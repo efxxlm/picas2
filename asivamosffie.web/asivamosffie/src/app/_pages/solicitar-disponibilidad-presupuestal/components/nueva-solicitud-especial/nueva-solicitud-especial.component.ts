@@ -98,6 +98,25 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    this.budgetAvailabilityService.getDetailInfoAdditionalById( this.activatedRoute.snapshot.params.id )
+      .subscribe(
+        disponibilidad => {
+          console.log(disponibilidad);
+          /*this.budgetAvailabilityService.getNumeroContrato( disponibilidad.numeroContrato )
+            .subscribe( 
+              response => {
+                this.disponibilidadPresupuestal = disponibilidad;
+                this.disponibilidadPresupuestal[ 'contratista' ] = response[ 'contratacion' ].contratista;
+                if ( this.disponibilidadPresupuestal[ 'aportante' ].tipoAportanteId === this.tipoAportante.aportanteFfie ) {
+                  this.disponibilidadPresupuestal[ 'tipoAportante' ] = 'FFIE';
+                  this.disponibilidadPresupuestal[ 'nombreAportante' ] = 'FFIE';
+                  console.log( this.disponibilidadPresupuestal );
+                }
+              } 
+            )*/
+        },
+        err => this.openDialog( '', `<b>${err.message}</b>` )
+      );
   };
 
   getValueChanges () {
@@ -296,21 +315,22 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
               objeto: this.addressForm.get('objeto').value,
               numeroRadicadoSolicitud: this.addressForm.get('numeroRadicado').value,
               aportanteId: this.addressForm.get('nombreAportante').value ? this.addressForm.get('nombreAportante').value.aportanteId : null,
-              valorSolicitud: this.addressForm.get('valor').value,
+              //valorSolicitud: this.addressForm.get('valor').value,
               valorAportante: this.addressForm.get('valor').value,
               cuentaCartaAutorizacion: this.addressForm.get('cartaAutorizacionET').value,
-              urlSoporte: this.addressForm.get('url').value
+              urlSoporte: this.addressForm.get('url').value,
+              disponibilidadPresupuestalProyecto:[{proyectoId:this.proyecto.proyectoId}]
             };
             console.log( disponibilidad );
-            //this.budgetAvailabilityService.createOrEditDDPRequest( disponibilidad )
-            //  .subscribe( 
-            //    respuesta => {
-            //      this.openDialog( '', respuesta.message )
-            //      if ( respuesta.code == "200" )
-            //        this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial'])
-            //    },
-            //    err => this.openDialog( '', err.message )
-            //  );
+            this.budgetAvailabilityService.createUpdateDisponibilidaPresupuestalEspecial( disponibilidad )
+              .subscribe( 
+                respuesta => {
+                  this.openDialog( '', respuesta.message )
+                  if ( respuesta.code == "200" )
+                    this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial'])
+                },
+                err => this.openDialog( '', err.message )
+              );
 
             break;
           case "2":

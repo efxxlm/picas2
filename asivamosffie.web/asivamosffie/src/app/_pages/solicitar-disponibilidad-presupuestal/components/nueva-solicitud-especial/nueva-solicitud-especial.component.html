@@ -112,21 +112,14 @@
                                 <div class="pr-1">
                                     <label class="label-left" for="departemento">Departamento</label>
                                 </div>
-                                <div class="col">
+                                <div class="col capitalize">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="departemento" (selectionChange)="changeDepartamento()">
-                                            <section *ngIf="addressForm.get( 'departemento' ).value === null">
-                                                <mat-option #departamento
-                                                            *ngFor="let departamento of listaDepartamento"
-                                                            [value]="departamento">
+                                            <mat-option #departamento class="capitalize"
+                                                *ngFor="let departamento of listaDepartamento"
+                                                [value]="departamento">
                                                 {{ departamento.descripcion }}
-                                                </mat-option>
-                                            </section>
-                                            <section *ngIf="addressForm.get( 'departemento' ).value !== null">
-                                                <mat-option [value]="addressForm.get( 'departemento' ).value">
-                                                {{ addressForm.get( 'departemento' ).value.descripcion }}
-                                                </mat-option>
-                                            </section>
+                                            </mat-option>                                            
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
@@ -139,20 +132,13 @@
                                 <div class="pr-1">
                                     <label class="label-left" for="municipio">Municipio</label>
                                 </div>
-                                <div class="col">
+                                <div class="col capitalize">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="municipio">
-                                            <section *ngIf="addressForm.get( 'municipio' ).value === null">
-                                                <mat-option #municipio *ngFor="let tipoSolicitud of listaMunicipio"
-                                                            [value]="tipoSolicitud">
-                                                            {{ tipoSolicitud.descripcion }}
-                                                </mat-option>
-                                            </section>
-                                            <section *ngIf="addressForm.get( 'municipio' ).value !== null">
-                                                <mat-option [value]="addressForm.get( 'municipio' ).value">
-                                                            {{ addressForm.get( 'municipio' ).value.descripcion }}
-                                                </mat-option>
-                                            </section>
+                                            <mat-option #municipio class="capitalize" *ngFor="let tipoSolicitud of listaMunicipio"
+                                                [value]="tipoSolicitud">
+                                                {{ tipoSolicitud.descripcion }}
+                                            </mat-option>                                        
                                         </mat-select>
                                     </mat-form-field>
                                 </div>

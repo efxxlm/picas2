@@ -451,8 +451,8 @@ namespace asivamosffie.services
         {
             try
             {
-                DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
-                                                .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
+                List<DisponibilidadPresupuestal> disponibilidad = _context.DisponibilidadPresupuestal
+                                                .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).ToList();/*
                                                 .Include(r => r.DisponibilidadPresupuestalProyecto)
                                                    .ThenInclude(r => r.Proyecto)
                                                 .Include(r => r.Aportante)
@@ -461,9 +461,9 @@ namespace asivamosffie.services
                                                    .ThenInclude(r => r.Departamento)
                                                 .Include(r => r.Aportante)
                                                    .ThenInclude(r => r.Municipio)
-                                                .OrderByDescending(r => r.DisponibilidadPresupuestalId).FirstOrDefaultAsync();
+                                                .OrderByDescending(r => r.DisponibilidadPresupuestalId).FirstOrDefaultAsync();*/
 
-                foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
+                /*foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
                 {
                     if (DisponibilidadPresupuestalProyecto.Proyecto != null)
                     {
@@ -475,8 +475,8 @@ namespace asivamosffie.services
                         }
                     }
                 } 
-
-                return disponibilidad;
+                */
+                return disponibilidad.FirstOrDefault();
             }
             catch (Exception e)
             {
@@ -709,7 +709,7 @@ namespace asivamosffie.services
         }
 
         //Enviar solicitud
-        public async Task<Respuesta> SendRequest(int disponibilidadPresupuestalId)
+        public async Task<Respuesta> SendRequest(int disponibilidadPresupuestalId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
 
             Respuesta respuesta = new Respuesta();
@@ -731,7 +731,34 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.EstadoSolicitudCodigo = "1"; // Se cambia el estado a "En validación presupuestal" => TipoDominioId = 39
                     _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
+                    //envio correo
+                    //envio correo a fiduciaria
+                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ddpSolicitudCreada);
+                    /*<b>Número del contrato:</b> [NumeroContrato]<br>
+                    <b>Fecha de firma del contrato:</b> [FechaContrato]<br>
+                    <b>Número del solicitud:</b> [NumeroSolicitud]<br>
+                    <b>Tipo de solicitud:</b> [TipoDeSolicitud]<br>*/
+                    string ncontrato = "";
+                    string fechaContrato = "";
+                    if(disponibilidadPresupuestal.ContratacionId>0)
+                    {
+                        var contrato = _context.Contratacion.Find(disponibilidadPresupuestal.ContratacionId);
+                        ncontrato = contrato.NumeroSolicitud;
+                        fechaContrato = contrato.FechaTramite!=null? Convert.ToDateTime(contrato.FechaTramite).ToString("dd/MM/yyy"):"";
+                    }
+                    string tiposolicut = _context.Dominio.Where(x=>x.TipoDominioId== (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal && x.Codigo==disponibilidadPresupuestal.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+                    string template = TemplateRecoveryPassword.Contenido.Replace("[NumeroContrato]",
+                        ncontrato).Replace("_LinkF_", pDominioFront).
+                        Replace("[FechaContrato]", fechaContrato).
+                        Replace("[NumeroSolicitud]", disponibilidadPresupuestal.NumeroSolicitud).
+                        Replace("[TipoDeSolicitud]", tiposolicut);
 
+                    
+                    var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Financiera).Include(y => y.Usuario).ToList();
+                    foreach (var usuarioadmin in usuariosadmin)
+                    {
+                        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Solicitud de disponibilidad presupuetal creada", template, pSender, pPassword, pMailServer, pMailPort);                        
+                    }
                 }
 
                 return respuesta = new Respuesta
@@ -1688,8 +1715,10 @@ namespace asivamosffie.services
                     pDisponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
                     pDisponibilidadPresupuestal.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
                     pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
-
-                    pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo;
+                    if(contrato!=null)
+                    {
+                        pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo;
+                    }                    
                     pDisponibilidadPresupuestal.TipoSolicitudCodigo = ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial;
                     pDisponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", _context.DisponibilidadPresupuestal.Count((r => r.NumeroSolicitud.Contains("DE"))));
 

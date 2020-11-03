@@ -18,6 +18,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         OrdenDia = 20,
         NotificacionActaAprobacion = 21,
         EnviarComiteAprobacion = 24,
+        ddpSolicitudCreada = 25,
 
     }
 }

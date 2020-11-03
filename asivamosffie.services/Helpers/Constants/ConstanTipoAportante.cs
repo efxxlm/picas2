@@ -18,6 +18,7 @@
     {
         public const string Ffie = "FFIE";
         public const string Departamento = "Gobernación";//join con dep o municipio
-        public const string Municipio = "Alcaldia";//join con dominio nombredominioid
+        public const string Municipio = "Alcaldía";//join con dominio nombredominioi
+        public static string Tercero = "Tercero";
     }
 }

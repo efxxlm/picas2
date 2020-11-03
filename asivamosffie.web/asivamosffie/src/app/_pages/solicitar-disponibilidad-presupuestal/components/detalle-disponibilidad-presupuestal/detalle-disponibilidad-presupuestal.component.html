@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle información adicional solicitud PI_002
+        Ver detalle información adicional solicitud {{numeroSolicitud}}
     </h1>
     <div class="d-flex justify-content-center">
         <p class="solicitud" *ngIf="this.tipoSolicitudColdigo === '1'">
@@ -18,7 +18,7 @@
         </p>
         <p class="solicitud">
             <strong>Fecha de comité técnico:</strong>
-            20/02/2020
+            {{fechaComite}}
         </p>
     </div>
     <mat-card class="shipping-card mainGris"  *ngIf="this.tipoSolicitudColdigo === '3'">
@@ -58,20 +58,13 @@
                             <div class="col-md-6 mb-1em" *ngFor="let aportante of this.aportantesList; index as i" style="margin-top: .5em; text-align: left;">
                                 <p class="mb1-em" style="font-size: 1.2em;"><b>Aportante {{ i+1 }} </b></p>
     
-                                <p *ngIf="aportante.aportante.tipoAportanteId === 6" style="margin-top: .5em;">
+                                <p style="margin-top: .5em;">
                                     <b>Tipo de aportante:</b>
-                                    FFIE
+                                    {{aportante.tipoAportanteNombre}}
                                 </p>
-                                <p *ngIf="aportante.aportante.tipoAportanteId === 6">
-                                    <b>Aportante:</b> FFIE
-                                </p>
-                                <p *ngIf="aportante.aportante.tipoAportanteId === 9" style="margin-top: .5em;">
-                                    <b>Tipo de aportante:</b>
-                                    ET
-                                </p>
-                                <p *ngIf="aportante.aportante.tipoAportanteId === 9">
+                                <p >
                                     <b>Aportante:</b>
-                                    {{ aportante['tipoAportanteNombre'] }} de {{ aportante['nombreAportante'] }}
+                                    {{aportante.nombreAportante}}
                                 </p>
                                 <p>
                                     <b>Valor del aportante:</b>
