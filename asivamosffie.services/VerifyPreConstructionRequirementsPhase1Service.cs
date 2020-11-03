@@ -459,12 +459,14 @@ namespace asivamosffie.services
                         && (bool)ContratoPerfil.TieneObservacionApoyo
                         && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
                         && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
-                        RegistroCompleto = false;
-
+                        RegistroCompleto = false; 
                 }
 
                 if (RegistroCompleto)
+                {
                     contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
+                    contrato.EstaDevuelto = false;
+                }
                 else
                     contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
 
