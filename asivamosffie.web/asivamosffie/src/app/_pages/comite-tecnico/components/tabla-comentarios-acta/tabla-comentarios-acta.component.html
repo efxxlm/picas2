@@ -1,3 +1,4 @@
+<!-- jflorez, quito esto 2020-11-03
 <div class="margin-90 text-center table-responsive">
   <table mat-table [dataSource]="dataSource" matSort>
 
@@ -24,21 +25,22 @@
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" class="radio-color-detalle"></mat-paginator>
 </div>
-
+ -->
 <!-- dejo esto comentado porque falta la info de back -->
-<!-- <p>
+<div *ngIf="data.length>0">
+ <p>
   <b>Fecha:</b>
-  26/06/2020
+  {{ data[0].fecha | date: 'dd/MM/yyyy' }}
 </p>
 <p class="d-flex">
   <b class="pr-05em">Observación:</b>
   <span class="ml-1em">
-    En la solicitud PI-00004 de la pestaña de Validación de solicitudes contractuales es una solicitud de multiproyecto en
-    la cual uno de los dos proyectos no fue aprobado, en este ya hay observaciones pero hace falta añadir que deben subir
-    el soporte de las cotizaciones porque no se encuentra el soporte
+    {{ textoLimpioMessage( data[0].observacion ) }}
+    
   </span>
 </p>
 <p>
   <b>Miembro comité:</b>
-  Gonzalo Díaz Mesa
-</p> -->
+  {{ data[0].miembroSesionParticipante.nombres }} {{ data[0].miembroSesionParticipante.apellidos }}
+</p>
+</div>
