@@ -7,7 +7,7 @@ import { CommonService } from 'src/app/core/_services/common/common.service';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { SesionComentario } from 'src/app/_interfaces/compromisos-actas-comite.interfaces';
-import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, EstadosActaComite, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
   selector: 'app-crear-acta',
@@ -42,6 +42,13 @@ export class CrearActaComponent implements OnInit {
     elements.forEach(control => {
       control.click();
     })
+  }
+
+  getStyle(){
+    if (EstadosActaComite.EnProcesoAprobacion != this.objetoComiteTecnico.estadoActaCodigo)
+    return 'auto'
+  else
+    return 'none'
   }
 
   ngOnInit(): void {

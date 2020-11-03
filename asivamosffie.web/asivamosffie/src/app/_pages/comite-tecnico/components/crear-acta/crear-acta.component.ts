@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, EstadosActaComite, EstadosComite, SesionComiteTema } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
@@ -40,6 +40,13 @@ export class CrearActaComponent implements OnInit {
     elements.forEach(control => {
       control.click();
     })
+  }
+
+  getStyle(){
+    if (EstadosActaComite.EnProcesoAprobacion != this.objetoComiteTecnico.estadoActaCodigo)
+    return 'auto'
+  else
+    return 'none'
   }
 
   ngOnInit(): void {

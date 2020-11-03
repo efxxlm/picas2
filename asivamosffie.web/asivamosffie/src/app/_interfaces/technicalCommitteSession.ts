@@ -354,3 +354,19 @@ interface EstadoComite{
 
   }
 
+  interface EstadoActaComite{
+    SinActa?: string,
+    EnProcesoAprobacion?: string,
+    Aprobada?: string,
+    Devuelta?: string,
+  }
+  
+  export const EstadosActaComite: EstadoActaComite = {
+    SinActa: "1",
+    EnProcesoAprobacion: "2",
+    Aprobada: "3",
+    Devuelta: "6",
+
+  }
+
+
