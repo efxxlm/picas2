@@ -106,11 +106,11 @@ namespace asivamosffie.services
 
             //   List<Dominio> ListEstadoCompromisos = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Compromiso).ToList();
 
-            foreach (var ComiteTecnico in ListComiteTecnico.OrderByDescending(r => r.ComiteTecnicoId))
+            foreach (var ComiteTecnico in ListComiteTecnico.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.ComiteTecnicoId))
             {
-                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico.OrderByDescending(r => r.SesionComiteSolicitudId))
+                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnico.Where(r=> !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionComiteSolicitudId))
                 {
-                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.OrderByDescending(r => r.SesionSolicitudCompromisoId))
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionSolicitudCompromisoId))
                     {
                         ListDynamic.Add(new
                         {
@@ -124,9 +124,9 @@ namespace asivamosffie.services
                         });
                     }
                 }
-                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.OrderByDescending(r => r.SesionComiteSolicitudId))
+                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionComiteSolicitudId))
                 {
-                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.OrderByDescending(r => r.SesionSolicitudCompromisoId))
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionSolicitudCompromisoId))
                     {
                         ListDynamic.Add(new
                         {
@@ -141,9 +141,9 @@ namespace asivamosffie.services
                     }
                 }
 
-                foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema.OrderByDescending(r => r.SesionTemaId))
+                foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.SesionTemaId))
                 {
-                    foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso.OrderByDescending(r => r.TemaCompromisoId))
+                    foreach (var TemaCompromiso in SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList().OrderByDescending(r => r.TemaCompromisoId))
                     {
                         ListDynamic.Add(new
                         {
