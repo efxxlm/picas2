@@ -79,6 +79,7 @@ export class GestionarPolizasComponent implements OnInit {
   public plazoContrato;
   public numContrato;
   public idContrato;
+  public selectedArray = [];
   obj1: boolean;
   obj2: boolean;
   obj3: boolean;
