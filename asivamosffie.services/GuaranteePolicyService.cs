@@ -897,7 +897,14 @@ namespace asivamosffie.services
                             strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
                     }
+                    bool bRegistroCompleto=false;
+                    string strRegistroCompleto= "Incompleto";
 
+                    if (contrato.RegistroCompleto != null)
+                    {
+                        strRegistroCompleto = (bool)contrato.RegistroCompleto ? "Completo" : "Incompleto";
+
+                    }                         
 
                     //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     GrillaContratoGarantiaPoliza contratoGrilla = new GrillaContratoGarantiaPoliza
@@ -918,8 +925,8 @@ namespace asivamosffie.services
 
                         EstadoPoliza = strEstadoSolicitudCodigoContratoPoliza
                         ,
-                        RegistroCompleto = contrato.RegistroCompleto
-
+                        RegistroCompleto = contrato.RegistroCompleto,
+                        RegistroCompletoNombre = strRegistroCompleto,
 
                         //Fecha = contrato.FechaCreacion != null ? Convert.ToDateTime(contrato.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
                         //,EstadoRegistro = "COMPLETO"
@@ -948,7 +955,8 @@ namespace asivamosffie.services
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
                         TipoSolicitud = "ERROR"
                         ,
-                        RegistroCompleto = false
+                        RegistroCompleto = false,
+                        RegistroCompletoNombre="ERROR",
 
                     };
                     ListContratoGrilla.Add(proyectoGrilla);
