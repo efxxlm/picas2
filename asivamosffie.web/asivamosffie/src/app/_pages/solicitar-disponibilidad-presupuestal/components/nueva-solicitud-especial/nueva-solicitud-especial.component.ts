@@ -46,7 +46,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     disponibilidadPresupuestalProyectoId: [  ],
     tipo: [ null, Validators.required ],
     objeto: [ null, Validators.required ],
-    numeroRadicado: [ null, Validators.compose( [ Validators.minLength(10), Validators.maxLength(15) ] ) ],
+    numeroRadicado: [ null, Validators.compose( [ Validators.minLength(1), Validators.maxLength(15) ] ) ],
     cartaAutorizacionET: ['', Validators.required],
     numeroContrato: [ null, Validators.compose( [ Validators.minLength(3), Validators.maxLength(10) ] ) ],
     departemento: [ null, Validators.required ],
@@ -97,26 +97,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
       });
   };
 
-  ngOnInit(): void {
-    this.budgetAvailabilityService.getDetailInfoAdditionalById( this.activatedRoute.snapshot.params.id )
-      .subscribe(
-        disponibilidad => {
-          console.log(disponibilidad);
-          /*this.budgetAvailabilityService.getNumeroContrato( disponibilidad.numeroContrato )
-            .subscribe( 
-              response => {
-                this.disponibilidadPresupuestal = disponibilidad;
-                this.disponibilidadPresupuestal[ 'contratista' ] = response[ 'contratacion' ].contratista;
-                if ( this.disponibilidadPresupuestal[ 'aportante' ].tipoAportanteId === this.tipoAportante.aportanteFfie ) {
-                  this.disponibilidadPresupuestal[ 'tipoAportante' ] = 'FFIE';
-                  this.disponibilidadPresupuestal[ 'nombreAportante' ] = 'FFIE';
-                  console.log( this.disponibilidadPresupuestal );
-                }
-              } 
-            )*/
-        },
-        err => this.openDialog( '', `<b>${err.message}</b>` )
-      );
+  ngOnInit(): void {    
   };
 
   getValueChanges () {

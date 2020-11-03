@@ -451,8 +451,8 @@ namespace asivamosffie.services
         {
             try
             {
-                List<DisponibilidadPresupuestal> disponibilidad = _context.DisponibilidadPresupuestal
-                                                .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).ToList();/*
+                DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
+                                                .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
                                                 .Include(r => r.DisponibilidadPresupuestalProyecto)
                                                    .ThenInclude(r => r.Proyecto)
                                                 .Include(r => r.Aportante)
@@ -461,9 +461,9 @@ namespace asivamosffie.services
                                                    .ThenInclude(r => r.Departamento)
                                                 .Include(r => r.Aportante)
                                                    .ThenInclude(r => r.Municipio)
-                                                .OrderByDescending(r => r.DisponibilidadPresupuestalId).FirstOrDefaultAsync();*/
+                                                .OrderByDescending(r => r.DisponibilidadPresupuestalId).FirstOrDefaultAsync();
 
-                /*foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
+                foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
                 {
                     if (DisponibilidadPresupuestalProyecto.Proyecto != null)
                     {
@@ -475,8 +475,8 @@ namespace asivamosffie.services
                         }
                     }
                 } 
-                */
-                return disponibilidad.FirstOrDefault();
+                
+                return disponibilidad;
             }
             catch (Exception e)
             {
