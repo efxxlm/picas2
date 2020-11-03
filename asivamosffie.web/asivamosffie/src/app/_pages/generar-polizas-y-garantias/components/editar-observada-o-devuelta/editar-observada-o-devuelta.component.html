@@ -330,7 +330,7 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="fechaRevision">Fecha de la revisión</label>
+                  <label class="label-left" for="fechaRevision">Fecha de la revisión 2</label>
                 </div>
                 <div class="col d-flex align-items-center">
                   <mat-form-field class="example-full-width">
@@ -350,16 +350,56 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="estadoRevision">Estado de la revisión</label>
+                  <label class="label-left" for="estadoRevision">Estado de la revisión 2</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="estadoRevision" required>
+                    <mat-select formControlName="estadoRevision" required [(ngModel)]="selected" (change)="this.moduleChange()">
                       <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
                         {{ estadoRevision.name }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.value == '2'">
+            <h2 class="card-subTitle">Aprobación</h2>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="fecha">Fecha de aprobacion</label>
+                  </div>
+                  <div class="col d-flex align-items-center">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22" [min]="minDate" readonly
+                        (click)="pickerFecha22.open()" required placeholder="DD/MM/AAAA">
+                      <mat-datepicker #pickerFecha22></mat-datepicker>
+                    </mat-form-field>
+                    <button mat-button color="primary" type="button" (click)="pickerFecha22.open()" class="btn-calendario">
+                      <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="responsableAprob">Responsable de aprobación</label>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="responsableAprob" required (change)="this.moduleChange()">
+                        <mat-option *ngFor="let aprob of aprobadosArray" [value]="aprob.value">
+                          {{ aprob.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
                 </div>
               </div>
             </div>

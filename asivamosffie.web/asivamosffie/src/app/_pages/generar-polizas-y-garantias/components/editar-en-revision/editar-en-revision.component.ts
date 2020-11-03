@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CreatePolizaGarantia, CreatePolizaObservacion, EditPoliza, InsertPoliza, PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
@@ -30,6 +30,7 @@ export class EditarEnRevisionComponent implements OnInit {
     polizasYSeguros: [null, Validators.required],
     buenManejoCorrectaInversionAnticipo: [null, Validators.required],
     estabilidadYCalidad: [null, Validators.required],
+    polizaCumplimiento: [null, Validators.required],
     cumpleAsegurado: [null, Validators.required],
     cumpleBeneficiario: [null, Validators.required],
     cumpleAfianzado: [null, Validators.required],
@@ -41,10 +42,8 @@ export class EditarEnRevisionComponent implements OnInit {
   });
 
   polizasYSegurosArray = [
-    { name: 'Buen manejo y correcta inversión del anticipo', value: '1' },
-    { name: 'Garantía de estabilidad y calidad de la obra', value: '2' },
-    { name: 'Póliza de cumplimiento', value: '3' },
-    { name: 'Garantía de estabilidad y calidad de la obra', value: '4' }
+    { name: 'Pólizas y seguros interventoría', value: '1' },
+    { name: 'Pólizas y seguros de póliza obra', value: '2' }
   ];
   estadoArray = [
     { name: 'Devuelta', value: '1' },
@@ -79,7 +78,7 @@ export class EditarEnRevisionComponent implements OnInit {
   public idPoliza;
   public idPoliza2;
   public idObservacion;
-  selected: any;
+  public selected = [];
 
   constructor(
     private router: Router,
@@ -167,13 +166,18 @@ export class EditarEnRevisionComponent implements OnInit {
       this.idObservacion = undefined;
     }
   }
+  get segurosReq() {
+    return this.addressForm.get('polizasYSeguros') as FormArray;
+  }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
-
+  clickedOption(){
+    console.log(this.selected)
+  }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
@@ -193,6 +197,7 @@ export class EditarEnRevisionComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
     let auxValue2 = this.addressForm.value.polizasYSeguros;
     const contratoArray :EditPoliza ={

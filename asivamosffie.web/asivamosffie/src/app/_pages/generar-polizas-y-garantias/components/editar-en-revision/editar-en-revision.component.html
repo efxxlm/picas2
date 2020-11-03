@@ -178,29 +178,53 @@
           <div class="col">
             <mat-form-field class="select-width">
               <mat-select formControlName="polizasYSeguros" multiple required>
-                <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
+                <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray ; let i = index" [value]="polizasYSeguros">
                   {{ polizasYSeguros.name }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
         </div>
-        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-  
-        </mat-card-title>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left" for="buenManejoCorrectaInversionAnticipo">¿Está incluida en la
-                  póliza presentada?</label>
+        <div *ngIf="addressForm.controls.polizasYSeguros.value && addressForm.controls.polizasYSeguros.value.name == 'Pólizas y seguros interventoría'">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+            Pólizas y seguros interventoría
+          </mat-card-title>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="buenManejoCorrectaInversionAnticipo">¿Está incluida en la
+                    póliza presentada?</label>
+                </div>
+                <div class="col">
+                  <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
+                    <mat-radio-button [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                  <span class="required-form-group">*</span>
+                </div>
               </div>
-              <div class="col">
-                <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
-                  <mat-radio-button [value]="true">Sí</mat-radio-button>
-                  <mat-radio-button [value]="false">No</mat-radio-button>
-                </mat-radio-group>
-                <span class="required-form-group">*</span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="addressForm.controls.polizasYSeguros.value && addressForm.controls.polizasYSeguros.value.name == 'Pólizas y seguros de póliza obra'">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+            Pólizas y seguros de póliza obra
+          </mat-card-title>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" for="estabilidadYCalidad">¿Está incluida en la póliza
+                    presentada?</label>
+                </div>
+                <div class="col">
+                  <mat-radio-group class="radioInput" formControlName="estabilidadYCalidad" required>
+                    <mat-radio-button [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                  <span class="required-form-group">*</span>
+                </div>
               </div>
             </div>
           </div>

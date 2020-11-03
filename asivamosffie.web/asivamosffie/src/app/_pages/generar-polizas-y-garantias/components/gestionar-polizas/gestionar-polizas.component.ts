@@ -42,13 +42,12 @@ export class GestionarPolizasComponent implements OnInit {
   });
 
   polizasYSegurosArray = [
-    { name: 'Buen manejo y correcta inversión del anticipo', value: '1' },
-    { name: 'Garantía de estabilidad y calidad de la obra', value: '2' },
-    { name: 'Póliza de cumplimiento', value: '3' },
-    { name: 'Garantía de estabilidad y calidad de la obra', value: '4' }
+    { name: 'Pólizas y seguros interventoría', value: '1' },
+    { name: 'Pólizas y seguros de póliza obra', value: '2' }
   ];
   estadoArray = [
-    { name: 'Devuelta', value: '1' }
+    { name: 'Devuelta', value: '1' },
+    { name: 'Aprobada', value: '2' }
   ];
 
   minDate: Date;

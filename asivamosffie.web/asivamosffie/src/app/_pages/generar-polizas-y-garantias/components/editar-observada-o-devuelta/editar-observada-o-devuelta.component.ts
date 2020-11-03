@@ -37,20 +37,23 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     condicionesGenerales: [null, Validators.required],
     fechaRevision: [null, Validators.required],
     estadoRevision: [null, Validators.required],
+    fechaAprob:[null, Validators.required],
+    responsableAprob:[null, Validators.required],
     observacionesGenerales: [null, Validators.required],
   });
 
   polizasYSegurosArray = [
-    { name: 'Buen manejo y correcta inversión del anticipo', value: '1' },
-    { name: 'Garantía de estabilidad y calidad de la obra', value: '2' },
-    { name: 'Póliza de cumplimiento', value: '3' },
-    { name: 'Garantía de estabilidad y calidad de la obra', value: '4' }
+    { name: 'Pólizas y seguros interventoría', value: '1' },
+    { name: 'Pólizas y seguros de póliza obra', value: '2' }
   ];
   estadoArray = [
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
   ];
-
+  aprobadosArray = [
+    { name: 'Andres Montealegre', value: '1' },
+    { name: 'David Benitez', value: '2' }
+  ];
   minDate: Date;
 
   editorStyle = {
@@ -96,7 +99,9 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.loadObservations(param.id);
     });
   }
-
+  moduleChange(){
+    console.log(this.selected);
+  }
   loadContrato(id){
     this.polizaService.GetListVistaContratoGarantiaPoliza().subscribe(data=>{
       this.tipoContrato=data[id-1].tipoContrato;
