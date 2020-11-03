@@ -24,7 +24,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 export class TablaValidacionSolicitudesContractualesComponent implements OnInit {
   @Input() ObjetoComiteTecnico: ComiteTecnico;
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
+  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'fechaComite', 'numeroComite', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -76,6 +76,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
   }
 
   cargarRegistro() {
+    console.log( this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario )
     this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario);
   }
 
