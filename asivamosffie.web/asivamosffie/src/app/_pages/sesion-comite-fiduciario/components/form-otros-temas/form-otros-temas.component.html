@@ -50,7 +50,7 @@
               <label class="label-left" for="estadoSolicitud">Estado de la solicitud</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width" >
+              <mat-form-field class="select-width">
                 <mat-select required formControlName="estadoSolicitud">
                   <mat-option *ngFor="let estado of estadosArray" [value]="estado">
                     {{ estado.nombre }}
@@ -67,7 +67,8 @@
         </div>
         <div class="col d-flex">
           <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
-            (onContentChanged)="maxLength($event, 5000)" formControlName="observacionesDecision" required></quill-editor>
+            (onContentChanged)="maxLength($event, 5000)" formControlName="observacionesDecision" required>
+          </quill-editor>
           <div class="d-flex align-items-center">
             <span class="contador miles mt-3em" *ngIf="addressForm.get('observacionesDecision').value !== null">
               {{5000 - (textoLimpio(addressForm.get('observacionesDecision').value)>5000?5000:textoLimpio(addressForm.get('observacionesDecision').value))}}
@@ -98,15 +99,17 @@
         <div class="col-md-10">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="cuantosCompromisos">¿Cuántos compromisos se generaron en este tema del
-                orden del día?</label>
+              <label class="label-left" for="cuantosCompromisos">
+                ¿Cuántos compromisos se generaron en este tema del orden del día?
+              </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input matInput #cuantosGrupos type="number" min="1" max="10" formControlName="cuantosCompromisos"
                   (keyup)="CambioCantidadCompromisos()" onkeyup="if(this.value>10) this.value = 10;">
               </mat-form-field>
-              <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Ingrese un número de 1 a 10"
+                matTooltipClass="info-tooltip">{{2 - cuantosGrupos.value.length}}</span>
             </div>
           </div>
         </div>
@@ -114,7 +117,7 @@
 
       <div formGroupName="compromisos">
         <div *ngFor="let compromiso of compromisos.controls; let i = index" [formGroupName]="i">
-          <div >
+          <div>
 
             <mat-card-title class="header-card--text sub-text">
               Compromiso {{ i + 1 }}
@@ -139,7 +142,7 @@
               <label class="label-left" for="responsable">Responsable</label>
             </div>
             <div class="col">
-              <mat-form-field class="select-width" >
+              <mat-form-field class="select-width">
                 <mat-select required formControlName="responsable">
                   <mat-option *ngFor="let estado of listaMiembros" [value]="estado">
                     {{ estado.nombre }}
@@ -156,8 +159,8 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly
-                      (click)="picker.open()" placeholder="DD/MM/AAAA">
+                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()"
+                      placeholder="DD/MM/AAAA">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
