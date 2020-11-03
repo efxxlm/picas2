@@ -1,6 +1,25 @@
 ﻿
 namespace asivamosffie.services.Helpers.Constant
 {
+    public class ConstantMessagesRegistrarProgramacionPersonal
+    {
+        #region Mensajes Informativos
+
+ 
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso      
+
+        #region  Mensajes Error
+        public const string Error = "500";
+        #endregion
+
+    }
+
     public class ConstantMessagesUsuarios
     {
         #region Mensajes Informativos
@@ -54,9 +73,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string DirecCambioContrasena = "301";
 
         #endregion Mensajes Redireccion
-
-
-
+         
     }
 
     public class ConstantMessagesContrasena
