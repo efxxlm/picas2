@@ -1,9 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { forkJoin, Observable } from 'rxjs';
+import { debounceTime, map, startWith } from 'rxjs/operators';
 import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { Dominio, CommonService, Localizacion } from 'src/app/core/_services/common/common.service';
 import { Aportante, Proyecto } from 'src/app/core/_services/project/project.service';
@@ -40,6 +40,9 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   };
   tipoAportantes: any[] = [];
   nombreAportantes: any[] = [];
+  myFilter = new FormControl();
+  listaContrato: any[] = [];
+  filteredContrato: Observable<string[]>;
 
   addressForm = this.fb.group({
     disponibilidadPresupuestalId: [  ],
@@ -87,11 +90,21 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     this.getValueChanges();
     forkJoin([
       this.commonService.listaTipoDDPEspecial(),
-      this.commonService.listaDepartamentos(),
+      this.commonService.listaDepartamentos(),  
+      this.commonService.listaTipoAportante()    
     ])
       .subscribe(respuesta => {
         this.tipoSolicitudArray = respuesta[0];
         this.listaDepartamento = respuesta[1];
+        this.tipoAportantes = respuesta[2];
+        this.budgetAvailabilityService.getContratosList().subscribe(
+          result=>{this.listaContrato=result;}
+        );
+        
+        this.filteredContrato = this.myFilter.valueChanges.pipe(
+          startWith(''),
+          map(value => this._filter(value))
+        );
         if ( this.activatedRoute.snapshot.params.id !== '0' ) {
           this.getRegistro( this.activatedRoute.snapshot.params.id );
         };
@@ -121,7 +134,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
             .subscribe(
               ( response: any[] ) => {
                 this.contrato = response;
-                for ( let contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
+                /*for ( let contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
                   if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteFfie ) {
                     this.tipoAportantes.push( { value: this.tipoAportante.aportanteFfie, nombre: 'FFIE' } );
                   };
@@ -131,7 +144,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                   if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteTercero ) {
                     //por integrar
                   }
-                }
+                }*/
                 console.log( this.contrato );
               },
               err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
@@ -144,6 +157,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         .subscribe( value => {
           this.nombreAportantes = [];
           this.contrato.contratacion.contratacionProyecto.forEach( contratacion => {
+            console.log(contratacion);
             if ( contratacion.proyecto.proyectoAportante[0].aportante.tipoAportanteId === value ) {
               this.nombreAportantes.push( { value, nombre: 'FFIE', aportanteId: contratacion.proyecto.proyectoAportante[0].aportante.cofinanciacionAportanteId } );
             };
@@ -195,9 +209,37 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto );
           this.addressForm.get('numeroRadicado').setValue( disponibilidad.numeroRadicadoSolicitud );
           this.addressForm.get( 'numeroContrato' ).setValue( disponibilidad.numeroContrato );
+          this.myFilter.setValue( disponibilidad.numeroContrato );
           this.addressForm.get( 'observacionLimiteEspecial' ).setValue( disponibilidad.limitacionEspecial ? disponibilidad.limitacionEspecial : null );
+          console.log("############33");
+          console.log(disponibilidad);
+          let tipoaportante=this.tipoAportantes.filter(x=>x.dominioId==disponibilidad.aportante.tipoAportanteId);
+          console.log(tipoaportante);
+          console.log(this.tipoAportantes);
+          
           this.addressForm.get( 'valor' ).setValue( disponibilidad.valorAportante ? disponibilidad.valorAportante : 0 );
           this.addressForm.get( 'url' ).setValue( disponibilidad.urlSoporte ? disponibilidad.urlSoporte : null );
+          this.budgetAvailabilityService.getNumeroContrato( disponibilidad.numeroContrato )
+            .subscribe(
+              ( response: any[] ) => {
+                this.contrato = response;          
+                this.contrato.contratacion.contratacionProyecto.forEach( contratacion => {
+                  console.log(contratacion);
+                  if ( contratacion.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteFfie) {
+                    this.nombreAportantes.push( { value:tipoaportante[0].codigo, nombre: 'FFIE', aportanteId: contratacion.proyecto.proyectoAportante[0].aportante.cofinanciacionAportanteId } );
+                  }
+                  else
+                  {
+                    this.nombreAportantes.push( { value:tipoaportante[0].codigo, nombre: contratacion.proyecto.proyectoAportante[0].aportante.nombreAportante, aportanteId: contratacion.proyecto.proyectoAportante[0].aportante.cofinanciacionAportanteId } );                    
+                  }
+                } );
+                let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);                   
+                this.addressForm.get( 'tipoAportante' ).setValue(tipoaportante[0].codigo);
+
+                this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);            
+              },
+              //err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
+            );          
         };
       } );
   };
@@ -368,6 +410,50 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
       };
     //}
-  };
+  }
+  
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();    
+    if(value!="")
+    {      
+      let filtroportipo:string[]=[];
+      this.listaContrato.forEach(element => {        
+        if(!filtroportipo.includes(element.numeroContrato))
+        {
+          filtroportipo.push(element.numeroContrato);
+        }
+      });
+      let ret= filtroportipo.filter(x=> x.toLowerCase().indexOf(filterValue) === 0);      
+      return ret;
+    }
+    else
+    {
+      return [];
+    }
+    
+  }
+  seleccionAutocomplete(nombre: string) {
+    let lista: any[] = [];
+    this.listaContrato.forEach(element => {
+      if (element.numeroContrato) {
+        lista.push(element);
+      }
+    });
+
+    let ret = lista.filter(x => x.numeroContrato.toLowerCase() === nombre.toLowerCase());
+    console.log(ret);
+    //reuso
+    this.budgetAvailabilityService.getContratoByNumeroContrato( nombre )
+            .subscribe(
+              ( response: any[] ) => {
+                this.contrato = response;
+                //if(this.contrato.)
+                console.log( this.contrato );
+              },
+              err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
+            );
+    //this.addressForm.get("numeroContrato").setValue();
+    this.contrato=ret[0];
+  }
 
 };

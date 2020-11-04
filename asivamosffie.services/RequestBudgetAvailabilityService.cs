@@ -117,6 +117,88 @@ namespace asivamosffie.services
             return Contrato;
         }
 
+        /*jflorez, versión light del metodo anterior*/
+        public async Task<Contrato> GetContratoByNumeroContrato(string pNumeroContrato)
+        {
+                       
+            //Si el aportante es tercero include dominio
+            Contrato Contrato = await _context.Contrato
+               .Where(r => r.NumeroContrato.Contains(pNumeroContrato) && !(bool)r.Eliminado)
+               .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+               .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.Contratista)
+               .FirstOrDefaultAsync();
+            try
+            {
+                Contrato.ListAportantes = new List<CofinanicacionAportanteGrilla>();
+                foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
+                {
+                    var proyectoAportante = _context.ProyectoAportante.Where(x => x.Proyecto.ProyectoId == ContratacionProyecto.ProyectoId && !(bool)x.Eliminado).Include(x => x.Aportante).ThenInclude(x => x.Cofinanciacion).ToList();
+                    foreach (var ProyectoAportante in proyectoAportante)
+                    {
+                        decimal? SaldoFuentesFinanciacion, SaldoDisponibilidadPresupuestal = 0;
+                        SaldoFuentesFinanciacion = ProyectoAportante.Aportante.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorFuente);
+                        SaldoDisponibilidadPresupuestal = ProyectoAportante.Aportante.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorAportante);
+
+                        ProyectoAportante.Aportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
+                        var nombre = "";
+                        if (ProyectoAportante.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                        {
+                            nombre = ConstanStringTipoAportante.Ffie;
+                        }
+                        else if (ProyectoAportante.Aportante.TipoAportanteId == ConstanTipoAportante.ET)
+                        {
+                            //verifico si tiene municipio
+                            if (ProyectoAportante.Aportante.MunicipioId != null)
+                            {
+                                nombre = "Alcaldía de " + _context.Localizacion.Find(ProyectoAportante.Aportante.MunicipioId).Descripcion;
+                            }
+                            else//solo departamento
+                            {
+                                if (ProyectoAportante.Aportante.DepartamentoId == null)
+                                {
+                                    nombre = "";
+                                }
+                                else
+                                {
+                                    nombre = "Gobernación de " + ProyectoAportante.Aportante.DepartamentoId == null ? "" :
+                                    _context.Localizacion.Find(ProyectoAportante.Aportante.DepartamentoId).Descripcion;
+                                }
+
+                            }
+
+                        }
+                        else
+                        {
+                            nombre = _context.Dominio.Find(ProyectoAportante.Aportante.NombreAportanteId).Nombre;
+                        }
+                        CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
+                        {
+                            CofinanciacionAportanteId = ProyectoAportante.Aportante.CofinanciacionAportanteId,
+                            Nombre = nombre,
+                            TipoAportante = await _commonService.GetNombreDominioByDominioID((int)ProyectoAportante.Aportante.TipoAportanteId),
+                            Vigencia = ProyectoAportante.Aportante.Cofinanciacion.VigenciaCofinanciacionId,
+                            FechaCreacion = ProyectoAportante.Aportante.FechaCreacion,
+                            MunicipioId = ProyectoAportante.Aportante.MunicipioId,
+                            DepartamentoId = ProyectoAportante.Aportante.DepartamentoId,
+                            RegistroCompleto = ProyectoAportante.Aportante.Cofinanciacion.RegistroCompleto
+                        };
+                        if (Contrato.ListAportantes.Where(x => x.CofinanciacionAportanteId == ProyectoAportante.Aportante.CofinanciacionAportanteId).Count() == 0)
+                        {
+                            Contrato.ListAportantes.Add(cofinanicacionAportanteGrilla);
+                        }
+                    }
+                }
+                return Contrato;
+            }
+            catch(Exception e)
+            {
+                return Contrato;
+            }
+            //return Contrato;
+        }
+
         public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id)
         {
             DisponibilidadPresupuestal disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal
@@ -1832,6 +1914,11 @@ namespace asivamosffie.services
                 return false;
             }
             return true;
+        }
+
+        public async Task<dynamic> GetContratos()
+        {
+            return _context.Contrato.Where(x => !(bool)x.Eliminado).ToList();
         }
     }
 }

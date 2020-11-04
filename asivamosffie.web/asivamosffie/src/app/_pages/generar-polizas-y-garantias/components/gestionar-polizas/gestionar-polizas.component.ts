@@ -153,6 +153,13 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   onSubmit() {
+    var completo:boolean;
+    if(this.addressForm.valid){
+      completo = true;
+    }
+    else{
+      completo = false;
+    }
     const contratoArray: InsertPoliza = {
       contratoId:this.idContrato,  
       TipoSolicitudCodigo: "",
@@ -166,7 +173,22 @@ export class GestionarPolizasComponent implements OnInit {
       ResponsableAprobacion:this.addressForm.value.responsableAprob,
       EstadoPolizaCodigo:"2",
       UsuarioCreacion:"usr1",
-      UsuarioModificacion:"usr1"
+      UsuarioModificacion:"usr1",
+      FechaExpedicion: this.addressForm.value.fecha,
+      Vigencia: this.addressForm.value.vigenciaPoliza,
+      VigenciaAmparo: this.addressForm.value.vigenciaAmparo,
+      ValorAmparo: this.addressForm.value.valorAmparo,
+      CumpleDatosAsegurado: this.addressForm.value.cumpleAsegurado,
+      CumpleDatosBeneficiario: this.addressForm.value.cumpleBeneficiario,
+      CumpleDatosTomador: this.addressForm.value.cumpleAfianzado,
+      IncluyeReciboPago:this.addressForm.value.reciboDePago,
+      IncluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales,
+      FechaAprobacion: "",
+      Estado: false,
+      FechaCreacion: "",
+      RegistroCompleto: completo,
+      FechaModificacion: "",
+      Eliminado: false
     };
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {

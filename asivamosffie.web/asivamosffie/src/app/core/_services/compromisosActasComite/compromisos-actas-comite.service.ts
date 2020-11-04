@@ -21,7 +21,43 @@ export class CompromisosActasComiteService {
   constructor ( private http: HttpClient ) {};
 
   getGrillaCompromisos () {
-    return this.http.get( `${ this.url }/GetListCompromisos` )
+    return this.http.get<any[]>( `${ this.url }/GetListCompromisos` )
+      .pipe(
+        map(
+          listas => {
+            listas.sort( ( listaA, listaB ) => {
+              if ( listaA.fechaComite < listaB.fechaComite ) {
+                return 1;
+              };
+              if ( listaA.fechaComite > listaB.fechaComite ) {
+                return -1;
+              };
+              return 0;
+            } );
+            return listas;
+          }
+        )
+      )
+  };
+
+  getGrillaActas () {
+    return this.http.get<any[]>( `${ this.url }/GetManagementReport` )
+      .pipe(
+        map(
+          listas => {
+            listas.sort( ( listaA, listaB ) => {
+              if ( listaA.fechaOrdenDia < listaB.fechaOrdenDia ) {
+                return 1;
+              };
+              if ( listaA.fechaOrdenDia > listaB.fechaOrdenDia ) {
+                return -1;
+              };
+              return 0;
+            } );
+            return listas;
+          }
+        )
+      )
   };
 
   getCompromiso ( compromisoId: number, tipoCompromiso: number ) {
@@ -75,31 +111,6 @@ export class CompromisosActasComiteService {
         localStorage.setItem( 'observacionGestion', JSON.stringify( observacionGestion ) );
       }
     }
-  };
-
-  getGrillaActas () {
-    return this.http.get<any[]>( `${ this.url }/GetManagementReport` )
-      .pipe(
-        map(
-          listas => {
-            const data: any[] = [];
-            const maxDate = new Date();
-            listas.forEach( lista => {
-              if ( new Date( lista.fechaOrdenDia ) < maxDate ) data.push( lista );
-            } );
-            data.sort( ( listaA, listaB ) => {
-              if ( listaA.fechaOrdenDia < listaB.fechaOrdenDia ) {
-                return 1;
-              };
-              if ( listaA.fechaOrdenDia > listaB.fechaOrdenDia ) {
-                return -1;
-              };
-              return 0;
-            } )
-            return data;
-          }
-        )
-      )
   };
 
   getActa ( comiteTecnicoId: number ) {

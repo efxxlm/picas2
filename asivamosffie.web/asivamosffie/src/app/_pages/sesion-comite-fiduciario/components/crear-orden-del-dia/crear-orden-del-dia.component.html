@@ -11,7 +11,7 @@
   </div>
 
   <!-- Seleccionar temas a tratar en el comite Fiduciario -->
-  <div class="flex w-tema">
+  <div class="flex w-tema" [style.pointer-events]="getStyle()">
 
     <span class="mr-1em font-weight-bold">Tipo de tema</span>
 
@@ -42,7 +42,7 @@
       <span class="seleccionados"> {{ totalSolicitudes() }} </span>
     </div>
 
-    <mat-accordion>
+    <mat-accordion >
 
       <mat-expansion-panel class="expansion-style " *ngFor="let datasolicitud of dataSolicitudContractual">
         <mat-expansion-panel-header class="expansion-style--header width-40">
@@ -53,7 +53,8 @@
 
         <app-tabla-sesiones
             (sesionesSeleccionadas)="getSesionesSeleccionada( $event )"
-            [dataSolicitud]="datasolicitud">
+            [dataSolicitud]="datasolicitud"
+            [style.pointer-events]="getStyle()">
         </app-tabla-sesiones>
 
       </mat-expansion-panel>
@@ -62,7 +63,7 @@
 
   </div>
 
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="temaNuevoBoolean">
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="temaNuevoBoolean" [style.pointer-events]="getStyle()">
     <mat-card class="shipping-card" >
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
@@ -173,7 +174,8 @@
       class="btn-guardar"
       *ngIf="estadosComite.sinConvocatoria == objetoSesion.estadoComiteCodigo"
       type="button"
-      (click)="onSubmit()">
+      (click)="onSubmit()"
+      [style.pointer-events]="getStyle()">
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>

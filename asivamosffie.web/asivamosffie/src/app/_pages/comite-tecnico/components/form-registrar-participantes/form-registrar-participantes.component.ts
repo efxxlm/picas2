@@ -193,8 +193,6 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         }
       })
 
-      console.log( (cantidadSolicitudes == cantidadSolicitudesCompletas) );
-
       if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0) {
         if (cantidadSolicitudes > 0) {
           this.estadoSolicitudes = this.estadoFormulario.enProceso;
@@ -210,8 +208,20 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   validarTemas(esProposicion: boolean) {
 
+    if (this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).length == 0) {
+
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+
+      return true;
+    } 
+
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
+    let sinDiligenciar = true;
 
     this.objetoComiteTecnico.sesionComiteTema
       .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
@@ -232,10 +242,12 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
             }
           })
+          sinDiligenciar = false;
           //})
         } else if (tem.requiereVotacion == false) {
           cantidadTemas++;
           cantidadTemasCompletas++;
+          sinDiligenciar = false;
         }
         else {
           cantidadTemas++;
@@ -250,13 +262,19 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       else
         this.estadoOtrosTemas = this.estadoFormulario.enProceso;
 
+        if (sinDiligenciar) // no se ha llenado nada
+        if (esProposicion)
+          this.estadoProposiciones = this.estadoFormulario.sinDiligenciar;
+        else
+          this.estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
+
       if (cantidadTemas == cantidadTemasCompletas)
         if (esProposicion)
           this.estadoProposiciones = this.estadoFormulario.completo;
         else
           this.estadoOtrosTemas = this.estadoFormulario.completo;
-    }else{
-      
+    } else {
+
     }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
@@ -284,11 +302,11 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     }
 
     if (this.estadoSolicitudes == this.estadoFormulario.completo &&
-        this.estadoOtrosTemas == this.estadoFormulario.completo &&
-        this.estadoProposiciones == this.estadoFormulario.completo  
-      ){
-        this.estaTodo = true;
-      }
+      this.estadoOtrosTemas == this.estadoFormulario.completo &&
+      this.estadoProposiciones == this.estadoFormulario.completo
+    ) {
+      this.estaTodo = true;
+    }
   }
 
   onDelete(i: number) {
@@ -309,7 +327,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result===true) {
+      if (result === true) {
         this.onDelete(e)
       }
     });

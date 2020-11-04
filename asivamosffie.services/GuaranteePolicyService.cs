@@ -40,34 +40,31 @@ namespace asivamosffie.services
         }
         //public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
         public async Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
-
         {
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
         }
 
         public async Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoId)
         {
-
             Contrato contrato =null;
 
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-
 
             //includefilter
             ContratoPoliza contratoPoliza = new ContratoPoliza();
             if (contrato != null)
             { 
                 //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-            contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+            contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == pContratoId
+            //&&(bool)r.Estado==true&&r.Eliminado==0
+            ).FirstOrDefault();
 
             }
 
             PolizaObservacion polizaObservacion=null;
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
             
-
-
             if (contratoPoliza != null)
             {
                 //List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == p && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
@@ -416,11 +413,13 @@ namespace asivamosffie.services
 
                     //TipoSolicitudCodigo ="3" //si estado devuelta, correo supervisor
                     //if (contratoPoliza.TipoSolicitudCodigo == "3")
-                    if (contratoPoliza.TipoSolicitudCodigo == ((int)EnumeratorEstadoPoliza.Con_poliza_observada_y_devuelta).ToString())
-                        contratoPoliza.TipoSolicitudCodigo = ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas).ToString();
+
+                    //ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+                    //if (contratoPoliza.TipoSolicitudCodigo == ((int)EnumeratorEstadoPoliza.Con_poliza_observada_y_devuelta).ToString())
+                    //    contratoPoliza.TipoSolicitudCodigo = ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas).ToString();
+
                     //contratoPoliza.TipoSolicitudCodigo = "4";                   
                                       
-
                     //_context.ExecuteStoreCommand("SET IDENTITY_INSERT [dbo].[MyUser] ON");
 
                     //guardar por primera vez EstadoPolizaCodigo DOM 51  2   En revisión de pólizas
@@ -629,7 +628,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CambiarEstadoPoliza(int pContratoPolizaId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Acta, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -781,9 +780,9 @@ namespace asivamosffie.services
             contratoPoliza.NumeroCertificado = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroCertificado);
             contratoPoliza.NombreAseguradora = Helpers.Helpers.CleanStringInput(contratoPoliza.NombreAseguradora);
 
-            contratoPoliza.UsuarioModificacion = "";
-            contratoPoliza.UsuarioCreacion = "";
-            contratoPoliza.EstadoPolizaCodigo = "";
+            //contratoPoliza.UsuarioModificacion = "";
+            //contratoPoliza.UsuarioCreacion = "";
+            //contratoPoliza.EstadoPolizaCodigo = "";
             //contratoPoliza.contratopoliza = "";
 
         }
@@ -865,7 +864,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings)
+        public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario)
         {
             //public void AprobarContrato(int pIdContrato)
 
@@ -919,6 +918,7 @@ namespace asivamosffie.services
                 {
                     //cambiar a estado Con aprobación de pólizas
                     //contratoPoliza.TipoSolicitudCodigo = "4";
+                    contratoPoliza.UsuarioModificacion = pUsuario;
                     contratoPoliza.TipoSolicitudCodigo = ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas).ToString();
                     _context.ContratoPoliza.Update(contratoPoliza);
 
@@ -1125,10 +1125,15 @@ namespace asivamosffie.services
 
                     if (contratoPoliza != null)
                     {
-                        //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
-                        TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                        if (contratoPoliza.TipoSolicitudCodigo != null)
+                        {
+                            //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
+                            TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                        
                         if (TipoSolicitudCodigoContratoPoliza != null)
                             strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                    }
+                    
 
                         EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         if (EstadoSolicitudCodigoContratoPoliza != null)

@@ -39,6 +39,14 @@ namespace asivamosffie.api.Controllers
             return await _managementCommitteeReportService.GetListContatoByNumeroContrato(pNumero);
         }
 
+        
+
+        [Route("GetContratoByNumeroContrato")]
+        public async Task<Contrato> GetContratoByNumeroContrato([FromQuery] string pNumero)
+        {
+            return await _managementCommitteeReportService.GetContratoByNumeroContrato(pNumero);
+        }
+
         [Route("GetReuestCommittee")]
         public async Task<IActionResult> GetReuestCommittee()
         {
@@ -337,6 +345,13 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
+        }
+
+        
+        [Route("GetContratos")]
+        public async Task<dynamic> GetContratos()
+        {
+            return await _managementCommitteeReportService.GetContratos();
         }
 
     }

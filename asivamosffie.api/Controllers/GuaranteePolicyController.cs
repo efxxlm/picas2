@@ -49,6 +49,11 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if (polizaObservacion.PolizaObservacionId == 0)
+                    polizaObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    polizaObservacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+
                 respuesta = await _guaranteePolicy.InsertEditPolizaObservacion(polizaObservacion);
                 return Ok(respuesta);
             }
@@ -67,6 +72,11 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if (polizaGarantia.PolizaGarantiaId == 0)
+                    polizaGarantia.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    polizaGarantia.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+
                 respuesta = await _guaranteePolicy.InsertEditPolizaGarantia(polizaGarantia);
                 return Ok(respuesta);
             }
@@ -83,8 +93,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {                
-                //contratoPoliza.UsuarioModificacion= HttpContext.User.FindFirst("User").Value;
+            {
+                contratoPoliza.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _guaranteePolicy.EditarContratoPoliza(contratoPoliza);
                 return Ok(respuesta);
             }
@@ -176,7 +186,7 @@ namespace asivamosffie.api.Controllers
                 asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
 
                 _appSettingsService = toAppSettingsService(_settings);
-                rta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato, _appSettingsService);
+                rta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato, _appSettingsService,  HttpContext.User.FindFirst("User").Value);
 
                 return Ok(rta);
             }

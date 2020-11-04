@@ -96,7 +96,7 @@ namespace asivamosffie.services
                                             });
                                         break;
                                     }
-
+                                
                                 case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                                     {
                                         ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
@@ -109,6 +109,23 @@ namespace asivamosffie.services
                                                 FechaSolicitud = (DateTime?)(procesoSeleccion.FechaCreacion),
                                                 NumeroSolicitud = procesoSeleccion.NumeroProceso,
                                                 TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
+                                                tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
+                                            });
+
+                                        break;
+                                    }
+                                case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
+                                    {
+                                        ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
+
+                                        if (procesoSeleccion != null)
+                                            comite.data.Add(new
+                                            {
+                                                Id = procesoSeleccion.ProcesoSeleccionId,
+                                                IdSolicitud = ss.SesionComiteSolicitudId,
+                                                FechaSolicitud = (DateTime?)(procesoSeleccion.FechaCreacion),
+                                                NumeroSolicitud = procesoSeleccion.NumeroProceso,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso).FirstOrDefault().Nombre,
                                                 tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
                                             });
 
@@ -461,6 +478,18 @@ namespace asivamosffie.services
                                 }
                                 break;
                             }
+                        case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
+                            {
+                                ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(ss.SolicitudId);
+
+                                if (procesoSeleccion != null)
+                                {
+                                    ss.NumeroSolicitud = procesoSeleccion.NumeroProceso;
+                                    ss.FechaSolicitud = (DateTime?)(procesoSeleccion.FechaCreacion);
+                                    ss.TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso).FirstOrDefault().Nombre;
+                                }
+                                break;
+                            }
                         case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
                             {
                                 ProcesoSeleccionMonitoreo procesoSeleccionMonitoreo = _context.ProcesoSeleccionMonitoreo
@@ -530,6 +559,9 @@ namespace asivamosffie.services
                             item.NumeroSolicitud = _context.Contratacion.Find(item.SolicitudId).NumeroSolicitud;
                             break;
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                            item.NumeroSolicitud = _context.ProcesoSeleccion.Find(item.SolicitudId).NumeroProceso;
+                            break;
+                        case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
                             item.NumeroSolicitud = _context.ProcesoSeleccion.Find(item.SolicitudId).NumeroProceso;
                             break;
                         case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
@@ -725,6 +757,7 @@ namespace asivamosffie.services
 
                         break;
 
+                    case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                         sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
                           .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
@@ -1858,9 +1891,7 @@ namespace asivamosffie.services
                                                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                                                             .FirstOrDefault();
 
-                if (comiteTecnicoOld.SesionComiteTema.Where(t => t.Eliminado != true).ToList().Count > 0 ||
-                     comiteTecnicoOld.SesionComiteSolicitudComiteTecnicoFiduciario.Where(c => c.Eliminado != true).ToList().Count > 0
-                    )
+                if (comiteTecnicoOld.SesionComiteTema.Where(t => t.Eliminado != true).ToList().Count > 0 )
                 {
                     return new Respuesta
                     {
@@ -1871,6 +1902,14 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.ErrorEliminarDependencia, idAccion, pUsuarioModifico, "ELIMINAR COMITE TECNICO")
                     };
                 }
+
+                comiteTecnicoOld.SesionComiteSolicitudComiteTecnicoFiduciario.ToList().ForEach(ct =>
+                {
+                    SesionComiteSolicitud solicitud = _context.SesionComiteSolicitud.Find(ct.SesionComiteSolicitudId);
+
+                    solicitud.Eliminado = true;
+                    solicitud.ComiteTecnicoFiduciarioId = null;
+                });
 
 
                 comiteTecnicoOld.UsuarioModificacion = pUsuarioModifico;
@@ -2336,7 +2375,8 @@ namespace asivamosffie.services
 
                 #region Inicio Proceso Seleccion
 
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || 
+                    pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso)
                 {
                     ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(sesionComiteSolicitudOld.SolicitudId);
                     if (procesoSeleccion != null)

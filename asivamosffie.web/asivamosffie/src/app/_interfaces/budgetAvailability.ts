@@ -19,6 +19,7 @@ export interface GrillaDisponibilidadPresupuestal{
 
 export interface DisponibilidadPresupuestal{
     
+    
     disponibilidadPresupuestalId?: number,
     fechaSolicitud?: Date,
     tipoSolicitudCodigo?: string,//tradicional, especial o administrativo
@@ -50,6 +51,7 @@ export interface DisponibilidadPresupuestal{
     urlSoporte?: string,
     /*not mapped on backend*/
     fechaComiteTecnicoNotMapped?: any;
+    aportante?: any;
     disponibilidadPresupuestalProyecto?: DisponibilidadPresupuestalProyecto[],
 
 }
