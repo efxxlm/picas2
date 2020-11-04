@@ -216,15 +216,27 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           let tipoaportante=this.tipoAportantes.filter(x=>x.dominioId==disponibilidad.aportante.tipoAportanteId);
           console.log(tipoaportante);
           console.log(this.tipoAportantes);
-          let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);                   
-          this.addressForm.get( 'tipoAportante' ).setValue(tipoaportante[0].codigo);
-          this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);
+          
           this.addressForm.get( 'valor' ).setValue( disponibilidad.valorAportante ? disponibilidad.valorAportante : 0 );
           this.addressForm.get( 'url' ).setValue( disponibilidad.urlSoporte ? disponibilidad.urlSoporte : null );
           this.budgetAvailabilityService.getNumeroContrato( disponibilidad.numeroContrato )
             .subscribe(
               ( response: any[] ) => {
-                this.contrato = response;                      
+                this.contrato = response;          
+                this.contrato.contratacion.contratacionProyecto.forEach( contratacion => {
+                  console.log(contratacion);
+                  if ( contratacion.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteFfie) {
+                    this.nombreAportantes.push( { value:tipoaportante[0].codigo, nombre: 'FFIE', aportanteId: contratacion.proyecto.proyectoAportante[0].aportante.cofinanciacionAportanteId } );
+                  }
+                  else
+                  {
+                    this.nombreAportantes.push( { value:tipoaportante[0].codigo, nombre: contratacion.proyecto.proyectoAportante[0].aportante.nombreAportante, aportanteId: contratacion.proyecto.proyectoAportante[0].aportante.cofinanciacionAportanteId } );                    
+                  }
+                } );
+                let nombreAportante= this.nombreAportantes.filter(x=>x.aportanteId==disponibilidad.aportanteId);                   
+                this.addressForm.get( 'tipoAportante' ).setValue(tipoaportante[0].codigo);
+
+                this.addressForm.get( 'nombreAportante' ).setValue(nombreAportante[0]);            
               },
               //err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
             );          
@@ -431,21 +443,11 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     let ret = lista.filter(x => x.numeroContrato.toLowerCase() === nombre.toLowerCase());
     console.log(ret);
     //reuso
-    this.budgetAvailabilityService.getNumeroContrato( nombre )
+    this.budgetAvailabilityService.getContratoByNumeroContrato( nombre )
             .subscribe(
               ( response: any[] ) => {
                 this.contrato = response;
-                for ( let contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
-                  /*if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteFfie ) {
-                    this.tipoAportantes.push( { value: this.tipoAportante.aportanteFfie, nombre: 'FFIE' } );
-                  };
-                  if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteEt ) {
-                    //por integrar
-                  };
-                  if ( contratacionProyecto.proyecto.proyectoAportante[0].aportante.tipoAportanteId === this.tipoAportante.aportanteTercero ) {
-                    //por integrar
-                  }*/
-                }
+                //if(this.contrato.)
                 console.log( this.contrato );
               },
               err => this.openDialog( '', '<b>Este número de contrato no existe por favor verifique los datos registrados.</b>' )
