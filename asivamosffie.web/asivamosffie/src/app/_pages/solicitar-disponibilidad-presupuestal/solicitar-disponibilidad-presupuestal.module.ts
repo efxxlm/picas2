@@ -20,6 +20,7 @@ import { DetalleDisponibilidadPresupuestalComponent } from './components/detalle
 import { VerDetalleDdpEspecialComponent } from './components/ver-detalle-ddp-especial/ver-detalle-ddp-especial.component';
 import { VerDetalleDdpAdministrativoComponent } from './components/ver-detalle-ddp-administrativo/ver-detalle-ddp-administrativo.component'
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     FormsModule,
     SolicitarDisponibilidadPresupuestalRoutingModule,
     CurrencyMaskModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    MatAutocompleteModule
   ]
 })
 export class SolicitarDisponibilidadPresupuestalModule { }

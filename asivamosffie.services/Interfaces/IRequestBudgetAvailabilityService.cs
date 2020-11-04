@@ -34,6 +34,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateOrEditProyectoAdministrtivo(DisponibilidadPresupuestal disponibilidad);
         Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa();
         Task<Respuesta> EliminarDisponibilidad(int disponibilidadPresupuestalId);
+        Task<dynamic> GetContratos();
     }
     
 }

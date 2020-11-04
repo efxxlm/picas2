@@ -339,5 +339,12 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [Route("GetContratos")]
+        public async Task<dynamic> GetContratos()
+        {
+            return await _managementCommitteeReportService.GetContratos();
+        }
+
     }
 }

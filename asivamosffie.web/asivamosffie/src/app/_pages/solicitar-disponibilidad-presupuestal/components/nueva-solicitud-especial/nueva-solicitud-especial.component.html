@@ -175,13 +175,21 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
-                                        <input  matInput
-                                                #numeroContrato
-                                                type="text"
-                                                maxlength="10"
-                                                formControlName="numeroContrato">
+                                        <!--<input  matInput
+                                            #numeroContrato
+                                            type="text"
+                                            maxlength="10"
+                                            formControlName="numeroContrato">-->
+                                        <input matInput #nombre2 type="text" maxlength="1000" [formControl]="myFilter" required
+                                            [matAutocomplete]="auto2">
+                                        <mat-autocomplete #auto2="matAutocomplete">
+                                        <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredContrato  | async"
+                                            [value]="nombres">
+                                            {{nombres}}
+                                        </mat-option>
+                                        </mat-autocomplete>
                                     </mat-form-field>
-                                    <span class="contador">{{10 - numeroContrato.value.length}}</span>
+                                    <!-- como es autocompletar, ps  no debería tener longitud<span class="contador">{{10 - numeroContrato.value.length}}</span>-->
                                 </div>
                             </div>
                         </div>
@@ -261,7 +269,7 @@
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="tipoAportante">
                                         <mat-option *ngFor="let tipoSolicitud of tipoAportantes"
-                                            [value]="tipoSolicitud.value">
+                                            [value]="tipoSolicitud.codigo">
                                             {{ tipoSolicitud.nombre }}
                                         </mat-option>
                                     </mat-select>
