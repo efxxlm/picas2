@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -553,26 +554,28 @@ namespace asivamosffie.services
         {
             try
             {
+                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+
                 ComiteTecnico comiteTecnico = _context.ComiteTecnico
                     .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
                     .Include(r => r.SesionParticipante)
-                           .ThenInclude(r => r.Usuario)
-                    .Include(r => r.SesionComentario)
+                      .ThenInclude(r => r.Usuario)
+                         .ThenInclude(r => r.SesionComentario) 
                     .FirstOrDefault();
 
-                string Tabla = _context.Template.Find(enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
-                string Registros = _context.Template.Find(enumeratorTemplate.RegistrosTablaAprobacionParticipanteActa).Contenido;
+                string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
+                string Registros = _context.Template.Find((int)enumeratorTemplate.RegistrosTablaAprobacionParticipanteActa).Contenido;
                 string TotalRegistros = string.Empty;
 
                 foreach (var SesionParticipante in comiteTecnico.SesionParticipante)
                 {
                     TotalRegistros += Registros;
 
-                    TotalRegistros.Replace("[FECHA_APROBACION]", ((DateTime)comiteTecnico.SesionComentario.Where(r => r.MiembroSesionParticipanteId == SesionParticipante.SesionParticipanteId && r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Select(r => r.FechaCreacion).FirstOrDefault()).ToString("dd-MMMM-yy"))
-                                  .Replace("[RESPONSABLE]" , SesionParticipante.Usuario.Nombres + " "+ SesionParticipante.Usuario.Apellidos);
+                    TotalRegistros = TotalRegistros.Replace("[FECHA_APROBACION]", (SesionParticipante.Usuario.SesionComentario.Where(r=> r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Select(r=> r.Fecha).FirstOrDefault()).ToString("dd-MM-yyyy"))
+                                  .Replace("[RESPONSABLE]", myTI.ToTitleCase(SesionParticipante.Usuario.Nombres.ToLower() + " "+ SesionParticipante.Usuario.Apellidos.ToLower()));
 
-                } 
-                Tabla.Replace("[REGISTROS]", TotalRegistros);
+                }
+                Tabla =  Tabla.Replace("[REGISTROS]", TotalRegistros);
 
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
@@ -587,6 +590,7 @@ namespace asivamosffie.services
                         .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite) 
                         .Replace("[TABLA_RESPONSABLE_APROBACION]", Tabla)
                         .Replace("[FECHA_COMITE]", ((DateTime.Now).ToString("dd-MM-yyyy")));
+                  
                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Aprobación de acta", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
