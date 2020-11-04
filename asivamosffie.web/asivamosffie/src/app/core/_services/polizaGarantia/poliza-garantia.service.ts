@@ -22,7 +22,7 @@ export class PolizaGarantiaService implements OnInit {
   CreateContratoPoliza(contratoPoliza: InsertPoliza) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateContratoPoliza`, contratoPoliza);
   }
-  EditarContratoPoliza(contratoPoliza: InsertPoliza) {
+  EditarContratoPoliza(contratoPoliza: any) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/EditarContratoPoliza`, contratoPoliza);
   }
   GetListPolizaObservacionByContratoPolizaId(pContratoPolizaId: number) {
