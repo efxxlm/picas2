@@ -96,14 +96,19 @@ export interface ContratoPoliza {
 
 
 export interface InsertPoliza{
-  contratoId:string;
-  nombreAseguradora:string;
-  numeroPoliza:string;
-  numeroCertificado:string;
-  fechaExpedicion:Date;
-  vigencia:Date;
-  vigenciaAmparo:Date;
-  valorAmparo:number;
+  contratoId:number,  
+  TipoSolicitudCodigo: any,
+  TipoModificacionCodigo:any,
+  DescripcionModificacion:any,
+  NombreAseguradora:any,
+  NumeroPoliza:any,
+  NumeroCertificado:any,
+  Observaciones:any,
+  ObservacionesRevisionGeneral:any,
+  ResponsableAprobacion:any,
+  EstadoPolizaCodigo:any,
+  UsuarioCreacion:any,
+  UsuarioModificacion:any
 }
 
 export interface EditPoliza{

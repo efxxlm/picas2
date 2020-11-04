@@ -564,8 +564,8 @@ namespace asivamosffie.services
                         .Replace("_LinkF_", pDominioFront)
                         .Replace("[TIPO_COMITE]", (bool)comiteTecnico.EsComiteFiduciario ? ConstanStringTipoComite.Fiduciario : ConstanStringTipoComite.Tecnico)
                         .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
-                        .Replace("[FECHA_COMITE]", ((DateTime)comiteTecnico.FechaOrdenDia).ToString("dd-MM-yyyy"));
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Solicitud  de contratación", template, pSender, pPassword, pMailServer, pMailPort);
+                        .Replace("[FECHA_COMITE]", ((DateTime.Now).ToString("dd-MM-yyyy")));
+                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Acta aprobada", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
                 return blEnvioCorreo;

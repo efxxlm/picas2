@@ -325,7 +325,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
               valorAportante: this.addressForm.get('valor').value,
               cuentaCartaAutorizacion: this.addressForm.get('cartaAutorizacionET').value,
               urlSoporte: this.addressForm.get('url').value,
-              disponibilidadPresupuestalProyecto:[{proyectoId:this.proyecto.proyectoId}]
+              disponibilidadPresupuestalProyecto:[{proyectoId:this.proyecto.proyectoId,
+                disponibilidadPresupuestalProyectoId:this.disponibilidadaeditar.disponibilidadPresupuestalProyecto?this.disponibilidadaeditar.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId:null}]
             };
             console.log( disponibilidad );
             this.budgetAvailabilityService.createUpdateDisponibilidaPresupuestalEspecial( disponibilidad )

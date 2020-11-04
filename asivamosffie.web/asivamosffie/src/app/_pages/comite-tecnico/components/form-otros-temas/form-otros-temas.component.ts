@@ -87,7 +87,10 @@ export class FormOtrosTemasComponent implements OnInit {
 
     this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
 
-
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
   }
 
   maxLength(e: any, n: number) {
@@ -184,7 +187,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
   CambioCantidadCompromisos() {
     const FormGrupos = this.addressForm.value;
-    if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos < 100) {
+    if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos <= 10) {
       while (this.compromisos.length < FormGrupos.cuantosCompromisos) {
         this.compromisos.push(this.crearCompromiso());
       }
