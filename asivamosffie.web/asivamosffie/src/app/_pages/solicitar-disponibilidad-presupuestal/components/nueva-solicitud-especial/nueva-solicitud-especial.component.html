@@ -13,7 +13,7 @@
 
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
                     DDP especial
                 </mat-card-title>
@@ -27,7 +27,7 @@
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
-                                    <mat-select formControlName="tipo">
+                                    <mat-select formControlName="tipo" required>
                                         <mat-option *ngFor="let tipoSolicitud of tipoSolicitudArray"
                                             [value]="tipoSolicitud">
                                             {{ tipoSolicitud.nombre }}
@@ -43,15 +43,15 @@
                             <label class="label-left" for="objeto">Objeto</label>
                         </div>
                         <div class="col d-flex">
-                            <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
                                 required (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
                                 <input type="hidden" formControlName="disponibilidadPresupuestalId" >
                                 <input type="hidden" formControlName="disponibilidadPresupuestalProyectoId" >
                             <div class="d-flex align-items-center">
-                                <span class="contador miles" *ngIf="addressForm.get('objeto').value !== null">
+                                <span class="contador miles mt-3em" *ngIf="addressForm.get('objeto').value !== null">
                                     {{1000 - (textoLimpio(addressForm.get('objeto').value)>1000?1000:textoLimpio(addressForm.get('objeto').value))}}
                                 </span>
-                                <span class="contador miles" *ngIf="addressForm.get('objeto').value === null">
+                                <span class="contador miles mt-3em" *ngIf="addressForm.get('objeto').value === null">
                                     1000
                                 </span>
                             </div>
@@ -69,7 +69,7 @@
                         </span>
                     </div> -->
                 </div>
-                <div class="row">
+                <div class="row mt-05em">
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
@@ -80,7 +80,7 @@
                             <div class="col d-flex">
                                 <mat-form-field class="full-width">
                                     <input matInput #numeroRadicado type="text" maxlength="15"
-                                        formControlName="numeroRadicado">
+                                        formControlName="numeroRadicado" required>
                                 </mat-form-field>
                                 <span class="contador">{{15 - numeroRadicado.value.length}}</span>
                             </div>
@@ -94,14 +94,16 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="cartaAutorizacionET">¿Cuenta con carta de
-                                        autorización de la ET?</label>
+                                    <label class="label-left" for="cartaAutorizacionET">
+                                      ¿Cuenta con carta de autorización de la ET?
+                                    </label>
                                 </div>
                                 <div class="col">
                                     <mat-radio-group class="radioInput" formControlName="cartaAutorizacionET">
                                         <mat-radio-button [value]="true">Sí</mat-radio-button>
                                         <mat-radio-button [value]="false">No</mat-radio-button>
                                     </mat-radio-group>
+                                    <span class="required-form-group">*</span>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +116,7 @@
                                 </div>
                                 <div class="col capitalize">
                                     <mat-form-field class="select-width">
-                                        <mat-select formControlName="departemento" (selectionChange)="changeDepartamento()">
+                                        <mat-select formControlName="departemento" (selectionChange)="changeDepartamento()" required>
                                             <mat-option #departamento class="capitalize"
                                                 *ngFor="let departamento of listaDepartamento"
                                                 [value]="departamento">
@@ -134,9 +136,9 @@
                                 </div>
                                 <div class="col capitalize">
                                     <mat-form-field class="select-width">
-                                        <mat-select formControlName="municipio">
+                                        <mat-select formControlName="municipio" required>
                                             <mat-option #municipio class="capitalize" *ngFor="let tipoSolicitud of listaMunicipio"
-                                                [value]="tipoSolicitud">
+                                                [value]="tipoSolicitud" required>
                                                 {{ tipoSolicitud.descripcion }}
                                             </mat-option>
                                         </mat-select>
@@ -157,7 +159,8 @@
                                                 #llaveMEN
                                                 type="text"
                                                 maxlength="8"
-                                                formControlName="llaveMEN">
+                                                formControlName="llaveMEN"
+                                                required>
                                     </mat-form-field>
                                     <span class="contador">{{8 - llaveMEN.value.length}}</span>
                                 </div>
@@ -200,7 +203,7 @@
         </mat-card>
 
         <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="proyectoEncontrado">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
                     {{ proyecto.llaveMen }}
                 </mat-card-title>
@@ -222,7 +225,7 @@
         </mat-card>
 
         <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="contrato">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
                     {{ contrato.numeroContrato }}
                 </mat-card-title>
@@ -253,7 +256,7 @@
         </section>
 
         <mat-card class="shipping-card animatedDown" *ngIf="seRecibioAportante === true || contrato">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
                     Aportante
                 </mat-card-title>
@@ -267,7 +270,7 @@
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
-                                    <mat-select formControlName="tipoAportante">
+                                    <mat-select formControlName="tipoAportante" required>
                                         <mat-option *ngFor="let tipoSolicitud of tipoAportantes"
                                             [value]="tipoSolicitud.codigo">
                                             {{ tipoSolicitud.nombre }}
@@ -287,7 +290,7 @@
                             <div class="col">
 
                                 <mat-form-field class="select-width">
-                                    <mat-select formControlName="nombreAportante">
+                                    <mat-select formControlName="nombreAportante" required>
                                         <mat-option *ngFor="let aportante of nombreAportantes"
                                             [value]="aportante">
                                             {{ aportante.nombre }}
@@ -311,7 +314,8 @@
                                             maxlength="28"
                                             formControlName="valor"
                                             currencyMask
-                                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                            required>
                                 </mat-form-field>
                                 <span class="contador" *ngIf="addressForm.get( 'valor' ).value.toString() !== null">{{20 - addressForm.get( 'valor' ).value.toString().length }}</span>
                             </div>
