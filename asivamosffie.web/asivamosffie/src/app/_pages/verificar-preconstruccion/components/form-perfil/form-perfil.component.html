@@ -1,0 +1,237 @@
+<form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
+  <div class="row" style="margin-left: 0em;">
+    <div class="pr-1">
+      <label class="label-left">¿En qué estado de la fase 1 - Preconstrucción se encuentra el proyecto?</label>
+    </div>
+    <div class="col">
+      <mat-form-field class="select-width">
+        <mat-select multiple required formControlName="estadoFases" (selectionChange)="getvalues( $event.value )">
+          <mat-select-trigger>
+            <small >
+              {{ (formContratista.get( 'estadoFases' ).value && formContratista.get( 'estadoFases' ).value[0]) ? formContratista.get( 'estadoFases' ).value[0] : ''}}
+              <span *ngIf="formContratista.get( 'estadoFases' ).value  ?.length > 1">, {{ formContratista.get( 'estadoFases' ).value ? formContratista.get( 'estadoFases' ).value[1] : '' }}
+              </span>
+            </small>
+          </mat-select-trigger>
+          <mat-option *ngFor="let estado of estadoProyectoArray" [value]="estado">{{estado}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="d-flex mt-1em" style="justify-content: center;">
+    <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren del contratista de interventoría para ejecutar esta fase?</b></label>
+    <div class="col d-flex">
+      <mat-form-field class="w-38">
+        <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles required>
+      </mat-form-field>
+      <span class="contador">{{3 - formContratista.get( 'numeroPerfiles' ).value.length}}</span>
+    </div>
+  </div>
+
+  <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroPerfiles' ).value !== null">
+    <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title" [ngClass]="perfil.get( 'estadoSemaforo' ).value">
+          Perfil {{ i+1 }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card>
+        <mat-card-content>
+          <section class="d-flex mt-1em">
+            <label class="mr-label mr-min label-left" style="margin-top: 1.7em;"><b>Perfil</b></label>
+            <mat-form-field class="w-50" appearance="fill">
+              <mat-select formControlName="perfilCodigo" class="padding-left" required>
+                <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
+                  {{perfilCv.nombre}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </section>
+
+          <section class="d-flex mt-1em" style="width: 63%;">
+            <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida requeridas para el perfil</b></label>
+            <div class="col d-flex">
+              <mat-form-field>
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas" required>
+              </mat-form-field>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.length}}</span>
+            </div>
+          </section>
+
+          <section class="d-flex mt-1em" style="width: 63%;">
+            <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida recibidas para el perfil</b></label>
+            <div class="col d-flex">
+              <mat-form-field>
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas" required>
+              </mat-form-field>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.length}}</span>
+            </div>
+          </section>
+
+          <section class="d-flex mt-1em" style="width: 63%;">
+            <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
+            <div class="col d-flex">
+              <mat-form-field>
+                <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas" required>
+              </mat-form-field>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.length}}</span>
+            </div>
+          </section>
+
+          <section class="d-flex mt-1em w-60">
+            <label class="mr-label mr-min mt-1em"><b>Fecha de aprobación de la totalidad de las hojas de vida</b></label>
+            <div class="d-flex">
+              <mat-form-field class="mt-min" 
+                              appearance="fill"
+                              style="width: 77%;">
+              <input  matInput 
+                      [matDatepicker]="fechaAprobacion" 
+                      formControlName="fechaAprobacion"
+                      placeholder="DD/MM/AAAA"
+                      [min]="minDate"
+                      required
+                      [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
+              <mat-datepicker #fechaAprobacion></mat-datepicker>
+              </mat-form-field>
+              <button mat-button 
+                      color="primary" 
+                      type="button" 
+                      (click)="fechaAprobacion.open()" 
+                      class="btn-calendario">
+              <img  class="mr-bottom-1" 
+                    src="assets/img/icon/calendarioCirculo.svg" 
+                    alt="Abrir Calendario">
+              </button>
+            </div>
+          </section>
+
+          <section class="d-flex mt-1em" align="left">
+            <label class="mr-label mr-min mt-1em"><b>Observaciones</b></label>
+            <quill-editor class="quill-editor-style w-65 ml-1em card" 
+                          [styles]="editorStyle"
+                          [modules]="config"
+                          (onContentChanged)="maxLength($event, 1000)" 
+                          formControlName="observacion"></quill-editor>
+            <div class="d-flex" style="align-items: flex-end;">
+              <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
+                {{1000 - textoLimpio(perfil.get('observacion').value)}}
+              </span>
+              <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
+                1000
+              </span>
+            </div>
+          </section>
+
+          <section formArrayName="contratoPerfilNumeroRadicado">
+            <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
+              <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }} </b></label>
+              <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
+                <mat-form-field class="w-38">
+                  <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
+                </mat-form-field>
+                <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
+              </div>
+              <div class="text-right" *ngIf="numeroRadicado( i ).length > 1">
+                <button mat-button
+                        color="warn"
+                        type="button"
+                        class="btn-eliminar"
+                        (click)="eliminarNumeroRadicado( i, j )"
+                        *ngIf="perfilProyecto.length === 0">
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                  Eliminar número de radicado
+                </button>
+                <button mat-button
+                        color="warn"
+                        type="button"
+                        class="btn-eliminar"
+                        (click)="deleteRadicado( numero.get( 'contratoPerfilNumeroRadicadoId' ).value, i, j )"
+                        *ngIf="perfilProyecto.length > 0">
+                  <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                  Eliminar número de radicado
+                </button>
+              </div>
+              <div class="text-right" *ngIf="numeroRadicado( i ).length === 1">
+                <button mat-button
+                        color="warn"
+                        type="button"
+                        class="btn-eliminar"
+                        (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                  <img src="assets/img/icon/mas.svg">
+                  Agregar otro número de radicado
+                </button>
+              </div>
+            </div>
+            <div class="text-right w-margin" *ngIf="numeroRadicado( i ).length > 1">
+              <button mat-button
+                      color="warn"
+                      type="button"
+                      class="btn-eliminar"
+                      (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                <img src="assets/img/icon/mas.svg">
+                Agregar otro número de radicado
+              </button>
+            </div>
+          </section>
+
+          <section class="d-flex mt-1em">
+            <label class="mr-label mr-min mt-1em"><b>URL con soporte</b></label>
+            <div class="col d-flex" style="width: 85%;">
+              <mat-form-field class="w-38">
+                <input matInput type="text" formControlName="rutaSoporte" required>
+              </mat-form-field>
+            </div>
+          </section>
+        </mat-card-content>
+      </mat-card>
+      <div class="text-right" *ngIf="perfiles.controls.length > 1">
+        <button mat-button
+                color="warn"
+                type="button"
+                class="btn-eliminar"
+                (click)="eliminarPerfil( i )"
+                *ngIf="perfilProyecto.length === 0">
+          <img src="assets/img/icon/menos.svg">
+          Eliminar perfil
+        </button>
+        <button mat-button
+                color="warn"
+                type="button"
+                class="btn-eliminar"
+                (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value, i )"
+                *ngIf="perfilProyecto.length > 0">
+          <img src="assets/img/icon/menos.svg">
+          Eliminar perfil
+        </button>
+      </div>
+
+      <div class="text-center">
+        <button mat-button 
+                color="warn" 
+                class="btn-guardar" 
+                type="button"
+                (click)="guardar()">
+                <img  src="assets/img/icon/guardar.svg">
+        </button>
+      </div>
+
+      <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="perfil.get( 'observacionSupervisor' ).value !== null">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Observaciones del supervisor
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <b style="margin-top: 0.8em;">
+            {{ perfil.get( 'fechaObservacion' ).value | date: 'dd/MM/yyyy' }}
+          </b>
+          <p>
+            {{ textoLimpioMessage( perfil.get( 'observacionSupervisor' ).value ) }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</form>

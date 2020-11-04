@@ -17,7 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RegisterPreContructionPhase1Controller : Controller
+    public class RegisterPreContructionPhase1Controller : ControllerBase
     {
         public readonly IRegisterPreContructionPhase1Service _registerPreContructionPhase1Service;
 
@@ -37,14 +37,14 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetContratoByContratoId")]
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        public async Task<Contrato> GetContratoByContratoId([FromQuery] int pContratoId)
         {
             return await _registerPreContructionPhase1Service.GetContratoByContratoId(pContratoId);
         }
          
         [Route("CreateEditContratoPerfil")]
         [HttpPost]
-        public async Task<IActionResult> CreateEditContratoPerfil(Contrato pContrato)
+        public async Task<IActionResult> CreateEditContratoPerfil([FromBody] Contrato pContrato)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -59,10 +59,44 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+  
+        [Route("ChangeStateContrato")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStateContrato([FromQuery] int pContratoId, string pEstadoVerificacionContratoCodigo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerPreContructionPhase1Service.ChangeStateContrato(pContratoId ,HttpContext.User.FindFirst("User").Value, pEstadoVerificacionContratoCodigo);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
+         [Route("DeleteContratoPerfilNumeroRadicado")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteContratoPerfilNumeroRadicado([FromQuery] int ContratoPerfilNumeroRadicadoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _registerPreContructionPhase1Service.DeleteContratoPerfilNumeroRadicado(ContratoPerfilNumeroRadicadoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+ 
         [Route("DeleteContratoPerfil")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteContratoPerfil(int ContratoPerfilId)
+        public async Task<IActionResult> DeleteContratoPerfil([FromQuery]  int ContratoPerfilId)
         {
             Respuesta respuesta = new Respuesta();
             try

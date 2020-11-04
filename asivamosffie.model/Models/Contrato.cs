@@ -11,9 +11,9 @@ namespace asivamosffie.model.Models
             ContratoObservacion = new HashSet<ContratoObservacion>();
             ContratoPerfil = new HashSet<ContratoPerfil>();
             ContratoPoliza = new HashSet<ContratoPoliza>();
+            ControversiaContractual = new HashSet<ControversiaContractual>();
         }
 
-        public int ContratoId { get; set; }
         public int ContratacionId { get; set; }
         public DateTime? FechaTramite { get; set; }
         public string TipoContratoCodigo { get; set; }
@@ -36,7 +36,7 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public int? CantidadPerfiles { get; set; }
         public string EstadoVerificacionCodigo { get; set; }
-        public string EstadoFase1 { get; set; }
+        public bool? TieneEstudiosDisenosFase1 { get; set; }
         public string EstadoActa { get; set; }
         public DateTime? FechaActaInicioFase1 { get; set; }
         public DateTime? FechaTerminacion { get; set; }
@@ -59,10 +59,22 @@ namespace asivamosffie.model.Models
         public DateTime? FechaFirmaActaContratistaInterventoriaFase2 { get; set; }
         public string RutaActaFase2 { get; set; }
         public string RutaActaSuscrita { get; set; }
+        public int ContratoId { get; set; }
+        public string EstadoFase2 { get; set; }
+        public string EstadoActaFase2 { get; set; }
+        public DateTime? FechaAprobacionRequisitos { get; set; }
+        public bool? TieneDiagnosticoFase1 { get; set; }
+        public bool? EstadoFase1EyD { get; set; }
+        public bool? EstadoFase1Diagnostico { get; set; }
+        public string EstadoVerificacionConstruccionCodigo { get; set; }
+        public bool? RegistroCompleto1 { get; set; }
+        public bool? EstaDevuelto { get; set; }
+
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
         public virtual ICollection<ContratoObservacion> ContratoObservacion { get; set; }
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }
         public virtual ICollection<ContratoPoliza> ContratoPoliza { get; set; }
+        public virtual ICollection<ControversiaContractual> ControversiaContractual { get; set; }
     }
 }

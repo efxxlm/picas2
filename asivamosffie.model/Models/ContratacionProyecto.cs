@@ -7,7 +7,9 @@ namespace asivamosffie.model.Models
     {
         public ContratacionProyecto()
         {
+            ContratacionObservacion = new HashSet<ContratacionObservacion>();
             ContratacionProyectoAportante = new HashSet<ContratacionProyectoAportante>();
+            DefensaJudicialContratacionProyecto = new HashSet<DefensaJudicialContratacionProyecto>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
         }
 
@@ -18,7 +20,7 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public bool Eliminado { get; set; }
         public bool? EsReasignacion { get; set; }
-        public decimal? PorcentajeAvanceObra { get; set; }
+        public string PorcentajeAvanceObra { get; set; }
         public bool? RequiereLicencia { get; set; }
         public bool? LicenciaVigente { get; set; }
         public string NumeroLicencia { get; set; }
@@ -27,11 +29,16 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Activo { get; set; }
         public bool? EsAvanceobra { get; set; }
-        public bool? TieneMonitoreWeb { get; set; }
+        public bool? TieneMonitoreoWeb { get; set; }
+        public string EstadoRequisitosVerificacionCodigo { get; set; }
+        public DateTime? FechaAprobacionRequisitos { get; set; }
+        public bool? RegistroCompleto { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
+        public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
+        public virtual ICollection<DefensaJudicialContratacionProyecto> DefensaJudicialContratacionProyecto { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
     }
 }

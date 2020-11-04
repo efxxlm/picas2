@@ -251,7 +251,8 @@ namespace asivamosffie.services
                || string.IsNullOrEmpty(contratoOld.Plazo.ToString())
                 || string.IsNullOrEmpty(contratoOld.CantidadPerfiles.ToString())
                 || string.IsNullOrEmpty(contratoOld.EstadoVerificacionCodigo.ToString())
-                || string.IsNullOrEmpty(contratoOld.EstadoFase1.ToString())
+                || string.IsNullOrEmpty(contratoOld.TieneDiagnosticoFase1.ToString())
+                || string.IsNullOrEmpty(contratoOld.TieneEstudiosDisenosFase1.ToString())
                 || string.IsNullOrEmpty(contratoOld.EstadoActa.ToString())
 
                 ) { return false; }

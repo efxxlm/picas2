@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public SesionComiteSolicitud()
         {
             SesionSolicitudCompromiso = new HashSet<SesionSolicitudCompromiso>();
+            SesionSolicitudObservacionActualizacionCronograma = new HashSet<SesionSolicitudObservacionActualizacionCronograma>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
             SesionSolicitudVoto = new HashSet<SesionSolicitudVoto>();
         }
@@ -32,10 +33,20 @@ namespace asivamosffie.model.Models
         public string UsuarioComiteFiduciario { get; set; }
         public string EstadoActaCodigo { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public string DesarrolloSolicitud { get; set; }
+        public string DesarrolloSolicitudFiduciario { get; set; }
+        public string EstadoActaCodigoFiduciario { get; set; }
+        public string ObservacionesFiduciario { get; set; }
+        public string RutaSoporteVotacionFiduciario { get; set; }
+        public bool? GeneraCompromisoFiduciario { get; set; }
+        public int? CantCompromisosFiduciario { get; set; }
+        public bool? RequiereVotacionFiduciario { get; set; }
+        public bool? RegistroCompletoFiduciaria { get; set; }
 
         public virtual ComiteTecnico ComiteTecnico { get; set; }
         public virtual ComiteTecnico ComiteTecnicoFiduciario { get; set; }
         public virtual ICollection<SesionSolicitudCompromiso> SesionSolicitudCompromiso { get; set; }
+        public virtual ICollection<SesionSolicitudObservacionActualizacionCronograma> SesionSolicitudObservacionActualizacionCronograma { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
         public virtual ICollection<SesionSolicitudVoto> SesionSolicitudVoto { get; set; }
     }

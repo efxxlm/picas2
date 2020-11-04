@@ -236,7 +236,7 @@ namespace asivamosffie.services
 
                                 foreach (var FuenteFinanciacion in ProyectoAportante.Aportante.FuenteFinanciacion)
                                 {
-                                    ValorFuenteNumero += FuenteFinanciacion.ValorFuente;
+                                    ValorFuenteNumero += (decimal)FuenteFinanciacion.ValorFuente;
                                 }
 
                                 TotalPlantillaRegistrosAportante = TotalPlantillaRegistrosAportante
@@ -249,7 +249,7 @@ namespace asivamosffie.services
                                 decimal ValorFuenteNumero2 = 0;
                                 foreach (var FuenteFinanciacion in ProyectoAportante.Aportante.FuenteFinanciacion)
                                 {
-                                    ValorFuenteNumero2 += FuenteFinanciacion.ValorFuente;
+                                    ValorFuenteNumero2 += (decimal)FuenteFinanciacion.ValorFuente;
                                 }
                                 TotalPlantillaRegistrosAportante = TotalPlantillaRegistrosAportante
                                     .Replace(placeholderDominio.Nombre,

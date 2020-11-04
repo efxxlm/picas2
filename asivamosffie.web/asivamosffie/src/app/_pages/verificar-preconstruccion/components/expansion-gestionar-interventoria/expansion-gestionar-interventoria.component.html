@@ -1,0 +1,81 @@
+<section class="container" *ngIf="contrato" style="margin-bottom: 2em;">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="/verificarPreconstruccion" mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Gestionar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
+    </h1>
+    <p class="text-primary">
+      <span class="mx-2em">
+        Fecha de aprobacion de póliza:
+        <b>
+          {{ fechaPoliza | date: 'dd/MM/yyyy' }}
+        </b>
+      </span>
+      <span class="mx-2em">
+        Proyectos asociados:
+        <b>
+          {{ contrato.contratacion.contratacionProyecto.length }}
+        </b>
+      </span>
+    </p>
+    <p class="info-container">
+      <span class="info-text sin-diligenciar">Sin diligenciar</span>
+      <span class="info-text en-proceso">En proceso</span>
+      <span class="info-text completo">Completo</span>
+    </p>
+  </div>
+
+  <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title" [ngClass]="contratacion.proyecto['estadoSemaforo']">
+          {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card">
+        <mat-card-content>
+          <p>
+            <b>Nombre del contratista:</b>
+            {{ contrato.contratacion.contratista.nombre }}
+          </p>
+          <p>
+            <b>Número de identificación (NIT/RUT):</b>
+            {{ contrato.contratacion.contratista.numeroIdentificacion }}
+          </p>
+          <p>
+            <b>Tipo de intervención:</b>
+            {{ contratacion.proyecto.tipoIntervencionCodigo }}
+          </p>
+          <p>
+            <b>Departamento:</b>
+            {{ contratacion.proyecto.departamento }}
+          </p>
+          <p>
+            <b>Municipio:</b>
+            {{ contratacion.proyecto.municipio }}
+          </p>
+          <p>
+            <b>Valor total del proyecto:</b>
+            {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+      <app-form-perfil  [perfilProyecto]="contratacion.proyecto.contratoPerfil"
+                        [contratoId]="contrato.contratoId"
+                        [proyectoId]="contratacion.proyectoId"
+                        [tieneEstadoFase1EyD]="contratacion.proyecto['tieneEstadoFase1EyD']"
+                        [tieneEstadoFase1Diagnostico]="contratacion.proyecto['tieneEstadoFase1Diagnostico']"
+                        (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
+                        (perfilesCompletados)="estadoSemaforo( i, $event )">
+      </app-form-perfil>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</section>
