@@ -4819,6 +4819,27 @@ namespace asivamosffie.services
                         });
                     }
                 }
+                foreach (var SesionComiteSolicitudComiteTecnico in ComiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.SesionComiteSolicitudId))
+                {
+                    foreach (var SesionSolicitudCompromiso in SesionComiteSolicitudComiteTecnico.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.SesionSolicitudCompromisoId))
+                    {
+                        ListCompromisos.Add(new ListCompromisos
+                        {
+                            FechaComite = ComiteTecnico.FechaOrdenDia,
+                            NumeroComite = ComiteTecnico.NumeroComite,
+                            Compromiso = SesionSolicitudCompromiso.Tarea,
+                            EstadoCodigo = string.IsNullOrEmpty(SesionSolicitudCompromiso.EstadoCodigo) ? ConstanStringCodigoCompromisos.Sin_avance : SesionSolicitudCompromiso.EstadoCodigo,
+                            FechaCumplimiento = ((DateTime)SesionSolicitudCompromiso.FechaCumplimiento).ToString("dd-MMMM-YY"),
+                            TipoSolicitud = ConstanCodigoTipoCompromisos.CompromisosSolicitud.ToString(),
+                            CompromisoId = SesionSolicitudCompromiso.SesionSolicitudCompromisoId,
+                            ComiteTecnicoId = ComiteTecnico.ComiteTecnicoId
+                        });
+                    }
+                }
+
+
+
+
                 foreach (var SesionComiteTema in ComiteTecnico.SesionComiteTema.Where(r => !(bool)r.Eliminado).OrderByDescending(r => r.SesionTemaId))
                 {
                     SesionComiteTema.TemaCompromiso = SesionComiteTema.TemaCompromiso.Where(r => !(bool)r.Eliminado).ToList();
