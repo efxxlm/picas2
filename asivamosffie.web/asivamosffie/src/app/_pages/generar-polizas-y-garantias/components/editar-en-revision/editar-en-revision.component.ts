@@ -119,19 +119,11 @@ export class EditarEnRevisionComponent implements OnInit {
     });
   }
   loadData(id){
-    this.polizaService.GetContratoPolizaByIdContratoPolizaId(id).subscribe(data=>{
+    this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data=>{
       this.addressForm.get('nombre').setValue(data.nombreAseguradora);
       this.addressForm.get('numeroPoliza').setValue(data.numeroPoliza);
       this.addressForm.get('numeroCertificado').setValue(data.numeroCertificado);
-      this.addressForm.get('fecha').setValue(data.fechaExpedicion);
-      this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
-      this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
-      this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
-      this.addressForm.get('cumpleAsegurado').setValue(data.cumpleDatosAsegurado);
-      this.addressForm.get('cumpleBeneficiario').setValue(data.cumpleDatosBeneficiario);
-      this.addressForm.get('cumpleAfianzado').setValue(data.cumpleDatosTomador);
-      this.addressForm.get('reciboDePago').setValue(data.incluyeReciboPago);
-      this.addressForm.get('condicionesGenerales').setValue(data.incluyeCondicionesGenerales);
+      this.addressForm.get('observacionesGenerales').setValue(data.observacionesRevisionGeneral);
       this.dataLoad2(data);
     }); 
   }
@@ -222,33 +214,41 @@ export class EditarEnRevisionComponent implements OnInit {
     console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
     let auxValue2 = this.addressForm.value.polizasYSeguros;
-    const contratoArray :EditPoliza ={
-      contratoId: this.idContrato,
-      nombreAseguradora: this.addressForm.value.nombre,
-      numeroPoliza:this.addressForm.value.numeroPoliza,
-      numeroCertificado: this.addressForm.value.numeroCertificado,
-      fechaExpedicion:this.addressForm.value.fecha,
-      vigencia: this.addressForm.value.vigenciaPoliza,
-      vigenciaAmparo: this.addressForm.value.vigenciaAmparo,
-      valorAmparo: this.addressForm.value.valorAmparo,
-      estadoPolizaCodigo:"",
-      usuarioCreacion:"",
-      registroCompleto:false,
-      fechaModificacion: this.addressForm.value.fecha,
-      usuarioModificacion:"",
-      contratoPolizaId:this.idPoliza,
-      polizaGarantia:[],
-      polizaObservacion:[],
-      cumpleDatosAsegurado: this.addressForm.value.cumpleAsegurado,
-      cumpleDatosBeneficiario: this.addressForm.value.cumpleBeneficiario,
-      cumpleDatosTomador: this.addressForm.value.cumpleAfianzado,
-      incluyeReciboPago: this.addressForm.value.reciboDePago,
-      incluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales
+    const contratoArray :InsertPoliza ={
+      contratoId:this.idContrato,  
+      TipoSolicitudCodigo: "",
+      TipoModificacionCodigo:"",
+      DescripcionModificacion:"",
+      NombreAseguradora:this.addressForm.value.nombre,
+      NumeroPoliza:this.addressForm.value.numeroPoliza,
+      NumeroCertificado:this.addressForm.value.numeroCertificado,
+      Observaciones:"",
+      ObservacionesRevisionGeneral:this.addressForm.value.observacionesGenerales,
+      ResponsableAprobacion:this.addressForm.value.responsableAprob,
+      EstadoPolizaCodigo:"2",
+      UsuarioCreacion:"usr1",
+      UsuarioModificacion:"usr1",
+      FechaExpedicion: this.addressForm.value.fecha,
+      Vigencia: this.addressForm.value.vigenciaPoliza,
+      VigenciaAmparo: this.addressForm.value.vigenciaAmparo,
+      ValorAmparo: this.addressForm.value.valorAmparo,
+      CumpleDatosAsegurado: this.addressForm.value.cumpleAsegurado,
+      CumpleDatosBeneficiario: this.addressForm.value.cumpleBeneficiario,
+      CumpleDatosTomador: this.addressForm.value.cumpleAfianzado,
+      IncluyeReciboPago:this.addressForm.value.reciboDePago,
+      IncluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales,
+      FechaAprobacion: "",
+      Estado: false,
+      FechaCreacion: "",
+      RegistroCompleto: false,
+      FechaModificacion: "",
+      Eliminado: false
     };
+    /*
     const polizaGarantia: CreatePolizaGarantia={
       polizaGarantiaId : this.idPoliza2,
       contratoPolizaId: this.idPoliza,
-      tipoGarantiaCodigo: auxValue2[0].value,
+      tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
       esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
     };
     const polizaObservacion: CreatePolizaObservacion={
@@ -257,7 +257,7 @@ export class EditarEnRevisionComponent implements OnInit {
       observacion: this.addressForm.value.observacionesGenerales,
       fechaRevision: this.addressForm.value.fechaRevision,
       estadoRevisionCodigo: auxValue.value
-    }
+    }*/
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if(data.isSuccessful==true){
         this.openDialog('', `<b>${data.message}</b>`);
@@ -267,12 +267,14 @@ export class EditarEnRevisionComponent implements OnInit {
         this.openDialog('', `<b>${data.message}</b>`);
       }
     });
+    /*
     this.polizaService.CreatePolizaGarantia(polizaGarantia).subscribe(data1=>{
 
     });
     this.polizaService.CreatePolizaObservacion(polizaObservacion).subscribe(data2=>{
 
     });
+    */
     console.log(this.addressForm.value);
   }
 

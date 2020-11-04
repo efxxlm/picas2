@@ -41,7 +41,6 @@ export class TablaGestionActasComponent implements OnInit {
 
     this.compromisoSvc.getGrillaActas()
       .subscribe( ( resp: any[] ) => {
-        console.log( resp );
         const dataTable = [];
 
         resp.forEach( value => {

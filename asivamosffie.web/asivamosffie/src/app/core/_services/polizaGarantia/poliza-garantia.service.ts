@@ -22,34 +22,37 @@ export class PolizaGarantiaService implements OnInit {
   CreateContratoPoliza(contratoPoliza: InsertPoliza) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateContratoPoliza`, contratoPoliza);
   }
-  EditarContratoPoliza(contratoPoliza: EditPoliza){
+  EditarContratoPoliza(contratoPoliza: any) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/EditarContratoPoliza`, contratoPoliza);
   }
-  GetListPolizaObservacionByContratoPolizaId(pContratoPolizaId:number){
+  GetListPolizaObservacionByContratoPolizaId(pContratoPolizaId: number) {
     return this.http.get<CreatePolizaObservacion>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaObservacionByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
   }
-  GetListPolizaGarantiaByContratoPolizaId(pContratoPolizaId:number){
+  GetListPolizaGarantiaByContratoPolizaId(pContratoPolizaId: number) {
     return this.http.get<CreatePolizaGarantia>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaGarantiaByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
   }
-  GetContratoPolizaByIdContratoPolizaId(pContratoPolizaId:number){
+  GetContratoPolizaByIdContratoPolizaId(pContratoPolizaId: number) {
     return this.http.get<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/GetContratoPolizaByIdContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
   }
-  GetListVistaContratoGarantiaPoliza(pContratoId:number){
+  GetListVistaContratoGarantiaPoliza(pContratoId: number) {
     return this.http.get<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/GetListVistaContratoGarantiaPoliza?pContratoId=${pContratoId}`);
   }
-  GetListGrillaContratoGarantiaPoliza(){
+  GetListGrillaContratoGarantiaPoliza() {
     return this.http.get<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/GetListGrillaContratoGarantiaPoliza`);
   }
-  AprobarContratoByIdContrato(pContratoPolizaId:number){
-    return this.http.post<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/AprobarContratoByIdContrato?pContratoPolizaId=${pContratoPolizaId}`,pContratoPolizaId);
+  GetContratoPolizaByIdContratoId(pContratoId: number) {
+    return this.http.get<GetContratoPolizaByIdContratoId>(`${environment.apiUrl}/guaranteePolicy/GetContratoPolizaByIdContratoId?pContratoId=${pContratoId}`);
   }
-  CambiarEstadoPoliza(pContratoPolizaId:number,pCodigoNuevoEstadoPoliza:string){
-    return this.http.put<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CambiarEstadoPoliza?pContratoPolizaId=${pContratoPolizaId}&pCodigoNuevoEstadoPoliza=${pCodigoNuevoEstadoPoliza}`,null);
+  AprobarContratoByIdContrato(pContratoPolizaId: number) {
+    return this.http.post<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/AprobarContratoByIdContrato?pContratoPolizaId=${pContratoPolizaId}`, pContratoPolizaId);
+  }
+  CambiarEstadoPoliza(pContratoPolizaId: number, pCodigoNuevoEstadoPoliza: string) {
+    return this.http.put<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CambiarEstadoPoliza?pContratoPolizaId=${pContratoPolizaId}&pCodigoNuevoEstadoPoliza=${pCodigoNuevoEstadoPoliza}`, null);
   }
 }
 
 export interface CreatePolizaObservacion {
-  polizaObservacionId:number;
+  polizaObservacionId: number;
   contratoPolizaId: number;
   observacion: string;
   fechaRevision: Date;
@@ -95,42 +98,76 @@ export interface ContratoPoliza {
 }
 
 
-export interface InsertPoliza{
-  contratoId:number,  
-  TipoSolicitudCodigo: any,
-  TipoModificacionCodigo:any,
-  DescripcionModificacion:any,
-  NombreAseguradora:any,
-  NumeroPoliza:any,
-  NumeroCertificado:any,
-  Observaciones:any,
-  ObservacionesRevisionGeneral:any,
-  ResponsableAprobacion:any,
-  EstadoPolizaCodigo:any,
-  UsuarioCreacion:any,
-  UsuarioModificacion:any
+export interface InsertPoliza {
+  contratoId: number;
+  TipoSolicitudCodigo: any;
+  TipoModificacionCodigo: any;
+  DescripcionModificacion: any;
+  NombreAseguradora: any;
+  NumeroPoliza: any;
+  NumeroCertificado: any;
+  Observaciones: any;
+  ObservacionesRevisionGeneral: any;
+  ResponsableAprobacion: any;
+  EstadoPolizaCodigo: any;
+  UsuarioCreacion: any;
+  UsuarioModificacion: any;
+  FechaExpedicion: any;
+  Vigencia: any;
+  VigenciaAmparo: any;
+  ValorAmparo: any;
+  CumpleDatosAsegurado: boolean;
+  CumpleDatosBeneficiario: boolean;
+  CumpleDatosTomador: boolean;
+  IncluyeReciboPago: boolean;
+  IncluyeCondicionesGenerales: boolean;
+  FechaAprobacion: any;
+  Estado: boolean;
+  FechaCreacion: any;
+  RegistroCompleto: boolean;
+  FechaModificacion: any;
+  Eliminado: boolean;
 }
 
-export interface EditPoliza{
-  contratoId:number;
-  nombreAseguradora:string;
-  numeroPoliza:string;
-  numeroCertificado:string;
-  fechaExpedicion:Date;
-  vigencia:Date;
-  vigenciaAmparo:Date;
-  valorAmparo:number;
-  estadoPolizaCodigo:string;
-  usuarioCreacion:string;
-  registroCompleto:boolean;
-  fechaModificacion:Date;
-  usuarioModificacion:string;
-  contratoPolizaId:number;
-  polizaGarantia:any;
-  polizaObservacion:any;
-  cumpleDatosAsegurado:boolean;
+export interface EditPoliza {
+  contratoId: number;
+  nombreAseguradora: string;
+  numeroPoliza: string;
+  numeroCertificado: string;
+  fechaExpedicion: Date;
+  vigencia: Date;
+  vigenciaAmparo: Date;
+  valorAmparo: number;
+  estadoPolizaCodigo: string;
+  usuarioCreacion: string;
+  registroCompleto: boolean;
+  fechaModificacion: Date;
+  usuarioModificacion: string;
+  contratoPolizaId: number;
+  polizaGarantia: any;
+  polizaObservacion: any;
+  cumpleDatosAsegurado: boolean;
   cumpleDatosBeneficiario: boolean;
   cumpleDatosTomador: boolean;
   incluyeReciboPago: boolean;
   incluyeCondicionesGenerales: boolean;
+}
+
+export interface GetContratoPolizaByIdContratoId {
+  contratoId: number;
+  tipoSolicitudCodigo: any;
+  tipoModificacionCodigo: any;
+  descripcionModificacion: any;
+  nombreAseguradora: any;
+  numeroPoliza: any;
+  numeroCertificado: any;
+  observaciones: any;
+  observacionesRevisionGeneral: any;
+  responsableAprobacion: any;
+  estadoPolizaCodigo: any;
+  fechaCreacion: any;
+  usuarioCreacion: any;
+  registroCompleto: boolean;
+  usuarioModificacion: any;
+  contratoPolizaId: number;
 }

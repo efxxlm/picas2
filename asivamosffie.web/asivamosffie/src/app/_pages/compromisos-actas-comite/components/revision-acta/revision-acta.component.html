@@ -13,7 +13,7 @@
   </div>
   
   <div class="text-center mr-1">
-    <span> <b>{{ acta.fechaComite }}</b> </span>
+    <span> <strong>{{ acta.fechaOrdenDia | date: 'dd/MM/yyyy' }}</strong> </span>
   </div>
 
   <section class="container">
@@ -238,7 +238,7 @@
 
 <div *ngIf="comentarActa">
   <form autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()">
-    <mat-card>
+    <mat-card style="margin-bottom: 1em;">
       <mat-card-title class="text-area-quill--label text-color">Comentarios al acta</mat-card-title>
       <mat-card-content>
         <p class="padding-p">Fecha: <b class="text-color"> {{ acta.sesionComentario.length > 0 ? ( acta.sesionComentario[0].fecha | date: 'dd/MM/yyyy' ) : ( fechaComentario | date: 'dd/MM/yyyy' ) }} </b></p>
@@ -259,6 +259,11 @@
       </div>
       </mat-card-content>
     </mat-card>
+
+    <div class="text-center" class="flex-text-center">
+      <img src="assets/img/icon/sim.svg" style="width: 2.5%;">
+      <p class="margin-p"><i> Indique sobre que tema, subtema o proyecto realiza su comentario, sea claro y especifico frente a su solicitud </i></p>
+    </div>
 
     <div class="text-center">
 

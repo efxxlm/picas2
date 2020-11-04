@@ -56,7 +56,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.proyectoAportante; index as i" style="margin-top: .5em;">
                                 <p class="mb1-em"><b>Aportante {{ i+1 }} </b></p>
-    
+
                                 <p *ngIf="aportante.aportante.tipoAportanteId === 6" style="margin-top: .5em;">
                                     <b>Tipo de aportante:</b>
                                     FFIE
@@ -75,7 +75,7 @@
                                 <p>
                                     <b>Valor del aportante:</b>
                                     {{ aportante.valorTotalAportante | currency }}
-    
+
                                 </p>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
 
     </mat-accordion>
 
-    
+
 
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row justify-content-center mt-2em mb-2em">
@@ -131,7 +131,7 @@
                     (onContentChanged)="maxLength($event, 1000)" formControlName="objeto" required></quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('objeto').value !== null">
-                {{1000 - textoLimpio(addressForm.get('objeto').value)}}
+                {{1000 - (textoLimpio(addressForm.get('objeto').value)>1000?1000:textoLimpio(addressForm.get('objeto').value))}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('objeto').value === null">
                 1000

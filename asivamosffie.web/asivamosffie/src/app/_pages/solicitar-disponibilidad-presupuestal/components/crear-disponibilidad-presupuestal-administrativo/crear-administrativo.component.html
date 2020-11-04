@@ -60,7 +60,7 @@
                 <input type="hidden" formControlName="disponibilidadPresupuestalId">
         </div>
         <span class="contador miles" *ngIf="formulario.get('objeto').value">
-            {{1000 - textoLimpio(formulario.get('objeto').value)}}
+            {{1000 - (textoLimpio(formulario.get('objeto').value)>1000?1000:textoLimpio(formulario.get('objeto').value))}}
         </span>
         <span class="contador miles" *ngIf="!formulario.get('objeto').value">
             1000

@@ -12,7 +12,7 @@
       <span><b>Contratación</b></span>
       <span>Estado: <b>Sin radicación de pólizas</b></span>
     </p>
-  
+
   </section>
   <section class="container">
     <mat-card class="shipping-card var-main-gris">
@@ -366,7 +366,7 @@
           </div>
         </mat-card-content>
       </mat-card>
-  
+
       <mat-card class="shipping-card">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text">
@@ -454,7 +454,7 @@
           </div>
         </mat-card-content>
       </mat-card>
-  
+
       <div class="d-flex align-items-center">
         <div class="text-area-quill">
           <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
@@ -463,13 +463,13 @@
           </quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-          {{2000 - textoLimpio(addressForm.controls.observacionesGenerales.value)}}
+          {{2000 - (textoLimpio(addressForm.controls.observacionesGenerales.value)>2000?2000:textoLimpio(addressForm.controls.observacionesGenerales.value))}}
         </span>
         <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value">
           2000
         </span>
       </div>
-  
+
       <div class="text-center mb-2em">
         <button mat-button color="warn" class="btn-guardar" type="submit">
           <img src="assets/img/icon/guardar.svg" alt="Regresar">

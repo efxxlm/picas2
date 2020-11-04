@@ -160,6 +160,14 @@ export class FormRegistrarParticipantesComponent {
   }
 
   validarSolicitudes() {
+
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length == 0) {
+
+      this.estadoSolicitudes = this.estadoFormulario.completo;
+
+    return true;
+  }
+
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
@@ -187,7 +195,7 @@ export class FormRegistrarParticipantesComponent {
         }
       })
 
-      console.log( cantidadSolicitudes, cantidadSolicitudesCompletas );
+      console.log(cantidadSolicitudes, cantidadSolicitudesCompletas);
 
       if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0) {
         if (cantidadSolicitudes > 0) {
@@ -214,58 +222,67 @@ export class FormRegistrarParticipantesComponent {
 
       return true;
     }
-    
+
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
+    let sinDiligenciar = true;
 
-      this.objetoComiteTecnico.sesionComiteTema
-        .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
-          tem.completo = true;
+    this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
+        tem.completo = true;
 
-          if (tem.requiereVotacion == true) {
-            //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-            if (tem.sesionTemaVoto.length == 0)
-              cantidadTemas++;
-
-            tem.sesionTemaVoto.forEach(vot => {
-              cantidadTemas++;
-
-              if (vot.esAprobado == false || vot.esAprobado == true) {
-                cantidadTemasCompletas++;
-              } else {
-                tem.completo = false;
-
-              }
-            })
-            //})
-          } else if (tem.requiereVotacion == false) {
+        if (tem.requiereVotacion == true) {
+          //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
+          if (tem.sesionTemaVoto.length == 0)
             cantidadTemas++;
-            cantidadTemasCompletas++;
-          }
-          else {
+
+          tem.sesionTemaVoto.forEach(vot => {
             cantidadTemas++;
-          }
-        })
+
+            if (vot.esAprobado == false || vot.esAprobado == true) {
+              cantidadTemasCompletas++;
+            } else {
+              tem.completo = false;
+
+            }
+          })
+          sinDiligenciar = false;
+          //})
+        } else if (tem.requiereVotacion == false) {
+          cantidadTemas++;
+          cantidadTemasCompletas++;
+          sinDiligenciar = false;
+        }
+        else {
+          cantidadTemas++;
+        }
+      })
 
 
 
-      if (cantidadTemas > 0) {
+    if (cantidadTemas > 0) {
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.enProceso;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.enProceso;
+
+      if (sinDiligenciar) // no se ha llenado nada
         if (esProposicion)
-          this.estadoProposiciones = this.estadoFormulario.enProceso;
+          this.estadoProposiciones = this.estadoFormulario.sinDiligenciar;
         else
-          this.estadoOtrosTemas = this.estadoFormulario.enProceso;
+          this.estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
 
-        if (cantidadTemas == cantidadTemasCompletas)
-          if (esProposicion)
-            this.estadoProposiciones = this.estadoFormulario.completo;
-          else
-            this.estadoOtrosTemas = this.estadoFormulario.completo;
-      }else{
+      if (cantidadTemas == cantidadTemasCompletas)
         if (esProposicion)
           this.estadoProposiciones = this.estadoFormulario.completo;
-        else 
+        else
           this.estadoOtrosTemas = this.estadoFormulario.completo;
-      }
+    } else {
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+    }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
 
@@ -291,9 +308,9 @@ export class FormRegistrarParticipantesComponent {
     }
 
     if (this.estadoSolicitudes == this.estadoFormulario.completo &&
-        this.estadoOtrosTemas == this.estadoFormulario.completo &&
-        this.estadoProposiciones == this.estadoFormulario.completo  
-    ){
+      this.estadoOtrosTemas == this.estadoFormulario.completo &&
+      this.estadoProposiciones == this.estadoFormulario.completo
+    ) {
       this.estaTodo = true;
     }
   }
@@ -316,7 +333,7 @@ export class FormRegistrarParticipantesComponent {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result===true) {
+      if (result === true) {
         this.onDelete(e)
       }
     });

@@ -92,7 +92,11 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       return 'none';
   }
   ngOnInit(): void {
-    console.log( this.fechaMaxima );
+    // console.log( this.fechaMaxima );
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
   }
 
   maxLength(e: any, n: number) {
@@ -172,7 +176,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         }
       })
   }
-  
+
 
   validarCompromisosDiligenciados(): boolean {
     let vacio = true;
@@ -296,7 +300,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
           else
             this.cantidadNoAprobado++;
         })
-    
+
         if (this.cantidadNoAprobado == 0){
           this.resultadoVotacion = 'Aprobó'
           this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
@@ -309,7 +313,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
           this.resultadoVotacion = 'No Aprobó'
         }
       }
-    }); 
+    });
 
     this.addressForm.get('estadoSolicitud').setValue(this.sesionComiteSolicitud.estadoCodigo)
     this.addressForm.get('observaciones').setValue(this.sesionComiteSolicitud.observacionesFiduciario)
