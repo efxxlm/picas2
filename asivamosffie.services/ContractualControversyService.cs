@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace asivamosffie.services
 {
-   public  class ContractualControversyService  :IContractualControversy
+    public class ContractualControversyService : IContractualControversy
     {
 
         private readonly ICommonService _commonService;
@@ -31,7 +31,7 @@ namespace asivamosffie.services
         //CreateEditNuevaActualizacionTramite(ControversiaActuacion
         //“Registrar nueva actualización del trámite”
 
-             public async Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
+        public async Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
         {
             Respuesta _response = new Respuesta();
 
@@ -95,7 +95,7 @@ namespace asivamosffie.services
 
                     }
 
-                     _context.SaveChanges();
+                    _context.SaveChanges();
 
                     return
                         new Respuesta
@@ -154,6 +154,43 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Code = ConstantMessagesContractualControversy.OperacionExitosa,
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO CONTROVERSIA ACTUAL")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
+        public async Task<Respuesta> CambiarEstadoControversiaActuacion (int pControversiaActuacionId, string pNuevoCodigoEstadoAvance, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ControversiaActuacion controversiaActuacionOld;
+                controversiaActuacionOld = _context.ControversiaActuacion.Find(pControversiaActuacionId);
+                controversiaActuacionOld.UsuarioModificacion = pUsuarioModifica;
+                controversiaActuacionOld.FechaModificacion = DateTime.Now;
+                controversiaActuacionOld.EstadoAvanceTramiteCodigo = pNuevoCodigoEstadoAvance;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO CONTROVERSIA ACTUACION")
                 };
             }
             catch (Exception ex)
