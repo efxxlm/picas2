@@ -166,6 +166,14 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   validarSolicitudes() {
+
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length == 0) {
+
+        this.estadoSolicitudes = this.estadoFormulario.completo;
+
+      return true;
+    }
+
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 

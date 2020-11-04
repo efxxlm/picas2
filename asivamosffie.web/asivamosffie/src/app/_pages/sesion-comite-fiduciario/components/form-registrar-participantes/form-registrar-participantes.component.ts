@@ -160,6 +160,14 @@ export class FormRegistrarParticipantesComponent {
   }
 
   validarSolicitudes() {
+
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length == 0) {
+
+      this.estadoSolicitudes = this.estadoFormulario.completo;
+
+    return true;
+  }
+
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
