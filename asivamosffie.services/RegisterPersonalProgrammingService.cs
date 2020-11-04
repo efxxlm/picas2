@@ -14,6 +14,7 @@ using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
 using Newtonsoft.Json;
+using iTextSharp.text.pdf.codec;
 
 namespace asivamosffie.services
 {
@@ -29,7 +30,30 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
-     //public async Task<List<dynamic>> GetListProyectos
+        public async Task<List<ProyectoGrilla>> GetListProyectos()
+        {
+
+            List<ProyectoGrilla> proyectoGrillas = await _context.ContratoConstruccion
+                .Include(e => e.Proyecto)
+                  .ThenInclude(i => i.InstitucionEducativa)
+                .Include(e => e.Proyecto)
+                   .ThenInclude(i => i.Sede)
+                .Include(e => e.Proyecto)
+                   .ThenInclude(i => i.ContratacionProyecto)
+                      .ThenInclude(i => i.Contratacion)
+                          .ThenInclude(i => i.Contrato)
+                .Select(cc => new ProyectoGrilla {
+
+                    LlaveMen = cc.Proyecto.LlaveMen,
+                    NumeroContrato = cc.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().NumeroContrato,
+
+
+
+                }).ToListAsync();
+              
+             
+            return proyectoGrillas;
+        }
 
 
     }

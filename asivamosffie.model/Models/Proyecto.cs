@@ -45,6 +45,8 @@ namespace asivamosffie.model.Models
         public bool? TieneEstadoFase1EyD { get; set; }
         public bool? TieneEstadoFase1Diagnostico { get; set; }
         public string UrlMonitoreo { get; set; }
+        public string EstadoProgramacionCodigo { get; set; }
+        
 
         public virtual InstitucionEducativaSede InstitucionEducativa { get; set; }
         public virtual Localizacion LocalizacionIdMunicipioNavigation { get; set; }

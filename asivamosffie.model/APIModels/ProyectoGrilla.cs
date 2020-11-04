@@ -27,6 +27,8 @@ namespace asivamosffie.model.APIModels
         public decimal? ValorAportante { get; set; }
         public int AportanteID { get; set; }
         public int DisponibilidadPresupuestalProyecto { get; set; }
-        public decimal ValorGestionado { get; set; }
+        public decimal ValorGestionado { get; set; } 
+        public string EstadoProgramacion { get; set; }
+        public string NumeroContrato { get; set; }
     }
 }
