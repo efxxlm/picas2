@@ -45,12 +45,7 @@ export class CompromisosActasComiteService {
       .pipe(
         map(
           listas => {
-            const data: any[] = [];
-            const maxDate = new Date();
-            listas.forEach( lista => {
-              if ( new Date( lista.fechaOrdenDia ) < maxDate ) data.push( lista );
-            } );
-            data.sort( ( listaA, listaB ) => {
+            listas.sort( ( listaA, listaB ) => {
               if ( listaA.fechaOrdenDia < listaB.fechaOrdenDia ) {
                 return 1;
               };
@@ -58,8 +53,8 @@ export class CompromisosActasComiteService {
                 return -1;
               };
               return 0;
-            } )
-            return data;
+            } );
+            return listas;
           }
         )
       )
