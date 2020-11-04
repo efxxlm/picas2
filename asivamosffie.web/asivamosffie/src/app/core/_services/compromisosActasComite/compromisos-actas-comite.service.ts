@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { DevolverActa } from '../../../_interfaces/compromisos-actas-comite.interfaces';
 import { Respuesta } from '../autenticacion/autenticacion.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -77,7 +78,28 @@ export class CompromisosActasComiteService {
   };
 
   getGrillaActas () {
-    return this.http.get ( `${ this.url }/GetManagementReport` )
+    return this.http.get<any[]>( `${ this.url }/GetManagementReport` )
+      .pipe(
+        map(
+          listas => {
+            const data: any[] = [];
+            const maxDate = new Date();
+            listas.forEach( lista => {
+              if ( new Date( lista.fechaOrdenDia ) < maxDate ) data.push( lista );
+            } );
+            data.sort( ( listaA, listaB ) => {
+              if ( listaA.fechaOrdenDia < listaB.fechaOrdenDia ) {
+                return 1;
+              };
+              if ( listaA.fechaOrdenDia > listaB.fechaOrdenDia ) {
+                return -1;
+              };
+              return 0;
+            } )
+            return data;
+          }
+        )
+      )
   };
 
   getActa ( comiteTecnicoId: number ) {
