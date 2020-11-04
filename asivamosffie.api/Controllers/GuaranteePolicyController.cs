@@ -238,7 +238,26 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+         [HttpPut]
+        [Route("CambiarEstadoPolizaByContratoId")]
+        public async Task<IActionResult> CambiarEstadoPolizaByContratoId([FromQuery]  int pContratoId, string pCodigoNuevoEstadoPoliza)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _guaranteePolicy.CambiarEstadoPolizaByContratoId( pContratoId,  pCodigoNuevoEstadoPoliza,  HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
         
+
+
         [HttpGet]
         [Route("GetListVistaContratoGarantiaPoliza")]
         public async Task<ActionResult<List<VistaContratoGarantiaPoliza>>> GetListVistaContratoGarantiaPoliza(int pContratoId)

@@ -626,6 +626,56 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Respuesta> CambiarEstadoPolizaByContratoId(int pContratoId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                Contrato contrato=null;
+                contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+                ContratoPoliza contratoPoliza= null;
+                if (contrato != null)
+                {
+                    //contratoPoliza = _context.ContratoPoliza.Find(contrato.ContratoId);                    
+                    contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
+                }                
+
+                if(contratoPoliza!=null)
+                {
+                    //SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(/*pSesionComiteSolicitud*/);
+                    contratoPoliza.UsuarioModificacion = pUsuarioModifica;
+                    contratoPoliza.FechaModificacion = DateTime.Now;
+                    contratoPoliza.EstadoPolizaCodigo = pCodigoNuevoEstadoPoliza;
+
+                    _context.SaveChanges();
+
+                }                
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO POLIZA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContratoPoliza.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
         public async Task<Respuesta> CambiarEstadoPoliza(int pContratoPolizaId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
