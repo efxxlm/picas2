@@ -28,7 +28,7 @@ namespace asivamosffie.api.Controllers
         }
         [Route("GetListProyectos")]
         [HttpGet]
-        public async Task<List<ProyectoGrilla>> GetListProyectos()
+        public async Task<List<dynamic>> GetListProyectos()
         {
             var result = await _IRegisterPersonalProgrammingService.GetListProyectos();
             return result;

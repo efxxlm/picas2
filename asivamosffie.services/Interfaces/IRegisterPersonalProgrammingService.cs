@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterPersonalProgrammingService
     {
-        Task<List<ProyectoGrilla>> GetListProyectos();
+        Task<List<dynamic>> GetListProyectos();
 
 
     }

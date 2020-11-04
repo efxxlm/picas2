@@ -30,10 +30,10 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
-        public async Task<List<ProyectoGrilla>> GetListProyectos()
+        public async Task<List<dynamic>> GetListProyectos()
         {
 
-            List<ProyectoGrilla> proyectoGrillas = await _context.ContratoConstruccion
+            List<ContratoConstruccion> ListContratoConstruccion = await _context.ContratoConstruccion
                 .Include(e => e.Proyecto)
                   .ThenInclude(i => i.InstitucionEducativa)
                 .Include(e => e.Proyecto)
@@ -41,18 +41,28 @@ namespace asivamosffie.services
                 .Include(e => e.Proyecto)
                    .ThenInclude(i => i.ContratacionProyecto)
                       .ThenInclude(i => i.Contratacion)
-                          .ThenInclude(i => i.Contrato)
-                .Select(cc => new ProyectoGrilla {
+                          .ThenInclude(i => i.Contrato).Distinct().OrderByDescending(r=> r.ContratoConstruccionId).ToListAsync();
 
-                    LlaveMen = cc.Proyecto.LlaveMen,
-                    NumeroContrato = cc.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().NumeroContrato,
+            List<dynamic> LisDyna = new List<dynamic>();
+            List<Dominio> ListDominioTipoIntervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
+            List<Dominio> ListDominioEstadoProgramacionCodigo = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
 
+            foreach (var ContratoConstruccion in ListContratoConstruccion)
+            {
+                LisDyna.Add(new
+                {
+                    FechaFirmaActaInicio = ContratoConstruccion.ActaApropiacionFechaAprobacion.HasValue ? ((DateTime)ContratoConstruccion.ActaApropiacionFechaAprobacion).ToString("dd-MM-yyyy") : " ",
+                    ContratoConstruccion.Proyecto.LlaveMen,
+                    ContratoConstruccion.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().NumeroContrato,
+                    TipoIntervencion = ListDominioTipoIntervencion.Where(r => r.Codigo == ContratoConstruccion.Proyecto.TipoIntervencionCodigo).FirstOrDefault(), 
+                    InstitucionEducativaSede = ContratoConstruccion.Proyecto.InstitucionEducativa.Nombre,
+                    Sede = ContratoConstruccion.Proyecto.Sede.Nombre,
+                    EstadoProgramacionInicial = !string.IsNullOrEmpty(ContratoConstruccion.Proyecto.EstadoProgramacionCodigo) ? ListDominioEstadoProgramacionCodigo.Where(r=> r.Codigo == ContratoConstruccion.Proyecto.EstadoProgramacionCodigo).FirstOrDefault().Nombre : ListDominioEstadoProgramacionCodigo.Where(r => r.Codigo == ConstanCodigoEstadoProgramacionInicial.Sin_ProgramacionPersona).FirstOrDefault().Nombre,
+                    ContratoConstruccion.Proyecto.ProyectoId 
+                });
+            }
 
-
-                }).ToListAsync();
-              
-             
-            return proyectoGrillas;
+            return LisDyna;
         }
 
 

@@ -121,6 +121,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Causas_De_Accidentes_Laborales = 75,
          
-        Tiempo_Aprobar_Acta = 84
+        Tiempo_Aprobar_Acta = 84,
+
+        Estado_Programacion_Inicial = 88
     }
 }
