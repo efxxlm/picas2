@@ -83,7 +83,7 @@
                         (click)="picker.open()" placeholder="DD/MM/AAAA">
                       <input formControlName="procesoSeleccionCronogramaId" type="hidden">
                       <input formControlName="estadoActividadInicialCodigo" type="hidden">
-  
+
                       <mat-datepicker #picker ></mat-datepicker>
                     </mat-form-field>
                   </div>
@@ -107,7 +107,7 @@
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <div class="d-flex justify-content-center">
                     <span class="contador mt-1em" *ngIf="form.get('observacion').value && activo[i]">
-                      {{800 - textoLimpio(form.get('observacion').value)}}
+                      {{800 - (textoLimpio(form.get('observacion').value)>800?800:textoLimpio(form.get('observacion').value))}}
                     </span>
                     <span class="contador mt-1em" *ngIf="!form.get('observacion').value && activo[i]">
                       800

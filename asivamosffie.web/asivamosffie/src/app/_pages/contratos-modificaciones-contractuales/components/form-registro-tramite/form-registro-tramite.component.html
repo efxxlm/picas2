@@ -5,7 +5,7 @@
       <div class="col d-flex">
         <mat-form-field class="w-38">
           <input matInput type="text" maxlength="10" formControlName="numeroContrato"
-          required>          
+          required>
         </mat-form-field>
         <span class="contador">{{10 - dataFormulario.get( 'numeroContrato' ).value.length}}</span>
       </div>
@@ -13,7 +13,7 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'numeroContrato' ).value.length > 0">
       <label class="mr-label"><b>Fecha de envío para firma del contratista</b></label>
-      <mat-form-field class="w-21 ml-1em" 
+      <mat-form-field class="w-21 ml-1em"
                       appearance="fill">
         <input  matInput
                 [matDatepicker]="pickerFechaEnvioTramite"
@@ -23,22 +23,22 @@
                 required>
         <mat-datepicker #pickerFechaEnvioTramite></mat-datepicker>
       </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaEnvioTramite.open()" 
+      <button mat-button
+              color="primary"
+              type="button"
+              (click)="pickerFechaEnvioTramite.open()"
               class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
+        <img  class="mr-bottom-1"
+              src="assets/img/icon/calendarioCirculo.svg"
               alt="Abrir Calendario">
       </button>
     </div>
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null">
       <label class="mr-label"><b>Fecha de firma por parte del contratista</b></label>
-      <mat-form-field class="w-22 ml-1em" 
+      <mat-form-field class="w-22 ml-1em"
                       appearance="fill">
-        <input  matInput 
+        <input  matInput
                 [matDatepicker]="pickerFechaFirmaContratista"
                 [min]="fechaTramite"
                 formControlName="fechaFirmaPorParteContratista"
@@ -46,22 +46,22 @@
                 required>
         <mat-datepicker #pickerFechaFirmaContratista></mat-datepicker>
       </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaFirmaContratista.open()" 
+      <button mat-button
+              color="primary"
+              type="button"
+              (click)="pickerFechaFirmaContratista.open()"
               class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
+        <img  class="mr-bottom-1"
+              src="assets/img/icon/calendarioCirculo.svg"
               alt="Abrir Calendario">
       </button>
     </div>
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null">
       <label class="mr-label"><b>Fecha de envío para la firma de la fiduciaria</b></label>
-      <mat-form-field class="w-20 ml-1em" 
+      <mat-form-field class="w-20 ml-1em"
                       appearance="fill">
-        <input  matInput 
+        <input  matInput
                 [matDatepicker]="pickerFechaEnvioFirmaFiduciaria"
                 [min]="fechaTramite"
                 formControlName="fechaEnvioParaFirmaFiduciaria"
@@ -69,22 +69,22 @@
                 required>
         <mat-datepicker #pickerFechaEnvioFirmaFiduciaria></mat-datepicker>
       </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaEnvioFirmaFiduciaria.open()" 
+      <button mat-button
+              color="primary"
+              type="button"
+              (click)="pickerFechaEnvioFirmaFiduciaria.open()"
               class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
+        <img  class="mr-bottom-1"
+              src="assets/img/icon/calendarioCirculo.svg"
               alt="Abrir Calendario">
       </button>
     </div>
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null">
       <label class="mr-label"><b>Fecha de firma por parte de la fiduciaria</b></label>
-      <mat-form-field class="w-22 ml-1em" 
+      <mat-form-field class="w-22 ml-1em"
                       appearance="fill">
-        <input  matInput 
+        <input  matInput
                 [matDatepicker]="pickerFechaFirmaFiduciaria"
                 [min]="fechaTramite"
                 formControlName="fechaFirmaPorParteFiduciaria"
@@ -92,13 +92,13 @@
                 required>
         <mat-datepicker #pickerFechaFirmaFiduciaria></mat-datepicker>
       </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaFirmaFiduciaria.open()" 
+      <button mat-button
+              color="primary"
+              type="button"
+              (click)="pickerFechaFirmaFiduciaria.open()"
               class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
+        <img  class="mr-bottom-1"
+              src="assets/img/icon/calendarioCirculo.svg"
               alt="Abrir Calendario">
       </button>
     </div>
@@ -108,12 +108,12 @@
       <quill-editor class="quill-editor-style ml-1em card"
                     [styles]="editorStyle"
                     [modules]="config"
-                    (onContentChanged)="maxLength($event, 2000)" 
+                    (onContentChanged)="maxLength($event, 2000)"
                     formControlName="observaciones"
                     style="width: 75%;">
       </quill-editor>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null" style="margin-top: 4em;">
-        {{2000 - textoLimpio(dataFormulario.get('observaciones').value)}}
+        {{2000 - (textoLimpio(dataFormulario.get('observaciones').value)>2000?2000:textoLimpio(dataFormulario.get('observaciones').value))}}
       </span>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null" style="margin-top: 4em;">
         2000
@@ -134,11 +134,11 @@
     </div>
 
     <div class="text-center w-90">
-      <button mat-button 
-              color="warn" 
-              class="btn-guardar" 
+      <button mat-button
+              color="warn"
+              class="btn-guardar"
               type="submit">
-              <img  src="assets/img/icon/guardar.svg" 
+              <img  src="assets/img/icon/guardar.svg"
                     alt="Regresar">
       </button>
     </div>

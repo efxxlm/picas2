@@ -466,7 +466,7 @@
         </quill-editor>
       </div>
       <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-        {{2000 - textoLimpio(addressForm.controls.observacionesGenerales.value)}}
+        {{2000 - (textoLimpio(addressForm.controls.observacionesGenerales.value)>2000?2000:textoLimpio(addressForm.controls.observacionesGenerales.value))}}
       </span>
       <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value">
         2000
