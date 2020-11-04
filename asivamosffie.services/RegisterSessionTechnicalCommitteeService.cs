@@ -617,6 +617,7 @@ namespace asivamosffie.services
                         case ConstanCodigoTipoSolicitud.Contratacion:
                             item.NumeroSolicitud = _context.Contratacion.Find(item.SolicitudId).NumeroSolicitud;
                             break;
+                        case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:    
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                             item.NumeroSolicitud = _context.ProcesoSeleccion.Find(item.SolicitudId).NumeroProceso;
                             break;
@@ -1399,22 +1400,8 @@ namespace asivamosffie.services
 
                         break;
 
-                    case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
-                        sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
-                          .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
-                          .FirstOrDefault()
-                          .FechaCreacion;
-
-                        sesionComiteSolicitud.NumeroSolicitud = ListProcesoSeleccion
-                          .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
-                          .FirstOrDefault()
-                          .NumeroProceso;
-
-                        sesionComiteSolicitud.ProcesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
-
-                        break;
-                    
                     case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
+                    case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                         sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
                           .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
                           .FirstOrDefault()
@@ -1468,6 +1455,7 @@ namespace asivamosffie.services
 
                         break;
 
+                    case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                         sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
                           .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
@@ -2196,7 +2184,8 @@ namespace asivamosffie.services
 
                 #region  Inicio Proceso Seleccion   
 
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || 
+                    pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso)
                 {
                     ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(sesionComiteSolicitudOld.SolicitudId);
                     if (procesoSeleccion != null)
@@ -2216,7 +2205,7 @@ namespace asivamosffie.services
                                     break;
                             }
                         }
-                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.EnProcesoDeSeleccion)
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobacionDeSeleccionEnTramite)
                         {
                             switch (sesionComiteSolicitudOld.EstadoCodigo)
                             {
@@ -2231,7 +2220,7 @@ namespace asivamosffie.services
                                     break;
                             }
                         }
-                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobacionDeSeleccionEnTramite)
+                        else if (procesoSeleccion.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.EnProcesoDeSeleccion)
                         {
                             switch (sesionComiteSolicitudOld.EstadoCodigo)
                             {
