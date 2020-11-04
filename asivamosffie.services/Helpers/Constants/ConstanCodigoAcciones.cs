@@ -110,6 +110,8 @@
 
         public const string Observacion_Compromisos = "132";
         public const string Eliminar_Compromiso_Solicitud = "133";
-        public const string Eliminar_Compromiso_Tema = "134";
+        public const string Eliminar_Compromiso_Tema = "134";        
+
+        public const string Cambiar_estado_Gestion_Poliza = "135";
     }
 }

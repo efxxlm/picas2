@@ -413,11 +413,13 @@ namespace asivamosffie.services
 
                     //TipoSolicitudCodigo ="3" //si estado devuelta, correo supervisor
                     //if (contratoPoliza.TipoSolicitudCodigo == "3")
-                    if (contratoPoliza.TipoSolicitudCodigo == ((int)EnumeratorEstadoPoliza.Con_poliza_observada_y_devuelta).ToString())
-                        contratoPoliza.TipoSolicitudCodigo = ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas).ToString();
+
+                    //ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion)
+                    //if (contratoPoliza.TipoSolicitudCodigo == ((int)EnumeratorEstadoPoliza.Con_poliza_observada_y_devuelta).ToString())
+                    //    contratoPoliza.TipoSolicitudCodigo = ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas).ToString();
+
                     //contratoPoliza.TipoSolicitudCodigo = "4";                   
                                       
-
                     //_context.ExecuteStoreCommand("SET IDENTITY_INSERT [dbo].[MyUser] ON");
 
                     //guardar por primera vez EstadoPolizaCodigo DOM 51  2   En revisión de pólizas
@@ -626,7 +628,7 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> CambiarEstadoPoliza(int pContratoPolizaId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Acta, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -778,9 +780,9 @@ namespace asivamosffie.services
             contratoPoliza.NumeroCertificado = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroCertificado);
             contratoPoliza.NombreAseguradora = Helpers.Helpers.CleanStringInput(contratoPoliza.NombreAseguradora);
 
-            contratoPoliza.UsuarioModificacion = "";
-            contratoPoliza.UsuarioCreacion = "";
-            contratoPoliza.EstadoPolizaCodigo = "";
+            //contratoPoliza.UsuarioModificacion = "";
+            //contratoPoliza.UsuarioCreacion = "";
+            //contratoPoliza.EstadoPolizaCodigo = "";
             //contratoPoliza.contratopoliza = "";
 
         }
