@@ -80,16 +80,16 @@ namespace asivamosffie.services
             //busco comite técnico
             DateTime fechaComitetecnico = DateTime.Now;
             string numerocomietetecnico = "";
+            
             if (resultado.ContratacionId != null)
             {
-                var contratacion = _context.Contratacion.Where(x => x.ContratacionId == resultado.ContratacionId).
-                    Include(x => x.ContratacionObservacion).ThenInclude(y => y.ComiteTecnico).ToList();
-                if (contratacion.FirstOrDefault().ContratacionObservacion.Count() > 0)
+                var contratacion = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == resultado.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).
+                    Include(x => x.ComiteTecnico).ToList();
+                if (contratacion.Count() > 0)
                 {
-                    numerocomietetecnico = contratacion.FirstOrDefault().ContratacionObservacion.FirstOrDefault().ComiteTecnico.NumeroComite;
-                    fechaComitetecnico = Convert.ToDateTime(contratacion.FirstOrDefault().ContratacionObservacion.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
+                    fechaComitetecnico = Convert.ToDateTime(contratacion.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
                 }
-            }
+            }            
             resultado.FechaComiteTecnicoNotMapped = fechaComitetecnico;
             return resultado;
 
@@ -99,9 +99,23 @@ namespace asivamosffie.services
         {
             try
             {
-                return await _context.DisponibilidadPresupuestal.Where(d => d.DisponibilidadPresupuestalId == id)
-                                    .Include(r => r.DisponibilidadPresupuestalProyecto)
+                var dis= await _context.DisponibilidadPresupuestal.Where(d => d.DisponibilidadPresupuestalId == id)
+                                    .Include(r => r.DisponibilidadPresupuestalProyecto)                                    
                                     .FirstOrDefaultAsync();
+                DateTime fechaComitetecnico = DateTime.Now;
+                string numerocomietetecnico = "";
+                if (dis.ContratacionId != null)
+                {
+                    var contratacion = _context.SesionComiteSolicitud.Where(x => x.SolicitudId== dis.ContratacionId && x.TipoSolicitudCodigo==ConstanCodigoTipoSolicitud.Contratacion).
+                        Include(x => x.ComiteTecnico).ToList();
+                    if (contratacion.Count() > 0)
+                    {
+                        fechaComitetecnico = Convert.ToDateTime(contratacion.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
+                    }
+                }
+                dis.FechaComiteTecnicoNotMapped = fechaComitetecnico;                
+
+                return dis;
             }
             catch (Exception ex)
             {

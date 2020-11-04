@@ -13,16 +13,16 @@
 
     <div class="d-flex justify-content-center">
         <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1'">
-            <strong>Tipo de solicitud: </strong>
-            Contratación
+            <strong>Contratación</strong>
+            
         </p>
         <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '3'">
-            <strong>Tipo de solicitud: </strong>
-            Modificación Contractual
+            <strong>Modificación Contractual</strong>
+            
         </p>
-        <p class="solicitud" *ngIf="objetoDisponibilidad.disponibilidadPresupuestalProyecto.length > 0 && objetoDisponibilidad.disponibilidadPresupuestalProyecto !== undefined && objetoDisponibilidad.disponibilidadPresupuestalProyecto[0].proyecto !== undefined">
+        <p class="solicitud" *ngIf="objetoDisponibilidad.fechaComiteTecnicoNotMapped">
             <strong>Fecha de comité técnico:</strong>
-            {{ objetoDisponibilidad.disponibilidadPresupuestalProyecto[0].proyecto['fechaComite'] | date: 'dd/MM/yyyy' }}
+            {{ objetoDisponibilidad.fechaComiteTecnicoNotMapped | date: 'dd/MM/yyyy' }}
         </p>
     </div>
 
@@ -45,7 +45,7 @@
 
             <section style="width: 80%;margin: auto;">
                 <p class="text-center color-mainColor departamento">
-                    {{ proyecto['departamento'] }}/{{ proyecto['municipio'] }}</p>
+                    {{ proyecto.localizacionIdMunicipio }}</p>
                 <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em;">
                     <mat-card-header class="header-card">
                         <mat-card-title class="header-card--text">
@@ -54,27 +54,20 @@
                     </mat-card-header>
                     <mat-card-content>
                         <div class="row">
-                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.proyectoAportante; index as i" style="margin-top: .5em;">
+                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.contratacionProyectoAportante; index as i" style="margin-top: .5em;">
                                 <p class="mb1-em"><b>Aportante {{ i+1 }} </b></p>
 
-                                <p *ngIf="aportante.aportante.tipoAportanteId === 6" style="margin-top: .5em;">
+                                <p style="margin-top: .5em;">
                                     <b>Tipo de aportante:</b>
-                                    FFIE
+                                    {{aportante.cofinanciacionAportante.tipoAportanteString}}
                                 </p>
-                                <p *ngIf="aportante.aportante.tipoAportanteId === 6">
-                                    <b>Aportante:</b> FFIE
-                                </p>
-                                <p *ngIf="aportante.aportante.tipoAportanteId === 9" style="margin-top: .5em;">
-                                    <b>Tipo de aportante:</b>
-                                    ET
-                                </p>
-                                <p *ngIf="aportante.aportante.tipoAportanteId === 9">
+                                <p >
                                     <b>Aportante:</b>
-                                    {{ aportante['tipoAportanteNombre'] }} de {{ aportante['nombreAportante'] }}
+                                    {{aportante.cofinanciacionAportante.nombreAportanteString}}
                                 </p>
                                 <p>
                                     <b>Valor del aportante:</b>
-                                    {{ aportante.valorTotalAportante | currency }}
+                                    {{ aportante.valorAporte | currency }}
 
                                 </p>
                             </div>
@@ -116,6 +109,7 @@
                         <mat-form-field class="full-width">
                             <input matInput #plazoDias type="number" min="1" max="99" maxlength="2" required
                                 formControlName="plazoDias" name="plazoDias"
+                                (change)="validatenomore30()"
                                 (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
