@@ -217,10 +217,11 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         this.estadoOtrosTemas = this.estadoFormulario.completo;
 
       return true;
-    }
+    } 
 
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
+    let sinDiligenciar = true;
 
     this.objetoComiteTecnico.sesionComiteTema
       .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
@@ -241,10 +242,12 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
             }
           })
+          sinDiligenciar = false;
           //})
         } else if (tem.requiereVotacion == false) {
           cantidadTemas++;
           cantidadTemasCompletas++;
+          sinDiligenciar = false;
         }
         else {
           cantidadTemas++;
@@ -258,6 +261,12 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         this.estadoProposiciones = this.estadoFormulario.enProceso;
       else
         this.estadoOtrosTemas = this.estadoFormulario.enProceso;
+
+        if (sinDiligenciar) // no se ha llenado nada
+        if (esProposicion)
+          this.estadoProposiciones = this.estadoFormulario.sinDiligenciar;
+        else
+          this.estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
 
       if (cantidadTemas == cantidadTemasCompletas)
         if (esProposicion)
