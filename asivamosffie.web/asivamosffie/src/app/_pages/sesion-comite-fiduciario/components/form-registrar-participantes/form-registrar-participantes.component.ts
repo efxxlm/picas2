@@ -178,7 +178,7 @@ export class FormRegistrarParticipantesComponent {
               sol.completo = false;
             }
           })
-        } else if (sol.requiereVotacion == false) {
+        } else if (sol.requiereVotacionFiduciario == false) {
           cantidadSolicitudes++;
           cantidadSolicitudesCompletas++;
         }
@@ -186,6 +186,8 @@ export class FormRegistrarParticipantesComponent {
           cantidadSolicitudesCompletas--;
         }
       })
+
+      console.log( cantidadSolicitudes, cantidadSolicitudesCompletas );
 
       if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0) {
         if (cantidadSolicitudes > 0) {
@@ -229,7 +231,7 @@ export class FormRegistrarParticipantesComponent {
             cantidadTemasCompletas++;
           }
           else {
-            cantidadTemasCompletas--;
+            cantidadTemas++;
           }
         })
 

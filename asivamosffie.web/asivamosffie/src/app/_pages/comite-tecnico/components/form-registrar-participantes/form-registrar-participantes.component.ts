@@ -193,6 +193,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         }
       })
 
+      console.log( (cantidadSolicitudes == cantidadSolicitudesCompletas) );
+
       if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0) {
         if (cantidadSolicitudes > 0) {
           this.estadoSolicitudes = this.estadoFormulario.enProceso;
@@ -207,6 +209,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   validarTemas(esProposicion: boolean) {
+
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
 
@@ -235,7 +238,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           cantidadTemasCompletas++;
         }
         else {
-          cantidadTemasCompletas--;
+          cantidadTemas++;
         }
       })
 
@@ -253,10 +256,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
         else
           this.estadoOtrosTemas = this.estadoFormulario.completo;
     }else{
-      if (esProposicion)
-        this.estadoProposiciones = this.estadoFormulario.completo;
-      else
-        this.estadoOtrosTemas = this.estadoFormulario.completo;
+      
     }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
