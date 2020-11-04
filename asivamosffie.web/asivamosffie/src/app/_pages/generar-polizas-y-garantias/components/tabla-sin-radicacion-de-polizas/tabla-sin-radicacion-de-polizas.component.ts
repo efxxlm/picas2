@@ -39,7 +39,7 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
           startIndex + pageSize;
         return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
       };
-      this.applyFilter("sin definir");
+      this.applyFilter("En revisión de pólizas");
     });    
   }
 

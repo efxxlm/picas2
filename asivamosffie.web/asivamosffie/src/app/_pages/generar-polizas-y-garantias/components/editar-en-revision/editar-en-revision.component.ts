@@ -50,7 +50,10 @@ export class EditarEnRevisionComponent implements OnInit {
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
   ];
-
+  aprobadosArray = [
+    { name: 'Andres Montealegre', value: '1' },
+    { name: 'David Benitez', value: '2' }
+  ];
   minDate: Date;
 
   editorStyle = {
@@ -124,28 +127,26 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('numeroPoliza').setValue(data.numeroPoliza);
       this.addressForm.get('numeroCertificado').setValue(data.numeroCertificado);
       this.addressForm.get('observacionesGenerales').setValue(data.observacionesRevisionGeneral);
+      this.addressForm.get('fecha').setValue(data.fechaExpedicion);
+      this.addressForm.get('fechaAprob').setValue(data.fechaAprobacion);
+      this.addressForm.get('cumpleAsegurado').setValue(data.cumpleDatosAsegurado);
+      this.addressForm.get('cumpleBeneficiario').setValue(data.cumpleDatosBeneficiario);
+      this.addressForm.get('cumpleAfianzado').setValue(data.cumpleDatosTomador);
+      this.addressForm.get('reciboDePago').setValue(data.incluyeReciboPago);
+      this.addressForm.get('condicionesGenerales').setValue(data.incluyeCondicionesGenerales);
+      this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
+      this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
+      this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
       this.dataLoad2(data);
     }); 
   }
 
   loadObservations(id){
-    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data_A=>{
-      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === data_A[0].estadoRevisionCodigo);
-      this.addressForm.get('fechaRevision').setValue(data_A[0].fechaRevision);
-      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
-      this.addressForm.get('observacionesGenerales').setValue(data_A[0].observacion);
-      this.loadGarantia(data_A[0].contratoPolizaId);
-      this.loadObservacionId2(data_A[0].polizaObservacionId);
-    });
+
   }
 
   loadGarantia(id){
-    this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_B=>{
-      this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
-      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t == data_B[0].tipoGarantiaCodigo);
-      this.addressForm.get('polizasYSeguros').setValue([tipoGarantiaCodigo]);
-      this.loadGrantiaID(data_B[0].polizaGarantiaId);
-    });
+
   }
   getvalues(values: Dominio[]) {
     console.log(values);
@@ -224,7 +225,7 @@ export class EditarEnRevisionComponent implements OnInit {
       NumeroCertificado:this.addressForm.value.numeroCertificado,
       Observaciones:"",
       ObservacionesRevisionGeneral:this.addressForm.value.observacionesGenerales,
-      ResponsableAprobacion:this.addressForm.value.responsableAprob,
+      ResponsableAprobacion:this.addressForm.value.responsableAprob.name,
       EstadoPolizaCodigo:"2",
       UsuarioCreacion:"usr1",
       UsuarioModificacion:"usr1",
@@ -237,7 +238,7 @@ export class EditarEnRevisionComponent implements OnInit {
       CumpleDatosTomador: this.addressForm.value.cumpleAfianzado,
       IncluyeReciboPago:this.addressForm.value.reciboDePago,
       IncluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales,
-      FechaAprobacion: "",
+      FechaAprobacion: this.addressForm.value.fechaAprob,
       Estado: false,
       FechaCreacion: "",
       RegistroCompleto: false,
@@ -258,8 +259,18 @@ export class EditarEnRevisionComponent implements OnInit {
       fechaRevision: this.addressForm.value.fechaRevision,
       estadoRevisionCodigo: auxValue.value
     }*/
+    var statePoliza;
+    if(this.addressForm.value.estadoRevision=="1"){
+      statePoliza = "3";
+    }
+    else{
+      statePoliza = "2";
+    }
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if(data.isSuccessful==true){
+        this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza,this.idContrato).subscribe(resp1=>{
+
+        });
         this.openDialog('', `<b>${data.message}</b>`);
         this.router.navigate(['/generarPolizasYGarantias']);
       }
@@ -267,14 +278,6 @@ export class EditarEnRevisionComponent implements OnInit {
         this.openDialog('', `<b>${data.message}</b>`);
       }
     });
-    /*
-    this.polizaService.CreatePolizaGarantia(polizaGarantia).subscribe(data1=>{
-
-    });
-    this.polizaService.CreatePolizaObservacion(polizaObservacion).subscribe(data2=>{
-
-    });
-    */
     console.log(this.addressForm.value);
   }
 

@@ -49,6 +49,9 @@ export class PolizaGarantiaService implements OnInit {
   CambiarEstadoPoliza(pContratoPolizaId: number, pCodigoNuevoEstadoPoliza: string) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CambiarEstadoPoliza?pContratoPolizaId=${pContratoPolizaId}&pCodigoNuevoEstadoPoliza=${pCodigoNuevoEstadoPoliza}`, null);
   }
+  CambiarEstadoPolizaByContratoId(pCodigoNuevoEstadoPoliza:string, pContratoId:number){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CambiarEstadoPolizaByContratoId?pCodigoNuevoEstadoPoliza=${pCodigoNuevoEstadoPoliza}&pContratoId=${pContratoId}`, null);
+  }
 }
 
 export interface CreatePolizaObservacion {
@@ -155,19 +158,28 @@ export interface EditPoliza {
 
 export interface GetContratoPolizaByIdContratoId {
   contratoId: number;
-  tipoSolicitudCodigo: any;
-  tipoModificacionCodigo: any;
-  descripcionModificacion: any;
-  nombreAseguradora: any;
-  numeroPoliza: any;
-  numeroCertificado: any;
-  observaciones: any;
-  observacionesRevisionGeneral: any;
-  responsableAprobacion: any;
-  estadoPolizaCodigo: any;
-  fechaCreacion: any;
-  usuarioCreacion: any;
-  registroCompleto: boolean;
-  usuarioModificacion: any;
   contratoPolizaId: number;
+  cumpleDatosAsegurado: boolean;
+  cumpleDatosBeneficiario: boolean;
+  cumpleDatosTomador: boolean;
+  descripcionModificacion: any;
+  estado: boolean;
+  estadoPolizaCodigo: any;
+  fechaAprobacion: any;
+  fechaExpedicion: any;
+  incluyeCondicionesGenerales: boolean;
+  incluyeReciboPago: boolean;
+  nombreAseguradora: any;
+  numeroCertificado:  any;
+  numeroPoliza:  any;
+  observaciones:  any;
+  observacionesRevisionGeneral:  any;
+  polizaGarantia:  any[];
+  polizaObservacion:  any[];
+  responsableAprobacion: any;
+  tipoModificacionCodigo:  any;
+  tipoSolicitudCodigo: any;
+  valorAmparo: number;
+  vigencia:  any;
+  vigenciaAmparo:  any;
 }

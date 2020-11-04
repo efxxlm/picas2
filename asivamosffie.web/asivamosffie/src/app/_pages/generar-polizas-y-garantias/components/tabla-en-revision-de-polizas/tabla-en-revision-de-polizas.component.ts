@@ -45,5 +45,9 @@ export class TablaEnRevisionDePolizasComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue;
   }
+  aprobarPoliza(id){
+    this.polizaService.CambiarEstadoPolizaByContratoId("4",id).subscribe(resp1=>{
 
+    });
+  }
 }
