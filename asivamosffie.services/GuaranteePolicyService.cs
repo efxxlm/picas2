@@ -40,34 +40,31 @@ namespace asivamosffie.services
         }
         //public async Task<ActionResult<List<PolizaGarantia>>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
         public async Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId)
-
         {
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
         }
 
         public async Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoId)
         {
-
             Contrato contrato =null;
 
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-
 
             //includefilter
             ContratoPoliza contratoPoliza = new ContratoPoliza();
             if (contrato != null)
             { 
                 //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-            contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+            contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == pContratoId
+            //&&(bool)r.Estado==true&&r.Eliminado==0
+            ).FirstOrDefault();
 
             }
 
             PolizaObservacion polizaObservacion=null;
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
             
-
-
             if (contratoPoliza != null)
             {
                 //List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == p && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
@@ -1125,10 +1122,15 @@ namespace asivamosffie.services
 
                     if (contratoPoliza != null)
                     {
-                        //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
-                        TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                        if (contratoPoliza.TipoSolicitudCodigo != null)
+                        {
+                            //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
+                            TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                        
                         if (TipoSolicitudCodigoContratoPoliza != null)
                             strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                    }
+                    
 
                         EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         if (EstadoSolicitudCodigoContratoPoliza != null)
