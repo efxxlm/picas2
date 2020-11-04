@@ -1891,9 +1891,7 @@ namespace asivamosffie.services
                                                             .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
                                                             .FirstOrDefault();
 
-                if (comiteTecnicoOld.SesionComiteTema.Where(t => t.Eliminado != true).ToList().Count > 0 ||
-                     comiteTecnicoOld.SesionComiteSolicitudComiteTecnicoFiduciario.Where(c => c.Eliminado != true).ToList().Count > 0
-                    )
+                if (comiteTecnicoOld.SesionComiteTema.Where(t => t.Eliminado != true).ToList().Count > 0 )
                 {
                     return new Respuesta
                     {
@@ -1904,6 +1902,14 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarSesionComiteFiduciario, ConstantSesionComiteFiduciario.ErrorEliminarDependencia, idAccion, pUsuarioModifico, "ELIMINAR COMITE TECNICO")
                     };
                 }
+
+                comiteTecnicoOld.SesionComiteSolicitudComiteTecnicoFiduciario.ToList().ForEach(ct =>
+                {
+                    SesionComiteSolicitud solicitud = _context.SesionComiteSolicitud.Find(ct.SesionComiteSolicitudId);
+
+                    solicitud.Eliminado = true;
+                    solicitud.ComiteTecnicoFiduciarioId = null;
+                });
 
 
                 comiteTecnicoOld.UsuarioModificacion = pUsuarioModifico;
