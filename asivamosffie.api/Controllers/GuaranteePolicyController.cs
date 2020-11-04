@@ -220,6 +220,15 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
+        [Route("GetNotificacionContratoPolizaByIdContratoId")]
+        [HttpGet]
+        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoId)
+        public async Task<NotificacionMensajeGestionPoliza> GetNotificacionContratoPolizaByIdContratoId(int pContratoId)
+        {
+            var respuesta = await _guaranteePolicy.GetNotificacionContratoPolizaByIdContratoId(pContratoId);
+            return respuesta;
+        }
+        
 
 
         [HttpPut]
