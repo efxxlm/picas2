@@ -29,6 +29,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId);
 
+        Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoId);
+
         Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings);
         
 

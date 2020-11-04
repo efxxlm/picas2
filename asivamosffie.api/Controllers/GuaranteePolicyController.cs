@@ -201,6 +201,16 @@ namespace asivamosffie.api.Controllers
         }
 
         
+        [Route("GetContratoPolizaByIdContratoId")]
+        [HttpGet]
+        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
+        public async Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoPolizaId)
+        {
+            var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoId(pContratoPolizaId);
+            return respuesta;
+        }
+
+
 
         [HttpPut]
         [Route("CambiarEstadoPoliza")]

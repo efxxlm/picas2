@@ -45,6 +45,46 @@ namespace asivamosffie.services
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
         }
 
+        public async Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoId)
+        {
+
+            Contrato contrato =null;
+
+            //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+
+            //includefilter
+            ContratoPoliza contratoPoliza = new ContratoPoliza();
+            if (contrato != null)
+            { 
+                //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
+            contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+            }
+
+            PolizaObservacion polizaObservacion=null;
+            //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
+            
+
+
+            if (contratoPoliza != null)
+            {
+                //List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == p && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
+                List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).ToListAsync();
+
+                contratoPoliza.PolizaGarantia = contratoPolizaGarantia;
+
+                polizaObservacion = _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
+            
+                //List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == p && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
+                List<PolizaObservacion> contratoPolizaObservacion = await _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).ToListAsync();
+
+                contratoPoliza.PolizaObservacion = contratoPolizaObservacion;
+            }
+
+            return contratoPoliza;
+        }
 
         public async Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
         {
@@ -106,7 +146,8 @@ namespace asivamosffie.services
                         //Auditoria
                         strCrearEditar = "REGISTRAR POLIZA GARANTIA";
                         _context.PolizaGarantia.Add(polizaGarantia);
-                        await _context.SaveChangesAsync();
+                        //await _context.SaveChangesAsync();
+                        _context.SaveChanges();
 
                     }
                     else
