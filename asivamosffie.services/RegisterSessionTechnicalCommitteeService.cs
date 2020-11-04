@@ -617,7 +617,7 @@ namespace asivamosffie.services
                         case ConstanCodigoTipoSolicitud.Contratacion:
                             item.NumeroSolicitud = _context.Contratacion.Find(item.SolicitudId).NumeroSolicitud;
                             break;
-                        case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:    
+                        case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
                         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
                             item.NumeroSolicitud = _context.ProcesoSeleccion.Find(item.SolicitudId).NumeroProceso;
                             break;
@@ -2184,7 +2184,7 @@ namespace asivamosffie.services
 
                 #region  Inicio Proceso Seleccion   
 
-                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion || 
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion ||
                     pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso)
                 {
                     ProcesoSeleccion procesoSeleccion = _context.ProcesoSeleccion.Find(sesionComiteSolicitudOld.SolicitudId);
@@ -3314,7 +3314,8 @@ namespace asivamosffie.services
                         temaCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
                         temaCompromisoOld.EsCumplido = temaCompromiso.EsCumplido;
                         if (!(bool)temaCompromiso.EsCumplido)
-                            temaCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+                            if (temaCompromisoOld.EstadoCodigo == ConstantCodigoCompromisos.Finalizado)
+                                temaCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
                     }
                 }
 
@@ -3327,7 +3328,8 @@ namespace asivamosffie.services
                         SesionSolicitudCompromisoOld.UsuarioModificacion = pComiteTecnico.UsuarioCreacion;
                         SesionSolicitudCompromisoOld.EsCumplido = pSesionSolicitudCompromiso.EsCumplido;
                         if (!(bool)SesionSolicitudCompromisoOld.EsCumplido)
-                            SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+                            if (SesionSolicitudCompromisoOld.EstadoCodigo == ConstantCodigoCompromisos.Finalizado)
+                                SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
                     }
                 }
 
@@ -3367,7 +3369,8 @@ namespace asivamosffie.services
                     TemaCompromiso temaCompromisoOld = _context.TemaCompromiso.Find(pObservacionComentario.TemaCompromisoId);
                     temaCompromisoOld.FechaModificacion = DateTime.Now;
                     temaCompromisoOld.UsuarioModificacion = pObservacionComentario.Usuario;
-                    temaCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+                    if (temaCompromisoOld.EstadoCodigo == ConstantCodigoCompromisos.Finalizado)
+                        temaCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
 
                     TemaCompromisoSeguimiento temaCompromisoSeguimiento = new TemaCompromisoSeguimiento
                     {
@@ -3387,7 +3390,8 @@ namespace asivamosffie.services
                     SesionSolicitudCompromiso SesionSolicitudCompromisoOld = _context.SesionSolicitudCompromiso.Find(pObservacionComentario.SesionSolicitudCompromisoId);
                     SesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
                     SesionSolicitudCompromisoOld.UsuarioModificacion = pObservacionComentario.Usuario;
-                    SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
+                    if (SesionSolicitudCompromisoOld.EstadoCodigo == ConstantCodigoCompromisos.Finalizado)
+                        SesionSolicitudCompromisoOld.EstadoCodigo = ConstantCodigoCompromisos.En_proceso;
 
                     CompromisoSeguimiento compromisoSeguimiento = new CompromisoSeguimiento
                     {
