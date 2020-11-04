@@ -553,9 +553,30 @@ namespace asivamosffie.services
         {
             try
             {
-                ComiteTecnico comiteTecnico = _context.ComiteTecnico.Find(pComiteTecnicoId);
+                ComiteTecnico comiteTecnico = _context.ComiteTecnico
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
+                    .Include(r => r.SesionParticipante)
+                           .ThenInclude(r => r.Usuario)
+                    .Include(r => r.SesionComentario)
+                    .FirstOrDefault();
+
+                string Tabla = _context.Template.Find(enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
+                string Registros = _context.Template.Find(enumeratorTemplate.RegistrosTablaAprobacionParticipanteActa).Contenido;
+                string TotalRegistros = string.Empty;
+
+                foreach (var SesionParticipante in comiteTecnico.SesionParticipante)
+                {
+                    TotalRegistros += Registros;
+
+                    TotalRegistros.Replace("[FECHA_APROBACION]", ((DateTime)comiteTecnico.SesionComentario.Where(r => r.MiembroSesionParticipanteId == SesionParticipante.SesionParticipanteId && r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Select(r => r.FechaCreacion).FirstOrDefault()).ToString("dd-MMMM-yy"))
+                                  .Replace("[RESPONSABLE]" , SesionParticipante.Usuario.Nombres + " "+ SesionParticipante.Usuario.Apellidos);
+
+                } 
+                Tabla.Replace("[REGISTROS]", TotalRegistros);
+
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
+                 
                 foreach (var usuario in usuariosecretario)
                 {
                     Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionActaAprobacion);
@@ -563,9 +584,10 @@ namespace asivamosffie.services
                         TemplateActaAprobada.Contenido
                         .Replace("_LinkF_", pDominioFront)
                         .Replace("[TIPO_COMITE]", (bool)comiteTecnico.EsComiteFiduciario ? ConstanStringTipoComite.Fiduciario : ConstanStringTipoComite.Tecnico)
-                        .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                        .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite) 
+                        .Replace("[TABLA_RESPONSABLE_APROBACION]", Tabla)
                         .Replace("[FECHA_COMITE]", ((DateTime.Now).ToString("dd-MM-yyyy")));
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Acta aprobada", template, pSender, pPassword, pMailServer, pMailPort);
+                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Aprobación de acta", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
                 return blEnvioCorreo;
@@ -686,7 +708,7 @@ namespace asivamosffie.services
                 {
                     SesionSolicitudCompromiso sesionSolicitudCompromisoOld = await _context.SesionSolicitudCompromiso.FindAsync(pSesionSolicitudCompromiso.SesionSolicitudCompromisoId);
                     sesionSolicitudCompromisoOld.FechaModificacion = DateTime.Now;
-                    sesionSolicitudCompromisoOld.UsuarioCreacion = pSesionSolicitudCompromiso.UsuarioCreacion; 
+                    sesionSolicitudCompromisoOld.UsuarioCreacion = pSesionSolicitudCompromiso.UsuarioCreacion;
                     sesionSolicitudCompromisoOld.EstadoCodigo = pSesionSolicitudCompromiso.EstadoCodigo;
 
 
