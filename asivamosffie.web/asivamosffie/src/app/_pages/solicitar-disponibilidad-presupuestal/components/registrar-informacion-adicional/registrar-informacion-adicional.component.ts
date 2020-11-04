@@ -72,15 +72,14 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
 
-        console.log( this.objetoDisponibilidad );
-        this.objetoDisponibilidad.disponibilidadPresupuestalProyecto.forEach(dp => {
-          this.projectService.getProjectById(dp.proyectoId)
-            .subscribe(proyecto => {
-              dp.proyecto = proyecto;
-              this.listaProyectos.push(proyecto);
-            })
+        this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
+        .subscribe(
+          contratacion => {
+          contratacion.contratacionProyecto.forEach(cp => {
+            cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
+            this.listaProyectos.push(cp.proyecto);
+          });
         });
-        console.log( this.objetoDisponibilidad );
       })
 
   }
@@ -110,15 +109,20 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       .subscribe(
         contratacion => {
         contratacion.contratacionProyecto.forEach(cp => {
-          this.projectService.getProjectById(cp.proyectoId)
+          cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
+          this.listaProyectos.push(cp.proyecto);
+          /*this.projectService.getProjectById(cp.proyectoId)
             .subscribe(proyecto => {
+              let aporntantes=cp.contratacionProyectoAportante;
               cp.proyecto = proyecto;
+              cp.proyecto.apo
               console.log(proyecto);
         
-              this.listaProyectos.push(proyecto);
+              
         
-            })
+            })*/
         });
+        console.log(this.listaProyectos);
         },
         err => {
           console.log( err );
@@ -140,6 +144,14 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
+    }
+  }
+  validatenomore30()
+  {
+    if(this.addressForm.value.plazoDias>30)
+    {
+      this.openDialog("","<b>El valor ingresado en dias no puede ser superior a 30</b>");
+      this.addressForm.get("plazoDias").setValue("");
     }
   }
 
@@ -170,6 +182,9 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
           this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
       })
 
+    }
+    else{
+      this.openDialog('','<b>Por favor ingrese todos los campos obligatorios.</b>')
     }
     
     console.log(this.objetoDisponibilidad);

@@ -245,7 +245,31 @@ namespace asivamosffie.services
                     item.Proyecto.UsuarioModificacion = ListRegiones.Find(r => r.LocalizacionId == departamento.IdPadre).Descripcion;
                     item.Proyecto.TipoIntervencionCodigo = ListTipoIntervencion.Find(r => r.Codigo == item.Proyecto.TipoIntervencionCodigo).Nombre;
                 }
+                foreach(var praportante in item.ContratacionProyectoAportante)
+                {                    
+                    if (praportante.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                    {
+                        praportante.CofinanciacionAportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                    }
+                    else if (praportante.CofinanciacionAportante.TipoAportanteId == ConstanTipoAportante.ET)
+                    {
+                        //verifico si tiene municipio
+                        if (praportante.CofinanciacionAportante.MunicipioId != null)
+                        {
+                            praportante.CofinanciacionAportante.NombreAportanteString = _context.Localizacion.Find(praportante.CofinanciacionAportante.MunicipioId).Descripcion;
+                        }
+                        else//solo departamento
+                        {
+                            praportante.CofinanciacionAportante.NombreAportanteString = praportante.CofinanciacionAportante.DepartamentoId == null ? "Error" : _context.Localizacion.Find(praportante.CofinanciacionAportante.DepartamentoId).Descripcion;
+                        }
+                    }
+                    else
+                    {
+                        praportante.CofinanciacionAportante.NombreAportanteString = _context.Dominio.Find(praportante.CofinanciacionAportante.NombreAportanteId).Nombre;
+                    }                     
+                    praportante.CofinanciacionAportante.TipoAportanteString = _context.Dominio.Find(praportante.CofinanciacionAportante.TipoAportanteId).Nombre;
 
+                }
             }
 
             return contratacion;
