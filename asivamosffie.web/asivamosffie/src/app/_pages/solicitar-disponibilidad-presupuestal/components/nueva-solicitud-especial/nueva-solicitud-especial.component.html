@@ -242,8 +242,8 @@
         <section *ngIf="contrato">
             <div class="d-flex align-items-center">
                 <div class="text-area-quill">
-                  <label for="justificacion" class="text-area-quill--label" style="color: #174193;">Limitación especial</label>
-                  <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="configLimiteEspecial"
+                  <label for="justificacion" class="text-area-quill--label title-objeto">Limitación especial</label>
+                  <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
                     (onContentChanged)="maxLength($event, 500)" formControlName="observacionLimiteEspecial"></quill-editor>
                 </div>
                 <span class="contador" *ngIf="addressForm.get('observacionLimiteEspecial').value !== null">
