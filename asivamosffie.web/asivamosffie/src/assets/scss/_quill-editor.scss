@@ -80,6 +80,10 @@
       max-width: 70em;
       border-bottom: $fontColor solid 1px;
 
+      .quill-sin-borde & {
+        border-bottom: none;
+      }
+
       .w-quill & {
         max-width: 30em;
         margin: auto;
