@@ -203,10 +203,10 @@ namespace asivamosffie.api.Controllers
         
         [Route("GetContratoPolizaByIdContratoId")]
         [HttpGet]
-        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId)
-        public async Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoPolizaId)
+        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoId)
+        public async Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoId)
         {
-            var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoId(pContratoPolizaId);
+            var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoId(pContratoId);
             return respuesta;
         }
 
