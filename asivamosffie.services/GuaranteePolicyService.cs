@@ -1113,7 +1113,7 @@ namespace asivamosffie.services
                 {
                     ContratoPoliza contratoPoliza;
 
-                    contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                    contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     string strTipoSolicitudCodigoContratoPoliza = "sin definir";

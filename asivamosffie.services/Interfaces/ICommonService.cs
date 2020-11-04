@@ -55,6 +55,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<ContratoPoliza> GetContratoPolizaByContratoId(int pContratoId);
 
+        Task<ContratoPoliza> GetLastContratoPolizaByContratoId(int pContratoId);
+
         Task<Contratacion> GetContratacionByContratacionId(int pContratacionId);
 
         Task<Contratista> GetContratistaByContratistaId(int pContratistaId);
