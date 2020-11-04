@@ -144,6 +144,11 @@ const routes: Routes = [
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule )
+      },
+      {
+        path: 'programacionPersonalObra',
+        loadChildren: () => import( './_pages/programacion-personal-obra/programacion-personal-obra.module' )
+          .then( module => module.ProgramacionPersonalObraModule )
       }
     ]
 
