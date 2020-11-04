@@ -282,6 +282,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                     if ( aportante.length === 0 ) {
                       this.openDialog( '', '<b>El proyecto no tiene una entidad territorial como aportante.<br><br>La solicitud no se puede completar.</b>' );
                       this.seRecibioAportante = false;
+                      this.addressForm.get('llaveMEN').setValue("");
                       return;
                     };
                     
@@ -372,7 +373,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
               cuentaCartaAutorizacion: this.addressForm.get('cartaAutorizacionET').value,
               urlSoporte: this.addressForm.get('url').value,
               disponibilidadPresupuestalProyecto:[{proyectoId:this.proyecto.proyectoId,
-                disponibilidadPresupuestalProyectoId:this.disponibilidadaeditar.disponibilidadPresupuestalProyecto?this.disponibilidadaeditar.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId:null}]
+                disponibilidadPresupuestalProyectoId:this.disponibilidadaeditar?this.disponibilidadaeditar.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId:null}]
             };
             console.log( disponibilidad );
             this.budgetAvailabilityService.createUpdateDisponibilidaPresupuestalEspecial( disponibilidad )
