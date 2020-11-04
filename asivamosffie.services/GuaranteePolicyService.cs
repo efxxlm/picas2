@@ -862,7 +862,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings)
+        public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario)
         {
             //public void AprobarContrato(int pIdContrato)
 
@@ -916,6 +916,7 @@ namespace asivamosffie.services
                 {
                     //cambiar a estado Con aprobación de pólizas
                     //contratoPoliza.TipoSolicitudCodigo = "4";
+                    contratoPoliza.UsuarioModificacion = pUsuario;
                     contratoPoliza.TipoSolicitudCodigo = ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas).ToString();
                     _context.ContratoPoliza.Update(contratoPoliza);
 
