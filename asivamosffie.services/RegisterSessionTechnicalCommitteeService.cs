@@ -930,6 +930,14 @@ namespace asivamosffie.services
                      )
                     .OrderByDescending(r => r.ProcesoSeleccionId).ToList();
 
+                List<ProcesoSeleccion> ListProcesoSeleccionEvaluacion =
+                    _context.ProcesoSeleccion
+                    .Where(r => !(bool)r.Eliminado
+                     && r.EstadoProcesoSeleccionCodigo == ConstanCodigoEstadoProcesoSeleccion.AprobacionDeSeleccionEnTramite
+                     && r.FechaCreacion < pFechaOrdenDelDia
+                     )
+                    .OrderByDescending(r => r.ProcesoSeleccionId).ToList();
+
                 List<Contratacion> ListContratacion = _context.Contratacion
                     .Where(r => !(bool)r.Eliminado
                     && r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_tramite
@@ -963,6 +971,14 @@ namespace asivamosffie.services
                                                             )
                                                         .Select(r => r.SolicitudId).Distinct().ToList();
 
+                List<int> ListIdProcesosSeleccionEvaluacion = _context.SesionComiteSolicitud
+                                                        .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso &&
+                                                            r.Eliminado != true &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
+                                                            r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico
+                                                            )
+                                                        .Select(r => r.SolicitudId).Distinct().ToList();
+
                 List<int> ListIdActualizacionCronograma = _context.SesionComiteSolicitud
                                                             .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion &&
                                                                 r.Eliminado != true &&
@@ -979,6 +995,7 @@ namespace asivamosffie.services
 
                 ListContratacion.RemoveAll(item => LisIdContratacion.Contains(item.ContratacionId));
                 ListProcesoSeleccion.RemoveAll(item => ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
+                ListProcesoSeleccionEvaluacion.RemoveAll(item => ListIdProcesosSeleccionEvaluacion.Contains(item.ProcesoSeleccionId));
                 ListActualizacionCronograma.RemoveAll(item => ListIdActualizacionCronograma.Contains(item.ProcesoSeleccionMonitoreoId));
 
 
@@ -993,6 +1010,18 @@ namespace asivamosffie.services
                         NumeroSolicitud = ProcesoSeleccion.NumeroProceso,
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion
+                    });
+                };
+
+                foreach (var ProcesoSeleccion in ListProcesoSeleccionEvaluacion)
+                {
+                    ListValidacionSolicitudesContractualesGrilla.Add(new
+                    {
+                        Id = ProcesoSeleccion.ProcesoSeleccionId,
+                        FechaSolicitud = ProcesoSeleccion.FechaCreacion.ToString("yyyy-MM-dd"),
+                        NumeroSolicitud = ProcesoSeleccion.NumeroProceso,
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Evaluación_De_Proceso).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Evaluación_De_Proceso
                     });
                 };
 
@@ -1371,6 +1400,21 @@ namespace asivamosffie.services
                         break;
 
                     case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+                        sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
+                          .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
+                          .FirstOrDefault()
+                          .FechaCreacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = ListProcesoSeleccion
+                          .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
+                          .FirstOrDefault()
+                          .NumeroProceso;
+
+                        sesionComiteSolicitud.ProcesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+
+                        break;
+                    
+                    case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
                         sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
                           .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
                           .FirstOrDefault()

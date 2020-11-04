@@ -203,6 +203,18 @@ export class FormRegistrarParticipantesComponent {
   }
 
   validarTemas(esProposicion: boolean) {
+
+    if (this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).length == 0) {
+
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+
+      return true;
+    }
+    
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
 
