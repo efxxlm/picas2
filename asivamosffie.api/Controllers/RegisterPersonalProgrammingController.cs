@@ -24,7 +24,7 @@ namespace asivamosffie.api.Controllers
         public RegisterPersonalProgrammingController(IRegisterPersonalProgrammingService registerPersonalProgrammingService)
         {
 
-           _IRegisterPersonalProgrammingService = registerPersonalProgrammingService;
+            _IRegisterPersonalProgrammingService = registerPersonalProgrammingService;
         }
         [Route("GetListProyectos")]
         [HttpGet]
@@ -34,6 +34,44 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
+        [Route("GetProgramacionPersonalByContratoConstruccionId")]
+        [HttpGet]
+        public async Task<List<ProgramacionPersonalContratoConstruccion>> GetProgramacionPersonalByContratoConstruccionId([FromQuery] int pContratoConstruccionId)
+        {
+            var result = await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoConstruccionId(pContratoConstruccionId, HttpContext.User.FindFirst("User").Value.ToUpper());
+            return result;
+        }
+         
+        [Route("UpdateProgramacionContratoPersonal")]
+        [HttpPost]
+        public async Task<IActionResult> UpdateProgramacionContratoPersonal([FromBody] ContratoConstruccion pContratoConstruccion)
+        {
+            try
+            {
+                Task<Respuesta> result = _IRegisterPersonalProgrammingService.UpdateProgramacionContratoPersonal(pContratoConstruccion);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+         
+        [Route("ChangeStatusProgramacionContratoPersonal")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeStatusProgramacionContratoPersonal([FromQuery] int pContratoConstruccionId, string pEstadoProgramacionCodigo)
+        {
+            try
+            {
+                Task<Respuesta> result = _IRegisterPersonalProgrammingService.ChangeStatusProgramacionContratoPersonal(pContratoConstruccionId, pEstadoProgramacionCodigo, HttpContext.User.FindFirst("User").Value);
+                object respuesta = await result;
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
     }
 }

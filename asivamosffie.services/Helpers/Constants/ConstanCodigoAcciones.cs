@@ -104,12 +104,20 @@
         public const string Crear_Cronograma_monitoreo = "114";
 
         public const string Eliminar_Compromisos_Solicitud = "125";
+
         public const string Eliminar_Compromisos_Tema = "126";
 
         public const string Crear_Editar_DDP = "127";
 
         public const string Observacion_Compromisos = "132";
+
         public const string Eliminar_Compromiso_Solicitud = "133";
+
         public const string Eliminar_Compromiso_Tema = "134";
+
+        public const string RegistrarProgramacionPersonal = "138";
+
+        public const string Cambiar_Estado_Programacion_Especial = "139";
+
     }
 }
