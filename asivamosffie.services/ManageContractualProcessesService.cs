@@ -831,6 +831,36 @@ namespace asivamosffie.services
             }
             return false;
         }
+
+        public async Task<bool> EnviarNotificacion(int pIdSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            try
+            {
+                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+                  
+                bool blEnvioCorreo = false;
+                var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Fiduciaria).Select(x => x.Usuario.Email).ToList();
+
+                foreach (var usuario in usuariosecretario)
+                {
+                    Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificarFiduciaria322);
+                    string template =
+                        TemplateActaAprobada.Contenido
+                        .Replace("_LinkF_", pDominioFront)
+                        .Replace("[NUMERO_SOLICITUD]", "_NumeroSolicitud_" ); 
+                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisión", template, pSender, pPassword, pMailServer, pMailPort);
+                }
+
+                return blEnvioCorreo;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+
+
     }
 
 }

@@ -30,13 +30,23 @@ namespace asivamosffie.api.Controllers
             _converter = converter; 
         }
 
+ 
+        [Route("EnviarActaAprobada")]
+        [HttpGet]
+        public async Task<bool> EnviarActaAprobada(int pComiteTecnicoId)
+        {
+            return await _managementCommitteeReportService.EnviarActaAprobada(pComiteTecnicoId, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+        }
+
+
+
         [Route("GetListCompromisoSeguimiento")]
         [HttpGet]
         public async Task<List<dynamic>> GetListCompromisoSeguimiento(int SesionSolicitudCompromisoId , int pTipoCompromiso)
         {
             return await _managementCommitteeReportService.GetListCompromisoSeguimiento(SesionSolicitudCompromisoId, pTipoCompromiso); 
         }
-
+         
         [Route("GetListCompromisos")]
         [HttpGet]
         public async Task<List<dynamic>> GetListCompromisos()

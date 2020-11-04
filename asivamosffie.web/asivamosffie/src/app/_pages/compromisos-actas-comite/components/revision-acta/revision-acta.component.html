@@ -243,8 +243,13 @@
       <mat-card-content>
         <p class="padding-p">Fecha: <b class="text-color"> {{ acta.sesionComentario.length > 0 ? ( acta.sesionComentario[0].fecha | date: 'dd/MM/yyyy' ) : ( fechaComentario | date: 'dd/MM/yyyy' ) }} </b></p>
         <div class="d-flex align-items-center">
-          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-          (onContentChanged)="maxLength($event, 1000)" formControlName="comentarioActa"></quill-editor>
+          <quill-editor class="quill-editor-style card"
+                        [styles]="editorStyle"
+                        [modules]="config"
+                        (onContentChanged)="maxLength($event, 1000)"
+                        formControlName="comentarioActa"
+                        required>
+            </quill-editor>
         <span class="contador" *ngIf="form.get('comentarioActa').value !== null">
           {{1000 - textoLimpio(form.get('comentarioActa').value, 1000)}}
         </span>
@@ -260,8 +265,7 @@
       <button mat-button 
               color="warn" 
               class="btn-guardar mr-bottom-2" 
-              type="submit"
-              [disabled]="form.get('comentarioActa').value === null">
+              type="submit">
               <img  src="assets/img/icon/guardar.svg" 
                     alt="Guardar">
       </button>

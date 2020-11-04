@@ -113,6 +113,8 @@ interface EstadoSolicitud{
     DevueltaPorComiteTecnico: string,
     DevueltaPorComiteFiduciario: string,
     EnTramite: string,
+    NoAplica: string
+    
   }
   
   export const EstadosSolicitud: EstadoSolicitud = {
@@ -123,6 +125,8 @@ interface EstadoSolicitud{
     DevueltaPorComiteTecnico: '5',
     DevueltaPorComiteFiduciario: '6',
     EnTramite: '7',
+    NoAplica: '8',
+
   }
 
   export interface ContratacionObservacion{

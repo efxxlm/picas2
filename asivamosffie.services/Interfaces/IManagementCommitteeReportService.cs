@@ -9,9 +9,8 @@ namespace asivamosffie.services.Interfaces
     public interface IManagementCommitteeReportService
     {
         //Tarea Programada
-        Task GetApproveExpiredMinutes(string pServerUser);
-
-         
+        Task GetApproveExpiredMinutes(string pServerUser); 
+        Task<bool> EnviarActaAprobada(int pComiteTecnicoId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<List<dynamic>> GetListCompromisos(int pUserId);
         Task<Respuesta> ChangeStatusSesionComiteSolicitudCompromiso(SesionSolicitudCompromiso pSesionSolicitudCompromiso);
         Task<ActionResult<List<GrillaSesionComiteTecnicoCompromiso>>> GetManagementCommitteeReport(int pUserId); 

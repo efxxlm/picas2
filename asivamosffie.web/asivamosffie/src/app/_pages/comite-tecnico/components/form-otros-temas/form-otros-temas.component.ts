@@ -257,11 +257,28 @@ export class FormOtrosTemasComponent implements OnInit {
 
   cargarRegistro() {
 
-    if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-    }else if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+    if ( this.sesionComiteTema.requiereVotacion ){
+      this.sesionComiteTema.sesionTemaVoto.forEach(sv => {
+        if (sv.esAprobado)
+          this.cantidadAprobado++;
+        else
+          this.cantidadNoAprobado++;
+      })
+  
+      if (this.cantidadNoAprobado == 0){
+        this.resultadoVotacion = 'Aprobó'
+        this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+      }else if ( this.cantidadAprobado == 0 ){
+        this.resultadoVotacion = 'No Aprobó'
+        this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
+      }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+        this.resultadoVotacion = 'Aprobó'
+      }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+        this.resultadoVotacion = 'No Aprobó'
+      }
     }
+    
+  
 
     this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
 
@@ -293,18 +310,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
         this.compromisos.push(grupoCompromiso)
       })
-
-      this.sesionComiteTema.sesionTemaVoto.forEach( sv => {
-        if (sv.esAprobado)
-          this.cantidadAprobado++;
-        else
-          this.cantidadNoAprobado++;
-      })
-  
-      if ( this.cantidadNoAprobado > 0 )
-        this.resultadoVotacion = 'No Aprobó'
-      else
-        this.resultadoVotacion = 'Aprobó'
+     
   
         this.tieneVotacion = this.sesionComiteTema.requiereVotacion;
 

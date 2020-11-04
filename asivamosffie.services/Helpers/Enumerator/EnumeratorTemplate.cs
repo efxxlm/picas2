@@ -20,5 +20,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         EnviarComiteAprobacion = 24,
         ddpSolicitudCreada = 25,
 
+        TablaAprobacionParticipanteActa = 27,
+        RegistrosTablaAprobacionParticipanteActa = 28,
+      	NotificarFiduciaria322 = 29
+
     }
 }

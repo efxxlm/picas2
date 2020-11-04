@@ -8,7 +8,7 @@ import { Proyecto } from '../project/project.service';
 @Injectable({
   providedIn: 'root'
 })
-export class BudgetAvailabilityService {
+export class BudgetAvailabilityService {  
 
   constructor(
     private http: HttpClient
@@ -95,6 +95,10 @@ export class BudgetAvailabilityService {
   getAportanteTerritorial ( pProyectoId: number, pTipoAportanteId: number ) {
     return this.http.get( `${ environment.apiUrl }/RequestBudgetAvailability/GetListAportanteByTipoAportanteByProyectoId?pProyectoId=${ pProyectoId }&pTipoAportanteId=${ pTipoAportanteId }` );
   };
+
+  getContratosList(): any {
+    return this.http.get<any[]>( `${ environment.apiUrl }/RequestBudgetAvailability/GetContratos` );
+  }
 
   
 };

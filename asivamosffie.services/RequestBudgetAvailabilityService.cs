@@ -1833,5 +1833,10 @@ namespace asivamosffie.services
             }
             return true;
         }
+
+        public async Task<dynamic> GetContratos()
+        {
+            return _context.Contrato.Where(x => !(bool)x.Eliminado).ToList();
+        }
     }
 }

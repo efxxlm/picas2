@@ -207,6 +207,18 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   validarTemas(esProposicion: boolean) {
+
+    if (this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).length == 0) {
+
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+
+      return true;
+    }
+
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
 
@@ -235,7 +247,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           cantidadTemasCompletas++;
         }
         else {
-          cantidadTemasCompletas--;
+          cantidadTemas++;
         }
       })
 
@@ -252,11 +264,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           this.estadoProposiciones = this.estadoFormulario.completo;
         else
           this.estadoOtrosTemas = this.estadoFormulario.completo;
-    }else{
-      if (esProposicion)
-        this.estadoProposiciones = this.estadoFormulario.completo;
-      else
-        this.estadoOtrosTemas = this.estadoFormulario.completo;
+    } else {
+
     }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
@@ -284,11 +293,11 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     }
 
     if (this.estadoSolicitudes == this.estadoFormulario.completo &&
-        this.estadoOtrosTemas == this.estadoFormulario.completo &&
-        this.estadoProposiciones == this.estadoFormulario.completo  
-      ){
-        this.estaTodo = true;
-      }
+      this.estadoOtrosTemas == this.estadoFormulario.completo &&
+      this.estadoProposiciones == this.estadoFormulario.completo
+    ) {
+      this.estaTodo = true;
+    }
   }
 
   onDelete(i: number) {
@@ -309,7 +318,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result===true) {
+      if (result === true) {
         this.onDelete(e)
       }
     });

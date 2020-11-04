@@ -42,6 +42,17 @@
       </div>
 
       <h2 class="card-subTitle">Decisiones</h2>
+      <div class="reparacion-card row" *ngIf="tieneVotacion">
+        <div class="col-md-4">
+          Resultado de la votación <b class="colorMainColor">{{ resultadoVotacion }}</b>
+        </div>
+        <div class="col-md-4 info-text completo">
+          Aprobó <b class="colorMainColor"> {{ cantidadAprobado }} </b>
+        </div>
+        <div class="col-md-4 info-text sin-diligenciar">
+          No aprobó <b class="colorMainColor"> {{ cantidadNoAprobado }} </b>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-md-8">
