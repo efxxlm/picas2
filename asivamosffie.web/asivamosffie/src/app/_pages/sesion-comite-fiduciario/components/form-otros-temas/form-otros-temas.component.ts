@@ -37,6 +37,11 @@ export class FormOtrosTemasComponent implements OnInit {
     compromisos: this.fb.array([])
   });
 
+  tieneVotacion: boolean = true;
+  cantidadAprobado: number = 0;
+  cantidadNoAprobado: number = 0;
+  resultadoVotacion: string = '';
+
   estadosArray = [];
 
   editorStyle = {
@@ -266,13 +271,32 @@ export class FormOtrosTemasComponent implements OnInit {
 
   cargarRegistro() {
 
-    this.ngOnInit().then(() => {
-      if (this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.AprobadaPorComiteTecnico) {
-        this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-      } else if (this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.RechazadaPorComiteTecnico) {
-        this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
+    let estados: string[] = ['2', '4', '6', '8']
+
+    this.commonService.listaEstadoSolicitud()
+      .subscribe(response => {
+
+        this.estadosArray = response.filter(s => estados.includes(s.codigo));
+      if ( this.sesionComiteTema.requiereVotacion ){
+        this.sesionComiteTema.sesionTemaVoto.forEach(sv => {
+          if (sv.esAprobado)
+            this.cantidadAprobado++;
+          else
+            this.cantidadNoAprobado++;
+        })
+    
+        if (this.cantidadNoAprobado == 0){
+          this.resultadoVotacion = 'Aprobó'
+          this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
+        }else if ( this.cantidadAprobado == 0 ){
+          this.resultadoVotacion = 'No Aprobó'
+          this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo))
+        }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+          this.resultadoVotacion = 'Aprobó'
+        }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+          this.resultadoVotacion = 'No Aprobó'
+        }
       }
-      console.log(this.estadosArray)
 
       this.responsable = this.listaResponsables.find(r => r.codigo == this.sesionComiteTema.responsableCodigo)
 
@@ -306,6 +330,8 @@ export class FormOtrosTemasComponent implements OnInit {
           })
 
         });
+
+        this.tieneVotacion = this.sesionComiteTema.requiereVotacion;
 
     })
 

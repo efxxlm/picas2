@@ -307,13 +307,27 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
 
-        if (this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico) {
-          this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-        } else if (this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico) {
-          this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
+        if ( this.sesionComiteSolicitud.requiereVotacion ){
+          this.sesionComiteSolicitud.sesionSolicitudVoto.forEach(sv => {
+            if (sv.esAprobado)
+              this.cantidadAprobado++;
+            else
+              this.cantidadNoAprobado++;
+          })
+      
+          if (this.cantidadNoAprobado == 0){
+            this.resultadoVotacion = 'Aprobó'
+            this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+          }else if ( this.cantidadAprobado == 0 ){
+            this.resultadoVotacion = 'No Aprobó'
+            this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
+          }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+            this.resultadoVotacion = 'Aprobó'
+          }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+            this.resultadoVotacion = 'No Aprobó'
+          }
         }
-        console.log(this.estadosArray)
-
+        
       })
 
 
@@ -351,18 +365,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     });
 
-    this.sesionComiteSolicitud.sesionSolicitudVoto.forEach(sv => {
-      if (sv.esAprobado)
-        this.cantidadAprobado++;
-      else
-        this.cantidadNoAprobado++;
-    })
-
-    if (this.cantidadNoAprobado > 0)
-      this.resultadoVotacion = 'No Aprobó'
-    else
-      this.resultadoVotacion = 'Aprobó'
-
+    
     this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacion;
 
     // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
