@@ -46,6 +46,8 @@ namespace asivamosffie.services
             List<dynamic> LisDyna = new List<dynamic>();
             List<Dominio> ListDominio = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Programacion_Inicial).ToList();
 
+
+            //Departamento Municipio Plazo
             foreach (var ContratoConstruccion in ListContratoConstruccion)
             {
                 if (ContratoConstruccion.Programacion != null)
@@ -128,9 +130,9 @@ namespace asivamosffie.services
                     ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = _context.ProgramacionPersonalContratoConstruccion.Find(item.ProgramacionPersonalContratoConstruccionId);
                     programacionPersonalContratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
                     programacionPersonalContratoConstruccion.FechaModificacion = DateTime.Now;
-                    programacionPersonalContratoConstruccion.CantidaPersonal = item.CantidaPersonal;
+                    programacionPersonalContratoConstruccion.CantidadPersonal = item.CantidadPersonal;
 
-                    if (programacionPersonalContratoConstruccion.CantidaPersonal == 0)
+                    if (programacionPersonalContratoConstruccion.CantidadPersonal == 0)
                         RegistroCompleto = false;
                 }
                 if (RegistroCompleto)
