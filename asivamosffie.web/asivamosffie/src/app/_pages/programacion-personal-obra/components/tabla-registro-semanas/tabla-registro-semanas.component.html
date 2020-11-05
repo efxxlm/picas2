@@ -1,19 +1,33 @@
 <section *ngIf="registroSemanasTabla.length > 0">
     <div *ngFor="let registro of registroSemanasTabla; index as i">
-        <table mat-table [dataSource]="registro" matSort *ngIf="i === 0" scop>
-    
-            <ng-container matColumnDef="semanas">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Semanas </th>
-                <td mat-cell *matCellDef="let element" align="center">
-                    <section *ngFor="let semana of element">
-                        <th> {{ semana.numeroSemana }} </th>
-                        <input [(ngModel)]="semana.cantidadPersonal" matInput type="number" required>
-                    </section>
-                </td>
-            </ng-container>
-          
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let column; columns: displayedColumns;"></tr>
-        </table>
+        <section *ngIf="i === 0">
+            <section class="cabecera-table">
+                <p>Semanas</p>
+            </section>
+            <section class="flex-table">
+                <section *ngFor="let semana of registro" class="size-semana">
+                    <div class="border-semana">
+                        {{ semana[0].numeroSemana }}
+                    </div>
+                    <div class="border-semana">
+                        <mat-form-field style="width: 2em;">
+                            <input matInput type="number" [(ngModel)]="semana[0].cantidadPersonal" required style="width: 1em;">
+                        </mat-form-field>
+                    </div>
+                </section>
+            </section>
+        </section>
+        <section *ngIf="i > 0" class="flex-table">
+            <section *ngFor="let semana of registro" class="size-semana">
+                <div class="border-semana">
+                    {{ semana[0].numeroSemana }}
+                </div>
+                <div class="border-semana">
+                    <mat-form-field style="width: 2em;">
+                        <input matInput type="number" [(ngModel)]="semana[0].cantidadPersonal" required style="width: 1em;">
+                    </mat-form-field>
+                </div>
+            </section>
+        </section>
     </div>
 </section>

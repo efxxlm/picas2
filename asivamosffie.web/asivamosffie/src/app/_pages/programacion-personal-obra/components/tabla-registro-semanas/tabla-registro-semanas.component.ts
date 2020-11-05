@@ -22,7 +22,7 @@ export class TablaRegistroSemanasComponent implements OnInit {
       this.registroSemanasTabla.push( [] );
       this.registroSemanas.forEach( registro => {
         if ( this.registroSemanasTabla[ numeroregistros ].length < 20 ) {
-          registro[ 'cantidadPersonal' ] = 0;
+          registro[ 'cantidadPersonal' ] = null;
           this.registroSemanasTabla[ numeroregistros ].push( [ registro ] );
         };
         if ( this.registroSemanasTabla[ numeroregistros ].length >= 20 ) {
