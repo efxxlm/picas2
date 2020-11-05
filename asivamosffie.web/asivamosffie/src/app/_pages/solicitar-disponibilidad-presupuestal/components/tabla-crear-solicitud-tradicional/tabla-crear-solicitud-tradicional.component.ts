@@ -82,12 +82,17 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
       };
     }
 
-  openDialog(modalTitle: string, modalText: string) {
-    const dialogRef = this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText }
-    });
-  }
+  
+    openDialog(modalTitle: string, modalText: string,reload:boolean=false) {
+      const dialogRef = this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle, modalText }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(reload)
+          location.reload();
+      })
+    }
 
   enviarSolicitud(e: number) {
     console.log(e);
@@ -111,7 +116,7 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
         this.budgetAvailabilityService.deleteRequest( e )
         .subscribe( respuesta => {
           console.log(respuesta);
-        this.openDialog( '', `<b>${respuesta.message}</b>` );
+        this.openDialog( '', `<b>${respuesta.message}</b>` ,true);
         if (respuesta.code == "200")
           this.ngOnInit();
       })
