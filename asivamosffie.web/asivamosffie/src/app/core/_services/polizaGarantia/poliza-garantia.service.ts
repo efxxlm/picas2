@@ -52,6 +52,9 @@ export class PolizaGarantiaService implements OnInit {
   CambiarEstadoPolizaByContratoId(pCodigoNuevoEstadoPoliza:string, pContratoId:number){
     return this.http.put<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CambiarEstadoPolizaByContratoId?pCodigoNuevoEstadoPoliza=${pCodigoNuevoEstadoPoliza}&pContratoId=${pContratoId}`, null);
   }
+  GetNotificacionContratoPolizaByIdContratoId(pContratoId: number){
+    return this.http.get<GetNotificacionContratoPolizaByIdContratoId>(`${environment.apiUrl}/guaranteePolicy/GetNotificacionContratoPolizaByIdContratoId?pContratoId=${pContratoId}`);
+  }
 }
 
 export interface CreatePolizaObservacion {
@@ -182,4 +185,12 @@ export interface GetContratoPolizaByIdContratoId {
   valorAmparo: number;
   vigencia:  any;
   vigenciaAmparo:  any;
+}
+
+export interface GetNotificacionContratoPolizaByIdContratoId{
+  nombreAseguradora: any;
+  numeroPoliza: any;
+  fechaRevision: any;
+  fechaAprobacion: any;
+  estadoRevision: any;
 }

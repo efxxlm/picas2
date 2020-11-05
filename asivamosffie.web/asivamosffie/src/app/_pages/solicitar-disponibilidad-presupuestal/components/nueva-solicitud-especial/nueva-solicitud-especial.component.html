@@ -211,7 +211,7 @@
             <mat-card-content>
                 <p>
                     <b>Tipo de intervención:</b>
-                    {{ proyecto.tipoIntervencionCodigo }}
+                    {{ proyecto.tipoIntervencionString }}
                 </p>
                 <p>
                     <b>Nombre de la I.E:</b>
@@ -311,13 +311,13 @@
                                 <mat-form-field class="full-width">
                                     <input  matInput
                                             #valor
-                                            maxlength="28"
+                                            maxlength="16"
                                             formControlName="valor"
                                             currencyMask
                                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                             required>
                                 </mat-form-field>
-                                <span class="contador" *ngIf="addressForm.get( 'valor' ).value.toString() !== null">{{20 - addressForm.get( 'valor' ).value.toString().length }}</span>
+                                <span class="contador" *ngIf="addressForm.get( 'valor' ).value.toString() !== null">{{10 - addressForm.get( 'valor' ).value.toString().length }}</span>
                             </div>
                         </div>
                     </div>

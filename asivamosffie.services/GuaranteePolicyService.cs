@@ -96,6 +96,8 @@ namespace asivamosffie.services
                 {
                     msjNotificacion.EstadoRevision = polizaObservacion.EstadoRevisionCodigo;
                     msjNotificacion.FechaRevision = polizaObservacion.FechaRevision.ToString("dd/MM/yyyy");
+                    msjNotificacion.FechaRevisionDateTime = polizaObservacion.FechaRevision;
+                    
                 }
             }
 

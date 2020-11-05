@@ -186,6 +186,7 @@ export interface Proyecto{
   fechaSesionJunta?: Date,
   numeroActaJunta?:number,
   tipoIntervencionCodigo?:number,
+  tipoIntervencionString?:number,
   llaveMen?:string,
   localizacionIdMunicipio?:string,
   institucionEducativaId?:number,
