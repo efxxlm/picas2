@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ProgramacionPersonalObraService } from 'src/app/core/_services/programacionPersonalObra/programacion-personal-obra.service';
 import { DialogRegistroProgramacionComponent } from '../dialog-registro-programacion/dialog-registro-programacion.component';
 
 @Component({
@@ -15,37 +16,32 @@ export class TablaRegistroProgramacionComponent implements OnInit {
   tablaRegistro              = new MatTableDataSource();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
-  dataTable: any[] = [
-    {
-      fechaFirmaInicio: new Date(),
-      llaveMen: 'LJ776554',
-      numeroContratoObra: 'C223456789',
-      tipoIntervencion: 'Remodelación',
-      institucionEducativa: 'I.E. María Villa Campo',
-      sede: 'Única sede',
-      estadoProgramacion :'Sin programación de personal',
-      contratoId: 2
-    }
-  ];
-  displayedColumns: string[]  = [ 
-    'fechaFirmaInicio',
+  displayedColumns: string[]  = [
+    'fechaFirmaActaInicio',
     'llaveMen',
-    'numeroContratoObra',
+    'numeroContrato',
     'tipoIntervencion',
-    'institucionEducativa',
+    'institucionEducativaSede',
     'sede',
-    'estadoProgramacion',
+    'estadoProgramacionInicial',
     'gestion' 
   ];
 
-  constructor ( private dialog: MatDialog ) {
+  constructor ( private dialog: MatDialog,
+                private programacionPersonalSvc: ProgramacionPersonalObraService ) {
   }
 
   ngOnInit(): void {
-    this.tablaRegistro = new MatTableDataSource( this.dataTable );
-    this.tablaRegistro.paginator              = this.paginator;
-    this.tablaRegistro.sort                   = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.programacionPersonalSvc.getListProyectos()
+      .subscribe(
+        response => {
+          console.log( response );
+          this.tablaRegistro = new MatTableDataSource( response );
+          this.tablaRegistro.paginator              = this.paginator;
+          this.tablaRegistro.sort                   = this.sort;
+          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        }
+      );
   };
 
   applyFilter ( event: Event ) {
@@ -53,9 +49,10 @@ export class TablaRegistroProgramacionComponent implements OnInit {
     this.tablaRegistro.filter = filterValue.trim().toLowerCase();
   };
 
-  openRegistroProgramacion ( ) {
+  openRegistroProgramacion ( contratoConstruccionId: number ) {
     this.dialog.open( DialogRegistroProgramacionComponent, {
-      width: '70em'
+      width: '70em',
+      data: { contratoConstruccionId }
     });
   };
 

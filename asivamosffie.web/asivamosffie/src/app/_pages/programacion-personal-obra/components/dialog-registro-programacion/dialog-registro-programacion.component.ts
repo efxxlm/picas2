@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ProgramacionPersonalObraService } from 'src/app/core/_services/programacionPersonalObra/programacion-personal-obra.service';
 
 @Component({
   selector: 'app-dialog-registro-programacion',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DialogRegistroProgramacionComponent implements OnInit {
 
-  constructor() { }
+  constructor ( private programacionPersonalSvc: ProgramacionPersonalObraService,
+                @Inject(MAT_DIALOG_DATA) public contrato )
+  {
+    this.programacionPersonalSvc.getProgramacionPersonalByContratoConstruccionId( contrato.contratoConstruccionId )
+      .subscribe( console.log )
+  };
 
   ngOnInit(): void {
-  }
+  };
 
-}
+};

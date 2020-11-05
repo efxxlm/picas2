@@ -11,9 +11,9 @@
 <div class="w-90 table-responsive">
   <table mat-table [dataSource]="tablaRegistro" matSort>
 
-    <ng-container matColumnDef="fechaFirmaInicio">
+    <ng-container matColumnDef="fechaFirmaActaInicio">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de firma de acta de inicio </th>
-      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaFirmaInicio | date: 'dd/MM/yyyy' }} </td>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaFirmaActaInicio | date: 'dd/MM/yyyy' }} </td>
     </ng-container>
 
     <ng-container matColumnDef="llaveMen">
@@ -21,9 +21,9 @@
       <td mat-cell *matCellDef="let element" align="center"> {{ element.llaveMen }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="numeroContratoObra">
+    <ng-container matColumnDef="numeroContrato">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato de obra </th>
-      <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContratoObra }} </td>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
     </ng-container>
 
     <ng-container matColumnDef="tipoIntervencion">
@@ -31,9 +31,9 @@
       <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="institucionEducativa">
+    <ng-container matColumnDef="institucionEducativaSede">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución Educativa </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativaSede }} </td>
     </ng-container>
 
     <ng-container matColumnDef="sede">
@@ -41,9 +41,9 @@
         <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="estadoProgramacion">
+    <ng-container matColumnDef="estadoProgramacionInicial">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de programación inicial </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoProgramacion }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoProgramacionInicial }} </td>
     </ng-container>
   
     <ng-container matColumnDef="gestion">
@@ -53,8 +53,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                (click)="openRegistroProgramacion()"
-                *ngIf="element.estadoProgramacion === 'Sin programación de personal'">
+                (click)="openRegistroProgramacion( element )">
                 Registrar programación de personal
         </button>
 
