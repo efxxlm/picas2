@@ -362,6 +362,7 @@ namespace asivamosffie.services
 
                         //controversiaContractual.Eliminado = false;
                         _context.ControversiaContractual.Add(controversiaContractual);
+                        await _context.SaveChangesAsync();
 
                     }
                     else
@@ -379,14 +380,11 @@ namespace asivamosffie.services
                         //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
                         //LimpiarEntradasContratoPoliza(ref contratoPoliza);
-
+                        controversiaContractual.FechaModificacion = DateTime.Now;
                         //_context.ContratoPoliza.Add(contratoPoliza);
                         _context.ControversiaContractual.Update(controversiaContractual);
-                        //await _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                     }
-
-
-
 
                     return
                         new Respuesta

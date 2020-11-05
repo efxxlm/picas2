@@ -28,7 +28,10 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //controversiaContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if(controversiaContractual.ControversiaContractualId==0)
+                    controversiaContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    controversiaContractual.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _contractualControversy.CreateEditarControversiaTAI(controversiaContractual);
                 return Ok(respuesta);
             }
