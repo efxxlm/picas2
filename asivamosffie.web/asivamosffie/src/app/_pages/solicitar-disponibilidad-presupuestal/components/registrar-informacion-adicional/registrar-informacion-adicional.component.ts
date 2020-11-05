@@ -97,8 +97,9 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
             this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
             this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
             this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
-            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo? solicitud.tipoSolicitudCodigo:this.objetoDisponibilidad.tipoSolicitudCodigo;
+            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo? solicitud.tipoSolicitudCodigo:this.objetoDisponibilidad.tipoSolicitudCodigo;            
           }
+          
         }),
         err => {
           console.log( err );
@@ -108,8 +109,10 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
       .subscribe(
         contratacion => {
+          this.objetoDisponibilidad.fechaComiteTecnicoNotMapped=contratacion.fechaComiteTecnicoNotMapped;
         contratacion.contratacionProyecto.forEach(cp => {
           cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
+          
           this.listaProyectos.push(cp.proyecto);
           /*this.projectService.getProjectById(cp.proyectoId)
             .subscribe(proyecto => {

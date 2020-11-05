@@ -1,4 +1,5 @@
 export interface Contratacion {
+    
     contratacionId?: number,
     tipoSolicitudCodigo?: string,
     fechaSolicitud?: Date,
@@ -13,10 +14,13 @@ export interface Contratacion {
     observaciones?: string,
     rutaMinuta?: string,
     contratacionProyecto?: ContratacionProyecto[],
+    /*not mapped*/
+    fechaComiteTecnicoNotMapped?: any
 
 }
 
 export interface ContratacionProyecto{
+    
     contratacionProyectoId?: number,
     contratacionId?: number,
     proyectoId?: number,
@@ -36,7 +40,7 @@ export interface ContratacionProyecto{
     proyecto?: any, 
     tipoIntervencionCodigo?: string,
     tipoSolicitudCodigo?: string,
-
+    
     proyectoGrilla?: ProyectoGrilla,
 
 }

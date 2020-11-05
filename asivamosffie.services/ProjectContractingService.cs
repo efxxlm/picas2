@@ -270,6 +270,16 @@ namespace asivamosffie.services
                     praportante.CofinanciacionAportante.TipoAportanteString = _context.Dominio.Find(praportante.CofinanciacionAportante.TipoAportanteId).Nombre;
 
                 }
+                DateTime? fechaComitetecnico = null;
+                string numerocomietetecnico = "";
+                var comite= _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
+                    Include(x => x.ComiteTecnico).ToList();
+                if (comite.Count() > 0)
+                {
+                    fechaComitetecnico = Convert.ToDateTime(comite.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
+                }
+
+                contratacion.FechaComiteTecnicoNotMapped = fechaComitetecnico;
             }
 
             return contratacion;
