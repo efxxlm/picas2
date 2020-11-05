@@ -1172,27 +1172,27 @@ namespace asivamosffie.services
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, DetallesProyectos);
                         break;
 
-                    case ConstanCodigoVariablesPlaceHolders.NUMERO_DE_LICENCIA:
-                        string numeroLicencia = "";
-                        if (pContratacion.ContratacionProyecto.Count() > 0)
-                        {
-                            numeroLicencia = pContratacion.ContratacionProyecto.FirstOrDefault().NumeroLicencia;
-                        }
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, numeroLicencia);
-                        break;
+                    // case ConstanCodigoVariablesPlaceHolders.NUMERO_DE_LICENCIA:
+                    //     string numeroLicencia = "";
+                    //     if (pContratacion.ContratacionProyecto.Count() > 0)
+                    //     {
+                    //         numeroLicencia = pContratacion.ContratacionProyecto.FirstOrDefault().NumeroLicencia;
+                    //     }
+                    //     pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, numeroLicencia);
+                    //     break;
 
-                    case ConstanCodigoVariablesPlaceHolders.FECHA_DE_VIGENCIA:
-                        string fechaVigencia = "";
-                        if (pContratacion.ContratacionProyecto.Count() > 0)
-                        {
-                            if (pContratacion.ContratacionProyecto.FirstOrDefault().FechaVigencia != null)
-                            {
-                                fechaVigencia = ((DateTime)pContratacion.ContratacionProyecto.FirstOrDefault().FechaVigencia).ToString("yy-MM-dd");
+                    // case ConstanCodigoVariablesPlaceHolders.FECHA_DE_VIGENCIA:
+                    //     string fechaVigencia = "";
+                    //     if (pContratacion.ContratacionProyecto.Count() > 0)
+                    //     {
+                    //         if (pContratacion.ContratacionProyecto.FirstOrDefault().FechaVigencia != null)
+                    //         {
+                    //             fechaVigencia = ((DateTime)pContratacion.ContratacionProyecto.FirstOrDefault().FechaVigencia).ToString("yy-MM-dd");
 
-                            }
-                        }
-                        pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, fechaVigencia);
-                        break;
+                    //         }
+                    //     }
+                    //     pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, fechaVigencia);
+                    //     break;
 
                     case ConstanCodigoVariablesPlaceHolders.CONSIDERACIONES_ESPECIALES:
                         pPlantilla = pPlantilla.Replace(placeholderDominio.Nombre, pContratacion.ConsideracionDescripcion);
@@ -1223,71 +1223,86 @@ namespace asivamosffie.services
 
             if (pContratacion.ContratacionProyecto.Count() > 0)
             {
+                ContratacionProyecto contratacionProyecto = pContratacion.ContratacionProyecto.ToArray()[0];
 
-                //Pregunta 1 
-                if (pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreoWeb == null ||
-                    !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().TieneMonitoreoWeb)
-                {
-                    //Si la respuesta a la pregunta 1, fue “No”, el sistema mostrará la pregunta 4
-                    strPregunta_1 = " no";
-                    // strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
+                if (contratacionProyecto.TieneMonitoreoWeb != null && contratacionProyecto.TieneMonitoreoWeb.Value == true ){
+
+                    contratacionProyecto.TieneMonitoreoWeb = true;
+
+                    strPregunta_1 = ConstanStringRespuestasBool.SI;
+
+                }else{
+
+                    contratacionProyecto.TieneMonitoreoWeb = false;
+
+                    strPregunta_1 = ConstanStringRespuestasBool.NO;
+
                 }
-                else
-                {
-                    //Si la respuesta fue “Si”, el sistema mostrará la pregunta 2.  
-                    strPregunta_1 = " si";
 
-                    //pregunta 2
-                    if (pContratacion.ContratacionProyecto.FirstOrDefault().EsReasignacion == null
-                        || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().EsReasignacion)
-                    {
-                        //pregunta 5
-                        if (pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia == null
-                            || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia)
-                        {
+                //Reasignacion 
+                if (contratacionProyecto.EsReasignacion != null && contratacionProyecto.EsReasignacion.Value == true){
 
-                        }
-                        else
-                        {
-                            strPregunta_5 = ContenidoPregunta5 + " si";
-                            strPregunta_6 = ContenidoPregunta6 + " " + pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente;
-                        }
-                    }
-                    else
-                    {
-                        strPregunta_2 = ContenidoPregunta2 + " si";
-                        //pregunta 3
-                        if (pContratacion.ContratacionProyecto.FirstOrDefault().EsAvanceobra == null
-                           || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().EsAvanceobra)
-                        {
+                    contratacionProyecto.EsReasignacion = true;
+                    strPregunta_2 = ContenidoPregunta2 + ConstanStringRespuestasBool.SI;
 
-                        }
-                        else
-                        {
+                }else{
+                    contratacionProyecto.EsReasignacion = false;
+                    strPregunta_2 = ContenidoPregunta2 + ConstanStringRespuestasBool.NO;
 
-                            strPregunta_3 = ContenidoPregunta3 + " si";
-                            strPregunta_4 = ContenidoPregunta4 + " " + (pContratacion.ContratacionProyecto.FirstOrDefault().PorcentajeAvanceObra).ToString() + "%";
-                            //pregunta 5
-                            if (pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia == null
-                                || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().RequiereLicencia)
-                            {
+                    strPregunta_5 = ContenidoPregunta5 + 
+                                    ((contratacionProyecto.RequiereLicencia.HasValue && contratacionProyecto.RequiereLicencia.Value == true) ? ConstanStringRespuestasBool.SI : ConstanStringRespuestasBool.NO);
 
-                            }
-                            else
-                            {
-                                strPregunta_5 = ContenidoPregunta5 + " si";
-                                if (pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente == null || !(bool)pContratacion.ContratacionProyecto.FirstOrDefault().LicenciaVigente)
-                                {
-                                    strPregunta_6 = ContenidoPregunta6 + " no";
-                                }
-                                {
-                                    strPregunta_6 = ContenidoPregunta6 + " si";
-                                }
+                }
 
-                            }
+                //Avance obra
+                if (contratacionProyecto.EsAvanceobra != null && contratacionProyecto.EsAvanceobra.Value == true){
 
-                        }
-                    }
+                    contratacionProyecto.EsAvanceobra = true;
+                    strPregunta_3 = ContenidoPregunta3 + ConstanStringRespuestasBool.SI;
+
+                    strPregunta_4 = ContenidoPregunta4 + contratacionProyecto.PorcentajeAvanceObra;
+
+                }else{
+                    contratacionProyecto.EsAvanceobra = false;
+                    //strPregunta_3 = ContenidoPregunta3 + ConstanStringRespuestasBool.NO;
+
+                    strPregunta_5 = ContenidoPregunta5 + 
+                                    ((contratacionProyecto.RequiereLicencia.HasValue && contratacionProyecto.RequiereLicencia.Value == true) ? ConstanStringRespuestasBool.SI : ConstanStringRespuestasBool.NO);
+
+                }
+
+                //Requiere Licencia
+                if (contratacionProyecto.RequiereLicencia != null && contratacionProyecto.RequiereLicencia.Value == true){
+
+                    contratacionProyecto.RequiereLicencia = true;
+                    strPregunta_4 = ContenidoPregunta4 + ConstanStringRespuestasBool.SI;
+
+                    //strPregunta_4 = ContenidoPregunta4 + contratacionProyecto.PorcentajeAvanceObra;
+
+                }else{
+                    contratacionProyecto.RequiereLicencia = false;
+                    //strPregunta_4 = ContenidoPregunta3 + ConstanStringRespuestasBool.NO;
+
+                    //strPregunta_5 = ContenidoPregunta5 + 
+                    //                ((contratacionProyecto.RequiereLicencia.HasValue && contratacionProyecto.RequiereLicencia.Value == true) ? ConstanStringRespuestasBool.SI : ConstanStringRespuestasBool.NO);
+
+                }
+
+                if (contratacionProyecto.LicenciaVigente != null && contratacionProyecto.LicenciaVigente.Value == true){
+
+                    contratacionProyecto.LicenciaVigente = true;
+                    strPregunta_5 = ContenidoPregunta5 + ConstanStringRespuestasBool.SI;
+
+                    pPlantilla = pPlantilla.Replace("[NUMERO_DE_LICENCIA]", "N&uacute;mero de licencia: " + contratacionProyecto.NumeroLicencia );        
+                    pPlantilla = pPlantilla.Replace("[FECHA_DE_VIGENCIA]", "Fecha de vigencia: : " + contratacionProyecto.FechaVigencia.Value.ToString("dd/MM/yyyy"));        
+
+                    //strPregunta_4 = ContenidoPregunta4 + contratacionProyecto.PorcentajeAvanceObra;
+
+                }else{
+                    contratacionProyecto.LicenciaVigente = false;
+                    
+                    pPlantilla = pPlantilla.Replace("[NUMERO_DE_LICENCIA]", "");        
+                    pPlantilla = pPlantilla.Replace("[FECHA_DE_VIGENCIA]", "");        
 
                 }
             }
@@ -1589,17 +1604,23 @@ namespace asivamosffie.services
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.TIPO_DOCUMENTO_PRIVADA_PS:
-                            if ( pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo != null )
+                            string tipoProponente = "";
+
+                                if (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
                                 {
-                                ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
-                                Replace(placeholderDominio.Nombre, (pProcesoSeleccion.ProcesoSeleccionProponente.Count() > 0)
-                                ? ListaParametricas.Where(r => r.Codigo == pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoIdentificacionCodigo
-                                && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento
-                                ).FirstOrDefault().Nombre : " ");
-                                }else {
-                                    ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.
-                                    Replace(placeholderDominio.Nombre, "");
+                                    if ( pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoProponenteCodigo == "2" ||
+                                         pProcesoSeleccion.ProcesoSeleccionProponente.FirstOrDefault().TipoProponenteCodigo == "4"
+                                        )    
+                                        {
+                                            tipoProponente = "NIT";
+                                        }else{
+                                            tipoProponente = "CC";
+                                        }
+
                                 }
+
+                                ProcesosSeleccionPrivada = ProcesosSeleccionPrivada.Replace(placeholderDominio.Nombre, tipoProponente );
+
                                 break;
 
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_REPRESENTANTE_LEGAL_PRIVADA_PS:
