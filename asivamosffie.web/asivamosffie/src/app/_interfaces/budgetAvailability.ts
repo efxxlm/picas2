@@ -73,6 +73,7 @@ export interface DisponibilidadPresupuestalProyecto{
 }
 
 export interface CustonReuestCommittee{
+    
     contratacionId?: number,
     disponibilidadPresupuestalId?: number,
     sesionComiteSolicitudId?: number,
@@ -86,7 +87,6 @@ export interface CustonReuestCommittee{
     valorSolicitado?: number,
     estadoSolicitudCodigo?: string,
     estadoSolicitudText?: string,
-    
 }
 
 export interface ListAportantes{

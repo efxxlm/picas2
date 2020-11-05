@@ -141,7 +141,7 @@ export class EditarEnRevisionComponent implements OnInit {
     }); 
     this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data_1=>{
       const estadoRevisionCodigo = this.estadoArray.find(p => p.value === data_1.estadoRevision);
-      this.addressForm.get('fechaRevision').setValue(data_1.fechaRevision);
+      this.addressForm.get('fechaRevision').setValue(data_1.fechaRevisionDateTime);
       this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
     });
   }

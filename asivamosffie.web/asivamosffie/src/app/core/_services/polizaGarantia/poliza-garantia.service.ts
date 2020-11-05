@@ -191,6 +191,7 @@ export interface GetNotificacionContratoPolizaByIdContratoId{
   nombreAseguradora: any;
   numeroPoliza: any;
   fechaRevision: any;
+  fechaRevisionDateTime: any;
   fechaAprobacion: any;
   estadoRevision: any;
 }
