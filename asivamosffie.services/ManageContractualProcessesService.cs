@@ -40,9 +40,9 @@ namespace asivamosffie.services
             _context = context;
             _documentService = documentService;
             _commonService = commonService;
-        } 
-    
-        public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud)
+        }
+
+        public async Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Sesion_Comite_Solicitud, (int)EnumeratorTipoDominio.Acciones);
 
@@ -60,6 +60,10 @@ namespace asivamosffie.services
                 contratacion.FechaModificacion = DateTime.Now;
                 contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
 
+
+                if (ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
+                    await EnviarNotificacion(contratacion, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+               
                 _context.SaveChanges();
 
                 return new Respuesta
@@ -68,7 +72,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = true,
                     Code = ConstantMessagesResourceControl.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, pSesionComiteSolicitud.UsuarioCreacion, "CAMBIAR ESTADO SOLICITUD")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, pSesionComiteSolicitud.UsuarioCreacion, "CAMBIAR ESTADO SOLICITUD")
                 };
             }
             catch (Exception ex)
@@ -79,7 +83,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = true,
                     Code = ConstantMessagesResourceControl.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, pSesionComiteSolicitud.UsuarioCreacion, ex.InnerException.ToString())
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_Procesos_Contractuales, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, pSesionComiteSolicitud.UsuarioCreacion, ex.InnerException.ToString())
                 };
             }
 
@@ -543,7 +547,6 @@ namespace asivamosffie.services
         {
             try
             {
-
                 List<ComiteTecnico> ListComiteTecnicos = _context.ComiteTecnico
                     .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
                     .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ToList();
@@ -832,12 +835,14 @@ namespace asivamosffie.services
             return false;
         }
 
-        public async Task<bool> EnviarNotificacion(int pIdSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        public async Task<bool> EnviarNotificacion(Contratacion contratacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             try
             {
                 TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
-                  
+                //TODO Validar Cuandos sea otro tipo de solicitud
+        
+
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Fiduciaria).Select(x => x.Usuario.Email).ToList();
 
@@ -847,7 +852,7 @@ namespace asivamosffie.services
                     string template =
                         TemplateActaAprobada.Contenido
                         .Replace("_LinkF_", pDominioFront)
-                        .Replace("[NUMERO_SOLICITUD]", "_NumeroSolicitud_" ); 
+                        .Replace("[NUMERO_SOLICITUD]", contratacion.NumeroSolicitud);
                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisión", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
@@ -858,7 +863,6 @@ namespace asivamosffie.services
                 return false;
             }
         }
-
 
 
     }
