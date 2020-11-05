@@ -5,7 +5,7 @@
         </a>
     </div>
     <div class="text-center">
-        <h1 class="title-menu--h1">
+        <h1 class="title-menu--h1 mb-1em">
             Crear solicitud de disponibilidad presupuestal
         </h1>
     </div>
@@ -55,7 +55,7 @@
         <div class="text-area-quill">
             <label for="alcanceParticular" class="text-area-quill--label">Objeto</label>
             <quill-editor class="quill-editor-style" #objeto [styles]="editorStyle" [modules]="config"
-                (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
+                (onContentChanged)="maxLength($event, 1000)" formControlName="objeto" required></quill-editor>
                 <input type="hidden" formControlName="proyectoAdministrativoId">
                 <input type="hidden" formControlName="disponibilidadPresupuestalId">
         </div>

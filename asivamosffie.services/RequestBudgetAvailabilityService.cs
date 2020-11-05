@@ -900,8 +900,8 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Data = disponibilidadPresupuestal,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, disponibilidadPresupuestal.UsuarioCreacion, strCrearEditar)
+                    Code = ConstantMessagesDisponibilidadPresupuesta.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesDisponibilidadPresupuesta.EliminacionExitosa, idAccion, disponibilidadPresupuestal.UsuarioCreacion, strCrearEditar)
 
                 };
             }
@@ -925,7 +925,7 @@ namespace asivamosffie.services
         {
             return await (
                             from dp in _context.DisponibilidadPresupuestal
-                            where dp.NumeroSolicitud.Contains("DE_")
+                            where dp.NumeroSolicitud.Contains("DE_") && !(bool)dp.Eliminado
                             select new DisponibilidadPresupuestal
                             {
                                 DisponibilidadPresupuestalId = dp.DisponibilidadPresupuestalId,
@@ -955,6 +955,7 @@ namespace asivamosffie.services
                                 ValorSolicitud = dp.ValorSolicitud,
                                 EstadoSolicitudCodigo = dp.EstadoSolicitudCodigo,
                                 RegistroCompleto = dp.RegistroCompleto,
+                                Objeto = dp.Objeto,
                                 EstadoSolicitudNombre = _context.Dominio.Where(r => (bool)r.Activo &&
                                                                              r.Codigo.Equals(dp.EstadoSolicitudCodigo) &&
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal)
@@ -1851,7 +1852,9 @@ namespace asivamosffie.services
                     //disponibilidadPresupuestalOld.ContratacionId = pDisponibilidadPresupuestal.ContratacionId;
                     //disponibilidadPresupuestalOld.NumeroDrp = pDisponibilidadPresupuestal.NumeroDrp;
                     //disponibilidadPresupuestalOld.PlazoMeses = pDisponibilidadPresupuestal.PlazoMeses;
-                    //disponibilidadPresupuestalOld.PlazoDias = pDisponibilidadPresupuestal.PlazoDias;
+                    ///disponibilidadPresupuestalOld.PlazoDias = pDisponibilidadPresupuestal.PlazoDias;
+                    disponibilidadPresupuestalOld.LimitacionEspecial = pDisponibilidadPresupuestal.LimitacionEspecial==null? disponibilidadPresupuestalOld.LimitacionEspecial : pDisponibilidadPresupuestal.LimitacionEspecial;
+                    disponibilidadPresupuestalOld.UrlSoporte = pDisponibilidadPresupuestal.UrlSoporte == null ? disponibilidadPresupuestalOld.UrlSoporte : pDisponibilidadPresupuestal.UrlSoporte;
                     disponibilidadPresupuestalOld.CuentaCartaAutorizacion = pDisponibilidadPresupuestal.CuentaCartaAutorizacion==null? disponibilidadPresupuestalOld.CuentaCartaAutorizacion: pDisponibilidadPresupuestal.CuentaCartaAutorizacion;
                     disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId;
                     disponibilidadPresupuestalOld.ValorAportante = pDisponibilidadPresupuestal.ValorAportante;
