@@ -62,11 +62,16 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
       })
   }
 
-  openDialog(modalTitle: string, modalText: string) {
+  
+  openDialog(modalTitle: string, modalText: string,reload:boolean=false) {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      if(reload)
+        location.reload();
+    })
   }
 
   enviarSolicitud(e: number) {
@@ -85,12 +90,27 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
   }
 
   eliminar(e: number) {
-    this.budgetAvailabilityService.eliminarDisponibilidad( e )
-      .subscribe( respuesta => {
-        this.openDialog( '', `<b>${respuesta.message}</b>` );
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', e)
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        this.budgetAvailabilityService.eliminarDisponibilidad( e )
+        .subscribe( respuesta => {
+          console.log(respuesta);
+        this.openDialog( '', `<b>${respuesta.message}</b>` ,true);
         if (respuesta.code == "200")
           this.ngOnInit();
       })
+      }
+    });
   }
 
   verDetalle(e: number){

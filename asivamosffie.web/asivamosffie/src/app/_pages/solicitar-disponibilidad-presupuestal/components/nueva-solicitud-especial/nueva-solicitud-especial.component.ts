@@ -390,6 +390,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
           case "2":
 
             let disponibilidadPresupuestal: DisponibilidadPresupuestal = {
+              disponibilidadPresupuestalId: this.addressForm.get('disponibilidadPresupuestalId').value,
               tipoSolicitudCodigo: "2", //especial
               tipoSolicitudEspecialCodigo: tipoDDP.codigo,
               objeto: this.addressForm.get('objeto').value,

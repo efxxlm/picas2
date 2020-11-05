@@ -56,26 +56,30 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
     this.activatedRoute.params.subscribe( parametros => {
       forkJoin([
-        this.budgetAvailabilityService.getListCocecutivoProyecto(),
-        this.budgetAvailabilityService.getDisponibilidadPresupuestalById( parametros.id )
+        this.budgetAvailabilityService.getListCocecutivoProyecto(),        
       ]).subscribe( respuesta => {
           this.listaProyectos = respuesta[0];
-
-          this.objetoDispinibilidad = respuesta[1];
-
-          //console.log( this.objetoDispinibilidad );
-
-          let proyecto = this.objetoDispinibilidad.disponibilidadPresupuestalProyecto[0];
-
-          let proyectoSeleccionado = this.listaProyectos.find( p => p.proyectoId == proyecto.proyectoAdministrativoId );
-
-          this.formulario.get('consecutivo').setValue( proyectoSeleccionado )
-          this.formulario.get('objeto').setValue( this.objetoDispinibilidad.objeto )
-          this.formulario.get('proyectoAdministrativoId').setValue( proyecto.proyectoAdministrativoId )
-          this.formulario.get('disponibilidadPresupuestalId').setValue( this.objetoDispinibilidad.disponibilidadPresupuestalId )
-
-          this.changeProyecto();
-
+          if(parametros.id>0)
+          {
+            this.budgetAvailabilityService.getDisponibilidadPresupuestalById( parametros.id ).subscribe(
+              result=>{
+                this.objetoDispinibilidad = result;
+  
+                //console.log( this.objetoDispinibilidad );
+      
+                let proyecto = this.objetoDispinibilidad.disponibilidadPresupuestalProyecto[0];
+      
+                let proyectoSeleccionado = this.listaProyectos.find( p => p.proyectoId == proyecto.proyectoAdministrativoId );
+      
+                this.formulario.get('consecutivo').setValue( proyectoSeleccionado )
+                this.formulario.get('objeto').setValue( this.objetoDispinibilidad.objeto )
+                this.formulario.get('proyectoAdministrativoId').setValue( proyecto.proyectoAdministrativoId )
+                this.formulario.get('disponibilidadPresupuestalId').setValue( this.objetoDispinibilidad.disponibilidadPresupuestalId )
+      
+                this.changeProyecto();              
+              }
+            )            
+          }          
         })
     })
 
@@ -126,9 +130,9 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
     }
 
     let proyectoSeleccionado = this.formulario.get('consecutivo').value
-
+    let iddiproyectoid=this.objetoDispinibilidad.disponibilidadPresupuestalProyecto?this.objetoDispinibilidad.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId:0;
     let proyecto: DisponibilidadPresupuestalProyecto = {
-       disponibilidadPresupuestalProyectoId: this.formulario.get('proyectoAdministrativoId').value,
+       disponibilidadPresupuestalProyectoId: iddiproyectoid,
       proyectoAdministrativoId: proyectoSeleccionado ? proyectoSeleccionado.proyectoId : null,
     }
 
