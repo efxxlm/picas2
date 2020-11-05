@@ -1,35 +1,35 @@
-<section>
+<section *ngIf="registroSemanas">
     <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
       <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
     </button>
     
     <div class="text-center">
       <h1 class="title-menu--h1">
-        Registrar programación del personal LU990088
+        Registrar programación del personal {{ dataContrato.contrato.llaveMen }}
       </h1>
     
       <div class="d-flex text-center justify-center">
         <p class="p">
-            Atlántico
+            {{ dataContrato.contrato.departamento }}
         </p>
       
         <p class="p ml-2em">
-            Baranoa
+          {{ dataContrato.contrato.municipio }}
         </p>
 
         <p class="p ml-2em">
-            María Inmaculada
+          {{ dataContrato.contrato.institucionEducativaSede }}
         </p>
 
         <p class="p ml-2em">
-            Única sede
+            {{ dataContrato.contrato.sede }}
         </p>
 
         <p class="p ml-2em">
-            Plazo del proyecto: <b>29 semanas</b>
+            Plazo del proyecto: <b>{{ dataContrato.contrato.plazoProyecto }} semanas</b>
         </p>
       </div>
 
-      <app-tabla-registro-semanas></app-tabla-registro-semanas>
+      <app-tabla-registro-semanas [registroSemanas]="registroSemanas"></app-tabla-registro-semanas>
     </div>
 </section>

@@ -9,11 +9,15 @@ import { ProgramacionPersonalObraService } from 'src/app/core/_services/programa
 })
 export class DialogRegistroProgramacionComponent implements OnInit {
 
+  registroSemanas: any[];
+
   constructor ( private programacionPersonalSvc: ProgramacionPersonalObraService,
-                @Inject(MAT_DIALOG_DATA) public contrato )
+                @Inject(MAT_DIALOG_DATA) public dataContrato )
   {
-    this.programacionPersonalSvc.getProgramacionPersonalByContratoConstruccionId( contrato.contratoConstruccionId )
-      .subscribe( console.log )
+    this.programacionPersonalSvc.getProgramacionPersonalByContratoConstruccionId( dataContrato.contrato.contratoConstruccionId )
+      .subscribe(
+        response => this.registroSemanas = response
+      );
   };
 
   ngOnInit(): void {

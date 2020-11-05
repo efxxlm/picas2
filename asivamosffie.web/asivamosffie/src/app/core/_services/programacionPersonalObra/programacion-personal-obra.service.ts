@@ -17,7 +17,7 @@ export class ProgramacionPersonalObraService {
   };
 
   getProgramacionPersonalByContratoConstruccionId ( pContratoConstruccionId: number ) {
-    return this.http.get( `${ this.urlApi }/GetProgramacionPersonalByContratoConstruccionId?pContratoConstruccionId=${ pContratoConstruccionId }` );
+    return this.http.get<any[]>( `${ this.urlApi }/GetProgramacionPersonalByContratoConstruccionId?pContratoConstruccionId=${ pContratoConstruccionId }` );
   };
 
 };

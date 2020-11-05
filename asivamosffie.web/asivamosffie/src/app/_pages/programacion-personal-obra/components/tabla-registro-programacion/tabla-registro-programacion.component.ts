@@ -49,10 +49,10 @@ export class TablaRegistroProgramacionComponent implements OnInit {
     this.tablaRegistro.filter = filterValue.trim().toLowerCase();
   };
 
-  openRegistroProgramacion ( contratoConstruccionId: number ) {
+  openRegistroProgramacion ( contrato: any ) {
     this.dialog.open( DialogRegistroProgramacionComponent, {
       width: '70em',
-      data: { contratoConstruccionId }
+      data: { contrato }
     });
   };
 
