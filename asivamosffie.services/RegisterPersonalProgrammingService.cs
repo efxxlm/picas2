@@ -33,7 +33,7 @@ namespace asivamosffie.services
         public async Task<List<dynamic>> GetListProyectos()
         {
             List<ContratoConstruccion> ListContratoConstruccion = await _context.ContratoConstruccion
-                .Include(e => e.Programacion)
+                .Include(e => e.Programacion) 
                 .Include(e => e.Proyecto)
                   .ThenInclude(i => i.InstitucionEducativa)
                 .Include(e => e.Proyecto)
@@ -42,16 +42,19 @@ namespace asivamosffie.services
                    .ThenInclude(i => i.ContratacionProyecto)
                       .ThenInclude(i => i.Contratacion)
                           .ThenInclude(i => i.Contrato).Distinct().OrderByDescending(r => r.ContratoConstruccionId).ToListAsync();
-             
+
             List<dynamic> LisDyna = new List<dynamic>();
             List<Dominio> ListDominio = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Programacion_Inicial).ToList();
 
-
+            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             //Departamento Municipio Plazo
             foreach (var ContratoConstruccion in ListContratoConstruccion)
             {
                 if (ContratoConstruccion.Programacion != null)
                 {
+                    Localizacion Municipio = ListLocalizacion.Find(r => r.LocalizacionId == ContratoConstruccion.Proyecto.LocalizacionIdMunicipio);
+                    Localizacion Departamento = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+
                     LisDyna.Add(new
                     {
                         FechaFirmaActaInicio = ContratoConstruccion.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.HasValue ? ((DateTime)ContratoConstruccion.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2).ToString("dd-MM-yyyy") : " ",
@@ -64,10 +67,13 @@ namespace asivamosffie.services
                         ? ListDominio.Where(r => r.Codigo == ContratoConstruccion.Proyecto.EstadoProgramacionCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Programacion_Inicial).FirstOrDefault().Nombre
                         : ListDominio.Where(r => r.Codigo == ConstanCodigoEstadoProgramacionInicial.Sin_Programacion_Personal && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Programacion_Inicial).FirstOrDefault().Nombre,
                         EstadoProgramacionInicialCodigo = !string.IsNullOrEmpty(ContratoConstruccion.Proyecto.EstadoProgramacionCodigo) ? ContratoConstruccion.Proyecto.EstadoProgramacionCodigo : ConstanCodigoEstadoProgramacionInicial.Sin_Programacion_Personal,
+                        Municipio = Municipio.Descripcion,
+                        Departamento = Departamento.Descripcion,
+                        PlazoProyecto = ContratoConstruccion.Programacion.FirstOrDefault().Duracion,
                         ContratoConstruccion.ContratoConstruccionId
                     });
                 }
-            } 
+            }
             return LisDyna;
         }
 
@@ -204,6 +210,6 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pUsuario, ex.InnerException.ToString())
                     };
             }
-        } 
+        }
     }
 }
