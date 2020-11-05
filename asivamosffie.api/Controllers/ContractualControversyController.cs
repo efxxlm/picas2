@@ -51,6 +51,10 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //controversiaContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if (controversiaActuacion.ControversiaActuacionId == 0)
+                    controversiaActuacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    controversiaActuacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _contractualControversy.CreateEditNuevaActualizacionTramite(controversiaActuacion);
                 return Ok(respuesta);
             }

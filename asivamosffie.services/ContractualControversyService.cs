@@ -35,7 +35,7 @@ namespace asivamosffie.services
         {
             Respuesta _response = new Respuesta();
 
-            int idAccionCrearcontroversiaActuacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContractualControversy.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearcontroversiaActuacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);
 
             //try
             //{
