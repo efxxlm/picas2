@@ -119,14 +119,15 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> UpdateProgramacionContratoPersonal(ContratoConstruccion pContratoConstruccion)
-        {
-
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
             bool RegistroCompleto = true;
 
             try
             {
-                Proyecto proyecto = _context.Proyecto.Find(pContratoConstruccion.ProyectoId);
+                ContratoConstruccion pContratoConstruccionOld = _context.ContratoConstruccion.Find(pContratoConstruccion.ContratoConstruccionId);
+
+                Proyecto proyecto = _context.Proyecto.Find(pContratoConstruccionOld.ProyectoId);
 
                 proyecto.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
                 proyecto.FechaModificacion = DateTime.Now;
