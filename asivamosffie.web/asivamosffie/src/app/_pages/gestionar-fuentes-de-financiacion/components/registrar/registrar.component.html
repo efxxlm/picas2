@@ -440,9 +440,8 @@
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width maincolor">
-                          <input matInput #numeroCuemta type="number" formControlName="numeroCuenta" maxlength="20"
-                            required (keypress)="validateNumberKeypress($event)"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                          <input matInput #numeroCuemta type="text" formControlName="numeroCuenta" maxlength="20"
+                            required >
                         </mat-form-field>
                         <span class="contador">{{20 - numeroCuemta.value.length}}</span>
                       </div>
