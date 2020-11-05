@@ -178,7 +178,7 @@
           <div class="col">
             <mat-form-field class="select-width">
               <mat-select formControlName="polizasYSeguros" multiple required
-                (selectionChange)="getvalues($event.value)">
+                (selectionChange)="getvalues($event.value)" [(ngModel)]="this.selectedArray">
                 <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
                   {{ polizasYSeguros.nombre }}
                 </mat-option>

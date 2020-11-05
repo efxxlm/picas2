@@ -79,7 +79,7 @@ export class GestionarPolizasComponent implements OnInit {
   public plazoContrato;
   public numContrato;
   public idContrato;
-  public selectedArray = [];
+  public selectedArray;
   obj1: boolean;
   obj2: boolean;
   obj3: boolean;
@@ -153,6 +153,11 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   onSubmit() {
+    const polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
+    for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
+        const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
+    }
+    console.log(polizasList);
     var completo:boolean;
     if(this.addressForm.valid){
       completo = true;

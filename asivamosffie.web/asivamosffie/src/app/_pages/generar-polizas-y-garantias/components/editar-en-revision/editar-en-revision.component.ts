@@ -217,6 +217,11 @@ export class EditarEnRevisionComponent implements OnInit {
   }
 
   onSubmit() {
+    const members = [this.addressForm.value.polizasYSeguros[0].codigo];
+    for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
+        const membAux = members.push(this.addressForm.value.polizasYSeguros[i].codigo);
+    }
+    console.log(members);
     console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
     let auxValue2 = this.addressForm.value.polizasYSeguros;
