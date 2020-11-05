@@ -167,7 +167,7 @@ namespace asivamosffie.services
                         IsSuccessful = false,
                         IsException = true,
                         IsValidation = false,
-                        Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                        Code = ConstantSesionComiteTecnico.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pContratoConstruccion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }

@@ -48,6 +48,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
+                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 Task<Respuesta> result = _IRegisterPersonalProgrammingService.UpdateProgramacionContratoPersonal(pContratoConstruccion);
                 object respuesta = await result;
                 return Ok(respuesta);
