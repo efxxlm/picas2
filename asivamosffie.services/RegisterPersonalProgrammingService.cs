@@ -104,8 +104,8 @@ namespace asivamosffie.services
                         };
                         _context.ProgramacionPersonalContratoConstruccion.Add(programacionPersonalContratoConstruccion);
                         List.Add(programacionPersonalContratoConstruccion);
-                    }
-                    _context.SaveChanges();
+                        _context.SaveChanges();
+                    } 
                 }
                 return List;
             }
