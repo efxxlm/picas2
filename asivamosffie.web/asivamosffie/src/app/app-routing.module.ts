@@ -146,7 +146,7 @@ const routes: Routes = [
           .then( module => module.CompromisosActasComiteModule )
       },
       {
-        path: 'programacionPersonalObra',
+        path: 'registrarProgramacionPersonalObra',
         loadChildren: () => import( './_pages/programacion-personal-obra/programacion-personal-obra.module' )
           .then( module => module.ProgramacionPersonalObraModule )
       }
