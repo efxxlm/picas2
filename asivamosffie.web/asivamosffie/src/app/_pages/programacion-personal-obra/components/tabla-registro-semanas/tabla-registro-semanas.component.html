@@ -2,16 +2,16 @@
     <div *ngFor="let registro of registroSemanasTabla; index as i">
         <section *ngIf="i === 0">
             <section class="cabecera-table">
-                <p>Semanas</p>
+                <p><i><b>Semanas</b></i></p>
             </section>
             <section class="flex-table">
                 <section *ngFor="let semana of registro" class="size-semana">
                     <div class="border-semana">
-                        {{ semana[0].numeroSemana }}
+                        {{ semana[0]?.numeroSemana }}
                     </div>
                     <div class="border-semana">
-                        <mat-form-field style="width: 2em;">
-                            <input matInput type="number" [(ngModel)]="semana[0].cantidadPersonal" required style="width: 1em;">
+                        <mat-form-field style="width: 2.5em;" *ngIf="semana[0] !== undefined && semana[0].cantidadPersonal !== undefined">
+                            <input matInput type="number" [(ngModel)]="semana[0].cantidadPersonal" required style="width: 2em;">
                         </mat-form-field>
                     </div>
                 </section>
@@ -20,14 +20,35 @@
         <section *ngIf="i > 0" class="flex-table">
             <section *ngFor="let semana of registro" class="size-semana">
                 <div class="border-semana">
-                    {{ semana[0].numeroSemana }}
+                    {{ semana[0]?.numeroSemana }}
                 </div>
                 <div class="border-semana">
-                    <mat-form-field style="width: 2em;">
-                        <input matInput type="number" [(ngModel)]="semana[0].cantidadPersonal" required style="width: 1em;">
+                    <mat-form-field style="width: 2.5em;" *ngIf="semana[0] !== undefined && semana[0].cantidadPersonal !== undefined">
+                        <input matInput type="number" [(ngModel)]="semana[0].cantidadPersonal" required style="width: 2em;">
                     </mat-form-field>
                 </div>
             </section>
         </section>
+    </div>
+
+    <div>
+        <p class="color-text-descriptivo">
+            <i> 
+            Registrar la cantidad de personal operativo (obreros y técnicos) requerido para la ejecución de las actividades por cada semana.
+            <br>
+            El valor puede ser 0, no puede estar el campo vacío.
+            </i>
+        </p>
+    </div>
+
+    <div class="text-center">
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
+                type="button"
+                (click)="guardarRegistros()">
+                <img  src="assets/img/icon/guardar.svg"
+                      alt="Regresar">
+        </button>
     </div>
 </section>

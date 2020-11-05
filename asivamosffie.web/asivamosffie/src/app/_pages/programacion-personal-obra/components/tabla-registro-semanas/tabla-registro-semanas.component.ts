@@ -29,9 +29,21 @@ export class TablaRegistroSemanasComponent implements OnInit {
           this.registroSemanasTabla.push( [] );
           numeroregistros++;
         };
-      } )
+      } );
+      for ( let registro of this.registroSemanasTabla ) {
+        if ( registro.length < 20 ) {
+          const bucleLimite = 20 - registro.length
+          for( let i=0; i<bucleLimite; i++ ) {
+            registro.push( [] );
+          };
+        };
+      };
       console.log( this.registroSemanasTabla );
     }
+  };
+
+  guardarRegistros () {
+    console.log( this.registroSemanasTabla );
   };
 
 };

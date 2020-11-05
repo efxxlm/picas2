@@ -5,7 +5,7 @@
 };
 
 .cabecera-table {
-    width: 100%;
+    width: 99.8%;
     border: solid 1px #174193;
     background-color: #174193;
     color: white;
@@ -16,9 +16,9 @@
 };
 
 .size-semana {
-    width: 3.1em;
+    width: 4em;
     height: 10em;
-}
+};
 
 .border-semana {
     border: solid 1px #174193;
@@ -26,4 +26,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
+};
+
+.color-text-descriptivo {
+    color: rgba(0, 0, 0, 0.555);
 }

@@ -51,7 +51,7 @@ export class TablaRegistroProgramacionComponent implements OnInit {
 
   openRegistroProgramacion ( contrato: any ) {
     this.dialog.open( DialogRegistroProgramacionComponent, {
-      width: '70em',
+      width: '80em',
       data: { contrato }
     });
   };
