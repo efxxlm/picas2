@@ -927,6 +927,14 @@ namespace asivamosffie.services
                             DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, proyecto.Proyecto.InfraestructuraIntervenirProyecto.Sum(r => r.PlazoDiasObra).ToString());
                             break;
 
+                        case ConstanCodigoVariablesPlaceHolders.PLAZO_INTERVENTORIA_MESES:
+                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, proyecto.Proyecto.InfraestructuraIntervenirProyecto.Sum(r => r.PlazoMesesInterventoria).ToString());
+                            break;
+
+                        case ConstanCodigoVariablesPlaceHolders.PLAZO_INTERVENTORIA_DIAS:
+                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, proyecto.Proyecto.InfraestructuraIntervenirProyecto.Sum(r => r.PlazoDiasInterventoria).ToString());
+                            break;
+
                         case ConstanCodigoVariablesPlaceHolders.VALOR_OBRA:
                             DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorObra));
                             break;
