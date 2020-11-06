@@ -63,7 +63,7 @@ export class DisponibilidadPresupuestalService {
   }
   SetValidarValidacionDDP(id)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetValidarValidacionDDP?id=${id}`,null);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/SetValidarValidacionDDP?id=${id}`,null);
   }
   SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion:any)
   {

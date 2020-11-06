@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace asivamosffie.model.APIModels
@@ -58,5 +59,10 @@ namespace asivamosffie.model.APIModels
         public List<ProyectoGrilla> Proyectos { get; set; }
         public List<CofinanicacionAportanteGrilla> Aportantes { get; set; }
         public bool? CuentaCarta { get; set; }
+        public string TipoSolicitudEspecial { get; set; }
+        public string ContratoNumero { get; set; }
+        public string NombreEntidad { get; set; }
+        public string UrlConSoporte { get; set; }
+        public string Limitacion { get; set; }
     }
 }

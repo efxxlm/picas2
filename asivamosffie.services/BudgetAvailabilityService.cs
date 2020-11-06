@@ -712,7 +712,7 @@ pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudCodigo != null 
                 //envio correo a juridica
                 var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Financiera).Include(y => y.Usuario).FirstOrDefault();
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
-                string template = TemplateRecoveryPassword.Contenido;
+                string template = TemplateRecoveryPassword.Contenido.Replace("[NUMERODISPONIBILIDAD]",DisponibilidadCancelar.NumeroSolicitud);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "SDP con validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
                 return
                 new Respuesta
@@ -720,8 +720,8 @@ pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudCodigo != null 
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
-                    Code = ConstantMessagesGenerateBudget.DevueltoCorrrectamente,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.DevueltoCorrrectamente, idAccion, usuariomod, "CON DISPONIBILIDAD PRESUPUESTAL")
+                    Code = ConstantMessagesGenerateBudget.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GenerarDisponibilidadPresupuestal, ConstantMessagesGenerateBudget.OperacionExitosa, idAccion, usuariomod, "CON DISPONIBILIDAD PRESUPUESTAL")
                 };
             }
             catch (Exception ex)

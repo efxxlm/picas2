@@ -58,17 +58,32 @@ export class ValidacionPresupuestalComponent implements OnInit {
     });
   }
   validar() {
+      if((this.detailavailabilityBudget.tipoSolicitudCodigo==this.pTipoDDP.DDP_administrativo ||
+        this.detailavailabilityBudget.tipoSolicitudCodigo==this.pTipoDDP.DDP_especial) &&
+        this.detailavailabilityBudget.nUmeroSaldoFuente<this.detailavailabilityBudget.valorSolicitud)        
+      {
+        this.openDialog('', '<b>El valor de la solicitud supera el valor de las fuentes de financiación.</b>');
+        return false;
+      }
     this.disponibilidadServices.SetValidarValidacionDDP(this.route.snapshot.paramMap.get('id')).subscribe(listas => {
-      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+      if(listas.code=="200")
+      {
+        this.openDialog('', listas.message,true);
+      }
+      else
+      {
+        this.openDialog('', listas.message,false);
+      }
+      
       });
   }
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string, retorno:boolean=false) {
     let dialogRef= this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-
+      if(retorno)
         this.router.navigate(['/validarDisponibilidadPresupuesto']);
 
     });
