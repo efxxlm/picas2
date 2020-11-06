@@ -11,9 +11,10 @@ namespace asivamosffie.model.APIModels
         public string FechaSolicitud { get; set; }
         public string NumeroSolicitud { get; set; }
         public string TipoSolicitud { get; set; }
-        public string EstadoRegistro { get; set; }
+        public bool EstadoRegistro { get; set; }
         public string NumeroContrato { get; set; }
         public string FechaFirmaContrato { get; set; }
+        public string TipoSolicitudEspecial { get; set; }
     }
 
     /*autor: jflorez

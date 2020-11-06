@@ -1764,6 +1764,8 @@ namespace asivamosffie.services
                 string contratoNumero = !contrato.Any()?"":contrato.Select(x => x.NumeroContrato).FirstOrDefault().ToString();
                 var contratista = _context.Contratista.Where(x => x.Contratacion.FirstOrDefault().ContratacionId == detailDP.ContratacionId);
                 string nombreEntidad = !contratista.Any()?"": contratista.Select(x => x.Nombre).FirstOrDefault().ToString();
+                var observaciones = _context.DisponibilidadPresupuestalObservacion.Where(x=>x.DisponibilidadPresupuestalId==detailDP.DisponibilidadPresupuestalId).ToList();
+                string observacionString = !observaciones.Any() ? "" : string.Join("<br><br>", observaciones.Select(x => x.Observacion));
                 DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
                 {
                     //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
@@ -1787,7 +1789,7 @@ namespace asivamosffie.services
                     CuentaCarta = detailDP.CuentaCartaAutorizacion,
                     TipoSolicitudEspecial = detailDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                     //si no viene el campo puede ser contratación
-                    detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo?"":                    
+                    detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :                    
                     "Contratación",
                     ContratoNumero= contratoNumero,
                     NombreEntidad =nombreEntidad,
@@ -1795,7 +1797,7 @@ namespace asivamosffie.services
                     Limitacion=detailDP.LimitacionEspecial,
                     /*//*las modificaciones aun no existen*/
 
-
+                    Observaciones=observacionString,
                     Proyectos = proyecto,
                     //Aportantes
                     Aportantes = aportantes,

@@ -5,6 +5,7 @@ import { CancelarDdpComponent } from '../cancelar-ddp/cancelar-ddp.component';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 
 @Component({
   selector: 'app-gestionar-ddp',
@@ -13,6 +14,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class GestionarDdpComponent implements OnInit {
   detailavailabilityBudget: any;
+  esModificacion=false;
+  pTipoDDP=TipoDDP;
 
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
