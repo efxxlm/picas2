@@ -52,6 +52,15 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   };
 
+  campoSinDiligenciar ( campoFormulario: string ) {
+    if ( campoFormulario === 'numeroContrato' && this.dataFormulario.get( campoFormulario ).value.length === 0 ) {
+      this.dataFormulario.get( campoFormulario ).markAsTouched();
+    };
+    if ( this.dataFormulario.get( campoFormulario ).value === null ) {
+      this.dataFormulario.get( campoFormulario ).markAsTouched();
+    };
+  };
+
   fileName ( event: any ) {
     
     if ( event.target.files.length > 0) {
