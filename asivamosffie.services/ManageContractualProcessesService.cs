@@ -48,22 +48,28 @@ namespace asivamosffie.services
 
             try
             {
-                SesionComiteSolicitud sesionComiteSolicitudOld = await _context.SesionComiteSolicitud.FindAsync(pSesionComiteSolicitud.SesionComiteSolicitudId);
+                SesionComiteSolicitud sesionComiteSolicitudOld = await
+                    _context.SesionComiteSolicitud.Where(r=> r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
+                    .Include(r=> r.ComiteTecnico).FirstOrDefaultAsync();
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
 
                 //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
 
-                Contratacion contratacion = _context.Contratacion.Find(pSesionComiteSolicitud.SolicitudId);
+                Contratacion contratacion = _context.Contratacion
+                    .Where(r=> r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
+                    .Include(r=> r.Contrato)
+                    .Include(r => r.DisponibilidadPresupuestal)
+                    .FirstOrDefault();
                 contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 contratacion.FechaModificacion = DateTime.Now;
                 contratacion.UsuarioCreacion = pSesionComiteSolicitud.UsuarioCreacion;
-
+                sesionComiteSolicitudOld.Contratacion = contratacion;
 
                 if (ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria == pSesionComiteSolicitud.EstadoCodigo)
-                    await EnviarNotificacion(contratacion, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-               
+                    await EnviarNotificacion(sesionComiteSolicitudOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
                 _context.SaveChanges();
 
                 return new Respuesta
@@ -835,24 +841,29 @@ namespace asivamosffie.services
             return false;
         }
 
-        public async Task<bool> EnviarNotificacion(Contratacion contratacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        public async Task<bool> EnviarNotificacion(SesionComiteSolicitud pSesionComiteSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             try
             {
                 TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
                 //TODO Validar Cuandos sea otro tipo de solicitud
-        
-
+                 
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Fiduciaria).Select(x => x.Usuario.Email).ToList();
-
+                List<Dominio> ListDominio = _context.Dominio.ToList();
                 foreach (var usuario in usuariosecretario)
                 {
                     Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificarFiduciaria322);
                     string template =
                         TemplateActaAprobada.Contenido
                         .Replace("_LinkF_", pDominioFront)
-                        .Replace("[NUMERO_SOLICITUD]", contratacion.NumeroSolicitud);
+                        .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r=> r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
+                        .Replace("[NUMERO_DDP]", pSesionComiteSolicitud.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp != null ? pSesionComiteSolicitud.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp :" ")
+                        .Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().Objeto)
+                        .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MMMM-yy") : " ")
+                        .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MMMM-yy") : " ")
+                        .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MMMM-yy") : " "
+                        .Replace("[NUMERO_SOLICITUD]", pSesionComiteSolicitud.Contratacion.NumeroSolicitud));
                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisión", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
