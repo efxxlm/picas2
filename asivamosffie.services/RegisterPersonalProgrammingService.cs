@@ -33,7 +33,7 @@ namespace asivamosffie.services
         public async Task<List<dynamic>> GetListProyectos()
         {
             List<ContratoConstruccion> ListContratoConstruccion = await _context.ContratoConstruccion
-                .Include(e => e.Programacion) 
+                .Include(e => e.Programacion)
                 .Include(e => e.Proyecto)
                   .ThenInclude(i => i.InstitucionEducativa)
                 .Include(e => e.Proyecto)
@@ -50,7 +50,7 @@ namespace asivamosffie.services
             //Departamento Municipio Plazo
             foreach (var ContratoConstruccion in ListContratoConstruccion)
             {
-                if (ContratoConstruccion.Programacion != null)
+                if (ContratoConstruccion.Programacion.Count() > 0)
                 {
                     Localizacion Municipio = ListLocalizacion.Find(r => r.LocalizacionId == ContratoConstruccion.Proyecto.LocalizacionIdMunicipio);
                     Localizacion Departamento = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
@@ -105,7 +105,7 @@ namespace asivamosffie.services
                         _context.ProgramacionPersonalContratoConstruccion.Add(programacionPersonalContratoConstruccion);
                         List.Add(programacionPersonalContratoConstruccion);
                         _context.SaveChanges();
-                    } 
+                    }
                 }
                 return List;
             }
@@ -119,7 +119,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> UpdateProgramacionContratoPersonal(ContratoConstruccion pContratoConstruccion)
-        { 
+        {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
             bool RegistroCompleto = true;
 
@@ -139,7 +139,7 @@ namespace asivamosffie.services
                     programacionPersonalContratoConstruccion.FechaModificacion = DateTime.Now;
                     programacionPersonalContratoConstruccion.CantidadPersonal = item.CantidadPersonal;
 
-                    if (programacionPersonalContratoConstruccion.CantidadPersonal == 0)
+                    if (programacionPersonalContratoConstruccion.CantidadPersonal == null)
                         RegistroCompleto = false;
                 }
                 if (RegistroCompleto)
@@ -173,7 +173,7 @@ namespace asivamosffie.services
             }
 
         }
-         
+
         public async Task<Respuesta> ChangeStatusProgramacionContratoPersonal(int pContratoConstruccionId, string pEstadoProgramacionCodigo, string pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Programacion_Especial, (int)EnumeratorTipoDominio.Acciones);
