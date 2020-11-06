@@ -79,5 +79,96 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetVistaContratoContratista")]
+        public async Task<ActionResult<VistaContratoContratista>> GetVistaContratoContratista(int pContratoId)
+        {
+            try
+            {
+                return await _contractualControversy.GetVistaContratoContratista(pContratoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+     
+        [HttpPut]
+        [Route("CambiarEstadoControversiaContractual")]
+        public async Task<IActionResult> CambiarEstadoControversiaContractual([FromQuery] int pControversiaContractualId, string pNuevoCodigoEstado)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.CambiarEstadoControversiaContractual(pControversiaContractualId,  pNuevoCodigoEstado, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        
+
+
+
+        [Route("EliminarControversiaContractual")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarControversiaContractual(int pControversiaContractualId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _contractualControversy.EliminarControversiaContractual(pControversiaContractualId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
+
+        [Route("EliminarControversiaActuacion")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarControversiaActuacion(int pControversiaActuacionId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _contractualControversy.EliminarControversiaActuacion(pControversiaActuacionId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
+        [HttpPut]
+        [Route("CambiarEstadoControversiaActuacion")]
+        public async Task<IActionResult> CambiarEstadoControversiaActuacion([FromQuery] int pControversiaActuacionId, string pNuevoCodigoEstadoAvance)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.CambiarEstadoControversiaActuacion(pControversiaActuacionId, pNuevoCodigoEstadoAvance, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }

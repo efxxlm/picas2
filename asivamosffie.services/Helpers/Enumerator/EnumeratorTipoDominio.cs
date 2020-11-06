@@ -119,6 +119,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipos_De_Ensayos_De_Laboratorio = 74,
 
-        Causas_De_Accidentes_Laborales = 75
+        Causas_De_Accidentes_Laborales = 75,
+        
+        Tipo_de_controversia=80
     }
 }

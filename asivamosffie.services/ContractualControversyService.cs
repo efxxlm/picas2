@@ -208,7 +208,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> EliminarControversiaActuacion(int pControversiaActuacionId)
+        public async Task<Respuesta> EliminarControversiaActuacion(int pControversiaActuacionId, string pUsuario)
         {                     
             Respuesta respuesta = new Respuesta();
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);
@@ -221,9 +221,10 @@ namespace asivamosffie.services
 
                 if (controversiaActuacion != null)
                 {
-                    strCrearEditar = "Eliminar DISPONIBILIDAD PRESUPUESAL";
+                    strCrearEditar = "Eliminar CONTROVERSIA ACTUACION";
                     controversiaActuacion.FechaModificacion = DateTime.Now;
                     //controversiaActuacion.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                    controversiaActuacion.UsuarioModificacion = pUsuario;
                     controversiaActuacion.Eliminado = true;
                     _context.ControversiaActuacion.Update(controversiaActuacion);
 
@@ -258,7 +259,7 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> EliminarControversiaContractual(int pControversiaContractualId)
+        public async Task<Respuesta> EliminarControversiaContractual(int pControversiaContractualId, string pUsuario)
         {
             Respuesta respuesta = new Respuesta();
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Controversia_Contractual, (int)EnumeratorTipoDominio.Acciones);
@@ -271,10 +272,10 @@ namespace asivamosffie.services
 
                 if (controversiaContractual != null)
                 {
-                    strCrearEditar = "Eliminar DISPONIBILIDAD PRESUPUESAL";
+                    strCrearEditar = "Eliminar CONTROVERSIA CONTRACTUAL";
                     controversiaContractual.FechaModificacion = DateTime.Now;
                     //controversiaContractual.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
-                    
+                    controversiaContractual.UsuarioModificacion = pUsuario;
                     //controversiaContractual.elim = true;
 
                     _context.ControversiaContractual.Update(controversiaContractual);
@@ -326,6 +327,30 @@ namespace asivamosffie.services
             return true;
         }
 
+        private bool ValidarRegistroCompletoControversiaContractual(ControversiaContractual controversiaContractual)
+        {
+            //RutaSoporte
+            //    EsRequiereComite
+
+            //    MotivoJustificacionRechazo
+            //    EsProcede
+
+                
+                
+                
+                
+
+            if (string.IsNullOrEmpty(controversiaContractual.ConclusionComitePreTecnico)
+             || string.IsNullOrEmpty(controversiaContractual.FechaComitePreTecnico.ToString())
+            || string.IsNullOrEmpty(controversiaContractual.FechaSolicitud.ToString())
+                )
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public async Task<Respuesta> CreateEditarControversiaTAI(ControversiaContractual controversiaContractual )
         {
             Respuesta _response = new Respuesta();
@@ -358,7 +383,7 @@ namespace asivamosffie.services
                         controversiaContractual.FechaCreacion = DateTime.Now;
                         //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
 
-                        //controversiaContractual.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaContractual);
+                        controversiaContractual.EsCompleto = ValidarRegistroCompletoControversiaContractual(controversiaContractual);
 
                         //controversiaContractual.Eliminado = false;
                         _context.ControversiaContractual.Add(controversiaContractual);
@@ -543,7 +568,8 @@ namespace asivamosffie.services
                          TipoControversia ="PENDIENTE",
                          TipoControversiaCodigo= "PENDIENTE",
                          ContratoId = contrato.ContratoId,
-                        
+                        EstadoControversia = "PENDIENTE",
+
                     };
 
                     //if (!(bool)proyecto.RegistroCompleto)
