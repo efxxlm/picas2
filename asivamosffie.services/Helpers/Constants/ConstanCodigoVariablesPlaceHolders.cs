@@ -183,7 +183,8 @@
         public const string DDP_VALOR_SOLICITADO_FUENTE = "23";
         public const string DDP_NUEVO_SALDO_FUENTE = "24";
         public const string DDP_LIMITACION_ESPECIAL = "25";
-        
+        public const string DDP_TABLA_LIMITACION_ESPECIAL = "26";
+
 
         #endregion
 
