@@ -53,23 +53,28 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                (click)="openRegistroProgramacion( element )">
+                (click)="openRegistroProgramacion( element )"
+                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinProgramacionPersonal">
                 Registrar programación de personal
         </button>
 
-        <!--
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
-                Ver detalle/Editar
+                class="btn-table"
+                (click)="aprobarProgramacion( element.contratoConstruccionId )"
+                *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal">
+                Aprobar programación
         </button>
 
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
-                Aprobar programación
+                class="btn-table"
+                (click)="openRegistroProgramacion( element )"
+                *ngIf=" element.estadoProgramacionInicialCodigo === estadosProgramacion.enRegistroProgramacion
+                        || element.estadoProgramacionInicialCodigo === estadosProgramacion.conAprobacionProgramacionPersonal
+                        || element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal">
+                Ver detalle/Editar
         </button>
-        -->
   
       </td>
     </ng-container>

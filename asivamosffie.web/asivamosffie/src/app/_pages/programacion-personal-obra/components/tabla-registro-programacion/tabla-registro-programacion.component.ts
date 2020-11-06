@@ -3,7 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { ProgramacionPersonalObraService } from 'src/app/core/_services/programacionPersonalObra/programacion-personal-obra.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { EstadosProgramacion } from 'src/app/_interfaces/programacionPersonal.interface';
 import { DialogRegistroProgramacionComponent } from '../dialog-registro-programacion/dialog-registro-programacion.component';
 
 @Component({
@@ -14,6 +17,12 @@ import { DialogRegistroProgramacionComponent } from '../dialog-registro-programa
 export class TablaRegistroProgramacionComponent implements OnInit {
 
   tablaRegistro              = new MatTableDataSource();
+  estadosProgramacion: EstadosProgramacion = {
+    sinProgramacionPersonal: '0',
+    enRegistroProgramacion: '1',
+    sinAprobacionProgramacionPersonal: '2',
+    conAprobacionProgramacionPersonal: '3'
+  };
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[]  = [
@@ -28,7 +37,8 @@ export class TablaRegistroProgramacionComponent implements OnInit {
   ];
 
   constructor ( private dialog: MatDialog,
-                private programacionPersonalSvc: ProgramacionPersonalObraService ) {
+                private programacionPersonalSvc: ProgramacionPersonalObraService,
+                private routes: Router ) {
   }
 
   ngOnInit(): void {
@@ -49,11 +59,40 @@ export class TablaRegistroProgramacionComponent implements OnInit {
     this.tablaRegistro.filter = filterValue.trim().toLowerCase();
   };
 
+  openDialog (modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data : { modalTitle, modalText }
+    });
+  };
+
   openRegistroProgramacion ( contrato: any ) {
-    this.dialog.open( DialogRegistroProgramacionComponent, {
+    const dialogProgramacion = this.dialog.open( DialogRegistroProgramacionComponent, {
       width: '80em',
       data: { contrato }
     });
+
+    dialogProgramacion.afterClosed()
+      .subscribe( value => {
+        if ( value === true ) {
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/registrarProgramacionPersonalObra' ] )
+          );
+        }
+      } )
+  };
+
+  aprobarProgramacion ( contratoConstruccionId: number ) {
+    this.programacionPersonalSvc.changeStatusProgramacionContratoPersonal( contratoConstruccionId, this.estadosProgramacion.conAprobacionProgramacionPersonal )
+      .subscribe(
+        response => {
+          this.openDialog( '', response.message );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/registrarProgramacionPersonalObra' ] )
+          );
+        },
+        err => this.openDialog( '', err.message )
+      )
   };
 
 };

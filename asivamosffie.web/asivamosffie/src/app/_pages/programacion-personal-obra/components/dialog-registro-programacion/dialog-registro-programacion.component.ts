@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ProgramacionPersonalObraService } from 'src/app/core/_services/programacionPersonalObra/programacion-personal-obra.service';
+import { DetalleProgramacionPersonal } from 'src/app/_interfaces/programacionPersonal.interface';
 
 @Component({
   selector: 'app-dialog-registro-programacion',
@@ -9,18 +11,29 @@ import { ProgramacionPersonalObraService } from 'src/app/core/_services/programa
 })
 export class DialogRegistroProgramacionComponent implements OnInit {
 
-  registroSemanas: any[];
+  registroSemanas: DetalleProgramacionPersonal[];
 
   constructor ( private programacionPersonalSvc: ProgramacionPersonalObraService,
+                private routes: Router,
+                private dialogRef: MatDialogRef<DialogRegistroProgramacionComponent>,
                 @Inject(MAT_DIALOG_DATA) public dataContrato )
   {
     this.programacionPersonalSvc.getProgramacionPersonalByContratoConstruccionId( dataContrato.contrato.contratoConstruccionId )
       .subscribe(
-        response => this.registroSemanas = response
+        response => {
+          this.registroSemanas = response;
+          console.log( this.registroSemanas );
+        }
       );
   };
 
   ngOnInit(): void {
   };
+
+  seRealizoPeticion ( peticion: boolean ) {
+    if ( peticion === true ) {
+      this.dialogRef.close( true );
+    };
+  }
 
 };
