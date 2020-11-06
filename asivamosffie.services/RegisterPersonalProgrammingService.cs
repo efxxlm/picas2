@@ -97,7 +97,7 @@ namespace asivamosffie.services
                         {
                             UsuarioCreacion = pUsuario,
                             FechaCreacion = DateTime.Now,
-                            Eliminado = true,
+                            Eliminado = false,
 
                             ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
                             NumeroSemana = i,
