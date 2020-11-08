@@ -1,17 +1,17 @@
 <div align="left" *ngIf="contratacion">
     <mat-card class="border-1">
         <mat-card-content>
-            <p><b>¿El contrato requiere anticipo? </b>: {{ contratacion.proyecto.contratoConstruccion[0].manejoAnticipoRequiere === true ? 'Si' : 'No' }}</p>
-            <p><b>¿Cuenta con plan de inversión aprobado para el anticipo?</b>: {{ contratacion.proyecto.contratoConstruccion[0].manejoAnticipoPlanInversion === true ? 'Si' : 'No' }}</p>
-            <p><b>¿Cuenta con cronograma de amortización aprobado?</b>: {{ contratacion.proyecto.contratoConstruccion[0].manejoAnticipoCronogramaAmortizacion === true ? 'Si' : 'No' }}</p>
+            <p><b>¿El contrato requiere anticipo? </b>: {{ contratacion.manejoAnticipoRequiere === true ? 'Si' : 'No' }}</p>
+            <p><b>¿Cuenta con plan de inversión aprobado para el anticipo?</b>: {{ contratacion.manejoAnticipoPlanInversion === true ? 'Si' : 'No' }}</p>
+            <p><b>¿Cuenta con cronograma de amortización aprobado?</b>: {{ contratacion.manejoAnticipoCronogramaAmortizacion === true ? 'Si' : 'No' }}</p>
         </mat-card-content>
     </mat-card>
 </div>
 <div align="left" *ngIf="contratacion">
-    <p><b>Url con soporte</b>: {{ contratacion.proyecto.contratoConstruccion[0].manejoAnticipoRutaSoporte }}</p>
+    <p><b>Url con soporte</b>: {{ contratacion.manejoAnticipoRutaSoporte }}</p>
 </div>
 <div align="center" *ngIf="this.observacionesCompleted==false">
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarManejo()">
         <div class="row" align="center">
             <div class="col-md-8">
                 <div class="row">

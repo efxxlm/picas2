@@ -15,6 +15,8 @@ export class FormVerificacionRequisitosComponent implements OnInit {
   contrato: Contrato;
   fechaPoliza: string;
 
+  completoDiagnostico: string;
+
   constructor(
     private faseUnoConstruccionService: FaseUnoConstruccionService,
     private activatedRoute: ActivatedRoute,
@@ -49,6 +51,6 @@ export class FormVerificacionRequisitosComponent implements OnInit {
     if ( seGuardo )
       this.getContrato();      
   }
-    
+   
 
 }

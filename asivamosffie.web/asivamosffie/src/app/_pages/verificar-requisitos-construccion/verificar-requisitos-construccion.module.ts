@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'src/app/material/material.module';
 import { QuillModule } from 'ngx-quill';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { VerificarRequisitosConstruccionRoutingModule } from './verificar-requisitos-construccion-routing.module';
 import { VerificarRequisitosConstruccionComponent } from './components/verificar-requisitos-construccion/verificar-requisitos-construccion.component';
 import { TablaContratosObraVrtcComponent } from './components/tabla-contratos-obra-vrtc/tabla-contratos-obra-vrtc.component';
@@ -26,6 +26,7 @@ import { RegistroHojasVidaVrtcComponent } from './components/registro-hojas-vida
     MaterialModule,
     QuillModule.forRoot(),
     ReactiveFormsModule,
+    FormsModule,
     VerificarRequisitosConstruccionRoutingModule
   ]
 })

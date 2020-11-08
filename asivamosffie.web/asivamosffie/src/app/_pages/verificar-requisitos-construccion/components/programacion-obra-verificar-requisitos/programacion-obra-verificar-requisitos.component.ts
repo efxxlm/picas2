@@ -1,9 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-programacion-obra-verificar-requisitos',
@@ -15,6 +16,8 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
+    construccionObservacionId: [],
+
   });
 
   editorStyle = {
@@ -32,6 +35,9 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
 
   @Input() observacionesCompleted;
   @Input() contratoConstruccion: any;
+  @Input() contratoConstruccionId: any;
+
+  @Output() createEdit = new EventEmitter();
 
   constructor(
     private dialog: MatDialog,
@@ -40,8 +46,35 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
     private faseUnoConstruccionService: FaseUnoConstruccionService
   ) { }
 
-  ngOnInit(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.contratoConstruccion)
+      this.ngOnInit();
   }
+
+  ngOnInit(): void {
+
+    this.addressForm.get('tieneObservaciones').setValue(this.contratoConstruccion.tieneObservacionesProgramacionObraApoyo)
+    this.addressForm.get('observaciones').setValue(this.contratoConstruccion.observacionProgramacionObra ? this.contratoConstruccion.observacionProgramacionObra.observaciones : null)
+    this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.observacionProgramacionObra ? this.contratoConstruccion.observacionProgramacionObra.construccionObservacionId : null)
+
+
+    this.validarSemaforo();
+
+  }
+
+  validarSemaforo() {
+
+    this.contratoConstruccion.semaforoProgramacion = "sin-diligenciar";
+
+    if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
+      this.contratoConstruccion.semaforoProgramacion = 'completo';
+
+      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
+        this.contratoConstruccion.semaforoProgramacion = 'en-proceso';
+    }
+  }
+
+  
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -50,8 +83,10 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    }
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -65,26 +100,43 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
     this.commonService.getFileById(this.contratoConstruccion.archivoCargueIdProgramacionObra)
       .subscribe(respuesta => {
         let documento = "ProgramacionObra.xlsx";
-        //console.log(documento);
-
-        //console.log(result);
-        /*var url = window.URL.createObjectURL(result);
-        window.open(url);
-        //console.log("download result ", result);*/
         var text = documento,
           blob = new Blob([respuesta], { type: 'application/octet-stream' }),
           anchor = document.createElement('a');
         anchor.download = documento;
-        //anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
         anchor.href = window.URL.createObjectURL(blob);
         anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
-        //console.log(anchor);
         anchor.click();
       });
   }
 
-  onSubmit() {
-    this.openDialog('La información ha sido guardada exitosamente.', '');
+  guardarProgramacion() {
+
+    let construccion = {
+      contratoConstruccionId: this.contratoConstruccionId,
+      tieneObservacionesProgramacionObraApoyo: this.addressForm.value.tieneObservaciones,
+
+      construccionObservacion: [
+        {
+          construccionObservacionId: this.addressForm.value.construccionObservacionId,
+          contratoConstruccionId: this.contratoConstruccionId,
+          tipoObservacionConstruccion: TiposObservacionConstruccion.ProgramacionObra,
+          esSupervision: false,
+          esActa: false,
+          observaciones: this.addressForm.value.observaciones,
+
+        }
+      ]
+    }
+
+    console.log(); 
+
+    this.faseUnoConstruccionService.createEditObservacionProgramacionObra(construccion)
+      .subscribe(respuesta => {
+        this.openDialog('', respuesta.message);
+        if (respuesta.code == "200")
+          this.createEdit.emit(true);
+      })
   }
 
 }

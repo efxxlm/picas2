@@ -58,9 +58,27 @@ export class FaseUnoConstruccionService {
     return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionesCarga?pArchivoCargueId=${ pArchivoCargueId }&pObservacion=${ pObservacion }`, '' );
   }
 
-  createEditObservacionDiagnostico( contratoConstruccion ){
+  createEditObservacionDiagnostico( contratoConstruccion ){ 
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionDiagnostico?esSupervisor=false`, contratoConstruccion );
   }
+
+  createEditObservacionPlanesProgramas( contratoConstruccion ){
+    return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionPlanesProgramas?esSupervisor=false`, contratoConstruccion );
+  }
+
+  createEditObservacionManejoAnticipo( contratoConstruccion ){
+    return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionManejoAnticipo?esSupervisor=false`, contratoConstruccion );
+  }
+
+  createEditObservacionProgramacionObra( contratoConstruccion ){  
+    return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionProgramacionObra?esSupervisor=false`, contratoConstruccion );
+  }
+
+  createEditObservacionFlujoInversion( contratoConstruccion ){  
+    return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionFlujoInversion?esSupervisor=false`, contratoConstruccion );
+  }
+
+  
 
   //Peticiones POST Carga Masiva "Programación de obra"
   uploadFileToValidateProgramming ( pContratoConstruccinId: number, documento: File ) {

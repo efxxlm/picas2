@@ -14,8 +14,8 @@ import { ContratacionProyecto } from 'src/app/_interfaces/project-contracting';
 export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChanges {
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
-    observaciones: [null, Validators.required],
-    construccionObservacionId:[]
+    observaciones: [null],
+    construccionObservacionId: []
   });
 
   editorStyle = {
@@ -31,7 +31,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
     ]
   };
 
-  
+
   @Input() observacionesCompleted;
   @Input() construccion: any;
   @Input() contratoConstruccionId: any;
@@ -39,28 +39,38 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
   @Output() createEditDiagnostico = new EventEmitter();
 
   constructor(
-              private dialog: MatDialog, 
-              private fb: FormBuilder,
-              private faseUnoConstruccionService: FaseUnoConstruccionService,
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private faseUnoConstruccionService: FaseUnoConstruccionService,
 
-              ) 
-  { }
+  ) { }
+  
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.contratacion )
-      this.ngOnInit(); 
-      console.log( "c", this.construccion )   
+    if (changes.contratacion)
+      this.ngOnInit();
+    console.log("c", this.construccion)
   }
 
   ngOnInit(): void {
-    if ( this.construccion ) {
-        this.addressForm.setValue({
-          tieneObservaciones: this.construccion.tieneObservacionesDiagnosticoApoyo,
-          observaciones: this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.observaciones : null,
-          construccionObservacionId: this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null,
-        })
-        
+    if (this.construccion) {
 
-        console.log( this.addressForm );
+      this.addressForm.get('tieneObservaciones').setValue(this.construccion.tieneObservacionesDiagnosticoApoyo)
+      this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.observaciones : null)
+      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null)
+
+      this.validarSemaforo();
+    }
+  }
+
+  validarSemaforo() {
+
+    this.construccion.semaforoDiagnostico = "sin-diligenciar";
+
+    if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
+      this.construccion.semaforoDiagnostico = 'completo';
+
+      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
+        this.construccion.semaforoDiagnostico = 'en-proceso';
     }
   }
 
@@ -71,24 +81,26 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    if (texto) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    }
   }
-  
-  openDialog (modalTitle: string, modalText: string) {
+
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
-      data : { modalTitle, modalText }
+      data: { modalTitle, modalText }
     });
   };
 
-  guardarDiagnostico(){
-    
+  guardarDiagnostico() {
+
     let construccion = {
-      contratoConstruccionId: this.contratoConstruccionId, 
+      contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesDiagnosticoApoyo: this.addressForm.value.tieneObservaciones,
 
-      construccionObservacion:[
+      construccionObservacion: [
         {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
           contratoConstruccionId: this.contratoConstruccionId,
@@ -103,11 +115,11 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
 
     console.log();
 
-    this.faseUnoConstruccionService.createEditObservacionDiagnostico( construccion )
-      .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message );
-        if ( respuesta.code == "200" )
-          this.createEditDiagnostico.emit( true );
+    this.faseUnoConstruccionService.createEditObservacionDiagnostico(construccion)
+      .subscribe(respuesta => {
+        this.openDialog('', respuesta.message);
+        if (respuesta.code == "200")
+          this.createEditDiagnostico.emit(true);
       })
   }
 

@@ -40,7 +40,7 @@
                 <section *ngIf="element.requiereObservacion === true">
                     <button mat-raised-button color="accent" 
                         class="btn-table expansion-style--title btn-color h-2em"
-                        (click)="openDialog( element.nombrePlanesProgramas, element.observaciones, element.id )">
+                        (click)="openDialogObservacion( element.nombrePlanesProgramas, element.observaciones, element.id )">
                         <small class="mr-1em">Observaciones</small>
                     </button>
                 </section>
@@ -57,7 +57,7 @@
     </div>
 </section>
 <div align="center" style="margin-top: 30px;" *ngIf="this.observacionesCompleted==false"> 
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarPlanes()">
         <div class="row" align="center">
             <div class="col-md-8">
                 <div class="row">

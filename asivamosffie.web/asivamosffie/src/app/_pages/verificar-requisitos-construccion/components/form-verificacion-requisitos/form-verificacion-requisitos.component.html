@@ -46,39 +46,48 @@
           </mat-card>
         </div>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion" >
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title"  
+              [ngClass]="contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0].semaforoDiagnostico" >
               Diagnóstico
             </mat-panel-title>
           </mat-expansion-panel-header>
           <app-diagnostico-verificar-requisitos [observacionesCompleted]="false"
             [construccion]="contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0]"
             [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
-            (createEditDiagnostico)="Cargar( $event )">
+            (createEditDiagnostico)="Cargar( $event )"
+            (completoDiagnostico)="completoDiagnostico = $event">
           </app-diagnostico-verificar-requisitos>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion" > 
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title" 
+              [ngClass]="contratacion.proyecto.contratoConstruccion[0].semaforoPlanes">
               Planes y Programas
             </mat-panel-title>
           </mat-expansion-panel-header>
           <app-planes-programas-verificar-requisitos 
               [observacionesCompleted]="false"
-              [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]">
+              [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+              [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]"
+              (createEdit)="Cargar( $event )">
           </app-planes-programas-verificar-requisitos>
         </mat-expansion-panel>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion" >
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title" 
+            [ngClass]="contratacion.proyecto.contratoConstruccion[0].semaforoManejo">
               Manejo de anticipo
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <app-manejo-anticipo-verificar-requisitos [observacionesCompleted]="false"
-            [contratacion]="contrato.contratacion.contratacionProyecto[i]">
+          <app-manejo-anticipo-verificar-requisitos 
+            [observacionesCompleted]="false"
+            (createEdit)="Cargar( $event )"
+            [contratacion]="contratacion.proyecto.contratoConstruccion[0]"
+            [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
           </app-manejo-anticipo-verificar-requisitos>
         </mat-expansion-panel>
 
@@ -107,25 +116,31 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title"
+            [ngClass]="contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion">
               Programación de obra
             </mat-panel-title>
           </mat-expansion-panel-header>
           <app-programacion-obra-verificar-requisitos 
             [observacionesCompleted]="false"
-            [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]">
+            [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"
+            (createEdit)="Cargar( $event )"
+            [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
           </app-programacion-obra-verificar-requisitos>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title"
+              [ngClass]="contratacion.proyecto.contratoConstruccion[0].semaforoFlujo">
               Flujo de inversión de recursos
             </mat-panel-title>
           </mat-expansion-panel-header>
           <app-inversion-fljrecursos-verificar-requisitos 
               [observacionesCompleted]="false"
-              [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]">
+              [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"
+              (createEdit)="Cargar( $event )"
+              [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
           </app-inversion-fljrecursos-verificar-requisitos>
         </mat-expansion-panel>
 
