@@ -11,8 +11,8 @@
             <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>:
                 {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
             <p><b>Observaciones:</b></p>
-            <p *ngIf="perfil.construccionPerfilObservacion.length > 0">
-                {{ perfil.construccionPerfilObservacion[0].observacion }} </p>
+            <p>
+                {{ perfil.observaciones }} </p>
             <p><b>Número de radicado en FFIE de aprobación de hojas de vida:</b></p>
             <section
                 *ngIf="perfil.construccionPerfilNumeroRadicado && perfil.construccionPerfilNumeroRadicado.length > 0">

@@ -48,8 +48,8 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion" >
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title"  
-              [ngClass]="contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0].semaforoDiagnostico" >
+            <mat-panel-title class="expansion-style--title {{ contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0].semaforoDiagnostico }}"  
+              >
               Diagnóstico
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -63,8 +63,8 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion" > 
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" 
-              [ngClass]="contratacion.proyecto.contratoConstruccion[0].semaforoPlanes">
+            <mat-panel-title class="expansion-style--title {{ contratacion.proyecto.contratoConstruccion[0].semaforoPlanes }}" 
+              >
               Planes y Programas
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -78,8 +78,8 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion" >
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title" 
-            [ngClass]="contratacion.proyecto.contratoConstruccion[0].semaforoManejo">
+            <mat-panel-title class="expansion-style--title {{ contratacion.proyecto.contratoConstruccion[0].semaforoManejo }} " 
+            >
               Manejo de anticipo
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -116,8 +116,8 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title"
-            [ngClass]="contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion">
+            <mat-panel-title class="expansion-style--title {{ contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion }} "
+            >
               Programación de obra
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -131,8 +131,8 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title"
-              [ngClass]="contratacion.proyecto.contratoConstruccion[0].semaforoFlujo">
+            <mat-panel-title class="expansion-style--title {{ contratacion.proyecto.contratoConstruccion[0].semaforoFlujo }}"
+              >
               Flujo de inversión de recursos
             </mat-panel-title>
           </mat-expansion-panel-header>

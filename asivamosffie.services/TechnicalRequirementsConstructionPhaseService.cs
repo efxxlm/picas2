@@ -194,7 +194,11 @@ namespace asivamosffie.services
 
                     cc.ConstruccionPerfil.ToList().ForEach(cp =>
                     {
-                        cp.ConstruccionPerfilObservacion = cp.ConstruccionPerfilObservacion.Where(cpo => cpo.Eliminado != true).ToList();
+                        cp.ConstruccionPerfilObservacion = cp.ConstruccionPerfilObservacion
+                                                                            .Where(cpo => cpo.Eliminado != true)
+                                                                            .OrderByDescending( cpo => cpo.FechaCreacion ) 
+                                                                            .ToList();
+
                         cp.ConstruccionPerfilNumeroRadicado = cp.ConstruccionPerfilNumeroRadicado.Where(cpr => cpr.Eliminado != true).ToList();
 
                         Dominio nombrePerfil = ListPerfilesDominio.Find(p => p.Codigo == cp.PerfilCodigo);
@@ -645,33 +649,34 @@ namespace asivamosffie.services
                         construccionPerfil.FechaAprobacion = perfil.FechaAprobacion;
                         construccionPerfil.RutaSoporte = perfil.RutaSoporte;
                         construccionPerfil.ConObervacionesSupervision = perfil.ConObervacionesSupervision;
+                        construccionPerfil.Observaciones = perfil.Observaciones;
 
                         construccionPerfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(construccionPerfil);
 
-                        foreach (var observacion in perfil.ConstruccionPerfilObservacion)
-                        {
-                            if (observacion.ConstruccionPerfilObservacionId > 0)
-                            {
-                                ConstruccionPerfilObservacion construccionPerfilObservacion = _context.ConstruccionPerfilObservacion.Find(observacion.ConstruccionPerfilObservacionId);
+                        // foreach (var observacion in perfil.ConstruccionPerfilObservacion)
+                        // {
+                        //     if (observacion.ConstruccionPerfilObservacionId > 0)
+                        //     {
+                        //         ConstruccionPerfilObservacion construccionPerfilObservacion = _context.ConstruccionPerfilObservacion.Find(observacion.ConstruccionPerfilObservacionId);
 
-                                construccionPerfilObservacion.UsuarioModificacion = pConstruccion.UsuarioCreacion;
-                                construccionPerfilObservacion.FechaModificacion = DateTime.Now;
+                        //         construccionPerfilObservacion.UsuarioModificacion = pConstruccion.UsuarioCreacion;
+                        //         construccionPerfilObservacion.FechaModificacion = DateTime.Now;
 
-                                construccionPerfilObservacion.Observacion = observacion.Observacion;
-                                //construccionPerfilObservacion.TipoObservacionCodigo = observacion.TipoObservacionCodigo;
+                        //         construccionPerfilObservacion.Observacion = observacion.Observacion;
+                        //         //construccionPerfilObservacion.TipoObservacionCodigo = observacion.TipoObservacionCodigo;
 
-                            }
-                            else
-                            {
-                                observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                                observacion.FechaCreacion = DateTime.Now;
+                        //     }
+                        //     else
+                        //     {
+                        //         observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                        //         observacion.FechaCreacion = DateTime.Now;
 
-                                observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
-                                observacion.Eliminado = false;
+                        //         observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+                        //         observacion.Eliminado = false;
 
-                                construccionPerfil.ConstruccionPerfilObservacion.Add(observacion);
-                            }
-                        }
+                        //         construccionPerfil.ConstruccionPerfilObservacion.Add(observacion);
+                        //     }
+                        // }
 
                         foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
                         {

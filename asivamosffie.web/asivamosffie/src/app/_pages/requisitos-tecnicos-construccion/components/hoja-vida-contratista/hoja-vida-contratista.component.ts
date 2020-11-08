@@ -150,7 +150,7 @@ export class HojaVidaContratistaComponent implements OnInit {
             {
               estadoSemaforo              : [ semaforo || 'sin-diligenciar' ],
               contratoPerfilId            : [ perfil.construccionPerfilId ? perfil.construccionPerfilId : 0 ],
-              perfilObservacion           : [ ( perfil['construccionPerfilObservacion'].length === 0 ) ? 0 : perfil['construccionPerfilObservacion'][0].contratoPerfilObservacionId ],
+              perfilObservacion           : [ perfil.observaciones ],
               perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
               cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? String( perfil.cantidadHvRequeridas ) : '' ],
               cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
@@ -300,13 +300,7 @@ export class HojaVidaContratistaComponent implements OnInit {
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
         value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value['construccionPerfilObservacion']    = value.observacion ? [ 
-                                                                          { 
-                                                                            ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
-                                                                            contratoPerfilId: value.contratoPerfilId,
-                                                                            observacion: value.observacion 
-                                                                          } 
-                                                                        ] : null;
+        value['observaciones']                    = value.observacion; 
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;

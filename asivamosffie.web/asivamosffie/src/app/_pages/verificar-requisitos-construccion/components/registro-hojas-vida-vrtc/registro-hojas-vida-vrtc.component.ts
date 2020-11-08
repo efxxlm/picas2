@@ -130,7 +130,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
         if ( perfil['construccionPerfilObservacion'].length > 0 ) {
           for ( let obs of perfil['construccionPerfilObservacion'] ) {
             if ( obs.tipoObservacionCodigo === '1' ) {
-              observaciones = obs.observacion;
+              observaciones = perfil['observaciones'];
             } else if ( obs.tipoObservacionCodigo === '3' ) {
               fechaObservacion = obs.fechaCreacion;
               observacionSupervisor = obs.observacion;
@@ -301,13 +301,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
         value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value['construccionPerfilObservacion']    = value.observacion ? [ 
-                                                                          { 
-                                                                            ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
-                                                                            contratoPerfilId: value.contratoPerfilId,
-                                                                            observacion: value.observacion 
-                                                                          } 
-                                                                        ] : null;
+        value['observaciones']                    = value.observacion 
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;
