@@ -83,6 +83,10 @@
         position: absolute;
         transition: transform 0.3s;
         transform: scale(0);
+
+            @media screen and (min-width: 0\0) {
+                top: 6.5px
+            }
     }
 
     &:hover::after,
