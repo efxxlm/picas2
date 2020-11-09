@@ -5,13 +5,7 @@ namespace asivamosffie.model.Models
 {
     public partial class DemandanteConvocante
     {
-        public DemandanteConvocante()
-        {
-            DemandadoConvocado = new HashSet<DemandadoConvocado>();
-        }
-
         public int DemandanteConvocadoId { get; set; }
-        public int DefensaJudicialContratoId { get; set; }
         public bool? EsConvocante { get; set; }
         public string Nombre { get; set; }
         public string TipoIdentificacionCodigo { get; set; }
@@ -24,8 +18,8 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public int? DefensaJucicialId { get; set; }
 
-        public virtual DefensaJudicialContrato DefensaJudicialContrato { get; set; }
-        public virtual ICollection<DemandadoConvocado> DemandadoConvocado { get; set; }
+        public virtual DefensaJudicial DefensaJucicial { get; set; }
     }
 }
