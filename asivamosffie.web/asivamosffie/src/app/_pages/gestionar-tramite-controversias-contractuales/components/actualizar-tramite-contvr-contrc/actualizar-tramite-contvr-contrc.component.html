@@ -16,6 +16,17 @@
                 <p><strong>Tipo de Controversia:</strong> Terminación anticipada por incumplimiento (TAI)</p>
             </mat-card-content>
         </mat-card>
-        <app-control-y-tabla-actua-tramite-cc></app-control-y-tabla-actua-tramite-cc>
+        <div class="botones">
+            <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1" style="width: 220px;">Actuaciones</button>
+            <div *ngIf="this.selTab==1" class="button-activated" style="width: 220px;">Actuaciones</div>
+            <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2" style="width: 220px;">Reclamaciones</button>
+            <div *ngIf="this.selTab==2" class="button-activated" style="width: 220px;">Reclamaciones</div>
+        </div>
+        <div *ngIf="this.selTab==1">
+            <app-control-y-tabla-actua-tramite-cc></app-control-y-tabla-actua-tramite-cc>
+        </div>
+        <div *ngIf="this.selTab==2">
+            <app-control-y-tabla-reclamacion-cc></app-control-y-tabla-reclamacion-cc>
+        </div>
     </div>
 </div>

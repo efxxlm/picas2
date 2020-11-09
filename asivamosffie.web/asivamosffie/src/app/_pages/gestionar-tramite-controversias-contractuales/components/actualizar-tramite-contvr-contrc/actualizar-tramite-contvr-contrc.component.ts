@@ -7,9 +7,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ActualizarTramiteContvrContrcComponent implements OnInit {
   public controversiaID = localStorage.getItem("controversiaID");
+  public selTab;
   constructor() { }
 
   ngOnInit(): void {
   }
-
+  cambiarTab(opc) {
+    this.selTab=opc;
+  }
 }

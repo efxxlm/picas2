@@ -23,11 +23,14 @@ import { DetalleReclmAseguradoraCcComponent } from './components/detalle-reclm-a
 import { DetalleSopActuacionCcComponent } from './components/detalle-sop-actuacion-cc/detalle-sop-actuacion-cc.component';
 import { VerdetalleTramiteCcComponent } from './components/verdetalle-tramite-cc/verdetalle-tramite-cc.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { ControlYTablaReclamacionCcComponent } from './components/control-y-tabla-reclamacion-cc/control-y-tabla-reclamacion-cc.component';
+import { RegistarReclamacionAseguradoraCcComponent } from './components/registar-reclamacion-aseguradora-cc/registar-reclamacion-aseguradora-cc.component';
+import { VerdetalleReclamacionAsegCcComponent } from './components/verdetalle-reclamacion-aseg-cc/verdetalle-reclamacion-aseg-cc.component';
 
 
 
 @NgModule({
-  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent, VerDetalleActuacionContrContrctComponent, DetalleDescrActCcComponent, DetalleReclmAseguradoraCcComponent, DetalleSopActuacionCcComponent, VerdetalleTramiteCcComponent],
+  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent, VerDetalleActuacionContrContrctComponent, DetalleDescrActCcComponent, DetalleReclmAseguradoraCcComponent, DetalleSopActuacionCcComponent, VerdetalleTramiteCcComponent, ControlYTablaReclamacionCcComponent, RegistarReclamacionAseguradoraCcComponent, VerdetalleReclamacionAsegCcComponent],
   imports: [
     CommonModule,
     MaterialModule,

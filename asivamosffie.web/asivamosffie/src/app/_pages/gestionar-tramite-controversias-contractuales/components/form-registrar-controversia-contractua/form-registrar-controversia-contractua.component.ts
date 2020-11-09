@@ -27,6 +27,9 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
+  seleccionAutocomplete(nombre:string){
+    this.addressForm.value.contrato = nombre;
+  }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());

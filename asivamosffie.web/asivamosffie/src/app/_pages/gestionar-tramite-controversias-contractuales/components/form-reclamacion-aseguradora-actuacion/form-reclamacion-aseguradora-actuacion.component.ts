@@ -12,10 +12,9 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   @Input() isEditable;
 
   addressForm = this.fb.group({
-    requiereReclamacionAseguradora: [null, Validators.required],
     resumenReclamacionFiduciaria: [null, Validators.required],
     requereReclamacionComiteTecnico: [null, Validators.required],
-    definitivoyCerrado: [null, Validators.required],
+    urlSoporte: [null, Validators.required],
   });
   editorStyle = {
     height: '50px'
