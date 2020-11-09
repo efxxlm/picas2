@@ -37,6 +37,14 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
       numReclamacion: "REC 002",
       estadoReclamacion: 'Enviado a comité técnico',
       id: 2
+    },
+    {
+      fechaActualizacion: '10/08/2020',
+      actuacion: "Actuacion 3",
+      numActuacion: "ACT Controversia 0003",
+      numReclamacion: "REC 003",
+      estadoReclamacion: 'Aprobada por comité técnico',
+      id: 3
     }
   ]; 
   constructor(private router: Router) { }
@@ -51,6 +59,10 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
+  actualizarReclamacionAseguradora(id){
+    localStorage.setItem("reclamacionID",id);
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);
+  }
   registrarReclamacionAseguradora(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarReclamacionAseguradora',id]);
   }

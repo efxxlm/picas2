@@ -26,11 +26,17 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { ControlYTablaReclamacionCcComponent } from './components/control-y-tabla-reclamacion-cc/control-y-tabla-reclamacion-cc.component';
 import { RegistarReclamacionAseguradoraCcComponent } from './components/registar-reclamacion-aseguradora-cc/registar-reclamacion-aseguradora-cc.component';
 import { VerdetalleReclamacionAsegCcComponent } from './components/verdetalle-reclamacion-aseg-cc/verdetalle-reclamacion-aseg-cc.component';
+import { ActualizarReclamacionAsegCcComponent } from './components/actualizar-reclamacion-aseg-cc/actualizar-reclamacion-aseg-cc.component';
+import { ControlYTablaActuacionReclamacionComponent } from './components/control-y-tabla-actuacion-reclamacion/control-y-tabla-actuacion-reclamacion.component';
+import { RegistrarNuevaActuacionReclamacionComponent } from './components/registrar-nueva-actuacion-reclamacion/registrar-nueva-actuacion-reclamacion.component';
+import { FormActuacionReclamacionComponent } from './components/form-actuacion-reclamacion/form-actuacion-reclamacion.component';
+import { VerDetalleeditarActuacionReclmComponent } from './components/ver-detalleeditar-actuacion-reclm/ver-detalleeditar-actuacion-reclm.component';
+import { VerdetalleReclamacionActuacionCcComponent } from './components/verdetalle-reclamacion-actuacion-cc/verdetalle-reclamacion-actuacion-cc.component';
 
 
 
 @NgModule({
-  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent, VerDetalleActuacionContrContrctComponent, DetalleDescrActCcComponent, DetalleReclmAseguradoraCcComponent, DetalleSopActuacionCcComponent, VerdetalleTramiteCcComponent, ControlYTablaReclamacionCcComponent, RegistarReclamacionAseguradoraCcComponent, VerdetalleReclamacionAsegCcComponent],
+  declarations: [ControlYTablaControversiasContractualesComponent, FormRegistrarControversiaContractuaComponent, GestionarTramiteControvrContractComponent, FormRegistrarControvrsAccordComponent, FormRegistrarControvrsSopSolComponent, ActualizarTramiteContvrContrcComponent, VerDetalleditarCntrvContrcComponent, ControlYTablaActuaTramiteCcComponent, RegistrarNuevaActuacionTramiteComponent, FormDescripcionActuacionComponent, FormReclamacionAseguradoraActuacionComponent, FormSoporteActuacionActtramComponent, VerdetalleeditTramiteCntrvContrcComponent, VerDetalleActuacionContrContrctComponent, DetalleDescrActCcComponent, DetalleReclmAseguradoraCcComponent, DetalleSopActuacionCcComponent, VerdetalleTramiteCcComponent, ControlYTablaReclamacionCcComponent, RegistarReclamacionAseguradoraCcComponent, VerdetalleReclamacionAsegCcComponent, ActualizarReclamacionAsegCcComponent, ControlYTablaActuacionReclamacionComponent, RegistrarNuevaActuacionReclamacionComponent, FormActuacionReclamacionComponent, VerDetalleeditarActuacionReclmComponent, VerdetalleReclamacionActuacionCcComponent],
   imports: [
     CommonModule,
     MaterialModule,

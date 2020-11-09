@@ -8,9 +8,11 @@ import { Component, OnInit } from '@angular/core';
 export class ActualizarTramiteContvrContrcComponent implements OnInit {
   public controversiaID = localStorage.getItem("controversiaID");
   public selTab;
+  public tipoControversia;
   constructor() { }
 
   ngOnInit(): void {
+    this.tipoControversia="Terminación anticipada por incumplimiento (TAI)";
   }
   cambiarTab(opc) {
     this.selTab=opc;

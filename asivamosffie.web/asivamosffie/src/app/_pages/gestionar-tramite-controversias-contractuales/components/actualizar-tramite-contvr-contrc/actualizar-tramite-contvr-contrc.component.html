@@ -13,20 +13,36 @@
                 <p><strong>Fecha de solicitud:</strong> 05/08/2020</p>
                 <p><strong>Fecha de la solicitud del trámite:</strong> 07/08/2020</p>
                 <p><strong>Número del contrato:</strong> C223456789</p>
-                <p><strong>Tipo de Controversia:</strong> Terminación anticipada por incumplimiento (TAI)</p>
+                <p><strong>Tipo de Controversia:</strong> {{this.tipoControversia}}</p>
             </mat-card-content>
         </mat-card>
-        <div class="botones">
-            <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1" style="width: 220px;">Actuaciones</button>
-            <div *ngIf="this.selTab==1" class="button-activated" style="width: 220px;">Actuaciones</div>
-            <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2" style="width: 220px;">Reclamaciones</button>
-            <div *ngIf="this.selTab==2" class="button-activated" style="width: 220px;">Reclamaciones</div>
+        <div *ngIf="this.tipoControversia=='Terminación anticipada por incumplimiento (TAI)'">
+            <div class="botones">
+                <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1" style="width: 220px;">Actuaciones</button>
+                <div *ngIf="this.selTab==1" class="button-activated" style="width: 220px;">Actuaciones</div>
+                <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2" style="width: 220px;">Reclamaciones</button>
+                <div *ngIf="this.selTab==2" class="button-activated" style="width: 220px;">Reclamaciones</div>
+            </div>
+            <div *ngIf="this.selTab==1">
+                <app-control-y-tabla-actua-tramite-cc></app-control-y-tabla-actua-tramite-cc>
+            </div>
+            <div *ngIf="this.selTab==2">
+                <app-control-y-tabla-reclamacion-cc></app-control-y-tabla-reclamacion-cc>
+            </div>
         </div>
-        <div *ngIf="this.selTab==1">
-            <app-control-y-tabla-actua-tramite-cc></app-control-y-tabla-actua-tramite-cc>
-        </div>
-        <div *ngIf="this.selTab==2">
-            <app-control-y-tabla-reclamacion-cc></app-control-y-tabla-reclamacion-cc>
+        <div *ngIf="this.tipoControversia!='Terminación anticipada por incumplimiento (TAI)'">
+            <div class="botones">
+                <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1" style="width: 220px;">Actuaciones</button>
+                <div *ngIf="this.selTab==1" class="button-activated" style="width: 220px;">Actuaciones</div>
+                <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2" style="width: 220px;">Mesas de trabajo</button>
+                <div *ngIf="this.selTab==2" class="button-activated" style="width: 220px;">Mesas de trabajo</div>
+            </div>
+            <div *ngIf="this.selTab==1">
+                <app-control-y-tabla-actua-tramite-cc></app-control-y-tabla-actua-tramite-cc>
+            </div>
+            <div *ngIf="this.selTab==2">
+                <app-control-y-tabla-reclamacion-cc></app-control-y-tabla-reclamacion-cc>
+            </div>
         </div>
     </div>
 </div>
