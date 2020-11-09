@@ -338,7 +338,7 @@
                         <input matInput #valorAporte currencyMask formControlName="valorFuenteRecursos" maxlength="20"
                           required (keypress)="validateNumberKeypress($event);validateonevige(j)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
                           >
                       </mat-form-field>
                       <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
@@ -410,7 +410,7 @@
                                 maxlength="20" required (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                 [readonly]="vigencias1(j).controls.length==1"
-                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
                                 >
                             </mat-form-field>
                             <span class="contador">{{20 - valorVigencia.value.length}}</span>
