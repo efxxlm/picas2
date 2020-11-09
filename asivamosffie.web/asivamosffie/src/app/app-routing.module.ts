@@ -124,13 +124,13 @@ const routes: Routes = [
           .then( module => module.ComiteFiduciarioModule )
       },
       {
- 
+
         path: 'procesosContractuales',
         loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
           .then( module => module.GestionarProcesosContractualesModule )
       },
       {
- 
+
         path: 'solicitarContratacion',
         loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
         .then(m => m.SolicitarContratacionModule)

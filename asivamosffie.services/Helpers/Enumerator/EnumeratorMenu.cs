@@ -33,7 +33,10 @@ namespace asivamosffie.services.Helpers.Enumerator
  
         Generar_Registro_Presupuestal=36,
 
-     	Registrar_Programacion_Personal_Obra = 48
+     	Registrar_Programacion_Personal_Obra = 48,
+        Gestionar_controversias_contractuales=47,
+
+
     }
 
     public enum enumeratorAccion

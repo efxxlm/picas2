@@ -123,6 +123,8 @@ namespace asivamosffie.services.Helpers.Enumerator
          
         Tiempo_Aprobar_Acta = 84,
 
-        Estado_Programacion_Inicial = 88
+        Estado_Programacion_Inicial = 88,
+        
+        Tipo_de_controversia=80
     }
 }
