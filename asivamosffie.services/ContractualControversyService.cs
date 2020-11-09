@@ -276,7 +276,7 @@ namespace asivamosffie.services
                     controversiaContractual.FechaModificacion = DateTime.Now;
                     //controversiaContractual.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     controversiaContractual.UsuarioModificacion = pUsuario;
-                    //controversiaContractual.elim = true;
+                    controversiaContractual.Eliminado = true;
 
                     _context.ControversiaContractual.Update(controversiaContractual);
 
