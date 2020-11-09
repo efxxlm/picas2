@@ -114,7 +114,7 @@
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                   </button>
-                </div>            
+                </div>
           </div>
           <div class="row">
                 <div class="pr-1">
@@ -126,8 +126,9 @@
                     formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false"
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                   </mat-form-field>
-                  <span class="contador">{{50 - valorConsignacion.value.length}}</span>
-                </div>            
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                  matTooltipClass="info-tooltip">{{50 - valorConsignacion.value.length}}</span>
+                </div>
           </div>
   
         </mat-card-content>

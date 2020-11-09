@@ -96,7 +96,8 @@
                                 (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
-                        <span class="contador">{{3 - plazoMeses.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">{{3 - plazoMeses.value.length}}</span>
                     </div>
                 </div>
             </div>
@@ -113,7 +114,8 @@
                                 (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
-                        <span class="contador">{{2 - plazoDias.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">{{2 - plazoDias.value.length}}</span>
                     </div>
                 </div>
             </div>

@@ -97,6 +97,21 @@ mat-form-field {
   position: relative;
   right: -2.7em;
   top: 0.3em;
+
+  &:hover::before {
+    @extend %tooltip;
+    content: 'Lista desplegable de selección única';
+    .mat-paginator & {
+      content: none;
+    }
+
+    [multiple] & {
+      content: 'Lista desplegable de selección múltiple';
+      .mat-paginator & {
+        content: none;
+      }
+    }
+  }
 }
 
 div.mat-select-arrow {

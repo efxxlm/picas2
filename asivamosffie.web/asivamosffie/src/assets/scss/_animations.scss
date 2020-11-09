@@ -20,6 +20,18 @@
     }
 }
 
+@keyframes animatedSelect {
+    from {
+        opacity  : 0;
+        transform: translateX(calc(-50% + 1em)) scale(.9);
+    }
+    
+    to {
+        opacity  : 1;
+        transform: translateX(calc(-50% + 1em)) scale(1);
+    }
+  }
+
 .animatedDown {
     animation-duration: .6s;
     animation-name    : animatedDown;

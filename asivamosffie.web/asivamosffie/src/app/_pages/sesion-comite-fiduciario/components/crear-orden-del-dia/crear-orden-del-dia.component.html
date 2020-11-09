@@ -119,7 +119,8 @@
                           maxlength="3" min="1" max="999" required (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
                       </mat-form-field>
-                      <span class="contador">{{3 - tiempoIntervencion.value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                      matTooltipClass="info-tooltip">{{3 - tiempoIntervencion.value.length}}</span>
                     </div>
                   </div>
                 </div>

@@ -52,8 +52,8 @@
                   (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   type="number">
               </mat-form-field>
-              <span
-                class="contador">{{4 - (proyecto.numeroActaJunta?proyecto.numeroActaJunta.toString().length:0)}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{4 - (proyecto.numeroActaJunta?proyecto.numeroActaJunta.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -91,7 +91,8 @@
                 <input matInput [(ngModel)]="proyecto.llaveMen" maxlength="8" required type="text"
                   (keypress)="validateKeypressLlave($event)">
               </mat-form-field>
-              <span class="contador">{{8 - (proyecto.llaveMen?proyecto.llaveMen.length:0)}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+              matTooltipClass="info-tooltip">{{8 - (proyecto.llaveMen?proyecto.llaveMen.length:0)}}</span>
             </div>
           </div>
         </div>
@@ -187,7 +188,8 @@
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input matInput maxlength="15" required type="number" value="{{CodigoDaneIE}}" #codigoDane
-                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  [matTooltipPosition]="'above'" matTooltip="Espacio diligenciado por el sistema" matTooltipClass="info-tooltip">
               </mat-form-field>
             </div>
           </div>
@@ -220,7 +222,8 @@
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input matInput value="{{codigoDaneSede}}" maxlength="15" required type="number" required #codigoDane2
-                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  [matTooltipPosition]="'above'" matTooltip="Espacio diligenciado por el sistema" matTooltipClass="info-tooltip">
               </mat-form-field>
             </div>
           </div>
@@ -275,8 +278,8 @@
                   (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" min="1"
                   max="99" required type="number">
               </mat-form-field>
-              <span
-                class="contador">{{3 - (proyecto.cantPrediosPostulados?proyecto.cantPrediosPostulados.toString().length:0)}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{3 - (proyecto.cantPrediosPostulados?proyecto.cantPrediosPostulados.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -317,7 +320,8 @@
               >
                 Latitud
               </label>
-              <mat-form-field class="w-8em">
+              <mat-form-field class="w-8em" [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
+              matTooltipClass="info-tooltip">
                 <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud" maxlength="7" min="1" max="99"
                   (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" required
                   type="number">
@@ -342,7 +346,8 @@
               <mat-form-field class="w-8em">
                 <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="7" min="1" max="99"
                   (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" required
-                  type="number">
+                  type="number" [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
+                  matTooltipClass="info-tooltip">
               </mat-form-field>
 
               <label class="label-left sub-label"
@@ -370,8 +375,8 @@
           <mat-form-field class="full-width">
             <input matInput [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text">
           </mat-form-field>
-          <span
-            class="contador">{{20 - (proyecto.predioPrincipal.direccion?proyecto.predioPrincipal.direccion.length:0)}}</span>
+          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+          matTooltipClass="info-tooltip">{{20 - (proyecto.predioPrincipal.direccion?proyecto.predioPrincipal.direccion.length:0)}}</span>
         </div>
       </div>
       <div class="row">
@@ -403,8 +408,8 @@
                 <input matInput [(ngModel)]="proyecto.predioPrincipal.numeroDocumento" maxlength="20" required
                   type="text">
               </mat-form-field>
-              <span
-                class="contador">{{20 - (proyecto.predioPrincipal.numeroDocumento?proyecto.predioPrincipal.numeroDocumento.length:0)}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+              matTooltipClass="info-tooltip">{{20 - (proyecto.predioPrincipal.numeroDocumento?proyecto.predioPrincipal.numeroDocumento.length:0)}}</span>
             </div>
           </div>
         </div>
@@ -423,8 +428,8 @@
                   [disabled]="proyecto.predioPrincipal.documentoAcreditacionCodigo!='1'" maxlength="20" required
                   type="text">
               </mat-form-field>
-              <span
-                class="contador">{{20 - (proyecto.predioPrincipal.cedulaCatastral?proyecto.predioPrincipal.cedulaCatastral.toString().length:0)}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+                matTooltipClass="info-tooltip">{{20 - (proyecto.predioPrincipal.cedulaCatastral?proyecto.predioPrincipal.cedulaCatastral.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -521,7 +526,8 @@
                   max="99" required type="number">
               </mat-form-field>
               <span
-                class="contador">{{2 - (proyecto.cantidadAportantes?proyecto.cantidadAportantes.toString().length:0)}}</span>
+                class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{2 - (proyecto.cantidadAportantes?proyecto.cantidadAportantes.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -650,7 +656,8 @@
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     required currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
-                <span class="contador">{{20 - (aportantes.valorObra?aportantes.valorObra.toString().length:0)}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                matTooltipClass="info-tooltip">{{20 - (aportantes.valorObra?aportantes.valorObra.toString().length:0)}}</span>
               </div>
             </div>
           </div>
@@ -671,7 +678,8 @@
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span
-                  class="contador">{{20 - (aportantes.valorInterventoria?aportantes.valorInterventoria.toString().length:0)}}</span>
+                  class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                  matTooltipClass="info-tooltip">{{20 - (aportantes.valorInterventoria?aportantes.valorInterventoria.toString().length:0)}}</span>
               </div>
             </div>
           </div>
@@ -691,7 +699,8 @@
                     currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" readonly>
                 </mat-form-field>
                 <span
-                  class="contador">{{40 - (aportantes.valorTotalAportante?aportantes.valorTotalAportante.toString().length:0)}}</span>
+                  class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                  matTooltipClass="info-tooltip">{{40 - (aportantes.valorTotalAportante?aportantes.valorTotalAportante.toString().length:0)}}</span>
               </div>
             </div>
           </div>
@@ -742,8 +751,8 @@
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     type="number">
                 </mat-form-field>
-                <span
-                  class="contador">{{4 - (infraestructura.cantidad?infraestructura.cantidad.toString().length:0)}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{4 - (infraestructura.cantidad?infraestructura.cantidad.toString().length:0)}}</span>
               </div>
             </div>
           </div>
@@ -763,7 +772,8 @@
                 <mat-form-field class="w-8em">
                   <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="2" min="1" max="99" required
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    type="number">
+                    type="number" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 29 días"
+                    matTooltipClass="info-tooltip">
                 </mat-form-field>
                 <label class="label-left sub-label"
                 [ngClass]="{'color-secondaryColor' : !infraestructura.plazoDiasObra && estaEditando}"
@@ -773,7 +783,8 @@
                 <mat-form-field class="w-8em">
                   <input matInput [(ngModel)]="infraestructura.plazoDiasObra" type="number" maxlength="2" min="1"
                     max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                    matTooltipClass="info-tooltip">
                 </mat-form-field>
               </div>
             </div>
@@ -794,7 +805,8 @@
                 <mat-form-field class="w-8em">
                   <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="2" min="1" max="99"
                     (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    required type="number">
+                    required type="number" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 29 días"
+                    matTooltipClass="info-tooltip">
                 </mat-form-field>
                 <label class="label-left sub-label"
                 [ngClass]="{'color-secondaryColor' : !infraestructura.plazoDiasInterventoria && estaEditando}"
@@ -804,7 +816,8 @@
                 <mat-form-field class="w-8em">
                   <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" type="number" maxlength="2"
                     min="1" max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                    matTooltipClass="info-tooltip">
                 </mat-form-field>
               </div>
             </div>
@@ -836,7 +849,7 @@
       </div>
 
       <div class="text-right">
-        <button mat-button color="warn" type="button" class="btn-eliminar" 
+        <button mat-button color="warn" type="button" class="btn-eliminar"
         *ngIf="bitPuedoEditar" (click)="addInfraestructura()">
           <img src="assets/img/icon/mas.svg" alt="Agregar otra infraestructura">
           Agregar otra infraestructura a intervenir

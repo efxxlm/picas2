@@ -60,7 +60,8 @@
                     formControlName="numAportes"
                     >
                 </mat-form-field>
-                <span class="contador">{{3 - numAportes.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{3 - numAportes.value.length}}</span>
               </div>
             </div>
           </div>
@@ -185,7 +186,8 @@
                           <input formControlName="cofinanciacionId" type="hidden">
                           <input formControlName="cofinanciacionAportanteId" type="hidden">
                         </mat-form-field>
-                        <span class="contador">{{3 - cauntosDocumentos.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">{{3 - cauntosDocumentos.value.length}}</span>
                       </div>
                     </div>
                   </div>
@@ -278,8 +280,8 @@
                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                         </mat-form-field>
                         <span
-                          class="contador">{{20 - (documento.valorDocumento?documento.valorDocumento.toString().length:0)}}</span>
-
+                          class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                          matTooltipClass="info-tooltip">{{20 - (documento.valorDocumento?documento.valorDocumento.toString().length:0)}}</span>
                       </div>
                     </div>
                   </div>
@@ -320,7 +322,8 @@
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
                         <span
-                          class="contador">{{20 - (documento.numeroActa?documento.numeroActa.toString().length:0)}}</span>
+                          class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                          matTooltipClass="info-tooltip">{{20 - (documento.numeroActa?documento.numeroActa.toString().length:0)}}</span>
                       </div>
                     </div>
                   </div>
@@ -363,7 +366,8 @@
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
                         <span
-                          class="contador">{{20 - (documento.numeroAcuerdo?documento.numeroAcuerdo.toString().length:0)}}</span>
+                          class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                          matTooltipClass="info-tooltip">{{20 - (documento.numeroAcuerdo?documento.numeroAcuerdo.toString().length:0)}}</span>
                       </div>
                     </div>
                   </div>
@@ -417,7 +421,8 @@
                         [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                     </mat-form-field>
                     <span
-                      class="contador">{{20 - (aportante.valortotal?aportante.valortotal.toString().length:0)}}</span>
+                      class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                      matTooltipClass="info-tooltip">{{20 - (aportante.valortotal?aportante.valortotal.toString().length:0)}}</span>
                   </div>
                 </div>
               </div>

@@ -227,7 +227,8 @@
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
-                <span class="contador">{{2 - cuantosRP.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{2 - cuantosRP.value.length}}</span>
               </div>
             </div>
             <div formGroupName="registrosPresupuestales">
@@ -249,7 +250,8 @@
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         <input type="hidden" formControlName="registroPresupuestalId">
                       </mat-form-field>
-                      <span class="contador">{{50 - numeroRP.value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                      matTooltipClass="info-tooltip">{{50 - numeroRP.value.length}}</span>
                     </div>
                   </div>
                   <div class="row">
@@ -339,7 +341,8 @@
                           [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                           >
                       </mat-form-field>
-                      <span class="contador">{{20 - valorAporte.value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                      matTooltipClass="info-tooltip">{{20 - valorAporte.value.length}}</span>
                     </div>
                   </div>
                 </div>
@@ -360,7 +363,8 @@
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
                       </mat-form-field>
-                      <span class="contador">{{2 - cuantasVigencias.value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                      matTooltipClass="info-tooltip">{{2 - cuantasVigencias.value.length}}</span>
                     </div>
                   </div>
                 </div>
@@ -443,7 +447,8 @@
                           <input matInput #numeroCuemta type="text" formControlName="numeroCuenta" maxlength="20"
                             required >
                         </mat-form-field>
-                        <span class="contador">{{20 - numeroCuemta.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">{{20 - numeroCuemta.value.length}}</span>
                       </div>
                     </div>
                     <div class="row">
@@ -458,7 +463,8 @@
                             required>
                           <input type="hidden" formControlName="cuentaBancariaId">
                         </mat-form-field>
-                        <span class="contador">{{100 - nombreCuenta.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+                        matTooltipClass="info-tooltip">{{100 - nombreCuenta.value.length}}</span>
                       </div>
                     </div>
                     <div class="row">
@@ -473,7 +479,8 @@
                             <mat-form-field class="full-width maincolor">
                               <input matInput #codigoSIFI type="text" formControlName="codigoSIFI" maxlength="6" required>
                             </mat-form-field>
-                            <span class="contador">{{6 - codigoSIFI.value.length}}</span>
+                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+                            matTooltipClass="info-tooltip">{{6 - codigoSIFI.value.length}}</span>
                           </div>
                         </div>
                       </div>

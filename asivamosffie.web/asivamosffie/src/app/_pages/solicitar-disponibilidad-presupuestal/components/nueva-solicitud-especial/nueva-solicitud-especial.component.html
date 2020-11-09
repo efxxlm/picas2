@@ -317,7 +317,8 @@
                                             [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                                             required>
                                 </mat-form-field>
-                                <span class="contador" *ngIf="addressForm.get( 'valor' ).value.toString() !== null">{{11 - addressForm.get( 'valor' ).value.toString().length }}</span>
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                                matTooltipClass="info-tooltip" *ngIf="addressForm.get( 'valor' ).value.toString() !== null">{{11 - addressForm.get( 'valor' ).value.toString().length }}</span>
                             </div>
                         </div>
                     </div>
