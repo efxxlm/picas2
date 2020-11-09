@@ -293,7 +293,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       .subscribe(response => {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
-      if ( this.sesionComiteSolicitud.requiereVotacion ){
+      if ( this.sesionComiteSolicitud.requiereVotacionFiduciario ){
         this.sesionComiteSolicitud.sesionSolicitudVoto.filter(sv => sv.comiteTecnicoFiduciarioId == this.sesionComiteSolicitud.comiteTecnicoFiduciarioId).forEach(sv => {
           if (sv.esAprobado)
             this.cantidadAprobado++;
@@ -346,7 +346,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     });
 
-    this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacion;
+    this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacionFiduciario;
 
     if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion) {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
