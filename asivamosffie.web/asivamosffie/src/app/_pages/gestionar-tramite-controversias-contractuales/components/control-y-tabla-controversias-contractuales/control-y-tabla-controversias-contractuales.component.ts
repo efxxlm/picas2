@@ -34,6 +34,13 @@ export class ControlYTablaControversiasContractualesComponent implements OnInit 
       tipoControversia: '1',
       estadoControversia: '3',
       id: 2
+    },
+    {
+      fechaSolicitud: '10/08/2020',
+      numeroSolicitud: 'CO003',
+      tipoControversia: '2',
+      estadoControversia: '6',
+      id: 3
     }
   ];  
   constructor(private router: Router) {

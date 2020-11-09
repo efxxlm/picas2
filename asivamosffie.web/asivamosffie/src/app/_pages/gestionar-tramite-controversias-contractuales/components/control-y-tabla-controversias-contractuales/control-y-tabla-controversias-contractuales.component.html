@@ -39,6 +39,7 @@
                     <div *ngIf="element.estadoControversia=='3'">Aprobada por comité técnico</div>
                     <div *ngIf="element.estadoControversia=='4'">En trámite</div>
                     <div *ngIf="element.estadoControversia=='5'">Cerrada</div>
+                    <div *ngIf="element.estadoControversia=='6'">Registrada</div>
                     </td>
             </ng-container>
     
@@ -59,7 +60,12 @@
                         Eliminar 
                     </button>
                     -->
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='3'"
+                    <!-- Cuando empiezo a integrar la tabla correspondiente
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='5'">
+                       Descargar proceso de controversia
+                    </button>
+                    -->
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='3'||element.estadoControversia=='6'"
                     (click)=this.actualizarTramiteButton(element.id);>
                         Actualizar trámite
                     </button>
