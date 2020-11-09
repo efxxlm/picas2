@@ -85,6 +85,7 @@ export class EditarEnRevisionComponent implements OnInit {
   public selected = [];
   public obj1;
   public obj2;
+  public arrayprueba = ["1","2"];
   obj3: boolean;
   obj4: boolean;
 
@@ -137,6 +138,7 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
+      this.loadGarantia(35);
       this.dataLoad2(data);
     }); 
     this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data_1=>{
@@ -151,10 +153,15 @@ export class EditarEnRevisionComponent implements OnInit {
   }
 
   loadGarantia(id){
-
+    this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_B=>{
+      this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
+      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.codigo == data_B[0].tipoGarantiaCodigo);
+      this.addressForm.get('polizasYSeguros').setValue([tipoGarantiaCodigo]);
+      this.loadGrantiaID(data_B[0].polizaGarantiaId);
+      this.getvalues([tipoGarantiaCodigo]);
+    });
   }
   getvalues(values: Dominio[]) {
-    console.log(values);
     const buenManejo = values.find(value => value.codigo == "1");
     const garantiaObra = values.find(value => value.codigo == "2");
     const pCumplimiento = values.find(value => value.codigo == "3");
@@ -255,13 +262,14 @@ export class EditarEnRevisionComponent implements OnInit {
       FechaModificacion: "",
       Eliminado: false
     };
-    /*
+    
     const polizaGarantia: CreatePolizaGarantia={
       polizaGarantiaId : this.idPoliza2,
       contratoPolizaId: this.idPoliza,
-      tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
-      esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
+      esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo,
+      tipoGarantiaCodigo: members,
     };
+    /*
     const polizaObservacion: CreatePolizaObservacion={
       polizaObservacionId: this.idObservacion,
       contratoPolizaId: this.idPoliza,
@@ -278,10 +286,13 @@ export class EditarEnRevisionComponent implements OnInit {
     }
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if(data.isSuccessful==true){
+        this.polizaService.CreatePolizaGarantia(polizaGarantia).subscribe(data0=>{
+
+        });
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza,this.idContrato).subscribe(resp1=>{
 
         });
-        this.openDialog('', `<b>${data.message}</b>`);
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
       else{

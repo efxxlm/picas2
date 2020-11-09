@@ -200,7 +200,7 @@ export class GestionarPolizasComponent implements OnInit {
         this.polizaService.CambiarEstadoPolizaByContratoId("2",this.idContrato).subscribe(resp=>{
 
         });
-        this.openDialog('', `<b>${data.message}</b>`);
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
       else {

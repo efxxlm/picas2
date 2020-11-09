@@ -243,7 +243,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza,this.idContrato).subscribe(resp1=>{
 
         });
-        this.openDialog('', `<b>${data.message}</b>`);
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
       else{
