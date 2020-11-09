@@ -77,14 +77,14 @@
           <label class="label-left" for="observacionesDecision">Descripción</label>
         </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" required
+          <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config" required
             (onContentChanged)="maxLength($event, 5000)" formControlName="observacionesDecision" required>
           </quill-editor>
           <div class="d-flex align-items-center">
-            <span class="contador miles mt-3em" *ngIf="addressForm.get('observacionesDecision').value !== null">
+            <span class="contador miles mt-3em" *ngIf="addressForm.get('observacionesDecision').value">
               {{5000 - (textoLimpio(addressForm.get('observacionesDecision').value)>5000?5000:textoLimpio(addressForm.get('observacionesDecision').value))}}
             </span>
-            <span class="contador miles mt-3em" *ngIf="addressForm.get('observacionesDecision').value === null">
+            <span class="contador miles mt-3em" *ngIf="!addressForm.get('observacionesDecision').value">
               5000
             </span>
           </div>
@@ -140,7 +140,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #tarea type="text" maxlength="500" formControlName="tarea">
+                  <input matInput #tarea type="text" maxlength="500" formControlName="tarea" required>
                   <input type="hidden" formControlName="temaCompromisoId">
                   <input type="hidden" formControlName="sesionTemaId">
                 </mat-form-field>
@@ -171,7 +171,7 @@
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
                     <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()"
-                      placeholder="DD/MM/AAAA">
+                      placeholder="DD/MM/AAAA" required>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
