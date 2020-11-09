@@ -14,6 +14,6 @@ namespace asivamosffie.model.APIModels
         public string TipoControversia { get; set; }
         public string EstadoControversia { get; set; }
         public int ContratoId { get; set; }
-     
+        public string RegistroCompletoNombre { get; set; }
     }
 }

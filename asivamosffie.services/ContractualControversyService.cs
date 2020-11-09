@@ -65,6 +65,8 @@ namespace asivamosffie.services
                         strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
                         controversiaActuacion.FechaCreacion = DateTime.Now;
                         //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
+                        controversiaActuacion.Observaciones= Helpers.Helpers.CleanStringInput(controversiaActuacion.Observaciones);
+                        controversiaActuacion.ResumenPropuestaFiduciaria = Helpers.Helpers.CleanStringInput(controversiaActuacion.ResumenPropuestaFiduciaria);
 
                         controversiaActuacion.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaActuacion);
 
@@ -78,6 +80,7 @@ namespace asivamosffie.services
                         strCrearEditar = "EDIT CONTROVERSIA ACTUACION";
 
                         controversiaActuacion.Observaciones = Helpers.Helpers.CleanStringInput(controversiaActuacion.Observaciones);
+                        controversiaActuacion.ResumenPropuestaFiduciaria = Helpers.Helpers.CleanStringInput(controversiaActuacion.ResumenPropuestaFiduciaria);
 
                         controversiaActuacion.FechaCreacion = DateTime.Now;
                         //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
@@ -382,6 +385,8 @@ namespace asivamosffie.services
                         strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
                         controversiaContractual.FechaCreacion = DateTime.Now;
                         //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
+                        controversiaContractual.MotivoJustificacionRechazo = Helpers.Helpers.CleanStringInput(controversiaContractual.MotivoJustificacionRechazo);
+                        controversiaContractual.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
 
                         controversiaContractual.EsCompleto = ValidarRegistroCompletoControversiaContractual(controversiaContractual);
 
@@ -516,7 +521,112 @@ namespace asivamosffie.services
             return vistaContratoContratista;
         }
 
-            public async Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual()
+        public async Task<Respuesta> EnviarCorreoTecnicaJuridicaContratacion(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, int pContratoId,  int pIdTemplate)
+        {
+            bool blEnvioCorreo = false;
+            Respuesta respuesta = new Respuesta();
+
+            //Si no llega Email
+            //if (string.IsNullOrEmpty(pUsuario.Email))
+            //{
+            //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.EmailObligatorio };
+            //}
+            try
+            {
+                //Usuario usuarioSolicito = _context.Usuario.Where(r => !(bool)r.Eliminado && r.Email.ToUpper().Equals(pUsuario.Email.ToUpper())).FirstOrDefault();
+
+                //if (usuarioSolicito != null)
+                //{
+                //if (usuarioSolicito.Activo == false)
+                //{
+                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.UsuarioInactivo };
+                //}
+                //else
+                //{
+                //string newPass = Helpers.Helpers.GeneratePassword(true, true, true, true, false, 8);
+                //usuarioSolicito.Contrasena = Helpers.Helpers.encryptSha1(newPass.ToString());
+                //usuarioSolicito.CambiarContrasena = true;
+                //usuarioSolicito.Bloqueado = false;
+                //usuarioSolicito.IntentosFallidos = 0;
+                //usuarioSolicito.Ip = pUsuario.Ip;
+
+                //Guardar Usuario
+                //await UpdateUser(usuarioSolicito);
+
+                //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
+
+                string template = TemplateRecoveryPassword.Contenido;
+
+                //string urlDestino = pDominio;
+                //asent/img/logo  
+                Contrato contrato=null;
+                contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Eliminado==false).FirstOrDefault();
+                                
+                ControversiaContractual controversiaContractual =null;
+                                
+                //con.NumeroSolicitud;
+                //con.ContratoId
+                //contrato1.FechaFirmaFiduciaria
+                //contrato1.Observaciones
+                string strNumeroSolicitud = string.Empty;
+                string strNumeroContrato = string.Empty;
+                string strFechaFirmaFiduciaria = string.Empty;
+                string strObservaciones = string.Empty;
+                              
+                if (contrato != null)
+                {
+                    controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
+
+                    if(controversiaContractual!=null)
+                        strNumeroSolicitud = controversiaContractual.NumeroSolicitud;
+
+                    strNumeroContrato = contrato.NumeroContrato;
+                    strFechaFirmaFiduciaria = contrato.FechaFirmaFiduciaria != null ? Convert.ToDateTime(contrato.FechaFirmaFiduciaria).ToString("dd/MM/yyyy") : contrato.FechaFirmaFiduciaria.ToString();
+                    strObservaciones = contrato.Observaciones;
+                    
+                }                                
+
+                //               Número de solicitud: 
+                //Número de contrato: 
+                //Fecha de firma de la fiduciaria: 
+                //Observaciones: Campo 
+
+                template = template.Replace("_Numero_solicitud_", strNumeroSolicitud);
+                template = template.Replace("_Numero_contrato_", strNumeroContrato);
+                template = template.Replace("_Fecha_firma_fiduciaria_", strFechaFirmaFiduciaria);
+                template = template.Replace("_Observaciones_", strObservaciones);
+                               
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
+
+                if (blEnvioCorreo)
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+
+                else
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+
+                //}
+                //}
+                //else
+                //{
+                //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
+
+                //}
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas");
+                return respuesta;
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContratoPoliza.Error };
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
+                return respuesta;
+            }
+
+        }
+
+        public async Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual()
         {
             //await AprobarContratoByIdContrato(1);
 
@@ -540,16 +650,22 @@ namespace asivamosffie.services
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     string strEstadoCodigoControversia = "sin definir";
                     string strTipoControversiaCodigo = "sin definir";
-          
+                    string strTipoControversia = "sin definir";
+
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio EstadoCodigoControversia;
                     Dominio TipoControversiaCodigo;
 
                     if (contrato != null)
                     {
-                        //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
-                        //if (TipoSolicitudCodigoContratoPoliza != null)
-                        //    strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                        TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                        if (TipoControversiaCodigo != null)
+                        {
+                            strTipoControversiaCodigo = TipoControversiaCodigo.Nombre;
+                            strTipoControversia = TipoControversiaCodigo.Codigo;
+
+                        }
+                            
 
                         //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         //if (EstadoSolicitudCodigoContratoPoliza != null)
@@ -565,10 +681,11 @@ namespace asivamosffie.services
                          NumeroSolicitud=controversia.NumeroSolicitud,
                          //FechaSolicitud=controversia.FechaSolicitud,
                          FechaSolicitud =controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
-                         TipoControversia ="PENDIENTE",
-                         TipoControversiaCodigo= "PENDIENTE",
+                         TipoControversia =strTipoControversia,
+                         TipoControversiaCodigo= strTipoControversiaCodigo,
                          ContratoId = contrato.ContratoId,
                         EstadoControversia = "PENDIENTE",
+                        RegistroCompletoNombre = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
 
                     };
 
