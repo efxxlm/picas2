@@ -305,7 +305,7 @@ namespace asivamosffie.services
                 else
                 {   //Si el interventoria y no esta completo
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
-                    //Si el interventoria y esta
+                    //Si el interventoria y esta completo
                     if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
                     {
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
