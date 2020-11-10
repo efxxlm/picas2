@@ -389,7 +389,7 @@ namespace asivamosffie.services
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
-                            Code = ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
+                            Code = ConstantMessagesContratoPoliza.OperacionExitosa,
                             Message =
                             await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
                             ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente,
