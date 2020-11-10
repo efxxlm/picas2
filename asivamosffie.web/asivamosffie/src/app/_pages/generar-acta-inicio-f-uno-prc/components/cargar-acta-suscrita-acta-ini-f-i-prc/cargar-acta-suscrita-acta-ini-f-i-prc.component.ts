@@ -36,7 +36,8 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
   public plazoFase2ConstruccionDias;
   public observaciones;
   public rutaDocumento;
-
+  public fechaFirmaContratistaObra;
+  public fechaFirmaContratistaInterventoria;
   fechaSesionString: string;
   fechaSesion: Date;
 

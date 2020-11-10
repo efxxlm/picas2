@@ -1,7 +1,7 @@
 <button mat-button mat-dialog-close class="modal--btn-cerrar">
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
-<h1 class="title-menu--h1 centerTrick">
+<h1 class="title-menu--h1">
     Cargar acta suscrita contrato {{this.numContrato}}
 </h1>
 <div class="text-center">
@@ -15,7 +15,7 @@
                     <div class="col d-flex">
                         <mat-form-field class="example-full-width">
                             <input matInput [matDatepicker]="picker" required [max]="maxDate" readonly
-                                (click)="picker.open()" [(ngModel)]="this.fechaFirmaContratistaObra" placeholder="DD/MM/AAAA">
+                                (click)="picker.open()">
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                         <button mat-button color="primary" type="button" (click)="picker.open()"
@@ -33,9 +33,9 @@
                         <label class="label-left">{{this.fecha2Titulo}}</label>
                     </div>
                     <div class="col d-flex">
-                        <mat-form-field class="example-full-width" style="width: 20%;">
+                        <mat-form-field class="example-full-width">
                             <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
-                                (click)="picker2.open()" [(ngModel)]="this.fechaFirmaContratistaInterventoria" placeholder="DD/MM/AAAA">
+                                (click)="picker2.open()">
                             <mat-datepicker #picker2></mat-datepicker>
                         </mat-form-field>
                         <button mat-button color="primary" type="button" (click)="picker2.open()"
