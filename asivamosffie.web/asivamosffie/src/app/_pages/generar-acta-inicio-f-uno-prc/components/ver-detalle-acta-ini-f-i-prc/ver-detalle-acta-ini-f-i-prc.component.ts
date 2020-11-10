@@ -38,7 +38,8 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   valorIni: any;
   nitContratistaInterventoria: any;
   nomContratista: any;
-
+  public mesPlazoIni: number = 10;
+  public diasPlazoIni: number = 25;
   constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {

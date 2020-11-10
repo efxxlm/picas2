@@ -156,7 +156,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
       plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
       plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
-      observaciones: "",
+      observaciones: this.addressForm.value.observacionesEspeciales,
       conObervacionesActa: this.observacionesOn,
       registroCompleto: true,
       contratoConstruccion: [],

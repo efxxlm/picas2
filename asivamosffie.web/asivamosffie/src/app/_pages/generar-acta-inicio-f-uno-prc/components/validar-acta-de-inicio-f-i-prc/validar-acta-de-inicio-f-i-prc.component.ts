@@ -40,7 +40,8 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   objeto: any;
   valorIni: any;
   nitContratistaInterventoria: any;
-
+  public mesPlazoIni: number = 10;
+  public diasPlazoIni: number = 25;
   constructor(private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService, private router: Router,public dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {

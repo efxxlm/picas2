@@ -106,6 +106,11 @@ export interface EditContrato {
   contratoPerfil: any[];
   contratoPoliza: any[];
 }
+export interface ContratoObservacionElement{
+  ContratoObservacionId: any;
+  observaciones: any;
+}
+
 export interface ContratoParaActa {
   contratoId: number;
   contratacionId: number;
