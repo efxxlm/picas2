@@ -123,6 +123,14 @@ export class FormularioProyectosComponent implements OnInit {
       }
       else
       {
+        //if (this.proyecto.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {
+          const lat = this.proyecto.predioPrincipal.ubicacionLatitud.split('°');
+          this.proyecto.predioPrincipal.ubicacionLatitud = lat[0];
+        //}
+        //if (this.proyecto.predioPrincipal.ubicacionLongitud.indexOf('°') > 1) {
+          const lon = this.proyecto.predioPrincipal.ubicacionLongitud.split('°');
+          this.proyecto.predioPrincipal.ubicacionLongitud = lon[0];
+        //}
         if(respuesta.code)
         {
           this.openDialog('', `<b>${respuesta.message}</b>`);
