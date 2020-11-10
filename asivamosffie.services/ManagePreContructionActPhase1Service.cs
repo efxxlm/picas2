@@ -70,8 +70,7 @@ namespace asivamosffie.services
                                        .ThenInclude(r => r.ContratacionProyectoAportante)
                                                      .ThenInclude(r => r.ComponenteAportante)
                                                        .ThenInclude(r => r.ComponenteUso)
-                        
-                                                       
+                              
                           .Include(r => r.Contratacion)
                             .ThenInclude(r => r.Contratista)
                          .Include(r => r.Contratacion) 
