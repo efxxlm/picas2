@@ -155,7 +155,7 @@ namespace asivamosffie.services
                          IsSuccessful = true,
                          IsException = false,
                          IsValidation = false,
-                         Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                         Code = ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pContratoConstruccion.UsuarioCreacion, "REGISTRAR PROGRAMACION DE PERSONAL")
                      };
             }
@@ -167,7 +167,7 @@ namespace asivamosffie.services
                         IsSuccessful = false,
                         IsException = true,
                         IsValidation = false,
-                        Code = ConstantSesionComiteTecnico.Error,
+                        Code = ConstantMessagesRegistrarProgramacionPersonal.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pContratoConstruccion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
@@ -195,7 +195,7 @@ namespace asivamosffie.services
                          IsSuccessful = true,
                          IsException = false,
                          IsValidation = false,
-                         Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                         Code = ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pUsuario, "CAMBIAR ESTADO PROGRAMACION PERSONAL")
                      };
             }
@@ -207,7 +207,7 @@ namespace asivamosffie.services
                         IsSuccessful = false,
                         IsException = true,
                         IsValidation = false,
-                        Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                        Code = ConstantMessagesRegistrarProgramacionPersonal.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pUsuario, ex.InnerException.ToString())
                     };
             }
