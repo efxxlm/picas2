@@ -21,11 +21,17 @@ export class GestionarDdpComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router) { }
 
-  openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string,relocate=false) {
+    let ref=this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    if(relocate)
+    {
+      ref.afterClosed().subscribe(result => {        
+        this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
+    });
+    }
   }
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -76,7 +82,9 @@ export class GestionarDdpComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
-    
+    dialogRef.afterClosed().subscribe(result => {        
+      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
+    });
   }
 
   openDialogCancelarDDP() {
@@ -84,6 +92,10 @@ export class GestionarDdpComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
+    dialogRef.afterClosed().subscribe(result => {        
+      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
+    });
+    
   }
 
 }

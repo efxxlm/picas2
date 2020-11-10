@@ -64,5 +64,7 @@ namespace asivamosffie.model.APIModels
         public string NombreEntidad { get; set; }
         public string UrlConSoporte { get; set; }
         public string Limitacion { get; set; }
+        public string NumeroDRP { get; set; }
+        public decimal ValorGestionado { get; set; }
     }
 }

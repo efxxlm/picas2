@@ -44,7 +44,7 @@ export class TablaEnValidacionComponent implements OnInit {
       //console.log(fecha.getDate()  + "/" + (fecha.getMonth()+1) + "/" + fecha.getFullYear() );
       elements.push({id:element.disponibilidadPresupuestalId,
         fecha:element.fechaSolicitud,estadoRegistro:element.estadoRegistro,numero:element.numeroSolicitud,
-        tipo:element.tipoSolicitudEspecial})
+        tipo:element.tipoSolicitud})
     });
     this.dataSource = new MatTableDataSource(elements);
     this.inicializarTabla();

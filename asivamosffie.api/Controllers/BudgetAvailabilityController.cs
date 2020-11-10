@@ -278,7 +278,7 @@ namespace asivamosffie.api.Controllers
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
+                pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion.ToUpper();
                 Task<Respuesta> result = _budgetAvailabilityService.CreateFinancialFundingGestion(pDisponibilidadPresObservacion);
                 object respuesta = await result;
                 return Ok(respuesta);

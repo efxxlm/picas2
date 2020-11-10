@@ -137,25 +137,25 @@
                     <div  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
                         <div *ngFor="let fuente of aportante.fuenteFinanciacion;index as ii">
                             <p>
-                                <strong>Fuente {{ii}}:</strong>
-                                {{fuente}}
+                                <strong>Fuente {{ii+1}}:</strong>
+                                {{fuente.nombre}}
                             </p>
                             <p>
                                 <strong>Saldo actual de la fuente:</strong>
-                                $ 70.000.000
+                                $ {{fuente.saldo_actual_de_la_fuente}}
                             </p>
                             <p>
                                 <strong>Valor solicitado de la fuente:</strong>
-                                $ 7.000.000
+                                $ {{fuente.valor_solicitado_de_la_fuente}}
                             </p>
                             <p>
                                 <strong>Nuevo saldo de la fuente:</strong>
-                                $ 63.000.000
+                                $ {{fuente.nuevo_saldo_de_la_fuente}}
                             </p>
-                            <p>
+                            <!-- no esta ene l caso de uso<p>
                                 <strong>Estado de las fuentes:</strong>
-                                Completo
-                            </p>
+                                {{fuente.estado_de_las_fuentes}}
+                            </p>-->
                         </div>
                     </div>                                        
                 </div>

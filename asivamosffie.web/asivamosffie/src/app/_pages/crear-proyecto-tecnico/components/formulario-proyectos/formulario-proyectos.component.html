@@ -343,9 +343,10 @@
                   maxlength="10" 
                   min="1" 
                   max="99"
-                  (keypress)="number($event)" 
+                  
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required
-                  type="number"
+                  
+                  appOchoDecimales 
                   >
               </mat-form-field>
 
@@ -363,9 +364,9 @@
                 Longitud
               </label>
               <mat-form-field class="w-8em">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="7" min="1" max="99"
-                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" required
-                  type="number" [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="10" min="1" max="99"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required appOchoDecimales
+                  [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
                   matTooltipClass="info-tooltip">
               </mat-form-field>
 

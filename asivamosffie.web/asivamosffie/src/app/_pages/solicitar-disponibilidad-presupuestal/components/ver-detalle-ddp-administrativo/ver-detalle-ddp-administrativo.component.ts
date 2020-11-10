@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BudgetAvailabilityService } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 import { DisponibilidadPresupuestal } from 'src/app/_interfaces/budgetAvailability';
@@ -15,7 +16,8 @@ export class VerDetalleDdpAdministrativoComponent implements OnInit {
   objeto: string;
   idProyectoAdmin: number;
   objetoDisponibilidad: DisponibilidadPresupuestal = {};
-  constructor(private activatedRoute: ActivatedRoute, private budgetAvailabilityService: BudgetAvailabilityService,
+  aportantes: any;
+  constructor(private activatedRoute: ActivatedRoute, private budgetAvailabilityService: DisponibilidadPresupuestalService,
     private projectContractingService: ProjectContractingService,
     private projectService: ProjectService) { }
 
@@ -26,13 +28,14 @@ export class VerDetalleDdpAdministrativoComponent implements OnInit {
   }
 
   cargarRegistro(id) {
-    this.budgetAvailabilityService.getDisponibilidadPresupuestalById(id).subscribe(resp=>{
-      this.numeroSolicitud = resp.numeroSolicitud;
-      this.objeto = resp.objeto;
-      this.idProyectoAdmin = resp.disponibilidadPresupuestalProyecto[0].proyectoAdministrativoId;
-      this.budgetAvailabilityService.getAportantesByProyectoAdminId(resp.disponibilidadPresupuestalProyecto[0].proyectoAdministrativoId).subscribe(resp1=>{
+    this.budgetAvailabilityService.GetDetailAvailabilityBudgetProyect(id).subscribe(resp=>{
+      this.numeroSolicitud = resp[0].numeroSolicitud;
+      this.objeto = resp[0].objeto;
+      this.idProyectoAdmin = resp[0].proyectos[0].llaveMen;
+      this.aportantes=resp[0].aportantes;
+      /*this.budgetAvailabilityService.getAportantesByProyectoAdminId(resp.disponibilidadPresupuestalProyecto[0].proyectoAdministrativoId).subscribe(resp1=>{
 
-      });
+      });*/
     });
   }
 }
