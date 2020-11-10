@@ -299,21 +299,22 @@ namespace asivamosffie.services
                     .Include(r => r.Contratacion)
                     .Include(r => r.ContratoPerfil)
                     .FirstOrDefault();
-
-                if (contratoOld.TipoContratoCodigo == ConstanCodigoTipoContratacion.Obra.ToString())  
+                //Si  obra  
+                if (contratoOld.TipoContratoCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
                 else
+                {   //Si el interventoria y no esta completo
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
-                 
+                    //Si el interventoria y esta
+                    if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
+                    {
+                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
+                    }
+                }
                 contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                 contratoOld.FechaModificacion = DateTime.Now;
 
-                //if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
-                //{
-                //    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-                //    contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                //    contratoOld.FechaModificacion = DateTime.Now;
-                //}
+
                 _context.SaveChanges();
                 return
                     new Respuesta
