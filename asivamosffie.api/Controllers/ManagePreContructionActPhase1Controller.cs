@@ -120,9 +120,8 @@ namespace asivamosffie.api.Controllers
             return await _managePreContruction.GetListContratoObservacionByContratoId(pContratoId);
         }
 
-
-        [Route("CreateEditObservacionesActa")]
         [HttpPut]
+        [Route("CreateEditObservacionesActa")] 
         public async Task<Respuesta> CreateEditObservacionesActa([FromBody] ContratoObservacion pcontratoObservacion)
         { 
             try
