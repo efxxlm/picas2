@@ -370,27 +370,27 @@ namespace asivamosffie.services
                 .Include(r => r.ContratoObservacion)
                 .ToListAsync();
 
-            if (pPerfilId == (int)EnumeratorPerfil.Tecnica)
-                lstContratos = lstContratos.Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToList();
+            //if (pPerfilId == (int)EnumeratorPerfil.Tecnica)
+            //    lstContratos = lstContratos.Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToList();
 
-            if (pPerfilId == (int)EnumeratorPerfil.Supervisor)
-                lstContratos = lstContratos.Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToList();
+            //if (pPerfilId == (int)EnumeratorPerfil.Supervisor)
+            //    lstContratos = lstContratos.Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToList();
 
-            List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato).ToList();
+            List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).ToList();
 
             foreach (var Contrato in lstContratos)
             {
                 lstActaInicio.Add(new GrillaActaInicio
                 {
                     ContratoId = Contrato.ContratoId,
-                    EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa).FirstOrDefault().Nombre : " ",
+                    EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato).FirstOrDefault().Nombre : " ",
                     EstadoVerificacion = Contrato.EstadoVerificacionCodigo,
                     EstadoActaCodigo = Contrato.EstadoActa,
                     FechaAprobacionRequisitos = Contrato.FechaAprobacionRequisitos.HasValue ? ((DateTime)Contrato.FechaAprobacionRequisitos).ToString("dd-MMMM-yy") : "",
                     NumeroContratoObra = Contrato.NumeroContrato,
-                    TipoContrato = Contrato.Contratacion.TipoSolicitudCodigo
-                    
-                });
+                    TipoContrato = Contrato.Contratacion.TipoSolicitudCodigo,
+                    TipoContratoNombre  = !string.IsNullOrEmpty(Contrato.Contratacion.TipoSolicitudCodigo) ? Listdominios.Where(r => r.Codigo == Contrato.Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).FirstOrDefault().Nombre : " ",
+                  });
             }
 
             return lstActaInicio;

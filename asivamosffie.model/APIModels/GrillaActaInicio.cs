@@ -13,6 +13,7 @@ namespace asivamosffie.model.APIModels
         public string EstadoActa { get; set; }
         public string EstadoVerificacion { get; set; }
         public string TipoContrato { get; set; }
+        public string TipoContratoNombre { get; set; }
         public bool TieneObservacionesSupervisor { get; set; }
     }
 }
