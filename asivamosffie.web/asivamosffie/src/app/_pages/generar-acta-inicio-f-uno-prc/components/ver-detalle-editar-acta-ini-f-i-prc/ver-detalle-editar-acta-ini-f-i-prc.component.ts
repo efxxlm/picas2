@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Contrato, EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
+import { Contrato, ContratoObservacionElement, EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 
@@ -46,7 +46,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     modalText: string
   };
   public observacionesOn: boolean;
-
+  indexContratacionID: any;
+  indexObservacionFinal: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -62,6 +63,9 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
   }
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe(data=>{
+      for(let i=0; i<data.contratoObservacion.length;i++){
+        this.indexObservacionFinal=data.contratoObservacion[i].observaciones;
+      }
       this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
       //Datos correspondientes al formulario
@@ -71,7 +75,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       this.addressForm.get('diasPlazoEjFase1').setValue(data.plazoFase1PreDias);
       this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
       this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
-      this.addressForm.get('observacionesEspeciales').setValue(data.observaciones);
+      this.addressForm.get('observacionesEspeciales').setValue(this.indexObservacionFinal);
     });
     this.idContrato = id;
   }
@@ -94,6 +98,9 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     this.fechaEnvioFirma = data.fechaEnvioFirma;
     this.fechaFirmaContratista = data.fechaFirmaContratista;
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
+    for(let i=0; i<data.contratoObservacion.length;i++){
+      this.indexContratacionID=data.contratoObservacion[i].contratoObservacionId;
+    }
   }
   generarActaSuscrita(){
     alert("genera PDf");
@@ -193,7 +200,10 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       this.openDialog('Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato', "");
     }
     else {
-      
+      const arrayObservacion=[{
+        "ContratoObservacionId": this.indexContratacionID,
+        "observaciones":this.addressForm.value.observacionesEspeciales
+      }];
       const arrayContrato: EditContrato = {
         contratoId: this.idContrato,
         contratacionId: this.contratacionId,
@@ -216,7 +226,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
         conObervacionesActa: this.observacionesOn,
         registroCompleto: false,
         contratoConstruccion: [],
-        contratoObservacion: [],
+        contratoObservacion:  arrayObservacion,
         contratoPerfil: [],
         contratoPoliza: []
       };
