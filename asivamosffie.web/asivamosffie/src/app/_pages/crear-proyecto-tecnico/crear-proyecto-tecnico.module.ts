@@ -7,18 +7,25 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FormularioProyectosComponent } from './components/formulario-proyectos/formulario-proyectos.component';
 import { TablaProyectosTecnicoComponent } from './components/tabla-proyectos-tecnico/tabla-proyectos-tecnico.component';
 import { MaterialModule } from 'src/app/material/material.module';
+import { OchoDecimalesDirective } from '../../shared/directives/ocho-decimales/ocho-decimales.directive';
 
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 
 @NgModule({
-  declarations: [CrearProyectoTenicoComponent, FormularioProyectosComponent, TablaProyectosTecnicoComponent],
+  declarations: [
+      CrearProyectoTenicoComponent, 
+      FormularioProyectosComponent, 
+      TablaProyectosTecnicoComponent,
+      OchoDecimalesDirective
+    ],
   imports: [
     CommonModule,
     CrearProyectoTecnicoRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    CurrencyMaskModule
+    CurrencyMaskModule,
+    
   ]
 })
 export class CrearProyectoTecnicoModule { }
