@@ -33,11 +33,26 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContractsGrid")]
         [HttpGet]
-        public async Task<List<dynamic>> GetContractsGrid( int pUsuarioId )
+        public async Task<List<dynamic>> GetContractsGrid(int pUsuarioId)
         {
             try
             {
-                return await _technicalRequirementsConstructionPhaseService.GetContractsGrid( pUsuarioId );
+                return await _technicalRequirementsConstructionPhaseService.GetContractsGrid(pUsuarioId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [Route("CreateEditObservacion")]
+        [HttpGet]
+        public async Task<Respuesta> CreateEditObservacion([FromQuery] ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
+        {
+            try
+            {
+                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                return await _technicalRequirementsConstructionPhaseService.CreateEditObservacion(pContratoConstruccion, pTipoObservacion, pEsSupervicion);
             }
             catch (Exception ex)
             {
@@ -51,7 +66,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _technicalRequirementsConstructionPhaseService.GetContractsGridApoyoObra( );
+                return await _technicalRequirementsConstructionPhaseService.GetContractsGridApoyoObra();
             }
             catch (Exception ex)
             {
@@ -65,7 +80,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _technicalRequirementsConstructionPhaseService.GetContractsGridApoyoInterventoria( );
+                return await _technicalRequirementsConstructionPhaseService.GetContractsGridApoyoInterventoria();
             }
             catch (Exception ex)
             {
@@ -73,7 +88,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("GetContratoByContratoId")]
         [HttpGet]
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -81,7 +96,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 string usuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                return await _technicalRequirementsConstructionPhaseService.GetContratoByContratoId( pContratoId, usuarioCreacion );
+                return await _technicalRequirementsConstructionPhaseService.GetContratoByContratoId(pContratoId, usuarioCreacion);
             }
             catch (Exception ex)
             {
@@ -89,14 +104,14 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("GetLoadProgrammingGrid")]
         [HttpGet]
         public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
         {
             try
             {
-                return await _technicalRequirementsConstructionPhaseService.GetLoadProgrammingGrid( pContratoConstruccionId );
+                return await _technicalRequirementsConstructionPhaseService.GetLoadProgrammingGrid(pContratoConstruccionId);
             }
             catch (Exception ex)
             {
@@ -104,14 +119,14 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("GetLoadInvestmentFlowGrid")]
         [HttpGet]
         public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
         {
             try
             {
-                return await _technicalRequirementsConstructionPhaseService.GetLoadInvestmentFlowGrid( pContratoConstruccionId );
+                return await _technicalRequirementsConstructionPhaseService.GetLoadInvestmentFlowGrid(pContratoConstruccionId);
             }
             catch (Exception ex)
             {
@@ -119,7 +134,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("CreateEditDiagnostico")]
         [HttpPost]
         public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
@@ -222,7 +237,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("CreateEditPlanesProgramas")]
         [HttpPost]
         public async Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion)
@@ -240,7 +255,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("CreateEditManejoAnticipo")]
         [HttpPost]
         public async Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion)
@@ -258,7 +273,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("CreateEditConstruccionPerfil")]
         [HttpPost]
         public async Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion)
@@ -276,15 +291,15 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("DeleteConstruccionPerfil")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteConstruccionPerfil([FromQuery]  int pConstruccioPerfilId)
+        public async Task<IActionResult> DeleteConstruccionPerfil([FromQuery] int pConstruccioPerfilId)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteConstruccionPerfil( pConstruccioPerfilId, HttpContext.User.FindFirst("User").Value);
+            {
+                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteConstruccionPerfil(pConstruccioPerfilId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -294,15 +309,15 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("CreateEditObservacionesCarga")]
         [HttpPost]
-        public async Task<IActionResult> CreateEditObservacionesCarga([FromQuery]  int pArchivoCargueId, string pObservacion)
+        public async Task<IActionResult> CreateEditObservacionesCarga([FromQuery] int pArchivoCargueId, string pObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionesCarga( pArchivoCargueId, pObservacion, HttpContext.User.FindFirst("User").Value);
+            {
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionesCarga(pArchivoCargueId, pObservacion, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -314,12 +329,12 @@ namespace asivamosffie.api.Controllers
 
         [Route("EnviarAlSupervisor")]
         [HttpPost]
-        public async Task<IActionResult> EnviarAlSupervisor([FromQuery]  int pContratoId)
+        public async Task<IActionResult> EnviarAlSupervisor([FromQuery] int pContratoId)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _technicalRequirementsConstructionPhaseService.EnviarAlSupervisor( pContratoId, HttpContext.User.FindFirst("User").Value);
+            {
+                respuesta = await _technicalRequirementsConstructionPhaseService.EnviarAlSupervisor(pContratoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -332,12 +347,12 @@ namespace asivamosffie.api.Controllers
 
         [Route("DeleteConstruccionPerfilNumeroRadicado")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteConstruccionPerfilNumeroRadicado([FromQuery]  int pConstruccionPerfilNumeroRadicadoId)
+        public async Task<IActionResult> DeleteConstruccionPerfilNumeroRadicado([FromQuery] int pConstruccionPerfilNumeroRadicadoId)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteConstruccionPerfilNumeroRadicado( pConstruccionPerfilNumeroRadicadoId, HttpContext.User.FindFirst("User").Value);
+            {
+                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteConstruccionPerfilNumeroRadicado(pConstruccionPerfilNumeroRadicadoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -347,15 +362,15 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("DeleteArchivoCargue")]
         [HttpDelete]
         public async Task<IActionResult> DeleteArchivoCargue(int pArchivoCargueId)
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteArchivoCargue( pArchivoCargueId, HttpContext.User.FindFirst("User").Value);
+            {
+                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteArchivoCargue(pArchivoCargueId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -365,7 +380,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("UploadFileToValidateProgramming")]
         [HttpPost]
         public async Task<IActionResult> UploadFileToValidateProgramming(IFormFile file, [FromQuery] int pContratoConstruccinId)
@@ -388,7 +403,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("TransferMassiveLoadProgramming")]
         [HttpPost]
         public async Task<IActionResult> TransferMassiveLoadProgramming([FromQuery] string pIdDocument)
@@ -407,7 +422,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("UploadFileToValidateInvestmentFlow")]
         [HttpPost]
         public async Task<IActionResult> UploadFileToValidateInvestmentFlow(IFormFile file, [FromQuery] int pContratoConstruccinId)
@@ -430,7 +445,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
         [Route("TransferMassiveLoadInvestmentFlow")]
         [HttpPost]
         public async Task<IActionResult> TransferMassiveLoadInvestmentFlow([FromQuery] string pIdDocument)
@@ -448,7 +463,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-        
+
         [Route("GenerateDRP")]
         [HttpGet]
         public async Task<IActionResult> GenerateDRP(int pContratoId)
@@ -456,7 +471,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
-                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;                
+                string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 return File(await _technicalRequirementsConstructionPhaseService.GetPDFDRP(pContratoId, UsuarioModificacion), "application/pdf");
             }
             catch (Exception ex)

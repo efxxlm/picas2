@@ -23,13 +23,16 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
 
-        public TechnicalCheckConstructionPhase2Service(devAsiVamosFFIEContext context, ICommonService commonService)
+        private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirements;
+
+        public TechnicalCheckConstructionPhase2Service(ITechnicalRequirementsConstructionPhaseService technicalRequirements, devAsiVamosFFIEContext context, ICommonService commonService)
         {
+            _technicalRequirements = technicalRequirements;
             _context = context;
             _commonService = commonService;
         }
 
-        public async Task<List<dynamic>> GetContractsGrid(string pUsuarioId , string pTipoContrato)
+        public async Task<List<dynamic>> GetContractsGrid(string pUsuarioId, string pTipoContrato)
         {
             List<dynamic> listaContrats = new List<dynamic>();
 
@@ -48,11 +51,12 @@ namespace asivamosffie.services
                         CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
                         EstadoCodigo = c.EstadoCodigo,
                         EstadoNombre = c.EstadoNombre,
-                        Existeregistro = c.ExisteRegistro,
-
+                        Existeregistro = c.ExisteRegistro, 
                     });
                 });
             return listaContrats;
         }
+
+
     }
 }
