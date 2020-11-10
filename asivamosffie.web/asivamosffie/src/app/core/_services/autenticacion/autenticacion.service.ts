@@ -58,6 +58,8 @@ export class AutenticacionService {
     localStorage.removeItem('actualUser');
     localStorage.removeItem('actaSuscrita');
     localStorage.removeItem('conObservaciones');
+    localStorage.removeItem('origin');
+    localStorage.removeItem('editable');
     this.actualUserSubject.next(null);
     this.actualUser = null;
   //   this.saveCloseSesionAudit().subscribe();
