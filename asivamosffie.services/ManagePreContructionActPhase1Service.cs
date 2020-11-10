@@ -45,7 +45,7 @@ namespace asivamosffie.services
                     {
                         fechaAprobacionRequisitosSupervisor = "Fecha-3.1.8",
                         contrato.NumeroContrato,
-                        estadoActaContrato = listEstadosActa.Where(r => r.Codigo == contrato.EstadoActa).FirstOrDefault().Nombre,
+                        estadoActaContrato = !string.IsNullOrEmpty(contrato.EstadoActa) ? listEstadosActa.Where(r => r.Codigo == contrato.EstadoActa).FirstOrDefault().Nombre : " ",
                         contrato.ContratoId
                     });
                 });
