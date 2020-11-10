@@ -36,12 +36,16 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
   public plazoFase2ConstruccionDias;
   public observaciones;
   public rutaDocumento;
-
+  public fechaFirmaContratistaObra;
+  public fechaFirmaContratistaInterventoria;
   fechaSesionString: string;
   fechaSesion: Date;
 
   fechaSesionString2: string;
   fechaSesion2: Date;
+  idRol: any;
+  fecha1Titulo: any;
+  fecha2Titulo: any;
 
 
   constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<CargarActaSuscritaActaIniFIPreconstruccionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private service: GestionarActPreConstrFUnoService) { 
@@ -50,6 +54,18 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
     this.maxDate2 = new Date();
     if (data.id != undefined) {
       this.idContrato = data.id;
+    }
+    if(data.idRol != undefined){
+      this.idRol = data.idRol;
+    }
+    if(data.numContrato != undefined){
+      this.numContrato = data.numContrato;
+    }
+    if(data.fecha1Titulo != undefined){
+      this.fecha1Titulo = data.fecha1Titulo;
+    }
+    if(data.fecha2Titulo != undefined){
+      this.fecha2Titulo = data.fecha2Titulo;
     }
   }
 
@@ -127,12 +143,16 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
       contratoPoliza: []
     };
     this.service.LoadActa(arraycontrato,inputNode.files[0],this.rutaDocumento,this.rutaDocumento).subscribe(data=>{
-      this.openDialog('La información ha sido guardada exitosamente.', "");
-      this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
-      this.close();
+      if(data.isSuccessful==true){
+        this.openDialog('La información ha sido guardada exitosamente.', "");
+        this.close();
+      } 
+      else{
+        this.openDialog(data.message,"");
+      }
     });
   }
   close(){
-    this.matDialogRef.close('cancel');
+    this.matDialogRef.close('aceptado');
 }
 }

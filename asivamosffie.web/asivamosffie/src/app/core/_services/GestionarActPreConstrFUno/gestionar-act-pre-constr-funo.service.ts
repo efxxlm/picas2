@@ -30,14 +30,19 @@ export class GestionarActPreConstrFUnoService {
     formData.append('fechaFirmaActaContratista', `${pcontrato.fechaFirmaActaContratista}`);
     formData.append('fechaFirmaActaContratistaInterventoria', `${pcontrato.fechaFirmaActaContratistaInterventoria}`);
     formData.append('file', archivoParaSubir, archivoParaSubir.name);
-    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa?pDirectorioBase=${
-      pDirectorioBase }&pDirectorioActaContrato=${ pDirectorioActaContrato }`, formData);
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa?pDirectorioBase=${pDirectorioBase}&pDirectorioActaContrato=${pDirectorioActaContrato}`, formData);
   }
   CambiarEstadoActa(pContratoId:number,pEstadoContrato:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CambiarEstadoActa?pContratoId=${pContratoId}&pEstadoContrato=${pEstadoContrato}`,pContratoId);
   }
   GetActaByIdPerfil(pPerfilId:number, pContratoId:number){
     return this.http.get(`${environment.apiUrl}/ManagePreContructionActPhase1/GetActaByIdPerfil?pPerfilId=${pPerfilId}&pContratoId=${pContratoId}`, { responseType: "blob" } );
+  }
+  GetListContratoObservacionByContratoId(pContratoId:number){
+    return this.http.get<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetListContratoObservacionByContratoId?pContratoId=${pContratoId}`);
+  }
+  CreateEditObservacionesActa(pcontratoObservacion: any){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CreateEditObservacionesActa`, pcontratoObservacion);
   }
 }
 
