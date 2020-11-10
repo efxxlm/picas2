@@ -75,20 +75,23 @@ namespace asivamosffie.services
                     }
                     if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
                         RegistroCompleto = true;
-                    listaContrats.Add(new
+                    if (c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue)
                     {
-                        c.Contratacion.NumeroSolicitud,
-                        c.ContratoId,
-                        FechaAprobacion = c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue ? ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"): " ",
-                        c.Contratacion.TipoSolicitudCodigo,
-                        c.NumeroContrato,
-                        CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
-                        CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
-                        CantidadProyectosConPerfilesPendientes,
-                        EstadoCodigo = c.EstadoVerificacionCodigo,
-                        EstaDevuelto,
-                        RegistroCompleto
-                    });
+                        listaContrats.Add(new
+                        {
+                            c.Contratacion.NumeroSolicitud,
+                            c.ContratoId,
+                            FechaAprobacion = c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue ? ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy") : " ",
+                            c.Contratacion.TipoSolicitudCodigo,
+                            c.NumeroContrato,
+                            CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
+                            CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
+                            CantidadProyectosConPerfilesPendientes,
+                            EstadoCodigo = c.EstadoVerificacionCodigo,
+                            EstaDevuelto,
+                            RegistroCompleto
+                        });
+                    }
                 }
             }
             catch (Exception ex)
@@ -96,7 +99,7 @@ namespace asivamosffie.services
 
                 throw;
             }
-           
+
             return listaContrats;
         }
 
@@ -300,7 +303,7 @@ namespace asivamosffie.services
                 {
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                    contratoOld.FechaModificacion = DateTime.Now; 
+                    contratoOld.FechaModificacion = DateTime.Now;
                 }
                 _context.SaveChanges();
                 return
