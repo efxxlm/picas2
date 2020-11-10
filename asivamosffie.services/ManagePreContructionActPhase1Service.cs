@@ -66,9 +66,17 @@ namespace asivamosffie.services
                 Contrato contrato =
                     await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                          .Include(r => r.Contratacion)
+                                .ThenInclude(r => r.ContratacionProyecto)
+                                       .ThenInclude(r => r.ContratacionProyectoAportante)
+                                                     .ThenInclude(r => r.ComponenteAportante)
+                                                       .ThenInclude(r => r.ComponenteUso)
+                        
+                                                       
+                          .Include(r => r.Contratacion)
                             .ThenInclude(r => r.Contratista)
                          .Include(r => r.Contratacion) 
                             .ThenInclude(r => r.DisponibilidadPresupuestal).FirstOrDefaultAsync();
+      
                 return contrato;
             }
             catch (Exception)
