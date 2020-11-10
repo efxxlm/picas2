@@ -118,7 +118,7 @@ namespace asivamosffie.services
                 //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
             contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == pContratoId
             //&&(bool)r.Estado==true&&r.Eliminado==0
-            ).FirstOrDefault();
+            ).OrderByDescending(r=>r.ContratoPolizaId).FirstOrDefault();
 
             }
 
