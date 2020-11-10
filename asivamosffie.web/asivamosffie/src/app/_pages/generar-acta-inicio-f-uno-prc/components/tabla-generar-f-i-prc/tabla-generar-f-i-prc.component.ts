@@ -12,7 +12,7 @@ import { CargarActaSuscritaActaIniFIPreconstruccionComponent } from '../cargar-a
   styleUrls: ['./tabla-generar-f-i-prc.component.scss']
 })
 export class TablaGenerarFIPreconstruccionComponent implements OnInit {
-  displayedColumns: string[] = [ 'fechaAprobacionRequisitosSupervisor', 'numeroContrato', 'estadoActaContrato', 'contratoId'];
+  displayedColumns: string[] = [ 'fechaAprobacionRequisitos', 'numeroContratoObra', 'estadoActa', 'contratoId'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -31,7 +31,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     this.cargarTablaDeDatos();
   }
   cargarTablaDeDatos(){
-    this.service.GetListContrato().subscribe(data=>{
+    this.service.GetListGrillaActaInicio(2).subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;

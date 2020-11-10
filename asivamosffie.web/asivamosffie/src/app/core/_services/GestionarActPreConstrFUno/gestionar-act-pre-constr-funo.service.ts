@@ -11,7 +11,10 @@ import { Contratacion, ContratacionProyecto } from 'src/app/_interfaces/project-
 export class GestionarActPreConstrFUnoService {
 
   constructor(private http: HttpClient) { }
-
+  
+  GetListGrillaActaInicio(pPerfilId: number){
+    return this.http.get<Contrato>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetListGrillaActaInicio?pPerfilId=${pPerfilId}`);
+  }
   GetListContrato() {
     return this.http.get<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetListContrato`);
   }
