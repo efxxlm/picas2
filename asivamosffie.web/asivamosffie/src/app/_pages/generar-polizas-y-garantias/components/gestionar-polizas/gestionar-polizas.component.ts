@@ -158,6 +158,13 @@ export class GestionarPolizasComponent implements OnInit {
         const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
     }
     console.log(polizasList);
+    let nombreAprobado;
+    if(!this.addressForm.value.responsableAprob.name){
+      nombreAprobado = "null";
+    }
+    else{
+      nombreAprobado = this.addressForm.value.responsableAprob.name;
+    }
     var completo:boolean;
     if(this.addressForm.valid){
       completo = true;
