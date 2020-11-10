@@ -10,9 +10,7 @@ export class DialogTablaAvanceResumenComponent implements OnInit {
 
     constructor ( @Inject( MAT_DIALOG_DATA ) public observaciones ) { };
 
-    ngOnInit(): void {
-        console.log( this.observaciones );
-    };
+    ngOnInit(): void {};
 
     innerObservacion ( observacion: string ) {
       if ( observacion !== undefined ) {
