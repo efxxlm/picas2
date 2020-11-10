@@ -92,8 +92,8 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
     });   
   };
 
-  getForm ( id: number, fechaPoliza: string ) {
-    this.routes.navigate( [ '/verificarPreconstruccion/interventoriaGestionarRequisitos', id ], { state: { fechaPoliza } } )
+  getForm ( id: number, fechaPoliza: string, estado: string ) {
+    this.routes.navigate( [ '/verificarPreconstruccion/interventoriaGestionarRequisitos', id ], { state: { fechaPoliza, estado } } )
   };
 
   enviarSupervisor ( contratoId: number ) {

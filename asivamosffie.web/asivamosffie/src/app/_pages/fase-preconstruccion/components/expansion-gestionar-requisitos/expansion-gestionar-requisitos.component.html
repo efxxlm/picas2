@@ -5,8 +5,11 @@
 				<img src="assets/img/icon/regresar.svg" alt="Regresar">
 			</a>
 		</div>
-		<h1 class="title-menu--h1">
+		<h1 class="title-menu--h1" *ngIf="estado === estadosPreconstruccion.sinAprobacionReqTecnicos">
 			Gestionar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
+		</h1>
+		<h1 class="title-menu--h1" *ngIf="estado === estadosPreconstruccion.enProcesoAprobacionReqTecnicos || estado === estadosPreconstruccion.enviadoAlInterventor">
+			Ver detalle/Editar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
 		</h1>
 		<p class="text-primary" style="margin-top: 1em;">
 			<span class="mx-2em">

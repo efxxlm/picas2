@@ -5,9 +5,12 @@
         <img src="assets/img/icon/regresar.svg" alt="Regresar">
       </a>
     </div>
-    <h1 class="title-menu--h1">
+    <h1 class="title-menu--h1" *ngIf="estadoInterventoria === estadosInterventoria.sinAprobacionReqTecnicos">
       Gestionar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
     </h1>
+    <h1 class="title-menu--h1" *ngIf="estadoInterventoria === estadosInterventoria.enProcesoVerificacionReqTecnicos || estadoInterventoria === estadosInterventoria.conReqTecnicosVerificados">
+			Ver detalle/Editar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
+		</h1>
     <p class="text-primary">
       <span class="mx-2em">
         Fecha de aprobacion de póliza:
@@ -31,7 +34,7 @@
 
   <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
     <mat-expansion-panel class="expansion-style">
-      <mat-expansion-panel-header class="expansion-style--header">
+      <mat-expansion-panel-header class="expansion-style--header" style="width: 50%;">
         <mat-panel-title class="expansion-style--title" [ngClass]="contratacion.proyecto['estadoSemaforo']">
           {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
         </mat-panel-title>

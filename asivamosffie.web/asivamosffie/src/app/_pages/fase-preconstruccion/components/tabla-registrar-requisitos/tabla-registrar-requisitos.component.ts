@@ -114,8 +114,8 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
       );
   }
 
-  getForm ( id: number, fechaPoliza: string ) {
-    this.routes.navigate( [ '/preconstruccion/gestionarRequisitos', id ], { state: { fechaPoliza } } )
+  getForm ( id: number, fechaPoliza: string, estado: string ) {
+    this.routes.navigate( [ '/preconstruccion/gestionarRequisitos', id ], { state: { fechaPoliza, estado } } )
   };
 
 }
