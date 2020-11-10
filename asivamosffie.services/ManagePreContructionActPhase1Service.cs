@@ -20,9 +20,9 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
-        private readonly IRegisterSessionTechnicalCommitteeService  _registerSessionTechnicalCommitteeService;
+        private readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
 
-        public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context, ICommonService commonService , IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
+        public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context, ICommonService commonService, IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
         {
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
             _context = context;
@@ -153,6 +153,9 @@ namespace asivamosffie.services
                     strFilePatch = Path.Combine(pDirectorioBase, pDirectorioActaContrato, pContrato.ContratoId.ToString());
                     await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
                 }
+                else 
+                    return new Respuesta();  
+
                 Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
 
                 ContratoOld.FechaFirmaActaContratista = pContrato.FechaActaInicioFase1;
@@ -228,8 +231,6 @@ namespace asivamosffie.services
         {
             return PIdPerfil switch
             {
-                //2 tecnica
-                //8 supervisor
                 (int)EnumeratorPerfil.Tecnica => await ReplacePlantillaTecnica(pContratoId),
                 (int)EnumeratorPerfil.Supervisor => await ReplacePlantillaSupervisor(pContratoId),
                 _ => Array.Empty<byte>(),
@@ -259,7 +260,7 @@ namespace asivamosffie.services
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
 
-         
+
     }
 
 }
