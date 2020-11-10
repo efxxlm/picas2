@@ -166,6 +166,11 @@ export class RegistrarAcuerdoComponent implements OnInit {
     const FormNumAportantes = this.datosAportantes.value;
     if(FormNumAportantes.numAportes!=null)
     {
+      if(FormNumAportantes.numAportes==0)
+      {        
+          this.openDialog("","<b>La cantidad de aportantes no puede ser igual a 0.</b>");
+          return;      
+      }
       if (FormNumAportantes.numAportes > this.aportantes.length && FormNumAportantes.numAportes < 1000) {
         while (this.aportantes.length < FormNumAportantes.numAportes) {
           this.aportantes.push(this.createAportante());
@@ -385,7 +390,10 @@ console.log(cofiApo);
     if(cantidadDocumentos==0 || cantidadDocumentos==null)
     {
       if(cantidadDocumentos==0)
-      this.openDialog("","La cantidad de documentos de apropiación del aportante no puede ser igual a 0.");
+      {
+        this.openDialog("","<b>La cantidad de documentos de apropiación del aportante no puede ser igual a 0.</b>");
+        return;
+      }
     }
     else{
       console.log(cantidadDocumentos, ' ', this.listaCofinancAportantes[identificador].cofinanciacionDocumento.length);

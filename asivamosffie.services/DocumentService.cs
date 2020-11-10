@@ -97,7 +97,7 @@ namespace asivamosffie.services
 
         public async  Task <List<ArchivoCargue>> GetListloadedDocuments(string pOrigenId = "1")
         {
-            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals( pOrigenId ) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();
+            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals( pOrigenId ) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();
         }
 
         public async Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser) {
@@ -145,5 +145,27 @@ namespace asivamosffie.services
                 return archivoCargue;
             }
         } 
+
+        public async Task<ArchivoCargue> GetArchivoCargueById(int pArchivoCargueId , string pUser) {
+
+            Respuesta respuesta = new Respuesta();
+            ArchivoCargue archivoCargue = new ArchivoCargue();
+            try
+            { 
+                archivoCargue = _context.ArchivoCargue.Find( pArchivoCargueId );
+
+                if (archivoCargue != null)
+                {
+                    return archivoCargue;
+                }
+                else {
+                    throw new Exception( "No se encontro el archivo" );
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -30,14 +30,22 @@
 
         public string DirectoryBaseCargue { get; set; }
 
+        public string DirectoryBaseActaInicio { get; set; }
+
         public string DirectoryBaseProyectos { get; set; }
          
         public string YearVigente { get; set; }
 
         public bool YearSiguienteEsVigente { get; set; }
 
-        public string DirectoryBaseOrdeELegibilidad { get; set; }
+        public string  DirectoryBaseOrdeELegibilidad { get; set; }
          
         public string DirectoryBaseContratacionMinuta { get; set; }
+         
+        public string DirectoryBaseRutaDocumentoContrato { get; set; }
+
+        public string DirectoryBaseProgramacionObra { get; set; }
+        public string DirectoryBaseFlujoInversion { get; set; }
     }
+  
 }

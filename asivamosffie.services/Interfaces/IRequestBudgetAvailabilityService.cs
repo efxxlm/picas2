@@ -1,6 +1,5 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
-using asivamosffie.services.PostParameters;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

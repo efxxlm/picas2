@@ -1,0 +1,154 @@
+<div class="text-center container-table margin-auto" *ngIf="contrato" style="margin-bottom: 2em;">
+  <div class="text-right">
+      <a routerLink="/requisitosTecnicosConstruccion" mat-button color="primary" class="btn-regresar">
+          <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Gestionar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
+  </h1>
+
+  <section class="container margin-1em color-primary" *ngIf="contrato.contratacion">
+    <div class="text-center section-flex">
+      <p class="mr-1em">Fecha de aprobacion de póliza: <b> {{ fechaPoliza | date: 'dd/MM/yyyy' }} </b></p>
+      <p>Proyectos asociados: <b> {{ contrato.contratacion.contratacionProyecto.length }} </b></p>
+    </div>
+  </section>
+
+  <section *ngIf="contrato.contratacion">
+    <div class="text-center">
+        <p class="info-container">
+          <span class="info-text sin-diligenciar">Sin diligenciar</span>
+          <span class="info-text en-proceso">En proceso</span>
+          <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-45">
+          <mat-panel-title class="expansion-style--title sin-diligenciar">
+            {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Nombre del contratista</b>: {{ contrato.contratacion.contratista.nombre }}</p>
+              <p><b>Número de identificación (NIT/RUT)</b>: {{ contrato.contratacion.contratista.numeroIdentificacion }}</p>
+              <p><b>Tipo de intervención</b>: {{ contratacion.proyecto.tipoIntervencionCodigo }}</p>
+              <p><b>Departamento</b>: {{ contratacion.proyecto.departamento }}</p>
+              <p><b>Municipio</b>: {{ contratacion.proyecto.municipio }}</p>
+              <p><b>Valor total del proyecto</b>: {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+              Diagnóstico
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <app-diagnostico [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]" (diagnostico)="getDiagnostico( i, $event )"></app-diagnostico>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+              Planes y Programas
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <app-planes-programas [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]" (planesProgramasForm)="getPlanesProgramas( i, $event )"></app-planes-programas>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+              Manejo de anticipo
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <app-manejo-anticipo [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]" (manejoAnticipo)="getAnticipo( i, $event )"></app-manejo-anticipo>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="contratacion.proyecto['estadoSemaforo']">
+              Hojas de vida del contratista de obra
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
+            <app-hoja-vida-contratista  [perfilProyecto]="contratacion.proyecto.contratoConstruccion[0].construccionPerfil"
+                                        [contratoId]="contrato.contratoId"
+                                        [proyectoId]="contratacion.proyectoId"
+                                        (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
+                                        (perfilesCompletados)="estadoSemaforo( i, $event )">
+            </app-hoja-vida-contratista>
+          </section>
+          <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
+            <app-hoja-vida-contratista  [perfilProyecto]="[]"
+                                        [contratoId]="contrato.contratoId"
+                                        [proyectoId]="contratacion.proyectoId"
+                                        (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
+                                        (perfilesCompletados)="estadoSemaforo( i, $event )">
+            </app-hoja-vida-contratista>
+          </section>
+          
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+              Programación de obra
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
+            <app-programacion-obra-flujo-inversion [esFlujoInversion]="false" [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
+          </section>
+          <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
+            <app-programacion-obra-flujo-inversion [esFlujoInversion]="false" [contratoConstruccionId]="0" (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
+          </section>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+              Flujo de inversión de recursos
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div class="d-flex mt-2em text-center" style="justify-content: center;">
+            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>5</b></p>
+            <p>Valor total del contrato: <b> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
+          </div>
+          <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
+            <app-programacion-obra-flujo-inversion  [esFlujoInversion]="true" 
+                                                    [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
+                                                    (terminoCarga)="getCargaMasiva( $event )"
+                                                    (realizoObservacion)="getCargaMasiva( $event )">
+            </app-programacion-obra-flujo-inversion>
+          </section>
+          <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
+            <app-programacion-obra-flujo-inversion  [esFlujoInversion]="true"
+                                                    [contratoConstruccionId]="0"
+                                                    (terminoCarga)="getCargaMasiva( $event )">
+            </app-programacion-obra-flujo-inversion>
+          </section>
+
+        </mat-expansion-panel>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </section>
+
+</div>

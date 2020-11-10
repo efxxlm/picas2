@@ -167,6 +167,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=46`);
   }
 
+  listaTipoSolicitud(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=29`);
+  }
+
   listaEstadoSolicitud(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=50`);
   }
@@ -181,6 +185,15 @@ export class CommonService {
   
   listaEstadoProyecto(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
+  }
+
+  listaPerfil () {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=11`);
+  }
+
+  public getFileById(id: number) {   
+    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesById?pArchivoCargueId=${id}`, { responseType: "blob" });
+    return retorno;
   }
 
   public listaUsuarios(){

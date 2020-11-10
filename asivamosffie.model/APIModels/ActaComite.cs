@@ -5,13 +5,14 @@ using System.Text;
 namespace asivamosffie.model.APIModels
 {
     public class HTMLContent
-    {
-        public string HTML { get; set; }
-        public HTMLContent(string sHTML)
-        {
-            HTML = sHTML;
-        }
-    }
+     {
+         public string HTML { get; set; }
+         public HTMLContent(string sHTML)
+         {
+             HTML = sHTML;
+         }
+     }
+
     public class ActaComite
     {
 

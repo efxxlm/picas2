@@ -13,8 +13,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 		Con_validacion_presupuestal = 4,
 		Con_disponibilidad_presupuestal = 5,
 		Rechazada_por_validacion_presupuestal = 6,
-		Con_disponibilidad_cancelada = 7
-
+		Con_disponibilidad_cancelada = 7,
+		Con_registro_presupuestal = 8,
+		Sin_registro_presupuestal = 9
 	}
 
 	/*autor: jflorez

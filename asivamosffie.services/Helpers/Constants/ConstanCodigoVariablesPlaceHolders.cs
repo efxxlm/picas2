@@ -152,6 +152,43 @@
         #endregion
 
 
+        #region DDP
+
+        public const string DDP_FECHA = "1";
+        //Ya exsite numero Solicitu
+        //public const string NUMERO_SOLICITUD="77";
+        public const string DDP_NUMERO_SOLICITUD = "2";
+        public const string DDP_NO="3";
+        public const string DDP_RUBRO_POR_FINANCIAR = "4";
+        public const string DDP_TIPO_SOLICITUD = "5";
+        public const string DDP_OPCION_CONTRATAR = "6";
+        public const string DDP_FECHA_COMITE_TECNICO = "7";
+        public const string DDP_NUMERO_COMITE = "8";
+        public const string DDP_OBJETO = "9";
+        public const string DDP_TABLAAPORTANTES = "10";        
+        public const string DDP_NOMBRE_APORTANTE = "11";
+        public const string DDP_FUENTE_APORTANTE = "12";
+        public const string DDP_VALOR_NUMERO = "13";
+        public const string DDP_VALOR_LETRAS = "14";
+        public const string DDP_TOTAL_DE_RECURSOS = "15";
+        public const string DDP_TOTAL_DE_RECURSOSLETRAS = "16";
+        public const string DDP_TABLA_PROYECTOS = "17";
+        public const string DDP_LLAVE_MEN = "18";
+        public const string DDP_INSTITUCION_EDUCATIVA = "19";
+        public const string DDP_SEDE = "20";
+        //public const string DDP_NOMBRE_APORTANTE = "98";
+        public const string DDP_FUENTE = "21";
+        public const string DDP_SALDO_ACTUAL_FUENTE = "22";
+        public const string DDP_VALOR_SOLICITADO_FUENTE = "23";
+        public const string DDP_NUEVO_SALDO_FUENTE = "24";
+        public const string DDP_LIMITACION_ESPECIAL = "25";
+        
+
+        #endregion
+
+
+
+
         #region Acta
         public const string NUMERO_COMITE = "120";
         public const string FECHA_COMITE = "121";
@@ -204,6 +241,21 @@
         public const string NOMBRE_PARTICIPANTE = "168";
         public const string CARGO_PARTICIPANTE = "169";
         public const string FIRMA_PARTICIPANTE = "170";
+        public const string TABLA_VALIDACION_CONTRACTUAL = "178";	
+        public const string REGISTROS_SOLICITUDES_CONTRACTUALES = "179";
+        //public const string FECHA_SOLICITUD = "180";
+        //public const string NUMERO_SOLICITUD = "181";
+        //public const string TIPO_SOLICITUD = "182";
+        public const string NUMERADOR_TEMA = "183";
+        public const string NOMBRE_TEMA = "184";
+        public const string RESPONSABLE_TEMA = "185";
+        public const string TIEMPO_INTERVENCION_MINUTOS_TEMA = "186";
+        public const string URL_CON_SOPORTE_TEMA = "187";
+        public const string TABLA_TEMAS = "188";
+        public const string TABLA_PROPOSICIONES_VARIOS = "189";
+  	    public const string TITULO_SOLICITUDES_CONTRACTUALES = "190";
+        public const string TITULOS_TEMAS_NUEVOS = "191";
+        public const string TITULO_PROPOSICIONES_VARIOS = "192";
         #endregion
     }
 }

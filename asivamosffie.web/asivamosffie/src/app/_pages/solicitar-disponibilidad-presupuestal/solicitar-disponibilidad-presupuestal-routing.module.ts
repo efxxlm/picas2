@@ -17,7 +17,7 @@ const routes: Routes = [
     component: TablaCrearSolicitudTradicionalComponent
   },
   {
-    path: 'crearSolicitudTradicional/registrar/:idContratacion/:idDisponibilidadPresupuestal',
+    path: 'crearSolicitudTradicional/registrar/:idContratacion/:idDisponibilidadPresupuestal/:idTipoSolicitud',
     component: RegistrarInformacionAdicionalComponent
   },
   {

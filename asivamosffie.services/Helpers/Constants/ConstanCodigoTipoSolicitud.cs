@@ -4,6 +4,7 @@
     {
         public const string Inicio_De_Proceso_De_Seleccion = "1";
         public const string Contratacion = "2";
-        public const string Modificacion_Contractual = "3"; 
+        public const string Modificacion_Contractual = "3";
+  
     }
 }

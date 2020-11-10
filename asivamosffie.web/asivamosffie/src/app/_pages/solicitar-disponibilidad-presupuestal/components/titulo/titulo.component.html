@@ -1,31 +1,37 @@
 <div class="container text-right">
-    <a routerLink="/home" mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
-    </a>
+  <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+    <img src="assets/img/icon/regresar.svg" alt="Regresar">
+  </a>
 </div>
 <div class="container text-center">
-    <h1 class="title-menu--h1">
-        Solicitar disponibilidad presupuestal
-    </h1>
-    <div class="row justify-content-center mb-2rem" *ngIf="perfil != 5">
+  <h1 class="title-menu--h1">
+    Solicitar disponibilidad presupuestal
+  </h1>
+  <div class="row justify-content-center mb-2rem" *ngIf="perfil != 5">
+    <div class="col-md-6">
+      <div class="row">
         <div class="pr-1">
-            <label class="label-left">Tipo de disponibilidad: </label>
+          <label class="label-left">Tipo de disponibilidad: </label>
         </div>
         <div class="col">
-            <mat-form-field class="select-width">
-                <mat-select [formControl]="tipoDisponibilidad" required>
-                    <mat-option *ngFor="let control of selectDisponibilidad" [value]="control">
-                        {{ control.nombre }}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+          <mat-form-field class="select-width">
+            <mat-select [formControl]="tipoDisponibilidad" required>
+              <mat-option *ngFor="let control of selectDisponibilidad" [value]="control">
+                {{ control.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
+      </div>
     </div>
+  </div>
 
-    <button mat-raised-button color="accent" class="btn-cargar-proyecto"
-        (click)="crearSolicitud()" [disabled]="tipoDisponibilidad.invalid && perfil != 5">
-        Crear solicitud
+  <div class="text-center mb-1em">
+    <button mat-raised-button color="accent" class="btn-cargar-proyecto" (click)="crearSolicitud()"
+      [disabled]="tipoDisponibilidad.invalid && perfil != 5">
+      Crear solicitud
     </button>
+  </div>
 
-    <app-tabla-crear-solicitud-administrativa *ngIf="perfil == 5"></app-tabla-crear-solicitud-administrativa>
+  <app-tabla-crear-solicitud-administrativa *ngIf="perfil == 5"></app-tabla-crear-solicitud-administrativa>
 </div>

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using asivamosffie.services.PostParameters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -166,7 +165,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                compromisoSeguimiento.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                compromisoSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditReportProgress(compromisoSeguimiento);
                 return Ok(respuesta);
 
@@ -187,7 +186,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                disponibilidadPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditProyectoAdministrtivo(disponibilidadPresupuestal);
                 return Ok(respuesta);
 
@@ -211,7 +210,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                disponibilidadPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal,proyectoId);
                 return Ok(respuesta);
 
@@ -232,7 +231,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                string user = "forozco";//HttpContext.User.FindFirst("User").Value;
+                string user = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional( pDisponibilidad, user);
                 return Ok(respuesta);
 
@@ -253,7 +252,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                string user = "forozco";//HttpContext.User.FindFirst("User").Value;
+                string user = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId);
                 return Ok(respuesta);
 
@@ -293,7 +292,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                disponibilidadPresupuestal.UsuarioCreacion = "forozco";//HttpContext.User.FindFirst("User").Value;
+                disponibilidadPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managementCommitteeReportService.CreateOrEditDDPRequest(disponibilidadPresupuestal);
                 return Ok(respuesta);
 

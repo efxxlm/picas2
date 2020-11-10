@@ -130,9 +130,11 @@ export class TablaCronogramaComponent implements OnInit {
     .subscribe( respuesta => {
       let res = respuesta[0] as Respuesta
       if (res.code == "200")
-        this.openDialog("Cronograma", res.message);    
+        this.openDialog("", res.message);    
         console.log(respuesta);       
-        this.editMode.valor = false; 
+        
+        //jflorez deshabilito el modo visualización
+        //this.editMode.valor = false; 
     })
 
   }
@@ -141,7 +143,16 @@ export class TablaCronogramaComponent implements OnInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result)
+      {
+        location.reload();
+      }
+    }); 
+
+
   }
 
 }

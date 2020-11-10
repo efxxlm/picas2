@@ -21,17 +21,22 @@
   margin-right: 0;
 }
 
-.btn-add
-{
+.btn-add {
   width: 2em;
 }
 
-.mt1
-{
+.mt1 {
   margin-top: 1em;
 }
 
-.mt3
-{
+.mt3 {
   margin-top: 3em;
+}
+
+.mat-card-header-text {
+  margin: 0;
+  .header-card--text {
+    padding-left: .4em;
+    padding-right: .4em;
+  }
 }

@@ -55,7 +55,7 @@
                       <mat-form-field class="select-width">
                         <mat-select required [(ngModel)]="fuente.fuenteFinanciacionId">                        
                           <mat-option *ngFor="let listado of listadoFuentes" [value]="listado.fuenteFinanciacionId">
-                            {{ listado.fuenteRecursosString }}
+                            Número de acuerdo: <b>{{ listado.cofinanciacionDocumento?.numeroAcuerdo }}</b> Tipo: <b>{{ listado.fuenteRecursosString }}</b>
                           </mat-option>
                         </mat-select>
                       </mat-form-field>
@@ -70,7 +70,9 @@
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
                         <input matInput [(ngModel)]="fuente.valorFuente" id="numAportes" maxlength="20" min="1"
-                          max="99999999999999999999" required type="number" (keypress)="blockNumber($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                          max="99999999999999999999" required
+                          currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                           (keypress)="blockNumber($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
                       </mat-form-field>
                       <span class="contador">{{20 - (fuente.valorFuente?fuente.valorFuente.toString().length:0)}}</span>
                     </div>
@@ -85,7 +87,8 @@
                     <img src="assets/img/icon/menos.svg" alt="Eliminar otra fuente">
                     Eliminar fuente
                   </button>  
-                  <button *ngIf="aportantes.aportanteFuenteFinanciacion.length==i+1" mat-button color="warn" type="button" class="btn-eliminar" (click)="addFont(aportantes)">
+                  <button *ngIf="aportantes.aportanteFuenteFinanciacion.length==i+1" mat-button color="warn" 
+                  type="button" class="btn-eliminar" (click)="addFont(a)">
                     <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente">
                     Agregar otra fuente
                   </button>
