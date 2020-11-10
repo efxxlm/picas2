@@ -171,8 +171,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> RegistrarTramiteContrato(Contrato pContrato, string pPatchfile, string pEstadoCodigo)
-        {
-
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Registrar_Tramite_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
             //Contrato Modificar
@@ -182,13 +181,10 @@ namespace asivamosffie.services
                 //contratacion
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
-                if (contratacionOld.FechaTramite != null)
+                if (!contratacionOld.FechaTramite.HasValue)
                 { 
                     contratacionOld.FechaTramite = DateTime.Now;
-                }
-
-
-              
+                } 
                 contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
                 contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
                 contratacionOld.FechaModificacion = pContrato.FechaModificacion;
