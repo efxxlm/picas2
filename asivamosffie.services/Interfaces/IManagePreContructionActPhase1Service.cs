@@ -15,6 +15,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Contrato> GetContratoByContratoId(int pContratoId);
 
+        Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId)
+
         Task<Respuesta> EditContrato(Contrato pContrato);
 
         Task<Respuesta> LoadActa(Contrato pContrato, IFormFile pFile, string pDirectorioBase, string pDirectorioActaContrato);

@@ -36,6 +36,19 @@ namespace asivamosffie.api.Controllers
             return await _managePreContruction.GetContratoByContratoId(pContratoId);
         }
 
+        [HttpGet]
+        [Route("GetListGrillaActaInicio")]
+        public async Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio(int pPerfilId)
+        {
+            try
+            {
+                return await _managePreContruction.GetListGrillaActaInicio(pPerfilId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [Route("EditContrato")]
         [HttpPut]
