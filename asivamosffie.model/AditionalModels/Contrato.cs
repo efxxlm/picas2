@@ -16,8 +16,6 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public IFormFile pFile { get; set; }
 
-        [NotMapped]
-        public IFormFile pFile { get; set; }
-
+  
     }
 }
