@@ -2342,11 +2342,6 @@ namespace asivamosffie.model.Models
             {
                 entity.HasKey(e => e.InfraestrucutraIntervenirProyectoId);
 
-                entity.Property(e => e.CoordinacionResponsableCodigo)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEliminacion).HasColumnType("datetime");
@@ -3198,6 +3193,10 @@ namespace asivamosffie.model.Models
                 entity.HasIndex(e => e.LlaveMen)
                     .HasName("uk_llavemen")
                     .IsUnique();
+
+                entity.Property(e => e.CoordinacionResponsableCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
