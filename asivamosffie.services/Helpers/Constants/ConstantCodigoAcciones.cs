@@ -84,5 +84,7 @@
         public const string Crear_Observacion_Contrato_Perfil = "100";
  
         public const string Cambiar_Estado_Verificacion_Contrato = "103";
+
+        public const string Crear_Edit_Contrato_Observacion = "141";
     } 
 }

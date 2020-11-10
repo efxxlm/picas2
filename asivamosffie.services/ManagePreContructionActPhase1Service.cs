@@ -28,7 +28,7 @@ namespace asivamosffie.services
             _context = context;
             _commonService = commonService;
         }
-   
+
         public async Task<dynamic> GetListContrato()
         {
             try
@@ -60,7 +60,6 @@ namespace asivamosffie.services
 
         }
 
-    
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
             try
@@ -72,12 +71,12 @@ namespace asivamosffie.services
                                        .ThenInclude(r => r.ContratacionProyectoAportante)
                                                      .ThenInclude(r => r.ComponenteAportante)
                                                        .ThenInclude(r => r.ComponenteUso)
-                              
+
                           .Include(r => r.Contratacion)
                             .ThenInclude(r => r.Contratista)
-                         .Include(r => r.Contratacion) 
+                         .Include(r => r.Contratacion)
                             .ThenInclude(r => r.DisponibilidadPresupuestal).FirstOrDefaultAsync();
-      
+
                 return contrato;
             }
             catch (Exception)
@@ -164,8 +163,8 @@ namespace asivamosffie.services
                     strFilePatch = Path.Combine(pDirectorioBase, pDirectorioActaContrato, pContrato.ContratoId.ToString());
                     await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
                 }
-                else 
-                    return new Respuesta();  
+                else
+                    return new Respuesta();
 
                 Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
 
@@ -270,6 +269,62 @@ namespace asivamosffie.services
 
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
+          
+        public async Task<Respuesta> CreateEditObservacionesActa(ContratoObservacion pcontratoObservacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Edit_Contrato_Observacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            { 
+                if (pcontratoObservacion.ContratoObservacionId == 0)
+                {
+                    pcontratoObservacion.FechaCreacion = DateTime.Now;
+                    _context.ContratoObservacion.Add(pcontratoObservacion);
+                }
+                else
+                {
+                    ContratoObservacion contratoObservacionOld = _context.ContratoObservacion.Find(pcontratoObservacion.ContratoObservacionId);
+
+                    contratoObservacionOld.FechaModificacion = DateTime.Now;
+                    contratoObservacionOld.UsuarioModificacion = pcontratoObservacion.UsuarioCreacion;
+
+                    contratoObservacionOld.Observaciones = pcontratoObservacion.Observaciones;
+                    contratoObservacionOld.EsActa = pcontratoObservacion.EsActa;
+                    contratoObservacionOld.EsActaFase1 = pcontratoObservacion.EsActaFase1;
+                    contratoObservacionOld.EsActaFase2 = pcontratoObservacion.EsActaFase2;
+                }
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pcontratoObservacion.UsuarioCreacion, "CAMBIAR ESTADO ACTA")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = RegisterPreContructionPhase1.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.Error, idAccion, pcontratoObservacion.UsuarioCreacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
+         
+        public async Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId) {
+
+            return  await _context.ContratoObservacion.Where(r => r.ContratoId == ContratoId).ToListAsync();
+        }
+
          
         //Codigo CDaza Se deja la misma Logica Pedidar por David
         public async Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
