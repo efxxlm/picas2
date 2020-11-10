@@ -300,7 +300,11 @@ namespace asivamosffie.services
                     .Include(r => r.ContratoPerfil)
                     .FirstOrDefault();
 
-                contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                if (contratoOld.TipoContratoCodigo == ConstanCodigoTipoContratacion.Obra.ToString())  
+                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                else
+                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
+                 
                 contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                 contratoOld.FechaModificacion = DateTime.Now;
 
