@@ -184,38 +184,45 @@ export class EditarObservadaODevueltaComponent implements OnInit {
         const membAux = members.push(this.addressForm.value.polizasYSeguros[i].codigo);
     }
     console.log(members);
+    let nombreAprobado;
+    if(!this.addressForm.value.responsableAprob.name){
+      nombreAprobado = "null";
+    }
+    else{
+      nombreAprobado = this.addressForm.value.responsableAprob.name;
+    }
     console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
     let auxValue2 = this.addressForm.value.polizasYSeguros;
-    const contratoArray :InsertPoliza ={
-      contratoId:this.idContrato,  
-      TipoSolicitudCodigo: "",
-      TipoModificacionCodigo:"",
-      DescripcionModificacion:"",
-      NombreAseguradora:this.addressForm.value.nombre,
-      NumeroPoliza:this.addressForm.value.numeroPoliza,
-      NumeroCertificado:this.addressForm.value.numeroCertificado,
-      Observaciones:"",
-      ObservacionesRevisionGeneral:this.addressForm.value.observacionesGenerales,
-      ResponsableAprobacion:this.addressForm.value.responsableAprob.name,
-      EstadoPolizaCodigo:"2",
-      UsuarioCreacion:"usr1",
-      UsuarioModificacion:"usr1",
-      FechaExpedicion: this.addressForm.value.fecha,
-      Vigencia: this.addressForm.value.vigenciaPoliza,
-      VigenciaAmparo: this.addressForm.value.vigenciaAmparo,
-      ValorAmparo: this.addressForm.value.valorAmparo,
-      CumpleDatosAsegurado: this.addressForm.value.cumpleAsegurado,
-      CumpleDatosBeneficiario: this.addressForm.value.cumpleBeneficiario,
-      CumpleDatosTomador: this.addressForm.value.cumpleAfianzado,
-      IncluyeReciboPago:this.addressForm.value.reciboDePago,
-      IncluyeCondicionesGenerales: this.addressForm.value.condicionesGenerales,
-      FechaAprobacion: this.addressForm.value.fechaAprob,
-      Estado: false,
-      FechaCreacion: "",
-      RegistroCompleto: false,
-      FechaModificacion: "",
-      Eliminado: false
+    const contratoArray ={
+      'contratoId':this.idContrato,  
+      'TipoSolicitudCodigo': "",
+      'TipoModificacionCodigo':"",
+      'DescripcionModificacion':"",
+      'NombreAseguradora':this.addressForm.value.nombre,
+      'NumeroPoliza':this.addressForm.value.numeroPoliza,
+      'NumeroCertificado':this.addressForm.value.numeroCertificado,
+      'Observaciones':"",
+      'ObservacionesRevisionGeneral':this.addressForm.value.observacionesGenerales,
+      'ResponsableAprobacion':nombreAprobado,
+      'EstadoPolizaCodigo':this.addressForm.value.polizasYSeguros[0].codigo,
+      'UsuarioCreacion':"usr1",
+      'UsuarioModificacion':"usr1",
+      'FechaExpedicion': this.addressForm.value.fecha,
+      'Vigencia': this.addressForm.value.vigenciaPoliza,
+      'VigenciaAmparo': this.addressForm.value.vigenciaAmparo,
+      'ValorAmparo': this.addressForm.value.valorAmparo,
+      'CumpleDatosAsegurado': this.addressForm.value.cumpleAsegurado,
+      'CumpleDatosBeneficiario': this.addressForm.value.cumpleBeneficiario,
+      'CumpleDatosTomador': this.addressForm.value.cumpleAfianzado,
+      'IncluyeReciboPago':this.addressForm.value.reciboDePago,
+      'IncluyeCondicionesGenerales': this.addressForm.value.condicionesGenerales,
+      'FechaAprobacion': this.addressForm.value.fechaAprob,
+      'Estado': false,
+      'FechaCreacion': "",
+      'RegistroCompleto': false,
+      'FechaModificacion': "",
+      'Eliminado': false
     };
     /*
     const polizaGarantia: CreatePolizaGarantia={
