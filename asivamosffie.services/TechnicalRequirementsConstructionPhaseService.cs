@@ -70,10 +70,8 @@ namespace asivamosffie.services
                     Existeregistro = c.ExisteRegistro,
 
                 });
-            });
-
-            return listaContrats;
-
+            }); 
+            return listaContrats; 
         }
 
         public async Task<List<dynamic>> GetContractsGridApoyoObra()

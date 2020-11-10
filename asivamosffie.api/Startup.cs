@@ -120,6 +120,7 @@ namespace asivamosffie.api
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
             //Agregar Interfaces y clases
+            services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IRegisterPreContructionPhase1Service, RegisterPreContructionPhase1Service>();
 
             services.AddTransient<ICommonService, CommonService>();
