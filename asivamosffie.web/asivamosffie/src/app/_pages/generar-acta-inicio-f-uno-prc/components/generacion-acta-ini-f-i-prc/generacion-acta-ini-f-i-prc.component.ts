@@ -37,6 +37,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   fechaDRP: any;
   objeto: any;
   valorIni: any;
+  nitContratistaInterventoria: any;
+  nomContratista: any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
@@ -69,6 +71,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
     this.objeto = data.objeto;
     this.valorIni = data.valor;
+    this.nitContratistaInterventoria = data.contratista.numeroIdentificacion;
+    this.nomContratista = data.contratista.nombre;
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
