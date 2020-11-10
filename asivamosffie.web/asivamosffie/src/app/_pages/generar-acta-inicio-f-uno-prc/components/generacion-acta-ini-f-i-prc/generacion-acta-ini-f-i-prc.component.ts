@@ -32,6 +32,11 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     modalTitle: string,
     modalText: string
   };
+  fechaAprobacionRequisitos: any;
+  numDRP: any;
+  fechaDRP: any;
+  objeto: any;
+  valorIni: any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
@@ -51,6 +56,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   }
   cargarDataParaInsercion(data){
     this.numContrato = data.numeroContrato;
+    this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitos;
     this.fechaFirmaContrato = data.fechaFirmaContrato;
     this.contratacionId = data.contratacionId;
     this.fechaTramite = data.fechaTramite;
@@ -59,6 +65,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     this.fechaEnvioFirma = data.fechaEnvioFirma;
     this.fechaFirmaContratista = data.fechaFirmaContratista;
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
+    this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
+    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
+    this.objeto = data.objeto;
+    this.valorIni = data.valor;
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
