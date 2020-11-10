@@ -56,55 +56,65 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue;
   }
-  generarActaFUno(id){
-    localStorage.setItem("origin", "obra");
-    localStorage.setItem("editable", "false");
+  validarActaParaInicio(id){
+    localStorage.setItem("origin","obra");
+    localStorage.setItem("editable","false");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/validarActaDeInicio',id]);
   }
-  verDetalleEditarActaFUno(observaciones,id){
-    if(observaciones == true){
-      localStorage.setItem("conObservaciones","true");
-    }
-    else{
-      localStorage.setItem("conObservaciones","false");
-    }
-    localStorage.setItem("origin", "obra");
-    localStorage.setItem("editable", "true");
+  verDetalleEditar(id){
+    localStorage.setItem("origin","obra");
+    localStorage.setItem("editable","true");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/validarActaDeInicio',id]);
   }
-  enviarParaRevision(idContrato, estadoActaContrato){
-    estadoActaContrato="366";
-    this.service.CambiarEstadoActa(idContrato,estadoActaContrato).subscribe(data=>{
-      if(data.isSuccessful==true){
-      }
-    });
-  }
-  verDetalleActaFUno(observaciones,actaSuscrita,id){
-    if(observaciones == true){
-      localStorage.setItem("conObservaciones","true");
-    }
-    else{
-      localStorage.setItem("conObservaciones","false");
-    }
-    if(actaSuscrita == true){
-      localStorage.setItem("actaSuscrita","true");
-    }
-    else{
-      localStorage.setItem("actaSuscrita","false");
-    }
+  verDetalle(id){
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa',id]);
   }
-  enviarActaParaFirma(){
-    alert("llama al servicio donde cambia estado a true");
+  generarActaFDos(){
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActa']);
   }
-  cargarActaSuscrita(id){
+  enviarRevision(id,estadoObs){
+    if(estadoObs=="Con revisión sin observaciones"){
+      this.service.CambiarEstadoActa(id,"18").subscribe(data=>{
+        this.ngOnInit();
+      });
+    }
+    else{
+      this.service.CambiarEstadoActa(id,"17").subscribe(data=>{
+        this.ngOnInit();
+      });
+    }
+    /*this.service.EnviarCorreoSupervisorContratista(id,2).subscribe(resp=>{
+
+    });*/
+  }
+  enviarInterventor(id){
+    if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){
+      this.service.CambiarEstadoActa(id,"18").subscribe(data=>{
+        this.ngOnInit();
+      });
+    }
+    else{
+      this.service.CambiarEstadoActa(id,"17").subscribe(data=>{
+        this.ngOnInit();
+      });
+    }
+  }
+  cargarActaSuscrita(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
-    dialogConfig.data = {id:id};
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
   }
-  descargarActaDesdeTabla(){
-    alert("llama al servicio");
+  descargarActaDesdeTabla(id){
+    this.service.GetActaByIdPerfil(8,id).subscribe(resp=>{
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+      blob = new Blob([resp], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
 }

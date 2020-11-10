@@ -52,6 +52,23 @@ export class FormularioTieneObservacionesComponent implements OnInit {
     alert("llama al servicio");
   }
   onSubmit() {
+    if(localStorage.getItem("editable")=="false"){
+      const contratoObservacion={
+        'ContratoId':12,
+        'Observaciones':"",
+        'EsActa':true,
+        'EsActaFase1':true
+      };
+    }
+    else{
+      const contratoObservacion={
+        'ContratoObservacionId':2,
+        'ContratoId':12,
+        'Observaciones':"",
+        'EsActa':true,
+        'EsActaFase1':true
+      };
+    }
     console.log(this.addressForm.value);
     this.openDialog('La información ha sido guardada exitosamente.', "");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);

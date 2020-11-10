@@ -54,55 +54,86 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue;
   }
-  generarActaFUno(id){
+  validarActaParaInicio(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "false");
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/validarActaDeInicio',id]);
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/validarActaDeInicio', id]);
   }
-  verDetalleEditarActaFUno(observaciones,id){
-    if(observaciones == true){
-      localStorage.setItem("conObservaciones","true");
-    }
-    else{
-      localStorage.setItem("conObservaciones","false");
-    }
+  verDetalleEditar(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "true");
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/validarActaDeInicio',id]);
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/validarActaDeInicio', id]);
   }
-  enviarParaRevision(idContrato, estadoActaContrato){
-    estadoActaContrato="366";
-    this.service.CambiarEstadoActa(idContrato,estadoActaContrato).subscribe(data=>{
-      if(data.isSuccessful==true){
-      }
-    });
+  verDetalle(id) {
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa', id]);
   }
-  verDetalleActaFUno(observaciones,actaSuscrita,id){
-    if(observaciones == true){
-      localStorage.setItem("conObservaciones","true");
+  generarActaFDos(id) {
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActaFDos', id]);
+  }
+  cambiarEstadoSupervisor(id) {
+    if (localStorage.getItem("origin") == "interventoria") {
+      this.service.CambiarEstadoActa(id, "3").subscribe(data => {
+        this.ngOnInit();
+      });
+    }
+  }
+  cambiarEstadoInterventor(id, tieneObs) {
+    if (localStorage.getItem("origin") == "interventoria") {
+        this.service.CambiarEstadoActa(id, "5").subscribe(data => {
+          this.ngOnInit();
+        });
+    }
+  }
+  enviarActaParaFirma(id) {
+    if (localStorage.getItem("origin") == "interventoria") {
+      this.service.CambiarEstadoActa(id, "6").subscribe(data => {
+        this.ngOnInit();
+      });
+      this.descargarActaDesdeTabla(id);
+    }
+  }
+  enviarInterventorBtn(id){
+    if (localStorage.getItem("origin") == "interventoria") {
+      this.service.CambiarEstadoActa(id, "4").subscribe(data => {
+        this.ngOnInit();
+      });
+    }
+  }
+  cargarActaSuscrita(id,tipoContrato,numContrato) {
+    let idRol = 8;
+    let fecha1Titulo;
+    let fecha2Titulo;
+    if(tipoContrato=='Interventoria'){
+      fecha1Titulo = 'Fecha de la firma del documento por parte del contratista de interventoría';
+      fecha2Titulo = 'Fecha de la firma del documento por parte del supervisor';
     }
     else{
-      localStorage.setItem("conObservaciones","false");
+      fecha1Titulo = 'Fecha de la firma del documento por parte del contratista de obra';
+      fecha2Titulo = 'Fecha de la firma del documento por parte del contratista de interventoría';
     }
-    if(actaSuscrita == true){
-      localStorage.setItem("actaSuscrita","true");
-    }
-    else{
-      localStorage.setItem("actaSuscrita","false");
-    }
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa',id]);
-  }
-  enviarActaParaFirma(){
-    alert("llama al servicio donde cambia estado a true");
-  }
-  cargarActaSuscrita(id){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
-    dialogConfig.data = {id:id};
+    dialogConfig.data = {id:id, idRol:idRol, numContrato:numContrato, fecha1Titulo:fecha1Titulo, fecha2Titulo:fecha2Titulo};
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(value => {
+      if (value == 'aceptado') {
+        this.service.CambiarEstadoActa(id,"7").subscribe(data=>{
+          this.ngOnInit();
+        });
+      }
+    });
   }
-  descargarActaDesdeTabla(){
-    alert("llama al servicio");
+  descargarActaDesdeTabla(id) {
+    this.service.GetActaByIdPerfil(8,id).subscribe(resp => {
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
 }

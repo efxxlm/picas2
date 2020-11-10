@@ -1,8 +1,8 @@
 <button mat-button mat-dialog-close class="modal--btn-cerrar">
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
-<h1 class="title-menu--h1">
-    Cargar acta suscrita contrato C223456789
+<h1 class="title-menu--h1 centerTrick">
+    Cargar acta suscrita contrato {{this.numContrato}}
 </h1>
 <div class="text-center">
     <div class="mtop">
@@ -10,12 +10,12 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left">Fecha de la firma del documento por parte del contratista de obra</label>
+                        <label class="label-left">{{this.fecha1Titulo}}</label>
                     </div>
                     <div class="col d-flex">
                         <mat-form-field class="example-full-width">
                             <input matInput [matDatepicker]="picker" required [max]="maxDate" readonly
-                                (click)="picker.open()">
+                                (click)="picker.open()" [(ngModel)]="this.fechaFirmaContratistaObra" placeholder="DD/MM/AAAA">
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                         <button mat-button color="primary" type="button" (click)="picker.open()"
@@ -30,12 +30,12 @@
             <div class="col-md-12">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left">Fecha de la firma del documento por parte del contratista de interventoría</label>
+                        <label class="label-left">{{this.fecha2Titulo}}</label>
                     </div>
                     <div class="col d-flex">
-                        <mat-form-field class="example-full-width">
+                        <mat-form-field class="example-full-width" style="width: 20%;">
                             <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
-                                (click)="picker2.open()">
+                                (click)="picker2.open()" [(ngModel)]="this.fechaFirmaContratistaInterventoria" placeholder="DD/MM/AAAA">
                             <mat-datepicker #picker2></mat-datepicker>
                         </mat-form-field>
                         <button mat-button color="primary" type="button" (click)="picker2.open()"
