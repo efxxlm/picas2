@@ -34,7 +34,12 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida requeridas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas" required>
+                <input  matInput
+                        type="text"
+                        maxlength="3"
+                        formControlName="cantidadHvRequeridas"
+                        required
+                        [class.invalid]="perfil.get( 'cantidadHvRequeridas' ).value.length > 0 ? perfil.get( 'cantidadHvRequeridas' ).markAsUntouched() : perfil.get( 'cantidadHvRequeridas' ).markAsTouched()">
               </mat-form-field>
               <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.toString().length}}</span>
             </div>
@@ -44,7 +49,12 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida recibidas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas" required>
+                <input  matInput
+                        type="text"
+                        maxlength="3"
+                        formControlName="cantidadHvRecibidas"
+                        required
+                        [class.invalid]="perfil.get( 'cantidadHvRecibidas' ).value.length > 0 ? perfil.get( 'cantidadHvRecibidas' ).markAsUntouched() : perfil.get( 'cantidadHvRecibidas' ).markAsTouched()">
               </mat-form-field>
               <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.toString().length}}</span>
             </div>
@@ -54,7 +64,12 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field>
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas" required>
+                <input  matInput
+                        type="text"
+                        maxlength="3"
+                        formControlName="cantidadHvAprobadas"
+                        required
+                        [class.invalid]="perfil.get( 'cantidadHvAprobadas' ).value.length > 0 ? perfil.get( 'cantidadHvAprobadas' ).markAsUntouched() : perfil.get( 'cantidadHvAprobadas' ).markAsTouched()">
               </mat-form-field>
               <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.toString().length}}</span>
             </div>
@@ -72,7 +87,8 @@
                       [min]="minDate"
                       placeholder="DD/MM/AAAA"
                       required
-                      [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
+                      [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )"
+                      [class.invalid]="perfil.get( 'fechaAprobacion' ).value !== null ? perfil.get( 'fechaAprobacion' ).markAsUntouched() : perfil.get( 'fechaAprobacion' ).markAsTouched()">
               <mat-datepicker #fechaAprobacion></mat-datepicker>
               </mat-form-field>
               <button mat-button 
@@ -109,7 +125,12 @@
               <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }} </b></label>
               <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
                 <mat-form-field class="w-38">
-                  <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
+                  <input  matInput
+                          type="text"
+                          maxlength="20"
+                          formControlName="numeroRadicado"
+                          required
+                          [class.invalid]="numero.get( 'numeroRadicado' ).value.length > 0 ? numero.get( 'numeroRadicado' ).markAsUntouched() : numero.get( 'numeroRadicado' ).markAsTouched()">
                 </mat-form-field>
                 <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
               </div>
@@ -160,7 +181,11 @@
             <label class="mr-label mr-min mt-1em"><b>URL con soporte</b></label>
             <div class="col d-flex" style="width: 85%;">
               <mat-form-field class="w-38">
-                <input matInput type="text" formControlName="rutaSoporte" required>
+                <input  matInput
+                        type="text"
+                        formControlName="rutaSoporte"
+                        required
+                        [class.invalid]="perfil.get( 'rutaSoporte' ).value.length > 0 ? perfil.get( 'rutaSoporte' ).markAsUntouched() : perfil.get( 'rutaSoporte' ).markAsTouched()">
               </mat-form-field>
             </div>
           </section>

@@ -81,14 +81,14 @@
                 <a  mat-raised-button
                     color="accent"
                     class="btn-table"
-                    (click)="getForm( element.contratoId, element.fechaAprobacion )"
+                    (click)="getForm( element.contratoId, element.fechaAprobacion, element.estadoCodigo )"
                     *ngIf="estadosPreconstruccion !== undefined && element.estadoCodigo === estadosPreconstruccion.sinAprobacionReqTecnicos.codigo">
                     Gestionar requisitos para inicio
                 </a>
                 <a  mat-raised-button
                     color="accent"
                     class="btn-table"
-                    (click)="getForm( element.contratoId, element.fechaAprobacion )"
+                    (click)="getForm( element.contratoId, element.fechaAprobacion, element.estadoCodigo )"
                     *ngIf=" estadosPreconstruccion !== undefined
                             && (element.estadoCodigo === estadosPreconstruccion.enProcesoAprobacionReqTecnicos.codigo
                             || element.estadoCodigo === estadosPreconstruccion.enviadoAlInterventor.codigo)">

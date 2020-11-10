@@ -18,6 +18,12 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
   estado: FormControl;
   cantidadPerfiles: FormControl;
   fechaPoliza: string;
+  estadoInterventoria: string;
+  estadosInterventoria = {
+    sinAprobacionReqTecnicos: '1',
+    enProcesoVerificacionReqTecnicos: '4',
+    conReqTecnicosVerificados: '5'
+  };
 
   estadoProyectoArray = [
     {
@@ -41,8 +47,10 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
       this.routes.navigateByUrl('/verificarPreconstruccion');
       return;
     };
-    if (this.routes.getCurrentNavigation().extras.state)
+    if (this.routes.getCurrentNavigation().extras.state) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
+      this.estadoInterventoria = this.routes.getCurrentNavigation().extras.state.estado;
+    };
   }
 
   ngOnInit(): void {

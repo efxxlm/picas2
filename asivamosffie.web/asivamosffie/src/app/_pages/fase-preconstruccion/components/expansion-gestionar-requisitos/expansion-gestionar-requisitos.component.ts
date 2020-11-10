@@ -15,18 +15,26 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
 
   contrato: Contrato;
   fechaPoliza: string;
+  estadosPreconstruccion = {
+    sinAprobacionReqTecnicos: '1',
+    enProcesoAprobacionReqTecnicos: '2',
+    enviadoAlInterventor: '10'
+  };
+  estado: string;
 
   constructor ( private activatedRoute: ActivatedRoute,
                 private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
                 private dialog: MatDialog,
                 private routes: Router ) {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
-    if (this.routes.getCurrentNavigation().extras.replaceUrl) {
+    if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
       this.routes.navigateByUrl('/preconstruccion');
       return;
     };
-    if (this.routes.getCurrentNavigation().extras.state)
+    if ( this.routes.getCurrentNavigation().extras.state ) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
+      this.estado = this.routes.getCurrentNavigation().extras.state.estado;
+    };
   };
 
   ngOnInit(): void {
