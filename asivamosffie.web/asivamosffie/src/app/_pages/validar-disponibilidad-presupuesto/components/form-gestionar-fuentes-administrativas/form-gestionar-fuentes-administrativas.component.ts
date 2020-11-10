@@ -4,6 +4,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuenteFinanciacionService } from 'src/app/core/_services/fuenteFinanciacion/fuente-financiacion.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-form-gestionar-fuentes-administrativas',
@@ -19,7 +20,8 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
         valorSolicitado: [null, Validators.compose([
           Validators.required, Validators.minLength(1), Validators.maxLength(20)])
         ],
-        nuevoSaldo: [null, Validators.required]
+        nuevoSaldo: [null, Validators.required],
+        gestionid:[null]
       })
     ])
   });
@@ -58,19 +60,67 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     this.sede=this.data.elemento.sede;
     this.disponibilidadPresupuestalProyectoid=this.data.elemento.disponibilidadPresupuestalProyectoid;
     this.valorGestionado=this.data.elemento.valorGestionado;
-    this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(this.disponibilidadPresupuestalProyectoid,this.data.elemento.id).subscribe(lista => {
+    this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalid(this.data.elemento.id).subscribe(lista => {
       console.log(lista);
       this.fuentesbase=lista;
+      let esEdicion=false;
       lista.forEach(element => {
         this.fuentesArray.push({name:element.fuente,value:element.fuenteFinanciacionID});  
+        if(element.gestionFuenteFinanciacionID>0)
+        {
+          esEdicion=true;
+        }
       });
+      if(esEdicion)
+      {
+        let fuentesarray=this.fuentes;  
+        fuentesarray.clear();
+
+        lista.forEach(element => {
+          if(element.gestionFuenteFinanciacionID>0)//es edición
+          {
+            let fuent=this.crearFuente();
+            //let fuentesel = this.fuentesArray.find(m => m.value == element.fuenteFinanciacionID)
+
+            fuent.get('fuentecampo').setValue(element.fuenteFinanciacionID);
+            fuent.get('saldoActual').setValue(element.saldo_actual_de_la_fuente);
+            fuent.get('valorSolicitado').setValue(element.valor_solicitado_de_la_fuente);
+            fuent.get('nuevoSaldo').setValue(element.nuevo_saldo_de_la_fuente);
+            fuent.get('gestionid').setValue(element.gestionFuenteFinanciacionID);
+            fuentesarray.push(fuent);
+             console.log(fuentesarray);
+          }
+        });
+      }
+      
       
     });
   }
+
+  
   fuenteCambio(fuente:any)
   {
     let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
-    fuente.get('saldoActual').setValue(fuenteSeleccionada[0].saldo_actual_de_la_fuente);
+    //valido que no se haya seleccionado previamente
+    let cont=0;
+    this.addressForm.value.fuentes.forEach(element => {
+      console.log(element.fuentecampo);
+      if(element.fuentecampo==fuente.controls.fuentecampo.value)
+      {
+        cont++;
+      }
+    });
+    if(cont>1)
+    {
+     this.openDialog("","<b>Ya seleccionaste esta fuente de financiación</b>"); 
+     fuente.controls.fuentecampo.clear();
+    }
+    else
+    {
+      fuente.get('saldoActual').setValue(fuenteSeleccionada[0].saldo_actual_de_la_fuente);
+    }
+
+    
   }
   reste(fuente:any)
   {
@@ -103,11 +153,49 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
   }
 
   borrarArray(borrarForm: any, i: number) {
-    borrarForm.removeAt(i);
+    console.log(borrarForm);
+    this.openDialogSiNo("",'<b>¿Está seguro de eliminar este registro?</b>',i,borrarForm);
+  }
+
+
+  openDialogSiNo(modalTitle: string, modalText: string,id:number,borrarForm:any) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        this.disponibilidadPresupuestalService.DeleteFinancialFundingGestion(borrarForm.value[id].gestionid).subscribe(
+          response => {
+            borrarForm.removeAt(id);
+            this.openDialog('', `<b>${response.message}</b>`);
+          },
+          error => {
+            console.log(<any>error);
+            let mensaje: string;
+              if (error.error.message){
+                mensaje = error.error.message;
+              }else {
+                mensaje = error.message;
+              }
+              this.openDialog('Error', mensaje);
+              
+            },
+          () =>{
+            //else
+          }); 
+      }           
+    });
   }
 
   agregaFuente() {
     this.fuentes.push(this.crearFuente());
+  }
+
+  validoFuente(){
+
   }
 
   crearFuente() {
@@ -118,6 +206,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
         Validators.required, Validators.minLength(1), Validators.maxLength(20)])
       ],
       nuevoSaldo: [null, Validators.required],
+      gestionid:[null]
     });
   }
 
@@ -128,6 +217,8 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
       let CreateFinancialFundingGestion={
         FuenteFinanciacionId:fuente.fuentecampo,
         ValorSolicitado:fuente.valorSolicitado,
+        DisponibilidadPresupuestalId:this.data.elemento.id,
+        gestionFuenteFinanciacionID:fuente.gestionid,
         DisponibilidadPresupuestalProyectoId:this.disponibilidadPresupuestalProyectoid};
       this.disponibilidadPresupuestalService.CreateFinancialFundingGestion(CreateFinancialFundingGestion).subscribe(result=>
         {
@@ -135,7 +226,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
           mensaje=result.message
         });
     });      
-    this.openDialog('','<b>La información a sido guardad exitosamente.</b>');  
+    this.openDialog('','<b>La información a sido guardada exitosamente.</b>');  
     
   }
 }

@@ -30,23 +30,29 @@ const ELEMENT_DATA: tablaEjemplo[] = [
 })
 export class GestionarDrpComponent implements OnInit {
   listacomponentes:tablaEjemplo[]=[];
-  public numContrato = "A886675445";//valor quemado
-  public fechaContrato = "20/06/2020";//valor quemado
-  public solicitudContrato = "Modificación contractual";//valor quemado
-  public estadoSolicitud = "Sin registro presupuestal";//valor quemado
+  public numContrato = "";
+  public fechaContrato = "";
+  public solicitudContrato = "";
+  public estadoSolicitud = "";
   displayedColumns: string[] = ['componente', 'uso', 'valorUso', 'valorTotal'];
   esModificacion=false;
-  dataSource = new MatTableDataSource();
+  dataSource = [];
   detailavailabilityBudget: any;
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router,private sanitized: DomSanitizer,) { }
   
-    openDialog(modalTitle: string, modalText: string) {
-      this.dialog.open(ModalDialogComponent, {
+    openDialog(modalTitle: string, modalText: string,relocate=false) {
+      let dialogref=this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle, modalText }
       });
+      if(relocate)
+      {
+        dialogref.afterClosed().subscribe(result => {
+          this.router.navigate(["/generarRegistroPresupuestal"], {});
+         });
+      }
     }
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -67,8 +73,9 @@ export class GestionarDrpComponent implements OnInit {
                 ], valorTotal: element2.valorTotal
               });
             });
+            this.dataSource.push(new MatTableDataSource(this.listacomponentes));
           });
-          this.dataSource = new MatTableDataSource(this.listacomponentes);
+          
         }
         else{
           this.openDialog('','Error al intentar recuperar los datos de la solicitud, por favor intenta nuevamente.');
@@ -100,6 +107,21 @@ export class GestionarDrpComponent implements OnInit {
     });
   
   }
+  descargarDRPBoton(){    
+    console.log(this.detailavailabilityBudget);
+    this.disponibilidadServices.GenerateDRP(this.detailavailabilityBudget.id).subscribe((listas:any) => {
+      console.log(listas);
+      const documento = `DRP ${ this.detailavailabilityBudget.id }.pdf`;
+        const text = documento,
+          blob = new Blob([listas], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+    });
+  
+  }
 
   generardrp(){
     this.disponibilidadServices.CreateDRP(this.detailavailabilityBudget.id).subscribe(listas => {
@@ -108,10 +130,15 @@ export class GestionarDrpComponent implements OnInit {
       this.openDialog("",listas.message);
       if(listas.code=="200")
       {
-        this.descargarDDPBoton();
+        this.descargarDRPBoton();
       } 
     });
   }
+
+  generardrpPDF()
+  {
+    this.descargarDRPBoton();
+  } 
   
 
 }

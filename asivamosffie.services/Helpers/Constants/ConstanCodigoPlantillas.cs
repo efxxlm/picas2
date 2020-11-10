@@ -58,6 +58,9 @@
         Descargar_Acta_Comite_Fiduciario = 35,
 
         DDP_limitacion=50,
-        DDP_Aportante_principal=51
+        DDP_Aportante_principal=51,
+        Ficha_DRP=52,
+        DRP_TABLA_FUENTES = 53,
+        DRP_TABLA_USOS = 54,
     }
 }

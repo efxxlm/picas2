@@ -69,7 +69,8 @@ namespace asivamosffie.services
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
                     List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = new { datausuario = usuario, dataperfiles = perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };
+                    List<Menu> menus = await _context.MenuPerfil.Where(y => perfiles.Select(x=>x.PerfilId).Contains(y.PerfilId)).Select(x=>x.Menu).Distinct().ToListAsync();
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = new { datausuario = usuario, dataperfiles = perfiles,datamenu= menus }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };
                   
                 }
 

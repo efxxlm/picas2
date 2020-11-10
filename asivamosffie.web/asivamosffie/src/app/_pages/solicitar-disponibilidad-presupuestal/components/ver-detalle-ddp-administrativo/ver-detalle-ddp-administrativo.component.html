@@ -11,30 +11,32 @@
         <p><b>Consecutivo proyecto administrativo:</b> {{this.idProyectoAdmin}}</p>
     </div>
     <mat-card class="shipping-card mainGris">
-            <mat-card-content align="left">
+            <mat-card-content align="left" *ngFor="let apo of aportantes; let i=index">
 
                 <mat-card-title class="header-card--text textoGris">
-                    Aportante 1
+                    Aportante {{i+1}}
                 </mat-card-title>
     
                 <p>
                     <strong>Valor del aportante al proyecto:</strong>
-                    xxx
+                    {{apo.valorAportanteAlProyecto}}
                 </p>
                 <p>
                     <strong>Nombre del aportante:</strong>
-                    Hola
+                    {{apo.nombre}}
                 </p>
-                <!--Pendiente de mapeo-->
+                <div *ngFor="let fuentes of apo.fuentesFinanciacion; let j=index">
                     <p>
-                        <strong>Fuente 1:</strong>
-                        Incentivo
+                        <strong>Fuente {{j+1}}:</strong>
+                        {{fuentes.fuente}}
                     </p>
                     <p>
-                        <strong>Valor fuente 1:</strong>
-                        $0
+                        <strong>Valor fuente {{j+1}}:</strong>
+                        ${{fuentes.saldo_actual_de_la_fuente}}
                         <!--{{fuentes.valor_solicitado_de_la_fuente | currency:'COP':'symbol-narrow':'.0-0'}}-->
                     </p>
+                </div>
+                    
             </mat-card-content>
     </mat-card>
     <mat-card class="shipping-card mainGris">

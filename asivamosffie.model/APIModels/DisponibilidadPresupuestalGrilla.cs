@@ -15,6 +15,7 @@ namespace asivamosffie.model.APIModels
         public string NumeroContrato { get; set; }
         public string FechaFirmaContrato { get; set; }
         public string TipoSolicitudEspecial { get; set; }
+        public string Estado { get; set; }
     }
 
     /*autor: jflorez

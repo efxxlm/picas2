@@ -37,7 +37,10 @@ export class DisponibilidadPresupuestalService {
     var json = JSON.stringify(pdf[0]);    
     return this.http.get(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`, { responseType: "blob" } );
   }
-
+  GenerateDRP(id)
+  {        
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}`, { responseType: "blob" } );
+  }
   
   GenerateDDP(id)
   {        
@@ -85,7 +88,7 @@ export class DisponibilidadPresupuestalService {
   }
   DeleteFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/DeleteFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/DeleteFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
   }
   GetFinancialFundingGestionByDDPP(DisponibilidadPresupuestalObservacion:any)
   {

@@ -44,10 +44,10 @@ export class TablaRegistroPresupuestalComponent implements OnInit {
         console.log(element);
         elementos.push({
           id:element.disponibilidadPresupuestalId,
-          estado:element.estadoRegistro,
+          estado:element.estado,
           fechaFirma:element.fechaFirmaContrato,
           numeroContrato:element.numeroContrato,
-          tipoSolicitud:element.tipoSolicitud});
+          tipoSolicitud:element.tipoSolicitudEspecial});
       });
       this.dataSource = new MatTableDataSource(elementos);
       this.dataSource.sort = this.sort;

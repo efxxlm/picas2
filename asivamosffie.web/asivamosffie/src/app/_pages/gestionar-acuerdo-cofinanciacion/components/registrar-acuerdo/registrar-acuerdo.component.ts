@@ -358,13 +358,14 @@ export class RegistrarAcuerdoComponent implements OnInit {
         this.verificarRespuesta(respuesta, parcial);
       },
       err => {
+        this.loading = false;
         let mensaje: string;
         if (err.error.message) {
           mensaje = err.error.message;
         } else {
           mensaje = err.message;
         }
-        this.loading = false;
+       
         this.openDialog('Error', mensaje);
       },
       () => {
