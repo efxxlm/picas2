@@ -728,10 +728,11 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Informativos
 
 
-        public const string CamposIncompletos = "101";
+        //public const string CamposIncompletos = "101";
         public const string EditadoCorrrectamente = "102";
         public const string CreadoCorrrectamente = "103";
         public const string RecursoNoEncontrado = "104";
+        public const string CorreoEnviado = "101";
 
         public const string ErrorEnviarCorreo = "107";
         public const string ErrorGuardarCambios = "109";

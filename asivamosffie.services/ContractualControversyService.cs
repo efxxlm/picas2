@@ -597,13 +597,13 @@ namespace asivamosffie.services
                 template = template.Replace("_Fecha_firma_fiduciaria_", strFechaFirmaFiduciaria);
                 template = template.Replace("_Observaciones_", strObservaciones);
                                
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestionar controversias contractuales", template, pSentender, pPassword, pMailServer, pMailPort);
 
                 if (blEnvioCorreo)
-                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContractualControversy.CorreoEnviado };
 
                 else
-                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContractualControversy.ErrorEnviarCorreo };
 
                 //}
                 //}
@@ -612,15 +612,15 @@ namespace asivamosffie.services
                 //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
 
                 //}
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas");
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, respuesta.Code, Convert.ToInt32( ConstantCodigoAcciones.Notificacion_Controversia_Contractual), lstMails, "Gestionar controversias contractuales");
                 return respuesta;
 
             }
             catch (Exception ex)
             {
 
-                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContratoPoliza.Error };
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
+                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesContractualControversy.Error };
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, lstMails, "Gestionar controversias contractuales") + ": " + ex.ToString() + ex.InnerException;
                 return respuesta;
             }
 

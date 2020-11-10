@@ -119,12 +119,13 @@
 
         public const string Cambiar_Estado_Programacion_Especial = "139";
         public const string Crear_Editar_Controversia_Contractual = "128";
-	public const string Crear_Editar_Controversia_Actuacion= "129";
+       	public const string Crear_Editar_Controversia_Actuacion= "129";
         public const string Eliminar_Controversia_Contractual= "130";
         public const string Eliminar_Controversia_Actuacion= "131";
 
         public const string Cambiar_estado_Controversia_Actuacion = "136";
         public const string  Cambiar_estado_Controversia_Contractual = "137";
+        public const string  Notificacion_Controversia_Contractual= "140";        
 
     }
 }
