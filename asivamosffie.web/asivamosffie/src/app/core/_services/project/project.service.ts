@@ -205,6 +205,13 @@ export interface Proyecto{
   usuarioCreacion?:string,
   fechaModificacion?: Date,
   usuarioModificacion?:string,
+
+  plazoMesesObra?:number,
+  plazoDiasObra?:number ,
+  plazoMesesInterventoria?:number ,
+  plazoDiasInterventoria?:number ,
+  coordinacionResponsableCodigo?:string ,
+
   //no modelado
   cantidadAportantes?:number;
   regid?:string;
@@ -266,11 +273,7 @@ export interface InfraestructuraIntervenirProyecto{
   usuarioCreacion:string ,
   fechaEliminacion?:Date ,
   usuarioEliminacion:string ,
-  plazoMesesObra :number,
-  plazoDiasObra:number ,
-  plazoMesesInterventoria:number ,
-  plazoDiasInterventoria:number ,
-  coordinacionResponsableCodigo:string ,
+  
 }
 export interface ProyectoAportante{
   mun?: string;

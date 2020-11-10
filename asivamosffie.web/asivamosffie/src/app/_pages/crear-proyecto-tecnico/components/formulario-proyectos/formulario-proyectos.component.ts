@@ -78,6 +78,11 @@ export class FormularioProyectosComponent implements OnInit {
     usuarioModificacion: '',
     institucionEducativaSede: null,
     localizacionIdMunicipioNavigation: null,
+    plazoDiasInterventoria: null,
+    plazoMesesInterventoria: null,
+    plazoMesesObra: null,
+    plazoDiasObra: null,
+    coordinacionResponsableCodigo: null,
     predioPrincipal: {
       cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
       fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
@@ -94,8 +99,8 @@ export class FormularioProyectosComponent implements OnInit {
 
   onSubmit() {
     // ajusto latitud y longitud de predios
-    this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°' + this.proyecto.predioPrincipal.ubicacionLatitud2;
-    this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' + this.proyecto.predioPrincipal.ubicacionLongitud2;
+    this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°' ;// + this.proyecto.predioPrincipal.ubicacionLatitud2;
+    this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' ;// + this.proyecto.predioPrincipal.ubicacionLongitud2;
     //this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId;
     //this.proyecto.sedeId = this.proyecto.sede.institucionEducativaSedeId?this.proyecto.sede.institucionEducativaSedeId:this.proyecto.sedeId;
     //voy a revisar algunos datos minimos
@@ -190,19 +195,19 @@ export class FormularioProyectosComponent implements OnInit {
             {
               cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
               fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
-              usuarioCreacion: '', predioId: null, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: '',ubicacionLatitud2:'',ubicacionLongitud2:''
+              usuarioCreacion: '', predioId: null, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''//,ubicacionLatitud2:'',ubicacionLongitud2:''
             }; 
           }
           else{
             if (respuesta.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {
               const lat = respuesta.predioPrincipal.ubicacionLatitud.split('°');
               this.proyecto.predioPrincipal.ubicacionLatitud = lat[0];
-              this.proyecto.predioPrincipal.ubicacionLatitud2 = lat[1];
+              //this.proyecto.predioPrincipal.ubicacionLatitud2 = lat[1];
             }
             if (respuesta.predioPrincipal.ubicacionLongitud.indexOf('°') > 1) {
               const lon = respuesta.predioPrincipal.ubicacionLongitud.split('°');
               this.proyecto.predioPrincipal.ubicacionLongitud = lon[0];
-              this.proyecto.predioPrincipal.ubicacionLongitud2 = lon[1];
+              //this.proyecto.predioPrincipal.ubicacionLongitud2 = lon[1];
             }
           }
           
@@ -253,6 +258,7 @@ export class FormularioProyectosComponent implements OnInit {
 
     }
     else {
+      
       // this.proyecto
       // agrego el predio principal
 
@@ -589,11 +595,7 @@ export class FormularioProyectosComponent implements OnInit {
       fechaCreacion: null,
       usuarioCreacion: '',
       usuarioEliminacion: '',
-      plazoMesesObra: null,
-      plazoDiasObra: null,
-      plazoMesesInterventoria: null,
-      plazoDiasInterventoria: null,
-      coordinacionResponsableCodigo: ''
+      
     });
   }
 
@@ -996,6 +998,14 @@ export class FormularioProyectosComponent implements OnInit {
     if (tecla === 57) { return true; } // 9
     const patron = /1/; // ver nota
     const te = String.fromCharCode(tecla);
+    return patron.test(te);
+  }
+
+  numberUbicacion(e: { keyCode: any; }) {
+    const tecla = e.keyCode;
+    const patron = /[\d{1,7}+(\.\d{1,8})]/; // ver nota
+    const te = String.fromCharCode(tecla);
+    console.log( patron.test(te) );
     return patron.test(te);
   }
 
