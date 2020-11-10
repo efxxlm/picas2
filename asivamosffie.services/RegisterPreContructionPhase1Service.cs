@@ -32,64 +32,71 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListContratacion()
         {
             List<dynamic> listaContrats = new List<dynamic>();
-
-            List<Contrato> listContratos = await _context.Contrato
-                .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
-                "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
-                "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
-                "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
-                "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
-                "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-                "AND ctr.TipoSolicitudCodigo = 1" +     //Solo contratos Tipo Obra
-                "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
-                "OR  c.EstadoVerificacionCodigo = 2" +  //En proceso de aprobación de requisitos técnicos
-                "OR  c.EstadoVerificacionCodigo = 3" +   //Con requisitos técnicos aprobados
-                "OR  c.EstadoVerificacionCodigo = 10")  //Enviado al interventor -- Enviado por el supervisor
-
-                .Include(r => r.ContratoPoliza)
-                .Include(r => r.Contratacion)
-                   .ThenInclude(r => r.ContratacionProyecto)
-                       .ThenInclude(r => r.Proyecto)
-                            .ThenInclude(r => r.ContratoPerfil)
-                .Include(r => r.Contratacion)
-                  .ThenInclude(r => r.DisponibilidadPresupuestal)
-               .ToListAsync();
-
-            foreach (var c in listContratos)
+            try
             {
-                int CantidadProyectosConPerfilesAprobados = 0;
-                int CantidadProyectosConPerfilesPendientes = 0;
-                bool RegistroCompleto = false;
-                bool EstaDevuelto = false;
-                if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
-                    EstaDevuelto = true;
-                foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
-                {
-                    if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
-                        CantidadProyectosConPerfilesPendientes++;
-                    else if (ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado) == ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado && r.RegistroCompleto))
-                        CantidadProyectosConPerfilesAprobados++;
-                    else
-                        CantidadProyectosConPerfilesPendientes++;
-                }
-                if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
-                    RegistroCompleto = true;
-                listaContrats.Add(new
-                {
-                    c.Contratacion.NumeroSolicitud,
-                    c.ContratoId,
-                    FechaAprobacion = ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
-                    c.Contratacion.TipoSolicitudCodigo,
-                    c.NumeroContrato,
-                    CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
-                    CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
-                    CantidadProyectosConPerfilesPendientes,
-                    EstadoCodigo = c.EstadoVerificacionCodigo,
-                    EstaDevuelto,
-                    RegistroCompleto
-                });
-            }
+                List<Contrato> listContratos = await _context.Contrato
+              .FromSqlRaw("SELECT c.* FROM dbo.Contrato AS c " +
+              "INNER JOIN dbo.Contratacion AS ctr ON c.ContratacionId = ctr.ContratacionId " +
+              "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
+              "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
+              "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
+              "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
+              "AND ctr.TipoSolicitudCodigo = 1" +     //Solo contratos Tipo Obra
+              "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
+              "OR  c.EstadoVerificacionCodigo = 2" +  //En proceso de aprobación de requisitos técnicos
+              "OR  c.EstadoVerificacionCodigo = 3" +  //Con requisitos técnicos aprobados
+              "OR  c.EstadoVerificacionCodigo = 10")  //Enviado al interventor -- Enviado por el supervisor
 
+              .Include(r => r.ContratoPoliza)
+              .Include(r => r.Contratacion)
+                 .ThenInclude(r => r.ContratacionProyecto)
+                     .ThenInclude(r => r.Proyecto)
+                          .ThenInclude(r => r.ContratoPerfil)
+              .Include(r => r.Contratacion)
+                .ThenInclude(r => r.DisponibilidadPresupuestal)
+             .ToListAsync();
+
+                foreach (var c in listContratos)
+                {
+                    int CantidadProyectosConPerfilesAprobados = 0;
+                    int CantidadProyectosConPerfilesPendientes = 0;
+                    bool RegistroCompleto = false;
+                    bool EstaDevuelto = false;
+                    if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
+                        EstaDevuelto = true;
+                    foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
+                    {
+                        if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
+                            CantidadProyectosConPerfilesPendientes++;
+                        else if (ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado) == ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado && r.RegistroCompleto))
+                            CantidadProyectosConPerfilesAprobados++;
+                        else
+                            CantidadProyectosConPerfilesPendientes++;
+                    }
+                    if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
+                        RegistroCompleto = true;
+                    listaContrats.Add(new
+                    {
+                        c.Contratacion.NumeroSolicitud,
+                        c.ContratoId,
+                        FechaAprobacion = c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue ? ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"): " ",
+                        c.Contratacion.TipoSolicitudCodigo,
+                        c.NumeroContrato,
+                        CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
+                        CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
+                        CantidadProyectosConPerfilesPendientes,
+                        EstadoCodigo = c.EstadoVerificacionCodigo,
+                        EstaDevuelto,
+                        RegistroCompleto
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+           
             return listaContrats;
         }
 

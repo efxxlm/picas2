@@ -125,6 +125,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -363,8 +364,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.CofinanciacionAportanteMunicipio)
                     .HasForeignKey(d => d.MunicipioId)
                     .HasConstraintName("fk_cofinanciacionMunicipio");
-
-       
+ 
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
