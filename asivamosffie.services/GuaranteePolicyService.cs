@@ -61,7 +61,7 @@ namespace asivamosffie.services
                 //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
                 contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == pContratoId
                 //&&(bool)r.Estado==true&&r.Eliminado==0
-                ).FirstOrDefault();
+                ).OrderByDescending(r => r.ContratoPolizaId).FirstOrDefault();
 
             }
 
@@ -85,7 +85,8 @@ namespace asivamosffie.services
                 msjNotificacion.NombreAseguradora = contratoPoliza.NombreAseguradora;
                 msjNotificacion.NumeroPoliza = contratoPoliza.NumeroPoliza;
                 //msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy");
-                msjNotificacion.Observaciones = contratoPoliza.Observaciones;
+                //msjNotificacion.Observaciones = contratoPoliza.Observaciones;
+                msjNotificacion.Observaciones = contratoPoliza.ObservacionesRevisionGeneral;
                 msjNotificacion.FechaAprobacion = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString();
 
                 //PolizaObservacion polizaObservacion;
@@ -1022,7 +1023,8 @@ namespace asivamosffie.services
                 contrato = _context.Contrato.Where(r => r.ContratoId == pIdContrato).FirstOrDefault();
 
                 //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-                contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
+                contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == contrato.ContratoId)
+                    .OrderByDescending(r => r.ContratoPolizaId).FirstOrDefault();
 
                 if (contratoPoliza != null)
                 {
