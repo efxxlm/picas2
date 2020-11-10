@@ -300,12 +300,16 @@ namespace asivamosffie.services
                     .Include(r => r.ContratoPerfil)
                     .FirstOrDefault();
 
-                if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
-                {
-                    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-                    contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                    contratoOld.FechaModificacion = DateTime.Now;
-                }
+                contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                contratoOld.FechaModificacion = DateTime.Now;
+
+                //if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
+                //{
+                //    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                //    contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
+                //    contratoOld.FechaModificacion = DateTime.Now;
+                //}
                 _context.SaveChanges();
                 return
                     new Respuesta
