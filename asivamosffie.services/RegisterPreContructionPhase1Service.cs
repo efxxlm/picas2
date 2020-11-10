@@ -58,25 +58,26 @@ namespace asivamosffie.services
 
                 foreach (var c in listContratos)
                 {
-                    int CantidadProyectosConPerfilesAprobados = 0;
-                    int CantidadProyectosConPerfilesPendientes = 0;
-                    bool RegistroCompleto = false;
-                    bool EstaDevuelto = false;
-                    if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
-                        EstaDevuelto = true;
-                    foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
-                    {
-                        if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
-                            CantidadProyectosConPerfilesPendientes++;
-                        else if (ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado) == ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado && r.RegistroCompleto))
-                            CantidadProyectosConPerfilesAprobados++;
-                        else
-                            CantidadProyectosConPerfilesPendientes++;
-                    }
-                    if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
-                        RegistroCompleto = true;
                     if (c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue)
                     {
+                        int CantidadProyectosConPerfilesAprobados = 0;
+                        int CantidadProyectosConPerfilesPendientes = 0;
+                        bool RegistroCompleto = false;
+                        bool EstaDevuelto = false;
+                        if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
+                            EstaDevuelto = true;
+                        foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
+                        {
+                            if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
+                                CantidadProyectosConPerfilesPendientes++;
+                            else if (ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado) == ContratacionProyecto.Proyecto.ContratoPerfil.Count(r => !(bool)r.Eliminado && r.RegistroCompleto))
+                                CantidadProyectosConPerfilesAprobados++;
+                            else
+                                CantidadProyectosConPerfilesPendientes++;
+                        }
+                        if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
+                            RegistroCompleto = true;
+
                         listaContrats.Add(new
                         {
                             c.Contratacion.NumeroSolicitud,

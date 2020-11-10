@@ -54,67 +54,68 @@ namespace asivamosffie.services
 
             foreach (var c in listContratos)
             {
-                bool TieneObservacionSupervisor = false;
-                int CantidadProyectosConPerfilesAprobados = 0;
-                int CantidadProyectosConPerfilesPendientes = 0;
-                bool RegistroCompleto = false;
-                bool EstaDevuelto = false;
-     
-                if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
-                    EstaDevuelto = true;
-                foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
+                if (c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue)
                 {
-                 
-                    bool RegistroCompletoObservaciones = false;
+                    bool TieneObservacionSupervisor = false;
+                    int CantidadProyectosConPerfilesAprobados = 0;
+                    int CantidadProyectosConPerfilesPendientes = 0;
+                    bool RegistroCompleto = false;
+                    bool EstaDevuelto = false;
 
-                    foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado))
+                    if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
+                        EstaDevuelto = true;
+                    foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                     {
-                        if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).Count() == 0)
-                            RegistroCompletoObservaciones = false;
-                        else if ((ContratoPerfil.TieneObservacionSupervisor == null)
-                           || (ContratoPerfil.TieneObservacionSupervisor.HasValue
-                           && (bool)ContratoPerfil.TieneObservacionSupervisor
-                           && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
-                           && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor)))
-                            RegistroCompletoObservaciones = false;
 
-                        if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor)
+                        bool RegistroCompletoObservaciones = false;
+
+                        foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                         {
-                            TieneObservacionSupervisor = true;
+                            if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).Count() == 0)
+                                RegistroCompletoObservaciones = false;
+                            else if ((ContratoPerfil.TieneObservacionSupervisor == null)
+                               || (ContratoPerfil.TieneObservacionSupervisor.HasValue
+                               && (bool)ContratoPerfil.TieneObservacionSupervisor
+                               && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
+                               && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor)))
+                                RegistroCompletoObservaciones = false;
+
+                            if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor)
+                            {
+                                TieneObservacionSupervisor = true;
+                            }
+
+                            if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
+                                RegistroCompleto = false;
+                            else if ((ContratoPerfil.TieneObservacionSupervisor == null)
+                                 || (ContratoPerfil.TieneObservacionSupervisor.HasValue
+                                 && (bool)ContratoPerfil.TieneObservacionSupervisor
+                                 && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
+                                 && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor)))
+                                RegistroCompleto = false;
                         }
-
-                        if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
-                            RegistroCompleto = false;
-                        else if ((ContratoPerfil.TieneObservacionSupervisor == null)
-                             || (ContratoPerfil.TieneObservacionSupervisor.HasValue
-                             && (bool)ContratoPerfil.TieneObservacionSupervisor
-                             && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
-                             && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor)))
-                            RegistroCompleto = false;
-                    }
-                    if (RegistroCompletoObservaciones)
-                        CantidadProyectosConPerfilesAprobados++;
-                    else
-                        CantidadProyectosConPerfilesPendientes++;
+                        if (RegistroCompletoObservaciones)
+                            CantidadProyectosConPerfilesAprobados++;
+                        else
+                            CantidadProyectosConPerfilesPendientes++;
+                    } 
+                    if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
+                        RegistroCompleto = true;
+                    listaContrats.Add(new
+                    {
+                        c.ContratoId,
+                        FechaAprobacion = ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
+                        c.Contratacion.TipoSolicitudCodigo,
+                        c.NumeroContrato,
+                        CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
+                        CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
+                        CantidadProyectosConPerfilesPendientes,
+                        EstadoCodigo = c.EstadoVerificacionCodigo,
+                        EstaDevuelto,
+                        RegistroCompleto,
+                        TieneObservacionSupervisor
+                    });
                 }
-
-
-                if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
-                    RegistroCompleto = true;
-                listaContrats.Add(new
-                {
-                    c.ContratoId,
-                    FechaAprobacion = ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
-                    c.Contratacion.TipoSolicitudCodigo,
-                    c.NumeroContrato,
-                    CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
-                    CantidadProyectosRequisitosAprobados = CantidadProyectosConPerfilesAprobados,
-                    CantidadProyectosConPerfilesPendientes,
-                    EstadoCodigo = c.EstadoVerificacionCodigo,
-                    EstaDevuelto,
-                    RegistroCompleto,
-                    TieneObservacionSupervisor 
-                });
             }
 
             return listaContrats;
