@@ -361,8 +361,7 @@ namespace asivamosffie.services
             }
             return null;
         }
-
-
+         
         public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId)
         {
             List<GrillaActaInicio> lstActaInicio = new List<GrillaActaInicio>();
@@ -377,14 +376,14 @@ namespace asivamosffie.services
             //if (pPerfilId == (int)EnumeratorPerfil.Supervisor)
             //    lstContratos = lstContratos.Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToList();
 
-            List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).ToList();
+            List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_interventoria || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).ToList();
 
             foreach (var Contrato in lstContratos)
             {
                 lstActaInicio.Add(new GrillaActaInicio
                 {
                     ContratoId = Contrato.ContratoId,
-                    EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato).FirstOrDefault().Nombre : " ",
+                    EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa &&(r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_interventoria)).FirstOrDefault().Nombre : " ",
                     EstadoVerificacion = Contrato.EstadoVerificacionCodigo,
                     EstadoActaCodigo = Contrato.EstadoActa,
                     FechaAprobacionRequisitos = Contrato.FechaAprobacionRequisitos.HasValue ? ((DateTime)Contrato.FechaAprobacionRequisitos).ToString("dd-MMMM-yy") : "",
