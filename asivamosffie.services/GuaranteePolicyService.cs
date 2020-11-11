@@ -1311,7 +1311,7 @@ namespace asivamosffie.services
 
 
             //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-            List<Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Distinct().ToListAsync();
+            List<Contrato> ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado==false ).Distinct().ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
@@ -1435,13 +1435,13 @@ namespace asivamosffie.services
 
             if (pContratoId == 0)
             {
-                ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Distinct()
+                ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado==false).Distinct()
             .ToListAsync();
 
             }
             else
             {
-                ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado && r.ContratoId == pContratoId).Distinct()
+                ListContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado==false && r.ContratoId == pContratoId).Distinct()
           .ToListAsync();
 
             }     
