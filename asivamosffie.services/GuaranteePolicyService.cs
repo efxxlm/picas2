@@ -1470,9 +1470,10 @@ namespace asivamosffie.services
                     Dominio TipoDocumentoCodigoContratista;
                     string strTipoDocumentoContratista = string.Empty;
 
-                    Contratista contratista;
+                    Contratista contratista=null;
                     if (contratacion != null)
                     {
+                        if(contratacion.ContratistaId!=null)
                         contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
 
                         if (contratista != null)
