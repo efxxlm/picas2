@@ -69,7 +69,7 @@ namespace asivamosffie.services
                     EstadoCodigo = c.EstadoCodigo,
                     EstadoNombre = c.EstadoNombre,
                     Existeregistro = c.ExisteRegistro,
-
+                    c.EstaDevuelto,
                 });
             });
             return listaContrats;
@@ -95,6 +95,7 @@ namespace asivamosffie.services
                     EstadoCodigo = c.EstadoCodigo,
                     EstadoNombre = c.EstadoNombre,
                     Existeregistro = c.ExisteRegistro,
+                    c.EstaDevuelto,
 
                 });
             });
@@ -123,6 +124,7 @@ namespace asivamosffie.services
                     EstadoCodigo = c.EstadoCodigo,
                     EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                     Existeregistro = c.ExisteRegistro,
+                    c.EstaDevuelto,
 
                 });
             });
@@ -1660,8 +1662,7 @@ namespace asivamosffie.services
 
             return construccionObservacion;
         }
-
- 
+         
         public async Task<Respuesta> CreateEditObservacion(ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
         {
             return pTipoObservacion switch
@@ -1795,7 +1796,7 @@ namespace asivamosffie.services
                 }
 
                 contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
-
+             
                 if (contratoConstruccion.RegistroCompletoVerificacion.Value)
                 {
                     Contrato contrato = _context.Contrato.Find(contratoConstruccion.ContratoId);

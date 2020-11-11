@@ -15,5 +15,6 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
         public string EstadoNombre { get; set; }
         public bool? ExisteRegistro { get; set; }
+        public bool? EstaDevuelto { get; set; }
     }
 }
