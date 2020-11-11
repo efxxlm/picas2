@@ -1,0 +1,149 @@
+.contenidoContrato{
+    width: 100%;
+    margin-top: 20px;
+    color: var(--mainColor);
+    font-weight: 400;
+}
+.info-sub-title, .mat-typography .info-sub-title {
+    margin-top: .8em;
+    margin-bottom: 1.2em;
+    color: var(--mainColor);
+    font-size: 16px;
+}
+.info-sub-title span, .mat-typography .info-sub-title span {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+.header-card--text.sub-text {
+    margin-top: 1em!important;
+    margin-left: 0;
+    padding: 0;
+}
+.grissub{
+    background-color: var(--fontColor) !important;
+}
+.cont1{
+    text-align: right;
+}
+.cont3{
+    text-align: left;
+}
+.cont1, .cont2, .cont3{
+    width: 33.33%;
+    float: left;
+}
+.shipping-card {
+    min-width: 120px;
+    margin: 20px auto;
+}
+.mainGris{
+    border: 1px solid var(--fontColor) !important;
+}
+.textoGris{
+    color: var(--fontColor) !important;
+}
+.mtop{
+    margin-top: 20px;
+}
+.mtopmini{
+    margin-top: 15px !important;
+}
+.supportElement{
+    padding: .2em;
+    border-top-width: 1px;
+    border-top-style: solid;
+}
+.botones{
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 3em;
+    margin-top: 2em;
+}
+.botones button{
+    line-height: 1.2;
+    min-height: 33px;
+}
+.full-width {
+    width: 100%;
+  }
+  
+
+  .row {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .col {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .col:last-child {
+    margin-right: 0;
+  }
+  
+  .btn-add {
+    width: 2em;
+  }
+  
+  .mt1 {
+    margin-top: 1em;
+  }
+  
+  .w-2em {
+    width: 2em;
+  }
+  
+  .w-8em {
+    width: 8em;
+  }
+  
+  .input-string {
+    font-weight: 600;
+    color: #174193;;
+    color: var(--mainColor);
+  }
+  .borderBlack{
+    border-bottom: 1px solid var(--fontColor) !important;
+  }
+  .noDecorated{
+    border: solid 0px var(--mainColor);
+    padding: 0em 0em 0em;
+  }
+  .auxMarg{
+    margin-top: 5%;
+  }
+  .botones{
+    justify-content: center;
+    margin-bottom: 3em;
+    margin-top: 2em;
+}
+.botones button{
+    line-height: 1.2;
+    min-height: 33px;
+}
+.botones .button-activated{
+    padding: 0 1.5em;
+    line-height: 2.2;
+    min-height: 33px;
+    background-color: var(--mainColor);
+    box-sizing: border-box;
+    position: relative;
+    color: #ffffff;
+    user-select: none;
+    outline: none;
+    border: none;
+    -webkit-tap-highlight-color: transparent;
+    display: inline-block;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: baseline;
+    text-align: center;
+    margin: 0;
+    min-width: 64px;
+    border-radius: 4px;
+    overflow: visible;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}

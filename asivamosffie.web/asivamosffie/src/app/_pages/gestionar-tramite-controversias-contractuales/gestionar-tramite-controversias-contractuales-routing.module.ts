@@ -9,6 +9,7 @@ import { RegistarReclamacionAseguradoraCcComponent } from './components/registar
 import { RegistrarNuevaActuacionReclamacionComponent } from './components/registrar-nueva-actuacion-reclamacion/registrar-nueva-actuacion-reclamacion.component';
 import { RegistrarNuevaActuacionTramNoTaiComponent } from './components/registrar-nueva-actuacion-tram-no-tai/registrar-nueva-actuacion-tram-no-tai.component';
 import { RegistrarNuevaActuacionTramiteComponent } from './components/registrar-nueva-actuacion-tramite/registrar-nueva-actuacion-tramite.component';
+import { RegistrarNuevaMesatrabajoActComponent } from './components/registrar-nueva-mesatrabajo-act/registrar-nueva-mesatrabajo-act.component';
 import { RegistrarNuevaMesatrabajoCcComponent } from './components/registrar-nueva-mesatrabajo-cc/registrar-nueva-mesatrabajo-cc.component';
 import { VerDetalleActuacionContrContrctComponent } from './components/ver-detalle-actuacion-contr-contrct/ver-detalle-actuacion-contr-contrct.component';
 import { VerDetalleActuacionNotaiComponent } from './components/ver-detalle-actuacion-notai/ver-detalle-actuacion-notai.component';
@@ -101,6 +102,10 @@ const routes: Routes = [
   {
     path: 'actualizarMesaTrabajo',
     component: ActualizarMesaDeTrabajoComponent
+  },
+  {
+    path: 'registrarNuevaMesaTrabajoAct',
+    component: RegistrarNuevaMesatrabajoActComponent
   }
 ];
 @NgModule({
