@@ -28,13 +28,13 @@
                 <strong>Valor de la solicitud:</strong>
                 {{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}
             </p>
-            <p  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
+            <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
                 <strong>Plazo:</strong>
                 {{detailavailabilityBudget?.plazo}}
             </p>
             <div>
-                <strong>Objeto:</strong>                                
-                <div [innerHtml]="detailavailabilityBudget?.objeto"></div> 
+                <strong>Objeto:</strong>
+                <div [innerHtml]="detailavailabilityBudget?.objeto"></div>
             </div>
             <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
                 <strong>Número comité técnico:</strong>
@@ -48,7 +48,7 @@
                 <strong>Tipo de modificación:</strong>
                 Adición y plazo
             </p>
-            <p  *ngIf="esModificacion">
+            <p *ngIf="esModificacion">
                 <strong>Valor después de la modificación:</strong>
                 $ 72.000.000
             </p>
@@ -60,10 +60,10 @@
                 <strong>Detalle de la modificación:</strong>
                 Se realiza adición de recursos para contrataciones complementarias
             </p>
-            
+
             <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
             &&detailavailabilityBudget?.tipoSolicitudEspecial=='Expensas'">
-                <h2 class="card-subTitle">Expensas</h2>                
+                <h2 class="card-subTitle">Expensas</h2>
                 <p>
                     <strong>¿Cuenta con carta de autorización de la ET?:</strong>
                     {{detailavailabilityBudget.cuentaCarta?"Si":"No"}}
@@ -95,7 +95,7 @@
             </div>
             <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
             &&detailavailabilityBudget?.tipoSolicitudEspecial!='Expensas'">
-                <h2 class="card-subTitle">Otros costos/Servicios</h2>                
+                <h2 class="card-subTitle">Otros costos/Servicios</h2>
                 <p>
                     <strong>Número de contrato:</strong>
                     {{detailavailabilityBudget.contratoNumero}}
@@ -106,15 +106,16 @@
                 </p>
                 <div>
                     <strong>Limitación especial:</strong>
-                    <div [innerHtml]="detailavailabilityBudget?.limitacion"></div> 
-                </div>                
+                    <div [innerHtml]="detailavailabilityBudget?.limitacion"></div>
+                </div>
             </div>
-            <div  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial && detailavailabilityBudget?.aportantes.length>0">
+            <div
+                *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial && detailavailabilityBudget?.aportantes.length>0">
                 <h2 class="card-subTitle">Aportantes</h2>
                 <div *ngFor="let aportante of detailavailabilityBudget?.aportantes; index as i">
                     <mat-card-title class="header-card--text sub-text">
                         Aportante {{i+1}}
-                    </mat-card-title>    
+                    </mat-card-title>
                     <p>
                         <strong>Tipo de aportante:</strong>
                         {{aportante.tipoAportante}}
@@ -131,10 +132,11 @@
                         <strong>Url con soporte:</strong>
                         {{detailavailabilityBudget?.urlConSoporte}}
                     </p>
-                    <mat-card-title class="header-card--text sub-text"  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
+                    <mat-card-title class="header-card--text sub-text"
+                        *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
                         Fuente
                     </mat-card-title>
-                    <div  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
+                    <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
                         <div *ngFor="let fuente of aportante.fuenteFinanciacion;index as ii">
                             <p>
                                 <strong>Fuente {{ii+1}}:</strong>
@@ -157,27 +159,25 @@
                                 {{fuente.estado_de_las_fuentes}}
                             </p>-->
                         </div>
-                    </div>                                        
+                    </div>
                 </div>
             </div>
         </mat-card-content>
     </mat-card>
 
     <mat-card class="shipping-card var-main-gris" *ngIf="detailavailabilityBudget?.observaciones">
-        <mat-card-header _ngcontent-jtp-c135="" class="mat-card-header header-card mlmenor">
-            <div class="mat-card-header-text">
-                <mat-card-title class="mat-card-title header-card--text"> 
-                    Observaciones
-                </mat-card-title>
-            </div>
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="mat-card-title header-card--text">
+                Observaciones
+            </mat-card-title>
         </mat-card-header>
-        <mat-card-content>            
-                <div [innerHtml]="detailavailabilityBudget?.observaciones"></div>
+        <mat-card-content>
+            <div [innerHtml]="detailavailabilityBudget?.observaciones"></div>
         </mat-card-content>
     </mat-card>
 
     <mat-accordion>
-        <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">        
+        <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
             <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of detailavailabilityBudget?.proyectos">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title">
@@ -204,17 +204,19 @@
 
                         <h2 class="card-subTitle">Aportantes</h2>
                         <div *ngFor="let apo of detailavailabilityBudget?.aportantes;index as i">
-                            <mat-card-title class="header-card--text sub-text textoGris">Aportante {{i}}</mat-card-title>
+                            <mat-card-title class="header-card--text sub-text textoGris">Aportante {{i}}
+                            </mat-card-title>
                             <p><strong>Tipo de aportante: </strong>{{apo.tipoAportante}}</p>
                             <p><strong>Nombre del aportante: </strong>{{apo.nombre}}</p>
                             <p><strong>Valor del aportante al proyecto: </strong>{{apo.valorAportanteAlProyecto}}</p>
-                        <mat-card-title class="header-card--text sub-text textoGris">Fuentes</mat-card-title>
-                        <mat-card-title class="header-card--text sub-text textoGris" *ngFor="let fuente of apo.fuentesFinanciacion;index as j">Fuente {{j}}</mat-card-title>
+                            <mat-card-title class="header-card--text sub-text textoGris">Fuentes</mat-card-title>
+                            <mat-card-title class="header-card--text sub-text textoGris"
+                                *ngFor="let fuente of apo.fuentesFinanciacion;index as j">Fuente {{j}}</mat-card-title>
                             <p><strong>Fuente: </strong>recursos propios</p>
                             <p><strong>Saldo actual de la fuente: </strong>$ 180.000.000</p>
                             <p><strong>Valor solicitado de la fuente: </strong>$ 70.000.000</p>
                             <p><strong>Saldo actual de la fuente: </strong>$ 110.000.000</p>
-                    </div>
+                        </div>
 
                     </mat-card-content>
                 </mat-card>
@@ -305,8 +307,7 @@
             </mat-accordion>
 
         </mat-expansion-panel>
-        <mat-expansion-panel class="expansion-style" 
-            *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional ||
+        <mat-expansion-panel class="expansion-style" *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional ||
             detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
@@ -314,9 +315,14 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-proyectos-asociados *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional" [proyectos]="detailavailabilityBudget?.proyectos" [codigo]="detailavailabilityBudget?.numeroSolicitud"></app-tabla-proyectos-asociados>
-            <app-tabla-gestionar-validacion-administrativo [proyectos]="detailavailabilityBudget?.proyectos" [codigo]="detailavailabilityBudget?.numeroSolicitud"
-            *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo"></app-tabla-gestionar-validacion-administrativo>
+            <app-tabla-proyectos-asociados
+                *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional"
+                [proyectos]="detailavailabilityBudget?.proyectos" [codigo]="detailavailabilityBudget?.numeroSolicitud">
+            </app-tabla-proyectos-asociados>
+            <app-tabla-gestionar-validacion-administrativo [proyectos]="detailavailabilityBudget?.proyectos"
+                [codigo]="detailavailabilityBudget?.numeroSolicitud"
+                *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo">
+            </app-tabla-gestionar-validacion-administrativo>
         </mat-expansion-panel>
     </mat-accordion>
 
