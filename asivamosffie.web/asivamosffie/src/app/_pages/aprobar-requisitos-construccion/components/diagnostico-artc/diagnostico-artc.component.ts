@@ -49,17 +49,16 @@ export class DiagnosticoArtcComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.contratacion){
       this.ngOnInit();
-      console.log("c", this.construccion)
-    }
-  }
+      console.log("c", this.construccion);
+    };
+  };
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
     if (this.construccion) {
-      console.log( this.construccion );
-      this.addressForm.get('tieneObservaciones').setValue(this.construccion.tieneObservacionesDiagnosticoApoyo)
-      this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.observaciones : null)
-      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null)
+      this.addressForm.get('tieneObservaciones') // Por integrar
+      this.addressForm.get('observaciones') //Por integrar
+      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null);
 
       this.validarSemaforo();
     };
@@ -85,16 +84,17 @@ export class DiagnosticoArtcComponent implements OnInit, OnChanges {
       }
     );
   };
+
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
+    };
+  };
 
   textoLimpio(texto: string) {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
-  }
+  };
   
   openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -114,7 +114,7 @@ export class DiagnosticoArtcComponent implements OnInit, OnChanges {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
           contratoConstruccionId: this.contratoConstruccionId,
           tipoObservacionConstruccion: TiposObservacionConstruccion.Diagnostico,
-          esSupervision: false,
+          esSupervision: true,
           esActa: false,
           observaciones: this.addressForm.value.observaciones,
 

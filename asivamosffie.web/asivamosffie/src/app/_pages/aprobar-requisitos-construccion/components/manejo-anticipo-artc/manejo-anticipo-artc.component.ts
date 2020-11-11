@@ -50,8 +50,8 @@ export class ManejoAnticipoArtcComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     if (this.contratacion) {
 
-      this.addressForm.get('tieneObservaciones').setValue(this.contratacion.tieneObservacionesManejoAnticipoApoyo)
-      this.addressForm.get('observaciones').setValue(this.contratacion.observacionManejoAnticipo ? this.contratacion.observacionManejoAnticipo.observaciones : null)
+      this.addressForm.get('tieneObservaciones') //Por integrar
+      this.addressForm.get('observaciones') //Por integrar
       this.addressForm.get('construccionObservacionId').setValue(this.contratacion.observacionManejoAnticipo ? this.contratacion.observacionManejoAnticipo.construccionObservacionId : null)
 
       this.validarSemaforo();
@@ -73,13 +73,13 @@ export class ManejoAnticipoArtcComponent implements OnInit, OnChanges {
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
-    }
-  }
+    };
+  };
 
   textoLimpio(texto: string) {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
-  }
+  };
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
@@ -99,7 +99,7 @@ export class ManejoAnticipoArtcComponent implements OnInit, OnChanges {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
           contratoConstruccionId: this.contratoConstruccionId,
           tipoObservacionConstruccion: TiposObservacionConstruccion.ManejoAnticipo,
-          esSupervision: false,
+          esSupervision: true,
           esActa: false,
           observaciones: this.addressForm.value.observaciones,
 

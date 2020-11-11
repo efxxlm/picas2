@@ -1,12 +1,12 @@
 <div align="left" *ngIf="construccion">
     <mat-card class="border">
         <mat-card-content>
-            <p><b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b>: {{ construccion.esInformeDiagnostico === true ? 'Si' : 'No' }}</p>
-            <p><b>Url con soporte</b>: {{ construccion.rutaInforme }}</p>
+            <p style="margin-left: 2em;"><b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b>: {{ construccion.esInformeDiagnostico === true ? 'Si' : 'No' }}</p>
+            <p style="margin-left: 2em;"><b>Url con soporte</b>: {{ construccion.rutaInforme }}</p>
         </mat-card-content>
     </mat-card>
 </div>
-<div align="left" *ngIf="construccion">
+<div align="left" *ngIf="construccion" class="mt-3em">
     <mat-card class="border">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
@@ -14,11 +14,11 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <p><b>a. Costo directo</b>: {{ construccion.costoDirecto | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            <p><b>b. A (administracion)</b>: {{ construccion.administracion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            <p><b>c. I (Imprevistos)</b>: {{ construccion.imprevistos | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            <p><b>d. U (Utilidad)</b>: {{ construccion.utilidad | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            <p><b>Valor total de la fase 2 - Construcción</b>: {{ construccion.valorTotalFaseConstruccion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p style="margin-left: 2em;"><b>a. Costo directo</b>: {{ construccion.costoDirecto | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p style="margin-left: 2em;"><b>b. A (administracion)</b>: {{ construccion.administracion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p style="margin-left: 2em;"><b>c. I (Imprevistos)</b>: {{ construccion.imprevistos | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p style="margin-left: 2em;"><b>d. U (Utilidad)</b>: {{ construccion.utilidad | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p style="margin-left: 2em;"><b>Valor total de la fase 2 - Construcción</b>: {{ construccion.valorTotalFaseConstruccion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
         </mat-card-content>
     </mat-card>
 </div>
@@ -32,24 +32,24 @@
         </mat-card-content>
     </mat-card>
 </div>
-<div align="center">
-    <mat-card class="border mt-1em">
+<div align="center" class="mt-3em">
+    <mat-card class="border">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
                Verificación del apoyo a la supervisión
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>08/08/2020</b></p>
-            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000</p>
+            <p style="margin-left: 2em;"><b>08/08/2020</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <p style="margin-left: 2em;">El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000</p>
         </mat-card-content>
     </mat-card>
 </div>
 <div align="center" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarDiagnostico()">
-        <div class="row" align="center">
-            <div class="col-md-8">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
                 <div class="row">
                     <div class="pr-1">
                         <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones al diagnóstico?</label>
@@ -57,7 +57,7 @@
                     <div class="col">
                         <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
                             <mat-radio-button [value]="true">Sí</mat-radio-button>
-                            <mat-radio-button [value]="false">No</mat-radio-button>
+                            <mat-radio-button [value]="false">No *</mat-radio-button>
                         </mat-radio-group>
                     </div>
                 </div>

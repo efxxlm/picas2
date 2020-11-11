@@ -67,6 +67,7 @@ export class PlanesProgramasArtcComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.planesProgramas)
       this.getDataPlanesProgramas();
+      console.log( this.planesProgramas );
   }
 
   ngOnInit(): void {
@@ -192,8 +193,8 @@ export class PlanesProgramasArtcComponent implements OnInit, OnChanges {
       }
     );
 
-    this.addressForm.get('tieneObservaciones').setValue(this.planesProgramas.tieneObservacionesPlanesProgramasApoyo)
-    this.addressForm.get('observaciones').setValue(this.planesProgramas.observacionPlanesProgramas ? this.planesProgramas.observacionPlanesProgramas.observaciones : null)
+    this.addressForm.get('tieneObservaciones') //Por integrar
+    this.addressForm.get('observaciones') //Por integrar
     this.addressForm.get('construccionObservacionId').setValue(this.planesProgramas.observacionPlanesProgramas ? this.planesProgramas.observacionPlanesProgramas.construccionObservacionId : null)
 
 
@@ -257,7 +258,7 @@ export class PlanesProgramasArtcComponent implements OnInit, OnChanges {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
           contratoConstruccionId: this.contratoConstruccionId,
           tipoObservacionConstruccion: TiposObservacionConstruccion.PlanesProgramas,
-          esSupervision: false,
+          esSupervision: true,
           esActa: false,
           observaciones: this.addressForm.value.observaciones,
 

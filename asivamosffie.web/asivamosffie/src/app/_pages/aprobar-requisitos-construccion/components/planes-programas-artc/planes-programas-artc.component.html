@@ -8,21 +8,29 @@
         <ng-container matColumnDef="recibioRequisito">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿Se recibio el requisito? </th>
             <td mat-cell *matCellDef="let element" align="center">
-                {{element.recibioRequisito === true ? 'Si' : 'No'}}
+                <section *ngIf="!( ( element.id === 11 ) || ( element.id === 12 ) || ( element.id === 13 ) )">
+                    <p *ngIf="element.recibioRequisito === true"> Si </p>
+                    <p *ngIf="element.recibioRequisito === false"> No </p>
+                </section>
+                <section *ngIf="( element.id === 11 ) || ( element.id === 12 ) || ( element.id === 13 )">
+                    <p *ngIf="element.recibioRequisito === 1"> No </p>
+                    <p *ngIf="element.recibioRequisito === 2"> Si </p>
+                    <p *ngIf="element.recibioRequisito === 3"> No se requiere </p>
+                </section>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaRadicado">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de radicado </th>
             <td mat-cell *matCellDef="let element" align="center">
-                {{element.fechaRadicado}}
+                {{ element.fechaRadicado | date: 'dd/MM/yyyy' }}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaAprobacion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación </th>
             <td mat-cell *matCellDef="let element" align="center">
-                {{element.fechaAprobacion}}
+                {{ element.fechaAprobacion | date: 'dd/MM/yyyy' }}
             </td>
         </ng-container>
 
@@ -30,7 +38,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> ¿Se tienen observaciones frente al
                 requisito? </th>
             <td mat-cell *matCellDef="let element" align="center">
-                {{element.requiereObservacion}}
+                {{ element.requiereObservacion === true ? 'Si' : 'No' }}
             </td>
         </ng-container>
 
@@ -51,29 +59,29 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
-<section class="mt-2em">
+<section class="mt-2em" style="margin-left: 2em;" *ngIf="urlSoporte !== undefined">
     <div align="left">
-        <p><b>URL con soporte</b>: https://drive.google.com/drive/PlanesyProgramas123</p>
+        <p><b>URL con soporte</b>: {{ urlSoporte }} </p>
     </div>
 </section>
-<div align="center" class="mt-2em">
-    <mat-card class="border mt-1em">
+<div align="center" class="mt-3em">
+    <mat-card class="border">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
                Verificación del apoyo a la supervisión
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>08/08/2020</b></p>
-            <p><b>¿Tiene observaciones a los planes y programas?:</b> Sí</p>
-            <p>En el Item ¿Cuenta con plan de manejo ambiental aprobado? la fecha es incorrecta verifique y ajuste</p>
+            <p style="margin-left: 2em;"><b>08/08/2020</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones a los planes y programas?:</b> Sí</p>
+            <p style="margin-left: 2em;">En el Item ¿Cuenta con plan de manejo ambiental aprobado? la fecha es incorrecta verifique y ajuste</p>
         </mat-card-content>
     </mat-card>
 </div>
 <div align="center" class="mt-2em" *ngIf="this.observacionesCompleted==false"> 
     <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarPlanes()">
-        <div class="row" align="center">
-            <div class="col-md-8">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
                 <div class="row">
                     <div class="pr-1">
                         <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones a los planes y programas?</label>
