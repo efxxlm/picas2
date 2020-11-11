@@ -55,7 +55,6 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
       this.cargarDataParaInsercion(data);
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
-      this.fechaActaFase1Prc = data.fechaActaInicioFase1;
       this.fechaTermPrevista = data.fechaTerminacion;
       this.diasFase1 = data.plazoFase1PreDias;
       this.mesesFase1 = data.plazoFase1PreMeses;
@@ -84,7 +83,8 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
     this.objeto = data.objeto;
     this.valorIni = data.valor;
-    this.nitContratistaInterventoria = data.contratista.numeroIdentificacion;
-    this.nomContratista = data.contratista.nombre;
+    this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
+    this.nomContratista = data.contratacion.contratista.nombre;
+    this.fechaActaFase1Prc = data.fechaActaInicioFase1;
   }
 }

@@ -15,7 +15,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
 
   @Input() contratoId;
   dataElements: any;
-  tieneObservacionesBool: any;
+  tieneObservacionesBool: boolean;
   observacionesUltimas: any;
   contratoObservacionId: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) { }
@@ -59,18 +59,14 @@ export class FormularioTieneObservacionesComponent implements OnInit {
     this.service.GetListContratoObservacionByContratoId(id).subscribe(data=>{
       this.dataElements = data;
       for(let i=0; i<this.dataElements.length;i++){ 
-        this.tieneObservacionesBool = this.dataElements[i].esActaFase2;
+        this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
         this.observacionesUltimas = this.dataElements[i].observaciones;
         this.contratoObservacionId = this.dataElements[i].contratoObservacionId;
-        if(localStorage.getItem("editable")=="true"){
-          this.addressForm.get('tieneObservaciones').setValue(this.dataElements[i].esActaFase2);
-          this.addressForm.get('observaciones').setValue(this.dataElements[i].observaciones);
-        }
       }
-      /*if(localStorage.getItem("editable")=="true"){
+      if(localStorage.getItem("editable")=="true"){
         this.addressForm.get('tieneObservaciones').setValue(this.tieneObservacionesBool);
         this.addressForm.get('observaciones').setValue(this.observacionesUltimas);
-      }*/
+      }
     });
   }
   generarActaSuscrita(){
