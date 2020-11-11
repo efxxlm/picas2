@@ -1460,7 +1460,25 @@ namespace asivamosffie.services
             {
                 try
                 {
-                    ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                    ContratoPoliza contratoPoliza=null;
+                    contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
+
+                    Dominio TipoSolicitudCodigoContratoPoliza=null;
+                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
+                    string strFechaFirmaContrato = string.Empty;
+
+                    if (contratoPoliza != null)
+                    {
+                        if (contratoPoliza.TipoSolicitudCodigo != null)
+                        {
+
+                            if (TipoSolicitudCodigoContratoPoliza != null)
+                                strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                        }
+                    }
+                    strFechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
+
+                   //ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     Contratacion contratacion = null;
                     contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratacionId);
 
@@ -1539,7 +1557,13 @@ namespace asivamosffie.services
                         DescripcionModificacion = "resumen", // resumen   TEMPORAL REV
 
                         //TipoModificacion = TipoModificacionCodigoContratoPoliza.Nombre
-                        TipoModificacion = "Tipo modificacion"
+                        TipoModificacion = "Tipo modificacion",
+
+                        TipoSolicitud = strTipoSolicitudCodigoContratoPoliza,
+
+                        FechaFirmaContrato = strFechaFirmaContrato,
+
+
 
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
                         //EstadoRegistro { get; set; }

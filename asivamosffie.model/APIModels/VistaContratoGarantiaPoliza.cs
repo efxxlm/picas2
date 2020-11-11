@@ -35,7 +35,6 @@ namespace asivamosffie.model.APIModels
         public string? DescripcionModificacion { get; set; }
 
         public string? TipoModificacion { get; set; }
-
-
+        public string? FechaFirmaContrato { get; set; }
     }
 }
