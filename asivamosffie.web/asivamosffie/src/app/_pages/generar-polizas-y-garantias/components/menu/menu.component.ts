@@ -13,14 +13,5 @@ export class MenuComponent implements OnInit {
   constructor(private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
-    this.loadServicePrueba();
-  }
-  loadServicePrueba(){
-    this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe(data=>{
-      this.loadTableData(data);
-    });
-  }
-  loadTableData(data){
-    this.dataTable = data;
   }
 }
