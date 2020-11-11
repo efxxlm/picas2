@@ -73,7 +73,7 @@ export class FormGestionarFuentesComponent implements OnInit {
       if(esEdicion)
       {
         let fuentesarray=this.fuentes;  
-        fuentesarray.clear();
+        fuentesarray.clear(); 
 
         lista.forEach(element => {
           if(element.gestionFuenteFinanciacionID>0)//es edición
@@ -109,7 +109,8 @@ export class FormGestionarFuentesComponent implements OnInit {
     if(cont>1)
     {
      this.openDialog("","<b>Ya seleccionaste esta fuente de financiación</b>"); 
-     fuente.controls.fuentecampo.clear();
+     console.log(fuente);
+     fuente.get("fuentecampo").set("");
     }
     else
     {
@@ -153,7 +154,49 @@ export class FormGestionarFuentesComponent implements OnInit {
   }
 
   borrarArray(borrarForm: any, i: number) {
-    borrarForm.removeAt(i);
+    console.log(borrarForm);
+    this.openDialogSiNo("",'<b>¿Está seguro de eliminar este registro?</b>',i,borrarForm);
+  }
+
+
+  openDialogSiNo(modalTitle: string, modalText: string,id:number,borrarForm:any) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        if(borrarForm.value[id].gestionid>0)
+        {
+          this.disponibilidadPresupuestalService.DeleteFinancialFundingGestion(borrarForm.value[id].gestionid).subscribe(
+            response => {
+              borrarForm.removeAt(id);
+              this.openDialog('', `<b>La información ha sido eliminada correctamente.</b>`);
+            },
+            error => {
+              console.log(<any>error);
+              let mensaje: string;
+                if (error.error.message){
+                  mensaje = error.error.message;
+                }else {
+                  mensaje = error.message;
+                }
+                this.openDialog('Error', mensaje);
+                
+              },
+            () =>{
+              //else
+            }); 
+        }
+        else{
+          borrarForm.removeAt(id);
+          this.openDialog('', `<b>La información ha sido eliminada correctamente.</b>`);
+        }
+        
+      }           
+    });
   }
 
   agregaFuente() {

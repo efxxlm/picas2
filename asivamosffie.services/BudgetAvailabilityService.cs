@@ -784,6 +784,8 @@ namespace asivamosffie.services
                     limitacionEspecial = limespecial.Any() ? limespecial.FirstOrDefault().Contenido : "";
                     limitacionEspecial = limitacionEspecial.Replace(placeholders.Where(x => x.Codigo == ConstanCodigoVariablesPlaceHolders.DDP_LIMITACION_ESPECIAL).FirstOrDefault().Nombre
                         , limitacionEspecial);
+
+
                 }
                 else if (pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
                 {
@@ -893,9 +895,9 @@ namespace asivamosffie.services
                     case ConstanCodigoVariablesPlaceHolders.DDP_NUEVO_SALDO_FUENTE: pStrContenido = pStrContenido.Replace(place.Nombre, ""); break;
 
                     //drp
-                    case ConstanCodigoVariablesPlaceHolders.NUMEROCONTRATO: pStrContenido = pStrContenido.Replace(place.Nombre, contrato.NumeroContrato); break;
+                    case ConstanCodigoVariablesPlaceHolders.NUMEROCONTRATO: pStrContenido = pStrContenido.Replace(place.Nombre,contrato==null?"": contrato.NumeroContrato); break;
                     case ConstanCodigoVariablesPlaceHolders.DRP_NO: pStrContenido = pStrContenido.Replace(place.Nombre, pDisponibilidad.NumeroDrp); break;
-                    case ConstanCodigoVariablesPlaceHolders.FECHACONTRATO: pStrContenido = pStrContenido.Replace(place.Nombre, contrato.FechaFirmaContrato!=null?Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy"):""); break;
+                    case ConstanCodigoVariablesPlaceHolders.FECHACONTRATO: pStrContenido = pStrContenido.Replace(place.Nombre, contrato == null ? "" : contrato.FechaFirmaContrato!=null?Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy"):""); break;
                     case ConstanCodigoVariablesPlaceHolders.TABLAFUENTES:
                         pStrContenido = pStrContenido.Replace(place.Nombre, tablafuentes); break;
                     case ConstanCodigoVariablesPlaceHolders.TABLAUSOS:
@@ -910,7 +912,8 @@ namespace asivamosffie.services
             descripción: return disponibilidad por validacion pres
         impacto: CU 3.3.2*/
 
-        public async Task<Respuesta> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Respuesta> SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
+            , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
@@ -926,9 +929,14 @@ namespace asivamosffie.services
                 _context.DisponibilidadPresupuestalObservacion.Add(pDisponibilidadPresObservacion);
                 _context.SaveChanges();
                 //envio correo a tecnico
+                //////
+                
+                
                 var usuarioTecnico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario).FirstOrDefault();
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DDPDevolucion);
                 string template = TemplateRecoveryPassword.Contenido;
+                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud).
+                    Replace("_LinkF_", pDominioFront);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioTecnico.Usuario.Email, "SDP Devuelto por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
                 return
                 new Respuesta
@@ -957,7 +965,8 @@ namespace asivamosffie.services
         /*autor: jflorez
             descripción: rechaza disponibilidad por validacion pres
         impacto: CU 3.3.2*/
-        public async Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Respuesta> SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion pDisponibilidadPresObservacion
+            , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresObservacion.DisponibilidadPresupuestalId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
@@ -974,8 +983,10 @@ namespace asivamosffie.services
                 _context.SaveChanges();
                 //envio correo a técnico
                 var usuarioTecnico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario).FirstOrDefault();
-                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DDPRechazado);
                 string template = TemplateRecoveryPassword.Contenido;
+                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud).
+                    Replace("_LinkF_", pDominioFront);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioTecnico.Usuario.Email, "SDP rechazado por validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
                 return
                 new Respuesta
@@ -1004,7 +1015,8 @@ namespace asivamosffie.services
         /*autor: jflorez
             descripción: valida disponibilidad por validacion pres
         impacto: CU 3.3.2*/
-        public async Task<Respuesta> SetValidarValidacionDDP(int id, string usuariomod, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
+        public async Task<Respuesta> SetValidarValidacionDDP(int id, string usuariomod
+            , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Find(id);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
@@ -1022,7 +1034,8 @@ namespace asivamosffie.services
                 //envio correo a juridica
                 var usuarioJuridico = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Financiera).Include(y => y.Usuario).FirstOrDefault();
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.DisponibilidadPresupuestalGenerada);
-                string template = TemplateRecoveryPassword.Contenido.Replace("[NUMERODISPONIBILIDAD]",DisponibilidadCancelar.NumeroSolicitud);
+                string template = TemplateRecoveryPassword.Contenido.Replace("[NUMERODISPONIBILIDAD]",DisponibilidadCancelar.NumeroSolicitud).
+                    Replace("_LinkF_", pDominioFront);
                 bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioJuridico.Usuario.Email, "SDP con validación presupuestal", template, pSentender, pPassword, pMailServer, pMailPort);
                 return
                 new Respuesta

@@ -132,7 +132,7 @@ export class FormOtrosTemasComponent implements OnInit {
     this.technicalCommitteSessionService.deleteTemaCompromiso(compromiso.get('temaCompromisoId').value)
       .subscribe(respuesta => {
         if (respuesta.code == "200") {
-          this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+          this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
           this.compromisos.removeAt(i)
           this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
         }

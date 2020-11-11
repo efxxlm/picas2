@@ -573,7 +573,8 @@ namespace asivamosffie.services
                     ThenInclude(x => x.ProyectoAportante).
                         ThenInclude(x => x.Aportante).
                             ThenInclude(x => x.FuenteFinanciacion).ToList();
-                if(!disponibilidad.Any())//entonces es una disponivlidad espacial
+                if(_context.DisponibilidadPresupuestal.Where(x=>x.DisponibilidadPresupuestalId==disponibilidadPresupuestaId).
+                    FirstOrDefault().TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)//entonces es una disponivlidad espacial
                 {
                     var ddp = _context.DisponibilidadPresupuestal.Where(x => x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).
                         Include(x => x.Aportante).
@@ -640,13 +641,15 @@ namespace asivamosffie.services
                     }
                     valor = _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
                 }
+                var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
+                
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
                     GestionFuenteFinanciacionID= gestionid,
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
-                    Nuevo_saldo_de_la_fuente = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado),
-                    Saldo_actual_de_la_fuente = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado),
+                    Nuevo_saldo_de_la_fuente = saldoFuente-valor,
+                    Saldo_actual_de_la_fuente = saldoFuente,
                     Valor_solicitado_de_la_fuente = valor
                 });
             }

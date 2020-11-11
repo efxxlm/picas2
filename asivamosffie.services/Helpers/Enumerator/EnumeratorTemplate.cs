@@ -22,7 +22,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         TablaAprobacionParticipanteActa = 27,
         RegistrosTablaAprobacionParticipanteActa = 28,
-      	NotificarFiduciaria322 = 29
+      	NotificarFiduciaria322 = 29,
+        DDPDevolucion=30,
+        DDPRechazado=31
 
     }
 }

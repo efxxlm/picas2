@@ -74,7 +74,8 @@
                     <button mat-raised-button color="accent" 
                             class="btn-table" 
                             (click)="enviarSolicitud(element.disponibilidadPresupuestalId)"
-                            *ngIf="element.disponibilidadPresupuestalId && element.estadoSolicitudText == ''">
+                            *ngIf="element.disponibilidadPresupuestalId && element.estadoSolicitudText == '' ||
+                            element.estadoSolicitudText == 'Devuelta por coordinación financiera'">
                             Enviar solicitud
                     </button>
                     <button mat-raised-button color="accent" 
@@ -87,7 +88,8 @@
                     <a mat-raised-button color="accent" 
                             class="btn-table" 
                             [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,1]"
-                            *ngIf="element.disponibilidadPresupuestalId != 0 && element.estadoSolicitudText == ''">
+                            *ngIf="element.disponibilidadPresupuestalId != 0 && (element.estadoSolicitudText == '' ||
+                            element.estadoSolicitudText == 'Devuelta por coordinación financiera')">
                             Ver detalle /Editar
                     </a>
                     
@@ -102,7 +104,8 @@
                         class="btn-table" 
                         [routerLink]="['verDetalle', element.contratacionId, element.disponibilidadPresupuestalId,1]"
                         *ngIf="element.disponibilidadPresupuestalId != 0 && ( element.estadoSolicitudText === 'Con validación presupuestal' ||
-                         element.estadoSolicitudText === 'En validación presupuestal' ||  element.estadoSolicitudText === 'Con disponibilidad presupuestal' )">
+                         element.estadoSolicitudText === 'En validación presupuestal' ||  element.estadoSolicitudText === 'Con disponibilidad presupuestal'
+                         ||  element.estadoSolicitudText === 'Rechazada por validación presupuestal' )">
                         Ver detalle
                     </a>
     

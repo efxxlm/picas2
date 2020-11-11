@@ -323,7 +323,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
     this.technicalCommitteSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
-        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.borrarArray(this.invitados, i)
       })
 

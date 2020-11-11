@@ -5,130 +5,323 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Gestionar DDP solicitud PI_004
+        Gestionar DDP solicitud {{detailavailabilityBudget?.numeroSolicitud}}
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de la solicitud: <b>02/07/2020</b></span>
-        <span><b>Contratación</b></span>
+        <span>Fecha de la solicitud: <b>{{detailavailabilityBudget?.fechaComiteTecnico| date:'dd/MM/yyyy'}}</b></span>
+        <span><b>{{detailavailabilityBudget?.tipoSolicitudEspecial}}</b></span>
     </p>
 
 </section>
 <section class="container">
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content>
-            <p>
+            <p *ngIf="detailavailabilityBudget?.numeroDDP">
                 <strong>Número DDP:</strong>
-                DDP_PI_004
+                {{detailavailabilityBudget?.numeroDDP}}
             </p>
             <p>
                 <strong>Rubro por financiar:</strong>
-                Proyecto de infraestructura
+                {{detailavailabilityBudget?.rubroPorFinanciar}}
             </p>
             <p>
                 <strong>Valor de la solicitud:</strong>
-                $ 140.000.000
+                {{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}
             </p>
-            <p>
+            <p  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
                 <strong>Plazo:</strong>
-                9 meses / 30 días
+                {{detailavailabilityBudget?.plazo}}
             </p>
-            <p>
-                <strong>Objeto:</strong>
+            <div>
+                <strong>Objeto:</strong>                                
+                <div [innerHtml]="detailavailabilityBudget?.objeto"></div> 
+            </div>
+            <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
+                <strong>Número comité técnico:</strong>
+                {{detailavailabilityBudget?.numeroComite}}
             </p>
-            <p>
-                Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
-                estudios y diseños y ejecución de las obras necesarias para la adecuación y mejoramiento de las
-                instituciones rurales.
-            </p>
-            <p>
-                <strong>Número de comité técnico:</strong>
-                CT_003
-            </p>
-            <p>
+            <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
                 <strong>Fecha comité técnico:</strong>
-                03/07/2020
+                {{detailavailabilityBudget?.fechaComiteTecnico | date: 'dd/MM/yyyy' }}
             </p>
+            <p *ngIf="esModificacion">
+                <strong>Tipo de modificación:</strong>
+                Adición y plazo
+            </p>
+            <p  *ngIf="esModificacion">
+                <strong>Valor después de la modificación:</strong>
+                $ 72.000.000
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Plazo después de la modificación:</strong>
+                12 meses / 5 días
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Detalle de la modificación:</strong>
+                Se realiza adición de recursos para contrataciones complementarias
+            </p>
+            
+            <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
+            &&detailavailabilityBudget?.tipoSolicitudEspecial=='Expensas'">
+                <h2 class="card-subTitle">Expensas</h2>                
+                <p>
+                    <strong>¿Cuenta con carta de autorización de la ET?:</strong>
+                    {{detailavailabilityBudget.cuentaCarta?"Si":"No"}}
+                </p>
+                <p>
+                    <strong>Departamento:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].departamento}}
+                </p>
+                <p>
+                    <strong>Municipio:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].municipio}}
+                </p>
+                <p>
+                    <strong>Llave MEN:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].llaveMen}}
+                </p>
+                <p>
+                    <strong>Tipo de intervención:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].tipoIntervencion}}
+                </p>
+                <p>
+                    <strong>Nombre de la I.E:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].institucionEducativa}}
+                </p>
+                <p>
+                    <strong>Sede:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].sede}}
+                </p>
+            </div>
+            <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
+            &&detailavailabilityBudget?.tipoSolicitudEspecial!='Expensas'">
+                <h2 class="card-subTitle">Otros costos/Servicios</h2>                
+                <p>
+                    <strong>Número de contrato:</strong>
+                    {{detailavailabilityBudget.contratoNumero}}
+                </p>
+                <p>
+                    <strong>Nombre de la entidad contratista:</strong>
+                    {{detailavailabilityBudget?.nombreEntidad}}
+                </p>
+                <div>
+                    <strong>Limitación especial:</strong>
+                    <div [innerHtml]="detailavailabilityBudget?.limitacion"></div> 
+                </div>                
+            </div>
+            <div  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial && detailavailabilityBudget?.aportantes.length>0">
+                <h2 class="card-subTitle">Aportantes</h2>
+                <div *ngFor="let aportante of detailavailabilityBudget?.aportantes; index as i">
+                    <mat-card-title class="header-card--text sub-text">
+                        Aportante {{i+1}}
+                    </mat-card-title>    
+                    <p>
+                        <strong>Tipo de aportante:</strong>
+                        {{aportante.tipoAportante}}
+                    </p>
+                    <p>
+                        <strong>Nombre del aportante:</strong>
+                        {{aportante.nombre}}
+                    </p>
+                    <p>
+                        <strong>Valor del aportante al proyecto:</strong>
+                        $ {{aportante.valorAportanteAlProyecto}}
+                    </p>
+                    <p *ngIf="detailavailabilityBudget?.urlConSoporte">
+                        <strong>Url con soporte:</strong>
+                        {{detailavailabilityBudget?.urlConSoporte}}
+                    </p>
+                    <mat-card-title class="header-card--text sub-text"  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
+                        Fuente
+                    </mat-card-title>
+                    <div  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
+                        <div *ngFor="let fuente of aportante.fuenteFinanciacion;index as ii">
+                            <p>
+                                <strong>Fuente {{ii+1}}:</strong>
+                                {{fuente.nombre}}
+                            </p>
+                            <p>
+                                <strong>Saldo actual de la fuente:</strong>
+                                $ {{fuente.saldo_actual_de_la_fuente}}
+                            </p>
+                            <p>
+                                <strong>Valor solicitado de la fuente:</strong>
+                                $ {{fuente.valor_solicitado_de_la_fuente}}
+                            </p>
+                            <p>
+                                <strong>Nuevo saldo de la fuente:</strong>
+                                $ {{fuente.nuevo_saldo_de_la_fuente}}
+                            </p>
+                            <!-- no esta ene l caso de uso<p>
+                                <strong>Estado de las fuentes:</strong>
+                                {{fuente.estado_de_las_fuentes}}
+                            </p>-->
+                        </div>
+                    </div>                                        
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
 
+    <mat-card class="shipping-card var-main-gris" *ngIf="detailavailabilityBudget?.observaciones">
+        <mat-card-header _ngcontent-jtp-c135="" class="mat-card-header header-card mlmenor">
+            <div class="mat-card-header-text">
+                <mat-card-title class="mat-card-title header-card--text"> 
+                    Observaciones
+                </mat-card-title>
+            </div>
+        </mat-card-header>
+        <mat-card-content>            
+                <div [innerHtml]="detailavailabilityBudget?.observaciones"></div>
         </mat-card-content>
     </mat-card>
 
     <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
+        <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">        
+            <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of detailavailabilityBudget?.proyectos">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        {{proyecto.llaveMen}} - {{proyecto.institucionEducativa}} - {{proyecto.sede}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-card class="shipping-card sub-card var-main-gris">
+                    <mat-card-content>
+                        <p>
+                            <strong>Tipo de intervención:</strong>{{proyecto.tipoIntervencion}}
+                        </p>
+                        <p>
+                            <strong>Departamento:</strong>
+                            {{proyecto.departamento}}
+                        </p>
+                        <p>
+                            <strong>Municipio:</strong>
+                            {{proyecto.municipio}}
+                        </p>
+                        <p>
+                            <strong>Valor total del proyecto:</strong>
+                            {{proyecto.valorTotal}}
+                        </p>
+
+                        <h2 class="card-subTitle">Aportantes</h2>
+                        <div *ngFor="let apo of detailavailabilityBudget?.aportantes;index as i">
+                            <mat-card-title class="header-card--text sub-text textoGris">Aportante {{i}}</mat-card-title>
+                            <p><strong>Tipo de aportante: </strong>{{apo.tipoAportante}}</p>
+                            <p><strong>Nombre del aportante: </strong>{{apo.nombre}}</p>
+                            <p><strong>Valor del aportante al proyecto: </strong>{{apo.valorAportanteAlProyecto}}</p>
+                        <mat-card-title class="header-card--text sub-text textoGris">Fuentes</mat-card-title>
+                        <mat-card-title class="header-card--text sub-text textoGris" *ngFor="let fuente of apo.fuentesFinanciacion;index as j">Fuente {{j}}</mat-card-title>
+                            <p><strong>Fuente: </strong>recursos propios</p>
+                            <p><strong>Saldo actual de la fuente: </strong>$ 180.000.000</p>
+                            <p><strong>Valor solicitado de la fuente: </strong>$ 70.000.000</p>
+                            <p><strong>Saldo actual de la fuente: </strong>$ 110.000.000</p>
+                    </div>
+
+                    </mat-card-content>
+                </mat-card>
+            </mat-expansion-panel>
+        </div>
+        <mat-expansion-panel class="expansion-style" *ngIf="false">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                    LJ776554 - I.E. María Villa Campo - Única sede
+                    Modificaciones
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-card class="shipping-card sub-card var-main-gris">
-                <mat-card-content>
-                    <p>
-                        <strong>Tipo de intervención:</strong>
-                        RemodelaciónDDP_001
-                    </p>
-                    <p>
-                        <strong>Departamento:</strong>
-                        Atlántico
-                    </p>
-                    <p>
-                        <strong>Municipio:</strong>
-                        Malambo
-                    </p>
-                    <p>
-                        <strong>Valor total del proyecto:</strong>
-                        $ 50.000.000
-                    </p>
 
-                    <h2 class="card-subTitle">Aportantes</h2>
+            <mat-accordion *ngIf="false">
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title">
+                            Solicitud PI_001
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
 
-                    <mat-card-title class="header-card--text sub-text">
-                        Aportante 1
-                    </mat-card-title>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content>
+                            <p>
+                                <strong>Tipo de modificación:</strong>
+                                Remodelación
+                            </p>
+                            <p>
+                                <strong>Departamento:</strong>
+                                Atlántico
+                            </p>
+                            <p>
+                                <strong>Municipio:</strong>
+                                Manatí
+                            </p>
+                            <p>
+                                <strong>Valor total del proyecto:</strong>
+                                $ 50.000.000
+                            </p>
 
-                    <p>
-                        <strong>Tipo de aportante:</strong>
-                        FFIE
-                    </p>
-                    <p>
-                        <strong>Nombre del aportante:</strong>
-                        FFIE
-                    </p>
-                    <p>
-                        <strong>Valor del aportante al proyecto:</strong>
-                        $ 7.000.000
-                    </p>
+                            <h2 class="card-subTitle">Aportantes</h2>
 
-                    <mat-card-title class="header-card--text sub-text">
-                        Fuente
-                    </mat-card-title>
+                            <mat-card-title class="header-card--text sub-text">
+                                Aportante 1
+                            </mat-card-title>
 
-                    <p>
-                        <strong>Fuente:</strong>
-                        Contingencia
-                    </p>
-                    <p>
-                        <strong>Saldo actual de la fuente:</strong>
-                        $ 70.000.000
-                    </p>
-                    <p>
-                        <strong>Valor solicitado de la fuente:</strong>
-                        $ 7.000.000
-                    </p>
-                    <p>
-                        <strong>Nuevo saldo de la fuente:</strong>
-                        $ 63.000.000
-                    </p>
-                    <p>
-                        <strong>Estado de las fuentes:</strong>
-                        Completo
-                    </p>
+                            <p>
+                                <strong>Tipo de aportante:</strong>
+                                FFIE
+                            </p>
+                            <p>
+                                <strong>Nombre del aportante:</strong>
+                                FFIE
+                            </p>
+                            <p>
+                                <strong>Valor del aportante al proyecto:</strong>
+                                $ 7.000.000
+                            </p>
 
-                </mat-card-content>
-            </mat-card>
+                            <mat-card-title class="header-card--text sub-text">
+                                Fuente
+                            </mat-card-title>
+
+                            <p>
+                                <strong>Fuente:</strong>
+                                Contingencia
+                            </p>
+                            <p>
+                                <strong>Saldo actual de la fuente:</strong>
+                                $ 70.000.000
+                            </p>
+                            <p>
+                                <strong>Valor solicitado de la fuente:</strong>
+                                $ 7.000.000
+                            </p>
+                            <p>
+                                <strong>Nuevo saldo de la fuente:</strong>
+                                $ 63.000.000
+                            </p>
+                            <p>
+                                <strong>Estado de las fuentes:</strong>
+                                Completo
+                            </p>
+
+                        </mat-card-content>
+                    </mat-card>
+
+                </mat-expansion-panel>
+            </mat-accordion>
+
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style" 
+            *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional ||
+            detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Proyectos asociados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-tabla-proyectos-asociados *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional" [proyectos]="detailavailabilityBudget?.proyectos" [codigo]="detailavailabilityBudget?.numeroSolicitud"></app-tabla-proyectos-asociados>
+            <app-tabla-gestionar-validacion-administrativo [proyectos]="detailavailabilityBudget?.proyectos" [codigo]="detailavailabilityBudget?.numeroSolicitud"
+            *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo"></app-tabla-gestionar-validacion-administrativo>
         </mat-expansion-panel>
     </mat-accordion>
 
     <div class="botones">
-        <button mat-raised-button color="accent">Descargar DDP</button>
+        <button mat-raised-button color="accent" (click)="generarddp()">Generar DDP</button>
     </div>
 
 </section>

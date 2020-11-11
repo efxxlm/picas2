@@ -189,7 +189,7 @@ export class FormProposicionesVariosComponent {
     this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {
         this.borrarArray(grupo, i)
-        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.ngOnInit();
       })
 

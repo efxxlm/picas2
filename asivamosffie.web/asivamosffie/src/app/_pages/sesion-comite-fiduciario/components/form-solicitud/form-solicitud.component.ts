@@ -170,7 +170,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.technicalCommitteSessionService.deleteSesionComiteCompromiso(compromiso.get('sesionSolicitudCompromisoId').value)
       .subscribe(respuesta => {
         if (respuesta.code == "200") {
-          this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+          this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
           this.compromisos.removeAt(i)
           this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
         }

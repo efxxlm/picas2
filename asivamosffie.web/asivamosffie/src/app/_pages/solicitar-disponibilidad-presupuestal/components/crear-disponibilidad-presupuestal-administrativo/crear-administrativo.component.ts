@@ -25,7 +25,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
   })
 
   listaProyectos: ListConcecutivoProyectoAdministrativo[] = []
-  listaAportantes: ListAdminProyect[] = []
+  listaAportantes: ListAdminProyect = {}
   objetoDispinibilidad: DisponibilidadPresupuestal = {}
 
   editorStyle = {
@@ -90,7 +90,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
     let proyecto = this.formulario.get('consecutivo').value;
     console.log( proyecto )
-    this.listaAportantes = proyecto.aportanteFuenteFinanciacion;
+    this.listaAportantes = proyecto;
     /*this.budgetAvailabilityService.getAportantesByProyectoAdminId( proyecto.proyectoId )
       .subscribe( lista  => {
         
@@ -119,11 +119,15 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
     let aportante = this.listaAportantes[0];
 
+    let valor=0;
+    this.listaAportantes.aportanteFuenteFinanciacion.forEach(element => {
+      valor+=element.valorFuente;
+    });
     let disponibilidad: DisponibilidadPresupuestal = {
       disponibilidadPresupuestalId: this.formulario.get('disponibilidadPresupuestalId').value,
       objeto: this.formulario.get('objeto').value,
       tipoSolicitudCodigo: '3',
-      valorSolicitud: aportante ? aportante.valorFuente : 0,
+      valorSolicitud: valor,
      
       disponibilidadPresupuestalProyecto: []
       

@@ -86,9 +86,9 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/CreateFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
   }
-  DeleteFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
+  DeleteFinancialFundingGestion(pIdDisponibilidadPresObservacion:number)
   {
-    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/DeleteFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/DeleteFinancialFundingGestion?pIdDisponibilidadPresObservacion=${pIdDisponibilidadPresObservacion}`,null);
   }
   GetFinancialFundingGestionByDDPP(DisponibilidadPresupuestalObservacion:any)
   {

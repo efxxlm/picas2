@@ -113,7 +113,8 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     if(cont>1)
     {
      this.openDialog("","<b>Ya seleccionaste esta fuente de financiación</b>"); 
-     fuente.controls.fuentecampo.clear();
+     console.log(fuente.get("fuentecampo"));
+     fuente.get("fuentecampo").setValue("");
     }
     else
     {
@@ -133,12 +134,17 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
     fuente.get('nuevoSaldo').setValue(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value);
     
   }
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string,reload=false) {
     let dialog=this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-
+    dialog.afterClosed().subscribe(res=>{
+      if(reload==true)
+      {
+        location.reload();
+      }
+    });
   }
 
   get fuentes() {
@@ -167,25 +173,33 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
       if(result === true)
       {
-        this.disponibilidadPresupuestalService.DeleteFinancialFundingGestion(borrarForm.value[id].gestionid).subscribe(
-          response => {
-            borrarForm.removeAt(id);
-            this.openDialog('', `<b>${response.message}</b>`);
-          },
-          error => {
-            console.log(<any>error);
-            let mensaje: string;
-              if (error.error.message){
-                mensaje = error.error.message;
-              }else {
-                mensaje = error.message;
-              }
-              this.openDialog('Error', mensaje);
-              
+        if(borrarForm.value[id].gestionid>0)
+        {
+          this.disponibilidadPresupuestalService.DeleteFinancialFundingGestion(borrarForm.value[id].gestionid).subscribe(
+            response => {
+              borrarForm.removeAt(id);
+              this.openDialog('', `<b>La información ha sido eliminada correctamente.</b>`);
             },
-          () =>{
-            //else
-          }); 
+            error => {
+              console.log(<any>error);
+              let mensaje: string;
+                if (error.error.message){
+                  mensaje = error.error.message;
+                }else {
+                  mensaje = error.message;
+                }
+                this.openDialog('Error', mensaje);
+                
+              },
+            () =>{
+              //else
+            }); 
+        }
+        else{
+          borrarForm.removeAt(id);
+          this.openDialog('', `<b>La información ha sido eliminada correctamente.</b>`);
+        }
+        
       }           
     });
   }
@@ -226,7 +240,7 @@ export class FormGestionarFuentesAdministrativasComponent implements OnInit {
           mensaje=result.message
         });
     });      
-    this.openDialog('','<b>La información a sido guardada exitosamente.</b>');  
+    this.openDialog('','<b>La información a sido guardada exitosamente.</b>',true);  
     
   }
 }
