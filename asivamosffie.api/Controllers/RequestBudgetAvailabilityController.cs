@@ -38,9 +38,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _managementCommitteeReportService.GetListContatoByNumeroContrato(pNumero);
         }
-
-        
-
+         
         [Route("GetContratoByNumeroContrato")]
         public async Task<Contrato> GetContratoByNumeroContrato([FromQuery] string pNumero)
         {

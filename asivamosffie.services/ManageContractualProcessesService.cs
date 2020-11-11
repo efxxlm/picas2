@@ -167,9 +167,7 @@ namespace asivamosffie.services
         }
 
         public string ReemplazarDatosPlantillaContratacion(string pPlantilla, Contratacion pContratacion, SesionComiteSolicitud pSesionComiteSolicitud)
-        {
-
-
+        { 
             pSesionComiteSolicitud.ComiteTecnico = _context.ComiteTecnico
                 .Where(r => !(bool)r.EsComiteFiduciario && r.ComiteTecnicoId == pSesionComiteSolicitud.ComiteTecnicoId)
                 .FirstOrDefault();
