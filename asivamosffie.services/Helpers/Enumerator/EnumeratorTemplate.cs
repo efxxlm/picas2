@@ -3,7 +3,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 {
     public enum enumeratorTemplate
     {
-        RecuperarClave = 2, 
+        RecuperarClave = 2,
         DisponibilidadPresupuestalGenerada = 4,
         MsjSupervisorGestionPoliza = 5,
         MsjFiduciariaJuridicaGestionPoliza = 6,
@@ -26,5 +26,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         DDPDevolucion=30,
         DDPRechazado=31
 
+        NotificarFiduciaria322 = 29,
+        NotificacionContratacion341 = 32
     }
 }
