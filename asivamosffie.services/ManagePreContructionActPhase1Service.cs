@@ -93,7 +93,10 @@ namespace asivamosffie.services
 
             try
             {
-                Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
+           
+                Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
+                    .Include(r=> r.Contratacion)
+                    .Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
 
                 ContratoOld.FechaActaInicioFase1 = pContrato.FechaActaInicioFase1;
                 ContratoOld.FechaTerminacion = pContrato.FechaTerminacion;
@@ -102,7 +105,13 @@ namespace asivamosffie.services
                 ContratoOld.PlazoFase2ConstruccionDias = pContrato.PlazoFase2ConstruccionDias;
                 ContratoOld.PlazoFase2ConstruccionMeses = pContrato.PlazoFase2ConstruccionMeses;
                 ContratoOld.ConObervacionesActa = pContrato.ConObervacionesActa;
-                ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_preliminar_generada;
+
+                if (ContratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
+                    ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Obra;
+                else
+                    ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_preliminar_generada;
+
+
 
                 if ((bool)ContratoOld.ConObervacionesActa)
                 {
