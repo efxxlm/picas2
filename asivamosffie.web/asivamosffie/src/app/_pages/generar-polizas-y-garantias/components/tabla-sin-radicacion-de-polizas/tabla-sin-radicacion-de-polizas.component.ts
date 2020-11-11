@@ -10,7 +10,6 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./tabla-sin-radicacion-de-polizas.component.scss']
 })
 export class TablaSinRadicacionDePolizasComponent implements OnInit {
-  @Input() dataTablePrueba;
 
   displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
   dataSource = new MatTableDataSource();
@@ -22,7 +21,6 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
   constructor(private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
-    console.log(this.dataTablePrueba);
     this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);

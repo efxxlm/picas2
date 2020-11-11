@@ -25,7 +25,7 @@ namespace asivamosffie.services.Helpers.Enumerator
       	NotificarFiduciaria322 = 29,
         DDPDevolucion=30,
         DDPRechazado=31,
-                
+
         NotificacionContratacion341 = 32
     }
 }
