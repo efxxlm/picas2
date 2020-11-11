@@ -42,7 +42,13 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     })
 
   }
-  generarActaFDos(id){
+  generarActaFDos(id,tipoContrato){
+    if(tipoContrato=='Interventoria'){
+      localStorage.setItem("origin", "interventoria");
+    }
+    else{
+      localStorage.setItem("origin","obra");
+    }
     localStorage.setItem("editable","false");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActa',id]);
   }
@@ -97,7 +103,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {
-        if(tipoContrato=='Obra e Interventoria'){
+        if(tipoContrato=='Obra'){
           this.service.CambiarEstadoActa(id,"20").subscribe(data=>{
             this.ngOnInit();
           });

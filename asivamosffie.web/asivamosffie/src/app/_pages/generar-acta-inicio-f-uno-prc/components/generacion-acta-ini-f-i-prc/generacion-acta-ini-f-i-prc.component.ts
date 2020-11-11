@@ -165,13 +165,23 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       contratoPoliza: []
     };
     this.service.EditContrato(arrayContrato).subscribe(data => {
-      this.openDialog('', data.message);
       if (data.code == "200") {
-        this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+        if(localStorage.getItem("origin")=="obra"){
+          this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
+            this.openDialog2('La información ha sido guardada exitosamente.', "");
+            this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+          });
+        }
+        else{
+          this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data0=>{
+            this.openDialog2('La información ha sido guardada exitosamente.', "");
+            this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+          });
+        }
       }
     })
     console.log(this.addressForm.value);
-    this.openDialog2('La información ha sido guardada exitosamente.', "");
+    
 
   }
 }
