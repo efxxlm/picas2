@@ -1441,7 +1441,7 @@ namespace asivamosffie.services
             }
             else
             {
-                ListContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado==false && r.ContratoId == pContratoId).Distinct()
+                ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado==false && r.ContratoId == pContratoId).Distinct()
           .ToListAsync();
 
             }     
