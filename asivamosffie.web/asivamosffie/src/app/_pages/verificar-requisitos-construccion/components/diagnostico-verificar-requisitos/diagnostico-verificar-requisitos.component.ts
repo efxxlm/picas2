@@ -55,8 +55,8 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
     if (this.construccion) {
 
       this.addressForm.get('tieneObservaciones').setValue(this.construccion.tieneObservacionesDiagnosticoApoyo)
-      this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.observaciones : null)
-      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null)
+      this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnosticoApoyo ? this.construccion.observacionDiagnosticoApoyo.observaciones : null)
+      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoApoyo ? this.construccion.observacionDiagnosticoApoyo.construccionObservacionId : null)
 
       this.validarSemaforo();
     }

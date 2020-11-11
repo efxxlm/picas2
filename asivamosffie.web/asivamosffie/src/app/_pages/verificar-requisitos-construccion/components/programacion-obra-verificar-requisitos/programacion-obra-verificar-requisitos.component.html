@@ -56,10 +56,10 @@
                Verificación del apoyo a la supervisión
             </mat-card-title>
         </mat-card-header>
-        <mat-card-content align="left">
-            <p><b>08/08/2020</b></p>
+        <mat-card-content align="left" *ngIf="contratoConstruccion.observacionProgramacionObraSupervisor" >
+            <p><b>{{ contratoConstruccion.observacionProgramacionObraSupervisor.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
             <p><b>¿Tiene observaciones a la programación de obra?:</b> Sí</p>
-            <p>No se encuentra la programación de la totalidad del proyecto. Revisar y volver a cargar.</p>
+            <p>{{ contratoConstruccion.observacionProgramacionObraSupervisor.observaciones }}</p>
         </mat-card-content>
     </mat-card>
 </div>

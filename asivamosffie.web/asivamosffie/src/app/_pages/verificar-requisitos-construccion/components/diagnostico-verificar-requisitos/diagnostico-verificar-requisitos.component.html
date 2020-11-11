@@ -86,9 +86,9 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>08/08/2020</b></p>
+            <p><b>{{ construccion.observacionDiagnosticoSupervisor.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
             <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000</p>
+            <p>{{ construccion.observacionDiagnosticoSupervisor.observaciones }}</p>
         </mat-card-content>
     </mat-card>
 </div>

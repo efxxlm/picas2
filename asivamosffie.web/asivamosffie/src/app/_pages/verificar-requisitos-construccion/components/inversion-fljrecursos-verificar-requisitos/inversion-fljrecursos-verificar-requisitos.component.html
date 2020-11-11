@@ -56,10 +56,10 @@
                Verificación del apoyo a la supervisión
             </mat-card-title>
         </mat-card-header>
-        <mat-card-content align="left">
-            <p><b>08/08/2020</b></p>
+        <mat-card-content align="left" *ngIf="contratoConstruccion.observacionFlujoInversionSupervisor" >
+            <p><b>{{ contratoConstruccion.observacionFlujoInversionSupervisor.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
             <p><b>¿Tiene observaciones al flujo de inversión de recursos?:</b> Sí</p>
-            <p>Cargar archivo actualizado del flujo de inversión</p>
+            <p>{{ contratoConstruccion.observacionFlujoInversionSupervisor.observaciones }}</p>
         </mat-card-content>
     </mat-card>
 </div>

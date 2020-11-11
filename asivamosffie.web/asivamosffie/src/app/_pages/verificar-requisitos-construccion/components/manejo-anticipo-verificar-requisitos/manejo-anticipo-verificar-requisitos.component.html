@@ -63,10 +63,10 @@
                Verificación del apoyo a la supervisión
             </mat-card-title>
         </mat-card-header>
-        <mat-card-content align="left">
-            <p><b>08/08/2020</b></p>
+        <mat-card-content align="left" *ngIf="contratacion.observacionManejoAnticipoSupervisor">
+            <p><b>{{ contratacion.observacionManejoAnticipoSupervisor.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
             <p><b>¿Tiene observaciones al manejo del anticipo?:</b> Sí</p>
-            <p>El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000</p>
+            <p>{{ contratacion.observacionManejoAnticipoSupervisor.observaciones }}</p>
         </mat-card-content>
     </mat-card>
 </div>

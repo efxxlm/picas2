@@ -21,19 +21,34 @@ namespace asivamosffie.model.Models
         public bool? EsCompletoDiagnostico  { get; set; }
 
         [NotMapped]
-        public ConstruccionObservacion ObservacionDiagnostico { get; set; }
+        public ConstruccionObservacion ObservacionDiagnosticoApoyo { get; set; }
         
         [NotMapped]
-        public ConstruccionObservacion ObservacionPlanesProgramas { get; set; }
+        public ConstruccionObservacion ObservacionDiagnosticoSupervisor { get; set; }
+        
+        [NotMapped]
+        public ConstruccionObservacion ObservacionPlanesProgramasApoyo { get; set; }
 
         [NotMapped]
-        public ConstruccionObservacion ObservacionManejoAnticipo { get; set; }
+        public ConstruccionObservacion ObservacionPlanesProgramasSupervisor { get; set; }
 
         [NotMapped]
-        public ConstruccionObservacion ObservacionProgramacionObra { get; set; }
+        public ConstruccionObservacion ObservacionManejoAnticipoApoyo { get; set; }
 
         [NotMapped]
-        public ConstruccionObservacion ObservacionFlujoInversion { get; set; }
+        public ConstruccionObservacion ObservacionManejoAnticipoSupervisor { get; set; }
+
+        [NotMapped]
+        public ConstruccionObservacion ObservacionProgramacionObraApoyo { get; set; }
+
+        [NotMapped]
+        public ConstruccionObservacion ObservacionProgramacionObraSupervisor { get; set; }
+
+        [NotMapped]
+        public ConstruccionObservacion ObservacionFlujoInversionApoyo { get; set; }
+
+        [NotMapped]
+        public ConstruccionObservacion ObservacionFlujoInversionSupervisor { get; set; }
         
     }
 }

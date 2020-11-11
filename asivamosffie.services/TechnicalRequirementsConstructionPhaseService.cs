@@ -208,11 +208,16 @@ namespace asivamosffie.services
 
                     });
 
-                    cc.ObservacionDiagnostico = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, VerificarEsSupervisor(pUsuarioCreacion));
-                    cc.ObservacionPlanesProgramas = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, VerificarEsSupervisor(pUsuarioCreacion));
-                    cc.ObservacionManejoAnticipo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, VerificarEsSupervisor(pUsuarioCreacion));
-                    cc.ObservacionProgramacionObra = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, VerificarEsSupervisor(pUsuarioCreacion));
-                    cc.ObservacionFlujoInversion = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, VerificarEsSupervisor(pUsuarioCreacion));
+                    cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, false);
+                    cc.ObservacionDiagnosticoSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, true);
+                    cc.ObservacionPlanesProgramasApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, false);
+                    cc.ObservacionPlanesProgramasSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, true);
+                    cc.ObservacionManejoAnticipoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, false);
+                    cc.ObservacionManejoAnticipoSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, true);
+                    cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, false);
+                    cc.ObservacionProgramacionObraSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, true);
+                    cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, false);
+                    cc.ObservacionFlujoInversionSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, true);
 
                 });
 
@@ -324,22 +329,22 @@ namespace asivamosffie.services
                                                                 .Include(r => r.ConstruccionPerfil)
                                                                 .FirstOrDefaultAsync();
 
-            cc.ObservacionDiagnostico = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, pEsSupervicion);
-            cc.ObservacionPlanesProgramas = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, pEsSupervicion);
-            cc.ObservacionManejoAnticipo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, pEsSupervicion);
-            cc.ObservacionProgramacionObra = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, pEsSupervicion);
-            cc.ObservacionFlujoInversion = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, pEsSupervicion);
+            cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, pEsSupervicion);
+            cc.ObservacionPlanesProgramasApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, pEsSupervicion);
+            cc.ObservacionManejoAnticipoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, pEsSupervicion);
+            cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, pEsSupervicion);
+            cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, pEsSupervicion);
 
             if (cc.TieneObservacionesDiagnosticoApoyo == null ||
-                 (cc.TieneObservacionesDiagnosticoApoyo == true && string.IsNullOrEmpty(cc.ObservacionDiagnostico.Observaciones)) ||
+                 (cc.TieneObservacionesDiagnosticoApoyo == true && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo.Observaciones)) ||
                  cc.TieneObservacionesFlujoInversionApoyo == null ||
-                 (cc.TieneObservacionesFlujoInversionApoyo == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversion.Observaciones)) ||
+                 (cc.TieneObservacionesFlujoInversionApoyo == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo.Observaciones)) ||
                  cc.TieneObservacionesManejoAnticipoApoyo == null ||
-                 (cc.TieneObservacionesManejoAnticipoApoyo == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipo.Observaciones)) ||
+                 (cc.TieneObservacionesManejoAnticipoApoyo == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo.Observaciones)) ||
                  cc.TieneObservacionesPlanesProgramasApoyo == null ||
-                 (cc.TieneObservacionesPlanesProgramasApoyo == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramas.Observaciones)) ||
+                 (cc.TieneObservacionesPlanesProgramasApoyo == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo.Observaciones)) ||
                  cc.TieneObservacionesProgramacionObraApoyo == null ||
-                 (cc.TieneObservacionesProgramacionObraApoyo == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObra.Observaciones))
+                 (cc.TieneObservacionesProgramacionObraApoyo == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo.Observaciones))
                  )
             {
                 esCompleto = false;
