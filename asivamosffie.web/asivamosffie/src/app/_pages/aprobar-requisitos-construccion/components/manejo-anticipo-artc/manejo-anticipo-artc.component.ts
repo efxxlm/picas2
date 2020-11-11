@@ -1,17 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-manejo-anticipo-artc',
   templateUrl: './manejo-anticipo-artc.component.html',
   styleUrls: ['./manejo-anticipo-artc.component.scss']
 })
-export class ManejoAnticipoArtcComponent implements OnInit {
+export class ManejoAnticipoArtcComponent implements OnInit, OnChanges {
+
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
+    construccionObservacionId: [],
+
   });
 
   editorStyle = {
@@ -29,9 +33,41 @@ export class ManejoAnticipoArtcComponent implements OnInit {
 
 
   @Input() observacionesCompleted;
-  constructor(private dialog: MatDialog, private fb: FormBuilder) { }
+  @Input() contratacion: any;
+  @Input() contratoConstruccionId: any;
+
+  @Output() createEdit = new EventEmitter();
+
+  constructor ( private dialog: MatDialog, 
+                private fb: FormBuilder )
+  { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.contratacion)
+      this.ngOnInit();
+  }
 
   ngOnInit(): void {
+    if (this.contratacion) {
+
+      this.addressForm.get('tieneObservaciones').setValue(this.contratacion.tieneObservacionesManejoAnticipoApoyo)
+      this.addressForm.get('observaciones').setValue(this.contratacion.observacionManejoAnticipo ? this.contratacion.observacionManejoAnticipo.observaciones : null)
+      this.addressForm.get('construccionObservacionId').setValue(this.contratacion.observacionManejoAnticipo ? this.contratacion.observacionManejoAnticipo.construccionObservacionId : null)
+
+      this.validarSemaforo();
+    }
+  }
+
+  validarSemaforo() {
+
+    this.contratacion.semaforoManejo = "sin-diligenciar";
+
+    if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
+      this.contratacion.semaforoManejo = 'completo';
+
+      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
+        this.contratacion.semaforoManejo = 'en-proceso';
+    }
   }
 
   maxLength(e: any, n: number) {
@@ -52,8 +88,27 @@ export class ManejoAnticipoArtcComponent implements OnInit {
     });
   };
 
-  onSubmit() {
-    this.openDialog('La información ha sido guardada exitosamente.', '');
+  guardarManejo() {
+
+    let construccion = {
+      contratoConstruccionId: this.contratoConstruccionId,
+      tieneObservacionesManejoAnticipoApoyo: this.addressForm.value.tieneObservaciones,
+
+      construccionObservacion: [
+        {
+          construccionObservacionId: this.addressForm.value.construccionObservacionId,
+          contratoConstruccionId: this.contratoConstruccionId,
+          tipoObservacionConstruccion: TiposObservacionConstruccion.ManejoAnticipo,
+          esSupervision: false,
+          esActa: false,
+          observaciones: this.addressForm.value.observaciones,
+
+        }
+      ]
+    }
+
+    console.log( construccion );
+
   }
 
 }

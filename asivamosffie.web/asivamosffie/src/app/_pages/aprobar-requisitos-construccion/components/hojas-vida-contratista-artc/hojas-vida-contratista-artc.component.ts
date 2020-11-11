@@ -28,6 +28,8 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   };
 
   @Input() observacionesCompleted;
+  @Input() perfil: any;  
+
   constructor(private dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {

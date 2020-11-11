@@ -1,100 +1,25 @@
-<mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion aux">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title personalizado">
-              Perfil 1
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div align="left">
-            <mat-card class="border-1">
-                <mat-card-content>
-                    <p><b>Perfil</b>: Ingeniero de obra</p>
-                    <p><b>Cantidad de hojas de vida requeridas para el perfil</b>: 2</p>
-                    <p><b>Cantidad de hojas de vida recibidas para el perfil:</b>: 10</p>
-                    <p><b>Cantidad de hojas de vida aprobadas para el perfil</b>: 3</p>
-                    <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>: 07/08/2020</p>
-                    <p><b>Observaciones:</b></p>
-                    <br>
-                    <p><b>Número de radicado en FFIE de aprobación de hojas de vida 1</b>: FFFLL098764-00</p>
-                    <p><b>Número de radicado en FFIE de aprobación de hojas de vida 2</b>: DDDNN5678-00</p>
-                    <p><b>URL con soporte</b>: https://drive.google.com/drive/perfil/Ingenierodeobra/hojasdevida</p>
-                </mat-card-content>
-            </mat-card>
-        </div>
-        <div align="center">
-            <mat-card class="border mt-2em">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text grayTitle">
-                       Verificación del apoyo a la supervisión
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content align="left">
-                    <p><b>08/08/2020</b></p>
-                    <p><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> Sí</p>
-                    <p>No cuenta con el soporte adecuado, actualice la URL para verificar la información</p>
-                </mat-card-content>
-            </mat-card>
-        </div>
-        <div align="center" *ngIf="this.observacionesCompleted==false">
-            <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-                <div class="row" align="center">
-                    <div class="col-md-8">
-                        <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones a las hojas de vida de este perfil?</label>
-                            </div>
-                            <div class="col">
-                                <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-                                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                                    <mat-radio-button [value]="false">No</mat-radio-button>
-                                </mat-radio-group>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex-editor mt-2em" *ngIf="addressForm.value.tieneObservaciones == true">
-                    <mat-card class="shipping-card w-80">
-                        <mat-card-header class="header-card">
-                            <mat-card-title class="header-card--text">
-                                Observaciones a las hojas de vida del contratista de obra
-                            </mat-card-title>
-                        </mat-card-header>
-                        <mat-card-content>
-        
-                            <quill-editor class="quill-editor-style w-65 ml-1em" [styles]="editorStyle" [modules]="config"
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones">
-                            </quill-editor>
-        
-                        </mat-card-content>
-                    </mat-card>
-                    <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">
-                        {{1000 - textoLimpio(addressForm.get('observaciones').value)}}
-                    </span>
-                    <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones === null">
-                        1000
-                    </span>
-                </div>
-                <div class="text-center mt-1em">
-                    <button mat-button color="warn" class="btn-guardar" type="submit">
-                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
-                    </button>
-                </div>
-            </form>
-        </div>
-        <div align="center" *ngIf="this.observacionesCompleted==true">
-            <mat-card class="border mt-1em">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text grayTitle">
-                        Validación de la supervisión
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content align="left">
-                    <p><b>10/08/2020</b></p>
-                    <p><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> Sí</p>
-                    <p>El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000, realice el ajuste y tenga en cuenta que estos valores deben
-                        ser corregidos para poder continuar.</p>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </mat-expansion-panel>
-</mat-accordion>
+<div align="left" *ngIf="perfil">
+    <mat-card class="border-1">
+        <mat-card-content>
+            <p><b>Perfil</b>: {{ perfil.nombrePerfil }}</p>
+            <p><b>Cantidad de hojas de vida requeridas para el perfil</b>:
+                {{ perfil.cantidadHvRequeridas }} </p>
+            <p><b>Cantidad de hojas de vida recibidas para el perfil:</b>:
+                {{ perfil.cantidadHvRecibidas }} </p>
+            <p><b>Cantidad de hojas de vida aprobadas para el perfil</b>:
+                {{ perfil.cantidadHvAprobadas }} </p>
+            <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>:
+                {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
+            <p><b>Observaciones:</b></p>
+            <p>
+                {{ perfil.observaciones }} </p>
+            <p><b>Número de radicado en FFIE de aprobación de hojas de vida:</b></p>
+            <section
+                *ngIf="perfil.construccionPerfilNumeroRadicado && perfil.construccionPerfilNumeroRadicado.length > 0">
+                <p *ngFor="let radicado of perfil.construccionPerfilNumeroRadicado; let k = index">
+                    {{ radicado.numeroRadicado }} </p>
+            </section>
+            <p><b>URL con soporte</b>: {{ perfil.rutaSoporte }} </p>
+        </mat-card-content>
+    </mat-card>
+</div>

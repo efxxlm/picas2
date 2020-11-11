@@ -22,9 +22,9 @@
         <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1">Contratos de
             obra</button>
         <div *ngIf="this.selTab==1" class="button-activated">Contratos de obra</div>
-        <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2">Contratos de
+        <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2" style="margin-left: 1em;">Contratos de
             interventoría</button>
-        <div *ngIf="this.selTab==2" class="button-activated">Contratos de interventoría</div>
+        <div *ngIf="this.selTab==2" class="button-activated" style="margin-left: 1em;">Contratos de interventoría</div>
     </div>
     <div *ngIf="this.selTab==1">
         <app-tabla-contrato-obra-artc></app-tabla-contrato-obra-artc>

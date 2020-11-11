@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 
 @Component({
   selector: 'app-tabla-contrato-obra-artc',
@@ -16,50 +17,27 @@ export class TablaContratoObraArtcComponent implements OnInit {
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 
     'fechaAprobacion',
-    'numeroContratoObra',
-    'proyectosAsociados',
-    'proyectosAprobados',
-    'proyectosPendientes',
-    'estadoRequisito',
+    'numeroContrato',
+    'cantidadProyectosAsociados',
+    'cantidadProyectosRequisitosAprobados',
+    'cantidadProyectosRequisitosPendientes',
+    'estadoCodigo',
     'gestion'
   ];
-  dataTable: any [] = [
-    {
-      fechaAprobacion: '06/08/2020',
-      numeroContratoObra: 'C326326',
-      proyectosAsociados: '2',
-      proyectosAprobados: '2',
-      proyectosPendientes: '0',
-      estadoRequisito: '1',
-      id: 1
-    },
-    {
-      fechaAprobacion: '05/08/2020',
-      numeroContratoObra: 'A208208',
-      proyectosAsociados: '1',
-      proyectosAprobados: '0',
-      proyectosPendientes: '1',
-      estadoRequisito: '1',
-      id: 2
-    },
-    {
-      fechaAprobacion: '01/08/2020',
-      numeroContratoObra: 'C801801',
-      proyectosAsociados: '1',
-      proyectosAprobados: '0',
-      proyectosPendientes: '1',
-      estadoRequisito: '3',
-      id: 3
-    }
-  ]
 
-  constructor ( private routes: Router ) { }
+  constructor ( private routes: Router,
+                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  {
+  };
 
   ngOnInit(): void {
-    this.dataSource                        = new MatTableDataSource( this.dataTable );
-    this.dataSource.paginator              = this.paginator;
-    this.dataSource.sort                   = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.faseDosAprobarConstruccionSvc.getContractsGrid( '1' )
+      .subscribe( response => {
+        this.dataSource                        = new MatTableDataSource( response );
+        this.dataSource.paginator              = this.paginator;
+        this.dataSource.sort                   = this.sort;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      } );
   };
 
   applyFilter ( event: Event ) {

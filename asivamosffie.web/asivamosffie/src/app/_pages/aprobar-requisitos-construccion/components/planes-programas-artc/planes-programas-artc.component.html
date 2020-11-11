@@ -8,7 +8,7 @@
         <ng-container matColumnDef="recibioRequisito">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> ¿Se recibio el requisito? </th>
             <td mat-cell *matCellDef="let element" align="center">
-                {{element.recibioRequisito}}
+                {{element.recibioRequisito === true ? 'Si' : 'No'}}
             </td>
         </ng-container>
 
@@ -37,8 +37,10 @@
         <ng-container matColumnDef="observaciones">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
             <td mat-cell *matCellDef="let element" align="center">
-                <section *ngIf="element.requiereObservacion=='Si'">
-                    <button mat-raised-button color="accent" class="btn-table expansion-style--title btn-color h-2em">
+                <section *ngIf="element.requiereObservacion === true">
+                    <button mat-raised-button color="accent" 
+                        class="btn-table expansion-style--title btn-color h-2em"
+                        (click)="openDialogObservacion( element.nombrePlanesProgramas, element.observaciones, element.id )">
                         <small class="mr-1em">Observaciones</small>
                     </button>
                 </section>
@@ -69,7 +71,7 @@
     </mat-card>
 </div>
 <div align="center" class="mt-2em" *ngIf="this.observacionesCompleted==false"> 
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarPlanes()">
         <div class="row" align="center">
             <div class="col-md-8">
                 <div class="row">

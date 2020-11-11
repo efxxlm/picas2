@@ -17,7 +17,6 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
     construccionObservacionId: [],
-
   });
 
   editorStyle = {

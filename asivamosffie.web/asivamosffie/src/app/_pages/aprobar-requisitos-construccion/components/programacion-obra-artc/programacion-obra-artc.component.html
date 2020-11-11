@@ -1,6 +1,6 @@
 <div align="center">
     <section>
-        <button mat-raised-button color="accent">Descargar archivo</button>
+        <button mat-raised-button color="accent" (click)="descargar()">Descargar archivo</button>
     </section>
 </div>
 <div align="center" class="mt-2em">
@@ -18,7 +18,7 @@
     </mat-card>
 </div>
 <div align="center" class="mt-2em" *ngIf="this.observacionesCompleted==false">
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarProgramacion()">
         <div class="row" align="center">
             <div class="col-md-8">
                 <div class="row">

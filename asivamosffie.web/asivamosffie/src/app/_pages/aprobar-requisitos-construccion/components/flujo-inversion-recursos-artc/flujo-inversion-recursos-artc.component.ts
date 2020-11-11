@@ -1,7 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 
 @Component({
@@ -9,12 +11,14 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './flujo-inversion-recursos-artc.component.html',
   styleUrls: ['./flujo-inversion-recursos-artc.component.scss']
 })
-export class FlujoInversionRecursosArtcComponent implements OnInit {
+export class FlujoInversionRecursosArtcComponent implements OnInit, OnChanges {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
+    construccionObservacionId:[],
   });
+
 
   editorStyle = {
     height: '100px'
@@ -29,11 +33,45 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
     ]
   };
 
-  
   @Input() observacionesCompleted;
-  constructor(private dialog: MatDialog, private fb: FormBuilder) { }
+  @Input() contratoConstruccion: any;
+  @Input() contratoConstruccionId: any;
+
+  @Output() createEdit = new EventEmitter();
+
+  constructor ( private dialog: MatDialog, 
+                private fb: FormBuilder,
+                private commonSvc: CommonService )
+  { };
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.contratoConstruccion)
+      this.ngOnInit();
+  }
 
   ngOnInit(): void {
+
+    if (this.contratoConstruccion) {
+
+      this.addressForm.get('tieneObservaciones').setValue(this.contratoConstruccion.tieneObservacionesFlujoInversionApoyo)
+      this.addressForm.get('observaciones').setValue(this.contratoConstruccion.ObservacionFlujoInversion ? this.contratoConstruccion.ObservacionFlujoInversion.observaciones : null)
+      this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.ObservacionFlujoInversion ? this.contratoConstruccion.ObservacionFlujoInversion.construccionObservacionId : null)
+
+      this.validarSemaforo();
+    }
+
+  }
+
+  validarSemaforo() {
+
+    this.contratoConstruccion.semaforoFlujo = "sin-diligenciar";
+
+    if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
+      this.contratoConstruccion.semaforoFlujo = 'completo';
+
+      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
+        this.contratoConstruccion.semaforoFlujo = 'en-proceso';
+    }
   }
 
   maxLength(e: any, n: number) {
@@ -54,7 +92,41 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
     });
   };
 
-  onSubmit(){
-    this.openDialog( 'La información ha sido guardada exitosamente.', '' );
+  descargar() {
+    this.commonSvc.getFileById(this.contratoConstruccion.archivoCargueIdFlujoInversion)
+      .subscribe(respuesta => {
+        let documento = "FlujoInversion.xlsx";
+        var text = documento,
+          blob = new Blob([respuesta], { type: 'application/octet-stream' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
   }
+
+  guardarFlujo() {
+
+    let construccion = {
+      contratoConstruccionId: this.contratoConstruccionId,
+      tieneObservacionesFlujoInversionApoyo: this.addressForm.value.tieneObservaciones,
+
+      construccionObservacion: [
+        {
+          construccionObservacionId: this.addressForm.value.construccionObservacionId,
+          contratoConstruccionId: this.contratoConstruccionId,
+          tipoObservacionConstruccion: TiposObservacionConstruccion.FlujoInversion,
+          esSupervision: false,
+          esActa: false,
+          observaciones: this.addressForm.value.observaciones,
+
+        }
+      ]
+    }
+
+    console.log( construccion );
+
+  }
+
 }

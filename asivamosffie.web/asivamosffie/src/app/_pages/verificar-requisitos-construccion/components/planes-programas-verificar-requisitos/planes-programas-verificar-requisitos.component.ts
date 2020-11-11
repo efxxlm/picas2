@@ -97,7 +97,7 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
     });
   };
 
-  openDialog(modalTitle: string, modalText: string) { 
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }

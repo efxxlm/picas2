@@ -1,19 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-diagnostico-artc',
   templateUrl: './diagnostico-artc.component.html',
   styleUrls: ['./diagnostico-artc.component.scss']
 })
-export class DiagnosticoArtcComponent implements OnInit {
+export class DiagnosticoArtcComponent implements OnInit, OnChanges {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
-    observaciones: [null, Validators.required],
+    observaciones: [null],
+    construccionObservacionId: []
   });
 
   editorStyle = {
@@ -28,7 +30,11 @@ export class DiagnosticoArtcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  @Input() observacionesCompleted;
+  @Input() observacionesCompleted: boolean;
+  @Input() construccion: any;
+  @Input() contratoConstruccionId: any;
+
+  @Output() createEditDiagnostico = new EventEmitter();
 
   dataTablaHistorialObservacion: any[] = [];
   dataSource                 = new MatTableDataSource();
@@ -38,11 +44,39 @@ export class DiagnosticoArtcComponent implements OnInit {
   ];
   constructor(private dialog: MatDialog, private fb: FormBuilder) {
     this.getDataPlanesProgramas ();
-   }
+  };
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.contratacion){
+      this.ngOnInit();
+      console.log("c", this.construccion)
+    }
+  }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
-  }
+    if (this.construccion) {
+      console.log( this.construccion );
+      this.addressForm.get('tieneObservaciones').setValue(this.construccion.tieneObservacionesDiagnosticoApoyo)
+      this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.observaciones : null)
+      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null)
+
+      this.validarSemaforo();
+    };
+  };
+
+  validarSemaforo() {
+
+    this.construccion.semaforoDiagnostico = "sin-diligenciar";
+
+    if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
+      this.construccion.semaforoDiagnostico = 'completo';
+
+      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
+        this.construccion.semaforoDiagnostico = 'en-proceso';
+    };
+  };
+
   getDataPlanesProgramas () {
     this.dataTablaHistorialObservacion.push(
       {
@@ -69,7 +103,27 @@ export class DiagnosticoArtcComponent implements OnInit {
     });
   };
 
-  onSubmit(){
-    this.openDialog( 'La información ha sido guardada exitosamente.', '' );
-  }
+  guardarDiagnostico() {
+
+    let construccion = {
+      contratoConstruccionId: this.contratoConstruccionId,
+      tieneObservacionesDiagnosticoApoyo: this.addressForm.value.tieneObservaciones,
+
+      construccionObservacion: [
+        {
+          construccionObservacionId: this.addressForm.value.construccionObservacionId,
+          contratoConstruccionId: this.contratoConstruccionId,
+          tipoObservacionConstruccion: TiposObservacionConstruccion.Diagnostico,
+          esSupervision: false,
+          esActa: false,
+          observaciones: this.addressForm.value.observaciones,
+
+        }
+      ]
+    };
+
+    console.log(construccion);
+
+  };
+
 }

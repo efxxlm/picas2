@@ -36,10 +36,10 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
 
   getContrato () {
     this.faseUnoConstruccionSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.id )
-    .subscribe( response => {
-      this.contrato = response;
-      console.log( this.contrato );
-    } );
+      .subscribe( response => {
+        this.contrato = response;
+        console.log( this.contrato );
+      } );
   };
 
   openDialog (modalTitle: string, modalText: string) {
