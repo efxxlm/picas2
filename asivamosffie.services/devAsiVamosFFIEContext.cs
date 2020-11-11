@@ -121,9 +121,11 @@ namespace asivamosffie.model.Models
         public virtual DbSet<TipoDominio> TipoDominio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public virtual DbSet<VRegistrarFase1> VRegistrarFase1 { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -364,7 +366,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.CofinanciacionAportanteMunicipio)
                     .HasForeignKey(d => d.MunicipioId)
                     .HasConstraintName("fk_cofinanciacionMunicipio");
- 
+
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
@@ -2334,11 +2336,6 @@ namespace asivamosffie.model.Models
             {
                 entity.HasKey(e => e.InfraestrucutraIntervenirProyectoId);
 
-                entity.Property(e => e.CoordinacionResponsableCodigo)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaEliminacion).HasColumnType("datetime");
@@ -3190,6 +3187,10 @@ namespace asivamosffie.model.Models
                 entity.HasIndex(e => e.LlaveMen)
                     .HasName("uk_llavemen")
                     .IsUnique();
+
+                entity.Property(e => e.CoordinacionResponsableCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
 
@@ -4481,6 +4482,29 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.UsuarioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_usuario");
+            });
+
+            modelBuilder.Entity<VRegistrarFase1>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_RegistrarFase1");
+
+                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroSolicitud)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoSolicitudCodigo)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VRequisitosTecnicosInicioConstruccion>(entity =>

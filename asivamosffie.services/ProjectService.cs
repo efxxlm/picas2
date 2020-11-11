@@ -167,10 +167,10 @@ namespace asivamosffie.services
                     if (
                          string.IsNullOrEmpty(infraestructuraIntervenirProyecto.InfraestructuraCodigo)
                          || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.Cantidad.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesObra.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasObra.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesInterventoria.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesObra.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasObra.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesInterventoria.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo.ToString())
                         )
                     {
                         return false;
@@ -262,12 +262,12 @@ namespace asivamosffie.services
                     if (
                          string.IsNullOrEmpty(infraestructuraIntervenirProyecto.InfraestructuraCodigo)
                          || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.Cantidad.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesObra.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasObra.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasObra.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesInterventoria.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasInterventoria.ToString())
-                         || string.IsNullOrEmpty(infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesObra.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasObra.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasObra.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoMesesInterventoria.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.PlazoDiasInterventoria.ToString())
+                         //|| string.IsNullOrEmpty(infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo.ToString())
                         )
                     {
                         return false;
@@ -558,12 +558,12 @@ namespace asivamosffie.services
                             //InfraestructuraIntervenirProyecto REGISTROS
                             ProyectoId = proyecto.ProyectoId,
                             InfraestructuraCodigo = infraestructuraIntervenirProyecto.InfraestructuraCodigo,
-                            Cantidad = infraestructuraIntervenirProyecto.Cantidad,
-                            PlazoMesesObra = infraestructuraIntervenirProyecto.PlazoMesesObra,
-                            PlazoDiasObra = infraestructuraIntervenirProyecto.PlazoDiasObra,
-                            PlazoMesesInterventoria = infraestructuraIntervenirProyecto.PlazoMesesInterventoria,
-                            PlazoDiasInterventoria = infraestructuraIntervenirProyecto.PlazoDiasInterventoria,
-                            CoordinacionResponsableCodigo = infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo
+                            Cantidad = infraestructuraIntervenirProyecto.Cantidad
+                            //PlazoMesesObra = infraestructuraIntervenirProyecto.PlazoMesesObra,
+                            //PlazoDiasObra = infraestructuraIntervenirProyecto.PlazoDiasObra,
+                            //PlazoMesesInterventoria = infraestructuraIntervenirProyecto.PlazoMesesInterventoria,
+                            //PlazoDiasInterventoria = infraestructuraIntervenirProyecto.PlazoDiasInterventoria,
+                            //CoordinacionResponsableCodigo = infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo
                         };
                         _context.InfraestructuraIntervenirProyecto.Add(infraestructuraIntervenirProyecto1);
                         _context.SaveChanges();
@@ -741,12 +741,12 @@ namespace asivamosffie.services
                                 //InfraestructuraIntervenirProyecto REGISTROS
                                 ProyectoId = pProyecto.ProyectoId,
                                 InfraestructuraCodigo = infraestructuraIntervenirProyecto.InfraestructuraCodigo,
-                                Cantidad = infraestructuraIntervenirProyecto.Cantidad,
-                                PlazoMesesObra = infraestructuraIntervenirProyecto.PlazoMesesObra,
-                                PlazoDiasObra = infraestructuraIntervenirProyecto.PlazoDiasObra,
-                                PlazoMesesInterventoria = infraestructuraIntervenirProyecto.PlazoMesesInterventoria,
-                                PlazoDiasInterventoria = infraestructuraIntervenirProyecto.PlazoDiasInterventoria,
-                                CoordinacionResponsableCodigo = infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo
+                                Cantidad = infraestructuraIntervenirProyecto.Cantidad
+                                //PlazoMesesObra = infraestructuraIntervenirProyecto.PlazoMesesObra,
+                                //PlazoDiasObra = infraestructuraIntervenirProyecto.PlazoDiasObra,
+                                //PlazoMesesInterventoria = infraestructuraIntervenirProyecto.PlazoMesesInterventoria,
+                                //PlazoDiasInterventoria = infraestructuraIntervenirProyecto.PlazoDiasInterventoria,
+                                //CoordinacionResponsableCodigo = infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo
                             };
                             _context.InfraestructuraIntervenirProyecto.Add(infraestructuraIntervenirProyecto1);
                             _context.SaveChanges();
@@ -764,11 +764,12 @@ namespace asivamosffie.services
                                 infraestructuraIntervenirProyecto1.ProyectoId = pProyecto.ProyectoId;
                                 infraestructuraIntervenirProyecto1.InfraestructuraCodigo = infraestructuraIntervenirProyecto.InfraestructuraCodigo;
                                 infraestructuraIntervenirProyecto1.Cantidad = infraestructuraIntervenirProyecto.Cantidad;
-                                infraestructuraIntervenirProyecto1.PlazoMesesObra = infraestructuraIntervenirProyecto.PlazoMesesObra;
-                                infraestructuraIntervenirProyecto1.PlazoDiasObra = infraestructuraIntervenirProyecto.PlazoDiasObra;
-                                infraestructuraIntervenirProyecto1.PlazoMesesInterventoria = infraestructuraIntervenirProyecto.PlazoMesesInterventoria;
-                                infraestructuraIntervenirProyecto1.PlazoDiasInterventoria = infraestructuraIntervenirProyecto.PlazoDiasInterventoria;
-                                infraestructuraIntervenirProyecto1.CoordinacionResponsableCodigo = infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo;
+                            //    infraestructuraIntervenirProyecto1.PlazoMesesObra = infraestructuraIntervenirProyecto.PlazoMesesObra;
+                            //    infraestructuraIntervenirProyecto1.PlazoDiasObra = infraestructuraIntervenirProyecto.PlazoDiasObra;
+                            //    infraestructuraIntervenirProyecto1.PlazoMesesInterventoria = infraestructuraIntervenirProyecto.PlazoMesesInterventoria;
+                            //    infraestructuraIntervenirProyecto1.PlazoDiasInterventoria = infraestructuraIntervenirProyecto.PlazoDiasInterventoria;
+                            //    infraestructuraIntervenirProyecto1.CoordinacionResponsableCodigo = infraestructuraIntervenirProyecto.CoordinacionResponsableCodigo;
+                            //
                             };
                             _context.Update(infraestructuraIntervenirProyecto1);
                             // _context.SaveChanges(); 

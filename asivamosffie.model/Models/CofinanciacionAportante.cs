@@ -32,7 +32,6 @@ namespace asivamosffie.model.Models
         public virtual Cofinanciacion Cofinanciacion { get; set; }
         public virtual Localizacion Departamento { get; set; }
         public virtual Localizacion Municipio { get; set; } 
-
         public virtual ICollection<CofinanciacionDocumento> CofinanciacionDocumento { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
         public virtual ICollection<DisponibilidadPresupuestal> DisponibilidadPresupuestal { get; set; }
