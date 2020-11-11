@@ -32,8 +32,8 @@ namespace asivamosffie.services.Helpers.Enumerator
        GestionarGarantias= 35,
  
         Generar_Registro_Presupuestal=36,
+        Registrar_contratos_modificaciones_contractuales = 46,
 
-        
     }
 
     public enum enumeratorAccion

@@ -26,28 +26,31 @@
     </div>
 
     <mat-card class="shipping-card var-main-gris">
-        <mat-card-content *ngFor=" let aportante of listaAportantes; let i = index ">
+        <mat-card-content >
 
             <mat-card-title class="header-card--text">
-                Aportante {{ i + 1 }}
+                Aportante 
             </mat-card-title>
 
             <p *ngIf="false">
                 <strong>Valor del aportante al proyecto:</strong>
-                {{ aportante.valorAporte }}
+                {{ listaAportantes.valorAporte }}
             </p>
             <p>
                 <strong>Nombre del aportante:</strong>
-                {{ aportante.nombreAportanteString }}
+                {{ listaAportantes.nombreAportante }}
             </p>
-            <p>
-                <strong>Fuente 1:</strong>
-                {{ aportante.fuenteFinanciacionString }}
-            </p>
-            <p>
-                <strong>Valor fuente 1:</strong>
-                {{ aportante.valorFuente | currency }}
-            </p>
+            <div *ngFor="let fuentej of listaAportantes.aportanteFuenteFinanciacion;let j =index;">                
+                <p>
+                    <strong>Fuente {{j+1}}:</strong>
+                    {{fuentej.fuenteFinanciacionString }}
+                </p>
+                <p>
+                    <strong>Valor fuente {{j+1}}:</strong>
+                    {{ fuentej.valorFuente | currency }}
+                </p>
+            </div>
+            
         </mat-card-content>
     </mat-card>
 

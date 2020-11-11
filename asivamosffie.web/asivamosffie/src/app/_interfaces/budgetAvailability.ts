@@ -109,6 +109,7 @@ export interface ListConcecutivoProyectoAdministrativo {
 }
 
 export interface ListAdminProyect{
+    aportanteFuenteFinanciacion?: any;
     proyectoId?: number,
     valorAporte?: number,
     aportanteId?: number,

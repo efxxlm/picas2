@@ -25,6 +25,8 @@ import { DatePipe } from '@angular/common';
 import { CurrencyMaskInputMode, NgxCurrencyModule } from 'ngx-currency';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { DomSafePipe } from './_pipes/dom-safe.pipe';
+import { AuthGuard } from './_guards/auth.guard';
+import { CanDeactivateGuard } from './_guards/can-deactivate.guard';
 //import { LoaderInterceptor } from './_helpers/loader.interceptor';
 
 export const customCurrencyMaskConfig = {
@@ -65,7 +67,9 @@ export const customCurrencyMaskConfig = {
     /*{ provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }, no alcance a implementarlo, att juan*/
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     //{ provide: LOCALE_ID, useValue: "es-ES" },
-    DatePipe
+    DatePipe, 
+    AuthGuard,
+    CanDeactivateGuard
   ],
   bootstrap: [AppComponent]
 })

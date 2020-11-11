@@ -224,6 +224,13 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       'FechaModificacion': "",
       'Eliminado': false
     };
+    const observacionArray={
+      'contratoId':this.idContrato, 
+      "contratoPolizaId":this.idPoliza, 
+      "Observacion":this.addressForm.value.observacionesGenerales,
+      "FechaRevision":this.addressForm.value.fechaRevision,
+      "EstadoRevisionCodigo":this.addressForm.value.estadoRevision.value
+    }
     /*
     const polizaGarantia: CreatePolizaGarantia={
       polizaGarantiaId : this.idPoliza2,

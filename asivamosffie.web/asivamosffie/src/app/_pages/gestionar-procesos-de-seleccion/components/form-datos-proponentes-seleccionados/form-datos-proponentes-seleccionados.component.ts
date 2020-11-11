@@ -376,7 +376,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       this.procesoSeleccionService.deleteProcesoSeleccionIntegranteByID(borrarForm.value[i].procesoSeleccionIntegranteId).subscribe(
         respuesta=>
         {
-          this.openDialog("","<b>La información se ha eliminado correctamente.</b>",true);
+          this.openDialog("","<b>La información ha sido eliminada correctamente.</b>",true);
         }
       );
     }

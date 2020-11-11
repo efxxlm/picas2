@@ -79,6 +79,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
     toolbar: []
   };
   disponibilidadaeditar: DisponibilidadPresupuestal;
+  esEdicion: boolean=false;
 
   constructor(  private fb: FormBuilder,
                 private commonService: CommonService,
@@ -110,6 +111,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         };
       });
   };
+
+  
 
   ngOnInit(): void {    
   };

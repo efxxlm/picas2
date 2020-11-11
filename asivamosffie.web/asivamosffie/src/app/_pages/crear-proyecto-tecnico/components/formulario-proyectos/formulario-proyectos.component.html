@@ -230,6 +230,22 @@
         </div>
       </div>
       <div class="row">
+        <div class="pr-1">
+          <label class="label-left"
+          [ngClass]="{'color-secondaryColor' : !proyecto.coordinacionResponsableCodigo && estaEditando}"
+          >Coordinación responsable</label>
+        </div>
+        <div class="col">
+          <mat-form-field class="select-width">
+            <mat-select required [(ngModel)]="proyecto.coordinacionResponsableCodigo">
+              <mat-option *ngFor="let listado of listaCordinaciones" [value]="listado.codigo">
+                {{ listado.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -320,47 +336,48 @@
               >
                 Latitud
               </label>
-              <mat-form-field class="w-8em" [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
+              <mat-form-field class="w-8em"  [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
               matTooltipClass="info-tooltip">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud" maxlength="7" min="1" max="99"
-                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" required
-                  type="number">
+                <input matInput 
+                  [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud" 
+                  maxlength="10" 
+                  min="1" 
+                  max="99"
+                  
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required
+                  
+                  appOchoDecimales 
+                  >
               </mat-form-field>
 
               <label class="label-left sub-label"
-              [ngClass]="{'color-secondaryColor' : !proyecto.predioPrincipal.ubicacionLatitud2 && estaEditando}"
+              [ngClass]="{'color-secondaryColor' : !proyecto.predioPrincipal.ubicacionLatitud && estaEditando}"
               >
                 º
               </label>
-              <mat-form-field class="w-2em">
-                <input matInput required type="text" maxlength="1"
-                  [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud2" #latitud class="input-string">
-              </mat-form-field>
+              
               <span
-                class="contador">{{7 - (proyecto.predioPrincipal.ubicacionLatitud?proyecto.predioPrincipal.ubicacionLatitud.toString().length:0)}}</span>
+                class="contador">{{10 - (proyecto.predioPrincipal.ubicacionLatitud?proyecto.predioPrincipal.ubicacionLatitud.toString().length:0)}}</span>
               <label class="label-left sub-label"
               [ngClass]="{'color-secondaryColor' : !proyecto.predioPrincipal.ubicacionLongitud && estaEditando}"
               >
                 Longitud
               </label>
               <mat-form-field class="w-8em">
-                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="7" min="1" max="99"
-                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;" required
-                  type="number" [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
+                <input matInput [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud" maxlength="10" min="1" max="99"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required appOchoDecimales
+                  [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
                   matTooltipClass="info-tooltip">
               </mat-form-field>
 
               <label class="label-left sub-label"
-              [ngClass]="{'color-secondaryColor' : !proyecto.predioPrincipal.ubicacionLongitud2 && estaEditando}"
+              [ngClass]="{'color-secondaryColor' : !proyecto.predioPrincipal.ubicacionLongitud && estaEditando}"
               >
                 º
               </label>
-              <mat-form-field class="w-2em">
-                <input matInput required type="text" maxlength="1"
-                  [(ngModel)]="proyecto.predioPrincipal.ubicacionLongitud2" #longitud class="input-string">
-              </mat-form-field>
+
               <span
-                class="contador">{{7 - (proyecto.predioPrincipal.ubicacionLongitud?proyecto.predioPrincipal.ubicacionLongitud.toString().length:0)}}</span>
+                class="contador">{{10 - (proyecto.predioPrincipal.ubicacionLongitud?proyecto.predioPrincipal.ubicacionLongitud.toString().length:0)}}</span>
             </div>
           </div>
         </div>
@@ -714,6 +731,75 @@
         </div>
       </div>
 
+      <h2 class="card-subTitle">Plazos</h2>
+      
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">Plazo obra</label>
+            </div>
+            <div class="col">
+              <label class="label-left sub-label"
+              [ngClass]="{'color-secondaryColor' : !proyecto.plazoMesesObra && estaEditando}"
+              >
+                Meses
+              </label>
+              <mat-form-field class="w-8em">
+                <input matInput [(ngModel)]="proyecto.plazoMesesObra" maxlength="2" min="1" max="99" required
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  type="number" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">
+              </mat-form-field>
+              <label class="label-left sub-label"
+              [ngClass]="{'color-secondaryColor' : !proyecto.plazoDiasObra && estaEditando}"
+              >
+                Días
+              </label>
+              <mat-form-field class="w-8em">
+                <input matInput [(ngModel)]="proyecto.plazoDiasObra" type="number" maxlength="2" min="1"
+                  max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 29 días"
+                  matTooltipClass="info-tooltip">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">Plazo interventoría</label>
+            </div>
+            <div class="col">
+              <label class="label-left sub-label"
+              [ngClass]="{'color-secondaryColor' : !proyecto.plazoMesesInterventoria && estaEditando}"
+              >
+                Meses
+              </label>
+              <mat-form-field class="w-8em">
+                <input matInput [(ngModel)]="proyecto.plazoMesesInterventoria" maxlength="2" min="1" max="99"
+                  (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  required type="number" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">
+              </mat-form-field>
+              <label class="label-left sub-label"
+              [ngClass]="{'color-secondaryColor' : !proyecto.plazoDiasInterventoria && estaEditando}"
+              >
+                Días
+              </label>
+              <mat-form-field class="w-8em">
+                <input matInput [(ngModel)]="proyecto.plazoDiasInterventoria" type="number" maxlength="2"
+                  min="1" max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 29 días"
+                  matTooltipClass="info-tooltip">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <h2 class="card-subTitle">Alcance</h2>
       <div *ngFor="let infraestructura of proyecto.infraestructuraIntervenirProyecto;index as i">
 
@@ -757,88 +843,8 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left">Plazo obra</label>
-              </div>
-              <div class="col">
-                <label class="label-left sub-label"
-                [ngClass]="{'color-secondaryColor' : !infraestructura.plazoMesesObra && estaEditando}"
-                >
-                  Meses
-                </label>
-                <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoMesesObra" maxlength="2" min="1" max="99" required
-                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    type="number" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                    matTooltipClass="info-tooltip">
-                </mat-form-field>
-                <label class="label-left sub-label"
-                [ngClass]="{'color-secondaryColor' : !infraestructura.plazoDiasObra && estaEditando}"
-                >
-                  Días
-                </label>
-                <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasObra" type="number" maxlength="2" min="1"
-                    max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 29 días"
-                    matTooltipClass="info-tooltip">
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left">Plazo interventoría</label>
-              </div>
-              <div class="col">
-                <label class="label-left sub-label"
-                [ngClass]="{'color-secondaryColor' : !infraestructura.plazoMesesInterventoria && estaEditando}"
-                >
-                  Meses
-                </label>
-                <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoMesesInterventoria" maxlength="2" min="1" max="99"
-                    (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    required type="number" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 29 días"
-                    matTooltipClass="info-tooltip">
-                </mat-form-field>
-                <label class="label-left sub-label"
-                [ngClass]="{'color-secondaryColor' : !infraestructura.plazoDiasInterventoria && estaEditando}"
-                >
-                  Días
-                </label>
-                <mat-form-field class="w-8em">
-                  <input matInput [(ngModel)]="infraestructura.plazoDiasInterventoria" type="number" maxlength="2"
-                    min="1" max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                    matTooltipClass="info-tooltip">
-                </mat-form-field>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="pr-1">
-            <label class="label-left"
-            [ngClass]="{'color-secondaryColor' : !infraestructura.coordinacionResponsableCodigo && estaEditando}"
-            >Coordinación responsable</label>
-          </div>
-          <div class="col">
-            <mat-form-field class="select-width">
-              <mat-select required [(ngModel)]="infraestructura.coordinacionResponsableCodigo">
-                <mat-option *ngFor="let listado of listaCordinaciones" [value]="listado.codigo">
-                  {{ listado.nombre }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
+        
+        
         <div class="text-right" *ngIf="proyecto.infraestructuraIntervenirProyecto.length>1">
           <button mat-button color="warn" type="button"  *ngIf="bitPuedoEditar"
           class="btn-eliminar" (click)="deleteInfraestructura(i)">

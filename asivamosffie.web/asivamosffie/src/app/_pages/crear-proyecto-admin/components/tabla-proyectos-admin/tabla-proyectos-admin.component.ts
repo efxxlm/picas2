@@ -65,7 +65,7 @@ export class TablaProyectosAdminComponent {
           if(respuesta)
           {
             this.inicializar();
-            this.openDialog('', "<b>La información ha sido eliminadad correctamente.</b>");
+            this.openDialog('', "<b>La información ha sido eliminada correctamente.</b>");
           }
           else
           {

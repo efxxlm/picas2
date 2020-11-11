@@ -13,10 +13,10 @@ export class PolizaGarantiaService implements OnInit {
   ngOnInit(): void {
 
   }
-  CreatePolizaObservacion(polizaObservacion: CreatePolizaObservacion) {
+  CreatePolizaObservacion(polizaObservacion: any) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateEditPolizaObservacion`, polizaObservacion);
   }
-  CreatePolizaGarantia(polizaGarantia: CreatePolizaGarantia) {
+  CreatePolizaGarantia(polizaGarantia: any) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CreateEditPolizaGarantia`, polizaGarantia);
   }
   CreateContratoPoliza(contratoPoliza: InsertPoliza) {

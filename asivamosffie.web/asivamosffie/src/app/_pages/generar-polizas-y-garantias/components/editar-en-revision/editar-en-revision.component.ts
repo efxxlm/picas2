@@ -273,21 +273,13 @@ export class EditarEnRevisionComponent implements OnInit {
       'FechaModificacion': "",
       'Eliminado': false
     };
-    /*
-    const polizaGarantia: CreatePolizaGarantia={
-      polizaGarantiaId : this.idPoliza2,
-      contratoPolizaId: this.idPoliza,
-      esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo,
-      tipoGarantiaCodigo: members,
-    };
-    
-    const polizaObservacion: CreatePolizaObservacion={
-      polizaObservacionId: this.idObservacion,
-      contratoPolizaId: this.idPoliza,
-      observacion: this.addressForm.value.observacionesGenerales,
-      fechaRevision: this.addressForm.value.fechaRevision,
-      estadoRevisionCodigo: auxValue.value
-    }*/
+    const observacionArray={
+      'contratoId':this.idContrato, 
+      "contratoPolizaId":this.idPoliza, 
+      "Observacion":this.addressForm.value.observacionesGenerales,
+      "FechaRevision":this.addressForm.value.fechaRevision,
+      "EstadoRevisionCodigo":this.addressForm.value.estadoRevision.value
+    }
     var statePoliza;
     if(this.addressForm.value.estadoRevision=="1"){
       statePoliza = "3";
@@ -300,6 +292,9 @@ export class EditarEnRevisionComponent implements OnInit {
         /*this.polizaService.CreatePolizaGarantia(polizaGarantia).subscribe(data0=>{
 
         });*/
+        this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp=>{
+
+        });
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza,this.idContrato).subscribe(resp1=>{
 
         });

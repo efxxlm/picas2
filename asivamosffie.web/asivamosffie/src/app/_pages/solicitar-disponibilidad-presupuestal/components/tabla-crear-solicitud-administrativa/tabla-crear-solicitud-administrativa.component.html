@@ -36,7 +36,7 @@
 
                 <button mat-raised-button color="accent" class="btn-table"
                     (click)="enviarSolicitud(element.disponibilidadPresupuestalId)"
-                    *ngIf="element.estadoSolicitudCodigo == '8' && element.objeto!=null">
+                    *ngIf="(element.estadoSolicitudCodigo == '2' || element.estadoSolicitudCodigo == '8') && element.objeto!=null">
                     Enviar solicitud
                 </button>
 

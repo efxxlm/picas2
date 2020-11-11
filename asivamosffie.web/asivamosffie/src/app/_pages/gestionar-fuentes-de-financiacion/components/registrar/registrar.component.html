@@ -161,7 +161,7 @@
             <mat-form-field class="select-width">
               <mat-select formControlName="vigenciaAcuerdo"  (selectionChange)="changeVigencia()" required>
                 <mat-option *ngFor="let nombreAportantes of nombresAportantes2" [value]="nombreAportantes">
-                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} Creado el: {{ nombreAportantes.fechaCreacion | date:'dd/MM/yyyy' }}
+                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} - Número del acuerdo: {{ nombreAportantes.cofinanciacion.cofinanciacionId }} 
                 </mat-option>
               </mat-select>
             </mat-form-field>

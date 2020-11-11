@@ -11,6 +11,7 @@ import { mergeMap, tap, toArray } from 'rxjs/operators';
 })
 export class FuenteFinanciacionService {
   
+  
 
   constructor( private http:HttpClient
 
@@ -35,6 +36,10 @@ export class FuenteFinanciacionService {
   
   GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid( id: number, idaportante:number ){
     return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid?disponibilidadPresupuestalProyectoid=${id}&aportanteID=${idaportante}`);
+  }
+
+  GetListFuentesFinanciacionByDisponibilidadPresupuestalid(id: any) {
+    return this.http.get<any[]>(`${environment.apiUrl}/SourceFunding/GetListFuentesFinanciacionByDisponibilidadPresupuestald?disponibilidadPresupuestaId=${id}`);
   }
 
   registrarRegistroPresupuestal( registroPresupuestal: RegistroPresupuestal ){

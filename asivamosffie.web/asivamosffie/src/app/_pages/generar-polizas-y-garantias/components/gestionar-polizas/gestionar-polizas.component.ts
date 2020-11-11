@@ -202,9 +202,18 @@ export class GestionarPolizasComponent implements OnInit {
       'FechaModificacion': "",
       'Eliminado': false
     };
+    const observacionArray={
+      'contratoId':this.idContrato, 
+      "Observacion":this.addressForm.value.observacionesGenerales,
+      "FechaRevision":this.addressForm.value.fechaRevision,
+      "EstadoRevisionCodigo":this.addressForm.value.estadoRevision.value
+    }
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
-        this.polizaService.CambiarEstadoPolizaByContratoId("2",this.idContrato).subscribe(resp=>{
+        this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp=>{
+
+        });
+        this.polizaService.CambiarEstadoPolizaByContratoId("2",this.idContrato).subscribe(resp0=>{
 
         });
         this.openDialog('', 'La información ha sido guardada exitosamente.');

@@ -292,12 +292,15 @@ namespace asivamosffie.services
                         cofinanciacionAportante.Eliminado = false;
                         cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
                         _context.CofinanciacionAportante.Add(cofinanciacionAportante);
+                        _context.SaveChanges();
                         foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
                         {
                             cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
                             cofinancicacionDocumento.FechaCreacion = DateTime.Now;
                             cofinancicacionDocumento.Eliminado = false;
                             cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId;
+                            cofinancicacionDocumento.CofinanciacionDocumentoId = 0;
+                            _context.CofinanciacionDocumento.Add(cofinancicacionDocumento);
                         }
                     }
                 }
