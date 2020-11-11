@@ -50,7 +50,7 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-      this.applyFilter("Obra e Interventoria");
+      this.applyFilter("Obra");
     });
   }
   applyFilter(filterValue: string) {

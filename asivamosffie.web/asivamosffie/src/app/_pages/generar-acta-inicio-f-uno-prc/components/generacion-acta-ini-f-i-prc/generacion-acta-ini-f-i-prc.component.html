@@ -147,7 +147,7 @@
                 <div class="d-flex align-items-start">
                     <div class="text-area-quill noDecorated">
                       <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones especiales</label>
-                      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                      <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         (onContentChanged)="maxLength($event, 500)" formControlName="observacionesEspeciales"></quill-editor>
                     </div>
                     <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
