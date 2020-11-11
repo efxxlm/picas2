@@ -413,7 +413,8 @@
                                 [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
                                 >
                             </mat-form-field>
-                            <span class="contador">{{20 - valorVigencia.value.length}}</span>
+                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                            matTooltipClass="info-tooltip">{{20 - valorVigencia.value.length}}</span>
                           </div>
                         </div>
                       </div>

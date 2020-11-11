@@ -167,6 +167,8 @@ div.mat-paginator {
   &.btn-table--sm {
     width: 7em;
     min-width: 7em;
+    margin-left: auto !important;
+    margin-right: auto !important;
   }
 
   .mat-button-wrapper {
