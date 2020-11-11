@@ -1311,7 +1311,7 @@ namespace asivamosffie.services
 
 
             //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-            List<Contrato> ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado==false ).Distinct().ToListAsync();
+            List<Contrato> ListContratos = await _context.Contrato.Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Firmado.ToString()&& !(bool)r.Eliminado).ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
