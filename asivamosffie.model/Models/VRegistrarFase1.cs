@@ -5,14 +5,15 @@ namespace asivamosffie.model.Models
 {
     public partial class VRegistrarFase1
     {
-        public int ContratoId { get; set; }
-        public string NumeroContrato { get; set; }
         public string NumeroSolicitud { get; set; }
-        public string TipoSolicitudCodigo { get; set; }
+        public int ContratoId { get; set; }
         public DateTime? FechaAprobacion { get; set; }
-        public int? CantidadPerfilesAsociados { get; set; }
-        public int? CantidadPerfilesAprobados { get; set; }
-        public int? CantidadPerfilesPendientes { get; set; }
+        public string TipoSolicitudCodigo { get; set; }
+        public string NumeroContrato { get; set; }
+        public int? CantidadProyectosAsociados { get; set; }
+        public int? CantidadProyectosRequisitosAprobados { get; set; }
+        public int? CantidadProyectosConPerfilesPendientes { get; set; }
+        public string EstadoCodigo { get; set; }
         public int? EstaDevuelto { get; set; }
         public int RegistroCompleto { get; set; }
     }

@@ -15,6 +15,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterPreContructionPhase1Service
     {
+        Task<List<VRegistrarFase1>> GetListContratacion2();
+
         Task<dynamic> GetListContratacion();
 
         Task<Contrato> GetContratoByContratoId(int pContratoId);

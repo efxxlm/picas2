@@ -29,6 +29,12 @@ namespace asivamosffie.services
         /// Se listan Los Contratos que tengan poliza aprobada y numero de ddp
         /// </summary>
         /// <returns></returns>
+        /// 
+        public async Task<List<VRegistrarFase1>> GetListContratacion2() 
+        {
+            return await _context.VRegistrarFase1.ToListAsync();
+        }
+
         public async Task<dynamic> GetListContratacion()
         {
             List<dynamic> listaContrats = new List<dynamic>();

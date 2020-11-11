@@ -27,6 +27,12 @@ namespace asivamosffie.api.Controllers
             _registerPreContructionPhase1Service = registerPreContructionPhase1Service;
         }
 
+        [HttpGet]
+        [Route("GetListContratacion2")]
+        public async Task<List<VRegistrarFase1>> GetListContratacion2()
+        {
+            return await _registerPreContructionPhase1Service.GetListContratacion2();
+        }
 
         [HttpGet]
         [Route("GetListContratacion")]
