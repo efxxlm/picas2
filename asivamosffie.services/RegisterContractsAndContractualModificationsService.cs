@@ -306,13 +306,12 @@ namespace asivamosffie.services
 
         public async Task<bool> EnviarNotificaciones(Contrato pContrato, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
-            pContrato = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.Contratacion).FirstOrDefault();
-
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionContratacion341);
             DateTime? FechaFirmaFiduciaria = _context.SesionComiteSolicitud.Where(r => r.SolicitudId == pContrato.Contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.ComiteTecnicoFiduciario.FechaOrdenDia).FirstOrDefault();
 
             var emails = _context.UsuarioPerfil
-                .Where(x =>( x.PerfilId == (int)EnumeratorPerfil.Juridica ) && x.Activo)
+                .Where(x =>( x.PerfilId == (int)EnumeratorPerfil.Juridica 
+                    || x.PerfilId == (int)EnumeratorPerfil.Tecnica) && x.Activo)
                 .Select(x => x.Usuario.Email)
                 .ToList();
             bool blEnvioCorreo  = false;
