@@ -50,7 +50,7 @@ export class VerDetallePolizaComponent implements OnInit {
   incluyeCondicionesGenerales: any;
 
   fechaRevision:any;
-  estadoRevision: { name: string; value: string; };
+  estadoRevision: any;
   fechaAprobacion: any;
   nomAprobado: any;
   observaciones: any;

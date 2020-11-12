@@ -185,11 +185,11 @@
         <strong>Fecha de la revisión:</strong>
         {{this.fechaRevision | date:'dd/MM/yyyy'}}
       </p>
-      <p *ngIf="this.estadoRevision==1">
+      <p *ngIf="this.estadoRevision=='1'">
         <strong>Estado de la revisión:</strong>
         Devuelta
       </p>
-      <p *ngIf="this.estadoRevision==2">
+      <p *ngIf="this.estadoRevision=='2'">
         <strong>Estado de la revisión:</strong>
         Aprobada
       </p>
