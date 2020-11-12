@@ -459,7 +459,8 @@ namespace asivamosffie.services
             {
                 contrato.FechaFirmaContratista = pFechaFirmaContratista;
                 contrato.FechaFirmaActaContratistaInterventoriaFase2 = pFechaFirmaActaContratistaInterventoria;
-                contrato.UsuarioModificacion = pUsuarioModificacion;
+                contrato.UsuarioModificacion = pUsuarioModificacion;  
+                contrato.FechaModificacion = DateTime.Now;
 
                 string strFilePatch = "";
                 //Save Files  
@@ -1238,11 +1239,13 @@ namespace asivamosffie.services
                             //sin alterar los ids
                             construccionObservacion2.EsActa = construccionObservacion.EsActa;
                             construccionObservacion2.EsSupervision = construccionObservacion.EsSupervision;
-                            construccionObservacion2.FechaCreacion = construccionObservacion.FechaCreacion;
-                            construccionObservacion2.FechaModificacion = construccionObservacion.FechaModificacion;
+                            //construccionObservacion2.FechaCreacion = construccionObservacion.FechaCreacion;
+                            //construccionObservacion2.FechaModificacion = construccionObservacion.FechaModificacion;
+                            construccionObservacion2.FechaModificacion = DateTime.Now;
                             construccionObservacion2.Observaciones = Helpers.Helpers.CleanStringInput(construccionObservacion.Observaciones);
-                            construccionObservacion2.UsuarioCreacion = construccionObservacion.UsuarioCreacion;
+                            //construccionObservacion2.UsuarioCreacion = construccionObservacion.UsuarioCreacion;
                             
+
                             //construccionObservacion.ConstruccionObservacionId = construccionObservacion2.ConstruccionObservacionId;
                             //construccionObservacion.ContratoConstruccionId = construccionObservacion2.ContratoConstruccionId;
                             //construccionObservacion.id

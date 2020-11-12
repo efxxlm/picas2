@@ -68,6 +68,15 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if (construccionObservacion.ConstruccionObservacionId == 0)
+                {
+                    construccionObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                }
+                else
+                {
+                    construccionObservacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                }                    
+                    
                 respuesta = await _ActBegin.InsertEditContratoObservacion(construccionObservacion);
                 return Ok(respuesta);
             }
@@ -137,7 +146,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //respuesta = await _ActBegin.CambiarEstadoActa(pSesionComiteSolicitud, pCodigoEstado, HttpContext.User.FindFirst("User").Value);
+
+                pUsuarioModifica=HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.CambiarEstadoActa( pContratoId,  pNuevoCodigoEstadoActa,  pUsuarioModifica);
                 return Ok(respuesta);
             }
@@ -158,6 +168,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //respuesta = await _ActBegin.CambiarEstadoActa(pSesionComiteSolicitud, pCodigoEstado, HttpContext.User.FindFirst("User").Value);
+                pUsuarioModifica = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.CambiarEstadoVerificacionActa(pContratoId, pNuevoCodigoEstadoVerificacionActa, pUsuarioModifica);
                 return Ok(respuesta);
             }
@@ -195,6 +206,7 @@ namespace asivamosffie.api.Controllers
                 _appSettingsService = toAppSettingsService(_settings);
 
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.GuardarCargarActaSuscritaContrato( pContratoId,  pFechaFirmaContratista,  pFechaFirmaActaContratistaInterventoria                     
              ,  pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseActaInicio,  pUsuarioModificacion, _appSettingsService);
                 return Ok(respuesta);
@@ -237,6 +249,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.GuardarTieneObservacionesActaInicio( pContratoId,  pObservacionesActa,  pUsuarioModificacion,  pEsSupervisor,  pEsActa);
                 return Ok(respuesta);
             }
@@ -255,6 +268,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.EditarContratoObservacion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacion,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2,  pEsSupervisor,  pEsActa);
                 return Ok(respuesta);
             }
