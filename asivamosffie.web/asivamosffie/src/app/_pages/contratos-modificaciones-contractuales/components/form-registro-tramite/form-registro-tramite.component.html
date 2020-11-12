@@ -27,14 +27,15 @@
           <label class="label-left">Fecha de envío para firma del contratista</label>
         </div>
         <div class="col d-flex">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
                           <input  matInput
                                   [matDatepicker]="pickerFechaEnvioTramite"
                                   [min]="fechaTramite"
                                   formControlName="fechaEnvioParaFirmaContratista"
                                   placeholder="DD/MM/AAAA"
                                   [class.invalid]="campoSinDiligenciar( 'fechaEnvioParaFirmaContratista' )"
-                                  required>
+                                  (click)="pickerFechaEnvioTramite.open()"
+                                  readonly required>
             <mat-datepicker #pickerFechaEnvioTramite></mat-datepicker>
           </mat-form-field>
           <button mat-button
@@ -58,14 +59,15 @@
           <label class="label-left">Fecha de firma por parte del contratista</label>
         </div>
         <div class="col d-flex">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
                           <input  matInput
                                   [matDatepicker]="pickerFechaFirmaContratista"
                                   [min]="fechaTramite"
                                   formControlName="fechaFirmaPorParteContratista"
                                   placeholder="DD/MM/AAAA"
                                   [class.invalid]="campoSinDiligenciar( 'fechaFirmaPorParteContratista' )"
-                                  required>
+                                  (click)="pickerFechaFirmaContratista.open()"
+                                  readonly required>
             <mat-datepicker #pickerFechaFirmaContratista></mat-datepicker>
           </mat-form-field>
           <button mat-button
@@ -89,14 +91,15 @@
           <label class="label-left">Fecha de envío para la firma de la fiduciaria</label>
         </div>
         <div class="col d-flex">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
                           <input  matInput
                                   [matDatepicker]="pickerFechaEnvioFirmaFiduciaria"
                                   [min]="fechaTramite"
                                   formControlName="fechaEnvioParaFirmaFiduciaria"
                                   placeholder="DD/MM/AAAA"
                                   [class.invalid]="campoSinDiligenciar( 'fechaEnvioParaFirmaFiduciaria' )"
-                                  required>
+                                  (click)="pickerFechaEnvioFirmaFiduciaria.open()"
+                                  readonly required>
             <mat-datepicker #pickerFechaEnvioFirmaFiduciaria></mat-datepicker>
           </mat-form-field>
           <button mat-button
@@ -120,14 +123,15 @@
           <label class="label-left">Fecha de firma por parte de la fiduciaria</label>
         </div>
         <div class="col d-flex">
-          <mat-form-field appearance="fill">
+          <mat-form-field>
                           <input  matInput
                                   [matDatepicker]="pickerFechaFirmaFiduciaria"
                                   [min]="fechaTramite"
                                   formControlName="fechaFirmaPorParteFiduciaria"
                                   placeholder="DD/MM/AAAA"
                                   [class.invalid]="campoSinDiligenciar( 'fechaFirmaPorParteFiduciaria' )"
-                                  required>
+                                  (click)="pickerFechaFirmaFiduciaria.open()"
+                                  readonly required>
             <mat-datepicker #pickerFechaFirmaFiduciaria></mat-datepicker>
           </mat-form-field>
           <button mat-button
@@ -168,7 +172,7 @@
     </div>
   </div>
 
-  <div class="row" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null" style="margin-top: 2em;">
+  <!-- <div class="row" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null" style="margin-top: 2em;">
     <div class="col-md-12">
       <div class="row">
         <div class="pr-1">
@@ -185,7 +189,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div class="container text-center" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
     <p class="info-url"><i>Indique la ruta del soporte de esta información</i></p>
