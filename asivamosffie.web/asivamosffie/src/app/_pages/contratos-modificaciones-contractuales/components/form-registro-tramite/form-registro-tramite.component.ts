@@ -170,10 +170,10 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       pContrato.append( 'observaciones', `${ this.dataFormulario.get( 'observaciones' ).value }` );
     };
 
-    if ( this.dataFormulario.get( 'rutaDocumento' ).value !== null ) {
-      pContrato.append( 'rutaDocumento', this.dataFormulario.get( 'rutaDocumento' ).value );
-      this.estadoCodigo = this.estadoCodigos.firmado;
-    };
+    // if ( this.dataFormulario.get( 'rutaDocumento' ).value !== null ) {
+    //   pContrato.append( 'rutaDocumento', this.dataFormulario.get( 'rutaDocumento' ).value );
+    //   this.estadoCodigo = this.estadoCodigos.firmado;
+    // };
 
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigo )
       .subscribe( 

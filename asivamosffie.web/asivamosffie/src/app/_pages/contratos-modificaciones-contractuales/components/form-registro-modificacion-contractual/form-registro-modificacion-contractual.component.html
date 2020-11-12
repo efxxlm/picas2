@@ -12,12 +12,12 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'numeroOtroSi' ).value.length > 0">
       <label class="mr-label"><b>Fecha de envío para firma del contratista</b></label>
-      <mat-form-field class="w-21"
-                      appearance="fill">
+      <mat-form-field class="w-21">
         <input  matInput
                 [matDatepicker]="pickerFechaEnvioTramite"
                 formControlName="fechaEnvioParaFirmaContratista"
-                placeholder="DD/MM/AAAA">
+                placeholder="DD/MM/AAAA" readonly
+                (click)="pickerFechaEnvioTramite.open()">
         <mat-datepicker #pickerFechaEnvioTramite></mat-datepicker>
       </mat-form-field>
       <button mat-button
@@ -33,12 +33,12 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null">
       <label class="mr-label"><b>Fecha de firma por parte del contratista</b></label>
-      <mat-form-field class="w-22"
-                      appearance="fill">
+      <mat-form-field class="w-22">
         <input  matInput
                 [matDatepicker]="pickerFechaFirmaContratista"
                 formControlName="fechaFirmaPorParteContratista"
-                placeholder="DD/MM/AAAA">
+                placeholder="DD/MM/AAAA"readonly
+                (click)="pickerFechaFirmaContratista.open()">
         <mat-datepicker #pickerFechaFirmaContratista></mat-datepicker>
       </mat-form-field>
       <button mat-button
@@ -54,12 +54,12 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null">
       <label class="mr-label"><b>Fecha de envío para la firma de la fiduciaria</b></label>
-      <mat-form-field class="w-20"
-                      appearance="fill">
+      <mat-form-field class="w-20">
         <input  matInput
                 [matDatepicker]="pickerFechaEnvioFirmaFiduciaria"
                 formControlName="fechaEnvioParaFirmaFiduciaria"
-                placeholder="DD/MM/AAAA">
+                placeholder="DD/MM/AAAA" readonly
+                (click)="pickerFechaEnvioFirmaFiduciaria.open()">
         <mat-datepicker #pickerFechaEnvioFirmaFiduciaria></mat-datepicker>
       </mat-form-field>
       <button mat-button
@@ -75,12 +75,12 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null">
       <label class="mr-label"><b>Fecha de firma por parte de la fiduciaria</b></label>
-      <mat-form-field class="w-22"
-                      appearance="fill">
+      <mat-form-field class="w-22">
         <input  matInput
                 [matDatepicker]="pickerFechaFirmaFiduciaria"
                 formControlName="fechaFirmaPorParteFiduciaria"
-                placeholder="DD/MM/AAAA">
+                placeholder="DD/MM/AAAA" readonly
+                (click)="pickerFechaFirmaFiduciaria.open()">
         <mat-datepicker #pickerFechaFirmaFiduciaria></mat-datepicker>
       </mat-form-field>
       <button mat-button
