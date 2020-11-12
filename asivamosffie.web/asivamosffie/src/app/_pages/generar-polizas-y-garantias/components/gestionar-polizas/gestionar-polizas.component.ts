@@ -84,6 +84,8 @@ export class GestionarPolizasComponent implements OnInit {
   obj2: boolean;
   obj3: boolean;
   obj4: boolean;
+  fechaFirmaContrato: any;
+  tipoSolicitud: any;
   constructor(
     private router: Router,
     private polizaService: PolizaGarantiaService,
@@ -101,10 +103,12 @@ export class GestionarPolizasComponent implements OnInit {
   }
   cargarDatos(id) {
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
+      this.fechaFirmaContrato = data[0].fechaFirmaContrato;
+      this.tipoSolicitud = data[0].tipoSolicitud;
       this.tipoContrato = data[0].tipoContrato;
       this.objeto = data[0].descripcionModificacion;
       this.nombreContratista = data[0].nombreContratista;
-      this.tipoIdentificacion = "NIT"  // quemado 
+      this.tipoIdentificacion = data[0].tipoDocumento;
       this.numeroIdentificacion = data[0].numeroIdentificacion;
       this.valorContrato = data[0].valorContrato;
       this.plazoContrato = data[0].plazoContrato;
@@ -208,6 +212,11 @@ export class GestionarPolizasComponent implements OnInit {
       "FechaRevision":this.addressForm.value.fechaRevision,
       "EstadoRevisionCodigo":this.addressForm.value.estadoRevision.value
     }
+    /*
+    const garantiaArray = {
+      'TipoGarantiaCodigo':this.addressForm.value.polizasYSeguros[0].codigo,
+      'EsIncluidaPoliza':this.addressForm.value.e
+    };*/
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
         this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp=>{

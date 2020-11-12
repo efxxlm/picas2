@@ -86,6 +86,8 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   obj2: boolean;
   obj3: boolean;
   obj4: boolean;
+  fechaFirmaContrato: any;
+  tipoSolicitud: any;
 
   constructor(
     private router: Router,
@@ -119,10 +121,12 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   }
   loadContrato(id){
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data=>{
+      this.fechaFirmaContrato = data[0].fechaFirmaContrato;
+      this.tipoSolicitud = data[0].tipoSolicitud;
       this.tipoContrato=data[0].tipoContrato;
       this.objeto=data[0].descripcionModificacion;
       this.nombreContratista = data[0].nombreContratista;
-      this.tipoIdentificacion = "NIT"  // quemado 
+      this.tipoIdentificacion = data[0].tipoDocumento;
       this.numeroIdentificacion = data[0].numeroIdentificacion;
       this.valorContrato = data[0].valorContrato;
       this.plazoContrato = data[0].plazoContrato;
@@ -196,6 +200,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     let auxValue2 = this.addressForm.value.polizasYSeguros;
     const contratoArray ={
       'contratoId':this.idContrato,  
+      "contratoPolizaId":this.idPoliza, 
       'TipoSolicitudCodigo': "",
       'TipoModificacionCodigo':"",
       'DescripcionModificacion':"",

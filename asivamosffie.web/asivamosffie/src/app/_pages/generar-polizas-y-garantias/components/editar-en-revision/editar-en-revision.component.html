@@ -8,8 +8,8 @@
     Ver detalle/Editar contrato {{this.numContrato}}
   </h1>
   <p class="info-sub-title">
-    <span>Fecha de firma del contrato <b>29/06/2020</b></span>
-    <span><b>Contratación</b></span>
+    <span>Fecha de firma del contrato <b>{{this.fechaFirmaContrato}}</b></span>
+    <span><b>{{this.tipoSolicitud}}</b></span>
     <span>Estado: <b>En revisión de pólizas</b></span>
   </p>
 
@@ -25,7 +25,7 @@
         <strong>Objeto:</strong>
       </p>
       <p>
-       {{this.objeto}}
+        {{this.objeto}}
       </p>
       <p>
         <strong>Nombre del contratista:</strong>
@@ -33,7 +33,7 @@
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
-       {{this.tipoIdentificacion}}
+        {{this.tipoIdentificacion}}
       </p>
       <p>
         <strong>Número de identificación:</strong>
@@ -49,7 +49,7 @@
       </p>
     </mat-card-content>
   </mat-card>
-  <form [formGroup]="addressForm"  (ngSubmit)="onSubmit()">
+  <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
       <mat-card-content>
         <div class="row">
@@ -166,7 +166,7 @@
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
+                  matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
               </div>
             </div>
           </div>
@@ -179,8 +179,8 @@
           <div class="col">
             <mat-form-field class="select-width">
               <mat-select formControlName="polizasYSeguros" multiple required
-                (selectionChange)="getvalues($event.value)">
-                <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
+                (selectionChange)="getvalues($event.value)" >
+                <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros" > 
                   {{ polizasYSeguros.nombre }}
                 </mat-option>
               </mat-select>
@@ -200,8 +200,8 @@
                 </div>
                 <div class="col">
                   <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
+                    <mat-radio-button [value]="true"  [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===true ? true : null) : null   )">Sí</mat-radio-button>
+                    <mat-radio-button [value]="false"  [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===false ? false : null) : null   )">No</mat-radio-button>
                   </mat-radio-group>
                   <span class="required-form-group">*</span>
                 </div>
@@ -405,7 +405,7 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select formControlName="estadoRevision" required>
-                    <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision" >
+                    <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
                       {{ estadoRevision.name }}
                     </mat-option>
                   </mat-select>
@@ -414,7 +414,8 @@
             </div>
           </div>
         </div>
-        <div *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.value == '2'">
+        <div
+          *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.value == '2'">
           <h2 class="card-subTitle">Aprobación</h2>
           <div class="row">
             <div class="col-md-8">
@@ -424,11 +425,12 @@
                 </div>
                 <div class="col d-flex align-items-center">
                   <mat-form-field class="example-full-width">
-                    <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22" [min]="minDate" readonly
-                      (click)="pickerFecha22.open()" required placeholder="DD/MM/AAAA">
+                    <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22" [min]="minDate"
+                      readonly (click)="pickerFecha22.open()" required placeholder="DD/MM/AAAA">
                     <mat-datepicker #pickerFecha22></mat-datepicker>
                   </mat-form-field>
-                  <button mat-button color="primary" type="button" (click)="pickerFecha22.open()" class="btn-calendario">
+                  <button mat-button color="primary" type="button" (click)="pickerFecha22.open()"
+                    class="btn-calendario">
                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                   </button>
                 </div>
