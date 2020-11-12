@@ -1,16 +1,83 @@
 <section class="container text-center">
-    <div class="text-right">
-      <a routerLink="/generarPolizasYGarantias" mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
-      </a>
-    </div>
-    <h1 class="title-menu--h1">
-      Ver detalle contrato 123456
-    </h1>
-    <p class="info-sub-title">
-      <span>Fecha de firma del contrato <b>20/08/2020</b></span>
-      <span><b>Contratacion</b></span>
-      <span>Estado: <b>Con aprobación de pólizas</b></span>
-    </p>
-  
-  </section>
+  <div class="text-right">
+    <a routerLink="/generarPolizasYGarantias" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Ver detalle contrato {{this.numContrato}}
+  </h1>
+  <p class="info-sub-title">
+    <span>Fecha de firma del contrato <b>{{this.fechaFirmaContrato}}</b></span>
+    <span><b>{{this.tipoSolicitud}}</b></span>
+    <span>Estado: <b>Con aprobación de pólizas</b></span>
+  </p>
+</section>
+<section class="container">
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>Tipo de contrato:</strong>
+        {{this.tipoContrato}}
+      </p>
+      <p>
+        <strong>Objeto:</strong>
+      </p>
+      <p>
+        {{this.objeto}}
+      </p>
+      <p>
+        <strong>Nombre del contratista:</strong>
+        {{this.nombreContratista}}
+      </p>
+      <p>
+        <strong>Tipo de identificación:</strong>
+        {{this.tipoIdentificacion}}
+      </p>
+      <p>
+        <strong>Número de identificación:</strong>
+        {{this.numeroIdentificacion}}
+      </p>
+      <p>
+        <strong>Valor del contrato:</strong>
+        ${{this.valorContrato}}
+      </p>
+      <p>
+        <strong>Plazo:</strong>
+        {{this.plazoContrato}}
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>Nombre de la aseguradora:</strong>
+        {{this.nomAseguradora}}
+      </p>
+      <p>
+        <strong>Número de la póliza:</strong>
+        {{this.numPoliza}}
+      </p>
+      <p>
+        <strong>Número de certificado:</strong>
+        {{this.numCertificado}}
+      </p>
+      <p>
+        <strong>Fecha de expedición de la póliza:</strong>
+        {{this.fechaExpPoliza | date:'dd/MM/yyyy'}}
+      </p>
+      <p>
+        <strong>Vigencia de la póliza:</strong>
+        {{this.vigenciaPoliza| date:'dd/MM/yyyy'}}
+      </p>
+      <p>
+        <strong>Vigencia del amparo:</strong>
+        {{this.vigenciaAmparo| date:'dd/MM/yyyy'}}
+      </p>
+      <p>
+        <strong>Valor del amparo:</strong>
+        {{this.valorAmparo | currency}}
+      </p>
+    </mat-card-content>
+  </mat-card>
+</section>
