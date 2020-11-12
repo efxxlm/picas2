@@ -173,17 +173,14 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       const tipoGarantiaCodigo = [];
       this.arrayGarantias = data;
       const polizasListRead = [this.arrayGarantias[0].tipoGarantiaCodigo];
-      console.log(polizasListRead);
       for (let i = 1; i < this.arrayGarantias.length; i++) {
         const Garantiaaux = polizasListRead.push(this.arrayGarantias[i].tipoGarantiaCodigo);
       }
-      console.log(polizasListRead);
       for (let i = 0; i < polizasListRead.length; i++) {
         const polizaSeleccionada = this.polizasYSegurosArray.filter(t => t.codigo === polizasListRead[i]);
         if (polizaSeleccionada.length > 0) { tipoGarantiaCodigo.push(polizaSeleccionada[0]) };
       }
       this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
-      console.log(tipoGarantiaCodigo);
       for (let j = 0; j < polizasListRead.length; j++) {
         switch (polizasListRead[j]) {
           case '1':
@@ -203,13 +200,12 @@ export class EditarObservadaODevueltaComponent implements OnInit {
             this.addressForm.get('polizasYSegurosCompleto').setValue(this.arrayGarantias[j].esIncluidaPoliza);
             break;
         }
-
       }
     });
   }
   loadObservations(id) {
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(t => {
-
+      this.polizaService.loadTableObservaciones.next(t);
     });
   }
   // evalua tecla a tecla
@@ -257,6 +253,13 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     else {
       statePoliza = "2";
     }
+    var completo: boolean;
+    if (this.addressForm.valid) {
+      completo = true;
+    }
+    else {
+      completo = false;
+    }
     console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
     let auxValue2 = this.addressForm.value.polizasYSeguros;
@@ -287,7 +290,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       'FechaAprobacion': this.addressForm.value.fechaAprob,
       'Estado': false,
       'FechaCreacion': "",
-      'RegistroCompleto': false,
+      'RegistroCompleto': completo,
       'FechaModificacion': "",
       'Eliminado': false
     };
@@ -341,6 +344,9 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     }
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
+        this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
+
+        });
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza, this.idContrato).subscribe(resp1 => {
 
         });

@@ -10,6 +10,7 @@ import { Subject } from 'rxjs';
 })
 export class PolizaGarantiaService implements OnInit {
   loadDataItems= new Subject();
+  loadTableObservaciones = new Subject();
   constructor(private http: HttpClient) { }
   ngOnInit(): void {
 

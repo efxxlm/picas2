@@ -106,7 +106,6 @@ export class EditarEnRevisionComponent implements OnInit {
     this.activatedRoute.params.subscribe( param => {
       this.loadContrato(param.id);
       this.loadData(param.id);
-      this.loadObservations(param.id);
     });
   }
 
@@ -166,30 +165,26 @@ export class EditarEnRevisionComponent implements OnInit {
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
     this.loadGarantia(this.idPoliza);
-
+    this.loadObservations(this.idPoliza)
   }
   loadObservations(id){
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data_1=>{
-
+      this.polizaService.loadTableObservaciones.next(data_1);
     });
   }
-
   loadGarantia(id){
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data => {
       const tipoGarantiaCodigo = [];
       this.arrayGarantias = data;
       const polizasListRead = [this.arrayGarantias[0].tipoGarantiaCodigo];
-      console.log(polizasListRead);
       for (let i = 1; i < this.arrayGarantias.length; i++) {
         const Garantiaaux = polizasListRead.push(this.arrayGarantias[i].tipoGarantiaCodigo);
       }
-      console.log(polizasListRead);
       for (let i = 0; i < polizasListRead.length; i++) {
         const polizaSeleccionada = this.polizasYSegurosArray.filter(t => t.codigo === polizasListRead[i]);
         if (polizaSeleccionada.length > 0) { tipoGarantiaCodigo.push(polizaSeleccionada[0]) };
       }
       this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
-      console.log(tipoGarantiaCodigo);
       for (let j = 0; j < polizasListRead.length; j++) {
         switch (polizasListRead[j]) {
           case '1':
@@ -290,6 +285,13 @@ export class EditarEnRevisionComponent implements OnInit {
     else{
       statePoliza = "2";
     }
+    var completo: boolean;
+    if (this.addressForm.valid) {
+      completo = true;
+    }
+    else {
+      completo = false;
+    }
     console.log(polizasList);
     console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
@@ -321,7 +323,7 @@ export class EditarEnRevisionComponent implements OnInit {
       'FechaAprobacion': this.addressForm.value.fechaAprob,
       'Estado': false,
       'FechaCreacion': "",
-      'RegistroCompleto': false,
+      'RegistroCompleto': completo,
       'FechaModificacion': "",
       'Eliminado': false
     };
