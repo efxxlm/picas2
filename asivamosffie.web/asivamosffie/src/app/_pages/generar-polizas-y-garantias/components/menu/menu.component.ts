@@ -9,9 +9,12 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
 export class MenuComponent implements OnInit {
 
   verAyuda = false;
-  public dataTable;
+  dataTable = [];
   constructor(private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
+    this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe(data=>{
+      this.polizaService.loadDataItems.next(data);
+    });
   }
 }

@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Subscription } from 'rxjs';
 import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 
 @Component({
@@ -10,7 +11,6 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./tabla-sin-radicacion-de-polizas.component.scss']
 })
 export class TablaSinRadicacionDePolizasComponent implements OnInit {
-
   displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
   dataSource = new MatTableDataSource();
 
@@ -18,11 +18,15 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataTable;
+  @Input() dataTableAux;
+  loadDataItems: Subscription;
   constructor(private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
-    this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe(data=>{
-      this.dataTable = data;
+    this.loadDataItems = this.polizaService.loadDataItems.subscribe((loadDataItems: any) => {
+      if(loadDataItems!=''){
+      this.dataTable=loadDataItems;
+      }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -40,7 +44,7 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
         return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
       };
       this.applyFilter("Sin radicación de pólizas");
-    });    
+    }); 
   }
 
   applyFilter(filterValue: string) {
