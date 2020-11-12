@@ -245,6 +245,27 @@ namespace asivamosffie.services
             }
         }
 
+        private bool VerificarRegistroCompletoDiagnostico( ContratoConstruccion pConstruccion ){
+            bool completo = true;
+
+            if (
+                pConstruccion.EsInformeDiagnostico == null ||
+                string.IsNullOrEmpty( pConstruccion.RutaInforme )||
+                pConstruccion.CostoDirecto == null ||
+                pConstruccion.Administracion == null ||
+                pConstruccion.Imprevistos == null ||
+                pConstruccion.Utilidad == null ||
+                pConstruccion.ValorTotalFaseConstruccion == null ||
+                pConstruccion.RequiereModificacionContractual == null ||
+                ( pConstruccion.RequiereModificacionContractual == true && pConstruccion.NumeroSolicitudModificacion == null )       
+            ){
+                completo = false;
+            }
+
+            return completo;
+
+        }
+
         public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
         {
             string CreateEdit = string.Empty;
@@ -271,6 +292,8 @@ namespace asivamosffie.services
                     contratoConstruccion.RequiereModificacionContractual = pConstruccion.RequiereModificacionContractual;
                     contratoConstruccion.NumeroSolicitudModificacion = pConstruccion.NumeroSolicitudModificacion;
 
+                    contratoConstruccion.RegistroCompletoDiagnostico = VerificarRegistroCompletoDiagnostico( contratoConstruccion );
+
                 }
                 else
                 {
@@ -280,6 +303,7 @@ namespace asivamosffie.services
 
                     contratoConstruccion.FechaCreacion = DateTime.Now;
                     contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                    contratoConstruccion.RegistroCompletoDiagnostico = false;
 
                     contratoConstruccion.ContratoId = pConstruccion.ContratoId;
                     contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;

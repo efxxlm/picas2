@@ -47,12 +47,18 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title 
+              {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoDiagnostico == true ? 
+                'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoDiagnostico == false ? 
+                      'en-proceso' : 'sin-diligenciar' }}">
               Diagnóstico
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <app-diagnostico [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]" (diagnostico)="getDiagnostico( i, $event )"></app-diagnostico>
+          <app-diagnostico 
+                          [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]" 
+                          (diagnostico)="getDiagnostico( i, $event )">
+          </app-diagnostico>
 
         </mat-expansion-panel>
 
