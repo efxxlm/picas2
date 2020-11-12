@@ -183,15 +183,11 @@ namespace asivamosffie.services
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
 
                 if (!contratacionOld.FechaTramite.HasValue)
-                    contratacionOld.FechaTramite = DateTime.Now;
+                     contratacionOld.FechaTramite = DateTime.Now;
 
                 contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
                 contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
                 contratacionOld.FechaModificacion = pContrato.FechaModificacion;
-
-                contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
-                if((bool)contratoOld.Estado) 
-                      await EnviarNotificaciones(pContrato, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                  
                 //Contrato  
                 //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
@@ -247,8 +243,13 @@ namespace asivamosffie.services
                     if (pContrato.pFile.Length > 0)
                         contratoOld.RutaDocumento = Path.Combine(pPatchfile, contratoOld.ContratoId.ToString(), pContrato.pFile.FileName);
                 }
-            }
 
+                //Enviar Notificaciones
+                contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
+                if ((bool)contratoOld.Estado)
+                    await EnviarNotificaciones(pContrato, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+            } 
             //Contrato Nuevo
             else
             {
@@ -258,18 +259,28 @@ namespace asivamosffie.services
                 pContrato.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.Sin_aprobacion_de_requisitos_tecnicos;
                 _context.Contrato.Add(pContrato);
                 _context.SaveChanges();
-
-
+                 
                 if (pContrato.pFile != null)
                 {
                     if (pContrato.pFile.Length > 0)
                         pContrato.RutaDocumento = Path.Combine(pPatchfile, pContrato.ContratoId.ToString(), pContrato.pFile.FileName);
                 }
+
             }
             string strFilePatch = string.Empty;
             //Save Files  
             if (pContrato.pFile != null && pContrato.pFile.Length > 0)
                 await _documentService.SaveFileContratacion(pContrato.pFile, strFilePatch, pContrato.pFile.FileName);
+
+
+
+            //Cambiar estado contratacion
+            Contratacion contratacionOld = _context.Contratacion.Find(pContrato.ContratacionId); 
+
+            contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
+            contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
+            contratacionOld.FechaModificacion = pContrato.FechaModificacion;
+
 
             _context.SaveChanges();
 
