@@ -102,17 +102,17 @@
         </div>
     </form>
 </div>
-<div align="center" *ngIf="this.observacionesCompleted==true" style="margin-top: 30px;">
+<div align="center" *ngIf="planesProgramas.observacionDevolucionPlanesProgramas">
     <mat-card class="border" style="margin-top: 20px;">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
-               Verificación del apoyo a la supervisión
+              Observaciones de la supervisión
             </mat-card-title>
         </mat-card-header>
-        <mat-card-content align="left" *ngIf="planesProgramas.observacionPlanesProgramasSupervisor">
-            <p><b>{{ planesProgramas.observacionPlanesProgramasSupervisor.fechaCreacion | date: "dd/MM/yyyy" }</b></p>
-            <p><b>¿Tiene observaciones a los planes y programas?:</b> Sí</p>
-            <p>{{ planesProgramas.observacionPlanesProgramasSupervisor.observaciones }}</p>
+        <mat-card-content align="left" >
+            <p><b>{{ planesProgramas.observacionDevolucionPlanesProgramas.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <p>{{ planesProgramas.observacionDevolucionPlanesProgramas.observaciones }}</p>
         </mat-card-content>
     </mat-card>
-</div>
+  </div> 
