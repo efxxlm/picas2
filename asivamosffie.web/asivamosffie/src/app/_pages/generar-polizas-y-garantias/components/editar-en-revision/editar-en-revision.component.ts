@@ -149,7 +149,7 @@ export class EditarEnRevisionComponent implements OnInit {
         if ( polizaSeleccionada.length > 0 ) { tipoGarantiaCodigo.push( polizaSeleccionada[0] ) };
       }
       this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
-      //this.getvalues([tipoGarantiaCodigo]);
+      this.getvalues(tipoGarantiaCodigo);
       this.loadGarantia(data.contratoPolizaId);
       this.dataLoad2(data);
     }); 

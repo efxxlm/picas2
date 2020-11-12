@@ -187,7 +187,7 @@ export class GestionarPolizasComponent implements OnInit {
       'Observaciones':"",
       'ObservacionesRevisionGeneral':this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion':nombreAprobado,
-      'EstadoPolizaCodigo':this.addressForm.value.polizasYSeguros[0].codigo,
+      'EstadoPolizaCodigo':"2",
       'UsuarioCreacion':"usr1",
       'UsuarioModificacion':"usr1",
       'FechaExpedicion': this.addressForm.value.fecha,

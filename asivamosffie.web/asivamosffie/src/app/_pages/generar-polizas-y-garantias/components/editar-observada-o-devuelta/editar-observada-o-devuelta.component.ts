@@ -142,6 +142,16 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.addressForm.get('numeroPoliza').setValue(data.numeroPoliza);
       this.addressForm.get('numeroCertificado').setValue(data.numeroCertificado);
       this.addressForm.get('observacionesGenerales').setValue(data.observacionesRevisionGeneral);
+      this.addressForm.get('fecha').setValue(data.fechaExpedicion);
+      this.addressForm.get('fechaAprob').setValue(data.fechaAprobacion);
+      this.addressForm.get('cumpleAsegurado').setValue(data.cumpleDatosAsegurado);
+      this.addressForm.get('cumpleBeneficiario').setValue(data.cumpleDatosBeneficiario);
+      this.addressForm.get('cumpleAfianzado').setValue(data.cumpleDatosTomador);
+      this.addressForm.get('reciboDePago').setValue(data.incluyeReciboPago);
+      this.addressForm.get('condicionesGenerales').setValue(data.incluyeCondicionesGenerales);
+      this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
+      this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
+      this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
       this.dataLoad2(data);
     }); 
   }
