@@ -1421,7 +1421,6 @@ namespace asivamosffie.services
             List<VistaContratoGarantiaPoliza> ListContratoGrilla = new List<VistaContratoGarantiaPoliza>();
             //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
 
-
             //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo          
 
             List<Contrato> ListContratos = new List<Contrato>();
@@ -1445,8 +1444,7 @@ namespace asivamosffie.services
           .ToListAsync();
 
             }     
-
-         
+                     
 
             //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado)               
 
@@ -1471,6 +1469,7 @@ namespace asivamosffie.services
                     {
                         if (contratoPoliza.TipoSolicitudCodigo != null)
                         {
+                            TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
 
                             if (TipoSolicitudCodigoContratoPoliza != null)
                                 strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
@@ -1562,8 +1561,6 @@ namespace asivamosffie.services
                         TipoSolicitud = strTipoSolicitudCodigoContratoPoliza,
 
                         FechaFirmaContrato = strFechaFirmaContrato,
-
-
 
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
                         //EstadoRegistro { get; set; }
