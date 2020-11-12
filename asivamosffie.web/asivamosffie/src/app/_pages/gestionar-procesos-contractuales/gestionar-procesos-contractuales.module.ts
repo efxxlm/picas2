@@ -21,9 +21,28 @@ import { TablaOtrosDescuentosComponent } from './components/tabla-otros-descuent
 import { FormEjecucionFinancieraComponent } from './components/form-ejecucion-financiera/form-ejecucion-financiera.component';
 import { FormRegistroTramiteComponent } from './components/form-registro-tramite/form-registro-tramite.component';
 import { TablaSolicitudesEnviadasComponent } from './components/tabla-solicitudes-enviadas/tabla-solicitudes-enviadas.component';
+import { DomSafePipe } from '../../_pipes/dom-safe.pipe';
 
 @NgModule({
-  declarations: [ ProcesosContractualesComponent, TablaSolicitudesSinTramitarComponent, FormContratacionComponent, FormAportantesComponent, FormModificacionContractualComponent, TablaProyectosAsociadosComponent, FormLiquidacionComponent, TablaRecursosCompartidosComponent, FormRecursosCompartidosComponent, TablaRecursosAportantesComponent, FormRecursosPagadosComponent, TablaRecursosPagadosComponent, TablaOtrosDescuentosComponent, FormEjecucionFinancieraComponent, FormRegistroTramiteComponent, TablaSolicitudesEnviadasComponent],
+  declarations: [ 
+    ProcesosContractualesComponent,
+    TablaSolicitudesSinTramitarComponent,
+    FormContratacionComponent,
+    FormAportantesComponent,
+    FormModificacionContractualComponent,
+    TablaProyectosAsociadosComponent,
+    FormLiquidacionComponent,
+    TablaRecursosCompartidosComponent,
+    FormRecursosCompartidosComponent,
+    TablaRecursosAportantesComponent,
+    FormRecursosPagadosComponent,
+    TablaRecursosPagadosComponent,
+    TablaOtrosDescuentosComponent,
+    FormEjecucionFinancieraComponent,
+    FormRegistroTramiteComponent,
+    TablaSolicitudesEnviadasComponent,
+    DomSafePipe
+  ],
   imports: [
     CommonModule,
     MaterialModule,

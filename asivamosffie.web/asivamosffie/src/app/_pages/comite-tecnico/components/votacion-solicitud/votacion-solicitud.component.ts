@@ -98,7 +98,7 @@ export class VotacionSolicitudComponent implements OnInit{
       this.listaVotacion.push( grupoVotacion )
     })
 
-    console.log( this.addressForm.value )
+    console.log( this.addressForm.value, this.data.sesionComiteSolicitud )
 
   }
 
@@ -138,7 +138,7 @@ export class VotacionSolicitudComponent implements OnInit{
 
     this.technicalCommitteSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
     .subscribe( respuesta => {
-      this.openDialog('Comité técnico', respuesta.message)
+      this.openDialog('', `<b>${respuesta.message}</b>`)
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.objetoComiteTecnico);
         //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])

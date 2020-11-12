@@ -9,7 +9,7 @@ import { Contratacion } from 'src/app/_interfaces/project-contracting';
 })
 export class ConsideracionesEspecialesComponent implements OnInit {
 
-  @Input() contratacion: Contratacion
+  @Input() contratacion: Contratacion;
   @Output() guardar: EventEmitter<any> = new EventEmitter()
 
   addressForm = this.fb.group({
@@ -33,8 +33,8 @@ export class ConsideracionesEspecialesComponent implements OnInit {
 
   cargarRegistros(){
 
-    this.addressForm.get('reasignacion').setValue( this.contratacion.esObligacionEspecial ? this.contratacion.esObligacionEspecial.toString() : false );
-    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion );
+    this.addressForm.get('reasignacion').setValue( this.contratacion.esObligacionEspecial !== undefined ? this.contratacion.esObligacionEspecial : '' );
+    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion ? this.contratacion.consideracionDescripcion : null );
 
   }
 

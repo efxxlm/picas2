@@ -16,9 +16,9 @@
 
   <form [formGroup]="datosAportantes" novalidate (ngSubmit)="onSave(true)">
     <mat-card class="shipping-card">
-      <mat-card-header class="header-card">
+      <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
-          Datos del aportante
+         Datos del aportante
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
@@ -27,14 +27,13 @@
             <div class="row">
               <div class="pr-1">
                 <label class="label-left"
-                  [ngClass]="{'color-secondaryColor' : datosAportantes.controls.vigenciaEstado.invalid && datosAportantes.controls.vigenciaEstado.dirty}">
+                  [ngClass]="{'color-secondaryColor' : datosAportantes.controls.vigenciaEstado.invalid && datosAportantes.controls.vigenciaEstado.dirty || datosAportantes.controls.vigenciaEstado.invalid && estaEditando}">
                   Vigencia del acuerdo de cofinanciación
                 </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select formControlName="vigenciaEstado" required>
-                    <mat-option></mat-option>
                     <mat-option *ngFor="let vigenciaEstado of vigenciaEstados" [value]="vigenciaEstado">
                       {{ vigenciaEstado }}
                     </mat-option>
@@ -49,18 +48,20 @@
             <div class="row">
               <div class="pr-1">
                 <label class="label-left"
-                [ngClass]="{'color-secondaryColor' : datosAportantes.controls.numAportes.invalid && datosAportantes.controls.numAportes.dirty}">
+                [ngClass]="{'color-secondaryColor' : datosAportantes.controls.numAportes.invalid && datosAportantes.controls.numAportes.dirty || datosAportantes.controls.numAportes.invalid && estaEditando}">
                   ¿Cuántos aportantes tiene el acuerdo?
                 </label>
               </div>
               <div class="col d-flex">
-                <mat-form-field class="full-width">
+                <mat-form-field class="full-width mainColor">
                   <input matInput #numAportes id="numAportes" (keyup)="CambioNumeroAportantes()"
-                    (change)="CambioNumeroAportantes()" maxlength="4" min="1" max="999" required type="number"
-                    formControlName="numAportes" (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                     min="1" max="999" required type="number"
+                    maxlength="3" (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    formControlName="numAportes"
+                    >
                 </mat-form-field>
-                <span class="contador">{{3 - numAportes.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{3 - numAportes.value.length}}</span>
               </div>
             </div>
           </div>
@@ -81,8 +82,8 @@
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
-                        <label class="label-left"                        
-                        [ngClass]="{'color-secondaryColor' : aportante.controls.tipo.invalid && aportante.controls.tipo.dirty}"
+                        <label class="label-left"
+                        [ngClass]="{'color-secondaryColor' : aportante.controls.tipo.invalid && aportante.controls.tipo.dirty|| aportante.controls.tipo.invalid && estaEditando}"
                         >
                         Tipo de aportante
                       </label>
@@ -103,16 +104,15 @@
                   </div>
                 </div>
                 <div class="row"
-                  *ngIf="aportantes.controls[i].get('tipo').value && this.tiposPersonaHabilitaNombre.includes(aportantes.controls[i].get('tipo').value.codigo.toString())">
+                  *ngIf="aportantes.controls[i].get('tipo').value && aportantes.controls[i].get('tipo').value.codigo && aportantes.controls[i].get('tipo').value.codigo.toString()=='3'">
                   <div class="pr-1">
-                    <label class="label-left" 
-                    [ngClass]="{'color-secondaryColor' : aportante.controls.nombre.invalid && aportante.controls.nombre.dirty}"
+                    <label class="label-left"
+                    [ngClass]="{'color-secondaryColor' : aportante.controls.nombre.invalid && aportante.controls.nombre.dirty || aportante.controls.nombre.invalid && estaEditando}"
                     >Nombre de Aportante</label>
                   </div>
                   <div class="col">
                     <mat-form-field class="select-width">
                       <mat-select formControlName="nombre">
-                        <mat-option></mat-option>
                         <mat-option *ngFor="let nombreAportante of nombresAportante" [value]="nombreAportante">
                           {{ nombreAportante.nombre }}
                         </mat-option>
@@ -122,7 +122,7 @@
                 </div>
 
                 <div class="row"
-                  *ngIf="aportantes.controls[i].get('tipo').value && !this.tiposPersonaHabilitaNombre.includes(aportantes.controls[i].get('tipo').value.codigo.toString())">
+                  *ngIf="aportantes.controls[i].get('tipo').value && aportantes.controls[i].get('tipo').value.codigo &&  this.tiposPersonaHabilitaNombre.includes(aportantes.controls[i].get('tipo').value.codigo.toString())">
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
@@ -131,10 +131,10 @@
                         >Departamento</label>
                       </div>
                       <div class="col">
-                        <mat-form-field class="select-width">
+                        <mat-form-field class="select-width capitalize">
                           <mat-select formControlName="departamento" (selectionChange)="changeDepartamento(i)">
                             <mat-option value="0">Seleccione</mat-option>
-                            <mat-option *ngFor="let departamento of departamentos" [value]="departamento">
+                            <mat-option *ngFor="let departamento of departamentos" class="capitalize" [value]="departamento">
                               {{ departamento.descripcion }}
                             </mat-option>
                           </mat-select>
@@ -145,7 +145,7 @@
                 </div>
 
                 <div class="row"
-                  *ngIf="aportantes.controls[i].get('tipo').value && !this.tiposPersonaHabilitaNombre.includes(aportantes.controls[i].get('tipo').value.codigo.toString())">
+                  *ngIf="aportantes.controls[i].get('tipo').value && this.tiposPersonaHabilitaNombre.includes(aportantes.controls[i].get('tipo').value.codigo.toString())">
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
@@ -154,11 +154,11 @@
                         >Municipio</label>
                       </div>
                       <div class="col">
-                        <mat-form-field class="select-width">
+                        <mat-form-field class="select-width capitalize">
                           <mat-select formControlName="municipio">
                             <mat-option value="0">Seleccione</mat-option>
                             <mat-option *ngFor="let municipio of aportantes.controls[i].get('municipios').value"
-                              [value]="municipio">
+                              [value]="municipio"  class="capitalize">
                               {{ municipio.descripcion }}
                             </mat-option>
                           </mat-select>
@@ -173,19 +173,21 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : aportante.controls.cauntosDocumentos.invalid && aportante.controls.cauntosDocumentos.dirty}"
+                        [ngClass]="{'color-secondaryColor' : aportante.controls.cauntosDocumentos.invalid && aportante.controls.cauntosDocumentos.dirty || aportante.controls.cauntosDocumentos.invalid && estaEditando}"
                         >¿Cuántos documentos de apropiación tiene este aportante?</label>
                       </div>
-                      <div class="col d-flex">
-                        <mat-form-field class="full-width">
-                          <input matInput #cauntosDocumentos maxlength="4" (change)="cantidadDocumentos(aportante,i)"
+                      <div class="col d-flex ">
+                        <mat-form-field class="full-width maincolor">
+                          <input matInput #cauntosDocumentos maxlength="4" class="maincolor"
                             (keyup)="cantidadDocumentos(aportante,i)" min="1" max="999" required type="number"
                             (keypress)="validateNumberKeypress($event)" formControlName="cauntosDocumentos"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                            >
                           <input formControlName="cofinanciacionId" type="hidden">
                           <input formControlName="cofinanciacionAportanteId" type="hidden">
                         </mat-form-field>
-                        <span class="contador">{{3 - cauntosDocumentos.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">{{3 - cauntosDocumentos.value.length}}</span>
                       </div>
                     </div>
                   </div>
@@ -207,7 +209,7 @@
     <div class="text-center animatedOpacity"
       *ngIf="datosAportantes.value.aportantes.length > 0 && numAportes.value < 100">
       <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
       </button>
     </div>
   </form>
@@ -228,33 +230,30 @@
     <div>
       <mat-accordion>
         <mat-expansion-panel class="expansion-style" *ngFor="let aportante of listaCofinancAportantes; let i = index">
-          <mat-expansion-panel-header class="expansion-style--header">
+          <mat-expansion-panel-header class="expansion-style--header" *ngIf="aportante.cofinanciacionDocumento.length>0">
             <mat-panel-title class="expansion-style--title"
               [ngClass]="{'sin-diligenciar': validaCompletitud(aportante)==1, 'en-proceso':  validaCompletitud(aportante)==2, 'completo':  validaCompletitud(aportante)==3}">
               Documentos de apropiación aportante {{ i + 1}}
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <mat-card class="shipping-card">
+          <mat-card class="shipping-card"  *ngIf="aportante.cofinanciacionDocumento.length>0">
             <div *ngFor="let documento of aportante.cofinanciacionDocumento;index as a">
-              <mat-card-header>
-                <mat-card-title class="header-card--text alineacion-titulos">
+              <mat-card-content>
+                <mat-card-title class="mat-card-title header-card--text alineacion-titulos2">
                   Documento {{a+1}}
                 </mat-card-title>
-              </mat-card-header>
-              <mat-card-content>
                 <div class="row">
                   <div class="col-md-8">
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : !documento.vigenciaAporte}"
+                        [ngClass]="{'color-secondaryColor' : !documento.vigenciaAporte && documento.cofinanciacionAportanteId>0}"
                         >Vigencia del aporte</label>
                       </div>
                       <div class="col">
                         <mat-form-field class="select-width">
                           <mat-select [(ngModel)]="documento.vigenciaAporte" required>
-                            <mat-option></mat-option>
                             <mat-option *ngFor="let vigenciaAportante of vigenciasAportante"
                               [value]="vigenciaAportante">
                               {{ vigenciaAportante }}
@@ -270,19 +269,19 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : (documento.valorDocumento<1 ||documento.valorDocumento=='')}"
+                        [ngClass]="{'color-secondaryColor' : (documento.valorDocumento<1 || documento.valorDocumento == undefined) && documento.cofinanciacionAportanteId>0 || documento.valorDocumento == undefined && estaEditando}"
                         >Valor indicado en el documento</label>
                       </div>
                       <div class="col d-flex align-items-center">
-                        <mat-form-field class="full-width">
+                        <mat-form-field class="full-width maincolor">
                           <input matInput #valorIndicadoEnElDocumento currencyMask (keyup)="actualizarValores()"
                             required [(ngModel)]="documento.valorDocumento" maxLength="28"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
+                            [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                         </mat-form-field>
                         <span
-                          class="contador">{{20 - (documento.valorDocumento?documento.valorDocumento.toString().length:0)}}</span>
-
+                          class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                          matTooltipClass="info-tooltip">{{20 - (documento.valorDocumento?documento.valorDocumento.toString().length:0)}}</span>
                       </div>
                     </div>
                   </div>
@@ -292,13 +291,12 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : !documento.tipoDocumentoId}"
+                        [ngClass]="{'color-secondaryColor' : !documento.tipoDocumentoId && documento.cofinanciacionAportanteId>0}"
                         >Tipo de documento</label>
                       </div>
                       <div class="col">
                         <mat-form-field class="select-width">
                           <mat-select [(ngModel)]="documento.tipoDocumentoId" required>
-                            <mat-option></mat-option>
                             <mat-option *ngFor="let tipoDocumento of tiposDocumento" [value]="tipoDocumento.dominioId">
                               {{ tipoDocumento.nombre }}
                             </mat-option>
@@ -314,17 +312,18 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : (documento.numeroActa<1 ||documento.numeroActa=='')}"
+                        [ngClass]="{'color-secondaryColor' : (documento.numeroActa<1 ||documento.numeroActa=='') && documento.cofinanciacionAportanteId>0}"
                         >Número de acta</label>
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
-                          <input matInput #numeroDocumento maxlength="20" min="1" required type="number"
+                          <input matInput #numeroDocumento maxlength="20" min="1" class="maincolor" required type="number"
                             (keypress)="validateNumberKeypress($event)" [(ngModel)]="documento.numeroActa"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
                         <span
-                          class="contador">{{20 - (documento.numeroActa?documento.numeroActa.toString().length:0)}}</span>
+                          class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                          matTooltipClass="info-tooltip">{{20 - (documento.numeroActa?documento.numeroActa.toString().length:0)}}</span>
                       </div>
                     </div>
                   </div>
@@ -334,12 +333,12 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : !documento.fechaActa}"
+                        [ngClass]="{'color-secondaryColor' : !documento.fechaActa && documento.cofinanciacionAportanteId>0}"
                         >Fecha del acta</label>
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="example-full-width">
-                          <input matInput [matDatepicker]="picker" [(ngModel)]="documento.fechaActa" [max]="maxDate"
+                          <input matInput [matDatepicker]="picker" class="maincolor" placeholder="DD/MM/AAAA" [(ngModel)]="documento.fechaActa" [max]="maxDate"
                             readonly (click)="picker.open()">
                           <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
@@ -356,18 +355,19 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : (documento.numeroAcuerdo<1||documento.numeroAcuerdo=='')}"
+                        [ngClass]="{'color-secondaryColor' : (documento.numeroAcuerdo<1|| documento.numeroAcuerdo == undefined) && documento.cofinanciacionAportanteId>0}"
                         >Número de documento
                           {{documento.tipoDocumentoId==25?'de acuerdo':''}}</label>
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="full-width">
-                          <input matInput #numeroDocumentoa maxlength="20" min="1" required type="number"
+                          <input matInput #numeroDocumentoa maxlength="20" min="1" class="maincolor" required type="number"
                             (keypress)="validateNumberKeypress($event)" [(ngModel)]="documento.numeroAcuerdo"
                             onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
                         <span
-                          class="contador">{{20 - (documento.numeroAcuerdo?documento.numeroAcuerdo.toString().length:0)}}</span>
+                          class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                          matTooltipClass="info-tooltip">{{20 - (documento.numeroAcuerdo?documento.numeroAcuerdo.toString().length:0)}}</span>
                       </div>
                     </div>
                   </div>
@@ -378,13 +378,13 @@
                     <div class="row">
                       <div class="pr-1">
                         <label class="label-left"
-                        [ngClass]="{'color-secondaryColor' : !documento.fechaAcuerdo}"
+                        [ngClass]="{'color-secondaryColor' : !documento.fechaAcuerdo && documento.cofinanciacionAportanteId>0}"
                         >Fecha del documento
                           {{documento.tipoDocumentoId==25?'de acuerdo':''}}</label>
                       </div>
                       <div class="col d-flex align-items-center">
                         <mat-form-field class="example-full-width">
-                          <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA"
+                          <input matInput [matDatepicker]="picker" class = "maincolor" placeholder="DD/MM/AAAA"
                             [(ngModel)]="documento.fechaAcuerdo" [max]="maxDate" required readonly
                             (click)="picker.open()">
                           <mat-datepicker #picker></mat-datepicker>
@@ -396,9 +396,9 @@
                     </div>
                   </div>
 
-                  <div class="col text-right">
+                  <div class="col text-right" *ngIf="aportante.cofinanciacionDocumento.length>1">
                     <button mat-button color="warn" type="button" class="btn-eliminar"
-                      (click)="eliminadoc(aportante,documento)">
+                      (click)="eliminadoc(aportante,documento,i)">
                       <img src="assets/img/icon/menos.svg" alt="Eliminar documento">
                       Eliminar documento
                     </button>
@@ -416,12 +416,13 @@
                   </div>
                   <div class="col d-flex align-items-center">
                     <mat-form-field class="full-width">
-                      <input matInput readonly maxlength="20" min="1" currencyMask required
+                      <input matInput readonly maxlength="20" min="1" class="maincolor" currencyMask required
                         [(ngModel)]="aportante.valortotal"
-                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }">
+                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                     </mat-form-field>
                     <span
-                      class="contador">{{20 - (aportante.valortotal?aportante.valortotal.toString().length:0)}}</span>
+                      class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                      matTooltipClass="info-tooltip">{{20 - (aportante.valortotal?aportante.valortotal.toString().length:0)}}</span>
                   </div>
                 </div>
               </div>

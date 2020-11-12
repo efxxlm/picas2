@@ -81,11 +81,11 @@ export class CambiarContrasenaComponent implements OnInit {
             let userupdated=respuesta.data;
             userupdated.token=this.currentUser.token;
             this.autenticacionService.setCurrentUserValue(userupdated);
-            this.openDialog('', respuesta.message);            
+            this.openDialog('', `<b>${respuesta.message}</b>`);            
             this.router.navigate(['/home']);
           }
           else{
-            this.openDialog('', respuesta.message);
+            this.openDialog('', `<b>${respuesta.message}</b>`);
           }
         }
         

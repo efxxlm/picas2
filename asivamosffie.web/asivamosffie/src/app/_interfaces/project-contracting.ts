@@ -1,4 +1,5 @@
 export interface Contratacion {
+    
     contratacionId?: number,
     tipoSolicitudCodigo?: string,
     fechaSolicitud?: Date,
@@ -13,10 +14,13 @@ export interface Contratacion {
     observaciones?: string,
     rutaMinuta?: string,
     contratacionProyecto?: ContratacionProyecto[],
+    /*not mapped*/
+    fechaComiteTecnicoNotMapped?: any
 
 }
 
 export interface ContratacionProyecto{
+    
     contratacionProyectoId?: number,
     contratacionId?: number,
     proyectoId?: number,
@@ -24,17 +28,20 @@ export interface ContratacionProyecto{
     usuarioCreacion?: string,
     eliminado?: boolean,
     esReasignacion?: boolean,
-    esAvanceObra?: boolean,
-    porcentajeAvanceObra?: number,
+    esAvanceobra?: boolean,
+    porcentajeAvanceObra?: string,
     requiereLicencia?: boolean,
     licenciaVigente?: boolean,
+    dataAportantes?: any[],
     numeroLicencia?: string,
     fechaVigencia?: Date,
-    contempladaServicioMonitoreo?: boolean,
+    tieneMonitoreoWeb?: boolean,
     contratacionProyectoAportante?: ContratacionProyectoAportante[],    
     proyecto?: any, 
     tipoIntervencionCodigo?: string,
     tipoSolicitudCodigo?: string,
+    
+    proyectoGrilla?: ProyectoGrilla,
 
 }
 
@@ -59,6 +66,7 @@ export interface ProyectoGrilla{
     tipoIntervencion?: string,
     llaveMen?: string,
     region?: string,
+    estadoProyectoCodigo?: string,
 }
 
 export interface ContratacionProyectoAportante{
@@ -109,6 +117,8 @@ interface EstadoSolicitud{
     DevueltaPorComiteTecnico: string,
     DevueltaPorComiteFiduciario: string,
     EnTramite: string,
+    NoAplica: string
+    
   }
   
   export const EstadosSolicitud: EstadoSolicitud = {
@@ -119,12 +129,62 @@ interface EstadoSolicitud{
     DevueltaPorComiteTecnico: '5',
     DevueltaPorComiteFiduciario: '6',
     EnTramite: '7',
+    NoAplica: '8',
+
+  }
+
+  export interface ContratacionObservacion{
+    contratacionObservacionId?: number,
+    contratacionId?: number,
+    observacion?: string,
+    usuarioCreacion?: string,
+    fechaCreacion?: Date,
+    comiteTecnicoId?: number,
+    contratacionProyectoid?: number,
+
+    contratacionProyecto?: ContratacionProyecto,
+    
   }
   
+  interface EstadoProyecto{
+    Disponible?: string,
+    AsignadoSolicitudContratacion?: string,
+    AprobadoComiteTecnico?: string,
+    AprobadoComiteFiduciario?: string,
+    RechazadoComiteTecnico?: string,
+    RechazadoComiteFiduciario?: string,
+    DevueltoComiteTecnico?: string,
+    DevueltoComiteFiduciario?: string,
+  }
+  
+  export const EstadosProyecto: EstadoProyecto = {
+    Disponible : "1",
+    AsignadoSolicitudContratacion : "2",
+    AprobadoComiteTecnico : "3",
+    AprobadoComiteFiduciario : "4",
+    RechazadoComiteTecnico : "5",
+    RechazadoComiteFiduciario : "6",
+    DevueltoComiteTecnico : "7",
+    DevueltoComiteFiduciario : "8",
+  }
 
-
-
-
-
-
-
+  interface EstadosSolicitudCronograma{
+    Creada: string,
+    AprobadaPorComiteTecnico: string,
+    AprobadaPorComiteFiduciario: string,
+    RechazadaPorComiteTecnico: string,
+    RechazadaPorComiteFiduciario: string,
+    DevueltaPorComiteTecnico: string,
+    DevueltaPorComiteFiduciario: string,
+    EnTramite: string,
+  }
+  export const EstadosSolicitudCronograma: EstadosSolicitudCronograma = {
+    Creada: '1',
+    AprobadaPorComiteTecnico: '2',
+    AprobadaPorComiteFiduciario: '3',
+    RechazadaPorComiteTecnico: '4',
+    RechazadaPorComiteFiduciario: '5',
+    DevueltaPorComiteTecnico: '6',
+    DevueltaPorComiteFiduciario: '7',
+    EnTramite: '8',
+  }

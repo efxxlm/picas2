@@ -6,25 +6,25 @@
   </div>
   <div class="text-center mb-2em">
     <h1 class="title-menu--h1 ">
-      Defenir fuentes y usos
+      Definir fuentes y usos
     </h1>
   </div>
 
-  <p class="text-detalle" *ngIf="contratacionProyecto">
-    <!-- <span>{{ contratacionProyecto.tipoIntervencionCodigo }}</span> -->
-    <span><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
-    <span>{{ contratacionProyecto.proyecto.localizacionIdMunicipioNavigation.descripcion }} - </span>
+  <p class="text-detalle d-flex colorMainColor" *ngIf="contratacionProyecto" style="justify-content: center;">
+    <span style="margin-right: 2em;"> {{ tipoIntervencion }} </span>
+    <span style="margin-right: 2em;"><b>{{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }}</b></span>
+    <span style="margin-right: 2em;"> {{ municipio }} </span>
   </p>
 
-  <div class="container-valor" *ngIf="contratacionProyecto">
-    <p>Valor total del proyecto <b>${{ contratacionProyecto.proyecto.valorTotal }}</b></p>
-    <p>Valor obra <b>${{ contratacionProyecto.proyecto.valorObra }}</b></p>
-    <p>Valor interventoría <b>${{ contratacionProyecto.proyecto.valorInterventoria }}</b></p>
+  <div class="container-valor" *ngIf="contratacionProyecto" style="margin: 1em;">
+    <p><b class="var-main-gris">Valor total del proyecto</b> <b style="margin-left: .2em;"> ${{ ( contratacionProyecto.proyecto.valorObra + contratacionProyecto.proyecto.valorInterventoria ) | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p><b class="var-main-gris">Valor obra</b> <b style="margin-left: .6em;">${{ contratacionProyecto.proyecto.valorObra | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
+    <p><b class="var-main-gris">Valor interventoría</b> <b style="margin-left: .6em;">${{ contratacionProyecto.proyecto.valorInterventoria | currency:' ':'symbol-narrow':'.0-0' }}</b></p>
   </div>
 
   <div class="text-center mb-2em">
     <h1 class="title-menu--h1" *ngIf="contratacionProyecto">
-      <!-- {{ contratacionProyecto.tipoSolicitudCodigo == 2 ? 'Intervención' : 'Obra'  }} -->
+      {{ contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra'  }}
     </h1>
   </div>
   <p class="text-center info-container">
@@ -38,12 +38,11 @@
   <mat-accordion formGroupName="aportantes" *ngFor="let aportante of aportantes.controls; let j = index" >
     <mat-expansion-panel class="expansion-style" [formGroupName]="j">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title class="expansion-style--title completo">
+        <mat-panel-title class="expansion-style--title" [ngClass]="aportante.get( 'estadoSemaforo' ).value !== null ? aportante.get( 'estadoSemaforo' ).value : 'sin-diligenciar'">
           Aportante {{ j + 1 }}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      
         <mat-card class="shipping-card">
           <mat-card-content>
             <div class="row">
@@ -53,7 +52,7 @@
                     <label class="label-left">Nombre del aportante:</label>
                   </div>
                   <div class="col d-flex">
-                    <b class="valor-input">FFIE</b>
+                    <b class="valor-input"> {{ aportante.get( 'nombreAportante' ).value }} </b>
                   </div>
                 </div>
               </div>
@@ -62,27 +61,32 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="valorAportanteProyecto">Valor del aportante al
-                      proyecto</label>
+                    <label class="label-left" for="valorAportanteProyecto">Valor del aportante al proyecto</label>
                   </div>
                   <div class="col d-flex">
                     <mat-form-field class="full-width">
                       <!-- <input matInput #valorAportante maxlength="20" min="1" required
                                                 type="number" formControlName="valorAportanteProyecto"> -->
-                      <input matInput #valorAportante currencyMask required maxLength="20"
-                        onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
-                        formControlName="valorAportanteProyecto">
+                      <input  matInput
+                              #valorAportante
+                              currencyMask
+                              required
+                              maxLength="20"
+                              onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                              [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'left' }"
+                              formControlName="valorAportanteProyecto"
+                              (ngModelChange)="validarSaldoDisponible( $event, aportante.get( 'saldoDisponible' ).value, aportante.get( 'nombreAportante' ).value )">
                         <input type="hidden" formControlName="contratacionProyectoAportanteId" >
                         <input type="hidden" formControlName="proyectoAportanteId" >
-                        
+
                     </mat-form-field>
-                    <span class="contador">{{20 - valorAportante.value.length}}</span>
+                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                    matTooltipClass="info-tooltip">{{20 - valorAportante.value.length}}</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="animatedDown">
+            <div class="animatedDown" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0 && esSaldoPermitido === true">
               <h2 class="card-subTitle">Usos</h2>
               <div formGroupName="componentes">
                 <div class="animatedDown" *ngFor="let conponente of componentes(j).controls; let i = index">
@@ -98,8 +102,7 @@
                           </div>
                           <div class="col">
                             <mat-form-field class="select-width">
-                              <mat-select required formControlName="fase">
-                                <mat-option></mat-option>
+                              <mat-select required formControlName="fase" #faseSeleccionada>
                                 <mat-option *ngFor="let fase of fasesSelect" [value]="fase">
                                   {{ fase.nombre }}
                                 </mat-option>
@@ -118,8 +121,7 @@
                           <div class="col">
                             <mat-form-field class="select-width">
                               <mat-select required formControlName="componente">
-                                <mat-option></mat-option>
-                                <mat-option *ngFor="let componente of componentesSelect" [value]="componente">
+                                <mat-option *ngFor="let componente of listaComponentes" [value]="componente" (click)="getlistaUsos( faseSeleccionada.value.codigo , componente.codigo )">
                                   {{ componente.nombre }}
                                 </mat-option>
                               </mat-select>
@@ -142,10 +144,16 @@
                                 <div class="col">
                                   <mat-form-field class="select-width" >
                                     <mat-select required formControlName="usoDescripcion">
-                                      <mat-option></mat-option>
-                                      <mat-option *ngFor="let u of usosSelect" [value]="u">
-                                        {{ u.nombre }}
-                                      </mat-option>
+                                      <section *ngIf="listaUsos.length > 0">
+                                        <mat-option *ngFor="let u of listaUsos" [value]="uso.get( 'usoDescripcion' ).value ? uso.get( 'usoDescripcion' ).value : u" (click)="deleteUsoSeleccionado( u.codigo )">
+                                          {{ uso.get( 'usoDescripcion' ).value ? uso.get( 'usoDescripcion' ).value.nombre : u.nombre }}
+                                        </mat-option>
+                                      </section>
+                                      <section *ngIf="listaUsos.length === 0 && uso.get( 'usoDescripcion' ).value">
+                                        <mat-option [value]="uso.get( 'usoDescripcion' ).value">
+                                          {{ uso.get( 'usoDescripcion' ).value.nombre }}
+                                        </mat-option>
+                                      </section>
                                     </mat-select>
                                   </mat-form-field>
                                 </div>
@@ -153,17 +161,12 @@
                             </div>
                             <div class="col-md-4 text-right p-0">
                               <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                                *ngIf="usos(j, i).length > 1" (click)="borrarArray(usos(j, i), k)">
+                                *ngIf="usos(j, i).length > 1" (click)="deleteUso(usos(j, i), k)">
                                 <img src="assets/img/icon/menos.svg" alt="Eliminar uso">
                                 Eliminar uso
                               </button>
-                              <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
-                                *ngIf="k + 1 === usos(j, i).length" (click)="addUso(j, i)">
-                                <img src="assets/img/icon/mas.svg" alt="Agregar otro uso">
-                                Agregar otro uso
-                              </button>
                             </div>
-                          </div>
+                          </div>                          
                           <div class="row">
                             <div class="col-md-8">
                               <div class="row">
@@ -179,22 +182,30 @@
                                       <input type="hidden" formControlName="componenteUsoId">
                                       <input type="hidden" formControlName="componenteAportanteId">
                                   </mat-form-field>
-                                  <span class="contador">{{20 - valorUso.value.length}}</span>
+                                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                                  matTooltipClass="info-tooltip">{{20 - valorUso.value.length}}</span>
                                 </div>
                               </div>
+                            </div>
+                            <div class="col-md-4 text-right">
+                              <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity"
+                                *ngIf="k + 1 === usos(j, i).length" (click)="addUso(j, i)">
+                                <img src="assets/img/icon/mas.svg" alt="Agregar otro uso">
+                                Agregar otro uso
+                              </button>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="text-right mt-1em">
-                      <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes.length > 1"
-                        (click)="borrarArray(componentes, i)">
+                      <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes( j ).length > 1"
+                        (click)="borrarArray(j, i)">
                         <img src="assets/img/icon/menos.svg" alt="Eliminar componente">
                         Eliminar componente
                       </button>
                       <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes.length === i + 1"
-                        (click)="addComponent( i )">
+                        (click)="addComponent( j )">
                         <img src="assets/img/icon/mas.svg" alt="Agregar otro componente">
                         Agregar otro componente
                       </button>
@@ -205,7 +216,7 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <div class="text-center">
+        <div class="text-center" *ngIf="aportante.get( 'valorAportanteProyecto' ).value > 0 && esSaldoPermitido === true">
           <button mat-button color="warn" class="btn-guardar" type="submit">
             <img src="assets/img/icon/guardar.svg" alt="guardar">
           </button>

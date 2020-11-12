@@ -121,12 +121,9 @@ namespace asivamosffie.model.Models
         public virtual DbSet<TipoDominio> TipoDominio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
-        public virtual DbSet<VRegistrarFase1> VRegistrarFase1 { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -366,7 +363,16 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.CofinanciacionAportanteMunicipio)
                     .HasForeignKey(d => d.MunicipioId)
                     .HasConstraintName("fk_cofinanciacionMunicipio");
- 
+
+                entity.HasOne(d => d.NombreAportante)
+                    .WithMany(p => p.CofinanciacionAportanteNombreAportante)
+                    .HasForeignKey(d => d.NombreAportanteId)
+                    .HasConstraintName("fk_cofinanciacionNombre");
+
+                entity.HasOne(d => d.TipoAportante)
+                    .WithMany(p => p.CofinanciacionAportanteTipoAportante)
+                    .HasForeignKey(d => d.TipoAportanteId)
+                    .HasConstraintName("fk_cofinanciacion_tipo");
             });
 
             modelBuilder.Entity<CofinanciacionDocumento>(entity =>
@@ -4482,39 +4488,6 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.UsuarioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_usuario");
-            });
-
-            modelBuilder.Entity<VRegistrarFase1>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToView("V_RegistrarFase1");
-
-                entity.Property(e => e.CantidadProyectosAsociados).HasColumnName("cantidadProyectosAsociados");
-
-                entity.Property(e => e.CantidadProyectosConPerfilesPendientes).HasColumnName("cantidadProyectosConPerfilesPendientes");
-
-                entity.Property(e => e.CantidadProyectosRequisitosAprobados).HasColumnName("cantidadProyectosRequisitosAprobados");
-
-                entity.Property(e => e.EstadoCodigo)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
-
-                entity.Property(e => e.NumeroContrato)
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.NumeroSolicitud)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.TipoSolicitudCodigo)
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VRequisitosTecnicosInicioConstruccion>(entity =>

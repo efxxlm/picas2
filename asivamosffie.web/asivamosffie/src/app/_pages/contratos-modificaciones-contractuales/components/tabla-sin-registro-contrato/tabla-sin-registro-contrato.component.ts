@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,7 +12,9 @@ import { ContratosModificacionesContractualesService } from '../../../../core/_s
 })
 export class TablaSinRegistroContratoComponent implements OnInit {
 
-  @Input() dataTable: any[] = [];
+  dataTable: any[] = [];
+  @Output() sinData = new EventEmitter<boolean>();
+  @Output() estadoSemaforo = new EventEmitter<string>();
   dataSource                = new MatTableDataSource();
   estadoCodigo: string;
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -23,31 +25,52 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
   estadoCodigos = {
-    enRevision: '9',
-    enFirmaFiduciaria: '11'
+    enviadaFiduciaria: '4',
+    enRevision: '2'
   }
 
   constructor ( private routes: Router,
-                private contratosContractualesSvc: ContratosModificacionesContractualesService ) { };
+                private contratosContractualesSvc: ContratosModificacionesContractualesService ) {
+    this.getGrilla();
+  };
 
   ngOnInit(): void {
-    this.getGrilla();
   };
 
   getGrilla () {
     this.contratosContractualesSvc.getGrilla()
       .subscribe( ( resp: any ) => {
-        const dataTable = [];
-        
-        for ( let contratacion of resp ) {
-          if ( contratacion.estadoCodigo === this.estadoCodigos.enRevision ) {
-            dataTable.push( contratacion );
-            this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
+        let sinDiligenciar = 0;
+        let enProceso = 0;
+        for ( let contrataciones of resp ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
+            this.dataTable.push( contrataciones );
+            sinDiligenciar++;
+          };
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enRevision ) {
+            this.dataTable.push( contrataciones );
+            enProceso++;
           };
         };
 
-        console.log( resp );
-        this.dataSource                        = new MatTableDataSource( dataTable );
+        if ( sinDiligenciar === this.dataTable.length ) {
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
+        };
+
+        if ( enProceso === this.dataTable.length ) {
+          this.estadoSemaforo.emit( 'en-proceso' );
+        };
+
+        if ( ( sinDiligenciar > 0 && sinDiligenciar < this.dataTable.length ) && ( enProceso > 0 && enProceso < this.dataTable.length ) ) {
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
+        };
+
+        if ( this.dataTable.length === 0 ) {
+          this.sinData.emit( false );
+          this.estadoSemaforo.emit( '' );
+        };
+
+        this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;
         this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -59,12 +82,12 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  gestionar ( tipoSolicitud: string, id: number ) {
+  gestionar ( tipoSolicitud: string, id: number, estadoCodigo: string ) {
 
     switch ( tipoSolicitud ) {
 
       case "Contratación":
-        this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo: this.estadoCodigo } } );
+        this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo } } );
       break;
 
       case "Modificación contractual":

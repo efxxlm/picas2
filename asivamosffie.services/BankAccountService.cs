@@ -36,7 +36,7 @@ namespace asivamosffie.services
         public async Task<CuentaBancaria> GetBankAccountById(int id)
         {
             return await _context.CuentaBancaria.FindAsync(id);
-        } 
+        }
 
         public async Task<Respuesta> Insert(CuentaBancaria cuentaBancaria)
         {
@@ -46,8 +46,6 @@ namespace asivamosffie.services
                 if (cuentaBancaria != null)
                 {
                     cuentaBancaria.FechaCreacion = DateTime.Now;
-                    cuentaBancaria.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-
                     _context.Add(cuentaBancaria);
                     await _context.SaveChangesAsync();
 
@@ -68,8 +66,6 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> Update(CuentaBancaria cuentaBancaria)
         {
-            Respuesta _response = new Respuesta();
-
             try
             {
                 CuentaBancaria updateObj = await _context.CuentaBancaria.FindAsync(cuentaBancaria.CuentaBancariaId);
@@ -85,11 +81,11 @@ namespace asivamosffie.services
                 _context.Update(updateObj);
                 await _context.SaveChangesAsync();
 
-                return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesBankAccount.EditadoCorrrectamente };
+                return new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesBankAccount.EditadoCorrrectamente };
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesBankAccount.Error, Message = ex.Message };
+                return new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesBankAccount.Error, Message = ex.Message };
             }
         }
 
@@ -108,44 +104,42 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria)
-        {
-            Respuesta respuesta = new Respuesta();
+        { 
             int idAccionCrearCuentaBancaria = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Cuenta_Bancaria, (int)EnumeratorTipoDominio.Acciones);
-            string strCrearEditar = "";
-
             try
-            {
-
-                if (cuentaBancaria.CuentaBancariaId == null || cuentaBancaria.CuentaBancariaId == 0)
+            { 
+                string strCrearEditar;
+                if (cuentaBancaria.CuentaBancariaId == 0)
                 {
                     //Auditoria
                     strCrearEditar = "CREAR CUENTA BANCARIA";
                     cuentaBancaria.FechaCreacion = DateTime.Now;
                     cuentaBancaria.Eliminado = false;
-
+                    //Registros
+                    cuentaBancaria.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco.ToUpper();
+                    cuentaBancaria.CodigoSifi = cuentaBancaria.CodigoSifi.ToUpper();
                     _context.CuentaBancaria.Add(cuentaBancaria);
                 }
                 else
                 {
-                    strCrearEditar = "EDIT CUENTA BANCARIA";
+                    strCrearEditar = "EDITAR CUENTA BANCARIA";
                     CuentaBancaria cuentaBancariaAntigua = _context.CuentaBancaria.Find(cuentaBancaria.CuentaBancariaId);
                     //Auditoria
                     cuentaBancariaAntigua.UsuarioModificacion = cuentaBancaria.UsuarioCreacion;
                     cuentaBancariaAntigua.FechaModificacion = DateTime.Now;
                     //Registros
                     cuentaBancariaAntigua.NumeroCuentaBanco = cuentaBancaria.NumeroCuentaBanco;
-                    cuentaBancariaAntigua.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco;
-                    cuentaBancariaAntigua.CodigoSifi = cuentaBancaria.CodigoSifi;
+                    cuentaBancariaAntigua.NombreCuentaBanco = cuentaBancaria.NombreCuentaBanco==null?"":cuentaBancaria.NombreCuentaBanco.ToUpper();
+                    cuentaBancariaAntigua.CodigoSifi = cuentaBancaria.CodigoSifi==null?"": cuentaBancaria.CodigoSifi.ToUpper();
                     cuentaBancariaAntigua.TipoCuentaCodigo = cuentaBancaria.TipoCuentaCodigo;
                     cuentaBancariaAntigua.BancoCodigo = cuentaBancaria.BancoCodigo;
                     cuentaBancariaAntigua.Exenta = cuentaBancaria.Exenta;
                     cuentaBancariaAntigua.FuenteFinanciacionId = cuentaBancaria.FuenteFinanciacionId;
-
-                    //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
+                     
                 }
-                //await _context.SaveChangesAsync();
+               await _context.SaveChangesAsync();
 
-                return respuesta =
+                return  
                new Respuesta
                {
                    IsSuccessful = true,
@@ -157,7 +151,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return respuesta =
+                return  
                        new Respuesta
                        {
                            IsSuccessful = false,

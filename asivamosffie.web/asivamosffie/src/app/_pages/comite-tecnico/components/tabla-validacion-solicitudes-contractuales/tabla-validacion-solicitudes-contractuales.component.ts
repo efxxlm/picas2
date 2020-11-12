@@ -1,7 +1,9 @@
+import { prepareEventListenerParameters } from '@angular/compiler/src/render3/view/template';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ComiteTecnico } from 'src/app/_interfaces/technicalCommitteSession';
 
 @Component({
@@ -24,7 +26,9 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(
+    private technicalCommitteSessionService: TechnicalCommitteSessionService
+  ) { }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -44,8 +48,26 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     };
   }
 
-  cargarRegistro(){
-    this.dataSource = new MatTableDataSource( this.ObjetoComiteTecnico.sesionComiteSolicitud );
+  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string) {
+
+    //console.log(pTablaId, pRegistroId)
+    this.technicalCommitteSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
+      .subscribe(resp => {
+        console.log(resp);
+        const documento = `FichaSolicitud${numeroSolicitud}.pdf`;
+        const text = documento,
+          blob = new Blob([resp], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
+
+  }
+
+  cargarRegistro() {
+    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
   }
 
 }

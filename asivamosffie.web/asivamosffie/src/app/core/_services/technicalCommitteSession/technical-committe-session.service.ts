@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Respuesta } from '../common/common.service';
 import { environment } from 'src/environments/environment';
-import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionTemaVoto, SesionSolicitudCompromiso } from 'src/app/_interfaces/technicalCommitteSession';
+import { SolicitudesContractuales, SesionComiteTema, ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionTemaVoto, SesionSolicitudCompromiso, SesionSolicitudObservacionProyecto, SesionParticipante, ProcesoSeleccionMonitoreo } from 'src/app/_interfaces/technicalCommitteSession';
 import { Session } from 'protractor';
-import { ProyectoGrilla } from 'src/app/_interfaces/project-contracting';
+import { ProyectoGrilla, ContratacionObservacion } from 'src/app/_interfaces/project-contracting';
+import { SesionComentario } from 'src/app/_interfaces/compromisos-actas-comite.interfaces';
 
 
 @Injectable({
@@ -23,12 +24,16 @@ export class TechnicalCommitteSessionService {
   }
 
   createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud( comite: ComiteTecnico ){
-     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud`, comite );
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud`, comite );
    }
 
   getListComiteGrilla(){
-     return this.http.get<ComiteGrilla[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getListComiteGrilla`);
-   }
+    return this.http.get<ComiteGrilla[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getListComiteGrilla`);
+  }
+
+  getListComite( EsFiduciario: string ){
+    return this.http.get<ComiteGrilla[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/ListMonitoreo?EsFiduciario=${ EsFiduciario }`);
+ }
 
   cambiarEstadoComiteTecnico( comite: ComiteTecnico ){
      return this.http.put<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/CambiarEstadoComiteTecnico`, comite);
@@ -44,6 +49,10 @@ export class TechnicalCommitteSessionService {
 
    createEditSesionInvitadoAndParticipante( comite: ComiteTecnico ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/createEditSesionInvitadoAndParticipante`, comite );
+   }
+
+   enviarComiteParaAprobacion( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/EnviarComiteParaAprobacion`, comite );
    }
 
    createEditSesionSolicitudVoto( sesionComiteSolicitud: SesionComiteSolicitud ){
@@ -86,9 +95,64 @@ export class TechnicalCommitteSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteSolicitud`, sesionComiteSolicitud);
    }
 
-   noRequiereVotacionSesionComiteTema( sesionComiteTema: SesionComiteTema ){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteTema?idSesionComiteTema=${ sesionComiteTema.sesionTemaId }`, sesionComiteTema );
+   noRequiereVotacionSesionComiteTema( sesionComiteTema: SesionComiteTema, pRequiereVotacion: boolean ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/noRequiereVotacionSesionComiteTema?idSesionComiteTema=${ sesionComiteTema.sesionTemaId }&pRequiereVotacion=${ pRequiereVotacion }`, sesionComiteTema );
+   }
 
+   getCompromisosByComiteTecnicoId( id: number){
+    return this.http.get<ComiteTecnico>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getCompromisosByComiteTecnicoId?ComiteTecnicoId=${ id }`); 
+   }
+
+   verificarTemasCompromisos( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/verificarTemasCompromisos`, comite );
+   }
+
+   crearObservacionProyecto( contratacionObservacion: ContratacionObservacion ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/crearObservacionProyecto`, contratacionObservacion );
+   }
+
+   getSesionSolicitudObservacionProyecto( pSesionComiteSolicitudId: number, pContratacionProyectoId: number ){
+    return this.http.get<SesionSolicitudObservacionProyecto[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getSesionSolicitudObservacionProyecto?pSesionComiteSolicitudId=${ pSesionComiteSolicitudId }&pContratacionProyectoId=${ pContratacionProyectoId }`);
+   }
+
+   getPlantillaByTablaIdRegistroId( pTablaId: string, pRegistroId: number ){
+    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getPlantillaByTablaIdRegistroId?pTablaId=${ pTablaId }&pRegistroId=${ pRegistroId }`, { responseType: "blob" } );
+   }
+
+   getSesionParticipantesByIdComite( id: number ){
+    return this.http.get<SesionParticipante[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getSesionParticipantesByIdComite?pComiteId=${ id }`);
+   }
+
+   getPlantillaActaBySesionComiteSolicitudId( id: number ){
+    return this.http.get(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/GetPlantillaActaIdComite?IdComite=${ id }`, { responseType: "blob" } );
+   }
+
+   getCometariosDelActa( id: number ){
+    return this.http.get<SesionComentario[]>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getCometariosDelActa?pComietTecnicoId=${ id }`);
+   }
+
+   getProcesoSeleccionMonitoreo( id: number ){
+    return this.http.get<ProcesoSeleccionMonitoreo>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/getProcesoSeleccionMonitoreo?pProcesoSeleccionMonitoreoId=${ id }`);
+   }
+
+   eliminarCompromisosSolicitud( id ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/EliminarCompromisosSolicitud?pSesionComiteSolicitudId=${ id }`);
+   }
+
+   eliminarCompromisosTema( id ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/EliminarCompromisosTema?pSesionTemaId=${ id }`);
+   }
+
+   observacionesCompromisos ( pObservacionComentario ) {
+     return this.http.post<Respuesta>( `${environment.apiUrl}/RegisterSessionTechnicalCommittee/ObservacionesCompromisos`, pObservacionComentario );
+   };
+
+   deleteSesionComiteCompromiso( id ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/DeleteSesionComiteCompromiso?pSesionComiteTemaId=${ id }`);
+   }
+
+   deleteTemaCompromiso( id ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/deleteTemaCompromiso?pTemaCompromisoId=${ id }`);
    }
   
 }

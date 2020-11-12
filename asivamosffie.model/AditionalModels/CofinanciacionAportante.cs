@@ -17,10 +17,14 @@ namespace asivamosffie.model.Models
 {
     public partial class CofinanciacionAportante
     {
+        
         [NotMapped]
-        public string TipoAportante  { get; set; }
+        public string TipoAportanteString  { get; set; }
 
         [NotMapped]
-        public string NombreAportante { get; set; }
+        public string NombreAportanteString { get; set; }
+
+        [NotMapped]
+        public decimal? SaldoDisponible { get; set; }
     }
 }

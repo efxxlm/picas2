@@ -32,7 +32,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
-
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormDatosProponentesNuevoComponent } from './components/form-datos-proponentes-nuevo/form-datos-proponentes-nuevo.component';
+import { VerObservacionesComponent } from './components/ver-observaciones/ver-observaciones.component';
 
 @NgModule({
   declarations: [
@@ -52,10 +55,12 @@ import { MatCardModule } from '@angular/material/card';
     CargarOrdenDeElegibilidadComponent,
     TablaOrdenDeElegibilidadComponent,
     VerDetalleTablaProcesosComponent,
+    VerObservacionesComponent,
     MonitorearCronogramaComponent,
     TablaCronogramaComponent,
     TablaDetalleCronogramaComponent,
-    RegistrarSeguimientoCronogramaComponent
+    RegistrarSeguimientoCronogramaComponent,
+    FormDatosProponentesNuevoComponent
   ],
   imports: [
     CommonModule,
@@ -67,7 +72,9 @@ import { MatCardModule } from '@angular/material/card';
     MatButtonModule,
     MatSelectModule,
     MatRadioModule,
-    MatCardModule
-  ]
+    MatCardModule,
+    CurrencyMaskModule,
+    MatAutocompleteModule
+  ],  
 })
 export class GestionarProcesosDeSeleccionModule { }

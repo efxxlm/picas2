@@ -1,0 +1,74 @@
+<section class="container">
+    <div class="text-right">
+        <a routerLink="../.." mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Crear solicitud de disponibilidad presupuestal
+        </h1>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="pr-1">
+            <label class="label-left">Consecutivo proyecto administrativo:</label>
+        </div>
+        <div class="col">
+            <mat-form-field class="select-width">
+                <mat-select formControlName="consecutivo" required>
+                    <mat-option>
+                        option
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+
+            <mat-card-title class="header-card--text">
+                Aportante 1
+            </mat-card-title>
+
+            <p>
+                <strong>Valor del aportante al proyecto:</strong>
+                $70.000.000
+            </p>
+            <p>
+                <strong>Nombre del aportante:</strong>
+                FFIE
+            </p>
+            <p>
+                <strong>Fuente 1:</strong>
+                Contingencia
+            </p>
+            <p>
+                <strong>Valor fuente 1:</strong>
+                $70.000.000
+            </p>
+        </mat-card-content>
+    </mat-card>
+
+    <div class="d-flex align-items-center">
+        <div class="text-area-quill">
+            <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
+        </div>
+        <span class="contador miles" *ngIf="objeto.value">
+            {{1000 - (textoLimpio(objeto.value)>1000?1000:textoLimpio(objeto.value))}}
+        </span>
+        <span class="contador miles" *ngIf="objeto.value">
+            1000
+        </span>
+    </div>
+
+    <div class="text-center">
+        <button mat-button color="warn" class="btn-guardar" (click)="enviarObjeto()">
+            <img src="assets/img/icon/guardar.svg" alt="Guardar">
+        </button>
+    </div>
+
+</section>

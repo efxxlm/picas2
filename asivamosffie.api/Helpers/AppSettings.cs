@@ -30,6 +30,8 @@
 
         public string DirectoryBaseCargue { get; set; }
 
+        public string DirectoryBaseActaInicio { get; set; }
+
         public string DirectoryBaseProyectos { get; set; }
          
         public string YearVigente { get; set; }
@@ -45,4 +47,5 @@
         public string DirectoryActaSuscritaContrato { get; set; }
 
     }
+  
 }

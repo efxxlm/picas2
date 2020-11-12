@@ -1,4 +1,4 @@
-<mat-card class="shipping-card">
+<mat-card class="shipping-card" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
   <mat-card-content>
     <div class="row mt-1em">
       <div class="col-md-8">
@@ -19,11 +19,11 @@
       </div>
     </div>
     <div class="text-center">
-      <button mat-raised-button color="accent" class="btn-cargar-elegibilidad"
+      <button mat-raised-button  *ngIf="editar" color="accent" class="btn-cargar-elegibilidad"
         [disabled]="selectTipoProceso.invalid" (click)="openCargarElegibilidad()">
         Cargar orden de elegibilidad
       </button><br>
-      <button mat-button color="warn" class="btn-descargar-plantilla">
+      <button mat-button color="warn" class="btn-descargar-plantilla" (click)="descargaPlantilla()">
           <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar--img">
           Descargar Excel para realizar cargue de proponentes habilitados
       </button>

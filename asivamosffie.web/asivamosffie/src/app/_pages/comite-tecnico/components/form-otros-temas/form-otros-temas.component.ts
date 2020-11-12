@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { SesionComiteTema, SesionParticipante, TemaCompromiso } from 'src/app/_interfaces/technicalCommitteSession';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { forkJoin } from 'rxjs';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-form-otros-temas',
@@ -18,9 +19,15 @@ export class FormOtrosTemasComponent implements OnInit {
 
   @Input() sesionComiteTema: SesionComiteTema;
   @Input() listaMiembros: SesionParticipante[];
+  @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   listaResponsables: Dominio[] = [];
   responsable: Dominio = {}
+
+  tieneVotacion: boolean = true;
+  cantidadAprobado: number = 0;
+  cantidadNoAprobado: number = 0;
+  resultadoVotacion: string = '';
 
   addressForm = this.fb.group({
     estadoSolicitud: [null, Validators.required],
@@ -78,6 +85,12 @@ export class FormOtrosTemasComponent implements OnInit {
         this.listaResponsables = response[1];
       })
 
+    this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
+
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
   }
 
   maxLength(e: any, n: number) {
@@ -93,8 +106,54 @@ export class FormOtrosTemasComponent implements OnInit {
     }
   }
 
+  changeCompromisos( requiereCompromisos ){
+
+    if ( requiereCompromisos.value === false )
+    {
+      console.log( requiereCompromisos.value );
+      this.technicalCommitteSessionService.eliminarCompromisosTema( this.sesionComiteTema.sesionTemaId )
+        .subscribe( respuesta => {
+          if (respuesta.code == "200"){
+            this.compromisos.clear();
+            this.addressForm.get("cuantosCompromisos").setValue(null); 
+          }
+        })
+    }
+  }
+
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
+  }
+
+  eliminarCompromisos(i) {
+
+    let compromiso = this.compromisos.controls[i];
+
+    this.technicalCommitteSessionService.deleteTemaCompromiso(compromiso.get('temaCompromisoId').value)
+      .subscribe(respuesta => {
+        if (respuesta.code == "200") {
+          this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+          this.compromisos.removeAt(i)
+          this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
+        }
+      })
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        this.eliminarCompromisos(e);
+      }
+    });
+  }
+
+  EliminarCompromiso(i: number) {
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este compromiso?</b>', i);
   }
 
   agregaCompromiso() {
@@ -106,22 +165,45 @@ export class FormOtrosTemasComponent implements OnInit {
       temaCompromisoId: [],
       sesionTemaId: [],
       tarea: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       responsable: [null, Validators.required],
       fecha: [null, Validators.required]
     });
   }
 
+  validarCompromisosDiligenciados(): boolean {
+    let vacio = true;
+    this.compromisos.controls.forEach(control => {
+      if (  control.value.tarea || 
+            control.value.responsable ||
+            control.value.fecha
+      )
+        vacio = false;
+    })
+
+    return vacio;
+  }
+
   CambioCantidadCompromisos() {
     const FormGrupos = this.addressForm.value;
-    if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos < 100) {
+    if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos <= 10) {
       while (this.compromisos.length < FormGrupos.cuantosCompromisos) {
         this.compromisos.push(this.crearCompromiso());
       }
     } else if (FormGrupos.cuantosCompromisos <= this.compromisos.length && FormGrupos.cuantosCompromisos >= 0) {
-      while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
-        this.borrarArray(this.compromisos, this.compromisos.length - 1);
+      if (this.validarCompromisosDiligenciados()) {
+
+        while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
+          this.borrarArray(this.compromisos, this.compromisos.length - 1);
+        }
+
+      }
+      else {
+        
+        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
+        this.addressForm.get('cuantosCompromisos').setValue( this.compromisos.length );
+
       }
     }
   }
@@ -163,16 +245,40 @@ export class FormOtrosTemasComponent implements OnInit {
     })
 
     console.log(tema)
-
     this.technicalCommitteSessionService.createEditTemasCompromiso(tema)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
-        if (respuesta.code == "200")
+        this.openDialog('', `<b>${respuesta.message}</b>`)
+        this.validar.emit( respuesta.data );
+        
+        if (respuesta.code == "200" && !respuesta.data)
           this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteTema.comiteTecnicoId])
       })
   }
 
   cargarRegistro() {
+
+    if ( this.sesionComiteTema.requiereVotacion ){
+      this.sesionComiteTema.sesionTemaVoto.forEach(sv => {
+        if (sv.esAprobado)
+          this.cantidadAprobado++;
+        else
+          this.cantidadNoAprobado++;
+      })
+  
+      if (this.cantidadNoAprobado == 0){
+        this.resultadoVotacion = 'Aprobó'
+        this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+      }else if ( this.cantidadAprobado == 0 ){
+        this.resultadoVotacion = 'No Aprobó'
+        this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
+      }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+        this.resultadoVotacion = 'Aprobó'
+      }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+        this.resultadoVotacion = 'No Aprobó'
+      }
+    }
+    
+  
 
     this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
 
@@ -204,6 +310,9 @@ export class FormOtrosTemasComponent implements OnInit {
 
         this.compromisos.push(grupoCompromiso)
       })
+     
+  
+        this.tieneVotacion = this.sesionComiteTema.requiereVotacion;
 
     });
   }

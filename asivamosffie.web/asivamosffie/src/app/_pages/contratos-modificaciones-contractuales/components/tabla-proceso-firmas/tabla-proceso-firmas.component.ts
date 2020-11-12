@@ -1,9 +1,12 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ContratosModificacionesContractualesService } from '../../../../core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
+import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-proceso-firmas',
@@ -12,8 +15,9 @@ import { ContratosModificacionesContractualesService } from '../../../../core/_s
 })
 export class TablaProcesoFirmasComponent implements OnInit {
 
-  @Input() dataTable: any[] = [];
   dataSource                = new MatTableDataSource();
+  @Output() sinData = new EventEmitter<boolean>();
+  @Output() estadoAcordeon = new EventEmitter<string>();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoRegistro', 'estadoDocumento', 'id' ];
@@ -21,38 +25,54 @@ export class TablaProcesoFirmasComponent implements OnInit {
     { titulo: 'Número de solicitud', name: 'numeroSolicitud' },
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
+  dataTable: any[] = [];
   estadoCodigo: string;
   estadoCodigos = {
-    enFirmaFiduciaria: '11',
-    firmado: '12',
-    registrado: '13'
+    enFirmaFiduciaria: '5',
+    enFirmaContratista: '10',
+    firmado: '8',
+    registrado: '6'
   }
 
   constructor ( private routes: Router,
-                private contratosContractualesSvc: ContratosModificacionesContractualesService ) { }
+                private contratosContractualesSvc: ContratosModificacionesContractualesService,
+                private dialog: MatDialog,
+                private procesosContractualesSvc: ProcesosContractualesService ) {
+    this.getGrilla();
+  }
 
   ngOnInit(): void {
-    this.getGrilla();
   };
 
   getGrilla () {
     this.contratosContractualesSvc.getGrilla()
-      .subscribe( ( resp: any ) => {
-        const dataTable = [];
-        
-        for ( let contratacion of resp ) {
-          if ( contratacion.estadoCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
-            dataTable.push( contratacion );
-            this.estadoCodigo = this.estadoCodigos.firmado;
-          };
-          if ( contratacion.estadoCodigo === this.estadoCodigos.firmado ) {
-            dataTable.push( contratacion );
-            this.estadoCodigo = this.estadoCodigos.firmado;
+      .subscribe( ( resp: any ) => {     
+        let conTrue = 0;
+        let conFalse = 0;
+        let firmado = 0;
+        let firmaContratista = 0;
+        for ( let contrataciones of resp ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enFirmaFiduciaria ) {
+            this.dataTable.push( contrataciones );
+          } else if ( contrataciones.estadoCodigo === this.estadoCodigos.firmado ) {
+            this.dataTable.push( contrataciones );
+            firmado++;
+          } else if ( contrataciones.estadoCodigo === this.estadoCodigos.enFirmaContratista ) {
+            this.dataTable.push( contrataciones );
+            firmaContratista++;
           };
         };
-
-        console.log( resp );
-        this.dataSource                        = new MatTableDataSource( dataTable );
+        if ( this.dataTable.length === 0 ) {
+          this.sinData.emit( false );
+        };
+        if ( firmaContratista === this.dataTable.length ) {
+          this.estadoAcordeon.emit( 'sin-diligenciar' );
+        } else if ( firmado === this.dataTable.length ) {
+          this.estadoAcordeon.emit( 'completo' );
+        } else if ( firmaContratista < this.dataTable.length || firmado < this.dataTable.length ) {
+          this.estadoAcordeon.emit( 'en-proceso' );
+        };
+        this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;
         this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -64,12 +84,12 @@ export class TablaProcesoFirmasComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  gestionar ( tipoSolicitud: string, id: number ) {
+  gestionar ( tipoSolicitud: string, id: number, estadoCodigo: string ) {
 
     switch ( tipoSolicitud ) {
 
       case "Contratación":
-        this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo: this.estadoCodigo } } );
+        this.routes.navigate( [ '/contratosModificacionesContractuales/contratacion', id ], { state: { estadoCodigo } } );
       break;
 
       case "Modificación contractual":
@@ -82,8 +102,32 @@ export class TablaProcesoFirmasComponent implements OnInit {
 
   };
 
+  openDialog (modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data : { modalTitle, modalText }
+    });
+  };
+
   cambioEstadoRegistrado ( elemento ) {
-    console.log( elemento, this.estadoCodigos.registrado );
+    elemento.contratacion.estadoSolicitudCodigo = this.estadoCodigos.registrado;
+    elemento.estadoCodigo = this.estadoCodigos.registrado
+
+    const pContrato = new FormData();
+
+    pContrato.append( 'contratacionId', `${ elemento.contratacion.contrato[0].contratacionId }` );
+    pContrato.append( 'contratoId', `${ elemento.contratacion.contrato[0].contratoId }` );
+
+    this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigos.registrado )
+      .subscribe(
+        response => {
+          this.openDialog( '', `<b>${response.message}</b>` );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/contratosModificacionesContractuales' ] )
+          );
+        },
+        err => this.openDialog( '', `<b>${err.message}</b>` )
+      );
   }
 
 };

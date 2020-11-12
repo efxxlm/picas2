@@ -11,6 +11,7 @@ import { RegistroPresupuestal } from '../fuenteFinanciacion/fuente-financiacion.
   providedIn: 'root'
 })
 export class CofinanciacionService {
+  
 
   constructor( private http: HttpClient ) {}
 
@@ -32,6 +33,10 @@ export class CofinanciacionService {
   EliminarCofinanciacionByCofinanciacionId(idcof:number)
   {    
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarCofinanciacionByCofinanciacionId?pCofinancicacionId=${idcof}`,null);
+  }
+
+  EliminarCofinanciacionAportanteByCofinanciacionAportanteId(idCof) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarCofinanciacionAportanteByCofinanciacionAportanteId?pCofinancicacionId=${idCof}`,null);
   }
 
   listaAcuerdosCofinanciacion(){ 
@@ -56,7 +61,7 @@ export interface Cofinanciacion{
   cofinanciacionId: number,
   vigenciaCofinanciacionId: number,
   cofinanciacionAportante: CofinanciacionAportante[],
-  fechaCreacion?: Date,
+  fechaCreacion?: string,
   valorTotal?: number,
   estadoRegistro?: string,
   eliminado?:boolean

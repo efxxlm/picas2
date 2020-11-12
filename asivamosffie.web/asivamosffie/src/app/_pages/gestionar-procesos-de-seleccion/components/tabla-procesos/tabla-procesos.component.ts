@@ -5,9 +5,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
 import { VerDetalleTablaProcesosComponent } from "../ver-detalle-tabla-procesos/ver-detalle-tabla-procesos.component";
-import { ProcesoSeleccionService, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccionService, ProcesoSeleccion, EstadosProcesoSeleccion, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
+import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 
 @Component({
   selector: 'app-tabla-procesos',
@@ -19,7 +20,8 @@ export class TablaProcesosComponent implements OnInit {
   displayedColumns: string[] = [ 'fechaCreacion', 'tipo', 'numero', 'etapa', 'estadoDelProceso', 'estadoDelRegistro', 'id'];
   dataSource = new MatTableDataSource();
   listaProceso: ProcesoSeleccion[] = [];
-
+  estadosProcesoSeleccion = EstadosProcesoSeleccion;
+  
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
@@ -57,20 +59,49 @@ export class TablaProcesosComponent implements OnInit {
         
         if (nombreTipo)   proceso.tipoProcesoNombre = nombreTipo.nombre;
         if (nombreEstado) proceso.estadoProcesoSeleccionNombre = nombreEstado.nombre;
-        if (nombreEtapa)  proceso.etapaProcesoSeleccionNombre = nombreTipo.nombre;
-
+        if (nombreEtapa)  proceso.etapaProcesoSeleccionNombre = nombreEtapa.nombre;
+        
+        if(proceso.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
+        {
+          //valido si esta incompleto si no tiene datos de evaluacion y proponentes seleccionados
+          if(proceso.evaluacionDescripcion!="" 
+          && proceso.urlSoporteEvaluacion!=""
+        
+        )
+          {
+            //si cerrada debe tener contratista
+            if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Cerrada)
+            {
+              if(proceso.listaContratistas?.length>0)
+              {
+                proceso.esCompleto=true;                
+              }              
+              else
+              {
+                proceso.esCompleto=false;
+              }
+            }
+            else
+            {
+              proceso.esCompleto=true;  
+            }            
+          }
+          else{
+            proceso.esCompleto=false;
+          }
+        }
           //this.dataSource = new MatTableDataSource( respuesta[0] );
       })
       this.dataSource = new MatTableDataSource( this.listaProceso );
-      
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.previousPageLabel = 'Anterior';  
 
     })
 
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    
   }
 
   verMas(e: number) {

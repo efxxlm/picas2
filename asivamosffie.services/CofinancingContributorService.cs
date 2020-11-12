@@ -17,8 +17,7 @@ namespace asivamosffie.services
 
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
-
-
+         
         public CofinancingContributorService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _context = context;
@@ -27,7 +26,7 @@ namespace asivamosffie.services
 
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetContributor()
         {
-            return await _context.CofinanciacionAportante.ToListAsync();
+            return await _context.CofinanciacionAportante.Where(ca => !(bool)ca.Eliminado).ToListAsync();
         }
 
         public async Task<CofinanciacionAportante> GetContributorById(int id)
@@ -71,8 +70,7 @@ namespace asivamosffie.services
         {
             return await _context.RegistroPresupuestal.FindAsync(id);
         }
-
-
+         
         // Grilla de control? { AportanteId }
         public async Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId)
         {
@@ -80,8 +78,7 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante)
-        {
-            Respuesta _reponse = new Respuesta();
+        { 
             int IdAccionCRegistrarAportante = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.RegistrarAportante)).Select(x => x.DominioId).First();
 
             try
@@ -91,10 +88,8 @@ namespace asivamosffie.services
                     //var AP = Helpers.Helpers.ConvertToUpercase(aportante);                   
                     _context.Add(CofnaAportante);
                     await _context.SaveChangesAsync();
-
-
-
-                    return _reponse = new Respuesta
+                     
+                    return   new Respuesta
                     {
                         IsSuccessful = true,
                         IsValidation = false,
@@ -106,7 +101,7 @@ namespace asivamosffie.services
                 else
                 {
 
-                    return _reponse = new Respuesta
+                    return   new Respuesta
                     {
                         IsSuccessful = false,
                         IsValidation = false,
@@ -119,7 +114,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return _reponse = new Respuesta
+                return   new Respuesta
                 {
                     IsSuccessful = false,
                     IsValidation = false,
@@ -129,13 +124,10 @@ namespace asivamosffie.services
 
                 };
             }
-        }
-
+        } 
 
         public async Task<Respuesta> Update(CofinanciacionAportante CofnaAportante)
-        {
-            Respuesta _response = new Respuesta();
-
+        { 
             try
             {
                 CofinanciacionAportante updateObj = await _context.CofinanciacionAportante.FindAsync(CofnaAportante.CofinanciacionAportanteId);
@@ -146,67 +138,55 @@ namespace asivamosffie.services
                 updateObj.MunicipioId = CofnaAportante.MunicipioId;
                 updateObj.Eliminado = false;
                 updateObj.FechaModificacion = DateTime.Now;
-                
-
-                _context.Update(updateObj);
+                 
                 await _context.SaveChangesAsync();
 
-                return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };
+                return new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
+                return new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
             }
-        }
-
-
-
+        } 
         //Registrar Registros presupuestales
         public async Task<Respuesta> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal)
-        {
-            Respuesta _reponse = new Respuesta();
+        { 
             try
             {
-                if (registroPresupuestal.RegistroPresupuestalId == null || registroPresupuestal.RegistroPresupuestalId == 0)
+                registroPresupuestal.Eliminado = false;
+                if (registroPresupuestal.RegistroPresupuestalId == 0)
                     await this.BudgetRecords(registroPresupuestal);
                 else
                     await this.UpdateBudgetRegister(registroPresupuestal);
 
                 await _context.SaveChangesAsync();
-                _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
+                return new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
             }
             catch (Exception ex)
             {
-                _reponse = new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+                return new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
             }
-
-            return _reponse;
+             
         }
-
-
+         
         public async Task<Respuesta> BudgetRecords(RegistroPresupuestal registroPresupuestal)
         {
-            Respuesta _reponse = new Respuesta();
             try
             {
                 registroPresupuestal.FechaCreacion = DateTime.Now;
-                registroPresupuestal.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                _context.Add(registroPresupuestal);
-                //await _context.SaveChangesAsync();
-                _reponse = new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
+                registroPresupuestal.Eliminado = false;
+                await _context.RegistroPresupuestal.AddAsync(registroPresupuestal);
+          
+                return new Respuesta() { IsSuccessful = true, IsValidation = true, Data = registroPresupuestal, Code = ConstantMessagesContributor.OperacionExitosa };
             }
             catch (Exception ex)
             {
-                _reponse = new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
+                return new Respuesta() { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContributor.ErrorInterno, Message = ex.InnerException.ToString() };
             }
-
-            return _reponse;
         }
 
         public async Task<Respuesta> UpdateBudgetRegister(RegistroPresupuestal registroPresupuestal)
         {
-            Respuesta _response = new Respuesta();
-
             try
             {
                 RegistroPresupuestal updateObj = await _context.RegistroPresupuestal.FindAsync(registroPresupuestal.RegistroPresupuestalId);
@@ -214,14 +194,12 @@ namespace asivamosffie.services
                 updateObj.AportanteId = registroPresupuestal.AportanteId;
                 updateObj.NumeroRp = registroPresupuestal.NumeroRp;
                 updateObj.FechaRp = registroPresupuestal.FechaRp;
-                _context.Update(updateObj);
-                //await _context.SaveChangesAsync();
-
-                return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };
+  
+                return new Respuesta { IsSuccessful = true, IsValidation = false, Data = updateObj, Code = ConstantMessagesRegisterBudget.EditadoCorrrectamente };
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
+                return new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesRegisterBudget.Error, Message = ex.Message };
             }
         }
     }

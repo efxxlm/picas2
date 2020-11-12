@@ -1,6 +1,7 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,7 @@ namespace asivamosffie.services
 
         public async Task<List<ProcesoSeleccionCronograma>> GetListProcesoSeleccionCronogramaBypProcesoSeleccionId(int pProcesoSeleccionId)
         {
-            return await _context.ProcesoSeleccionCronograma.Where(r=> !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).ToListAsync();
+            return await _context.ProcesoSeleccionCronograma.Where(r=> !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x=>x.CronogramaSeguimiento).ToListAsync();
         }
 
         public async Task<ActionResult<List<ProcesoSeleccionCronograma>>> GetSelectionProcessSchedule()
@@ -179,5 +180,103 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId)
+        {
+            return await _context.ProcesoSeleccionMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionId == pProcesoSeleccionId).Include(x=>x.ProcesoSeleccionCronogramaMonitoreo).Include(x=>x.ProcesoSeleccion).ToListAsync();
+        }
+
+        public async Task<Respuesta> setProcesoSeleccionMonitoreoCronograma(ProcesoSeleccionMonitoreo procesoSeleccionCronograma
+            , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender
+            )
+        {
+            Respuesta _response = new Respuesta();
+            int IdAccionCrearCuentaBancaria = _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Acciones && x.Codigo.Equals(ConstantCodigoAcciones.Crear_Cronograma_monitoreo)).Select(x => x.DominioId).First();
+            try
+            {
+                if (procesoSeleccionCronograma != null)
+                {
+                    if(procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId>0)
+                    {
+                        procesoSeleccionCronograma.FechaModificacion = DateTime.Now;
+                        if (procesoSeleccionCronograma.EnviadoComiteTecnico == true)
+                        {
+                            procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.EnTramite;
+                        }
+                        _context.Update(procesoSeleccionCronograma);
+                    }
+                    else
+                    {
+                        
+                        procesoSeleccionCronograma.FechaCreacion = DateTime.Now;
+                        procesoSeleccionCronograma.Eliminado = false;
+                        procesoSeleccionCronograma.NumeroProceso = Helpers.Helpers.Consecutive("ACTCRONO", _context.ProcesoSeleccionMonitoreo.Count());
+                        procesoSeleccionCronograma.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.Creado;
+                        foreach (var proceso in procesoSeleccionCronograma.ProcesoSeleccionCronogramaMonitoreo)
+                        {                            
+                            proceso.FechaCreacion = DateTime.Now;
+                            proceso.UsuarioCreacion = procesoSeleccionCronograma.UsuarioCreacion;
+                        }
+                        _context.Add(procesoSeleccionCronograma);
+                    }
+                    
+
+                    //por aqui actualizo el estado de la solicitud si lo estoy envaiando a comite y se envia notificacion
+                    if(procesoSeleccionCronograma.EnviadoComiteTecnico==true)
+                    {
+                        //jflorez ya no le cambio el estado porque no debería afectar al papá
+                        /*var solicitud = _context.ProcesoSeleccion.Find(procesoSeleccionCronograma.ProcesoSeleccionId);
+                        solicitud.EstadoProcesoSeleccionCodigo = ConstanCodigoEstadoProcesoSeleccion.Apertura_En_Tramite;*/
+                        var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
+                        foreach (var usuario in usuariosecretario)
+                        {
+                            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.SolicitarApertura);
+                            string template = TemplateRecoveryPassword.Contenido.Replace("_LinkF_", pDominioFront).Replace("[NumeroSol]", procesoSeleccionCronograma.NumeroProceso).Replace("[FechaSol]", procesoSeleccionCronograma.FechaCreacion.ToString("dd/MM/yy"));
+                            bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Proceso de selección en tramite", template, pSentender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                    
+
+                    await _context.SaveChangesAsync();
+
+                    return _response = new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsValidation = false,
+                        Data = procesoSeleccionCronograma,
+                        Code = ConstantMessagesProcessSchedule.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesContributor.OperacionExitosa, IdAccionCrearCuentaBancaria, procesoSeleccionCronograma.UsuarioCreacion.ToString(), "CREAR EDITAR CRONOGRAMA EN MONITOREO")
+                    };
+                }
+                else
+                {
+                    return _response = new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsValidation = false,
+                        Data = null,
+                        Code = ConstantMessagesProcessSchedule.RecursoNoEncontrado,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesContributor.RecursoNoEncontrado, IdAccionCrearCuentaBancaria, procesoSeleccionCronograma.UsuarioCreacion.ToString(), "ERROR EN LA CREACION EDICION EN CRONOGRAMA EN MONITOREO")
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesProcessSchedule.ErrorInterno,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Procesos_Seleccion_Cronograma, ConstantMessagesContributor.ErrorInterno, IdAccionCrearCuentaBancaria, procesoSeleccionCronograma.UsuarioCreacion.ToString(), ex.InnerException.ToString()),
+
+                };
+            }
+        }
+
+        public async Task<ActionResult<List<ProcesoSeleccionCronogramaMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByMonitoreoId(int pProcesoSeleccionId)
+        {
+            return await _context.ProcesoSeleccionCronogramaMonitoreo.Where(r => !(bool)r.Eliminado && r.ProcesoSeleccionMonitoreoId == pProcesoSeleccionId).ToListAsync();
+        }
     }
 }

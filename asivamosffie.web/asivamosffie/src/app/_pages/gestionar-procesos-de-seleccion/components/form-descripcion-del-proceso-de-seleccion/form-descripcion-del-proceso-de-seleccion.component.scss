@@ -7,11 +7,6 @@
   margin: 20px auto;
 }
 
-.mat-radio-button {
-  display: block;
-  margin: 5px 0;
-}
-
 .row {
   display: flex;
   flex-direction: row;
@@ -24,4 +19,32 @@
 
 .col:last-child {
   margin-right: 0;
+}
+
+.required-calendar {
+  margin-left: 0.2em;
+}
+
+.mainColor {
+  color: var(--mainColor);
+}
+
+.toptd {
+  position: absolute;
+  top: 0.8em;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+
+  button.btn-calendario {
+    margin-left: 0;
+  }
+}
+
+.mlmenor {
+  margin-left: -1em;
+}
+
+.quill-ancho {
+  width: 32em;
 }

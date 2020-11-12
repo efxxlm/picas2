@@ -6,11 +6,11 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-      Registrar participantes de la sesión CT_00001
+      Registrar participantes de la sesión {{ objetoComiteTecnico.numeroComite }}
     </h1>
   </div>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-    <div class="row px-5em">
+    <div class="row px-miembros mt-2em mb-2em">
       <div class="pr-1">
         <label class="label-left">Miembros participantes</label>
       </div>
@@ -18,14 +18,14 @@
         <mat-form-field class="select-width">
           <mat-select formControlName="miembrosParticipantes" multiple required>
             <mat-option *ngFor="let miembro of miembrosArray" [value]="miembro">
-              {{ miembro.nombres }} {{ miembro.apellidos }}
+              {{ miembro['nombres'] }} {{ miembro['apellidos'] }}
             </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
     </div>
     <mat-card class="shipping-card">
-      <mat-card-header class="header-card">
+      <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
           Invitados
         </mat-card-title>
@@ -34,7 +34,7 @@
         <div formGroupName="invitados">
           <div *ngFor="let invitado of invitados.controls; let i = index">
             <div [formGroupName]="i">
-              <mat-card-title class="header-card--text alineacion-titulos2">
+              <mat-card-title class="header-card--text alineacion-titulos2 pl-0">
                 Invitado {{ i + 1 }}
               </mat-card-title>
               <div class="row">
@@ -72,11 +72,11 @@
                 </div>
               </div>
               <div class="text-right" *ngIf="invitados.controls.length > 1">
-                <button mat-button 
-                        color="warn" 
-                        type="button" 
-                        class="btn-eliminar" 
-                        (click)="openDialogSiNo('', '¿Está seguro de eliminar este registro?', i)" 
+                <button mat-button
+                        color="warn"
+                        type="button"
+                        class="btn-eliminar"
+                        (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i)"
                         >
                   <img src="assets/img/icon/menos.svg" alt="Eliminar invitado">
                   Eliminar invitado
@@ -101,7 +101,7 @@
     </div>
   </form>
 
-  <div class="text-center">
+  <div class="text-center" *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0" >
     <p class="info-container">
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
       <span class="info-text en-proceso">En proceso</span>
@@ -109,13 +109,13 @@
     </p>
   </div>
 
-  <mat-accordion>
+  <mat-accordion *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0">
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
         <!-- class="expansion-style--title completo" -->
         <!-- <mat-panel-title class="expansion-style--title completo" > -->
-        <mat-panel-title 
-          class="expansion-style--title" 
+        <mat-panel-title
+          class="expansion-style--title"
           [class.sin-diligenciar]="estadoSolicitudes == this.estadoFormulario.sinDiligenciar"
           [class.en-proceso]="estadoSolicitudes == this.estadoFormulario.enProceso"
           [class.completo]="estadoSolicitudes == this.estadoFormulario.completo" >
@@ -123,7 +123,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <button 
+      <button
         (click)="registrarSolicitudes.cargarRegistro()"
         style="display: none;"
         id="btnRegistrarSolicitudes"
@@ -139,7 +139,7 @@
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title 
+        <mat-panel-title
           class="expansion-style--title"
           [class.sin-diligenciar]="estadoOtrosTemas == this.estadoFormulario.sinDiligenciar"
           [class.en-proceso]="estadoOtrosTemas == this.estadoFormulario.enProceso"
@@ -148,7 +148,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <button 
+      <button
         (click)="otrosTemas.cargarRegistro()"
         style="display: none;"
         id="btnOtrosTemas"
@@ -165,7 +165,7 @@
     </mat-expansion-panel>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-        <mat-panel-title 
+        <mat-panel-title
           class="expansion-style--title"
           [class.sin-diligenciar]="estadoProposiciones == this.estadoFormulario.sinDiligenciar"
           [class.en-proceso]="estadoProposiciones == this.estadoFormulario.enProceso"
@@ -174,7 +174,7 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <button 
+      <button
         (click)="proposiciones.cargarRegistro()"
         style="display: none;"
         id="btnProposiciones"
@@ -192,13 +192,14 @@
   </mat-accordion>
 
   <div class="text-center">
-    <button mat-button 
-            color="warn" 
-            class="btn-guardar" 
-            type="button" 
-            [disabled]="!estaTodo"
+    <button mat-button
+            color="warn"
+            class="btn-guardar"
+            type="button"
+            *ngIf="objetoComiteTecnico.sesionParticipante && objetoComiteTecnico.sesionParticipante.length > 0"
             (click)="CambiarEstado()"
-            >
+            [disabled]="!estaTodo">
+            
       <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>

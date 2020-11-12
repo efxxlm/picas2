@@ -2,23 +2,24 @@
     <div class="pr-1">
         <label class="label-left" for="unionTemporal">¿El contratista es una unión temporal o consorcio? </label>
     </div>
-    <mat-radio-group class="radioInput" [formControl]="unionTemporal">
-        <mat-radio-button value="true">Sí</mat-radio-button>
-        <mat-radio-button value="false">No</mat-radio-button>
+    <mat-radio-group class="radioInput" [formControl]="unionTemporal" required>
+        <mat-radio-button [value]="true" [checked]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ].tipoProponenteCodigo === '4' : null">Sí</mat-radio-button>
+        <mat-radio-button [value]="false" [checked]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ].tipoProponenteCodigo !== '4' : null">No</mat-radio-button>
     </mat-radio-group>
+    <span class="required-form-group">*</span>
 </div>
 <mat-card class="shipping-card">
     <mat-card-content>
-        <div class="row mt-1em" *ngIf="unionTemporal.value == 'false'" >
+        <div class="row mt-1em" *ngIf="unionTemporal.value == false" >
             <div class="pr-1">
                 <label class="label-left" for="numeroDocumento">Número de documento del contratista (NIT/RUT/CC)</label>
             </div>
-            <div class="col d-flex">
+            <div class="col d-flex pr-7-8">
                 <mat-form-field class="full-width">
-                    <input matInput type="text" [formControl]="numeroDocumento">
+                    <input matInput type="text" [formControl]="numeroDocumento" required>
                 </mat-form-field>
             </div>
-            
+
         </div>
         <div class="row mt-1em">
             <div class="pr-1">
@@ -26,10 +27,10 @@
             </div>
             <div class="col d-flex">
                 <mat-form-field class="full-width">
-                    <input matInput type="text" [formControl]="nombreContratista">
+                    <input matInput type="text" [formControl]="nombreContratista" [value]="contratacion[ 'contratista' ] ? contratacion[ 'contratista' ]?.nombre : ''" required>
                 </mat-form-field>
             </div>
-            <button mat-button color="primary" class="btn-guardar" type="submit" (click)="buscar()">
+            <button mat-button color="primary" class="btn-guardar guardar-transform" type="submit" (click)="buscar()" [disabled]="unionTemporal.value === null">
                 <img src="assets/img/icon/lupa.svg" alt="Regresar" > <strong>Buscar</strong>
             </button>
         </div>
@@ -42,7 +43,7 @@
         Seleccione el contratista
     </p>
     <div class="table-responsive">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
 
             <ng-container matColumnDef="nombre">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
@@ -67,7 +68,7 @@
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Seleccionar </th>
                 <td mat-cell *matCellDef="let element">
-                    <mat-radio-button class="example-margin" (change)="selectElement(element)"></mat-radio-button>
+                    <mat-radio-button class="example-margin" (change)="selectElement(element)" [checked]="this.contratacion[ 'contratista' ] !== undefined ? true: null"></mat-radio-button>
                 </td>
             </ng-container>
 

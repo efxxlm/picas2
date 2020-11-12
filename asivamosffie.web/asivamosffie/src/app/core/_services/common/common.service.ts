@@ -5,16 +5,12 @@ import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 import { Usuario } from '../autenticacion/autenticacion.service';
 import { promise } from 'protractor';
-import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
-  
-  
-  
-
+    
   constructor(private http: HttpClient) { }
 
   public loadProfiles() {
@@ -27,12 +23,20 @@ export class CommonService {
     return retorno;
   }
 
+  getDocumento ( pPath: string ) {
+    return this.http.get( `${ environment.apiUrl }/Document/GetFileByPath?pPath=${ pPath }`, { responseType: "blob" } );
+  };
+
   listaTipoAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
+  
 
   listaNombreAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=4`);
+  }
+  listaNombreTipoAportante(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
 
   listaDepartamentos(){
@@ -91,6 +95,7 @@ export class CommonService {
   }
   
   listaAportanteByTipoAportanteId(pTipoAportanteID:number){
+    console.log(environment.apiUrl);
     return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
   }
 
@@ -129,17 +134,37 @@ export class CommonService {
   listaEstadoProcesoSeleccion(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=35`);
   }
+  listaEstadoProcesoSeleccionMonitoreo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=79`);
+  }
+
+  listaTipoDisponibilidadPresupuestal(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=36`);
+  }
+  
+  listaTipoDisponibilidadPresupuestalNotCode(minCode:string){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominioNotCode?pIdDominio=36&pMinCode=${minCode}`);
+  }
 
   listaEstadoCronogramaSeguimiento(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=40`);
   }
 
   getUsuariosByPerfil( pIdPerfil: number ){
-    return this.http.get<Usuario[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
   }
 
   listaFases(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=16`);
+  }
+  listaSalarios(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=64`);
+  }
+  listaEtapaActualProceso(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=83`);
+  }
+  listaLimiteSalarios(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=65`);
   }
 
   listaComponentes(){
@@ -154,12 +179,24 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=46`);
   }
 
-  listaEstadoSolicitud(){
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=31`);
+  listaTipoSolicitud(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=29`);
   }
 
-  listaPerfil () {
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=11`);
+  listaEstadoSolicitud(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=50`);
+  }
+
+  listaEstadoCompromisos(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=45`);
+  }
+
+  listaTipoTema(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=42`);
+  }
+  
+  listaEstadoProyecto(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
   }
 
   public listaUsuarios(){
@@ -211,8 +248,20 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=18`);
   }
 
+  listaFuenteTipoFinanciacion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=8`);
+  }
+
   listaBancos(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=22`);
+  }
+
+  listaTipoDDPEspecial(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=49`);
+  }
+
+  listaGarantiasPolizas(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
 
   vigenciasDesde2015(): number[]{
@@ -227,6 +276,7 @@ export class CommonService {
 }
 
 export interface Dominio{
+  descripcion?: string;
   dominioId?: number,
   tipoDominioId?: number,
   nombre?: string,

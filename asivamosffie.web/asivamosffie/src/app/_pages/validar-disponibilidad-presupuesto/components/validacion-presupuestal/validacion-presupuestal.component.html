@@ -1,0 +1,177 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/validarDisponibilidadPresupuesto" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Validación presupuestal solicitud {{detailavailabilityBudget?.numeroSolicitud}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Fecha de la solicitud: <b> {{detailavailabilityBudget?.fechaSolicitud | date:'dd/MM/yyyy'}}</b></span>
+        <span><b>{{detailavailabilityBudget?.tipoSolicitudEspecial}}</b></span>
+    </p>
+
+</section>
+<section class="container">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-content>
+            <p *ngIf="detailavailabilityBudget?.numeroDDP">
+                <strong>Número DDP:</strong>
+                {{detailavailabilityBudget?.numeroDDP}}
+            </p>
+            <p>
+                <strong>Rubro por financiar:</strong>
+                {{detailavailabilityBudget?.rubroPorFinanciar}}
+            </p>
+            <p>
+                <strong>Valor de la solicitud:</strong>
+                {{detailavailabilityBudget?.valorSolicitud | currency:'':'symbol':'3.0'}}
+            </p>
+            <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
+                <strong>Plazo:</strong>
+                {{detailavailabilityBudget?.plazo}}
+            </p>
+            <div>
+                <strong>Objeto:</strong>
+                <div [innerHtml]="detailavailabilityBudget?.objeto"></div>
+            </div>
+            <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial">
+                <strong>Número de radicado de la solicitud:</strong>
+                {{detailavailabilityBudget?.numeroRadicado}}
+            </p>
+            <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
+                <strong>Número comité técnico:</strong>
+                {{detailavailabilityBudget?.numeroComite}}
+            </p>
+            <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
+                <strong>Fecha comité técnico:</strong>
+                {{detailavailabilityBudget?.fechaComiteTecnico | date: 'dd/MM/yyyy' }}
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Tipo de modificación:</strong>
+                Adición y plazo
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Valor después de la modificación:</strong>
+                $ 72.000.000
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Plazo después de la modificación:</strong>
+                12 meses / 5 días
+            </p>
+            <p *ngIf="esModificacion">
+                <strong>Detalle de la modificación:</strong>
+                Se realiza adición de recursos para contrataciones complementarias
+            </p>
+
+            <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
+            &&detailavailabilityBudget?.tipoSolicitudEspecial=='Expensas'">
+                <h2 class="card-subTitle">Expensas</h2>
+                <p>
+                    <strong>¿Cuenta con carta de autorización de la ET?:</strong>
+                    {{detailavailabilityBudget.cuentaCarta?"Si":"No"}}
+                </p>
+                <p>
+                    <strong>Departamento:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].departamento}}
+                </p>
+                <p>
+                    <strong>Municipio:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].municipio}}
+                </p>
+                <p>
+                    <strong>Llave MEN:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].llaveMen}}
+                </p>
+                <p>
+                    <strong>Tipo de intervención:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].tipoIntervencion}}
+                </p>
+                <p>
+                    <strong>Nombre de la I.E:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].institucionEducativa}}
+                </p>
+                <p>
+                    <strong>Sede:</strong>
+                    {{detailavailabilityBudget?.proyectos[0].sede}}
+                </p>
+            </div>
+            <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
+            &&detailavailabilityBudget?.tipoSolicitudEspecial!='Expensas'">
+                <h2 class="card-subTitle">Otros costos/Servicios</h2>
+                <p>
+                    <strong>Número de contrato:</strong>
+                    {{detailavailabilityBudget.contratoNumero}}
+                </p>
+                <p>
+                    <strong>Nombre de la entidad contratista:</strong>
+                    {{detailavailabilityBudget?.nombreEntidad}}
+                </p>
+                <div>
+                    <strong>Limitación especial:</strong>
+                    <div [innerHtml]="detailavailabilityBudget?.limitacion"></div>
+                </div>
+            </div>
+            <div
+                *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial && detailavailabilityBudget?.aportantes.length>0">
+                <h2 class="card-subTitle">Aportantes</h2>
+                <div *ngFor="let aportante of detailavailabilityBudget?.aportantes; index as i">
+                    <mat-card-title class="header-card--text sub-text">
+                        Aportante {{i+1}}
+                    </mat-card-title>
+                    <p>
+                        <strong>Tipo de aportante:</strong>
+                        {{aportante.tipoAportante}}
+                    </p>
+                    <p>
+                        <strong>Nombre del aportante:</strong>
+                        {{aportante.nombre}}
+                    </p>
+                    <p>
+                        <strong>Valor del aportante al proyecto:</strong>
+                        $ {{aportante.valorAportanteAlProyecto}}
+                    </p>
+                    <p *ngIf="detailavailabilityBudget?.urlConSoporte">
+                        <strong>Url con soporte:</strong>
+                        {{detailavailabilityBudget?.urlConSoporte}}
+                    </p>                    
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+      <mat-card class="shipping-card var-main-gris" *ngIf="detailavailabilityBudget?.observaciones">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+                Observaciones
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <div [innerHtml]="detailavailabilityBudget?.observaciones"></div>
+            <p></p>
+        </mat-card-content>
+    </mat-card>
+
+    <app-tabla-gestionar-validacion [proyectos]="detailavailabilityBudget?.proyectos"
+        [codigo]="detailavailabilityBudget?.numeroSolicitud"
+        *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
+    </app-tabla-gestionar-validacion>
+    <!--<app-tabla-gestionar-validacion-administrativo [proyectos]="detailavailabilityBudget?.proyectos" [codigo]="detailavailabilityBudget?.numeroSolicitud"
+    *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo"></app-tabla-gestionar-validacion-administrativo>
+    -->
+    <div class="botones">
+        <button mat-raised-button color="accent" (click)="download()"
+            *ngIf="detailavailabilityBudget?.numeroDDP">Descargar DDP</button>
+        <button mat-raised-button color="accent" (click)="validar()" [disabled]="!sePuedeValidarFuente()">Validar
+            solicitud</button>
+        <button mat-raised-button color="accent" [disabled]="sePuedeValidarFuente()"
+            (click)="openDialogDevolver(0,detailavailabilityBudget?.numeroSolicitud,detailavailabilityBudget?.tipoSolicitudText)">Devolver
+            por <br> validación presupuestal</button>
+        <button mat-raised-button color="accent" [disabled]="sePuedeValidarFuente()"
+            (click)="openDialogDevolver(1,detailavailabilityBudget?.numeroSolicitud,detailavailabilityBudget?.tipoSolicitudText)">Rechazar
+            por <br> validación presupuestal</button>
+        <button mat-raised-button color="accent"
+            *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_administrativo || detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial"
+            (click)="gestionarFuentes(detailavailabilityBudget)">Gestionar fuentes</button>
+    </div>
+</section>

@@ -12,7 +12,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<byte[]> GetDDPBySesionComiteSolicitudID(int pSesionComiteSolicitudID ,string pPatchLogo);
 
-        Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud);
+        Task<Respuesta> CambiarEstadoSesionComiteSolicitud(SesionComiteSolicitud pSesionComiteSolicitud, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
 
         Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud();
 

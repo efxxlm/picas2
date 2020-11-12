@@ -18,35 +18,40 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
+                <mat-panel-title class="expansion-style--title" [ngClass]="{'sin-diligenciar':descripcion_class===0,'en-proceso':descripcion_class===1,'completo':descripcion_class===2}">
                     Descripción de la invitación
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>
-            <app-form-descripcion-del-proceso-de-seleccion 
+            <app-form-descripcion-del-proceso-de-seleccion [editar]="bitPuedoEditar"
                 #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
                 >
             </app-form-descripcion-del-proceso-de-seleccion>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-proceso">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':evaluacion_class===0,'en-proceso':evaluacion_class===1,'completo':evaluacion_class===2, 'en-alerta':evaluacion_class===3}">
                     Evaluación
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="evaluacion.cargarRegistro()" id="botonevaluacion"></button>
-            <app-form-evaluacion
+            <app-form-evaluacion [editar]="bitPuedoEditar"
             #evaluacion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" >
         </app-form-evaluacion>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':orden_class===0,'en-proceso':orden_class===1,'completo':orden_class===2, 'en-alerta':orden_class===3}">
                     Orden de elegibilidad
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-orden-de-elegibilidad></app-form-orden-de-elegibilidad>
-            <app-tabla-orden-de-elegibilidad></app-tabla-orden-de-elegibilidad>
+            <app-form-orden-de-elegibilidad [editar]="bitPuedoEditar"
+            #orden [procesoSeleccion]="procesoSeleccion" ></app-form-orden-de-elegibilidad>
+            <app-tabla-orden-de-elegibilidad [editar]="bitPuedoEditar"
+            #ordentabla [procesoSeleccion]="procesoSeleccion"></app-tabla-orden-de-elegibilidad>
         </mat-expansion-panel>
     </mat-accordion>
+    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo!=estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+        Cuando la solicitud se encuentra en estado <b>“Aprobada apertura de comité fiduciario”</b> el sistema habilitará las opciones para continuar el proceso.
+        </div>
 </div>

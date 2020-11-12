@@ -55,7 +55,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //string pUsuarioModifico = " ";
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
                 pProyectoAdministrativo.UsuarioCreacion = pUsuarioModifico;
                 respuesta = await _projectService.CreateOrEditAdministrativeProject(pProyectoAdministrativo);
                 return Ok(respuesta);
@@ -78,7 +78,7 @@ namespace asivamosffie.api.Controllers
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
                     //string strUsuario = "";
-                    string strUsuario = HttpContext.User.FindFirst("User").Value;
+                    string strUsuario =HttpContext.User.FindFirst("User").Value.ToUpper();
                     respuesta = await _projectService.SetValidateCargueMasivo(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProyectos), strUsuario);
                 }
                 return Ok(respuesta);
@@ -95,9 +95,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                Respuesta respuesta = new Respuesta();
-                string pUsuarioModifico = "";
-                //string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+                Respuesta respuesta = new Respuesta();                
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _projectService.UploadMassiveLoadProjects(pIdDocument, pUsuarioModifico);
 
                 return Ok(respuesta);
@@ -115,7 +114,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                pProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                pProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 respuesta = await _projectService.CreateOrEditProyect(pProyecto);
                 return Ok(respuesta);
             }
@@ -134,7 +133,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProjects()
         {
-            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
             var respuesta = await _projectService.ListAdministrativeProyectos(pUsuarioModifico);
             return respuesta;
 
@@ -144,7 +143,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
             var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
             return respuesta;
         }
@@ -155,8 +154,9 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
         {
-            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.EnviarProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico,_settings.Value.DominioFront
+                , _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
             return respuesta;
         }
 
@@ -182,7 +182,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<bool> DeleteProyectoByProyectoId(int pProyectoId)
         {
-            var respuesta = await _projectService.DeleteProyectoByProyectoId(pProyectoId);
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.DeleteProyectoByProyectoId(pProyectoId,pUsuarioModifico);
             return respuesta;
         }
 
@@ -191,6 +192,39 @@ namespace asivamosffie.api.Controllers
         public async Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId)
         {
             var respuesta = await _projectService.GetFontsByAportantId(pAportanteId);
+            return respuesta;
+        }
+
+        [Route("deleteFontByID")]
+        [HttpPost]
+        public async Task<bool> deleteFontByID(int pId)
+        {
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.deleteFontByID(pId, pUsuarioModifico);
+            return respuesta;
+        }
+        [Route("deletePredioByID")]
+        [HttpPost]
+        public async Task<bool> deletePredioByID(int pId)
+        {
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.deletePredioByID(pId, pUsuarioModifico);
+            return respuesta;
+        }
+        [Route("deleteAportantesByID")]
+        [HttpPost]
+        public async Task<bool> deleteAportantesByID(int pId)
+        {
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.deleteAportantesByID(pId, pUsuarioModifico);
+            return respuesta;
+        }
+        [Route("deleteInfraestructuraByID")]
+        [HttpPost]
+        public async Task<bool> deleteInfraestructuraByID(int pId)
+        {
+            string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+            var respuesta = await _projectService.deleteInfraestructuraByID(pId, pUsuarioModifico);
             return respuesta;
         }
     }

@@ -1,147 +1,207 @@
 <form autocomplete="off" [formGroup]="dataFormulario" (ngSubmit)="guardar()">
-  <div class="container">
-    <div class="d-flex mt-1em">
-        <label class="mr-label" for="numeroContrato" class="label-left"><b>Número del contrato</b></label>
-      <div class="col d-flex">
-        <mat-form-field class="w-38">
-          <input matInput type="text" maxlength="10" formControlName="numeroContrato">          
-        </mat-form-field>
-        <span class="contador">{{10 - dataFormulario.get( 'numeroContrato' ).value.length}}</span>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left">Número del contrato</label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field>
+            <input  matInput
+                    type="text"
+                    maxlength="10"
+                    formControlName="numeroContrato"
+                    [class.invalid]="campoSinDiligenciar( 'numeroContrato' )"
+                    required>
+          </mat-form-field>
+          <span class="contador">{{10 - dataFormulario.get( 'numeroContrato' ).value.length}}</span>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'numeroContrato' ).value.length > 0">
-      <label class="mr-label"><b>Fecha de envío para firma del contratista</b></label>
-      <mat-form-field class="w-21 ml-1em" 
-                      appearance="fill">
-        <input  matInput 
-                [matDatepicker]="pickerFechaEnvioTramite" 
-                formControlName="fechaEnvioParaFirmaContratista"
-                placeholder="DD/MM/AAAA">
-        <mat-datepicker #pickerFechaEnvioTramite></mat-datepicker>
-      </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaEnvioTramite.open()" 
-              class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
-              alt="Abrir Calendario">
-      </button>
-    </div>
-
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null">
-      <label class="mr-label"><b>Fecha de firma por parte del contratista</b></label>
-      <mat-form-field class="w-22 ml-1em" 
-                      appearance="fill">
-        <input  matInput 
-                [matDatepicker]="pickerFechaFirmaContratista" 
-                formControlName="fechaFirmaPorParteContratista"
-                placeholder="DD/MM/AAAA">
-        <mat-datepicker #pickerFechaFirmaContratista></mat-datepicker>
-      </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaFirmaContratista.open()" 
-              class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
-              alt="Abrir Calendario">
-      </button>
-    </div>
-
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null">
-      <label class="mr-label"><b>Fecha de envío para la firma de la fiduciaria</b></label>
-      <mat-form-field class="w-20 ml-1em" 
-                      appearance="fill">
-        <input  matInput 
-                [matDatepicker]="pickerFechaEnvioFirmaFiduciaria" 
-                formControlName="fechaEnvioParaFirmaFiduciaria"
-                placeholder="DD/MM/AAAA">
-        <mat-datepicker #pickerFechaEnvioFirmaFiduciaria></mat-datepicker>
-      </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaEnvioFirmaFiduciaria.open()" 
-              class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
-              alt="Abrir Calendario">
-      </button>
-    </div>
-
-    <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null">
-      <label class="mr-label"><b>Fecha de firma por parte de la fiduciaria</b></label>
-      <mat-form-field class="w-22 ml-1em" 
-                      appearance="fill">
-        <input  matInput 
-                [matDatepicker]="pickerFechaFirmaFiduciaria" 
-                formControlName="fechaFirmaPorParteFiduciaria"
-                placeholder="DD/MM/AAAA">
-        <mat-datepicker #pickerFechaFirmaFiduciaria></mat-datepicker>
-      </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaFirmaFiduciaria.open()" 
-              class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
-              alt="Abrir Calendario">
-      </button>
-    </div>
-
-    <div class="d-flex mt-1em">
-      <label class="mr-label"><b>Observaciones</b></label>
-      <quill-editor class="quill-editor-style w-65 ml-1em" 
-                    [styles]="editorStyle"
-                    [modules]="config"
-                    (onContentChanged)="maxLength($event, 2000)" 
-                    formControlName="observaciones"></quill-editor>
-      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null">
-        {{2000 - textoLimpio(dataFormulario.get('observaciones').value)}}
-      </span>
-      <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null">
-        2000
-      </span>
-    </div>
-
-    <div class="d-flex" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
-      <label class="mr-3em"><b>Adjuntar documento suscrito</b></label>
-      <div class="input w-65">
-        <span class="input-file-text text-center">{{archivo}}</span>
-        <button mat-raised-button 
-                color="primary" 
-                type="button" 
-                (click)="fileInput.click()" 
-                class="input-file--btn">
-                Adjuntar
-        </button>
-        <input  hidden 
-                (change)="fileName( $event )" 
-                #fileInput 
-                type="file" 
-                id="file" 
-                formControlName="documento" 
-                accept=".pdf">
+  <div class="row" *ngIf="dataFormulario.get( 'numeroContrato' ).value.length > 0">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left">Fecha de envío para firma del contratista</label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field>
+                          <input  matInput
+                                  [matDatepicker]="pickerFechaEnvioTramite"
+                                  [min]="fechaTramite"
+                                  formControlName="fechaEnvioParaFirmaContratista"
+                                  placeholder="DD/MM/AAAA"
+                                  [class.invalid]="campoSinDiligenciar( 'fechaEnvioParaFirmaContratista' )"
+                                  (click)="pickerFechaEnvioTramite.open()"
+                                  readonly required>
+            <mat-datepicker #pickerFechaEnvioTramite></mat-datepicker>
+          </mat-form-field>
+          <button mat-button
+                  color="primary"
+                  type="button"
+                  (click)="pickerFechaEnvioTramite.open()"
+                  class="btn-calendario">
+                  <img  class="mr-bottom-1"
+                        src="assets/img/icon/calendarioCirculo.svg"
+                        alt="Abrir Calendario">
+          </button>
+        </div>
       </div>
     </div>
+  </div>
 
-    <div class="container text-center" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
-      <p class="align-text"><small>Adjunte el documento que contenga la minuta del contrato</small></p>
+  <div class="row" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left">Fecha de firma por parte del contratista</label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field>
+                          <input  matInput
+                                  [matDatepicker]="pickerFechaFirmaContratista"
+                                  [min]="fechaTramite"
+                                  formControlName="fechaFirmaPorParteContratista"
+                                  placeholder="DD/MM/AAAA"
+                                  [class.invalid]="campoSinDiligenciar( 'fechaFirmaPorParteContratista' )"
+                                  (click)="pickerFechaFirmaContratista.open()"
+                                  readonly required>
+            <mat-datepicker #pickerFechaFirmaContratista></mat-datepicker>
+          </mat-form-field>
+          <button mat-button
+                  color="primary"
+                  type="button"
+                  (click)="pickerFechaFirmaContratista.open()"
+                  class="btn-calendario">
+                  <img  class="mr-bottom-1"
+                        src="assets/img/icon/calendarioCirculo.svg"
+                        alt="Abrir Calendario">
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="text-center w-90">
-      <button mat-button 
-              color="warn" 
-              class="btn-guardar" 
-              type="submit">
-              <img  src="assets/img/icon/guardar.svg" 
-                    alt="Regresar">
-      </button>
+  <div class="row" *ngIf="dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left">Fecha de envío para la firma de la fiduciaria</label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field>
+                          <input  matInput
+                                  [matDatepicker]="pickerFechaEnvioFirmaFiduciaria"
+                                  [min]="fechaTramite"
+                                  formControlName="fechaEnvioParaFirmaFiduciaria"
+                                  placeholder="DD/MM/AAAA"
+                                  [class.invalid]="campoSinDiligenciar( 'fechaEnvioParaFirmaFiduciaria' )"
+                                  (click)="pickerFechaEnvioFirmaFiduciaria.open()"
+                                  readonly required>
+            <mat-datepicker #pickerFechaEnvioFirmaFiduciaria></mat-datepicker>
+          </mat-form-field>
+          <button mat-button
+                  color="primary"
+                  type="button"
+                  (click)="pickerFechaEnvioFirmaFiduciaria.open()"
+                  class="btn-calendario">
+                  <img  class="mr-bottom-1"
+                        src="assets/img/icon/calendarioCirculo.svg"
+                        alt="Abrir Calendario">
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="row" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left">Fecha de firma por parte de la fiduciaria</label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field>
+                          <input  matInput
+                                  [matDatepicker]="pickerFechaFirmaFiduciaria"
+                                  [min]="fechaTramite"
+                                  formControlName="fechaFirmaPorParteFiduciaria"
+                                  placeholder="DD/MM/AAAA"
+                                  [class.invalid]="campoSinDiligenciar( 'fechaFirmaPorParteFiduciaria' )"
+                                  (click)="pickerFechaFirmaFiduciaria.open()"
+                                  readonly required>
+            <mat-datepicker #pickerFechaFirmaFiduciaria></mat-datepicker>
+          </mat-form-field>
+          <button mat-button
+                  color="primary"
+                  type="button"
+                  (click)="pickerFechaFirmaFiduciaria.open()"
+                  class="btn-calendario">
+                  <img  class="mr-bottom-1"
+                        src="assets/img/icon/calendarioCirculo.svg"
+                        alt="Abrir Calendario">
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left">Observaciones</label>
+        </div>
+        <div class="col d-flex">
+          <quill-editor class="quill-editor-style ml-1em card"
+                        [styles]="editorStyle"
+                        [modules]="config"
+                        (onContentChanged)="maxLength($event, 2000)"
+                        formControlName="observaciones">
+          </quill-editor>
+          <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null" style="margin-top: 1.8em;">
+            {{2000 - (textoLimpio(dataFormulario.get('observaciones').value)>2000?2000:textoLimpio(dataFormulario.get('observaciones').value))}}
+          </span>
+          <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null" style="margin-top: 1.8em;">
+            2000
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null" style="margin-top: 2em;">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left">URL con soporte</label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field>
+            <input  matInput
+                    type="text"
+                    formControlName="rutaDocumento"
+                    [class.invalid]="campoSinDiligenciar( 'rutaDocumento' )"
+                    required>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <div class="container text-center" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
+    <p class="info-url"><i>Indique la ruta del soporte de esta información</i></p>
+  </div>
+
+  <div class="text-center w-90" style="margin-top: 2em;">
+    <button mat-button
+            color="warn"
+            class="btn-guardar"
+            type="submit">
+            <img  src="assets/img/icon/guardar.svg"
+                  alt="Regresar">
+    </button>
   </div>
 </form>

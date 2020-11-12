@@ -27,14 +27,18 @@ namespace asivamosffie.services.Interfaces
 
         Task<Proyecto> GetProyectoByProyectoId(int idProyecto);
 
-        Task<bool> DeleteProyectoByProyectoId(int pProyectoId);
+        Task<bool> DeleteProyectoByProyectoId(int pProyectoId, string usuario);
 
         Task<List<ProyectoGrilla>> ListProyectos();
 
         Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId, string usuario);
 
-        Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string usuario);
+        Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuarioModifico,string pDominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
         Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId);
+        Task<bool> deleteFontByID(int pAportanteProyectoId, string pUsuarioModifico);
+        Task<bool> deletePredioByID(int pAportanteProyectoId, string pUsuarioModifico);
+        Task<bool> deleteAportantesByID(int pAportanteProyectoId, string pUsuarioModifico);
+        Task<bool> deleteInfraestructuraByID(int pAportanteProyectoId, string pUsuarioModifico);
     }
 }

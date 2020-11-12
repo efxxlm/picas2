@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Contratacion } from 'src/app/_interfaces/project-contracting';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-table-caracteristicas-especiales',
@@ -26,7 +27,7 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  constructor() { }
+  constructor ( private routes: Router ) { }
 
   ngOnInit(): void {
     //this.dataSource = new MatTableDataSource();
@@ -36,5 +37,24 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
   cargarRegistros(){
     this.dataSource = new MatTableDataSource( this.contratacion.contratacionProyecto );
   }
+
+  definirCaracteristicas ( id: number, municipio: any ) {
+    this.routes.navigate( [ '/solicitarContratacion/definir-caracteristicas', id ], { state: {municipio: municipio} } )
+  }
+
+  getSemaforo ( elemento: any, tieneMonitoreoWeb: any ) {
+    if ( elemento === undefined ) {
+      return 'sin-diligenciar';
+    }; 
+    if ( elemento === true ) {
+      return 'completo';
+    };
+    if ( elemento === false && tieneMonitoreoWeb !== undefined ) {
+      return 'en-proceso';
+    }
+    if ( elemento === false && tieneMonitoreoWeb === undefined ) {
+      return 'sin-diligenciar';
+    };
+  };
 
 }

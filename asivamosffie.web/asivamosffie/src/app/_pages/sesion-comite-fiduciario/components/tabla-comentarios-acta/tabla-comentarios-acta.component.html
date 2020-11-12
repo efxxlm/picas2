@@ -1,0 +1,40 @@
+<!-- <div class="margin-90 text-center table-responsive">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-25 back-color"> Fecha </th>
+          <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fecha | date: 'dd/MM/yyyy' }}</b> </td>
+      </ng-container>
+
+      <ng-container matColumnDef="observacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Observación </th>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ textoLimpioMessage( element.observacion ) }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombres">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Miembro Comité </th>
+        <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.miembroSesionParticipante.nombres }} {{ element.miembroSesionParticipante.apellidos }} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" class="radio-color-detalle"></mat-paginator>
+</div> -->
+<div *ngIf="data.length>0">
+  <p>
+    <b>Fecha:</b>
+    {{ data[0].fecha | date: 'dd/MM/yyyy' }}
+  </p>
+  <p class="d-flex">
+    <b class="pr-05em">Observación:</b>
+    <span class="ml-1em">
+      {{ textoLimpioMessage( data[0].observacion ) }}
+
+    </span>
+  </p>
+  <p>
+    <b>Miembro comité:</b>
+    {{ data[0].miembroSesionParticipante.nombres }} {{ data[0].miembroSesionParticipante.apellidos }}
+  </p>
+</div>

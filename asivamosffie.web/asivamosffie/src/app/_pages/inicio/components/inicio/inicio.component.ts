@@ -98,7 +98,7 @@ export class InicioComponent implements OnInit {
           this.router.navigate(['/cambiarContrasena']);
         }else
         {
-          this.openDialog('', respuesta.message);
+          this.openDialog('', `<b>${respuesta.message}</b>`);
         }
       }else // Expected response 
       {

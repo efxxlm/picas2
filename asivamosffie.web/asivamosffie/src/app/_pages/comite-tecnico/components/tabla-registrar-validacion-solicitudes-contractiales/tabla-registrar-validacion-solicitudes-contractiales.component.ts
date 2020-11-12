@@ -5,11 +5,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { VotacionSolicitudComponent } from '../votacion-solicitud/votacion-solicitud.component';
 import { VotacionSolicitudMultipleComponent } from '../votacion-solicitud-multiple/votacion-solicitud-multiple.component';
-import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto, TiposSolicitud, SesionSolicitudObservacionProyecto } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteTecnico, SesionComiteSolicitud, SesionSolicitudVoto, TiposSolicitud, SesionSolicitudObservacionProyecto, SesionParticipante, SesionSolicitudObservacionActualizacionCronograma } from 'src/app/_interfaces/technicalCommitteSession';
 import { Usuario } from 'src/app/core/_services/autenticacion/autenticacion.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 import { ProjectService, Proyecto } from 'src/app/core/_services/project/project.service';
+import { forkJoin } from 'rxjs';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
+import { VotacionSolicitudActualizaCronogramaComponent } from '../votacion-solicitud-actualiza_cronograma/votacion-solicitud-actualiza_cronograma.component';
 
 @Component({
   selector: 'app-tabla-registrar-validacion-solicitudes-contractiales',
@@ -23,7 +26,6 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   listaMiembros: Usuario[];
   tiposSolicitud = TiposSolicitud
-  
 
   displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'votacion', 'id'];
   dataSource = new MatTableDataSource();
@@ -41,6 +43,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     private commonService: CommonService,
     private technicalCommitteSessionService: TechnicalCommitteSessionService,
     private projectService: ProjectService,
+    private projectContractingService: ProjectContractingService,
 
   ) {
 
@@ -48,78 +51,153 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
   openDialogValidacionSolicitudes(elemento: SesionComiteSolicitud) {
 
-    elemento.sesionSolicitudVoto = [];
-    elemento.sesionSolicitudObservacionProyecto = [];
-
-    console.log(this.ObjetoComiteTecnico);
-
-    this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
-      let votacion: SesionSolicitudVoto = p.sesionSolicitudVoto.find(v => v.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId);
-      let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
-
-      let solicitudVoto: SesionSolicitudVoto = {
-        sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
-        sesionParticipanteId: p.sesionParticipanteId,
-        sesionSolicitudVotoId: votacion ? votacion.sesionSolicitudVotoId : 0,
-        nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
-        esAprobado: votacion ? votacion.esAprobado : null,
-        observacion: votacion ? votacion.observacion : null,
-
-        sesionComiteSolicitud: elemento,
-
+    let promesa = new Promise(resolve => {
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
+        this.projectContractingService.getContratacionByContratacionId(elemento.contratacion.contratacionId)
+          .subscribe(respuesta => {
+            elemento.contratacion = respuesta;
+            resolve();
+          });
       }
 
-      if (elemento.contratacion && elemento.contratacion.contratacionProyecto) {
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion) {
+        this.technicalCommitteSessionService.getProcesoSeleccionMonitoreo(elemento.procesoSeleccionMonitoreo.procesoSeleccionMonitoreoId)
+          .subscribe(respuesta => {
+            console.log(respuesta);
+            elemento.procesoSeleccionMonitoreo = respuesta;
+            resolve();
+          });
+      }
+    })
 
-        elemento.contratacion.contratacionProyecto.forEach(c => {
+    let sesionComiteSolicitud: SesionComiteSolicitud = {
+      sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+      tipoSolicitudCodigo: elemento.tipoSolicitudCodigo,
+      numeroSolicitud: elemento.numeroSolicitud,
+      fechaSolicitud: elemento.fechaSolicitud,
+      tipoSolicitud: elemento.tipoSolicitud,
 
-          let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
-            .find(o => o.contratacionProyectoId == c.contratacionProyectoId
-              && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
+      contratacion: elemento.contratacion,
+      procesoSeleccionMonitoreo: elemento.procesoSeleccionMonitoreo,
 
-          let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
-            sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
-            sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
-            sesionParticipanteId: p.sesionParticipanteId,
-            contratacionProyectoId: c.contratacionProyectoId,
-            observacion: observacion ? observacion.observacion : null,
-            nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+      sesionSolicitudObservacionProyecto: [],
+      sesionSolicitudVoto: [],
+      sesionSolicitudObservacionActualizacionCronograma: [],
+    }
 
-            proyecto: c.proyecto,
-          }
+    console.log(elemento)
 
-          elemento.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+
+    this.ObjetoComiteTecnico.sesionParticipante.forEach(p => {
+      let solicitudVoto: SesionSolicitudVoto = elemento.sesionSolicitudVoto
+                                                .find(v => v.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId && 
+                                                      v.sesionParticipanteId == p.sesionParticipanteId);
+                                                      
+      let usuario: Usuario = this.listaMiembros.find(m => m.usuarioId == p.usuarioId)
+
+
+      if (solicitudVoto) {
+        solicitudVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
+      } else {
+
+        solicitudVoto = {
+          sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+          sesionParticipanteId: p.sesionParticipanteId,
+          sesionSolicitudVotoId: 0,
+          nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+          esAprobado: null,
+          observacion: null,
+
+
+
+        }
+        solicitudVoto.sesionComiteSolicitud = elemento;
+        //solicitudVoto.nombreParticipante = `${usuario.nombres} ${usuario.apellidos}`;
+      }
+
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
+
+        promesa.then(() => {
+          console.log(elemento.contratacion)
+          elemento.contratacion.contratacionProyecto.forEach(c => {
+
+            let observacion = p.sesionSolicitudObservacionProyecto //elemento.sesionSolicitudObservacionProyecto
+              .find(o => o.contratacionProyectoId == c.contratacionProyectoId
+                && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
+
+            let sesionSolicitudObservacionProyecto: SesionSolicitudObservacionProyecto = {
+              sesionSolicitudObservacionProyectoId: observacion ? observacion.sesionSolicitudObservacionProyectoId : 0,
+              sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+              sesionParticipanteId: p.sesionParticipanteId,
+              contratacionProyectoId: c.contratacionProyectoId,
+              observacion: observacion ? observacion.observacion : null,
+              nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+
+              proyecto: c.proyecto,
+            }
+
+            sesionComiteSolicitud.sesionSolicitudObservacionProyecto.push(sesionSolicitudObservacionProyecto)
+          })
+        })
+      }
+
+      if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion) {
+
+        promesa.then(() => {
+          //console.log(elemento.procesoSeleccionMonitoreo)
+          elemento.procesoSeleccionMonitoreo.procesoSeleccionCronogramaMonitoreo.forEach(c => {
+
+            let observacion = c.sesionSolicitudObservacionActualizacionCronograma
+              .find(o => p.sesionParticipanteId == o.sesionParticipanteId
+                && o.sesionComiteSolicitudId == elemento.sesionComiteSolicitudId)
+
+            let sesionSolicitudObservacionActualizacionCronograma: SesionSolicitudObservacionActualizacionCronograma = {
+              sesionSolicitudObservacionActualizacionCronogramaId: observacion ? observacion.sesionSolicitudObservacionActualizacionCronogramaId : 0,
+              sesionComiteSolicitudId: elemento.sesionComiteSolicitudId,
+              sesionParticipanteId: p.sesionParticipanteId,
+              procesoSeleccionCronogramaMonitoreoId: c.procesoSeleccionCronogramaMonitoreoId,
+              observacion: observacion ? observacion.observacion : null,
+              nombreParticipante: `${usuario.nombres} ${usuario.apellidos}`,
+
+              procesoSeleccionCronograma: c.procesoSeleccionCronograma,
+
+            }    
+            
+            sesionComiteSolicitud.sesionSolicitudObservacionActualizacionCronograma.push( sesionSolicitudObservacionActualizacionCronograma );
+            //console.log( sesionComiteSolicitud.sesionSolicitudObservacionActualizacionCronograma )
+          })
         })
       }
 
 
-      elemento.sesionSolicitudVoto.push(solicitudVoto)
+      sesionComiteSolicitud.sesionSolicitudVoto.push(solicitudVoto)
     })
 
 
-    //console.log(elemento)
+    console.log(sesionComiteSolicitud)
 
-    this.abrirPopupVotacion(elemento);
+    this.abrirPopupVotacion(sesionComiteSolicitud);
   }
 
-  changeRequiere( check: boolean, solicitud: SesionComiteSolicitud ){
-    
-    this.ObjetoComiteTecnico.sesionComiteSolicitud.forEach( sc => {
-      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId)
-        if ( check ){
-          sc.completo = false
-        }else{
-          sc.completo = true
-          this.technicalCommitteSessionService.noRequiereVotacionSesionComiteSolicitud( solicitud )
-            .subscribe( respuesta => {
-              
-            })
-        }
+  changeRequiere(check: boolean, solicitud: SesionComiteSolicitud) {
+
+    this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sc => {
+
+      if (sc.sesionComiteSolicitudId == solicitud.sesionComiteSolicitudId) {
+        solicitud.requiereVotacion = check;
+        this.technicalCommitteSessionService.noRequiereVotacionSesionComiteSolicitud(solicitud)
+          .subscribe(respuesta => {
+            sc.completo = !check;
+            this.validar.emit(null);
+          })
+      }
     })
+
   }
 
   abrirPopupVotacion(elemento: SesionComiteSolicitud) {
 
+    console.log(elemento.tipoSolicitudCodigo)
     if (elemento.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion) {
 
       const dialog = this.dialog.open(VotacionSolicitudMultipleComponent, {
@@ -129,14 +207,37 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
       });
 
-      
+
 
       dialog.afterClosed().subscribe(c => {
         if (c && c.comiteTecnicoId) {
           this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
             .subscribe(response => {
               this.ObjetoComiteTecnico = response;
-              this.validar.emit(null);        
+              this.validarRegistros();
+              this.validar.emit(null);
+            })
+        }
+      })
+
+    } else if ( elemento.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion ){
+
+      const dialog = this.dialog.open(VotacionSolicitudActualizaCronogramaComponent, {
+        width: '70em',
+        data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico },
+        maxHeight: '90em',
+
+      });
+
+
+
+      dialog.afterClosed().subscribe(c => {
+        if (c && c.comiteTecnicoId) {
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
+            .subscribe(response => {
+              this.ObjetoComiteTecnico = response;
+              this.validarRegistros();
+              this.validar.emit(null);
             })
         }
       })
@@ -147,14 +248,15 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
         width: '70em', data: { sesionComiteSolicitud: elemento, objetoComiteTecnico: this.ObjetoComiteTecnico }
       });
 
-      
+
 
       dialog.afterClosed().subscribe(c => {
         if (c && c.comiteTecnicoId) {
           this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(c.comiteTecnicoId)
             .subscribe(response => {
               this.ObjetoComiteTecnico = response;
-              this.validar.emit(null);        
+              this.validarRegistros();
+              this.validar.emit(null);
             })
         }
       })
@@ -168,6 +270,7 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
 
     this.commonService.listaUsuarios().then((respuesta) => {
       this.listaMiembros = respuesta;
+
     })
 
 
@@ -189,9 +292,27 @@ export class TablaRegistrarValidacionSolicitudesContractialesComponent implement
     };
   }
 
+  validarRegistros() {
+    if (this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
+      this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sc => {
+        sc.completo = true;
+
+        if (sc.requiereVotacion == true && sc.sesionSolicitudVoto.length == 0) { sc.completo = false }
+
+        sc.sesionSolicitudVoto.forEach(ss => {
+          if (ss.esAprobado != true && ss.esAprobado != false) {
+            sc.completo = false;
+          }
+        })
+      })
+    }
+  }
+
   cargarRegistro() {
-    console.log(this.ObjetoComiteTecnico.sesionComiteSolicitud)
-    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitud);
+
+    this.validarRegistros();
+
+    this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
   }
 
 }

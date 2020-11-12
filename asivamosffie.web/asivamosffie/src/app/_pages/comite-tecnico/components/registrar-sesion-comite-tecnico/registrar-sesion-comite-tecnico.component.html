@@ -10,7 +10,7 @@
         </h1>
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
-            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text en-proceso">En proceso</span>    
             <span class="info-text completo">Completo</span>
         </p>
     </div>
@@ -35,7 +35,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-proceso">
+                <mat-panel-title class="expansion-style--title completo">
                     Otros temas
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -55,7 +55,9 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title 
+                class="expansion-style--title sin-diligenciar"
+                [ngClass]="estadoAcordeon">
                     Proposiciones y varios
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -70,14 +72,15 @@
             <app-form-proposiciones-varios
                 #proposiciones
                 [objetoComiteTecnico]="objetoComiteTecnico"
+                (semaforo)="changeSemaforo($event)"
             >
         </app-form-proposiciones-varios>
         </mat-expansion-panel>
     </mat-accordion>
 
     <div class="text-center mt-2em mb-2em">
-        <button mat-raised-button color="accent" class="btn-ancho" (click)="openDialogAplazarSesion()">Aplazar sesión</button>
-        <button mat-raised-button color="accent" class="btn-ancho" (click)="fallida()">Declarar fallida </button>
-        <a routerLink="registrarParticipantes" mat-raised-button color="accent" class="btn-ancho">Registrar participantes</a>
+        <button mat-raised-button color="accent" [disabled]="!cargoRegistro" class="btn-ancho" (click)="openDialogAplazarSesion()">Aplazar sesión</button>
+        <button mat-raised-button color="accent" [disabled]="!cargoRegistro" class="btn-ancho" (click)="fallida()">Declarar fallida </button>
+        <a routerLink="registrarParticipantes" [disabled]="!cargoRegistro" mat-raised-button color="accent" class="btn-ancho">Registrar participantes</a>
     </div>
 </section>

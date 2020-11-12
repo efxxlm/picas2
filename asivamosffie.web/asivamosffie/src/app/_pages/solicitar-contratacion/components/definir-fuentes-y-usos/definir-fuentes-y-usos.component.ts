@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
@@ -14,28 +14,29 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./definir-fuentes-y-usos.component.scss']
 })
 
-export class DefinirFuentesYUsosComponent implements OnInit {
+export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   idSolicitud: number;
   contratacionProyecto: ContratacionProyecto;
-
+  municipio: string;
+  tipoIntervencion: string;
   addressForm = this.fb.group([]);
-
   fasesSelect: Dominio[] = [];
-
+  listaUsos: any[] = [];
+  listaComponentes: any[] = [];
   componentesSelect: Dominio[] = [];
-
   usosSelect: Dominio[] = [];
+  realizoPeticion: boolean = false;
+  esSaldoPermitido: boolean = false;
 
-  
-  createFormulario(){
+  createFormulario() {
     return this.fb.group({
       aportantes: this.fb.array([])
-    }); 
+    });
   }
 
-  componentes( i: number ) {
-    return this.aportantes.controls[i].get('componentes') as FormArray; 
+  componentes(i: number) {
+    return this.aportantes.controls[i].get('componentes') as FormArray;
   }
 
   get aportantes() {
@@ -49,28 +50,50 @@ export class DefinirFuentesYUsosComponent implements OnInit {
   }
 
   constructor(
-              private fb: FormBuilder,
-              private route: ActivatedRoute,
-              private projectContractingService: ProjectContractingService,
-              private commonService: CommonService,
-              public dialog: MatDialog,    
-              private router: Router,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private projectContractingService: ProjectContractingService,
+    private commonService: CommonService,
+    public dialog: MatDialog,
+    private router: Router,
 
-             ) 
-  { 
-
+  ) {
+    this.getMunicipio();
   }
 
-  createAportante(){
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty && this.realizoPeticion === false && this.esSaldoPermitido === true ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    }
+  };
+
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
+
+  createAportante() {
     return this.fb.group({
+      nombreAportante: [],
+      estadoSemaforo: [ null ],
+      saldoDisponible: [ null ],
       contratacionProyectoAportanteId: [],
-      proyectoAportanteId:[],
+      proyectoAportanteId: [],
       valorAportanteProyecto: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)]),
       ],
       componentes: this.fb.array([])
     });
-  }
+  };
 
   ngOnInit(): void {
 
@@ -83,83 +106,160 @@ export class DefinirFuentesYUsosComponent implements OnInit {
         this.commonService.listaFases(),
         this.commonService.listaComponentes(),
         this.commonService.listaUsos(),
-        this.projectContractingService.getContratacionProyectoById( id )
+        this.projectContractingService.getContratacionProyectoById(id)
       ])
 
-      .subscribe( response => {
+        .subscribe(response => {
 
-        this.fasesSelect = response[0];
-        this.componentesSelect = response[1];
-        this.usosSelect = response[2];
-        this.contratacionProyecto = response[3];
-
-
-        setTimeout(() => {
-
-          this.contratacionProyecto.contratacionProyectoAportante.forEach( apo => {
-            let grupoAportante = this.createAportante();
-            let listaComponentes = grupoAportante.get('componentes') as FormArray;
-
-            grupoAportante.get('contratacionProyectoAportanteId').setValue( apo.contratacionProyectoAportanteId );
-            grupoAportante.get('proyectoAportanteId').setValue( apo.proyectoAportanteId );
-            grupoAportante.get('valorAportanteProyecto').setValue( apo.valorAporte );
-
-            if ( apo.componenteAportante.length > 0 ){
-                apo.componenteAportante.forEach( compoApo => {
-                    let grupoComponente = this.createComponente();
-                    let listaUsos = grupoComponente.get('usos') as FormArray;
-                    let faseSeleccionada = this.fasesSelect.find( f => f.codigo == compoApo.faseCodigo )
-                    let componenteSeleccionado = this.componentesSelect.find( c => c.codigo == compoApo.tipoComponenteCodigo )
-
-                    grupoComponente.get('componenteAportanteId').setValue( compoApo.componenteAportanteId )
-                    grupoComponente.get('contratacionProyectoAportanteId').setValue( compoApo.contratacionProyectoAportanteId )
-                    grupoComponente.get('fase').setValue( faseSeleccionada )
-                    grupoComponente.get('componente').setValue( componenteSeleccionado );
-
-                    compoApo.componenteUso.forEach( uso => {
-                        let grupoUso = this.createUso();
-                        let usoSeleccionado = this.usosSelect.find( u => u.codigo == uso.tipoUsoCodigo )
-
-                        grupoUso.get('componenteUsoId').setValue( uso.componenteUsoId )
-                        grupoUso.get('componenteAportanteId').setValue( uso.componenteAportanteId )
-                        grupoUso.get('usoDescripcion').setValue( usoSeleccionado )
-                        grupoUso.get('valorUso').setValue( uso.valorUso )
-
-                        listaUsos.push( grupoUso );
-                     })
-
-                    listaComponentes.push( grupoComponente );
-                  })
-            }else{
-
-              let grupoComponente = this.createComponente();
-              let grupoUso = this.createUso();
-              let listaUsos = grupoComponente.get('usos') as FormArray;
-
-              listaUsos.push( grupoUso );
-
-              listaComponentes.push( grupoComponente );
-            }
-
-            this.aportantes.push( grupoAportante );
-          })
-
-          this.idSolicitud = this.contratacionProyecto.contratacionId;
-
+          this.fasesSelect = response[0];
+          this.componentesSelect = response[1];
+          this.usosSelect = response[2];
+          this.contratacionProyecto = response[3];
           console.log( this.contratacionProyecto );
+          setTimeout(() => {
 
-        }, 1000);
-      })
+            if ( this.componentesSelect.length > 0 ) {
+              this.listaComponentes = this.componentesSelect.filter( value => this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === value.codigo );
+            };
 
-      
+            this.idSolicitud = this.contratacionProyecto.contratacionId;
+
+            this.commonService.listaTipoIntervencion()
+              .subscribe((intervenciones: any) => {
+                for (const intervencion of intervenciones) {
+                  if (intervencion.codigo === this.contratacionProyecto.proyecto.tipoIntervencionCodigo) {
+                    this.tipoIntervencion = intervencion.nombre;
+                    break;
+                  }
+                }
+              });
+
+            this.contratacionProyecto.contratacionProyectoAportante.forEach(apo => {
+              const grupoAportante = this.createAportante();
+              const listaComponentes = grupoAportante.get('componentes') as FormArray;
+
+              grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.contratacionProyectoAportanteId);
+              grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
+              if ( apo.valorAporte !== 0 ) {
+                this.esSaldoPermitido = true;
+              }
+              grupoAportante.get('valorAportanteProyecto').setValue( apo.valorAporte );
+              grupoAportante.get( 'saldoDisponible' ).setValue( apo['saldoDisponible'] ? apo['saldoDisponible'] : 0 );
+              if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
+                grupoAportante.get('nombreAportante').setValue('FFIE');
+              } else if (apo['cofinanciacionAportante'].tipoAportanteId === 9) {
+                if ( apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio === undefined ) {
+                  grupoAportante.get('nombreAportante').setValue(`Gobernación de ${apo['cofinanciacionAportante'].departamento.descripcion}`);
+                };
+                if ( apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio !== undefined ) {
+                  grupoAportante.get('nombreAportante').setValue(`Alcaldía de ${apo['cofinanciacionAportante'].municipio.descripcion}`);
+                };
+              } else if (apo['cofinanciacionAportante'].tipoAportanteId === 10) {
+                grupoAportante.get('nombreAportante').setValue(`${apo['cofinanciacionAportante'].nombreAportante.nombre}`);
+              }
+
+              if (apo.componenteAportante.length > 0) {
+                apo.componenteAportante.forEach(compoApo => {
+                  const grupoComponente = this.createComponente();
+                  const listaUsos = grupoComponente.get('usos') as FormArray;
+                  const faseSeleccionada = this.fasesSelect.find(f => f.codigo == compoApo.faseCodigo);
+                  const componenteSeleccionado = this.componentesSelect.find(c => c.codigo == compoApo.tipoComponenteCodigo);
+
+                  if ( compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === true ) {
+                    grupoAportante.get( 'estadoSemaforo' ).setValue( 'completo' )
+                  };
+                  if ( compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === false ) {
+                    grupoAportante.get( 'estadoSemaforo' ).setValue( 'en-proceso' )
+                  };
+
+                  grupoComponente.get('componenteAportanteId').setValue(compoApo.componenteAportanteId);
+                  grupoComponente.get('contratacionProyectoAportanteId').setValue(compoApo.contratacionProyectoAportanteId);
+                  grupoComponente.get('fase').setValue(faseSeleccionada);
+                  grupoComponente.get('componente').setValue(componenteSeleccionado);
+
+                  compoApo.componenteUso.forEach(uso => {
+                    const grupoUso = this.createUso();
+                    const usoSeleccionado = this.usosSelect.find(u => u.codigo == uso.tipoUsoCodigo);
+
+                    grupoUso.get('componenteUsoId').setValue(uso.componenteUsoId);
+                    grupoUso.get('componenteAportanteId').setValue(uso.componenteAportanteId);
+                    grupoUso.get('usoDescripcion').setValue(usoSeleccionado);
+                    grupoUso.get('valorUso').setValue(uso.valorUso);
+
+                    if ( grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0 ) {
+                      grupoAportante.get( 'estadoSemaforo' ).setValue( 'sin-diligenciar' );
+                    } 
+
+                    listaUsos.push(grupoUso);
+                  });
+
+                  listaComponentes.push(grupoComponente);
+                });
+              } else {
+
+                const grupoComponente = this.createComponente();
+                const grupoUso = this.createUso();
+                const listaUsos = grupoComponente.get('usos') as FormArray;
+
+                listaUsos.push(grupoUso);
+
+                listaComponentes.push( grupoComponente );
+              }
+
+              this.aportantes.push(grupoAportante);
+            });
+
+          }, 1000);
+        });
+
+
     });
 
   }
 
+  getlistaUsos ( fase?: string, componente?: string ) {
+    if ( fase !== undefined && componente !== undefined ) {
+      const descripcionLista = `${fase}-${componente}`;
+      if ( this.usosSelect.length > 0 ) {
+        const listaDeUsos = this.usosSelect.filter( uso => uso.descripcion === descripcionLista );
+        this.listaUsos = listaDeUsos;
+      };
+    };
+  };
+  
+  validarSaldoDisponible ( saldoIngresado: number, saldoDisponible: number, nombreAportante: string ) {
+    if (  saldoIngresado > saldoDisponible ) {
+      this.openDialog( '', `<b>El valor del aportante ${ nombreAportante } al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>` );
+      this.esSaldoPermitido = false;
+    } else if ( saldoIngresado <= saldoDisponible ) {
+      this.esSaldoPermitido = true;
+    };
+  };
+
+  deleteUsoSeleccionado ( usoCodigo: any ) {
+    console.log( usoCodigo );
+    this.listaUsos = this.listaUsos.filter( uso => uso.codigo !== usoCodigo );
+  };
+
+  getMunicipio() {
+    if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
+      this.router.navigate(['/solicitarContratacion']);
+      return;
+    };
+    this.municipio = this.router.getCurrentNavigation().extras.state.municipio;
+  };
 
   addUso(j: number, i: number) {
-    const listaUsos =  this.componentes( j ).controls[i].get('usos') as FormArray;
+    if ( this.listaUsos.length === 0 ) {
+      this.openDialog( '', `<b>No se encuentran usos disponibles para el componente de ${ this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }.</b>` );
+      return;
+    };
+    const listaUsos = this.componentes(j).controls[i].get('usos') as FormArray;
     listaUsos.push(this.createUso());
+  }
+
+  deleteUso ( borrarForm: any, i: number ) {
+    borrarForm.removeAt(i);
   }
 
   createUso(): FormGroup {
@@ -174,16 +274,16 @@ export class DefinirFuentesYUsosComponent implements OnInit {
     });
   }
 
-  addComponent( i: number ) {
+  addComponent(i: number) {
     let grupoComponente = this.createComponente();
     let listaUsos = grupoComponente.get('usos') as FormArray;
-    listaUsos.push( this.createUso() );
-    this.componentes( i ).push( grupoComponente );
+    listaUsos.push(this.createUso());
+    this.componentes(i).push(grupoComponente);
   }
 
   createComponente(): FormGroup {
     return this.fb.group({
-      componenteAportanteId:[],
+      componenteAportanteId: [],
       contratacionProyectoAportanteId: [],
       fase: [null, Validators.required],
       componente: [null, Validators.required],
@@ -191,92 +291,123 @@ export class DefinirFuentesYUsosComponent implements OnInit {
     });
   }
 
-  borrarArray(borrarForm: any, i: number) {
-    borrarForm.removeAt(i);
+  borrarArray(j: number, i: number) {
+    this.componentes(j).removeAt( i );
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
   }
 
   onSubmit() {
 
     let valoresCorrectos = true;
+    let valorTotalSumado = 0;
+    let totalAportantes = 0;
 
     this.contratacionProyecto.contratacionProyectoAportante = [];
 
-      this.aportantes.controls.forEach( controlAportante => {
-        let listaComponentes = controlAportante.get('componentes') as FormArray;
+    this.aportantes.controls.forEach(controlAportante => {
+      const listaComponentes = controlAportante.get('componentes') as FormArray;
 
+      if ( controlAportante.get('valorAportanteProyecto').value !== 0 ) {
+        totalAportantes++;
+      };
 
-        let aportante: ContratacionProyectoAportante = {
-          contratacionProyectoAportanteId: controlAportante.get('contratacionProyectoAportanteId').value,
-          contratacionProyectoId: this.contratacionProyecto.contratacionProyectoId,
-          proyectoAportanteId: controlAportante.get('proyectoAportanteId').value,
-          valorAporte: controlAportante.get('valorAportanteProyecto').value,
-          componenteAportante: [],
+      valorTotalSumado += controlAportante.get('valorAportanteProyecto').value;
 
-        }
+      const aportante: ContratacionProyectoAportante = {
+        contratacionProyectoAportanteId: controlAportante.get('contratacionProyectoAportanteId').value,
+        contratacionProyectoId: this.contratacionProyecto.contratacionProyectoId,
+        proyectoAportanteId: controlAportante.get('proyectoAportanteId').value,
+        valorAporte: controlAportante.get('valorAportanteProyecto').value,
+        componenteAportante: []
+      };
 
-        let valorTotal: number = 0; 
-        let valorSumado: number = 0; 
+      let valorTotal = 0;
+      let valorSumado = 0;
 
-        valorTotal = aportante.valorAporte;
+      valorTotal = aportante.valorAporte;
 
-        listaComponentes.controls.forEach( controlComponente => {
-          let listaUsos = controlComponente.get('usos') as FormArray;
+      listaComponentes.controls.forEach(controlComponente => {
+        const listaUsos = controlComponente.get('usos') as FormArray;
 
-          let componenteAportante: ComponenteAportante = {
-            componenteAportanteId: controlComponente.get('componenteAportanteId').value,
-            contratacionProyectoAportanteId: aportante.contratacionProyectoAportanteId,
-            tipoComponenteCodigo: controlComponente.get('componente').value ? controlComponente.get('componente').value.codigo : null ,
-            faseCodigo: controlComponente.get('fase').value ? controlComponente.get('fase').value.codigo : null ,
-            componenteUso: [],
+        const componenteAportante: ComponenteAportante = {
+          componenteAportanteId: controlComponente.get('componenteAportanteId').value,
+          contratacionProyectoAportanteId: aportante.contratacionProyectoAportanteId,
+          tipoComponenteCodigo: controlComponente.get('componente').value ? controlComponente.get('componente').value.codigo : null,
+          faseCodigo: controlComponente.get('fase').value ? controlComponente.get('fase').value.codigo : null,
+          componenteUso: []
+        };
 
-          }
+        listaUsos.controls.forEach(controlUsos => {
+          const componenteUso: ComponenteUso = {
+            componenteUsoId: controlUsos.get('componenteUsoId').value,
+            componenteAportanteId: componenteAportante.componenteAportanteId,
+            tipoUsoCodigo: controlUsos.get('usoDescripcion').value ? controlUsos.get('usoDescripcion').value.codigo : null,
+            valorUso: controlUsos.get('valorUso').value,
+          };
 
+          valorSumado = valorSumado + componenteUso.valorUso;
 
-          listaUsos.controls.forEach( controlUsos => {
-            let componenteUso: ComponenteUso = {
-              componenteUsoId: controlUsos.get('componenteUsoId').value,
-              componenteAportanteId: componenteAportante.componenteAportanteId,
-              tipoUsoCodigo: controlUsos.get('usoDescripcion').value ? controlUsos.get('usoDescripcion').value.codigo : null, 
-              valorUso: controlUsos.get('valorUso').value,
+          componenteAportante.componenteUso.push(componenteUso);
+        });
+
+        aportante.componenteAportante.push(componenteAportante);
+
+      });
+
+      if (valorSumado != valorTotal) {
+
+        valoresCorrectos = false;
+      };
+
+      this.contratacionProyecto.contratacionProyectoAportante.push(aportante);
+    });
+    
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorObra && totalAportantes !== this.aportantes.controls.length ) {
+      this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
+      return;
+    };
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorInterventoria && totalAportantes !== this.aportantes.controls.length ) {
+      this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
+      return;
+    };
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length ) {
+      if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorInterventoria  ) {
+        this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de interventoría.</b>');
+        return;
+      };
+    };
+
+    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' && totalAportantes === this.aportantes.controls.length ) {
+      console.log( valorTotalSumado );
+      if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra  ) {
+        this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de obra.</b>');
+        return;
+      };
+    };
+
+    if (valoresCorrectos) {
+
+      this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto(this.contratacionProyecto)
+        .subscribe(
+          respuesta => {
+            this.openDialog('', `<b>${respuesta.message}</b>`);
+            this.realizoPeticion = true;
+            if (respuesta.code === '200') {
+              this.router.navigate(['/solicitarContratacion/solicitud', this.contratacionProyecto.contratacionId]);
             }
+          },
+          err => this.openDialog('', `<b>${err.message}</b>`)
+        );
 
-            valorSumado = valorSumado + componenteUso.valorUso;
-
-            componenteAportante.componenteUso.push( componenteUso );
-          })
-
-          aportante.componenteAportante.push( componenteAportante );
-
-        })
-
-          if (valorSumado != valorTotal){
-              
-              valoresCorrectos = false;
-            }
-
-        this.contratacionProyecto.contratacionProyectoAportante.push( aportante );
-    })
-
-    if (valoresCorrectos){
-      
-      this.projectContractingService.createEditContratacionProyectoAportanteByContratacionproyecto( this.contratacionProyecto )
-        .subscribe( respuesta => {
-          this.openDialog( "Solicitud Contratación", respuesta.message )
-
-          if (respuesta.code == "200")
-            this.router.navigate(["/solicitarContratacion/solicitud", this.contratacionProyecto.contratacionId ]);
-        })
-
-      }else{
-        this.openDialog('','El valor total es diferente a la suma del valor de los componentes');
-      }
+    } else {
+      this.openDialog('', '<b>La sumatoria de los componentes, no es igual el valor total del aporte.</b>');
+    }
 
     console.log(this.contratacionProyecto);
   }

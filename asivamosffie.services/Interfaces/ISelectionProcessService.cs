@@ -27,6 +27,7 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetProcesoSeleccionCotizacion();
         Task<ActionResult<List<ProcesoSeleccionCotizacion>>> GetCotizacionByProcesoSeleccionId(int ProcesoSeleccionId);
         Task<Respuesta> CreateEditarProcesoSeleccionCotizacion(ProcesoSeleccionCotizacion procesoSeleccionCotizacion);
+        Task getActividadesVencidas(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
         //Proponente
         Task<ProcesoSeleccionCronograma> GetProcesoSeleccionProponenteById(int id);
@@ -38,10 +39,17 @@ namespace asivamosffie.services.Interfaces
         Task<ActionResult<List<GrillaProcesoSeleccionIntegrante>>> GetGridProcesoSeleccionIntegrante(int? procesoSeleccionId);
         Task<Respuesta> CreateEditarProcesoSeleccionIntegrante(ProcesoSeleccionIntegrante procesoSeleccionIntegrante);
         Task<Respuesta> CreateEditarCronogramaSeguimiento(CronogramaSeguimiento cronogramaSeguimiento);
-         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
-         Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument, string pUsuarioModifico);
+         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pProcesoSeleccion);
+         Task<Respuesta> UploadMassiveLoadElegibilidad(string pIdDocument,int procesoSeleccionId, string pUsuarioModifico);
          Task<Respuesta> DeleteProcesoSeleccion( int pId, string pUsuarioModificacion );
-         Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado );
+         Task<Respuesta> ChangeStateProcesoSeleccion( int pId, string pUsuarioModificacion, string pCodigoEstado,string pFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
          Task<List<ProcesoSeleccionProponente>> GetProcesoSeleccionProponentes();
+         Task<Respuesta> CreateContractorsFromProponent(ProcesoSeleccion pProcesoSeleccion, string pUsuarioCreo);
+        Task<Respuesta> deleteProcesoSeleccionCotizacionByID(int procesoSeleccionCotizacionId, string usuarioModificacion);
+        Task<Respuesta> deleteProcesoSeleccionGrupoByID(int procesoSeleccionCotizacionId, string usuarioModificacion);
+        Task<Respuesta> deleteProcesoSeleccionActividadesByID(int procesoSeleccionCotizacionId, string usuarioModificacion);
+        Task<List<string>> getObservacionesProcesoSeleccionProponentes(int id);
+        Task<Respuesta> DeleteProcesoSeleccionCronogramaMonitoreo(int pId, string usuarioCreacion);
+        Task<Respuesta> DeleteProcesoSeleccionIntegrante(int pId, string usuarioCreacion);
     }
 }

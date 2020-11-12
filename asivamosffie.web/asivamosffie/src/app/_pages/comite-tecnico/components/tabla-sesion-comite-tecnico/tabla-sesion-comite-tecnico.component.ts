@@ -12,13 +12,13 @@ import { ComiteGrilla, EstadosComite } from 'src/app/_interfaces/technicalCommit
 })
 export class TablaSesionComiteTecnicoComponent implements OnInit {
 
-  estadosComite = EstadosComite
+  estadosComite = EstadosComite;
 
   displayedColumns: string[] = ['fecha', 'numero', 'estado', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -26,21 +26,22 @@ export class TablaSesionComiteTecnicoComponent implements OnInit {
   }
 
   constructor(
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+  ) {
 
-             ) 
-  {
-  
   }
 
   ngOnInit(): void {
 
     this.technicalCommitteeSessionService.getListComiteGrilla()
-      .subscribe( response => {
-        let lista: ComiteGrilla[] = response.filter( c => c.estadoComiteCodigo == this.estadosComite.convocada )
-        this.dataSource = new MatTableDataSource( lista );
-      })
-
+      .subscribe(response => {
+        let lista: ComiteGrilla[] = response.filter(c => c.estadoComiteCodigo == this.estadosComite.convocada ||
+          c.estadoComiteCodigo === this.estadosComite.aplazada);
+        this.dataSource = new MatTableDataSource(lista);
+        this.initPaginator();
+      });
+  }
+  initPaginator() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

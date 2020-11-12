@@ -26,27 +26,30 @@
   margin-right: 0;
 }
 
-.w-margin {
-  width: 99%;
+.title-menu--h1 {
+  margin-bottom: 0.8em;
+}
+
+.mx-1em {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+th.mat-header-cell {
+  text-align: center;
+}
+
+.btn-guardar {
   margin-top: 1em;
 }
 
-.mt-1em {
-  margin-top: .8em;
+.primer-tabla {
+  max-width: 40em;
+  margin: auto;
 }
 
-.padding-left {
-  padding-left: .7em
-}
-
-.mr-min {
-  margin-right: .7em;
-}
-
-.w-30 {
-  width: 30%;
-}
-
-.w-31 {
-  width: 31%;
+.sino {
+  width: 7em;
+  justify-content: space-between;
+  padding-right: 0.5em;
 }

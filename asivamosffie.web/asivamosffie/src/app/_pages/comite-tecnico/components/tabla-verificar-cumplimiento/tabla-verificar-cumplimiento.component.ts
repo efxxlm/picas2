@@ -4,28 +4,14 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogVerDetalleComponent } from '../dialog-ver-detalle/dialog-ver-detalle.component';
+import { ActivatedRoute } from '@angular/router';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
+import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
+import { forkJoin } from 'rxjs';
+import { ComiteTecnico, SesionComiteTema, SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { ObservacionSecretarioComponent } from '../observacion-secretario/observacion-secretario.component';
 
-export interface OrdenDelDia {
-  id: number;
-  tarea: string;
-  responsable: string;
-  fechaCumplimiento: string;
-  fechaReporte: string;
-  estadoReportado: string;
-  gestionRealizada: number;
-}
-
-const ELEMENT_DATA: OrdenDelDia[] = [
-  {
-    id: 0,
-    tarea: 'Realizar seguimiento semanal del cronograma',
-    responsable: 'Julian Guillermo García Pedreros',
-    fechaCumplimiento: '30/06/2020',
-    fechaReporte: '02/07/2020',
-    estadoReportado: 'En proceso',
-    gestionRealizada: 0
-  }
-];
 
 @Component({
   selector: 'app-tabla-verificar-cumplimiento',
@@ -34,6 +20,8 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaVerificarCumplimientoComponent implements OnInit {
 
+  listaCompromisos: any[] = [];
+  comite: any;
   displayedColumns: string[] = [
     'tarea',
     'responsable',
@@ -43,7 +31,10 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     'gestionRealizada',
     'id'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
+  estaCumplido: any[] = [ 'Cumplido', 'No Cumplido' ];
+
+  estadosArray: Dominio[] = []
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -53,9 +44,63 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor(public dialog: MatDialog) { }
+  constructor(
+    public dialog: MatDialog,
+    private activatedRoute: ActivatedRoute,
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+    private commonService: CommonService,
+
+  ) { }
 
   ngOnInit(): void {
+
+
+    this.estadosArray
+
+    this.activatedRoute.params.subscribe(parametros => {
+
+      forkJoin([
+        this.technicalCommitteeSessionService.getCompromisosByComiteTecnicoId(parametros.id),
+        this.commonService.listaEstadoCompromisos(),
+
+      ]).subscribe(respuesta => {
+        this.comite = respuesta[0];
+        respuesta[0].sesionComiteTema.forEach(tem => {
+          tem.temaCompromiso.forEach(tc => {
+            tc.nombreResponsable = `${tc.responsableNavigation.usuario.nombres} ${tc.responsableNavigation.usuario.apellidos}`;
+            tc.nombreEstado = tc.estadoCodigo;
+            tc.estadoCodigo = null;
+            tc['temaCompromisoSeguimiento'] = tc['temaCompromisoSeguimiento'];
+            tc[ 'tieneCompromisos' ] = tc['temaCompromisoSeguimiento'].length > 0 ? true : false;
+            tc[ 'compromisoSeleccionado' ] = tc[ 'esCumplido' ] !== undefined ? ( tc[ 'esCumplido' ] === true ? 'Cumplido' : 'No Cumplido' ) : null;
+            tc[ 'esCumplido' ] = tc[ 'esCumplido' ] !== undefined ? tc[ 'esCumplido' ] : null;
+          });
+          this.listaCompromisos = this.listaCompromisos.concat(tem.temaCompromiso);
+        })
+
+        if (respuesta[0].sesionComiteSolicitudComiteTecnico) {
+          respuesta[0].sesionComiteSolicitudComiteTecnico.forEach(sol => {
+            sol.sesionSolicitudCompromiso.forEach(sc => {
+              sc.nombreResponsable = `${sc.responsableSesionParticipante.usuario.nombres} ${sc.responsableSesionParticipante.usuario.apellidos}`
+              sc.nombreEstado = sc.estadoCodigo;
+              sc.estadoCodigo = null;
+              sc[ 'tieneCompromisos' ] = sc[ 'compromisoSeguimiento' ].length > 0 ? true : false;
+              sc[ 'compromisoSeleccionado' ] = sc[ 'esCumplido' ] !== undefined ? ( sc[ 'esCumplido' ] === true ? 'Cumplido' : 'No Cumplido' ) : null
+              sc[ 'esCumplido' ] = sc[ 'esCumplido' ] !== undefined ? sc[ 'esCumplido' ] : null;
+            });
+            this.listaCompromisos = this.listaCompromisos.concat(sol.sesionSolicitudCompromiso);
+          })
+        }
+        console.log( respuesta[0], this.listaCompromisos );
+        this.estadosArray = respuesta[1];
+        this.dataSource = new MatTableDataSource(this.listaCompromisos);
+        this.initPaginator();
+
+      })
+    })
+  }
+
+  initPaginator() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -73,10 +118,78 @@ export class TablaVerificarCumplimientoComponent implements OnInit {
     };
   }
 
-  openVerDetalle(id: number) {
+  onChange ( compromiso: any, compromisoSeleccionado: string ) {
+    this.listaCompromisos.forEach( value => {
+      if ( value.sesionSolicitudCompromisoId === compromiso.sesionSolicitudCompromisoId ) {
+        value[ 'esCumplido' ] = !compromisoSeleccionado.includes( 'No' );
+      };
+    } );
+    if ( ( compromiso.nombreEstado === 'En proceso'  || compromiso.nombreEstado === 'Finalizado' ) && compromisoSeleccionado === 'No Cumplido' ) {
+      this.openObservacionSecretario( compromiso );
+    };
+  };
+
+  openVerDetalle( compromisoSeguimiento: any[] ) {
     this.dialog.open(DialogVerDetalleComponent, {
-      width: '70em'
+      width: '70em',
+      data: { compromisos: compromisoSeguimiento }
     });
+  };
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  };
+
+  openObservacionSecretario( compromisoSeguimiento: any[] ) {
+    this.dialog.open( ObservacionSecretarioComponent, {
+      width: '70em',
+      data: { compromisos: compromisoSeguimiento }
+    });
+  };
+
+  onSave() {
+
+    const compromisosIncompletos = this.listaCompromisos.filter( value => value[ 'esCumplido' ] === null );
+    console.log( compromisosIncompletos, this.listaCompromisos );
+    if ( compromisosIncompletos.length > 0 ) {
+      this.openDialog( '', '<b>Falta registrar información</b>' )
+      return;
+    };
+    let comite: ComiteTecnico = {
+      sesionComiteTema: [
+        {
+          temaCompromiso: []
+        }
+      ],
+      sesionComiteSolicitudComiteTecnico: [
+        {
+          sesionSolicitudCompromiso: []
+        }
+      ]
+    };
+
+    this.listaCompromisos.forEach( compromiso => {
+      if ( compromiso.sesionSolicitudCompromisoId !== undefined ) {
+        comite.sesionComiteSolicitudComiteTecnico[0].sesionSolicitudCompromiso.push( compromiso );
+      };
+      if ( compromiso.temaCompromisoId !== undefined ) {
+        comite.sesionComiteTema[0].temaCompromiso.push( compromiso );
+      };
+    } );
+
+    console.log( comite );
+    this.technicalCommitteeSessionService.verificarTemasCompromisos(comite)
+      .subscribe(respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`)
+        if (respuesta.code == "200") {
+          this.listaCompromisos = [];
+          this.ngOnInit();
+        }
+      })
+
   }
 
 }

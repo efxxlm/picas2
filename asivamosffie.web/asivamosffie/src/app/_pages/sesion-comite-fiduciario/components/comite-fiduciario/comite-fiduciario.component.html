@@ -1,0 +1,81 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Registrar sesión de comité fiduciario
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenida/o, aquí podrá realizar la programación y registro de una sesión de comité fiduciario.
+    </div>
+
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': ordenesDelDia === true}"
+            (click)="ordenesDelDia = true;
+                sesionComiteFiduciario = false;
+                gestionActas = false;
+                monitoreoCompromisos = false;">
+            Órdenes del día
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': sesionComiteFiduciario === true}"
+            (click)="sesionComiteFiduciario = true;
+                ordenesDelDia = false;
+                gestionActas = false;
+                monitoreoCompromisos = false;">
+                Sesiones de comité fiduciario
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': gestionActas === true}"
+            (click)="gestionActas = true;
+                ordenesDelDia = false;
+                sesionComiteFiduciario = false;
+                monitoreoCompromisos = false;">
+            Gestión de actas
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': monitoreoCompromisos === true}"
+            (click)="monitoreoCompromisos = true;
+                ordenesDelDia = false;
+                sesionComiteFiduciario = false;
+                gestionActas = false;">
+            Monitoreo a compromisos
+        </button>
+    </div>
+
+
+    <div *ngIf="ordenesDelDia">
+        <div class="row justify-content-center mt-1em mb-1em">
+            <div class="pr-1">
+                <label class="label-left">Fecha del próximo comité</label>
+            </div>
+            <div class="d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                    <input [formControl]="fechaComite" matInput [matDatepicker]="picker" required [min]="minDate"
+                        readonly (click)="picker.open()" placeholder="DD/MM/AAAA">
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
+                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+            </div>
+        </div>
+        <button type="button" (click)="onClickCrearOrden()"  mat-raised-button color="accent"
+            [disabled]="fechaComite.invalid" class="crear-orden">
+            Crear orden del día del comité fiduciario
+        </button>
+
+        <app-tabla-orden-del-dia></app-tabla-orden-del-dia>
+    </div>
+
+    <app-tabla-sesion-comite-fiduciario *ngIf="sesionComiteFiduciario"></app-tabla-sesion-comite-fiduciario>
+
+    <app-tabla-gestion-actas *ngIf="gestionActas"></app-tabla-gestion-actas>
+
+    <app-tabla-monitoreo-compromisos *ngIf="monitoreoCompromisos"></app-tabla-monitoreo-compromisos>
+
+</div>

@@ -42,8 +42,21 @@ export class TablaResultadosComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('lista', this.esMultiproyecto );
+    let lista = [];
+    if ( this.elementosSelecciondos.length > 0 ) {
+      this.elementosSelecciondos.forEach( seleccionados => {
+        this.listaResultados.forEach( ( proyecto, value ) => {
+          if ( proyecto.proyectoId === seleccionados.proyectoId ) {
+            this.listaResultados.splice( value, 1 );
+          };
+        } );
+      } );
+      lista = this.listaResultados;
+    } else {
+      lista = this.listaResultados
+    }
 
-    this.dataSource = new MatTableDataSource(this.listaResultados);
+    this.dataSource = new MatTableDataSource(lista);
 
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
@@ -66,7 +79,7 @@ export class TablaResultadosComponent implements OnInit {
 
   openPopup() {
     this.dialog.open(AsociadaComponent, {
-      data: { data: this.elementosSelecciondos, esMultiproyecto: this.esMultiproyecto}
+      data: { data: this.elementosSelecciondos, esMultiproyecto: this.esMultiproyecto }
     });
   }
 }

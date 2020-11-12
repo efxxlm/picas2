@@ -1,0 +1,65 @@
+<section class="container">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Gestionar garantías y pólizas
+        </h1>
+        <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+        <div class="text-info" *ngIf="verAyuda">
+            <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+                <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+            </button>
+            Bienvenida/o aquí podrá gestionar las garantías y pólizas para los contratos asociados al desarrollo de
+            proyectos de infraestructura que ejecutará el FFIE, que se encuentran firmados y registrados y que requieren
+            aprobación de pólizas.
+        </div>
+    </div>
+
+    <div class="text-center">
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Sin radicación de pólizas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-sin-radicacion-de-polizas [dataTableAux]="this.dataTable"></app-tabla-sin-radicacion-de-polizas>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    En revisión de pólizas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-en-revision-de-polizas [dataTableAux]="this.dataTable"></app-tabla-en-revision-de-polizas>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Con póliza observada y devuelta
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-con-poliza-observada-y-devuelta [dataTableAux]="this.dataTable"></app-tabla-con-poliza-observada-y-devuelta>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Con aprobación de pólizas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-tabla-con-aprobacion-de-polizas [dataTableAux]="this.dataTable"></app-tabla-con-aprobacion-de-polizas>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

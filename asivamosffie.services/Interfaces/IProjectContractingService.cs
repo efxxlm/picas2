@@ -12,7 +12,8 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Contratacion> GetAllContratacionByContratacionId(int pContratacionId);
 
-        Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico);
+        Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico,
+            string  DominioFront, string MailServer, int MailPort, bool EnableSSL, string Password, string Sender);
 
         Task<Respuesta> DeleteContratacionByIdContratacion(int idContratacion, string pUsusarioElimino);
 

@@ -1,0 +1,37 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+
+<div class="text-center">
+    <h1 class="title-menu--h1">
+        {{this.tipo==0?'Devolver':'Rechazar'}} por validación presupuestal
+    </h1>
+
+    <p class="info-sub-title">
+        <span>Tipo de solicitud:<b>{{tipoSolicitud}}</b></span>
+        <span>Número de solicitud: <b>{{numeroSolicitud}}</b></span>
+    </p>
+</div>
+
+<div class="d-flex align-items-center">
+    <div class="text-area-quill">
+        <label for="alcanceParticular" class="text-area-quill--label">Observaciones</label>
+        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+            (onContentChanged)="maxLength($event, 2000)" [formControl]="observaciones"></quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="observaciones.value">
+        {{2000 - (textoLimpio(observaciones.value)>2000?2000:textoLimpio(observaciones.value))}}
+    </span>
+    <span class="contador miles" *ngIf="!observaciones.value">
+        2000
+    </span>
+</div>
+<p class="text-center">
+    <img src="assets/img/icon/sim.svg" alt="información" class="icon">
+    Indique sobre que llave(s), aportante(s) y/o fuente(s) realiza su comentario, sea claro y específico frente a su
+    solicitud
+</p>
+
+<div class="row justify-content-center mt-1em mb-1em">
+    <button mat-raised-button color="accent" [disabled]="observaciones.invalid" (click)="devolverSolicitud()">{{this.tipo==0?'Devolver':'Rechazar'}} solicitud</button>
+</div>

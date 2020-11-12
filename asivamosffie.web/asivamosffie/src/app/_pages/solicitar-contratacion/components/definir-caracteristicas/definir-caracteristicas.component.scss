@@ -25,3 +25,16 @@
 .col:last-child {
   margin-right: 0;
 }
+
+.mr-1em {
+  margin-right: 1em;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+b.color-mainColor {
+  font-weight: 600;
+}

@@ -18,8 +18,9 @@ export interface RegistrosCargados {
     institucion:string,
     sede:string,
     estado:string,
-    estadoj:string    ,
-    gestion:string
+    estadoj:string,
+    estadop:string,
+    gestion:{estadop:string,id:number}
 }
 
 @Component({
@@ -28,19 +29,10 @@ export interface RegistrosCargados {
   styleUrls: ['./tabla-proyectos-tecnico.component.scss']
 })
 export class TablaProyectosTecnicoComponent {
-  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','gestion'];
-  
+  //no se va a usar estado juridico
+  //displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadoj','estadop','gestion'];
 
-  columnas = [
-    { titulo: 'Fecha',name: 'fecha' },
-    { titulo: 'Departamento',name: 'departamento' },
-    { titulo: 'Municipio',name: 'municipio' },
-    { titulo: 'Institución Educativa',name: 'institucion' },
-    { titulo: 'Sede',name: 'sede' },
-    { titulo: 'Estado del registro',name: 'estado' },
-    { titulo: 'Estado jurídico de los predios',name: 'estadoj' },
-  ];
-
+  displayedColumns: string[] = ['fecha','departamento','municipio','institucion','sede','estado','estadop','gestion'];
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataSource= new MatTableDataSource();
@@ -69,18 +61,18 @@ export class TablaProyectosTecnicoComponent {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.projectService.deleteProjectById(this.proyectoid).subscribe(respuesta => {
           let proyecto = respuesta;
           if(respuesta)
           {
             this.inicializar();
-            this.openDialog('', "Proyecto eliminado correctamente");
+            this.openDialog('', "<b>La información a sido eliminada correctamente.</b>");
           }
           else
           {
-            this.openDialog('', "Hubo un error al eliminar el proyecto, por favor intenta nuevamente.");
+            this.openDialog('', "<b>El registro tiene información que depende de él no se puede eliminar.</b>");
           }
         },
           err => {
@@ -109,8 +101,10 @@ export class TablaProyectosTecnicoComponent {
       respuesta.forEach(element => {
         datos.push({fecha:element.fecha
           ,id:element.proyectoId,departamento:element.departamento,municipio:element.municipio,
-          estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,
-          institucion:element.institucionEducativa,sede:element.sede,gestion:element.proyectoId});
+          estado:element.estadoRegistro,estadoj:element.estadoJuridicoPredios,estadop:element.estadoProyecto,
+          institucion:element.institucionEducativa,sede:element.sede,
+          gestion:{id:element.proyectoId,estadop:element.estadoProyecto},
+        });
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
       this.dataSource.paginator = this.paginator;
@@ -141,14 +135,14 @@ export class TablaProyectosTecnicoComponent {
   ver(gestion:any)
   {
     console.log(gestion);    
-    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion.id}]);
+    this.router.navigate(['/crearProyecto/crearProyecto', { id: gestion}]);
   }
 
   eliminar(gestion:any)
   {
     console.log(gestion);  
-    this.proyectoid=gestion.id;
-    this.openDialogSiNo('', "Está seguro de eliminar este registro?",);  
+    this.proyectoid=gestion;
+    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);  
     
   }
   

@@ -62,6 +62,14 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("dominioByIdDominioNotCode")]
+        public async Task<ActionResult<List<Dominio>>> GetDominioByIdDominioNotCode(int pIdDominio, string pMinCode)
+        {
+            var result = await common.GetListDominioByIdTipoDominio(pIdDominio);
+            return result.Where(x=>x.Codigo!=pMinCode).ToList();
+        }
+
+        [HttpGet]
         [Route("ListDepartamento")]
         public async Task<ActionResult<List<Localicacion>>> GetListDepartamento()
         {

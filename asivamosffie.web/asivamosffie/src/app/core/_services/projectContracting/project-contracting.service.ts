@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Contratacion, ContratacionProyecto, ContratistaGrilla } from 'src/app/_interfaces/project-contracting';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../common/common.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

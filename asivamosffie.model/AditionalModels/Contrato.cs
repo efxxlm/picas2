@@ -15,7 +15,21 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public IFormFile pFile { get; set; }
+       
+        [NotMapped]
+        public DateTime? FechaEnvioFirmaFormat { get; set; }
 
-  
+        [NotMapped]
+        public DateTime? FechaFirmaContratistaFormat { get; set; }
+
+        [NotMapped]
+        public DateTime? FechaFirmaFiduciariaFormat { get; set; }
+
+
+        [NotMapped]
+        public DateTime? FechaFirmaContratoFormat { get; set; }
+
+        [NotMapped]
+        public List<CofinanicacionAportanteGrilla> ListAportantes{ get; set; }
     }
 }

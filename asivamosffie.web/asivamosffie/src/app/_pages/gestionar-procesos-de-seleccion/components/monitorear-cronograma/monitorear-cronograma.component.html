@@ -6,9 +6,9 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Monitorear cronograma proceso SP 0007-2020
+            Monitorear cronograma proceso {{procesoSeleccion.numeroProceso}}
         </h1>
-        <span class="subtittle">Selección privada</span>
+        <b class="subtittle">Selección privada</b>
         <button mat-raised-button color="primary" class="btn-ver-objetivo" (click)="verAyuda = !verAyuda">
             <img src="assets/img/icon/ojo-blanco.svg" alt="Ver objeto">
             Ver objeto
@@ -40,8 +40,10 @@
     </div>
 
     <app-tabla-cronograma [editMode]="editMode" *ngIf="ajustarCronograma"></app-tabla-cronograma>
-    <app-tabla-detalle-cronograma [editMode]="editMode" *ngIf="ajustarCronograma && !editMode.valor"></app-tabla-detalle-cronograma>
-
+<!--deprecated
+    <app-tabla-detalle-cronograma [editMode]="editMode" *ngIf="ajustarCronograma "></app-tabla-detalle-cronograma>
+-->
     <app-registrar-seguimiento-cronograma *ngIf="registrarSeguimiento"></app-registrar-seguimiento-cronograma>
+    
     
 </div>

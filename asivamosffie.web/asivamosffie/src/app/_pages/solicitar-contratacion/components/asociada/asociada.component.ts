@@ -28,23 +28,21 @@ export class AsociadaComponent implements OnInit {
 
   solicitudAsociada: FormControl;
   solicitudAsociadaArray = [
-    {name: 'Obra', value: '1'},
-    {name: 'Interventoría', value: '2'}
+    { name: 'Obra', value: '1' },
+    { name: 'Interventoría', value: '2' }
   ];
 
-
   constructor(
-                @Inject(MAT_DIALOG_DATA) public data: any,
-                private projectContactingService: ProjectContractingService,
-                public dialog: MatDialog,    
-                public router: Router      
-             ) 
-  {
-    
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private projectContactingService: ProjectContractingService,
+    private dialogRef: MatDialogRef<AsociadaComponent>,
+    public dialog: MatDialog,
+    public router: Router
+  ) {
+
   }
   ngOnInit(): void {
     this.declararInput();
-
   }
 
   private declararInput() {
@@ -52,51 +50,57 @@ export class AsociadaComponent implements OnInit {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
   }
 
-  validaciones(): string{
-    if (this.data.esMultiproyecto == 'true' && this.data.data.length < 2)
-      return 'Debe seleccionar por lo menos dos (2) proyectos';
+  validaciones(): string {
+    if (this.data.esMultiproyecto === 'true' && this.data.data.length < 2) {
+      return '<b>Debe seleccionar por lo menos dos (2) proyectos</b>';
+    }
 
-      if (this.data.esMultiproyecto == 'false' && this.data.data.length > 1)
-      return 'Puede seleccionar unicamente un (1) proyecto';
-    
-      return '';
+    if (this.data.esMultiproyecto === 'false' && this.data.data.length > 1) {
+      return '<b>Puede seleccionar unicamente un (1) proyecto</b>';
+    }
+    return '';
   }
 
-  onSave(){
+  onSave() {
 
-    let contratacion: Contratacion = {
-      tipoSolicitudCodigo: this.solicitudAsociada.value,
+    const contratacion: Contratacion = {
+      tipoSolicitudCodigo: this.solicitudAsociada.value.length > 1 ? '3' : this.solicitudAsociada.value[0],
       contratacionProyecto: []
-    }
-    
-    let mensajeValidaciones = this.validaciones();
+    };
 
-    if ( mensajeValidaciones.length > 0 )
-    {
-      this.openDialog('', mensajeValidaciones)
+    const mensajeValidaciones = this.validaciones();
+
+    if (mensajeValidaciones.length > 0) {
+      this.openDialog('', `<b>${mensajeValidaciones}</b>`)
       return false;
-    }
+    };
 
-    this.data.data.forEach( e => {
-      
-      let contratacionProyecto: ContratacionProyecto = {
+    this.data.data.forEach(e => {
+
+      const contratacionProyecto: ContratacionProyecto = {
         proyectoId: e.proyectoId,
       }
 
-      contratacion.contratacionProyecto.push( contratacionProyecto )
-    })
+      contratacion.contratacionProyecto.push(contratacionProyecto)
+    });
 
-    this.projectContactingService.createContratacionProyecto( contratacion ).subscribe( respuesta => {
-      this.openDialog( "Proceso seleccion", respuesta.message )
-      if ( respuesta.code == "200" )
-        this.router.navigate(["/solicitarContratacion/solicitud", respuesta.data.contratacionId]);
-    })
+    this.projectContactingService.createContratacionProyecto(contratacion).subscribe(
+      respuesta => {
+        this.dialogRef.close();
+        if (respuesta.code === '200') {
+          this.openDialog('', `<b>${respuesta.message}</b>`);
+        }
+        this.router.navigate(['/solicitarContratacion']);
+      },
+      err => this.openDialog('', `<b>${err.message}</b>`)
+    );
+
   }
 
 }

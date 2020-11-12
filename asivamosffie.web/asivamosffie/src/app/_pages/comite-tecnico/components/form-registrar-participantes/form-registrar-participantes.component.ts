@@ -61,26 +61,14 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.agregaInvitado();
+    //this.agregaInvitado();
     let lista: any[] = [];
 
     this.activatedRoute.params.subscribe(parametros => {
       let id = parametros.id;
 
-      forkJoin([
-        this.commonService.getUsuariosByPerfil(1),
-        this.commonService.getUsuariosByPerfil(2),
-        this.commonService.getUsuariosByPerfil(3),
-        this.commonService.getUsuariosByPerfil(4),
-        this.commonService.getUsuariosByPerfil(5),
-        this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(id),
-
-
-      ]).subscribe(response => {
-
-        for (let i = 0; i < 5; i++) {
-          lista = lista.concat(response[i])
-        }
+      this.commonService.listaUsuarios().then((respuesta) => {
+        lista = respuesta;
 
         this.miembrosArray = lista.map(u => {
 
@@ -90,51 +78,55 @@ export class FormRegistrarParticipantesComponent implements OnInit {
           return u
         })
 
-        this.objetoComiteTecnico = response[5];
+        forkJoin([
+          this.technicalCommitteSessionService.getComiteTecnicoByComiteTecnicoId(id),
+          this.technicalCommitteSessionService.getSesionParticipantesByIdComite(id),
+
+        ]).subscribe(response => {
+          response[0].sesionParticipante = response[1];
+          this.objetoComiteTecnico = response[0];
+
+          console.log(this.objetoComiteTecnico)
 
 
+          setTimeout(() => {
 
-        setTimeout(() => {
+            this.onUpdate();
+          }, 1000);
 
-          this.onUpdate();
+          let listaSeleccionados = [];
+          this.objetoComiteTecnico.sesionParticipante.forEach(p => {
+            let participante: any = {}
+            participante = this.miembrosArray.find(m => m.usuarioId == p.usuarioId)
 
+            participante.sesionParticipanteId = p.sesionParticipanteId
 
+            listaSeleccionados.push(participante);
+          });
 
-        }, 1000);
-
-        let listaSeleccionados = [];
-        this.objetoComiteTecnico.sesionParticipante.forEach(p => {
-          let participante: any = {}
-          participante = this.miembrosArray.find(m => m.usuarioId == p.usuarioId)
-          participante.sesionParticipanteId = p.sesionParticipanteId
-
-          listaSeleccionados.push(participante);
-        });
-
-        this.addressForm.get('miembrosParticipantes').setValue(listaSeleccionados)
+          this.addressForm.get('miembrosParticipantes').setValue(listaSeleccionados)
 
 
-        if (this.objetoComiteTecnico.sesionInvitado.length > 0) {
+          if (this.objetoComiteTecnico.sesionInvitado.length > 0) {
 
-          this.invitados.clear();
+            this.invitados.clear();
 
-          this.objetoComiteTecnico.sesionInvitado.forEach(i => {
-            let grupoInvitado = this.crearInvitado();
+            this.objetoComiteTecnico.sesionInvitado.forEach(i => {
+              let grupoInvitado = this.crearInvitado();
 
-            grupoInvitado.get('nombre').setValue(i.nombre)
-            grupoInvitado.get('cargo').setValue(i.cargo)
-            grupoInvitado.get('entidad').setValue(i.entidad)
-            grupoInvitado.get('sesionInvitadoId').setValue(i.sesionInvitadoId)
+              grupoInvitado.get('nombre').setValue(i.nombre)
+              grupoInvitado.get('cargo').setValue(i.cargo)
+              grupoInvitado.get('entidad').setValue(i.entidad)
+              grupoInvitado.get('sesionInvitadoId').setValue(i.sesionInvitadoId)
 
-            this.invitados.push(grupoInvitado);
-          })
-        }
+              this.invitados.push(grupoInvitado);
+            })
+          }
+
+        })
 
       })
-
     })
-
-
   }
 
   get invitados() {
@@ -155,13 +147,13 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     return this.fb.group({
       sesionInvitadoId: [],
       nombre: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       cargo: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(50)])
       ],
       entidad: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ]
     });
   }
@@ -174,17 +166,25 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   validarSolicitudes() {
+
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length == 0) {
+
+        this.estadoSolicitudes = this.estadoFormulario.completo;
+
+      return true;
+    }
+
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
-    this.objetoComiteTecnico.sesionComiteSolicitud.forEach(sol => {
-      sol.completo = true;
-      if (sol.requiereVotacion == true) {
-        this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-          if (par.sesionSolicitudVoto.length == 0)
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico) {
+      this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.forEach(sol => {
+        sol.completo = true;
+        if (sol.requiereVotacion == true) {
+          if (sol.sesionSolicitudVoto.length == 0)
             cantidadSolicitudes++;
 
-          par.sesionSolicitudVoto.forEach(vot => {
+          sol.sesionSolicitudVoto.forEach(vot => {
             cantidadSolicitudes++;
             if (vot.esAprobado == false || vot.esAprobado == true) {
               cantidadSolicitudesCompletas++;
@@ -192,57 +192,77 @@ export class FormRegistrarParticipantesComponent implements OnInit {
               sol.completo = false;
             }
           })
-        })
-      } else if (sol.requiereVotacion == false) {
-        cantidadSolicitudes++;
-        cantidadSolicitudesCompletas++;
-      }
-      else {
-        cantidadSolicitudesCompletas--;
-      }
-    })
+        } else if (sol.requiereVotacion == false) {
+          cantidadSolicitudes++;
+          cantidadSolicitudesCompletas++;
+        }
+        else {
+          cantidadSolicitudesCompletas--;
+        }
+      })
 
-    if (cantidadSolicitudes > 0) {
-      this.estadoSolicitudes = this.estadoFormulario.enProceso;
-      if (cantidadSolicitudes == cantidadSolicitudesCompletas)
-        this.estadoSolicitudes = this.estadoFormulario.completo;
+      if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length > 0) {
+        if (cantidadSolicitudes > 0) {
+          this.estadoSolicitudes = this.estadoFormulario.enProceso;
+          if (cantidadSolicitudes == cantidadSolicitudesCompletas)
+            this.estadoSolicitudes = this.estadoFormulario.completo;
+        }
+      } else {
+        this.estadoSolicitudes = '';
+      }
     }
+
   }
 
-  validarTemas( esProposicion: boolean ) {
+  validarTemas(esProposicion: boolean) {
+
+    if (this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).length == 0) {
+
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+
+      return true;
+    } 
+
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
+    let sinDiligenciar = true;
 
     this.objetoComiteTecnico.sesionComiteTema
-      .filter( t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
-      tem.completo = true;
-      
-      if (tem.requiereVotacion == true) {
-        this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-          if (par.sesionTemaVoto.filter( tv => tv.sesionTemaId == tem.sesionTemaId ).length == 0)
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
+        tem.completo = true;
+
+        if (tem.requiereVotacion == true) {
+          //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
+          if (tem.sesionTemaVoto.length == 0)
             cantidadTemas++;
 
-          par.sesionTemaVoto.filter( tv => tv.sesionTemaId == tem.sesionTemaId ).forEach(vot => {
+          tem.sesionTemaVoto.forEach(vot => {
             cantidadTemas++;
-            console.log( vot.esAprobado )
+
             if (vot.esAprobado == false || vot.esAprobado == true) {
               cantidadTemasCompletas++;
             } else {
               tem.completo = false;
-              
+
             }
           })
-        })
-      } else if (tem.requiereVotacion == false) {
-        cantidadTemas++;
-        cantidadTemasCompletas++;
-      }
-      else {
-        cantidadTemasCompletas--;
-      }
-    })
+          sinDiligenciar = false;
+          //})
+        } else if (tem.requiereVotacion == false) {
+          cantidadTemas++;
+          cantidadTemasCompletas++;
+          sinDiligenciar = false;
+        }
+        else {
+          cantidadTemas++;
+        }
+      })
 
-    
+
 
     if (cantidadTemas > 0) {
       if (esProposicion)
@@ -250,11 +270,19 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       else
         this.estadoOtrosTemas = this.estadoFormulario.enProceso;
 
-    if (cantidadTemas == cantidadTemasCompletas)
-      if (esProposicion)
-        this.estadoProposiciones = this.estadoFormulario.completo;
-      else  
-      this.estadoOtrosTemas = this.estadoFormulario.completo;
+        if (sinDiligenciar) // no se ha llenado nada
+        if (esProposicion)
+          this.estadoProposiciones = this.estadoFormulario.sinDiligenciar;
+        else
+          this.estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
+
+      if (cantidadTemas == cantidadTemasCompletas)
+        if (esProposicion)
+          this.estadoProposiciones = this.estadoFormulario.completo;
+        else
+          this.estadoOtrosTemas = this.estadoFormulario.completo;
+    } else {
+
     }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
@@ -263,9 +291,11 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
   onUpdate() {
 
+    this.estaTodo = false;
+
     this.validarSolicitudes();
-    this.validarTemas( true );
-    this.validarTemas( false );
+    this.validarTemas(true);
+    this.validarTemas(false);
 
 
     let btnRegistrarSolicitudes = document.getElementById('btnRegistrarSolicitudes');
@@ -273,20 +303,27 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     let btnProposiciones = document.getElementById('btnProposiciones');
 
 
-    btnRegistrarSolicitudes.click();
-    btnOtrosTemas.click();
-    btnProposiciones.click();
-  
-    if (this.estadoSolicitudes == this.estadoFormulario.completo)
+    if (this.objetoComiteTecnico.sesionParticipante && this.objetoComiteTecnico.sesionParticipante.length > 0) {
+      btnRegistrarSolicitudes.click();
+      btnOtrosTemas.click();
+      btnProposiciones.click();
+    }
+
+    if (this.estadoSolicitudes == this.estadoFormulario.completo &&
+      this.estadoOtrosTemas == this.estadoFormulario.completo &&
+      this.estadoProposiciones == this.estadoFormulario.completo
+    ) {
       this.estaTodo = true;
+    }
   }
 
   onDelete(i: number) {
     let grupo = this.invitados.controls[i] as FormGroup;
     console.log(grupo, this.invitados, i)
-    this.technicalCommitteSessionService.deleteSesionInvitado(grupo.get('sesionInvitadoId').value)
+    let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
+    this.technicalCommitteSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
-        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.borrarArray(this.invitados, i)
       })
 
@@ -298,7 +335,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result === true) {
         this.onDelete(e)
       }
     });
@@ -312,7 +349,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     }
     this.technicalCommitteSessionService.cambiarEstadoComiteTecnico(comite)
       .subscribe(respuesta => {
-        this.openDialog('', 'La sesión ha sido registrada exitosamente.');
+        this.openDialog('', '<b>La sesión ha sido registrada exitosamente.</b>');
         if (respuesta.code == "200")
           this.router.navigate(['/comiteTecnico']);
       })
@@ -361,7 +398,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
       this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
-          this.openDialog('', respuesta.message)
+          this.openDialog('', `<b>${respuesta.message}</b>`)
           if (respuesta.code == "200")
             this.ngOnInit();
         })
