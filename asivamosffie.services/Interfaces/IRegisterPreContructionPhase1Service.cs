@@ -15,19 +15,6 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterPreContructionPhase1Service
     {
-        Task<List<VRegistrarFase1>> GetListContratacion2();
-
-        Task<dynamic> GetListContratacion();
-
-        Task<Contrato> GetContratoByContratoId(int pContratoId);
-
-        Task<Respuesta> CreateEditContratoPerfil(Contrato pContrato);
-
-        Task<Respuesta> DeleteContratoPerfil(int ContratoPerfilId, string UsuarioModificacion);
-
-        Task<Respuesta> DeleteContratoPerfilNumeroRadicado(int ContratoPerfilNumeroRadicadoId, string UsuarioModificacion);
-
-        Task<Respuesta> ChangeStateContrato(int pContratoId, string UsuarioModificacion, string pEstadoVerificacionContratoCodigo);
 
     }
 }

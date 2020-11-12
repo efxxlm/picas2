@@ -41,6 +41,11 @@ export class FormEvaluacionComponent {
     }
   }
 
+  textoLimpio(texto: string){
+    const textolimpio = texto.replace(/<[^>]*>/g, '');
+    return textolimpio.length;
+    }
+
   onSubmit() {
     console.log(this.addressForm.value);
 

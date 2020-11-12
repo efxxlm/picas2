@@ -710,6 +710,8 @@ namespace asivamosffie.services
                     contratoPoliza.FechaModificacion = DateTime.Now;
                     contratoPoliza.EstadoPolizaCodigo = pCodigoNuevoEstadoPoliza;
 
+                    contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+
                     _context.SaveChanges();
 
                 }                

@@ -4,10 +4,14 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
-  HttpClient
+  HttpClient, HttpResponse, HttpErrorResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { AutenticacionService } from '../core/_services/autenticacion/autenticacion.service';
+import { catchError, filter, finalize, switchMap, take, tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from '../shared/components/modal-dialog/modal-dialog.component';
+
 
 @Injectable()
 export class JwtInterceptorInterceptor implements HttpInterceptor {
@@ -228,7 +232,6 @@ export class JwtInterceptorInterceptor implements HttpInterceptor {
                 }
             });
         }
-
-        return next.handle(request);
-  }
+        return request;
+    }
 }

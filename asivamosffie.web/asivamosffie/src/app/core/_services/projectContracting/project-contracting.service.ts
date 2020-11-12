@@ -62,4 +62,8 @@ export class ProjectContractingService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/ProjectContracting/changeStateContratacionByIdContratacion?idContratacion=${ id }&PCodigoEstado=${ estado }`, null);
   }
 
+  getContratacionByContratacionIdWithGrillaProyecto( id: number ){
+    return this.http.get<Contratacion>(`${environment.apiUrl}/ProjectContracting/getContratacionByContratacionIdWithGrillaProyecto?pContratacionId=${ id }`);
+   }
+
 }

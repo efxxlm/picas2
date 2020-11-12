@@ -65,6 +65,18 @@ export class CambiarContrasenaComponent implements OnInit {
     });
   }
 
+  // validarContrasenaIgualAnterior(): boolean{
+
+  //   let esIgual: boolean = false;
+
+  //   if (this.formChangePassword.value.currentPassword == this.formChangePassword.value.newPassword)
+  //     this.openDialog('', 'la contrasena nueva')
+  //     return 
+
+  //   return esIgual;
+    
+  // }
+
   cambiarContrasena(event: Event) {
     event.preventDefault();
     if (this.formChangePassword.valid) {
@@ -133,7 +145,7 @@ export class CambiarContrasenaComponent implements OnInit {
   validatePass()
   {
     event.preventDefault();    
-    console.log(this.formChangePassword.value.currentPassword);
+    //console.log(this.formChangePassword.value.currentPassword);
     this.autenticacionService.ValdiatePass(sha1(this.formChangePassword.value.currentPassword)).pipe(first()).subscribe( respuesta => {
       if(respuesta.code=="101")
       {

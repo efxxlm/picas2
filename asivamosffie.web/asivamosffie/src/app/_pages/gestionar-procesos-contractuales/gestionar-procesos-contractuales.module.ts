@@ -50,6 +50,9 @@ import { DomSafePipe } from '../../_pipes/dom-safe.pipe';
     FormsModule,
     QuillModule.forRoot(),
     GestionarProcesosContractualesRoutingModule
+  ],
+  exports: [
+    TablaOtrosDescuentosComponent
   ]
 })
 export class GestionarProcesosContractualesModule { }

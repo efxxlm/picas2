@@ -13,5 +13,6 @@ namespace asivamosffie.services.Interfaces
         
         Task<Respuesta> ChangePasswordUser(int Userid, string Oldpwd, string Newpwd);
         Task<Respuesta> ValidateCurrentPassword(int Userid, string oldpwd);
+        Task<Respuesta> CloseSesion(int v);
     }
 }

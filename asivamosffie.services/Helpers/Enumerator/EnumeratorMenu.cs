@@ -28,10 +28,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         DisponibilidadPresupuestal = 30,
         SesionComiteTema = 26,
-        RegistrarComiteTecnico = 24,
         RegistrarSesionComiteFiduciario = 29, 
-        GenerarDisponibilidadPresupuestal = 28, 
-        Gestionar_Procesos_Contractuales = 31,
+        GenerarDisponibilidadPresupuestal = 28,
 
         
        GestionarGarantias= 35,
@@ -52,9 +50,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         CargueProyectosMasivos = 69,
         DescargarExcelProyectos = 75,
         CargueOrdenesMasivos = 76,
-        DescargarExcelOrdenes = 77
-        CargueOrdenesMasivos = 76, 
-        DescargarExcelOrdenes = 77,   
+        DescargarExcelOrdenes = 77,
         Notificacion_Gestion_Poliza = 90, 
         Crear_Editar_ProcesoSeleccion_Grupo= 29
 

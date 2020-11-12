@@ -3,7 +3,7 @@
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">Número del contrato</label>
+          <label class="label-left mt-1em">Número del contrato</label>
         </div>
         <div class="col d-flex">
           <mat-form-field>
@@ -24,7 +24,7 @@
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">Fecha de envío para firma del contratista</label>
+          <label class="label-left mt-1em">Fecha de envío para firma del contratista</label>
         </div>
         <div class="col d-flex">
           <mat-form-field>
@@ -56,7 +56,7 @@
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">Fecha de firma por parte del contratista</label>
+          <label class="label-left mt-1em">Fecha de firma por parte del contratista</label>
         </div>
         <div class="col d-flex">
           <mat-form-field>
@@ -88,7 +88,7 @@
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">Fecha de envío para la firma de la fiduciaria</label>
+          <label class="label-left mt-1em">Fecha de envío para la firma de la fiduciaria</label>
         </div>
         <div class="col d-flex">
           <mat-form-field>
@@ -120,7 +120,7 @@
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">Fecha de firma por parte de la fiduciaria</label>
+          <label class="label-left mt-1em">Fecha de firma por parte de la fiduciaria</label>
         </div>
         <div class="col d-flex">
           <mat-form-field>
@@ -172,30 +172,44 @@
     </div>
   </div>
 
-  <!-- <div class="row" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null" style="margin-top: 2em;">
+  <div class="row" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null" style="margin-top: 2em;">
     <div class="col-md-12">
       <div class="row">
         <div class="pr-1">
-          <label class="label-left">URL con soporte</label>
+          <label  class="label-left"
+                  style="margin-top: 1.4em;">
+                  Adjuntar documento suscrito
+          </label>
         </div>
         <div class="col d-flex">
-          <mat-form-field>
-            <input  matInput
-                    type="text"
-                    formControlName="rutaDocumento"
-                    [class.invalid]="campoSinDiligenciar( 'rutaDocumento' )"
-                    required>
-          </mat-form-field>
+          <span class="input-file-text text-center required"
+                (click)="fileInput.click()"
+                style="width: 100%;">
+            {{archivo || dataFormulario.get( 'documento' ).value}}
+          </span>
+          <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
+            Adjuntar
+          </button>
+          <input  required
+                  hidden
+                  (change)="fileName( $event )"
+                  #fileInput
+                  type="file"
+                  id="file"
+                  formControlName="documentoFile"
+                  [placeholder]="archivo || dataFormulario.get( 'documento' ).value"
+                  [class.invalid]="campoSinDiligenciar( 'documentoFile' )"
+                  accept="application/pdf">
         </div>
       </div>
     </div>
-  </div> -->
-
-  <div class="container text-center" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
-    <p class="info-url"><i>Indique la ruta del soporte de esta información</i></p>
   </div>
 
-  <div class="text-center w-90" style="margin-top: 2em;">
+  <div class="container text-center">
+    <p class="align-text"><small><i>Adjunte el contrato suscrito cuando tenga todas las firmas requeridas.</i></small></p>
+  </div>
+
+  <div class="text-center" style="margin-top: 2em;">
     <button mat-button
             color="warn"
             class="btn-guardar"

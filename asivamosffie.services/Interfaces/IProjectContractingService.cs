@@ -19,7 +19,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Contratacion> GetContratacionByContratacionId(int pContratacionId);
 
-        Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen, string pMunicipio, int pIdInstitucionEducativa, int pIdSede);
+        Task<List<ProyectoGrilla>> GetListProyectsByFilters(string pTipoIntervencion, string pLlaveMen, string pRegion, string pDepartamento, string pMunicipio, int pIdInstitucionEducativa, int pIdSede);
 
         Task<List<ContratistaGrilla>> GetListContractingByFilters(string pTipoIdentificacionCodigo, string pNumeroIdentidicacion, string pNombre, bool? EsConsorcio);
 
@@ -38,5 +38,7 @@ namespace asivamosffie.services.Interfaces
         Task<ContratacionProyecto> GetContratacionProyectoById(int idContratacionProyecto);
 
         Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion);
+
+        Task<Contratacion> GetContratacionByContratacionIdWithGrillaProyecto(int pContratacionId);
     }
 }

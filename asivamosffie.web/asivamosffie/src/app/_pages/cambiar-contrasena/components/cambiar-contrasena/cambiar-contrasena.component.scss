@@ -38,3 +38,11 @@
     margin-top: 2%;
     margin-bottom: 3%;
 }
+.asterisco::after{
+    content: "*";
+    position: absolute;
+    top: 1em;
+    right: -0.5em;
+    font-weight: 600;
+    color:var(--mainColor);
+}
