@@ -47,14 +47,15 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                (click)="getForm( element.contratoId, element.fechaAprobacion )">
+                (click)="getForm( element.contratoId, element.fechaAprobacion )"
+                *ngIf="element.estadoCodigo === '0' ">
                 Gestionar requisitos de inicio
         </button>
 
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoRequisito === '2' || element.estadoRequisito === '4'"
+                *ngIf="element.estadoCodigo === '2' || element.estadoCodigo === '10'"
                 (click)="aprobarInicio( element.contratoId )">
                 Aprobar inicio
         </button>
@@ -62,7 +63,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoRequisito === '2' || element.estadoRequisito === '4'"
+                *ngIf="element.estadoCodigo === '1' || element.estadoCodigo === '2' || element.estadoCodigo === '10'"
                 (click)="getForm( element.contratoId, element.fechaAprobacion )">
                 Ver detalle / Editar
         </button>
@@ -70,7 +71,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoRequisito === '3'"
+                *ngIf="['3','4','5','6','7','8','9','11'].includes( element.estadoCodigo )"
                 (click)="verDetalle( element.contratoId )">
                 Ver detalle
         </button>

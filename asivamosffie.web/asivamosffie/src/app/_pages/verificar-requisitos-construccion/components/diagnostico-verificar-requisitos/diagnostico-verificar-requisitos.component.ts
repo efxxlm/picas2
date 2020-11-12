@@ -32,10 +32,10 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
   };
 
 
-  @Input() observacionesCompleted;
   @Input() construccion: any;
   @Input() contratoConstruccionId: any;
-
+  @Input() observacionesCompleted
+  
   @Output() createEditDiagnostico = new EventEmitter();
 
   constructor(
@@ -54,9 +54,10 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
   ngOnInit(): void {
     if (this.construccion) {
 
+      
       this.addressForm.get('tieneObservaciones').setValue(this.construccion.tieneObservacionesDiagnosticoApoyo)
       this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnosticoApoyo ? this.construccion.observacionDiagnosticoApoyo.observaciones : null)
-      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoApoyo ? this.construccion.observacionDiagnosticoApoyo.construccionObservacionId : null)
+      this.addressForm.get('construccionObservacionId').setValue(0);
 
       this.validarSemaforo();
     }
@@ -95,6 +96,8 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
   };
 
   guardarDiagnostico() {
+
+    
 
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,

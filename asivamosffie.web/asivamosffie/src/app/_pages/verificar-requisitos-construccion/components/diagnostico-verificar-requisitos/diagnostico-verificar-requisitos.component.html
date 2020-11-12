@@ -32,6 +32,20 @@
         </mat-card-content>
     </mat-card>
 </div>
+
+<div align="left" *ngIf="this.observacionesCompleted==true">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+               Verificación del apoyo a la supervisión
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p><b>¿Tiene observaciones al diagnóstico?</b>: {{ construccion.tieneObservacionesDiagnosticoApoyo === true ? 'Si' : 'No' }}</p>
+            <p><b>Observaciones al diagnóstico</b>: {{ construccion.observacionDiagnosticoApoyo ? construccion.observacionDiagnosticoApoyo.observaciones : "" }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
 <div align="center" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarDiagnostico()">
         <div class="row" align="center">
@@ -78,17 +92,17 @@
         </div>
     </form>
 </div>
-<div align="center" *ngIf="this.observacionesCompleted==true">
+<div align="center" *ngIf="construccion.observacionDevolucionDiagnostico">
     <mat-card class="border" style="margin-top: 20px;">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
-               Verificación del apoyo a la supervisión
+               Observaciones de la supervisión
             </mat-card-title>
         </mat-card-header>
-        <mat-card-content align="left">
-            <p><b>{{ construccion.observacionDiagnosticoSupervisor.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+        <mat-card-content align="left" >
+            <p><b>{{ construccion.observacionDevolucionDiagnostico.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
             <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>{{ construccion.observacionDiagnosticoSupervisor.observaciones }}</p>
+            <p>{{ construccion.observacionDevolucionDiagnostico.observaciones }}</p>
         </mat-card-content>
     </mat-card>
 </div>

@@ -3,7 +3,7 @@
         <button mat-raised-button color="accent" (click)="descargar()">Descargar archivo</button>
     </section>
 </div>
-<div align="center" style="margin-top: 30px;" *ngIf="this.observacionesCompleted==false">
+<div align="center" style="margin-top: 30px;">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarFlujo()">
         <div class="row" align="center">
             <div class="col-md-8">
