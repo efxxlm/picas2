@@ -81,19 +81,28 @@ namespace asivamosffie.services
                 {
                     Directory.CreateDirectory(pFilePatch);
                 }
-                var streamFile = new FileStream(pFilePatch + "/" + pNameFile, FileMode.Create);
-                using (streamFile)
-                {
-                    await pFile.CopyToAsync(streamFile);
-           
-                    return true;
+                if (!string.IsNullOrEmpty(pNameFile)) {
+                    var streamFile = new FileStream(pFilePatch + "/" + pNameFile, FileMode.Create);
+                    using (streamFile)
+                    {
+                        await pFile.CopyToAsync(streamFile);
+
+                        return true;
+                    }
                 }
+                else{
+                    var streamFile = new FileStream(pFilePatch, FileMode.Create);
+                    using (streamFile)
+                    {
+                        await pFile.CopyToAsync(streamFile); 
+                        return true;
+                    }
+                } 
             }
             catch (Exception)
             {
                 return false;
             }
-
         }
 
         public async  Task <List<ArchivoCargue>> GetListloadedDocuments(string pOrigenId = "1")
