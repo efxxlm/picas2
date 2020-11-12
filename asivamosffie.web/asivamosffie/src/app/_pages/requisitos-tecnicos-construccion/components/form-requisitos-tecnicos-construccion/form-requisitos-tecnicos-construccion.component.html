@@ -75,10 +75,13 @@
           <app-planes-programas [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]" (planesProgramasForm)="getPlanesProgramas( i, $event )"></app-planes-programas>
 
         </mat-expansion-panel>
-
+        
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title 
+            {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoManejoAnticipo == true ? 
+              'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoManejoAnticipo == false ? 
+                    'en-proceso' : 'sin-diligenciar' }}">
               Manejo de anticipo
             </mat-panel-title>
           </mat-expansion-panel-header>

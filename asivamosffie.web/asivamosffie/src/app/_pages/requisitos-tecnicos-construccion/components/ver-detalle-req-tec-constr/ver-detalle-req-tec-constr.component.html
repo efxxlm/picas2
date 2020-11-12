@@ -67,7 +67,9 @@
                         Manejo de anticipo
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-detalle-manejo-anticipo></app-detalle-manejo-anticipo>
+                    <app-detalle-manejo-anticipo
+                                                [contratacion]="contratacion.proyecto.contratoConstruccion[0]">
+                  </app-detalle-manejo-anticipo>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">

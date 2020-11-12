@@ -118,6 +118,8 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoDiagnostico { get; set; }
         public int? ObservacionPlanesProgramasSupervisorId { get; set; }
         public bool? RegistroCompletoPlanesProgramas { get; set; }
+        public int? ObservacionManejoAnticipoSupervisorId { get; set; }
+        public bool? RegistroCompletoManejoAnticipo { get; set; }
 
 
         public virtual Contrato Contrato { get; set; }

@@ -87,7 +87,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <app-manejo-anticipo-verificar-requisitos 
-            [observacionesCompleted]="contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoSupervisor"
+            [observacionesCompleted]="false"
             (createEdit)="Cargar( $event )"
             [contratacion]="contratacion.proyecto.contratoConstruccion[0]"
             [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
@@ -125,7 +125,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <app-programacion-obra-verificar-requisitos 
-            [observacionesCompleted]="contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraSupervisor"
+            [observacionesCompleted]="false"
             [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"
             (createEdit)="Cargar( $event )"
             [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
@@ -140,7 +140,7 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <app-inversion-fljrecursos-verificar-requisitos 
-              [observacionesCompleted]="contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionSupervisor"
+              [observacionesCompleted]="false"
               [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"
               (createEdit)="Cargar( $event )"
               [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">

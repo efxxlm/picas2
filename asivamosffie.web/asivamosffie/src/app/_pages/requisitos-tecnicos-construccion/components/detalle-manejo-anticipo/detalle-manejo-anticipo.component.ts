@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-detalle-manejo-anticipo',
@@ -7,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetalleManejoAnticipoComponent implements OnInit {
 
+  @Input() contratacion: any;
+
   constructor() { }
+
 
   ngOnInit(): void {
   }

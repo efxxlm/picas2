@@ -223,8 +223,11 @@ namespace asivamosffie.services
                     cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, false);
                     cc.ObservacionFlujoInversionSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, true);
 
+                    // Observaciones devoluciones
+
                     cc.ObservacionDevolucionDiagnostico = _context.ConstruccionObservacion.Find( cc.ObservacionDiagnosticoSupervisorId );
                     cc.ObservacionDevolucionPlanesProgramas = _context.ConstruccionObservacion.Find( cc.ObservacionPlanesProgramasSupervisorId );
+                    cc.ObservacionDevolucionManejoAnticipo = _context.ConstruccionObservacion.Find( cc.ObservacionManejoAnticipoSupervisorId );
 
                 });
 
@@ -603,6 +606,22 @@ namespace asivamosffie.services
             }
         }
 
+        private bool VerificarRegistroCompletoManejoAnticipo( ContratoConstruccion pConstruccion ){
+            bool completo = true;
+
+            if (
+                    pConstruccion.ManejoAnticipoRequiere == null ||
+                    pConstruccion.ManejoAnticipoPlanInversion == null ||
+                    pConstruccion.ManejoAnticipoCronogramaAmortizacion == null ||
+                    string.IsNullOrEmpty( pConstruccion.ManejoAnticipoRutaSoporte )  
+            )
+            {
+                completo = false;
+            }
+
+            return completo;
+        }
+
         public async Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion)
         {
             string CreateEdit = string.Empty;
@@ -623,7 +642,8 @@ namespace asivamosffie.services
                     contratoConstruccion.ManejoAnticipoPlanInversion = pConstruccion.ManejoAnticipoPlanInversion;
                     contratoConstruccion.ManejoAnticipoCronogramaAmortizacion = pConstruccion.ManejoAnticipoCronogramaAmortizacion;
                     contratoConstruccion.ManejoAnticipoRutaSoporte = pConstruccion.ManejoAnticipoRutaSoporte;
-                    contratoConstruccion.ManejoAnticipoConObservaciones = pConstruccion.ManejoAnticipoConObservaciones;
+
+                    contratoConstruccion.RegistroCompletoManejoAnticipo = VerificarRegistroCompletoManejoAnticipo( contratoConstruccion );
 
                 }
                 else
@@ -634,6 +654,7 @@ namespace asivamosffie.services
 
                     contratoConstruccion.FechaCreacion = DateTime.Now;
                     contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                    contratoConstruccion.RegistroCompletoManejoAnticipo = false;
 
                     contratoConstruccion.ContratoId = pConstruccion.ContratoId;
                     contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
@@ -642,7 +663,8 @@ namespace asivamosffie.services
                     contratoConstruccion.ManejoAnticipoPlanInversion = pConstruccion.ManejoAnticipoPlanInversion;
                     contratoConstruccion.ManejoAnticipoCronogramaAmortizacion = pConstruccion.ManejoAnticipoCronogramaAmortizacion;
                     contratoConstruccion.ManejoAnticipoRutaSoporte = pConstruccion.ManejoAnticipoRutaSoporte;
-                    contratoConstruccion.ManejoAnticipoConObservaciones = pConstruccion.ManejoAnticipoConObservaciones;
+
+                    contratoConstruccion.RegistroCompletoManejoAnticipo = VerificarRegistroCompletoManejoAnticipo( contratoConstruccion );
 
                     _context.ContratoConstruccion.Add(contratoConstruccion);
                 }

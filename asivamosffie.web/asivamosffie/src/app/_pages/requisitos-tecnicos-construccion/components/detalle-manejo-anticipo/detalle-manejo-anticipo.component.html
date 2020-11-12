@@ -1,12 +1,12 @@
-<div align="left">
+<div align="left" *ngIf="contratacion">
     <mat-card class="border">
         <mat-card-content>
-            <p><b>¿El contrato requiere anticipo?</b>: Sí</p>
-            <p><b>¿Cuenta con plan de inversión aprobado para el anticipo?</b>: Si</p>
-            <p><b>¿Cuenta con cronograma de amortización aprobado?</b>: Si</p>
+            <p><b>¿El contrato requiere anticipo? </b>: {{ contratacion.manejoAnticipoRequiere === true ? 'Si' : 'No' }}</p>
+            <p><b>¿Cuenta con plan de inversión aprobado para el anticipo?</b>: {{ contratacion.manejoAnticipoPlanInversion === true ? 'Si' : 'No' }}</p>
+            <p><b>¿Cuenta con cronograma de amortización aprobado?</b>: {{ contratacion.manejoAnticipoCronogramaAmortizacion === true ? 'Si' : 'No' }}</p>
         </mat-card-content>
     </mat-card>
 </div>
-<div align="left">
-    <p><b>Url con soporte</b>: https://drive.google.com/drive/ManejodeAnticipo123</p>
+<div align="left" *ngIf="contratacion"> 
+    <p><b>Url con soporte</b>: {{ contratacion.manejoAnticipoRutaSoporte }}</p>
 </div>
