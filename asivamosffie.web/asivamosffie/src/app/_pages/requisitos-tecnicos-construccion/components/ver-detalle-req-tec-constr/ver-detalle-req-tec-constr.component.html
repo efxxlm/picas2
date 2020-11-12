@@ -46,7 +46,7 @@
                       </mat-panel-title>
                     </mat-expansion-panel-header>
                     <app-detalle-diagnostico
-                      [construccion]="contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0]">
+                                            [construccion]="contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0]">
                   </app-detalle-diagnostico>
                   </mat-expansion-panel>
 
@@ -56,7 +56,9 @@
                         Planes y Programas
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-detalle-planes-programas></app-detalle-planes-programas>
+                    <app-detalle-planes-programas
+                                                  [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]">
+                    </app-detalle-planes-programas>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
