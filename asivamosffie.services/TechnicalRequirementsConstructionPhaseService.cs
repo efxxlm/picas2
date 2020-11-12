@@ -1850,7 +1850,7 @@ namespace asivamosffie.services
 
                     contratoConstruccion.TieneObservacionesDiagnosticoSupervisor = pContratoConstruccion.TieneObservacionesDiagnosticoSupervisor;
 
-                    if (contratoConstruccion.TieneObservacionesDiagnosticoSupervisor.Value)
+                    if (contratoConstruccion.TieneObservacionesDiagnosticoSupervisor.HasValue)
                     {
 
                         await CreateEditObservacionConstruccion(pContratoConstruccion.ConstruccionObservacion.FirstOrDefault(), pContratoConstruccion.UsuarioCreacion);
