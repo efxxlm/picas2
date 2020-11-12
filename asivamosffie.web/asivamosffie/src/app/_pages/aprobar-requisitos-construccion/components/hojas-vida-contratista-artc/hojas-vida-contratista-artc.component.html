@@ -10,16 +10,63 @@
                 {{ perfil.cantidadHvAprobadas }} </p>
             <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>:
                 {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
-            <p><b>Observaciones:</b></p>
-            <p>
-                {{ perfil.observaciones }} </p>
-            <p><b>Número de radicado en FFIE de aprobación de hojas de vida:</b></p>
+            <section>
+                <b>Observaciones:</b> <div [innerHTML]="innerObservacion( perfil.observaciones )"></div>
+            </section>
             <section
                 *ngIf="perfil.construccionPerfilNumeroRadicado && perfil.construccionPerfilNumeroRadicado.length > 0">
                 <p *ngFor="let radicado of perfil.construccionPerfilNumeroRadicado; let k = index">
-                    {{ radicado.numeroRadicado }} </p>
+                    <b>Número de radicado en FFIE de aprobación de hojas de vida {{ k+1 }}</b>: {{ radicado.numeroRadicado }} 
+                </p>
             </section>
             <p><b>URL con soporte</b>: {{ perfil.rutaSoporte }} </p>
         </mat-card-content>
     </mat-card>
+</div>
+
+<div align="center" *ngIf="this.observacionesCompleted==false">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones al manejo del anticipo?</label>
+                    </div>
+                    <div class="col">
+                        <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                            <mat-radio-button [value]="true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false">No</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex-editor mt-2em" *ngIf="addressForm.value.tieneObservaciones == true">
+            <mat-card class="shipping-card w-80">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text">
+                        Observaciones al manejo del anticipo
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+
+                    <quill-editor class="quill-editor-style w-65 ml-1em" [styles]="editorStyle" [modules]="config"
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones">
+                    </quill-editor>
+
+                </mat-card-content>
+            </mat-card>
+            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">
+                {{1000 - textoLimpio(addressForm.get('observaciones').value)}}
+            </span>
+            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones === null">
+                1000
+            </span>
+        </div>
+        <div class="text-center mt-1em">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
 </div>

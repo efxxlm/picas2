@@ -46,8 +46,8 @@ namespace asivamosffie.api.Controllers
         }
 
         [Route("CreateEditObservacion")]
-        [HttpGet]
-        public async Task<Respuesta> CreateEditObservacion([FromQuery] ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacion([FromBody] ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
         {
             try
             {

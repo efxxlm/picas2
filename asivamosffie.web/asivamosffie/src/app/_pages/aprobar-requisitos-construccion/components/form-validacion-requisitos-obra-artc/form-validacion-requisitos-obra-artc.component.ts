@@ -29,4 +29,11 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
       } );
   };
 
+  Cargar ( seGuardo: boolean ) {
+    if ( seGuardo ) {
+      this.contrato = null;
+      this.getContrato();
+    };
+  };
+
 };

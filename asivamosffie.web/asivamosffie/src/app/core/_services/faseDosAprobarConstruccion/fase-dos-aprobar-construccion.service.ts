@@ -16,4 +16,8 @@ export class FaseDosAprobarConstruccionService {
     return this.http.get<any[]>( `${ this.apiUrl }/GetContractsGrid?pTipoContrato=${ pTipoContrato }` );
   };
 
+  createEditObservacion ( pContratoConstruccion: any, pTipoObservacion: string, pEsSupervicion: string ) {
+    return this.http.post( `${ this.apiUrl }/TechnicalRequirementsConstructionPhaseControlle/CreateEditObservacion?pTipoObservacion=${ pTipoObservacion }&pEsSupervicion=${ pEsSupervicion }`, pContratoConstruccion );
+  };
+
 };

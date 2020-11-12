@@ -47,10 +47,11 @@ export class FormVerificacionRequisitosComponent implements OnInit {
       });
   };
 
-  Cargar( seGuardo: boolean ){
-    if ( seGuardo )
-      this.getContrato();      
-  }
-   
+  Cargar ( seGuardo: boolean ) {
+    if ( seGuardo ) {
+      this.contrato = null;
+      this.getContrato();
+    };
+  };
 
-}
+};

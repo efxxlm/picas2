@@ -24,6 +24,7 @@ export class TablaContratoObraArtcComponent implements OnInit {
     'estadoCodigo',
     'gestion'
   ];
+  tipoContratoObra: string = '1';
 
   constructor ( private routes: Router,
                 private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
@@ -31,8 +32,9 @@ export class TablaContratoObraArtcComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.faseDosAprobarConstruccionSvc.getContractsGrid( '1' )
+    this.faseDosAprobarConstruccionSvc.getContractsGrid( this.tipoContratoObra )
       .subscribe( response => {
+        console.log( response );
         this.dataSource                        = new MatTableDataSource( response );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;

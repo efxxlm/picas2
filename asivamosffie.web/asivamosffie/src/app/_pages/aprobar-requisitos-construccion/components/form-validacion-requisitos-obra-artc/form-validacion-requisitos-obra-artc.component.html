@@ -51,7 +51,8 @@
 
               <app-diagnostico-artc [observacionesCompleted]="false"
                                     [construccion]="contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0]"
-                                    [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
+                                    [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+                                    (createEditDiagnostico)="Cargar( $event )">
               </app-diagnostico-artc>
             </mat-expansion-panel>
 
@@ -63,7 +64,8 @@
               </mat-expansion-panel-header>
               <app-planes-programas-artc  [observacionesCompleted]="false"
                                           [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
-                                          [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]">
+                                          [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]"
+                                          (createEdit)="Cargar( $event )">
               </app-planes-programas-artc>
             </mat-expansion-panel>
 
@@ -75,7 +77,8 @@
               </mat-expansion-panel-header>
               <app-manejo-anticipo-artc [observacionesCompleted]="false"
                                         [contratacion]="contratacion.proyecto.contratoConstruccion[0]"
-                                        [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
+                                        [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+                                        (createEdit)="Cargar( $event )">
               </app-manejo-anticipo-artc>
             </mat-expansion-panel>
 
@@ -89,13 +92,14 @@
               <mat-accordion *ngFor="let perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil; let j = index">
                 <mat-expansion-panel class="expansion-style sub-expansion-black">
                   <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
+                    <mat-panel-title class="expansion-style--title completo">
                       Perfil {{ j + 1 }}
                     </mat-panel-title>
                   </mat-expansion-panel-header>
     
                   <app-hojas-vida-contratista-artc  [observacionesCompleted]="false"
-                                                    [perfil]="contratacion.proyecto.contratoConstruccion[0].construccionPerfil[j]">
+                                                    [perfil]="contratacion.proyecto.contratoConstruccion[0].construccionPerfil[j]"
+                                                    (createEdit)="Cargar( $event )">
                   </app-hojas-vida-contratista-artc>
 
                 </mat-expansion-panel>
@@ -111,7 +115,8 @@
               </mat-expansion-panel-header>
               <app-programacion-obra-artc [observacionesCompleted]="false"
                                           [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"
-                                          [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
+                                          [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+                                          (createEdit)="Cargar( $event )">
               </app-programacion-obra-artc>
             </mat-expansion-panel>
 
@@ -123,7 +128,8 @@
               </mat-expansion-panel-header>
              <app-flujo-inversion-recursos-artc [observacionesCompleted]="false"
                                                 [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"
-                                                [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
+                                                [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+                                                (createEdit)="Cargar( $event )">
              </app-flujo-inversion-recursos-artc>
             </mat-expansion-panel>
                   
