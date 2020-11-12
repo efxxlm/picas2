@@ -77,7 +77,8 @@ namespace asivamosffie.api.Controllers
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
-                Task<Respuesta> result = _budgetAvailabilityService.SetCancelRegistroPresupuestal(pDisponibilidadPresObservacion);
+                Task<Respuesta> result = _budgetAvailabilityService.SetCancelRegistroPresupuestal(pDisponibilidadPresObservacion,
+                    _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -122,7 +123,7 @@ namespace asivamosffie.api.Controllers
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.CreateDDP(id, UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                Task<Respuesta> result = _budgetAvailabilityService.CreateDDP(id, UsuarioModificacion,_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -367,7 +368,8 @@ namespace asivamosffie.api.Controllers
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 pDisponibilidadPresObservacion.UsuarioCreacion = UsuarioModificacion;
-                Task<Respuesta> result = _budgetAvailabilityService.SetCancelRegistroPresupuestal(pDisponibilidadPresObservacion);
+                Task<Respuesta> result = _budgetAvailabilityService.SetCancelRegistroPresupuestal(pDisponibilidadPresObservacion,
+                    _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -389,7 +391,7 @@ namespace asivamosffie.api.Controllers
             {
                 HttpContext.Connection.RemoteIpAddress.ToString();
                 string UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                Task<Respuesta> result = _budgetAvailabilityService.CreateDRP(id, UsuarioModificacion, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                Task<Respuesta> result = _budgetAvailabilityService.CreateDRP(id, UsuarioModificacion, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 object respuesta = await result;
                 return Ok(respuesta);
             }

@@ -67,5 +67,7 @@ namespace asivamosffie.model.APIModels
         public string NumeroDRP { get; set; }
         public decimal ValorGestionado { get; set; }
         public string NumeroRadicado { get; set; }
+        public string FechaContrato { get; set; }
+        public List<DisponibilidadPresupuestalObservacion> ObservacioensCancelacion { get; set; }
     }
 }

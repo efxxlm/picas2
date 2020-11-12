@@ -75,7 +75,7 @@
                             class="btn-table" 
                             (click)="enviarSolicitud(element.disponibilidadPresupuestalId)"
                             *ngIf="element.disponibilidadPresupuestalId && element.estadoSolicitudText == '' ||
-                            element.estadoSolicitudText == 'Devuelta por coordinación financiera'">
+                            element.estadoSolicitudText == 'Devuelta por validación presupuestal'">
                             Enviar solicitud
                     </button>
                     <button mat-raised-button color="accent" 
@@ -89,7 +89,7 @@
                             class="btn-table" 
                             [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,1]"
                             *ngIf="element.disponibilidadPresupuestalId != 0 && (element.estadoSolicitudText == '' ||
-                            element.estadoSolicitudText == 'Devuelta por coordinación financiera')">
+                            element.estadoSolicitudText == 'Devuelta por validación presupuestal')">
                             Ver detalle /Editar
                     </a>
                     
@@ -105,7 +105,9 @@
                         [routerLink]="['verDetalle', element.contratacionId, element.disponibilidadPresupuestalId,1]"
                         *ngIf="element.disponibilidadPresupuestalId != 0 && ( element.estadoSolicitudText === 'Con validación presupuestal' ||
                          element.estadoSolicitudText === 'En validación presupuestal' ||  element.estadoSolicitudText === 'Con disponibilidad presupuestal'
-                         ||  element.estadoSolicitudText === 'Rechazada por validación presupuestal' )">
+                         ||  element.estadoSolicitudText === 'Rechazada por validación presupuestal' 
+                         ||  element.estadoSolicitudText === 'Devuelta por coordinación financiera'
+                         ||  element.estadoSolicitudText === 'Con registro presupuestal')">
                         Ver detalle
                     </a>
     

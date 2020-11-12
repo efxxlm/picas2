@@ -27,6 +27,7 @@ export class VerDetalleDdpEspecialComponent implements OnInit {
 
   constructor ( private activatedRoute: ActivatedRoute,
                 private budgetAvailabilitySvc: DisponibilidadPresupuestalService,
+                private budgetServices:BudgetAvailabilityService,
                 private dialog: MatDialog )
   {
     this.getDDP( this.activatedRoute.snapshot.params.id );
@@ -39,10 +40,13 @@ export class VerDetalleDdpEspecialComponent implements OnInit {
     this.budgetAvailabilitySvc.GetDisponibilidadPresupuestalByID( disponibilidadId )
       .subscribe(
         disponibilidad => {
-          /*this.budgetAvailabilitySvc.getNumeroContrato( disponibilidad.numeroContrato )
-            .subscribe( */
+          this.disponibilidadPresupuestal = disponibilidad;
+          if(disponibilidad.tipoSolicitudEspecialCodigo==2)
+          {                            
+            this.budgetServices.getContratoByNumeroContrato( disponibilidad.numeroContrato )
+            .subscribe( 
               response => {
-                this.disponibilidadPresupuestal = disponibilidad;
+                console.log(disponibilidad);
                 this.disponibilidadPresupuestal[ 'contratista' ] = response[ 'contratacion' ].contratista;
                 if ( this.disponibilidadPresupuestal[ 'aportante' ].tipoAportanteId === this.tipoAportante.aportanteFfie ) {
                   this.disponibilidadPresupuestal[ 'tipoAportante' ] = 'FFIE';
@@ -50,10 +54,11 @@ export class VerDetalleDdpEspecialComponent implements OnInit {
                   console.log( this.disponibilidadPresupuestal );
                 }
               } 
-            /*)
+            );
+          }
+          
         },
-        err => this.openDialog( '', `<b>${err.message}</b>` )*/
-      }
+        err => this.openDialog( '', `<b>${err.message}</b>` )    
       );
   };
 

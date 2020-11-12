@@ -55,6 +55,8 @@
         Titulo_solicitudes_contractuales =	43,
         Titulo_temas_nuevos	= 44,
         Titulo_proposicione_varios	= 45,
+        DDP_TR_Fuente     = 46,
+        DDP_TR_Proyecto = 47,
         Descargar_Acta_Comite_Fiduciario = 35,
 
         DDP_limitacion=50,
@@ -62,5 +64,6 @@
         Ficha_DRP=52,
         DRP_TABLA_FUENTES = 53,
         DRP_TABLA_USOS = 54,
+        DDP_Cabecera_Proyecto=55
     }
 }

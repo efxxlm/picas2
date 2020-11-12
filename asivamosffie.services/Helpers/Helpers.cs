@@ -42,6 +42,24 @@ namespace asivamosffie.services.Helpers
             return HtmlConvertirTextoPlano(valor);
         }
 
+        public static string HtmlEntities(string valor)
+        {
+            valor = valor.Replace("á", "&aacute;")
+                .Replace("é", "&eacute;")
+                .Replace("í", "&iacute;")
+                .Replace("ó", "&oacute;")
+                .Replace("ú", "&uacute;")
+                .Replace("ñ", "&ntilde;")
+                .Replace("Á", "&Aacute;")
+                .Replace("É", "&Eacute;")
+                .Replace("Í", "&Iacute;")
+                .Replace("Ó", "&Oacute;")
+                .Replace("Ó", "&Uacute;")
+                .Replace("Ñ", "&Ntilde;")
+                ;
+            return valor;
+        }
+
         public double CentimetrosAMedidaPDF(double centimetros)
         {
             return (double)(centimetros * 0.393701 * 72);

@@ -26,6 +26,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         DDPDevolucion=30,
         DDPRechazado=31,
 
-        NotificacionContratacion341 = 32
+        NotificacionContratacion341 = 32,
+        DRPNotificacion = 33,
+        DDPCancelado = 34,
+        DRPCancelado = 35
     }
 }

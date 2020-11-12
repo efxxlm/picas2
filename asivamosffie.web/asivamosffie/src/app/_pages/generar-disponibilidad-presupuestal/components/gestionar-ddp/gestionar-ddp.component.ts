@@ -82,6 +82,8 @@ export class GestionarDdpComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
+    dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
+    dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
     dialogRef.afterClosed().subscribe(result => {        
       this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
     });
@@ -92,6 +94,8 @@ export class GestionarDdpComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
+    dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
+    dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
     dialogRef.afterClosed().subscribe(result => {        
       this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
     });

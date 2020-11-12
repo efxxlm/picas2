@@ -90,6 +90,13 @@ export class GestionarDrpComponent implements OnInit {
     dialogConfig.height = 'auto';
     dialogConfig.width = '50%';
     const dialogRef = this.dialog.open(CancelarDrpComponent, dialogConfig);
+    dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
+    dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
+    dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
+    dialogRef.componentInstance.fecha = this.detailavailabilityBudget.fechaSolicitud;
+    dialogRef.afterClosed().subscribe(result => {        
+      this.router.navigate(["/generarRegistroPresupuestal"], {});      
+    });
   }
   
   descargarDDPBoton(){    
