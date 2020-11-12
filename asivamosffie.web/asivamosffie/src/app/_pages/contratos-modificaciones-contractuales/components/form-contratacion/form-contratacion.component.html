@@ -37,7 +37,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div align="left">
+        <div align="left" style="margin-top: 2em;">
           <mat-card class="border">
             <mat-card-content>
               <p><b>Nombre del contratista</b>: {{ contratacion?.contratista.nombre }} </p>
@@ -90,9 +90,15 @@
                   
                 </div>
               </section>
-              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
+              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'documento' ).value }} </p>
             </mat-card-content>
           </mat-card>
+        </div>
+
+        <div class="text-center" style="width: 20%;display: inline-block;">
+          <button mat-raised-button color="accent" class="btn-table" (click)="getDocumento( form.get( 'rutaDocumento' ).value )">
+            Descargar documento
+          </button>
         </div>
 
       </mat-expansion-panel>

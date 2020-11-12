@@ -34,11 +34,15 @@ namespace asivamosffie.services
             //• Sin registro 4 
             //• En proceso de firmas 2  5  8
             //• Registrados   
+            // Enviado a fiduciaria
+            // 2, 4 , 5 ,6,8 ,10  
 
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
-                   && (r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion
-                   || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                   && 
+                  ((r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                   || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual
+                   )
                 ).ToListAsync();
 
             List<Dominio> ListasParametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
@@ -53,11 +57,20 @@ namespace asivamosffie.services
 
                             Contratacion contratacion =
                                 _context.Contratacion
-                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId)
+                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId && 
+                                (  
+                                       r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_Revision
+                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria
+                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_proceso_de_firmas
+                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados
+                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Firmado
+                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_Firma_Del_Contratista
+                                ))
                                     .Include(r => r.Contrato).FirstOrDefault();
 
                             if (contratacion == null)
                                 break;
+                       
                             if (contratacion.Contrato.Count() > 0)
                             {
                                 if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
@@ -100,10 +113,10 @@ namespace asivamosffie.services
 
                         case ConstanCodigoTipoSolicitud.Modificacion_Contractual:
 
-                            sesionComiteSolicitud.TipoSolicitud = ListasParametricas
-                           .Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
-                            && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
-                           .FirstOrDefault().Nombre;
+                            // sesionComiteSolicitud.TipoSolicitud = ListasParametricas
+                            //.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud
+                            // && r.Codigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual)
+                            //.FirstOrDefault().Nombre;
                             break;
 
 
@@ -177,7 +190,7 @@ namespace asivamosffie.services
             if (pContrato.ContratoId > 0)
             {
                 Contrato contratoOld = _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
-                    .Include(r=> r.Contratacion)
+                    .Include(r => r.Contratacion)
                     .FirstOrDefault();
                 //contratacion
                 Contratacion contratacionOld = _context.Contratacion.Find(contratoOld.ContratacionId);
@@ -189,14 +202,9 @@ namespace asivamosffie.services
                 contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
                 contratacionOld.FechaModificacion = pContrato.FechaModificacion;
 
-                contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
-                if((bool)contratoOld.Estado) 
-                      await EnviarNotificaciones(pContrato, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                 
                 //Contrato  
-                if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
-                    contratoOld.RutaDocumento = pContrato.RutaDocumento;
-
+                //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
+                //    contratoOld.RutaDocumento = pContrato.RutaDocumento;
 
                 if (contratoOld.FechaTramite == null)
                     contratoOld.FechaTramite = DateTime.Now;
@@ -210,7 +218,6 @@ namespace asivamosffie.services
                 {
                     if (((DateTime)pContrato.FechaEnvioFirma).Year > 2000)
                         contratoOld.FechaEnvioFirma = pContrato.FechaEnvioFirma;
-
                 }
 
                 //Fecha envio por parte del contratista 
@@ -232,7 +239,6 @@ namespace asivamosffie.services
                 {
                     if (((DateTime)pContrato.FechaFirmaContrato).Year > 2000)
                         contratoOld.FechaFirmaContrato = pContrato.FechaFirmaContrato;
-
                 }
 
                 // Fecha Tramite
@@ -240,19 +246,23 @@ namespace asivamosffie.services
                 {
                     if (((DateTime)pContrato.FechaTramite).Year > 2000)
                         contratoOld.FechaTramite = pContrato.FechaTramite;
-
                 }
 
                 if (!string.IsNullOrEmpty(pContrato.Observaciones))
                     contratoOld.Observaciones = pContrato.Observaciones;
-                 
+
                 if (pContrato.pFile != null)
                 {
                     if (pContrato.pFile.Length > 0)
                         contratoOld.RutaDocumento = Path.Combine(pPatchfile, contratoOld.ContratoId.ToString(), pContrato.pFile.FileName);
                 }
-            }
 
+                //Enviar Notificaciones
+                contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
+                if ((bool)contratoOld.Estado)
+                    await EnviarNotificaciones(pContrato, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+            }
             //Contrato Nuevo
             else
             {
@@ -263,21 +273,30 @@ namespace asivamosffie.services
                 _context.Contrato.Add(pContrato);
                 _context.SaveChanges();
 
-
                 if (pContrato.pFile != null)
                 {
                     if (pContrato.pFile.Length > 0)
                         pContrato.RutaDocumento = Path.Combine(pPatchfile, pContrato.ContratoId.ToString(), pContrato.pFile.FileName);
                 }
+
             }
             string strFilePatch = string.Empty;
             //Save Files  
             if (pContrato.pFile != null && pContrato.pFile.Length > 0)
                 await _documentService.SaveFileContratacion(pContrato.pFile, strFilePatch, pContrato.pFile.FileName);
 
+
+
+            //Cambiar estado contratacion
+            Contratacion contratacion = _context.Contratacion.Find(pContrato.ContratacionId);
+
+            contratacion.EstadoSolicitudCodigo = pEstadoCodigo;
+            contratacion.UsuarioModificacion = pContrato.UsuarioModificacion;
+            contratacion.FechaModificacion = pContrato.FechaModificacion;
+
             _context.SaveChanges();
 
-    
+
             try
             {
                 return
@@ -310,24 +329,24 @@ namespace asivamosffie.services
             DateTime? FechaFirmaFiduciaria = _context.SesionComiteSolicitud.Where(r => r.SolicitudId == pContrato.Contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.ComiteTecnicoFiduciario.FechaOrdenDia).FirstOrDefault();
 
             var emails = _context.UsuarioPerfil
-                .Where(x =>( x.PerfilId == (int)EnumeratorPerfil.Juridica 
+                .Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica
                     || x.PerfilId == (int)EnumeratorPerfil.Tecnica) && x.Activo)
                 .Select(x => x.Usuario.Email)
                 .ToList();
-            bool blEnvioCorreo  = false;
+            bool blEnvioCorreo = false;
 
             foreach (var email in emails)
             {
                 string template = TemplateRecoveryPassword.Contenido
                             .Replace("_LinkF_", pDominioFront)
-                            .Replace("[TIPO_CONTRATO]", pContrato.Contratacion.NumeroSolicitud) 
+                            .Replace("[TIPO_CONTRATO]", pContrato.Contratacion.NumeroSolicitud)
                             .Replace("[NUMERO_CONTRATO]", pContrato.NumeroContrato)
                             .Replace("[FECHA_FIRMA_CONTRATO]", FechaFirmaFiduciaria.HasValue ? ((DateTime)FechaFirmaFiduciaria).ToString("dd-MMMM-yy") : " ")
                             .Replace("[Observaciones]", pContrato.Observaciones);
-                 blEnvioCorreo = Helpers.Helpers.EnviarCorreo(email, "Solicitud de contratación en trámite en la Fiduciaria", template, pSender, pPassword, pMailServer, pMailPort);
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(email, "Solicitud de contratación en trámite en la Fiduciaria", template, pSender, pPassword, pMailServer, pMailPort);
 
-            }  
-            return blEnvioCorreo; 
+            }
+            return blEnvioCorreo;
         }
 
         private bool ValidarRegistroCompletoContrato(Contrato contratoOld)
