@@ -26,8 +26,33 @@ namespace asivamosffie.services
             //_settings = settings;
         }
 
-        
+        public async Task<string> GetNombreContratistaByContratoId(int pContratoId)
+        {
+            Contrato contrato = null;
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
+            Contratacion contratacion = null;
+            if (contrato != null)
+            {
+                contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratacionId);
+
+            }            
+
+            Contratista contratista = null;
+            if (contratacion != null)
+            {
+                if (contratacion.ContratistaId != null)
+                    contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+
+                if (contratista != null)
+                {
+                    return contratista.Nombre;
+
+                }
+            }
+            return null;
+        }
+        
  
         public async Task<Respuesta> CreateOrEditFichaEstudio(FichaEstudio fichaEstudio)
         {
