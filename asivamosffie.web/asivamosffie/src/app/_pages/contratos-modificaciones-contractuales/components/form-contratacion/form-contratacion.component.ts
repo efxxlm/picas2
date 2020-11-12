@@ -115,7 +115,7 @@ export class FormContratacionComponent implements OnInit {
       .subscribe(
         response => {
 
-          const documento = `Minuta contractual`;
+          const documento = `Documento suscrito`;
           const text = documento,
           blob = new Blob([response], { type: 'application/pdf' }),
           anchor = document.createElement('a');
@@ -125,7 +125,7 @@ export class FormContratacionComponent implements OnInit {
           anchor.click();
 
         },
-        err => this.openDialog( '', `<b>${err.message}</b>` )
+        err => this.openDialog( '', `<b>Archivo no encontrado.</b>` )
       );
   };
 
