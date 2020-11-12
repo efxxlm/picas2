@@ -53,6 +53,7 @@ export interface DisponibilidadPresupuestal{
     fechaComiteTecnicoNotMapped?: any;
     aportante?: any;
     disponibilidadPresupuestalProyecto?: DisponibilidadPresupuestalProyecto[],
+    stringAportante?:string
 
 }
 

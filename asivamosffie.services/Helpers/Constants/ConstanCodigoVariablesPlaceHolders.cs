@@ -188,8 +188,8 @@
         public const string DRP_NO = "28";
         public const string FECHACONTRATO = "29";
         public const string TABLAFUENTES  = "30";
-        public const string TABLAUSOS = "31";        
-
+        public const string TABLAUSOS = "31";
+        public const string CABECERAPROYECTOS = "32";
 
         #endregion
 

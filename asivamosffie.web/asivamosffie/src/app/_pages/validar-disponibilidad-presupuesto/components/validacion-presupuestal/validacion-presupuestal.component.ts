@@ -66,7 +66,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
       if(this.detailavailabilityBudget.tipoSolicitudCodigo==this.pTipoDDP.DDP_administrativo ||
         this.detailavailabilityBudget.tipoSolicitudCodigo==this.pTipoDDP.DDP_especial)
       {
-        if(this.detailavailabilityBudget.nUmeroSaldoFuente==this.detailavailabilityBudget.valorSolicitud)
+        if(this.detailavailabilityBudget.valorGestionado==this.detailavailabilityBudget.valorSolicitud)
         {
           return true;
         }

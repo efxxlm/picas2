@@ -226,6 +226,9 @@ export interface Proyecto{
   infraestructuraIntervenirProyecto?:InfraestructuraIntervenirProyecto[],
   proyectoAportante?:ProyectoAportante[],
   proyectoPredio?:ProyectoPredio[],
+  sedeString?:string,
+  institucionEducativaString?:string,
+  stringAportante?:string,
   
 }
 

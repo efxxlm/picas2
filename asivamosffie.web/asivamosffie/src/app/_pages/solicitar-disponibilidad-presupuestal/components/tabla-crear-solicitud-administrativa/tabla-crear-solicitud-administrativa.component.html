@@ -41,7 +41,8 @@
                 </button>
 
                 <button mat-raised-button color="accent" class="btn-table"
-                    (click)="editar(element.disponibilidadPresupuestalId)" *ngIf="element.estadoSolicitudCodigo != '1'">
+                    (click)="editar(element.disponibilidadPresupuestalId)" *ngIf="
+                    element.estadoSolicitudCodigo==8 || element.estadoSolicitudCodigo==2">
                     Ver detalle /Editar
                 </button>
 
@@ -52,7 +53,7 @@
                 </button>
 
                 <button mat-raised-button color="accent" class="btn-table"
-                    (click)="verDetalle(element.disponibilidadPresupuestalId)" *ngIf="element.estadoSolicitudCodigo == '1'">
+                    (click)="verDetalle(element.disponibilidadPresupuestalId)" *ngIf="element.estadoSolicitudCodigo!=8 || element.estadoSolicitudCodigo!=2">
                     Ver detalle
                 </button>
             </td>

@@ -2,6 +2,7 @@
 using AuthorizationTest.JwtHelpers;
 using asivamosffie.model.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace asivamosffie.model.APIModels
 {
@@ -16,6 +17,7 @@ namespace asivamosffie.model.APIModels
         public string FechaFirmaContrato { get; set; }
         public string TipoSolicitudEspecial { get; set; }
         public string Estado { get; set; }
+        public IQueryable<Contratacion> Contratacion { get; set; }
     }
 
     /*autor: jflorez

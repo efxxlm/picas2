@@ -25,6 +25,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   municipio: string;
   plazoDias: number;
   plazoMeses: number;
+  proyectos:any[]=[];
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private budgetAvailabilityService: BudgetAvailabilityService,
     private projectService: ProjectService) { }
@@ -45,18 +46,24 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       this.plazoMeses = data0.plazoMeses;
       this.fechaComite =data0.contratacionId&&data0.fechaComiteTecnicoNotMapped!='0001-01-01T00:00:00'?data0.fechaComiteTecnicoNotMapped:"";
       //this.fechaComite = data0.disponibilidadPresupuestalProyecto[0].proyecto['fechaComite'];
-      this.cargarServicio2(data0.disponibilidadPresupuestalProyecto[0].proyectoId);
+      data0.disponibilidadPresupuestalProyecto.forEach(element => {
+        this.cargarServicio2(element.proyectoId);
+      });
+      
     });
   }
 
   cargarServicio2(id){
     this.projectService.getProjectById(id).subscribe(data1=>{
-      this.llaveMen = data1.llaveMen;
-      this.nameColegio = data1.institucionEducativa.nombre;
-      this.sede = data1.sede.nombre;
-      this.departamento = data1.departamento;
-      this.municipio = data1.municipio;
-      this.aportantesList = data1.proyectoAportante;
+      this.proyectos.push({
+        llaveMen : data1.llaveMen,
+        nameColegio: data1.institucionEducativa.nombre,
+        sede: data1.sede.nombre,
+        departamento: data1.departamento,
+        municipio: data1.municipio,
+        aportantesList: data1.proyectoAportante
+      })
+     
       console.log(this.aportantesList);
     });
   }

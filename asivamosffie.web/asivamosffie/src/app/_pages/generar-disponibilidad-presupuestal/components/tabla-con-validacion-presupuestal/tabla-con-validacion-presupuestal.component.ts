@@ -38,7 +38,7 @@ export class TablaConValidacionPresupuestalComponent implements OnInit {
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
       elements.push({id:element.disponibilidadPresupuestalId,
         fecha:element.fechaSolicitud,numero:element.numeroSolicitud,estadoRegistro:element.estadoRegistro,
-        tipo:element.tipoSolicitudEspecial})
+        tipo:element.tipoSolicitud})
     });
     this.dataSource = new MatTableDataSource(elements);
     this.dataSource.sort = this.sort;

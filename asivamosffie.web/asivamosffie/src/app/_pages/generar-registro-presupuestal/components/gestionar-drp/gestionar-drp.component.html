@@ -5,13 +5,13 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Gestionar DRP contrato {{this.numContrato}}
+        Gestionar DRP contrato {{detailavailabilityBudget?.numContrato}}
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de firma del contrato: <b>{{this.fechaContrato| date:'dd/MM/yyyy'}}</b></span>
+        <span>Fecha de firma del contrato: <b>{{detailavailabilityBudget?.fechaContrato}}</b></span>
         <span><b>{{detailavailabilityBudget?.tipoSolicitudEspecial}}</b></span>
-        <span>Estado: <b>{{this.estadoSolicitud}}</b></span>
-    </p>
+        <span>Estado: <b>{{detailavailabilityBudget?.estadoStr}}</b></span>
+    </p> 
 </section>
 <section class="container">
     <mat-card class="shipping-card mainGris">
@@ -81,11 +81,17 @@
                         </div>
                     </div>                                        
                 </div>
-            </div>                        
+            </div>       
+            <div  *ngIf="detailavailabilityBudget?.observacioensCancelacion.length>0">
+                <h2 class="card-subTitle">Observaciones</h2>
+                <div *ngFor="let aportante of detailavailabilityBudget?.observacioensCancelacion; index as i">
+                    <div [innerHtml]="aportante.observacion"></div>
+                </div>
+            </div>                 
         </mat-card-content>
     </mat-card>
     <mat-accordion>
-        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of detailavailabilityBudget.proyectos;index as i;">
+        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of detailavailabilityBudget?.proyectos;index as i;">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
                     {{proyecto.llaveMen}} - {{proyecto.institucionEducativa}} - {{proyecto.sede}}
@@ -137,8 +143,12 @@
     </mat-accordion>
     <div class="botones">
         <button mat-raised-button color="accent" (click)="this.descargarDDPBoton()">Descargar DDP</button>
-        <button mat-raised-button color="accent" (click)="this.generardrp()" *ngIf="!detailavailabilityBudget.numeroDRP">Generar DRP</button>
-        <button mat-raised-button color="accent" (click)="this.generardrpPDF()" *ngIf="detailavailabilityBudget.numeroDRP">Descargar DRP</button>
-        <button mat-raised-button color="accent" (click)="this.cancelarDRPBoton()">Cancelar DRP</button>
+        <button mat-raised-button color="accent" (click)="this.generardrp()" *ngIf="!detailavailabilityBudget?.numeroDRP">Generar DRP</button>
+        <button mat-raised-button color="accent" (click)="this.generardrpPDF()" 
+        *ngIf="detailavailabilityBudget?.numeroDRP && detailavailabilityBudget?.estadoStr!='Sin registro presupuestal'">Descargar DRP</button>
+        <button mat-raised-button color="accent" (click)="this.cancelarDRPBoton()"
+        *ngIf="detailavailabilityBudget?.estadoStr!='Sin registro presupuestal' && 
+        detailavailabilityBudget?.estadoStr!='Con registro presupuestal'"
+        >Cancelar DRP</button>
     </div>
 </section>

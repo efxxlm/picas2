@@ -18,7 +18,7 @@
         </p>
         <p class="solicitud">
             <strong>Fecha de comité técnico:</strong>
-            {{fechaComite}}
+            {{fechaComite| date:'dd/MM/yyyy'}}
         </p>
     </div>
     <mat-card class="shipping-card mainGris"  *ngIf="this.tipoSolicitudColdigo === '3'">
@@ -38,15 +38,15 @@
         </mat-card-content>
     </mat-card>
     <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of proyectos">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title">
-                    {{ this.llaveMen }} - {{ this.nameColegio }} - {{ this.sede }}
+                    {{ proyecto.llaveMen }} - {{ proyecto.nameColegio }} - {{ proyecto.sede }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <section style="width: 80%;margin: auto;">
                 <p class="text-center color-mainColor departamento">
-                   {{this.departamento}} / {{this.municipio}}</p>
+                   {{proyecto.departamento}} / {{proyecto.municipio}}</p>
                 <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em;">
                     <mat-card-header class="header-card">
                         <mat-card-title class="header-card--text">
@@ -55,7 +55,7 @@
                     </mat-card-header>
                     <mat-card-content>
                         <div class="row">
-                            <div class="col-md-6 mb-1em" *ngFor="let aportante of this.aportantesList; index as i" style="margin-top: .5em; text-align: left;">
+                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.aportantesList; index as i" style="margin-top: .5em; text-align: left;">
                                 <p class="mb1-em" style="font-size: 1.2em;"><b>Aportante {{ i+1 }} </b></p>
     
                                 <p style="margin-top: .5em;">
