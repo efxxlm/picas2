@@ -91,6 +91,8 @@ export class EditarEnRevisionComponent implements OnInit {
   obj4: boolean;
   fechaFirmaContrato: any;
   tipoSolicitud: any;
+  ultimoEstadoRevision: any;
+  ultimaFechaRevision: any;
 
   constructor(
     private router: Router,
@@ -142,16 +144,6 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
-      //Ejemplo
-      /*
-      const tipoGarantiaCodigo = [];
-      for(let i =0; i<this.arrayprueba.length;i++){
-        const polizaSeleccionada = this.polizasYSegurosArray.filter( t => t.codigo === this.arrayprueba[i] );
-        if ( polizaSeleccionada.length > 0 ) { tipoGarantiaCodigo.push( polizaSeleccionada[0] ) };
-      }
-      
-      this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
-      this.getvalues(tipoGarantiaCodigo);*/
       this.loadGarantia(data.contratoPolizaId);
       this.dataLoad2(data);
     }); 
@@ -170,6 +162,13 @@ export class EditarEnRevisionComponent implements OnInit {
   loadObservations(id){
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data_1=>{
       this.polizaService.loadTableObservaciones.next(data_1);
+      for(let i=0; i<data_1.length;i++){
+        this.ultimoEstadoRevision = data_1[i].estadoRevisionCodigo;
+        this.ultimaFechaRevision = data_1[i].fechaRevision;
+      }
+      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === this.ultimoEstadoRevision);
+      this.addressForm.get('fechaRevision').setValue(this.ultimaFechaRevision);
+      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
     });
   }
   loadGarantia(id){
@@ -272,11 +271,11 @@ export class EditarEnRevisionComponent implements OnInit {
         const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
     }
     let nombreAprobado;
-    if(!this.addressForm.value.responsableAprob.name){
-      nombreAprobado = "null";
+    if(!this.addressForm.value.responsableAprob.value){
+      nombreAprobado = null;
     }
     else{
-      nombreAprobado = this.addressForm.value.responsableAprob.name;
+      nombreAprobado = this.addressForm.value.responsableAprob.value;
     }
     var statePoliza;
     if(this.addressForm.value.estadoRevision.value=="1"){
@@ -292,7 +291,6 @@ export class EditarEnRevisionComponent implements OnInit {
     else {
       completo = false;
     }
-    console.log(polizasList);
     console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
     let auxValue2 = this.addressForm.value.polizasYSeguros;
