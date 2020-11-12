@@ -1402,7 +1402,7 @@ namespace asivamosffie.services
                 }
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActaFase2, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
-                EstadoVerificacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoVerificacionCodigo, (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato);
+                EstadoVerificacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoVerificacionConstruccionCodigo, (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato);
 
                 //EstadoActaFase2Contrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.EstadoActa, (int)EnumeratorTipoDominio.Estado_Acta_Contrato);
 
@@ -1568,7 +1568,7 @@ namespace asivamosffie.services
             {
                 Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
                 contrato.UsuarioModificacion = pUsuarioModifica;
-                contrato.EstadoVerificacionCodigo = pNuevoCodigoEstadoVerificacionActa;
+                contrato.EstadoVerificacionConstruccionCodigo = pNuevoCodigoEstadoVerificacionActa;
                 contrato.FechaModificacion = DateTime.Now;
 
                 _context.SaveChanges();
