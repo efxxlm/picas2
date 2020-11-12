@@ -194,10 +194,9 @@ namespace asivamosffie.services
                       await EnviarNotificaciones(pContrato, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                  
                 //Contrato  
-                if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
-                    contratoOld.RutaDocumento = pContrato.RutaDocumento;
-
-
+                //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
+                //    contratoOld.RutaDocumento = pContrato.RutaDocumento;
+                 
                 if (contratoOld.FechaTramite == null)
                     contratoOld.FechaTramite = DateTime.Now;
 
@@ -210,7 +209,6 @@ namespace asivamosffie.services
                 {
                     if (((DateTime)pContrato.FechaEnvioFirma).Year > 2000)
                         contratoOld.FechaEnvioFirma = pContrato.FechaEnvioFirma;
-
                 }
 
                 //Fecha envio por parte del contratista 
@@ -231,16 +229,14 @@ namespace asivamosffie.services
                 if (!string.IsNullOrEmpty(pContrato.FechaFirmaContrato.ToString()))
                 {
                     if (((DateTime)pContrato.FechaFirmaContrato).Year > 2000)
-                        contratoOld.FechaFirmaContrato = pContrato.FechaFirmaContrato;
-
+                        contratoOld.FechaFirmaContrato = pContrato.FechaFirmaContrato; 
                 }
 
                 // Fecha Tramite
                 if (!string.IsNullOrEmpty(pContrato.FechaTramite.ToString()))
                 {
                     if (((DateTime)pContrato.FechaTramite).Year > 2000)
-                        contratoOld.FechaTramite = pContrato.FechaTramite;
-
+                        contratoOld.FechaTramite = pContrato.FechaTramite; 
                 }
 
                 if (!string.IsNullOrEmpty(pContrato.Observaciones))
