@@ -64,7 +64,10 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title 
+            {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoPlanesProgramas == true ? 
+              'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoPlanesProgramas == false ? 
+                    'en-proceso' : 'sin-diligenciar' }}">
               Planes y Programas
             </mat-panel-title>
           </mat-expansion-panel-header>

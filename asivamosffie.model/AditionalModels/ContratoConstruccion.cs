@@ -53,5 +53,8 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public ConstruccionObservacion ObservacionDevolucionDiagnostico { get; set; }
         
+        [NotMapped]
+        public ConstruccionObservacion ObservacionDevolucionPlanesProgramas { get; set; }
+        
     }
 }
