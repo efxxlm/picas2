@@ -275,12 +275,11 @@ namespace asivamosffie.services
 
 
             //Cambiar estado contratacion
-            Contratacion contratacionOld = _context.Contratacion.Find(pContrato.ContratacionId); 
+            Contratacion contratacion = _context.Contratacion.Find(pContrato.ContratacionId);
 
-            contratacionOld.EstadoSolicitudCodigo = pEstadoCodigo;
-            contratacionOld.UsuarioModificacion = pContrato.UsuarioModificacion;
-            contratacionOld.FechaModificacion = pContrato.FechaModificacion;
-
+            contratacion.EstadoSolicitudCodigo = pEstadoCodigo;
+            contratacion.UsuarioModificacion = pContrato.UsuarioModificacion;
+            contratacion.FechaModificacion = pContrato.FechaModificacion;
 
             _context.SaveChanges();
 
