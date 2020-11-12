@@ -30,17 +30,10 @@ namespace asivamosffie.services
 
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
-            // Estado de la sesionComiteSolicitud
-            //• Sin registro 4 
-            //• En proceso de firmas 2  5  8
-            //• Registrados   
-            // Enviado a fiduciaria
-            // 2, 4 , 5 ,6,8 ,10  
-
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
                 .Where(r => !(bool)r.Eliminado
-                   && 
-                  ((r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && r.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                   &&
+                  ((r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                    || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual
                    )
                 ).ToListAsync();
@@ -57,20 +50,11 @@ namespace asivamosffie.services
 
                             Contratacion contratacion =
                                 _context.Contratacion
-                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId && 
-                                (  
-                                       r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_Revision
-                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Enviadas_a_la_Fiduciaria
-                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_proceso_de_firmas
-                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados
-                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Firmado
-                                    || r.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.En_Firma_Del_Contratista
-                                ))
-                                    .Include(r => r.Contrato).FirstOrDefault();
+                                .Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).Include(r => r.Contrato).FirstOrDefault();
 
                             if (contratacion == null)
                                 break;
-                       
+
                             if (contratacion.Contrato.Count() > 0)
                             {
                                 if (!string.IsNullOrEmpty(contratacion.Contrato.FirstOrDefault().NumeroContrato))
@@ -250,17 +234,19 @@ namespace asivamosffie.services
 
                 if (!string.IsNullOrEmpty(pContrato.Observaciones))
                     contratoOld.Observaciones = pContrato.Observaciones;
-
-                if (pContrato.pFile != null)
-                {
-                    if (pContrato.pFile.Length > 0)
-                        contratoOld.RutaDocumento = Path.Combine(pPatchfile, contratoOld.ContratoId.ToString(), pContrato.pFile.FileName);
-                }
-
+                 
                 //Enviar Notificaciones
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
                 if ((bool)contratoOld.Estado)
                     await EnviarNotificaciones(pContrato, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+                //Save Files  
+                if (pContrato.pFile != null && pContrato.pFile.Length > 0)
+                {
+                    string pFilePath = Path.Combine(pPatchfile, pContrato.ContratoId.ToString());
+                    if(await _documentService.SaveFileContratacion(pContrato.pFile, pFilePath, pContrato.pFile.FileName))
+                        contratoOld.RutaDocumento = Path.Combine(pFilePath, pContrato.pFile.FileName);
+                }
 
             }
             //Contrato Nuevo
@@ -273,20 +259,17 @@ namespace asivamosffie.services
                 _context.Contrato.Add(pContrato);
                 _context.SaveChanges();
 
-                if (pContrato.pFile != null)
+                //Save Files  
+                //Save Files  
+                if (pContrato.pFile != null && pContrato.pFile.Length > 0)
                 {
-                    if (pContrato.pFile.Length > 0)
-                        pContrato.RutaDocumento = Path.Combine(pPatchfile, pContrato.ContratoId.ToString(), pContrato.pFile.FileName);
+                    string pFilePath = Path.Combine(pPatchfile, pContrato.ContratoId.ToString());
+                    if (await _documentService.SaveFileContratacion(pContrato.pFile, pFilePath, pContrato.pFile.FileName))
+                        pContrato.RutaDocumento = Path.Combine(pFilePath, pContrato.pFile.FileName);
                 }
 
             }
-            string strFilePatch = string.Empty;
-            //Save Files  
-            if (pContrato.pFile != null && pContrato.pFile.Length > 0)
-                await _documentService.SaveFileContratacion(pContrato.pFile, strFilePatch, pContrato.pFile.FileName);
-
-
-
+ 
             //Cambiar estado contratacion
             Contratacion contratacion = _context.Contratacion.Find(pContrato.ContratacionId);
 
