@@ -155,17 +155,18 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
       this.dataLoad2(data);
     });
+    this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data_1 => {
+      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === data_1.estadoRevision);
+      this.addressForm.get('fechaRevision').setValue(data_1.fechaRevisionDateTime);
+      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
+    });
   }
-
-  loadObservations(id) {
-
-  }
-
 
   dataLoad2(data) {
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
     this.loadGarantia(this.idPoliza);
+    this.loadObservations(this.idPoliza);
   }
   loadGarantia(id) {
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data => {
@@ -206,6 +207,11 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       }
     });
   }
+  loadObservations(id) {
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(t => {
+
+    });
+  }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -232,17 +238,24 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   }
 
   onSubmit() {
-    const members = [this.addressForm.value.polizasYSeguros[0].codigo];
+    const polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
     for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
-      const membAux = members.push(this.addressForm.value.polizasYSeguros[i].codigo);
+      const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
     }
-    console.log(members);
+    console.log(polizasList);
     let nombreAprobado;
     if (!this.addressForm.value.responsableAprob.name) {
-      nombreAprobado = "null";
+      nombreAprobado = 'null';
     }
     else {
       nombreAprobado = this.addressForm.value.responsableAprob.name;
+    }
+    var statePoliza;
+    if (this.addressForm.value.estadoRevision == "1") {
+      statePoliza = "3";
+    }
+    else {
+      statePoliza = "2";
     }
     console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
@@ -259,7 +272,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       'Observaciones': "",
       'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion': nombreAprobado,
-      'EstadoPolizaCodigo': this.addressForm.value.polizasYSeguros[0].codigo,
+      'EstadoPolizaCodigo': statePoliza,
       'UsuarioCreacion': "usr1",
       'UsuarioModificacion': "usr1",
       'FechaExpedicion': this.addressForm.value.fecha,
@@ -285,26 +298,46 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       "FechaRevision": this.addressForm.value.fechaRevision,
       "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
     }
-    /*
-    const polizaGarantia: CreatePolizaGarantia={
-      polizaGarantiaId : this.idPoliza2,
-      contratoPolizaId: this.idPoliza,
-      tipoGarantiaCodigo: this.addressForm.value.polizasYSeguros,
-      esIncluidaPoliza: this.addressForm.value.buenManejoCorrectaInversionAnticipo
-    };
-    const polizaObservacion: CreatePolizaObservacion={
-      polizaObservacionId: this.idObservacion,
-      contratoPolizaId: this.idPoliza,
-      observacion: this.addressForm.value.observacionesGenerales,
-      fechaRevision: this.addressForm.value.fechaRevision,
-      estadoRevisionCodigo: auxValue.value
-    }*/
-    var statePoliza;
-    if (this.addressForm.value.estadoRevision == "1") {
-      statePoliza = "3";
-    }
-    else {
-      statePoliza = "2";
+    let garantiaArray;
+    for (let i = 0; i < polizasList.length; i++) {
+      switch (polizasList[i]) {
+        case '1':
+          garantiaArray = {
+            'contratoPolizaId': this.idPoliza,
+            'TipoGarantiaCodigo': '1',
+            'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
+          };
+          this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r => {
+          });
+          break;
+        case '2':
+          garantiaArray = {
+            'contratoPolizaId': this.idPoliza,
+            'TipoGarantiaCodigo': '2',
+            'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
+          };
+          this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r1 => {
+          });
+          break;
+        case '3':
+          garantiaArray = {
+            'contratoPolizaId': this.idPoliza,
+            'TipoGarantiaCodigo': '3',
+            'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
+          };
+          this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r2 => {
+          });
+          break;
+        case '4':
+          garantiaArray = {
+            'contratoPolizaId': this.idPoliza,
+            'TipoGarantiaCodigo': '4',
+            'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
+          };
+          this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r3 => {
+          });
+          break;
+      }
     }
     this.polizaService.EditarContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {

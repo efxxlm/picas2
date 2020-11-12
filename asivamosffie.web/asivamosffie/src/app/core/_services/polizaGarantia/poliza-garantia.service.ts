@@ -27,7 +27,7 @@ export class PolizaGarantiaService implements OnInit {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/EditarContratoPoliza`, contratoPoliza);
   }
   GetListPolizaObservacionByContratoPolizaId(pContratoPolizaId: number) {
-    return this.http.get<CreatePolizaObservacion>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaObservacionByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaObservacionByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
   }
   GetListPolizaGarantiaByContratoPolizaId(pContratoPolizaId: number) {
     return this.http.get<any[]>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaGarantiaByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);

@@ -86,6 +86,7 @@ export class EditarEnRevisionComponent implements OnInit {
   public obj1;
   public obj2;
   public arrayprueba = ["1","2"];
+  public arrayGarantias = [];
   obj3: boolean;
   obj4: boolean;
   fechaFirmaContrato: any;
@@ -143,13 +144,15 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
       //Ejemplo
+      /*
       const tipoGarantiaCodigo = [];
       for(let i =0; i<this.arrayprueba.length;i++){
         const polizaSeleccionada = this.polizasYSegurosArray.filter( t => t.codigo === this.arrayprueba[i] );
         if ( polizaSeleccionada.length > 0 ) { tipoGarantiaCodigo.push( polizaSeleccionada[0] ) };
       }
+      
       this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
-      this.getvalues(tipoGarantiaCodigo);
+      this.getvalues(tipoGarantiaCodigo);*/
       this.loadGarantia(data.contratoPolizaId);
       this.dataLoad2(data);
     }); 
@@ -159,44 +162,58 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
     });
   }
-
-  loadObservations(id){
-
-  }
-
-  loadGarantia(id){
-    this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data_B=>{
-      /*
-      this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(data_B[0].esIncluidaPoliza);
-      const tipoGarantiaCodigo = this.polizasYSegurosArray.find(t => t.codigo == data_B[0].tipoGarantiaCodigo);
-      this.addressForm.get('polizasYSeguros').setValue([tipoGarantiaCodigo]);
-      this.addressForm.get('polizasYSeguros').setValue(["1","2"]);
-      this.loadGrantiaID(data_B[0].polizaGarantiaId);
-      this.getvalues(["1","2"]);
-      */
-    });
-  }
-  getvalues(values: Dominio[]) {
-    const buenManejo = values.find(value => value.codigo == "1");
-    const garantiaObra = values.find(value => value.codigo == "2");
-    const pCumplimiento = values.find(value => value.codigo == "3");
-    const polizasYSeguros = values.find(value => value.codigo == "4");
-
-    buenManejo ? this.obj1 = true : this.obj1 = false;
-    garantiaObra ? this.obj2 = true : this.obj2 = false;
-    pCumplimiento ? this.obj3 = true : this.obj3 = false;
-    polizasYSeguros ? this.obj4 = true : this.obj4 = false;
-
-  }
   dataLoad2(data){
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
-    this.polizaService.GetListPolizaObservacionByContratoPolizaId(this.idPoliza).subscribe(data_1=>{
-      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === data_1[0].estadoRevision);
-      this.addressForm.get('fechaRevision').setValue(data_1[0].fechaRevisionDateTime);
-      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
+    this.loadGarantia(this.idPoliza);
+
+  }
+  loadObservations(id){
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data_1=>{
+
     });
   }
+
+  loadGarantia(id){
+    this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data => {
+      const tipoGarantiaCodigo = [];
+      this.arrayGarantias = data;
+      const polizasListRead = [this.arrayGarantias[0].tipoGarantiaCodigo];
+      console.log(polizasListRead);
+      for (let i = 1; i < this.arrayGarantias.length; i++) {
+        const Garantiaaux = polizasListRead.push(this.arrayGarantias[i].tipoGarantiaCodigo);
+      }
+      console.log(polizasListRead);
+      for (let i = 0; i < polizasListRead.length; i++) {
+        const polizaSeleccionada = this.polizasYSegurosArray.filter(t => t.codigo === polizasListRead[i]);
+        if (polizaSeleccionada.length > 0) { tipoGarantiaCodigo.push(polizaSeleccionada[0]) };
+      }
+      this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
+      console.log(tipoGarantiaCodigo);
+      for (let j = 0; j < polizasListRead.length; j++) {
+        switch (polizasListRead[j]) {
+          case '1':
+            this.obj1 = true;
+            this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(this.arrayGarantias[j].esIncluidaPoliza);
+            break;
+          case '2':
+            this.obj2 = true;
+            this.addressForm.get('estabilidadYCalidad').setValue(this.arrayGarantias[j].esIncluidaPoliza);
+            break;
+          case '3':
+            this.obj3 = true;
+            this.addressForm.get('polizaYCoumplimiento').setValue(this.arrayGarantias[j].esIncluidaPoliza);
+            break;
+          case '4':
+            this.obj4 = true;
+            this.addressForm.get('polizasYSegurosCompleto').setValue(this.arrayGarantias[j].esIncluidaPoliza);
+            break;
+        }
+
+      }
+    });
+  }
+
   loadGrantiaID(id){
     if(id!=undefined){
       this.idPoliza2 = id;
@@ -213,9 +230,20 @@ export class EditarEnRevisionComponent implements OnInit {
       this.idObservacion = undefined;
     }
   }
-  get segurosReq() {
-    return this.addressForm.get('polizasYSeguros') as FormArray;
+
+  getvalues(values: Dominio[]) {
+    const buenManejo = values.find(value => value.codigo == "1");
+    const garantiaObra = values.find(value => value.codigo == "2");
+    const pCumplimiento = values.find(value => value.codigo == "3");
+    const polizasYSeguros = values.find(value => value.codigo == "4");
+
+    buenManejo ? this.obj1 = true : this.obj1 = false;
+    garantiaObra ? this.obj2 = true : this.obj2 = false;
+    pCumplimiento ? this.obj3 = true : this.obj3 = false;
+    polizasYSeguros ? this.obj4 = true : this.obj4 = false;
+
   }
+
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
