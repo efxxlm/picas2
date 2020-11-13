@@ -12,8 +12,11 @@ import { RegistrarNuevaActuacionTramiteComponent } from './components/registrar-
 import { RegistrarNuevaMesatrabajoActComponent } from './components/registrar-nueva-mesatrabajo-act/registrar-nueva-mesatrabajo-act.component';
 import { RegistrarNuevaMesatrabajoCcComponent } from './components/registrar-nueva-mesatrabajo-cc/registrar-nueva-mesatrabajo-cc.component';
 import { VerDetalleActuacionContrContrctComponent } from './components/ver-detalle-actuacion-contr-contrct/ver-detalle-actuacion-contr-contrct.component';
+import { VerDetalleActuacionMtComponent } from './components/ver-detalle-actuacion-mt/ver-detalle-actuacion-mt.component';
 import { VerDetalleActuacionNotaiComponent } from './components/ver-detalle-actuacion-notai/ver-detalle-actuacion-notai.component';
+import { VerDetalleMesaTrabajoComponent } from './components/ver-detalle-mesa-trabajo/ver-detalle-mesa-trabajo.component';
 import { VerDetalleditarCntrvContrcComponent } from './components/ver-detalleditar-cntrv-contrc/ver-detalleditar-cntrv-contrc.component';
+import { VerDetalleeditarActuacionMtComponent } from './components/ver-detalleeditar-actuacion-mt/ver-detalleeditar-actuacion-mt.component';
 import { VerDetalleeditarActuacionNotaiComponent } from './components/ver-detalleeditar-actuacion-notai/ver-detalleeditar-actuacion-notai.component';
 import { VerDetalleeditarActuacionReclmComponent } from './components/ver-detalleeditar-actuacion-reclm/ver-detalleeditar-actuacion-reclm.component';
 import { VerDetalleeditarMesaDeTrabajoComponent } from './components/ver-detalleeditar-mesa-de-trabajo/ver-detalleeditar-mesa-de-trabajo.component';
@@ -100,12 +103,24 @@ const routes: Routes = [
     component: VerDetalleeditarMesaDeTrabajoComponent
   },
   {
+    path: 'verDetalleMesaTrabajo/:id',
+    component: VerDetalleMesaTrabajoComponent
+  },
+  {
     path: 'actualizarMesaTrabajo',
     component: ActualizarMesaDeTrabajoComponent
   },
   {
     path: 'registrarNuevaMesaTrabajoAct',
     component: RegistrarNuevaMesatrabajoActComponent
+  },
+  {
+    path: 'verDetalleEditarMesaTrabajoAct/:id',
+    component: VerDetalleeditarActuacionMtComponent
+  },
+  {
+    path: 'verDetalleMesaTrabajoAct/:id',
+    component: VerDetalleActuacionMtComponent
   }
 ];
 @NgModule({
