@@ -60,7 +60,7 @@ export class InversionFljrecursosVerificarRequisitosComponent implements OnInit,
       this.addressForm.get('observaciones').setValue(this.contratoConstruccion.ObservacionFlujoInversion ? this.contratoConstruccion.ObservacionFlujoInversion.observaciones : null)
       this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.ObservacionFlujoInversion ? this.contratoConstruccion.ObservacionFlujoInversion.construccionObservacionId : null)
 
-      this.validarSemaforo();
+      //this.validarSemaforo();
     }
 
   }

@@ -15,6 +15,7 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
   probBoolean: boolean = false;
   contrato: Contrato;
   fechaPoliza: string;
+  programacionObra: string = 'sin-diligenciar';
 
   constructor ( private dialog: MatDialog,
                 private faseUnoConstruccionSvc: FaseUnoConstruccionService,

@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
@@ -10,7 +11,7 @@ import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPrecons
   templateUrl: './diagnostico-artc.component.html',
   styleUrls: ['./diagnostico-artc.component.scss']
 })
-export class DiagnosticoArtcComponent implements OnInit, OnChanges {
+export class DiagnosticoArtcComponent implements OnInit {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -35,6 +36,7 @@ export class DiagnosticoArtcComponent implements OnInit, OnChanges {
   @Input() contratoConstruccionId: any;
 
   @Output() createEditDiagnostico = new EventEmitter();
+  @Output() estadoSemaforoDiagnostico = new EventEmitter<string>();
 
   dataTablaHistorialObservacion: any[] = [];
   dataSource                 = new MatTableDataSource();
@@ -42,37 +44,19 @@ export class DiagnosticoArtcComponent implements OnInit, OnChanges {
     'fechaRevision',
     'observacionesSupervision'
   ];
-  constructor(private dialog: MatDialog, private fb: FormBuilder) {
-    this.getDataPlanesProgramas ();
-  };
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.contratacion){
-      this.ngOnInit();
-      console.log("c", this.construccion);
-    };
+  constructor ( private dialog: MatDialog, 
+                private fb: FormBuilder,
+                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  {
+    this.getDataPlanesProgramas();
   };
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
     if (this.construccion) {
-      this.addressForm.get('tieneObservaciones') // Por integrar
-      this.addressForm.get('observaciones') //Por integrar
-      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnostico ? this.construccion.observacionDiagnostico.construccionObservacionId : null);
-
-      this.validarSemaforo();
-    };
-  };
-
-  validarSemaforo() {
-
-    this.construccion.semaforoDiagnostico = "sin-diligenciar";
-
-    if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
-      this.construccion.semaforoDiagnostico = 'completo';
-
-      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
-        this.construccion.semaforoDiagnostico = 'en-proceso';
+      this.addressForm.get('tieneObservaciones').setValue( this.construccion.tieneObservacionesDiagnosticoSupervisor !== undefined ? this.construccion.tieneObservacionesDiagnosticoSupervisor : null )
+      this.addressForm.get('observaciones').setValue( this.construccion.observacionDiagnosticoSupervisor !== undefined ? this.construccion.observacionDiagnosticoSupervisor.observaciones : null )
+      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoSupervisor !== undefined ? this.construccion.observacionDiagnosticoSupervisor.construccionObservacionId : null);
     };
   };
 
@@ -107,8 +91,7 @@ export class DiagnosticoArtcComponent implements OnInit, OnChanges {
 
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
-      tieneObservacionesDiagnosticoApoyo: this.addressForm.value.tieneObservaciones,
-
+      tieneObservacionesDiagnosticoSupervisor: this.addressForm.value.tieneObservaciones,
       construccionObservacion: [
         {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
@@ -116,13 +99,17 @@ export class DiagnosticoArtcComponent implements OnInit, OnChanges {
           tipoObservacionConstruccion: TiposObservacionConstruccion.Diagnostico,
           esSupervision: true,
           esActa: false,
-          observaciones: this.addressForm.value.observaciones,
-
+          observaciones: this.addressForm.value.observaciones
         }
       ]
     };
 
     console.log(construccion);
+    this.faseDosAprobarConstruccionSvc.createEditObservacionDiagnosticoSupervisor( construccion )
+      .subscribe(
+        response => this.openDialog( '', response.message ),
+        err => this.openDialog( '', err.message )
+      );
 
   };
 

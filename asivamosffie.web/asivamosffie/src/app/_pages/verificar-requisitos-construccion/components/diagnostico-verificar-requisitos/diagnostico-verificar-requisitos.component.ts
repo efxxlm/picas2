@@ -59,7 +59,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
       this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnosticoApoyo ? this.construccion.observacionDiagnosticoApoyo.observaciones : null)
       this.addressForm.get('construccionObservacionId').setValue(0);
 
-      this.validarSemaforo();
+      //this.validarSemaforo();
     }
   }
 
@@ -97,8 +97,6 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
 
   guardarDiagnostico() {
 
-    
-
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesDiagnosticoApoyo: this.addressForm.value.tieneObservaciones,
@@ -110,8 +108,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
           tipoObservacionConstruccion: TiposObservacionConstruccion.Diagnostico,
           esSupervision: false,
           esActa: false,
-          observaciones: this.addressForm.value.observaciones,
-
+          observaciones: this.addressForm.value.observaciones
         }
       ]
     }
@@ -124,7 +121,6 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
         if (respuesta.code == "200")
           this.createEditDiagnostico.emit(true);
       })
-  }
+  };
 
-
-} 
+};

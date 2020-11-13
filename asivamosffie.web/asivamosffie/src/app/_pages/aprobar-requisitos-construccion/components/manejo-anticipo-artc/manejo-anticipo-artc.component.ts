@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
@@ -9,7 +10,7 @@ import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPrecons
   templateUrl: './manejo-anticipo-artc.component.html',
   styleUrls: ['./manejo-anticipo-artc.component.scss']
 })
-export class ManejoAnticipoArtcComponent implements OnInit, OnChanges {
+export class ManejoAnticipoArtcComponent implements OnInit {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -39,22 +40,18 @@ export class ManejoAnticipoArtcComponent implements OnInit, OnChanges {
   @Output() createEdit = new EventEmitter();
 
   constructor ( private dialog: MatDialog, 
-                private fb: FormBuilder )
-  { }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.contratacion)
-      this.ngOnInit();
-  }
+                private fb: FormBuilder,
+                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  { };
 
   ngOnInit(): void {
     if (this.contratacion) {
 
-      this.addressForm.get('tieneObservaciones') //Por integrar
-      this.addressForm.get('observaciones') //Por integrar
-      this.addressForm.get('construccionObservacionId').setValue(this.contratacion.observacionManejoAnticipo ? this.contratacion.observacionManejoAnticipo.construccionObservacionId : null)
+      this.addressForm.get('tieneObservaciones').setValue( this.contratacion.tieneObservacionesManejoAnticipoSupervisor !== undefined ? this.contratacion.tieneObservacionesManejoAnticipoSupervisor : null );
+      this.addressForm.get('observaciones').setValue( this.contratacion.observacionManejoAnticipoSupervisor !== undefined ? this.contratacion.observacionManejoAnticipoSupervisor.observaciones : null );
+      this.addressForm.get('construccionObservacionId').setValue(this.contratacion.observacionManejoAnticipoSupervisor !== undefined ? this.contratacion.observacionManejoAnticipoSupervisor.construccionObservacionId : null)
 
-      this.validarSemaforo();
+      //this.validarSemaforo();
     }
   }
 
@@ -92,7 +89,7 @@ export class ManejoAnticipoArtcComponent implements OnInit, OnChanges {
 
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
-      tieneObservacionesManejoAnticipoApoyo: this.addressForm.value.tieneObservaciones,
+      tieneObservacionesManejoAnticipoSupervisor: this.addressForm.value.tieneObservaciones,
 
       construccionObservacion: [
         {
@@ -108,7 +105,12 @@ export class ManejoAnticipoArtcComponent implements OnInit, OnChanges {
     }
 
     console.log( construccion );
+    this.faseDosAprobarConstruccionSvc.createEditObservacionManejoAnticipoSupervisor( construccion )
+      .subscribe(
+        response => this.openDialog( '', response.message ),
+        err => this.openDialog( '', err.message )
+      );
 
-  }
+  };
 
-}
+};

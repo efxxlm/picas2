@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,  } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { DialogObservacionesComponent } from 'src/app/_pages/requisitos-tecnicos-construccion/components/dialog-observaciones/dialog-observaciones.component';
@@ -11,7 +12,7 @@ import { DialogObservacionesComponent } from 'src/app/_pages/requisitos-tecnicos
   templateUrl: './planes-programas-artc.component.html',
   styleUrls: ['./planes-programas-artc.component.scss']
 })
-export class PlanesProgramasArtcComponent implements OnInit, OnChanges {
+export class PlanesProgramasArtcComponent implements OnInit {
 
  
   dataPlanesProgramas: any[] = [];
@@ -60,18 +61,14 @@ export class PlanesProgramasArtcComponent implements OnInit, OnChanges {
   @Output() createEdit = new EventEmitter();
 
   constructor ( private dialog: MatDialog, 
-                private fb: FormBuilder ) 
+                private fb: FormBuilder,
+                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService ) 
   {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.planesProgramas)
-      this.getDataPlanesProgramas();
-      console.log( this.planesProgramas );
-  }
+  };
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataPlanesProgramas);
+    this.getDataPlanesProgramas();
   }
 
 
@@ -193,12 +190,10 @@ export class PlanesProgramasArtcComponent implements OnInit, OnChanges {
       }
     );
 
-    this.addressForm.get('tieneObservaciones') //Por integrar
-    this.addressForm.get('observaciones') //Por integrar
-    this.addressForm.get('construccionObservacionId').setValue(this.planesProgramas.observacionPlanesProgramas ? this.planesProgramas.observacionPlanesProgramas.construccionObservacionId : null)
+    this.addressForm.get('tieneObservaciones').setValue( this.planesProgramas.tieneObservacionesPlanesProgramasSupervisor !== undefined ? this.planesProgramas.tieneObservacionesPlanesProgramasSupervisor : null );
+    this.addressForm.get('observaciones').setValue( this.planesProgramas.observacionPlanesProgramasSupervisor !== undefined ? this.planesProgramas.observacionPlanesProgramasSupervisor.observaciones : null );
+    this.addressForm.get('construccionObservacionId').setValue(this.planesProgramas.observacionPlanesProgramasSupervisor !== undefined ? this.planesProgramas.observacionPlanesProgramasSupervisor.construccionObservacionId : null);
 
-
-    this.validarSemaforo();
   };
 
   validarSemaforo() {
@@ -251,8 +246,7 @@ export class PlanesProgramasArtcComponent implements OnInit, OnChanges {
 
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
-      tieneObservacionesPlanesProgramasApoyo: this.addressForm.value.tieneObservaciones,
-
+      tieneObservacionesPlanesProgramasSupervisor: this.addressForm.value.tieneObservaciones,
       construccionObservacion: [
         {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
@@ -260,13 +254,17 @@ export class PlanesProgramasArtcComponent implements OnInit, OnChanges {
           tipoObservacionConstruccion: TiposObservacionConstruccion.PlanesProgramas,
           esSupervision: true,
           esActa: false,
-          observaciones: this.addressForm.value.observaciones,
-
+          observaciones: this.addressForm.value.observaciones
         }
       ]
     }
 
-    console.log( construccion ); 
+    console.log( construccion );
+    this.faseDosAprobarConstruccionSvc.createEditObservacionPlanesProgramasSupervisor( construccion )
+      .subscribe(
+        response => this.openDialog( '', response.message ),
+        err => this.openDialog( '', err.message )
+      );
 
   };
 

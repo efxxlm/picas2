@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
@@ -10,7 +11,7 @@ import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPrecons
   templateUrl: './programacion-obra-artc.component.html',
   styleUrls: ['./programacion-obra-artc.component.scss']
 })
-export class ProgramacionObraArtcComponent implements OnInit, OnChanges {
+export class ProgramacionObraArtcComponent implements OnInit {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -39,36 +40,15 @@ export class ProgramacionObraArtcComponent implements OnInit, OnChanges {
   
   constructor ( private dialog: MatDialog, 
                 private fb: FormBuilder,
-                private commonSvc: CommonService ) 
+                private commonSvc: CommonService,
+                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
   { }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.contratoConstruccion)
-      this.ngOnInit();
-  }
-
   ngOnInit(): void {
-
-    this.addressForm.get('tieneObservaciones').setValue(this.contratoConstruccion.tieneObservacionesProgramacionObraApoyo)
-    this.addressForm.get('observaciones').setValue(this.contratoConstruccion.observacionProgramacionObra ? this.contratoConstruccion.observacionProgramacionObra.observaciones : null)
-    this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.observacionProgramacionObra ? this.contratoConstruccion.observacionProgramacionObra.construccionObservacionId : null)
-
-
-    this.validarSemaforo();
-
-  }
-
-  validarSemaforo() {
-
-    this.contratoConstruccion.semaforoProgramacion = "sin-diligenciar";
-
-    if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
-      this.contratoConstruccion.semaforoProgramacion = 'completo';
-
-      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
-        this.contratoConstruccion.semaforoProgramacion = 'en-proceso';
-    }
-  }
+    this.addressForm.get('tieneObservaciones').setValue( this.contratoConstruccion.tieneObservacionesProgramacionObraSupervisor !== undefined ? this.contratoConstruccion.tieneObservacionesProgramacionObraSupervisor : null );
+    this.addressForm.get('observaciones').setValue( this.contratoConstruccion.observacionProgramacionObraSupervisor !== undefined ? this.contratoConstruccion.observacionProgramacionObraSupervisor.observaciones : null );
+    this.addressForm.get('construccionObservacionId').setValue( this.contratoConstruccion.observacionProgramacionObraSupervisor !== undefined ? this.contratoConstruccion.observacionProgramacionObraSupervisor.construccionObservacionId : null );
+  };
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -108,8 +88,7 @@ export class ProgramacionObraArtcComponent implements OnInit, OnChanges {
 
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
-      tieneObservacionesProgramacionObraApoyo: this.addressForm.value.tieneObservaciones,
-
+      tieneObservacionesProgramacionObraSupervisor: this.addressForm.value.tieneObservaciones,
       construccionObservacion: [
         {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
@@ -117,14 +96,18 @@ export class ProgramacionObraArtcComponent implements OnInit, OnChanges {
           tipoObservacionConstruccion: TiposObservacionConstruccion.ProgramacionObra,
           esSupervision: false,
           esActa: false,
-          observaciones: this.addressForm.value.observaciones,
-
+          observaciones: this.addressForm.value.observaciones
         }
       ]
-    }
+    };
 
     console.log( construccion );
-  }
+    this.faseDosAprobarConstruccionSvc.createEditObservacionProgramacionObraSupervisor( construccion )
+      .subscribe(
+        response => this.openDialog( '', response.message ),
+        err => this.openDialog( '', err.message )
+      )
 
+  };
 
-}
+};

@@ -43,7 +43,70 @@ export class FormVerificacionRequisitosComponent implements OnInit {
       .subscribe(response => {
         this.contrato = response;
         console.log(this.contrato);
-        
+        for ( let contratacion of this.contrato.contratacion.contratacionProyecto ) {
+
+          //Semaforo Diagnostico
+          contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = "sin-diligenciar";
+          if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo !== undefined 
+                && (  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo === true 
+                      || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo === false ) 
+              ) 
+          {
+            contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'completo';
+            if ( contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo === true )
+              contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
+          };
+
+          //Semaforo planes y programas
+          contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = "sin-diligenciar";
+          if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasApoyo !== undefined 
+                && (  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasApoyo === true 
+                      || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasApoyo === false ) 
+          ) 
+          {
+            contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'completo';
+            if ( contratacion.proyecto.contratoConstruccion[0].observacionPlanesProgramasApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasApoyo === true )
+              contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'en-proceso';
+          };
+
+          //Semaforo manejo de anticipo
+          contratacion.proyecto.contratoConstruccion[0].semaforoManejo = "sin-diligenciar";
+          if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo !== undefined 
+                && (  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === true 
+                      || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === false ) 
+          ) 
+          {
+            contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'completo';
+            if ( contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === true )
+              contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'en-proceso';
+          };
+          //Semaforo perfiles CV - Por integrar
+
+          //Semaforo programacion de obra
+          contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = "sin-diligenciar";
+          if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo !== undefined 
+                && (  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === true 
+                      || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === false ) 
+          )
+          {
+            contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'completo';
+            if ( contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObra === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === true )
+              contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'en-proceso';
+          };
+
+          //Semaforo flujo inversion de recursos
+          contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = "sin-diligenciar";
+          if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo !== undefined 
+                && (  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === true 
+                      || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === false ) 
+          )
+          {
+            contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'completo';
+            if ( contratacion.proyecto.contratoConstruccion[0].ObservacionFlujoInversion === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === true )
+              contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'en-proceso';
+          };
+
+        };
       });
   };
 

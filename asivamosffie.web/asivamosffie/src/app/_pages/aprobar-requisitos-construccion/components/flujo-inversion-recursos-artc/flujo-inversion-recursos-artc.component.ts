@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
@@ -11,7 +12,7 @@ import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPrecons
   templateUrl: './flujo-inversion-recursos-artc.component.html',
   styleUrls: ['./flujo-inversion-recursos-artc.component.scss']
 })
-export class FlujoInversionRecursosArtcComponent implements OnInit, OnChanges {
+export class FlujoInversionRecursosArtcComponent implements OnInit {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -41,23 +42,16 @@ export class FlujoInversionRecursosArtcComponent implements OnInit, OnChanges {
 
   constructor ( private dialog: MatDialog, 
                 private fb: FormBuilder,
-                private commonSvc: CommonService )
+                private commonSvc: CommonService,
+                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
   { };
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes.contratoConstruccion)
-      this.ngOnInit();
-  }
 
   ngOnInit(): void {
 
     if (this.contratoConstruccion) {
-
-      this.addressForm.get('tieneObservaciones').setValue(this.contratoConstruccion.tieneObservacionesFlujoInversionApoyo)
-      this.addressForm.get('observaciones').setValue(this.contratoConstruccion.ObservacionFlujoInversion ? this.contratoConstruccion.ObservacionFlujoInversion.observaciones : null)
-      this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.ObservacionFlujoInversion ? this.contratoConstruccion.ObservacionFlujoInversion.construccionObservacionId : null)
-
-      this.validarSemaforo();
+      this.addressForm.get('tieneObservaciones').setValue( this.contratoConstruccion.tieneObservacionesFlujoInversionSupervisor !== undefined ? this.contratoConstruccion.tieneObservacionesFlujoInversionSupervisor : null );
+      this.addressForm.get('observaciones').setValue( this.contratoConstruccion.observacionFlujoInversionSupervisor !== undefined ? this.contratoConstruccion.observacionFlujoInversionSupervisor.observaciones : null );
+      this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.observacionFlujoInversionSupervisor !== undefined ? this.contratoConstruccion.observacionFlujoInversionSupervisor.construccionObservacionId : null);
     }
 
   }
@@ -110,7 +104,7 @@ export class FlujoInversionRecursosArtcComponent implements OnInit, OnChanges {
 
     let construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
-      tieneObservacionesFlujoInversionApoyo: this.addressForm.value.tieneObservaciones,
+      tieneObservacionesFlujoInversionSupervisor: this.addressForm.value.tieneObservaciones,
 
       construccionObservacion: [
         {
@@ -126,6 +120,11 @@ export class FlujoInversionRecursosArtcComponent implements OnInit, OnChanges {
     }
 
     console.log( construccion );
+    this.faseDosAprobarConstruccionSvc.createEditObservacionFlujoInversionSupervisor( construccion )
+      .subscribe(
+        response => this.openDialog( '', response.message ),
+        err => this.openDialog( '', err.message )
+      )
 
   }
 
