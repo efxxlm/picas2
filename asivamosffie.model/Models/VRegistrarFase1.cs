@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         public string TipoSolicitudCodigo { get; set; }
         public string NumeroContrato { get; set; }
         public int? CantidadProyectosAsociados { get; set; }
-        public int? CantidadProyectosRequisitosAprobados { get; set; }
+        public int CantidadProyectosRequisitosAprobados { get; set; }
         public int? CantidadProyectosConPerfilesPendientes { get; set; }
         public string EstadoCodigo { get; set; }
         public int? EstaDevuelto { get; set; }

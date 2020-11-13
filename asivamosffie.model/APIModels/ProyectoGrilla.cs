@@ -30,7 +30,7 @@ namespace asivamosffie.model.APIModels
         public decimal ValorGestionado { get; set; } 
         public string EstadoProgramacion { get; set; }
         public string NumeroContrato { get; set; }
-        public decimal ValorGestionado { get; set; }
+     
         public List<CofinanicacionAportanteGrilla> Aportantes { get; set; }
     }
 }
