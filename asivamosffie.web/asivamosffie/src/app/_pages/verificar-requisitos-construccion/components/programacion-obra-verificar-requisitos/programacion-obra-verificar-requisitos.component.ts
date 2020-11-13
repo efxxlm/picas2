@@ -52,6 +52,8 @@ export class ProgramacionObraVerificarRequisitosComponent implements OnInit {
 
   ngOnInit(): void {
 
+    console.log(this.contratoConstruccion.observacionProgramacionObraApoyo);
+
     this.addressForm.get('tieneObservaciones').setValue(this.contratoConstruccion.tieneObservacionesProgramacionObraApoyo)
     this.addressForm.get('observaciones').setValue(this.contratoConstruccion.observacionProgramacionObraApoyo ? this.contratoConstruccion.observacionProgramacionObraApoyo.observaciones : null)
     this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.observacionProgramacionObraApoyo ? this.contratoConstruccion.observacionProgramacionObraApoyo.construccionObservacionId : null)

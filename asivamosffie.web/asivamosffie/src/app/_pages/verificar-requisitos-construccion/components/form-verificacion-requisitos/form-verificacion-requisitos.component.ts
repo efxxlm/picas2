@@ -90,7 +90,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
           )
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'completo';
-            if ( contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObra === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === true )
+            if ( contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObraApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'en-proceso';
           };
 
@@ -102,7 +102,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
           )
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'completo';
-            if ( contratacion.proyecto.contratoConstruccion[0].ObservacionFlujoInversion === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === true )
+            if ( contratacion.proyecto.contratoConstruccion[0].observacionFlujoInversionApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'en-proceso';
           };
 

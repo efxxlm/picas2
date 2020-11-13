@@ -417,6 +417,8 @@ namespace asivamosffie.services
 
                         cp.NombrePerfil = nombrePerfil != null ? nombrePerfil.Nombre : "";
 
+                        cp.ObservacionApoyo = getObservacionPerfil( cp, false);
+
                     });
 
                     cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, false);
@@ -1987,6 +1989,23 @@ namespace asivamosffie.services
             return construccionObservacion;
         }
 
+        private ConstruccionPerfilObservacion getObservacionPerfil(ConstruccionPerfil pPerfil, bool pEsSupervicion)
+        {
+            ConstruccionPerfilObservacion observacion = new ConstruccionPerfilObservacion();
+
+            ConstruccionPerfilObservacion construccionObservacionPerfil = pPerfil.ConstruccionPerfilObservacion.ToList()
+                        .Where(r => r.EsSupervision == pEsSupervicion &&
+                                    r.Archivada != true
+                              )
+                        //.OrderByDescending(o => o.FechaCreacion)
+                        .FirstOrDefault();
+
+            if (construccionObservacionPerfil != null)
+                observacion = construccionObservacionPerfil;
+
+            return construccionObservacionPerfil;
+        }
+
         public async Task<Respuesta> CreateEditObservacion(ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
         {
             return pTipoObservacion switch
@@ -2037,6 +2056,60 @@ namespace asivamosffie.services
                     };
 
                     _context.ConstruccionObservacion.Add(construccionObservacion);
+                }
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        private async Task<Respuesta> CreateEditObservacionConstruccionPerfil(ConstruccionPerfilObservacion pObservacion, string pUsuarioCreacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Construccion, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = "";
+
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (pObservacion.ConstruccionPerfilObservacionId > 0)
+                {
+                    strCrearEditar = "EDITAR OBSERVACION CONSTRUCCION PERFIL";
+                    ConstruccionPerfilObservacion construccionObservacionPerfil = _context.ConstruccionPerfilObservacion.Find(pObservacion.ConstruccionPerfilObservacionId);
+
+                    construccionObservacionPerfil.FechaModificacion = DateTime.Now;
+                    construccionObservacionPerfil.UsuarioModificacion = pUsuarioCreacion;
+
+                    construccionObservacionPerfil.Observacion = pObservacion.Observacion;
+
+                }
+                else
+                {
+                    strCrearEditar = "CREAR OBSERVACION CONSTRUCCION PERFIL";
+
+                    ConstruccionPerfilObservacion construccionObservacionPerfil = new ConstruccionPerfilObservacion
+                    {
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacion = pUsuarioCreacion,
+
+                        ConstruccionPerfilObservacionId = pObservacion.ConstruccionPerfilObservacionId,
+                        TipoObservacionCodigo = "0", // no se usa
+                        Observacion = pObservacion.Observacion,
+                        EsSupervision = pObservacion.EsSupervision,
+                    };
+
+                    _context.ConstruccionPerfilObservacion.Add( construccionObservacionPerfil );
                 }
 
                 return respuesta;
@@ -2521,6 +2594,101 @@ namespace asivamosffie.services
                     };
             }
         }
+
+        public async Task<Respuesta> CreateEditObservacionPerfil(ConstruccionPerfil pPerfil, bool esSupervisor)
+        {
+            Respuesta respuesta = new Respuesta();
+
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Perfil, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                CreateEdit = "EDIT OBSERVACION PERFIL";
+                int idObservacion = 0;
+
+                if (pPerfil.ConstruccionPerfilObservacion.Count() > 0)
+                    idObservacion = pPerfil.ConstruccionPerfilObservacion.FirstOrDefault().ConstruccionPerfilObservacionId;
+
+                ConstruccionPerfil construccionPerfil = _context.ConstruccionPerfil.Find( pPerfil.ConstruccionPerfilId );
+
+                construccionPerfil.UsuarioModificacion = pPerfil.UsuarioCreacion;
+                construccionPerfil.FechaModificacion = DateTime.Now;
+
+                if (esSupervisor)
+                {
+
+                    construccionPerfil.TieneObservacionesSupervisor = pPerfil.TieneObservacionesSupervisor;
+
+                    if (construccionPerfil.TieneObservacionesSupervisor.Value)
+                    {
+
+                        await CreateEditObservacionConstruccionPerfil( pPerfil.ConstruccionPerfilObservacion.FirstOrDefault(), pPerfil.UsuarioCreacion);
+                    }
+                    else
+                    {
+                        ConstruccionPerfilObservacion observacionDelete = _context.ConstruccionPerfilObservacion.Find(idObservacion);
+                        // &&
+                        //            r.EsSupervision != true &&
+                        //            r.Eliminado != false &&
+                        //            r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico)
+                        // .OrderByDescending(r => r.FechaCreacion)
+                        // .FirstOrDefault();
+                        if (observacionDelete != null)
+                            observacionDelete.Eliminado = true;
+                    }
+
+                }
+                else
+                {
+                    construccionPerfil.TieneObservacionesApoyo = pPerfil.TieneObservacionesApoyo;
+
+                    if (construccionPerfil.TieneObservacionesApoyo.Value)
+                    {
+                        await CreateEditObservacionConstruccionPerfil(pPerfil.ConstruccionPerfilObservacion.FirstOrDefault(), pPerfil.UsuarioCreacion);
+                    }
+                    else
+                    {
+                        ConstruccionPerfilObservacion observacionDelete = _context.ConstruccionPerfilObservacion.Find(idObservacion);
+                        // &&
+                        //            r.EsSupervision != true &&
+                        //            r.Eliminado != false &&
+                        //            r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico)
+                        // .OrderByDescending(r => r.FechaCreacion)
+                        // .FirstOrDefault();
+                        if (observacionDelete != null)
+                            observacionDelete.Eliminado = true;
+                    }
+                }
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pPerfil.UsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pPerfil.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
 
         #endregion Observaciones
 

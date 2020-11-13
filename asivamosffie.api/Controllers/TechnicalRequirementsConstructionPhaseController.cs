@@ -256,6 +256,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateEditObservacionPerfil")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacionPerfil(ConstruccionPerfil pPerfil, bool esSupervisor)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pPerfil.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionPerfil(pPerfil, esSupervisor);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
 
         [Route("CreateEditPlanesProgramas")]
         [HttpPost]

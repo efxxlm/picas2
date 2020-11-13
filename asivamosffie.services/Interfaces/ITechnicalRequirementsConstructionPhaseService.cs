@@ -37,6 +37,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditObservacionProgramacionObra(ContratoConstruccion pContratoConstruccion, bool esSupervisor);
         Task<Respuesta> CreateEditObservacionFlujoInversion(ContratoConstruccion pContratoConstruccion, bool esSupervisor);
         Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion);
+        Task<Respuesta> CreateEditObservacionPerfil(ConstruccionPerfil pPerfil, bool esSupervisor);
 
 
     }
