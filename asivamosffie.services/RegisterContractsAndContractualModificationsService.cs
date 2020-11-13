@@ -134,12 +134,14 @@ namespace asivamosffie.services
                           .Include(r => r.Contratista)
                            .Include(r => r.Contrato).FirstOrDefaultAsync();
 
+                contratacion.FechaTramite = DateTime.Now;
+     
                 contratacion.sesionComiteSolicitud = _context.SesionComiteSolicitud
                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                     .Include(r => r.ComiteTecnico)
                     .Include(r => r.ComiteTecnicoFiduciario)
                     .ToList();
-
+                
                 if (contratacion.Contratista != null)
                 {
                     if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
@@ -153,12 +155,15 @@ namespace asivamosffie.services
                 }
                 foreach (var Contrato in contratacion.Contrato)
                 {
+                     
                     if (!string.IsNullOrEmpty(Contrato.TipoContratoCodigo))
                     {
+                        Contrato.FechaTramite = DateTime.Now;
                         Contrato.TipoContratoCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).FirstOrDefault().Nombre;
-                    }
+                    } 
                 }
 
+                _context.SaveChanges();
                 return contratacion;
             }
             catch (Exception ex)
