@@ -15,7 +15,7 @@
             </section>
             <section
                 *ngIf="perfil.construccionPerfilNumeroRadicado && perfil.construccionPerfilNumeroRadicado.length > 0">
-                <p *ngFor="let radicado of perfil.construccionPerfilNumeroRadicado; let k = index">
+                <p *ngFor="let radicado of perfil.construccionPerfilNumeroRadicado; index as k">
                     <b>Número de radicado en FFIE de aprobación de hojas de vida {{ k+1 }}</b>: {{ radicado.numeroRadicado }} 
                 </p>
             </section>
@@ -65,7 +65,7 @@
         </div>
         <div class="text-center mt-1em">
             <button mat-button color="warn" class="btn-guardar" type="submit">
-                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                <img src="assets/img/icon/guardar.svg">
             </button>
         </div>
     </form>

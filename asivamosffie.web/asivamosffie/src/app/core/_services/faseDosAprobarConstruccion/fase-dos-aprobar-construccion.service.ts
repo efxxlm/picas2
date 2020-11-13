@@ -37,4 +37,8 @@ export class FaseDosAprobarConstruccionService {
     return this.http.post<Respuesta>( `${ environment.apiUrl }/TechnicalRequirementsConstructionPhase/createEditObservacionFlujoInversion?esSupervisor=true`, contratoConstruccion );
   };
 
+  createEditObservacionPerfilSupervisor( contratacionPerfil ){
+    return this.http.post<Respuesta>( `${ environment.apiUrl }/TechnicalRequirementsConstructionPhase/createEditObservacionPerfil?esSupervisor=true`, contratacionPerfil );
+  };
+
 };

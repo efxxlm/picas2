@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -9,11 +10,12 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./hojas-vida-contratista-artc.component.scss']
 })
 export class HojasVidaContratistaArtcComponent implements OnInit {
+
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
+    construccionPerfilObservacionId:[]
   });
-
   editorStyle = {
     height: '100px'
   };
@@ -30,10 +32,18 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   @Input() observacionesCompleted;
   @Input() perfil: any;  
 
-  constructor(private dialog: MatDialog, private fb: FormBuilder) { }
+  constructor ( private dialog: MatDialog, 
+                private fb: FormBuilder,
+                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  {};
 
   ngOnInit(): void {
-  }
+    if (this.perfil){
+      this.addressForm.get('tieneObservaciones').setValue( this.perfil.tieneObservacionesSupervisor !== undefined ? this.perfil.tieneObservacionesSupervisor : null );
+      this.addressForm.get('observaciones').setValue( this.perfil.observacionSupervisor !== undefined ? this.perfil.observacionSupervisor.observacion : null );
+      this.addressForm.get('construccionPerfilObservacionId').setValue( this.perfil.observacionSupervisor !== undefined ? this.perfil.observacionSupervisor.construccionPerfilObservacionId : null );
+    };
+  };
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -61,7 +71,29 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   };
 
   onSubmit(){
-    this.openDialog( 'La información ha sido guardada exitosamente.', '' );
+
+    let ConstruccionPerfil = {
+      construccionPerfilId: this.perfil.construccionPerfilId,
+      tieneObservacionesSupervisor: this.addressForm.value.tieneObservaciones,
+      construccionPerfilObservacion: [
+        {
+          ConstruccionPerfilObservacionId: this.addressForm.value.construccionPerfilObservacionId,
+          construccionPerfilId: this.perfil.construccionPerfilId,
+          esSupervision: true,
+          esActa: false,
+          observacion: this.addressForm.value.observaciones
+        }
+      ]
+    }
+
+    console.log( ConstruccionPerfil );
+
+    this.faseDosAprobarConstruccionSvc.createEditObservacionPerfilSupervisor( ConstruccionPerfil )
+      .subscribe(
+        response => this.openDialog( '', response.message ),
+        err => this.openDialog( '', err.message )
+      );
+
   }
 
 }

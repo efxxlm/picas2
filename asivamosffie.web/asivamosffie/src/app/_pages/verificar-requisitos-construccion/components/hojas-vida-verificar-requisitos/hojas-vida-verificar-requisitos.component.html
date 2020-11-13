@@ -10,14 +10,13 @@
                 {{ perfil.cantidadHvAprobadas }} </p>
             <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>:
                 {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
-            <p><b>Observaciones:</b></p>
-            <p>
-                {{ perfil.observaciones }} </p>
-            <p><b>Número de radicado en FFIE de aprobación de hojas de vida:</b></p>
+            <section>
+                <b>Observaciones:</b> <div [innerHTML]="innerObservacion( perfil.observaciones )"></div>
+            </section>
             <section
                 *ngIf="perfil.construccionPerfilNumeroRadicado && perfil.construccionPerfilNumeroRadicado.length > 0">
-                <p *ngFor="let radicado of perfil.construccionPerfilNumeroRadicado; let k = index">
-                    {{ radicado.numeroRadicado }} </p>
+                <p *ngFor="let radicado of perfil.construccionPerfilNumeroRadicado; index as k">
+                    <b>Número de radicado en FFIE de aprobación de hojas de vida {{ k+1 }}</b>: {{ radicado.numeroRadicado }} </p>
             </section>
             <p><b>URL con soporte</b>: {{ perfil.rutaSoporte }} </p>
         </mat-card-content>

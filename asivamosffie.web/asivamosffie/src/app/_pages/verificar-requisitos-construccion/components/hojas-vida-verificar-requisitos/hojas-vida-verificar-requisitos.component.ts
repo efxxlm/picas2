@@ -59,7 +59,14 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   textoLimpio(texto: string) {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
-  }
+  };
+
+  innerObservacion ( observacion: string ) {
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return observacionHtml;
+    };
+  };
   
   openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {

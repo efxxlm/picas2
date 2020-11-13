@@ -80,7 +80,38 @@ export class FormVerificacionRequisitosComponent implements OnInit {
             if ( contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'en-proceso';
           };
-          //Semaforo perfiles CV - Por integrar
+          //Semaforo perfiles CV
+          let perfilSinDiligenciar = 0;
+          let perfilCompleto = 0;
+          for ( let perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil ) {
+            perfil.semaforoPerfil = "sin-diligenciar";
+            if  ( perfil.tieneObservacionesApoyo !== undefined 
+                  && (  perfil.tieneObservacionesApoyo === true 
+                        || perfil.tieneObservacionesApoyo === false )
+            ) 
+            {
+              perfil.semaforoPerfil = 'completo';
+              if ( perfil.observacionApoyo === undefined && perfil.tieneObservacionesApoyo === true )
+                perfil.semaforoPerfil = 'en-proceso';
+            };
+            if ( perfil.semaforoPerfil === 'sin-diligenciar' ) {
+              perfilSinDiligenciar++;
+            };
+            if ( perfil.semaforoPerfil === 'completo' ) {
+              perfilCompleto++;
+            };
+          };
+          if ( perfilSinDiligenciar > 0 && ( perfilSinDiligenciar === contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length ) ) {
+            contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles = "sin-diligenciar";
+          };
+          if ( perfilCompleto > 0 && ( perfilCompleto === contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length ) ) {
+            contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles = "completo";
+          };
+          if (  perfilSinDiligenciar === perfilCompleto
+                || ( perfilSinDiligenciar > 0 && perfilSinDiligenciar < contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
+                || ( perfilCompleto > 0 && perfilCompleto < contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length ) ) {
+            contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles = "en-proceso";
+          };
 
           //Semaforo programacion de obra
           contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = "sin-diligenciar";

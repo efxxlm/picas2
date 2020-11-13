@@ -96,14 +96,14 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title {{ contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0].semaforoPerfiles }}">
               Hojas de vida del contratista de obra
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-accordion *ngFor="let perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil; let j = index">
             <mat-expansion-panel class="expansion-style sub-expansion-black">
               <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title {{ perfil.semaforoPerfil }}">
                   Perfil {{ j + 1 }}
                 </mat-panel-title>
               </mat-expansion-panel-header>
