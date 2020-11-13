@@ -52,8 +52,78 @@ namespace asivamosffie.services
             }
             return null;
         }
-        
- 
+
+        public async Task<Respuesta> CreateOrEditDemandadoConvocado(DemandadoConvocado demandadoConvocado)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty;
+            DemandadoConvocado demandadoConvocadoBD = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(demandadoConvocado.DemandadoConvocadoId.ToString()) || demandadoConvocado.DemandadoConvocadoId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "REGISTRAR DEMANDADO CONVOCADO";
+                    demandadoConvocado.FechaCreacion = DateTime.Now;
+                    demandadoConvocado.UsuarioCreacion = demandadoConvocado.UsuarioCreacion;
+                    //fichaEstudio.DefensaJudicialId = fichaEstudio.DefensaJudicialId;
+                    demandadoConvocado.Eliminado = false;
+                    _context.DemandadoConvocado.Add(demandadoConvocado);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT DEMANDADO CONVOCADO";
+                    demandadoConvocadoBD = _context.DemandadoConvocado.Find(demandadoConvocado.DemandadoConvocadoId);
+
+                    //Auditoria
+                    demandadoConvocadoBD.UsuarioModificacion = demandadoConvocado.UsuarioModificacion;
+                    demandadoConvocadoBD.Eliminado = false;
+
+                    //Registros
+                    demandadoConvocadoBD.Nombre = demandadoConvocado.Nombre;
+                    demandadoConvocadoBD.TipoIdentificacionCodigo = demandadoConvocado.TipoIdentificacionCodigo;
+                    demandadoConvocadoBD.NumeroIdentificacion = demandadoConvocado.NumeroIdentificacion;
+                    demandadoConvocadoBD.DefensaJudicial = demandadoConvocado.DefensaJudicial;
+                    demandadoConvocadoBD.Direccion = demandadoConvocado.Direccion;
+                    demandadoConvocadoBD.UsuarioModificacion = demandadoConvocado.UsuarioModificacion;
+                    demandadoConvocadoBD.Email = demandadoConvocado.Email;
+                    
+                    _context.DemandadoConvocado.Update(demandadoConvocado);
+
+                }
+
+                _context.SaveChanges();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = demandadoConvocado,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, demandadoConvocado.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = demandadoConvocado,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, demandadoConvocado.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
         public async Task<Respuesta> CreateOrEditFichaEstudio(FichaEstudio fichaEstudio)
         {
             Respuesta respuesta = new Respuesta();
