@@ -205,7 +205,7 @@
     </div>
   </div>
 
-  <div class="container text-center">
+  <div class="container text-center" *ngIf="dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null">
     <p class="align-text"><small><i>Adjunte el contrato suscrito cuando tenga todas las firmas requeridas.</i></small></p>
   </div>
 
