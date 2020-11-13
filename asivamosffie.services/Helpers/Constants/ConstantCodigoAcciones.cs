@@ -129,6 +129,7 @@ public const string Inicio_de_sesion = "1";
         public const string Enviar_Al_Supervisor = "123";
         public const string Cambiar_Estado_Contrato_Construccion ="142";
         public const string Crear_Editar_Observacion_Perfil = "143";
+        public const string Aprobar_Inicio_Construccion = "144";
 
     }
 }

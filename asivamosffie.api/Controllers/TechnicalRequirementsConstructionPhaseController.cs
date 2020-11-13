@@ -380,6 +380,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("AprobarInicio")]
+        [HttpPost]
+        public async Task<IActionResult> AprobarInicio([FromQuery] int pContratoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _technicalRequirementsConstructionPhaseService.AprobarInicio(pContratoId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
         [Route("DeleteConstruccionPerfilNumeroRadicado")]
         [HttpDelete]

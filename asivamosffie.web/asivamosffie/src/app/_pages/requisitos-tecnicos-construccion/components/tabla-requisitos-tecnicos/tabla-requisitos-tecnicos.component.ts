@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 
 @Component({
@@ -26,8 +28,14 @@ export class TablaRequisitosTecnicosComponent implements OnInit {
   ];
 
   constructor ( private routes: Router,
-                private faseUnoConstruccionSvc: FaseUnoConstruccionService )
+                private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+                private dialog: MatDialog,
+              )
   {
+    this.cargarRegistros();
+  }
+
+  cargarRegistros(){
     this.faseUnoConstruccionSvc.getContractsGrid()
       .subscribe( listas => {
         this.dataSource                        = new MatTableDataSource( listas );
@@ -49,8 +57,22 @@ export class TablaRequisitosTecnicosComponent implements OnInit {
     this.routes.navigate( [ '/requisitosTecnicosConstruccion/gestionarInicioContrato', id ], { state: { fechaPoliza } } )
   };
 
+  openDialog (modalTitle: string, modalText: string) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });   
+  };
+
   aprobarInicio ( id: number ) {
-    console.log( id );
+    this.faseUnoConstruccionSvc.aprobarInicio( id )
+      .subscribe( 
+        response => {
+          this.openDialog( '', response.message );
+          this.cargarRegistros();
+        },
+        err => this.openDialog( '', err.message )
+      );
   };
 
   verDetalle ( id: number ) {

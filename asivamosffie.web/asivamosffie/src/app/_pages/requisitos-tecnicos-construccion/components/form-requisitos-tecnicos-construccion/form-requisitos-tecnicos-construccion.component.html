@@ -48,9 +48,9 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
-              {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoDiagnostico == true ? 
+              {{ contratacion.proyecto.contratoConstruccion[0] ? contratacion.proyecto.contratoConstruccion[0].registroCompletoDiagnostico == true ? 
                 'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoDiagnostico == false ? 
-                      'en-proceso' : 'sin-diligenciar' }}">
+                      'en-proceso' : 'sin-diligenciar' : 'sin-diligenciar' }}">
               Diagnóstico
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -65,9 +65,9 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
-            {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoPlanesProgramas == true ? 
+            {{ contratacion.proyecto.contratoConstruccion[0] ? contratacion.proyecto.contratoConstruccion[0].registroCompletoPlanesProgramas == true ? 
               'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoPlanesProgramas == false ? 
-                    'en-proceso' : 'sin-diligenciar' }}">
+                    'en-proceso' : 'sin-diligenciar' : 'sin-diligenciar' }}">
               Planes y Programas
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -79,9 +79,9 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
-            {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoManejoAnticipo == true ? 
+            {{ contratacion.proyecto.contratoConstruccion[0] ? contratacion.proyecto.contratoConstruccion[0].registroCompletoManejoAnticipo == true ? 
               'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoManejoAnticipo == false ? 
-                    'en-proceso' : 'sin-diligenciar' }}">
+                    'en-proceso' : 'sin-diligenciar' : 'sin-diligenciar' }}">
               Manejo de anticipo
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -119,9 +119,9 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
-            {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoProgramacionObra == true ? 
+            {{ contratacion.proyecto.contratoConstruccion[0] ? contratacion.proyecto.contratoConstruccion[0].registroCompletoProgramacionObra == true ? 
               'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoProgramacionObra == false ? 
-                    'en-proceso' : 'sin-diligenciar' }}">
+                    'en-proceso' : 'sin-diligenciar' : 'sin-diligenciar' }}">
               Programación de obra
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -146,9 +146,9 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
-            {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoFlujoInversion == true ? 
+            {{ contratacion.proyecto.contratoConstruccion[0] ? contratacion.proyecto.contratoConstruccion[0].registroCompletoFlujoInversion == true ? 
               'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoFlujoInversion == false ? 
-                    'en-proceso' : 'sin-diligenciar' }}">
+                    'en-proceso' : 'sin-diligenciar' : 'sin-diligenciar' }}">
               Flujo de inversión de recursos
             </mat-panel-title>
           </mat-expansion-panel-header>

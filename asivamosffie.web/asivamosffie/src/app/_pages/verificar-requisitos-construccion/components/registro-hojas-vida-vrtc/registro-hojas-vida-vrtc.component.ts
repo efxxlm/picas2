@@ -158,10 +158,12 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
               cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
               fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
               observacion                 : [ observaciones ],
+              observacionDevolucion       : [ perfil.observacionDevolucion],
               observacionSupervisor       : [ observacionSupervisor ],
               fechaObservacion            : [ fechaObservacion ],
               contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
               rutaSoporte                 : [ perfil.rutaSoporte ? perfil.rutaSoporte : '' ]
+
             }
           )
         )
