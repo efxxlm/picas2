@@ -211,7 +211,22 @@
           </p>
         </mat-card-content>
       </mat-card>
+      <div align="center" *ngIf="perfil.value.observacionDevolucion">
+        <mat-card class="border" style="margin-top: 20px;">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text grayTitle">
+                  Observaciones de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left" >
+                <p><b>{{ perfil.value.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+                <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+                <p>{{ perfil.value.observacionDevolucion.observacion }}</p>
+            </mat-card-content>
+        </mat-card>
+      </div>
     </mat-expansion-panel>
+    
   </mat-accordion>
 
 </form>

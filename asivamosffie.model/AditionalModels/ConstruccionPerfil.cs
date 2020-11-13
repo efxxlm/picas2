@@ -26,5 +26,8 @@ namespace asivamosffie.model.Models
         [NotMapped] 
         public ConstruccionPerfilObservacion ObservacionSupervisor  { get; set; }
 
+        [NotMapped] 
+        public ConstruccionPerfilObservacion ObservacionDevolucion  { get; set; }
+
     }
 }

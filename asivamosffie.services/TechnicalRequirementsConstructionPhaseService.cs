@@ -420,6 +420,8 @@ namespace asivamosffie.services
                         cp.ObservacionApoyo = getObservacionPerfil( cp, false);
                         cp.ObservacionSupervisor = getObservacionPerfil( cp, true);
 
+                        cp.ObservacionDevolucion = _context.ConstruccionPerfilObservacion.Find( cp.ObservacionSupervisorId );
+
                     });
 
                     cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, false);

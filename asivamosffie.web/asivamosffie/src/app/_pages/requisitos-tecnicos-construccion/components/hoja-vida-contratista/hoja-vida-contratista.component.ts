@@ -92,6 +92,7 @@ export class HojaVidaContratistaComponent implements OnInit {
       } );
       this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {
+      console.log( this.perfilProyecto )
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
         .subscribe( () => {
@@ -109,7 +110,9 @@ export class HojaVidaContratistaComponent implements OnInit {
               {
                 contratoPerfilNumeroRadicadoId: 0,
                 contratoPerfilId: perfil.contratoPerfilId,
-                numeroRadicado: ''
+                numeroRadicado: '',
+                
+
               }
             )
           )
@@ -157,6 +160,7 @@ export class HojaVidaContratistaComponent implements OnInit {
               cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
               fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
               observacion                 : [ observaciones ],
+              observacionDevolucion       : [ perfil.observacionDevolucion],
               observacionSupervisor       : [ observacionSupervisor ],
               fechaObservacion            : [ fechaObservacion ],
               contratoPerfilNumeroRadicado: this.fb.array( numeroRadicados ),
