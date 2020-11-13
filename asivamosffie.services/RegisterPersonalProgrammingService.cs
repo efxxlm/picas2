@@ -77,41 +77,38 @@ namespace asivamosffie.services
             return LisDyna;
         }
 
-        public async Task<List<ProgramacionPersonalContratoConstruccion>> GetProgramacionPersonalByContratoConstruccionId(int pContratoConstruccionId, string pUsuario)
+        public async Task<List<ProgramacionPersonalContrato>> GetProgramacionPersonalByContratoId(int pContrato, string pUsuario)
         {
 
             try
             {
-                ContratoConstruccion contratoConstruccion = await
-                    _context.ContratoConstruccion.Where(r => r.ContratoConstruccionId == pContratoConstruccionId)
-                    .Include(r => r.Programacion).FirstOrDefaultAsync();
+          
+                List<ProgramacionPersonalContrato> List = _context.ProgramacionPersonalContrato.Where(r => r.ContratoId == pContrato).ToList();
 
-                List<ProgramacionPersonalContratoConstruccion> List = _context.ProgramacionPersonalContratoConstruccion.Where(r => r.ContratoConstruccionId == pContratoConstruccionId).ToList();
+                ////Crear Los registros De programacion Si no existen
+                //if (List.Count() == 0)
+                //{
+                //    for (int i = 1; i < contratoConstruccion.Programacion.FirstOrDefault().Duracion + 1; i++)
+                //    {
+                //        ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = new ProgramacionPersonalContratoConstruccion
+                //        {
+                //            UsuarioCreacion = pUsuario,
+                //            FechaCreacion = DateTime.Now,
+                //            Eliminado = true,
 
-                //Crear Los registros De programacion Si no existen
-                if (List.Count() == 0)
-                {
-                    for (int i = 1; i < contratoConstruccion.Programacion.FirstOrDefault().Duracion + 1; i++)
-                    {
-                        ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = new ProgramacionPersonalContratoConstruccion
-                        {
-                            UsuarioCreacion = pUsuario,
-                            FechaCreacion = DateTime.Now,
-                            Eliminado = true,
-
-                            ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
-                            NumeroSemana = i,
-                        };
-                        _context.ProgramacionPersonalContratoConstruccion.Add(programacionPersonalContratoConstruccion);
-                        List.Add(programacionPersonalContratoConstruccion);
-                    }
+                //            ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
+                //            NumeroSemana = i,
+                //        };
+                //        _context.ProgramacionPersonalContratoConstruccion.Add(programacionPersonalContratoConstruccion);
+                //        List.Add(programacionPersonalContratoConstruccion);
+                //    }
                     _context.SaveChanges();
-                }
+            
                 return List;
             }
             catch (Exception ex)
             {
-                return new List<ProgramacionPersonalContratoConstruccion>();
+                return new List<ProgramacionPersonalContrato>();
             }
 
 
@@ -122,31 +119,31 @@ namespace asivamosffie.services
         {
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
-            bool RegistroCompleto = true;
+            //bool RegistroCompleto = true;
 
             try
             {
-                Proyecto proyecto = _context.Proyecto.Find(pContratoConstruccion.ProyectoId);
+                //Proyecto proyecto = _context.Proyecto.Find(pContratoConstruccion.ProyectoId);
 
-                proyecto.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
-                proyecto.FechaModificacion = DateTime.Now;
+                //proyecto.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
+                //proyecto.FechaModificacion = DateTime.Now;
 
-                foreach (var item in pContratoConstruccion.ProgramacionPersonalContratoConstruccion)
-                {
-                    ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = _context.ProgramacionPersonalContratoConstruccion.Find(item.ProgramacionPersonalContratoConstruccionId);
-                    programacionPersonalContratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
-                    programacionPersonalContratoConstruccion.FechaModificacion = DateTime.Now;
-                    programacionPersonalContratoConstruccion.CantidadPersonal = item.CantidadPersonal;
+                //foreach (var item in pContratoConstruccion.ProgramacionPersonalContrato)
+                //{
+                //    ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = _context.ProgramacionPersonalContratoConstruccion.Find(item.ProgramacionPersonalContratoConstruccionId);
+                //    programacionPersonalContratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
+                //    programacionPersonalContratoConstruccion.FechaModificacion = DateTime.Now;
+                //    programacionPersonalContratoConstruccion.CantidadPersonal = item.CantidadPersonal;
 
-                    if (programacionPersonalContratoConstruccion.CantidadPersonal == 0)
-                        RegistroCompleto = false;
-                }
-                if (RegistroCompleto)
-                    proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_de_programacion_personal;
-                else
-                    proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.En_registro_programacion;
+                //    if (programacionPersonalContratoConstruccion.CantidadPersonal == 0)
+                //        RegistroCompleto = false;
+                //}
+                //if (RegistroCompleto)
+                //    proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_de_programacion_personal;
+                //else
+                //    proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.En_registro_programacion;
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 return
                      new Respuesta
@@ -179,14 +176,14 @@ namespace asivamosffie.services
 
             try
             {
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
+                //ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
 
-                Proyecto proyecto = _context.Proyecto.Find(contratoConstruccion.ProyectoId);
-                proyecto.UsuarioModificacion = pUsuario;
-                proyecto.FechaModificacion = DateTime.Now;
-                proyecto.EstadoProgramacionCodigo = pEstadoProgramacionCodigo;
+                //Proyecto proyecto = _context.Proyecto.Find(contratoConstruccion.ProyectoId);
+                //proyecto.UsuarioModificacion = pUsuario;
+                //proyecto.FechaModificacion = DateTime.Now;
+                //proyecto.EstadoProgramacionCodigo = pEstadoProgramacionCodigo;
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 return
                      new Respuesta

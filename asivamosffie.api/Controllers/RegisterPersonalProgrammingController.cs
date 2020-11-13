@@ -34,11 +34,11 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-        [Route("GetProgramacionPersonalByContratoConstruccionId")]
+        [Route("GetProgramacionPersonalByContratoId")]
         [HttpGet]
-        public async Task<List<ProgramacionPersonalContratoConstruccion>> GetProgramacionPersonalByContratoConstruccionId([FromQuery] int pContratoConstruccionId)
+        public async Task<List<ProgramacionPersonalContrato>> GetProgramacionPersonalByContratoId([FromQuery] int pContratoId)
         {
-            var result = await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoConstruccionId(pContratoConstruccionId, HttpContext.User.FindFirst("User").Value.ToUpper());
+            var result = await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoId(pContratoId, HttpContext.User.FindFirst("User").Value.ToUpper());
             return result;
         }
          
