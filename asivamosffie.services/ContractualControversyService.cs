@@ -173,6 +173,16 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<ControversiaContractual> GetControversiaContractualById(int id)
+        {
+            return await _context.ControversiaContractual.FindAsync(id);
+        }
+
+        public async Task<ControversiaActuacion> GetControversiaActuacionById(int id)
+        {
+            return await _context.ControversiaActuacion.FindAsync(id);
+        }
+
         public async Task<Respuesta> CambiarEstadoControversiaActuacion (int pControversiaActuacionId, string pNuevoCodigoEstadoAvance, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);

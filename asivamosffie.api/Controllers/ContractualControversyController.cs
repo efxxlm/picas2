@@ -43,8 +43,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateEditNuevaActualizacionTramite")]
-        
+        [Route("CreateEditNuevaActualizacionTramite")]        
         public async Task<IActionResult> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
         {
             Respuesta respuesta = new Respuesta();
@@ -132,6 +131,23 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [Route("GetControversiaContractualById")]
+        [HttpGet]
+        
+        public async Task<ControversiaContractual> GetControversiaContractualById(int pControversiaContractualId)
+        {
+            var respuesta = await _contractualControversy.GetControversiaContractualById(pControversiaContractualId);
+            return respuesta;
+        }
+
+        [Route("GetControversiaActuacionById")]
+        [HttpGet]        
+        public async Task<ControversiaActuacion> GetControversiaActuacionById(int pControversiaActuacionId)
+        {
+            var respuesta = await _contractualControversy.GetControversiaActuacionById(pControversiaActuacionId);
+            return respuesta;
+        }
 
 
         [Route("EliminarControversiaActuacion")]
