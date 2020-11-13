@@ -66,7 +66,8 @@ namespace asivamosffie.services
 
                 contratoCambiarEstado.EstadoVerificacionConstruccionCodigo = pEstado;
 
-                if (pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_interventor.ToString() || pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_apoyo.ToString())  {
+                if (pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_interventor.ToString() || pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_apoyo.ToString())
+                {
 
                     foreach (var ContratoConstruccion in contratoCambiarEstado.ContratoConstruccion)
                     {
@@ -127,10 +128,10 @@ namespace asivamosffie.services
                             construccionObservacionApoyo.Archivada = true;
 
                             //Contrato Construccion
-                            ContratoConstruccion.ObservacionDiagnosticoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
-                            ContratoConstruccion.TieneObservacionesDiagnosticoApoyo = null;
-                            ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor = null;
-                            ContratoConstruccion.RegistroCompletoDiagnostico = false;
+                            ContratoConstruccion.ObservacionPlanesProgramasSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesPlanesProgramasApoyo = null;
+                            ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoPlanesProgramas = false;
                         }
 
                         //Observaciones Manejo de Anticipo
@@ -158,11 +159,74 @@ namespace asivamosffie.services
                             construccionObservacionApoyo.Archivada = true;
 
                             //Contrato Construccion
-                            ContratoConstruccion.ObservacionDiagnosticoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
-                            ContratoConstruccion.TieneObservacionesDiagnosticoApoyo = null;
-                            ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor = null;
-                            ContratoConstruccion.RegistroCompletoDiagnostico = false;
+                            ContratoConstruccion.ObservacionManejoAnticipoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesManejoAnticipoApoyo = null;
+                            ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoManejoAnticipo = false;
                         }
+
+                        //Observaciones Programacion Obra  
+
+                        if ((bool)ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor)
+                        {
+                            //Observacion Supervisor
+                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
+                                    && (bool)r.EsSupervision
+                                    && !(bool)r.Eliminado
+                                    && !(bool)r.Archivada)
+                                .FirstOrDefault();
+
+                            construccionObservacionSupervisor.Archivada = true;
+
+                            //Observacion Apoyo
+                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
+                                   && !(bool)r.EsSupervision
+                                   && !(bool)r.Eliminado
+                                   && !(bool)r.Archivada)
+                               .FirstOrDefault();
+
+                            construccionObservacionApoyo.Archivada = true;
+
+                            //Contrato Construccion
+                            ContratoConstruccion.ObservacionProgramacionObraSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesProgramacionObraApoyo = null;
+                            ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoProgramacionObra = false;
+                        }
+
+                        //Observaciones Flujo Inversion 
+
+                        if ((bool)ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor)
+                        {
+                            //Observacion Supervisor
+                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
+                                    && (bool)r.EsSupervision
+                                    && !(bool)r.Eliminado
+                                    && !(bool)r.Archivada)
+                                .FirstOrDefault();
+
+                            construccionObservacionSupervisor.Archivada = true;
+
+                            //Observacion Apoyo
+                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
+                                   && !(bool)r.EsSupervision
+                                   && !(bool)r.Eliminado
+                                   && !(bool)r.Archivada)
+                               .FirstOrDefault();
+
+                            construccionObservacionApoyo.Archivada = true;
+
+                            //Contrato Construccion
+                            ContratoConstruccion.ObservacionFlujoInversionSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesFlujoInversionApoyo = null;
+                            ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoFlujoInversion = false;
+                        }
+
                     }
                 }
                 _context.SaveChanges();
@@ -1405,10 +1469,11 @@ namespace asivamosffie.services
 
                     ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(contratoConstruccionId);
 
-                    if (contratoConstruccion != null){
+                    if (contratoConstruccion != null)
+                    {
                         contratoConstruccion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoProgramacionObra = true;
-                        }
+                    }
 
 
 
@@ -1456,16 +1521,16 @@ namespace asivamosffie.services
 
             List<TempProgramacion> lista = _context.TempProgramacion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
 
-            lista.GroupBy( r => r.ArchivoCargueId ).ToList().ForEach(c =>
-            {
-                ArchivoCargue archivo = _context.ArchivoCargue.Where(a => c.Key == a.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
-                if (archivo != null)
-                {
-                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
+          {
+              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => c.Key == a.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
+              if (archivo != null)
+              {
+                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
 
-                    listaCargas.Add(archivo);
-                }
-            });
+                  listaCargas.Add(archivo);
+              }
+          });
 
             return listaCargas;
 
@@ -1688,7 +1753,8 @@ namespace asivamosffie.services
 
                     ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(contratoConstruccionId);
 
-                    if (contratoConstruccion != null){
+                    if (contratoConstruccion != null)
+                    {
                         contratoConstruccion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoFlujoInversion = true;
                     }
@@ -1737,16 +1803,16 @@ namespace asivamosffie.services
 
             List<TempFlujoInversion> lista = _context.TempFlujoInversion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
 
-            lista.GroupBy( r => r.ArchivoCargueId ).ToList().ForEach(c =>
-            {
-                ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.Key && a.Eliminado != true).FirstOrDefault();
-                if (archivo != null)
-                {
-                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
+          {
+              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.Key && a.Eliminado != true).FirstOrDefault();
+              if (archivo != null)
+              {
+                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
 
-                    listaCargas.Add(archivo);
-                }
-            });
+                  listaCargas.Add(archivo);
+              }
+          });
 
             return listaCargas;
 
@@ -1808,9 +1874,9 @@ namespace asivamosffie.services
                 archivoCargue.FechaModificacion = DateTime.Now;
                 archivoCargue.Eliminado = true;
 
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( pContratoConstruccionId );
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
 
-                if ( pEsFlujoInvserion )
+                if (pEsFlujoInvserion)
                     contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
                 else
                     contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
