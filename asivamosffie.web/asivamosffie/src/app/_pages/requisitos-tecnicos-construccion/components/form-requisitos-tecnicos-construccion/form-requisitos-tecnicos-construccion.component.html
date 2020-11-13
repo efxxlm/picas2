@@ -118,23 +118,32 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title 
+              {{ contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra ? 'completo' : 'sin-diligenciar' }}">
               Programación de obra
             </mat-panel-title>
           </mat-expansion-panel-header>
 
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
-            <app-programacion-obra-flujo-inversion [esFlujoInversion]="false" [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
+            <app-programacion-obra-flujo-inversion 
+                                                  [esFlujoInversion]="false" 
+                                                  [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
+                                                  (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
+
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
-            <app-programacion-obra-flujo-inversion [esFlujoInversion]="false" [contratoConstruccionId]="0" (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
+            <app-programacion-obra-flujo-inversion 
+                                                  [esFlujoInversion]="false" 
+                                                  [contratoConstruccionId]="0" 
+                                                  (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title 
+            {{ contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion ? 'completo' : 'sin-diligenciar' }}">
               Flujo de inversión de recursos
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -144,7 +153,8 @@
             <p>Valor total del contrato: <b> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
           </div>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
-            <app-programacion-obra-flujo-inversion  [esFlujoInversion]="true" 
+            <app-programacion-obra-flujo-inversion  
+                                                    [esFlujoInversion]="true" 
                                                     [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
                                                     (terminoCarga)="getCargaMasiva( $event )"
                                                     (realizoObservacion)="getCargaMasiva( $event )">
