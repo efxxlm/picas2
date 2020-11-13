@@ -81,6 +81,13 @@
 
   &.card {
     width: 100%;
+
+    &.invalid {
+      .ql-container.ql-snow {
+        max-width: 70em;
+        border-bottom: $secondaryColor solid 1px;
+      }
+    }
     .ql-container.ql-snow {
       max-width: 70em;
       border-bottom: $fontColor solid 1px;
