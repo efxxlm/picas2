@@ -76,3 +76,17 @@
     
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </div>
+  <div align="center" *ngIf="observacionDevolucionFlujoInversion">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+              Observaciones de la supervisión
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left" >
+            <p><b>{{ observacionDevolucionFlujoInversion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <p>{{ observacionDevolucionFlujoInversion.observaciones }}</p>
+        </mat-card-content>
+    </mat-card>
+  </div>

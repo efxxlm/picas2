@@ -146,7 +146,9 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
-            {{ contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion ? 'completo' : 'sin-diligenciar' }}">
+            {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoFlujoInversion == true ? 
+              'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoFlujoInversion == false ? 
+                    'en-proceso' : 'sin-diligenciar' }}">
               Flujo de inversión de recursos
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -160,6 +162,7 @@
                                                     [esFlujoInversion]="true" 
                                                     [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
                                                     (terminoCarga)="getCargaMasiva( $event )"
+                                                    [observacionDevolucionFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionFlujoInversion"
                                                     (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion>
           </section>

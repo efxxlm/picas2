@@ -376,6 +376,7 @@ namespace asivamosffie.services
                     cc.ObservacionDevolucionPlanesProgramas = _context.ConstruccionObservacion.Find(cc.ObservacionPlanesProgramasSupervisorId);
                     cc.ObservacionDevolucionManejoAnticipo = _context.ConstruccionObservacion.Find(cc.ObservacionManejoAnticipoSupervisorId);
                     cc.ObservacionDevolucionProgramacionObra = _context.ConstruccionObservacion.Find(cc.ObservacionProgramacionObraSupervisorId);
+                    cc.ObservacionDevolucionFlujoInversion = _context.ConstruccionObservacion.Find(cc.ObservacionFlujoInversionSupervisorId);
 
                 });
 
@@ -1687,9 +1688,10 @@ namespace asivamosffie.services
 
                     ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(contratoConstruccionId);
 
-                    if (contratoConstruccion != null)
+                    if (contratoConstruccion != null){
                         contratoConstruccion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
-
+                        contratoConstruccion.RegistroCompletoFlujoInversion = true;
+                    }
 
                     return respuesta =
                     new Respuesta

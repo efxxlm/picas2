@@ -12,6 +12,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   @Input() esFlujoInversion: boolean;
   @Input() contratoConstruccionId: number;
   @Input() observacionDevolucionProgramacionObra: number;
+  @Input() observacionDevolucionFlujoInversion: number;
   @Output() terminoCarga = new EventEmitter();
   @Output() realizoObservacion = new EventEmitter();
   tieneRegistrosObra: boolean = true;

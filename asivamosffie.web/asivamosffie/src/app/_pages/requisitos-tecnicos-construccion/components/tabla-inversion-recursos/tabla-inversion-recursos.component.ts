@@ -18,6 +18,7 @@ export class TablaInversionRecursosComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
   @Input() contratoConstruccionId: number;
+  @Input() observacionDevolucionFlujoInversion: any;
   @Output() tieneRegistros = new EventEmitter();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
