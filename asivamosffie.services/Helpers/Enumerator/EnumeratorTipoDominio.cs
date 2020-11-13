@@ -57,25 +57,28 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_de_Solicitud = 29,
 
-        Etapa_Proceso_Seleccion = 34,
+   
 
-		Tipo_Documento = 30,
+        Tipo_Documento = 30,
 
         Estado_Solicitud = 31,
 
         Estado_Solicitud_Presupuestal = 33,
 
+        Etapa_Proceso_Seleccion = 34,
+
+        Estado_Proceso_Seleccion = 35,
+
         Tipo_Disponibilidad_Presupuestal = 36,
 
         Opcion_Por_Contratar = 37,
-         
+
         Tipo_de_Solicitud_Obra_Interventorias = 37,
 
         EstadoComite = 38,
-         
+
         Estado_Comite = 38,
 
-        Estado_Proceso_Seleccion = 35,
 
         Estado_Solicitud_Disponibilidad_Presupuestal = 39,
 
@@ -90,29 +93,33 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Compromiso = 45,
 
         Miembros_Comite_Tecnico = 46,
-         
+
         Estados_Acta = 47,
-         
+
         EstadoAcataComiteTecnico = 47,
 
         Tipo_DDP_Espacial = 49,
 
-        Estado_Sesion_Comite_Solicitud = 50,
+        Estado_Sesion_Comite_Solicitud=50,
 
-        Estado_Contrato_Poliza = 51,  
+        Estado_Contrato_Poliza = 51,
 
-		Tipo_Contrato = 52,
+        Tipo_Contrato = 52,
 
         Estado_Verificacion_Contrato = 53,
-             
+
+        Tipo_Observacion_Contrato_Perfil_Observacion = 54,
+
         Tipo_Modificacion_Contrato_Poliza = 56,
 
-		Tipo_Garantia_Poliza = 58, 
-	   
+        Tipo_Garantia_Poliza = 58,
+
+        Estado_Del_Acta_Contrato = 60,
+
         Estado_Proyecto = 63,
-  
+
         PlaceHolderDDP = 66,
-         
+
         Responsable_Equipo_Tecnico = 71,
 
         Responsable_Equipo_Estructurador = 73,
@@ -122,7 +129,12 @@ namespace asivamosffie.services.Helpers.Enumerator
         Causas_De_Accidentes_Laborales = 75,
          
         Tiempo_Aprobar_Acta = 84,
+ 
+        Estados_actas_inicio_obra = 85,
+
+        Estados_actas_inicio_interventoria = 86,
 
         Estado_Programacion_Inicial = 88
+          
     }
 }

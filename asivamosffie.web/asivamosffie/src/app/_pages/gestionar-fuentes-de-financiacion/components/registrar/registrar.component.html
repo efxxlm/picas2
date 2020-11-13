@@ -47,7 +47,7 @@
             <mat-form-field class="select-width">
               <mat-select formControlName="nombreAportanteFFIE" (selectionChange)="changeNombreAportanteFFIE()" required>
                 <mat-option *ngFor="let nombreAportantes of nombresAportantes" [value]="nombreAportantes">
-                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} Creado el: {{ nombreAportantes.fechaCreacion | date:'dd/MM/yyyy' }}
+                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} - Número del acuerdo: {{ nombreAportantes.cofinanciacion.cofinanciacionId }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -161,7 +161,7 @@
             <mat-form-field class="select-width">
               <mat-select formControlName="vigenciaAcuerdo"  (selectionChange)="changeVigencia()" required>
                 <mat-option *ngFor="let nombreAportantes of nombresAportantes2" [value]="nombreAportantes">
-                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} Creado el: {{ nombreAportantes.fechaCreacion | date:'dd/MM/yyyy' }}
+                  Vigencia: {{ nombreAportantes.cofinanciacion.vigenciaCofinanciacionId}} - Número del acuerdo: {{ nombreAportantes.cofinanciacion.cofinanciacionId }} 
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -227,7 +227,8 @@
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
-                <span class="contador">{{2 - cuantosRP.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{2 - cuantosRP.value.length}}</span>
               </div>
             </div>
             <div formGroupName="registrosPresupuestales">
@@ -249,7 +250,8 @@
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         <input type="hidden" formControlName="registroPresupuestalId">
                       </mat-form-field>
-                      <span class="contador">{{50 - numeroRP.value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                      matTooltipClass="info-tooltip">{{50 - numeroRP.value.length}}</span>
                     </div>
                   </div>
                   <div class="row">
@@ -336,10 +338,11 @@
                         <input matInput #valorAporte currencyMask formControlName="valorFuenteRecursos" maxlength="20"
                           required (keypress)="validateNumberKeypress($event);validateonevige(j)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
                           >
                       </mat-form-field>
-                      <span class="contador">{{20 - valorAporte.value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                      matTooltipClass="info-tooltip">{{20 - valorAporte.value.length}}</span>
                     </div>
                   </div>
                 </div>
@@ -360,7 +363,8 @@
                           (keypress)="validateNumberKeypress($event)"
                           onKeyPress="if(this.value.length>=this.maxLength) return false;">
                       </mat-form-field>
-                      <span class="contador">{{2 - cuantasVigencias.value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                      matTooltipClass="info-tooltip">{{2 - cuantasVigencias.value.length}}</span>
                     </div>
                   </div>
                 </div>
@@ -406,10 +410,11 @@
                                 maxlength="20" required (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                 [readonly]="vigencias1(j).controls.length==1"
-                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
+                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
                                 >
                             </mat-form-field>
-                            <span class="contador">{{20 - valorVigencia.value.length}}</span>
+                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                            matTooltipClass="info-tooltip">{{20 - valorVigencia.value.length}}</span>
                           </div>
                         </div>
                       </div>
@@ -440,11 +445,11 @@
                       </div>
                       <div class="col d-flex">
                         <mat-form-field class="full-width maincolor">
-                          <input matInput #numeroCuemta type="number" formControlName="numeroCuenta" maxlength="20"
-                            required (keypress)="validateNumberKeypress($event)"
-                            onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                          <input matInput #numeroCuemta type="text" formControlName="numeroCuenta" maxlength="20"
+                            required >
                         </mat-form-field>
-                        <span class="contador">{{20 - numeroCuemta.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">{{20 - numeroCuemta.value.length}}</span>
                       </div>
                     </div>
                     <div class="row">
@@ -459,7 +464,8 @@
                             required>
                           <input type="hidden" formControlName="cuentaBancariaId">
                         </mat-form-field>
-                        <span class="contador">{{100 - nombreCuenta.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+                        matTooltipClass="info-tooltip">{{100 - nombreCuenta.value.length}}</span>
                       </div>
                     </div>
                     <div class="row">
@@ -474,7 +480,8 @@
                             <mat-form-field class="full-width maincolor">
                               <input matInput #codigoSIFI type="text" formControlName="codigoSIFI" maxlength="6" required>
                             </mat-form-field>
-                            <span class="contador">{{6 - codigoSIFI.value.length}}</span>
+                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+                            matTooltipClass="info-tooltip">{{6 - codigoSIFI.value.length}}</span>
                           </div>
                         </div>
                       </div>

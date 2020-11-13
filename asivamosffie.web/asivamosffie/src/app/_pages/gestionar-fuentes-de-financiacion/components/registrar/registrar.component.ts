@@ -554,11 +554,11 @@ export class RegistrarComponent implements OnInit {
             //this.removeItemVigencia(this.vigencias1(j), this.vigencias1(j).length - 1,j,false);
             this.vigencias1(j).removeAt(secuenciaa);
           }
-          //this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
         else{
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
-          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
+          //this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
       }          
     }
@@ -666,7 +666,8 @@ export class RegistrarComponent implements OnInit {
   removeItemVigencia(borrarForm: any, i: number,j:number,mensaje=true)
   {
     borrarForm.removeAt(i);
-    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(i).length);    
+    console.log(this.vigencias1(j).length);
+    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
     if(mensaje)
     {
       this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);

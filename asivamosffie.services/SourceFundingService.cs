@@ -487,21 +487,23 @@ namespace asivamosffie.services
         public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid,int aportanteID)
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();            
-            var gestion = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.FuenteFinanciacionId).ToList();
-            if(gestion.Count()==0)
-            {
-                gestion = _context.FuenteFinanciacion.Where(x => x.AportanteId == aportanteID && x.Eliminado == false).Select(x => x.FuenteFinanciacionId).ToList();
-            }
+            var gestion = _context.FuenteFinanciacion.Where(x => x.AportanteId == aportanteID && x.Eliminado == false).Select(x => x.FuenteFinanciacionId).ToList();
+            
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
             foreach (var financiacion in financiaciones)
             {
+                var valorDisponible = (decimal)financiacion.ValorFuente-_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
+                var valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
+                     && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
-                    Nuevo_saldo_de_la_fuente = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId==disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado),
-                    Saldo_actual_de_la_fuente = (decimal)financiacion.ValorFuente - _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId==financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Sum(x=>x.ValorSolicitado),
-                    Valor_solicitado_de_la_fuente = _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado)
+                    Nuevo_saldo_de_la_fuente = valorDisponible-valorsolicitado,
+                    Saldo_actual_de_la_fuente = valorDisponible,
+                    Valor_solicitado_de_la_fuente =valorsolicitado,
+                    GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
+                     && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault(),
                 });
             }
             return ListaRetorno;
@@ -555,6 +557,103 @@ namespace asivamosffie.services
                 nombre = _context.Dominio.Find(aportante.NombreAportanteId).Nombre;
             }
             return nombre;
+        }
+        
+        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId)
+        {
+            List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
+            var gestion = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.FuenteFinanciacionId).ToList();
+            if (gestion.Count() == 0)
+            {
+                var disponibilidad = _context.DisponibilidadPresupuestalProyecto.Where(x => x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).
+                    Include(x => x.ProyectoAdministrativo).
+                        ThenInclude(x => x.ProyectoAdministrativoAportante).
+                            ThenInclude(x => x.AportanteFuenteFinanciacion).
+                   Include(x=>x.Proyecto).
+                    ThenInclude(x => x.ProyectoAportante).
+                        ThenInclude(x => x.Aportante).
+                            ThenInclude(x => x.FuenteFinanciacion).ToList();
+                if(_context.DisponibilidadPresupuestal.Where(x=>x.DisponibilidadPresupuestalId==disponibilidadPresupuestaId).
+                    FirstOrDefault().TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)//entonces es una disponivlidad espacial
+                {
+                    var ddp = _context.DisponibilidadPresupuestal.Where(x => x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).
+                        Include(x => x.Aportante).
+                            ThenInclude(x => x.FuenteFinanciacion).ToList();
+                    foreach (var d in ddp)
+                    {
+                        foreach (var fuente in d.Aportante.FuenteFinanciacion)
+                        {
+                            if (fuente.FuenteFinanciacionId != null)
+                            {
+                                gestion.Add(Convert.ToInt32(fuente.FuenteFinanciacionId));
+                            }
+                        }
+                    }
+                }
+                foreach (var dDisponibilidadProyecto in disponibilidad)
+                {
+                    if(dDisponibilidadProyecto.ProyectoAdministrativoId!=null)
+                    {
+                        foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.ProyectoAdministrativo.ProyectoAdministrativoAportante)
+                        {
+                            foreach (var d in pAdminsitrativoApo.AportanteFuenteFinanciacion)
+                            {
+                                if (d.FuenteFinanciacionId != null)
+                                {
+                                    gestion.Add(Convert.ToInt32(d.FuenteFinanciacionId));
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.Proyecto.ProyectoAportante)
+                        {
+                            foreach (var d in pAdminsitrativoApo.Aportante.FuenteFinanciacion)
+                            {
+                                if (d.FuenteFinanciacionId != null)
+                                {
+                                    gestion.Add(Convert.ToInt32(d.FuenteFinanciacionId));
+                                }
+                            }
+                        }
+                    }
+                    
+                }                
+            }
+            var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
+            
+            foreach (var financiacion in financiaciones)
+            {
+                var gestionfienteid= _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.GestionFuenteFinanciacionId);
+                int gestionid = 0;
+                if(gestionfienteid!=null)
+                {
+                    gestionid = gestionfienteid.FirstOrDefault();
+                }
+                decimal valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
+                if(valor==0)//si es disponibilidad especial entonces la relacion es diferente
+                {
+                    var gestionfiente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.GestionFuenteFinanciacionId);
+                    if (gestionfiente != null)
+                    {
+                        gestionid = gestionfiente.FirstOrDefault();
+                    }
+                    valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
+                }
+                var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
+                
+                ListaRetorno.Add(new GrillaFuentesFinanciacion
+                {
+                    GestionFuenteFinanciacionID= gestionid,
+                    FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
+                    Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
+                    Nuevo_saldo_de_la_fuente = saldoFuente-valor,
+                    Saldo_actual_de_la_fuente = saldoFuente,
+                    Valor_solicitado_de_la_fuente = valor
+                });
+            }
+            return ListaRetorno;
         }
     }
 }

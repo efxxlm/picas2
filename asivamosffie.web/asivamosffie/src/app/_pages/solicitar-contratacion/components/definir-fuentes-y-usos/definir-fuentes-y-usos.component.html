@@ -80,7 +80,8 @@
                         <input type="hidden" formControlName="proyectoAportanteId" >
 
                     </mat-form-field>
-                    <span class="contador">{{20 - valorAportante.value.length}}</span>
+                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                    matTooltipClass="info-tooltip">{{20 - valorAportante.value.length}}</span>
                   </div>
                 </div>
               </div>
@@ -181,7 +182,8 @@
                                       <input type="hidden" formControlName="componenteUsoId">
                                       <input type="hidden" formControlName="componenteAportanteId">
                                   </mat-form-field>
-                                  <span class="contador">{{20 - valorUso.value.length}}</span>
+                                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                                  matTooltipClass="info-tooltip">{{20 - valorUso.value.length}}</span>
                                 </div>
                               </div>
                             </div>

@@ -29,13 +29,12 @@
     <ng-container matColumnDef="estadoRegistro">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
       <td mat-cell *matCellDef="let element">
-        <span style="margin-right: 0em;" class="info-text completo"
-          *ngIf="element.registroCompletoNombre === 'Completo'"></span>
-        <span style="margin-right: 0em;" class="info-text sin-diligenciar"
-          *ngIf="element.registroCompletoNombre === 'Incompleto'"></span>
-        <div>
-          {{element.registroCompletoNombre}}
-        </div>
+        <div class="info-text completo" *ngIf="element.registroCompletoNombre === 'Completo'">
+          {{element.registroCompletoNombre}}    
+      </div>
+      <div class="info-text sin-diligenciar" *ngIf="element.registroCompletoNombre === 'Incompleto'">
+          {{element.registroCompletoNombre}}    
+      </div>
       </td>
     </ng-container>
 

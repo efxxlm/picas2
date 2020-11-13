@@ -32,6 +32,8 @@ export class CrearOrdenDelDiaComponent implements OnInit {
   tipoDeTemas: FormControl = new FormControl();
   solicitudesSeleccionadas = [];
   estadosComite = EstadosComite;
+  objetoComiteTecnico: ComiteTecnico;
+
   objetoSesion: ComiteFiduciario = {
     estadoComiteCodigo: this.estadosComite.sinConvocatoria
   };
@@ -171,6 +173,8 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     this.fiduciaryCommitteeSessionService.getRequestCommitteeSessionById(this.idSesion)
       .subscribe(comite => {
         console.log(comite)
+
+        this.objetoComiteTecnico = comite;
 
         if (comite.tipoTemaFiduciarioCodigo == "3") {
           this.tipoDeTemas.setValue(this.listaTipoTemas);
@@ -316,7 +320,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value ? tema.get('sesionTemaId').value : 0)
       .subscribe(respuesta => {
         this.borrarArray(grupo, i)
-        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.ngOnInit();
       })
 
@@ -359,6 +363,13 @@ export class CrearOrdenDelDiaComponent implements OnInit {
         //Validators.pattern('/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/')
       ]],
     });
+  }
+
+  getStyle() {
+    if ( this.idSesion == 0 || this.estadosComite.sinConvocatoria == this.objetoComiteTecnico.estadoComiteCodigo)
+      return 'auto'
+    else
+      return 'none'
   }
 
   onSubmit() {

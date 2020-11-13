@@ -60,28 +60,39 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
         this.listaSolicitudes = response[0];
         this.dataSource = new MatTableDataSource( this.listaSolicitudes) ;
         console.log( response[0] );
+        this.initPaginator();
       })
 
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      if (length === 0 || pageSize === 0) { return '0 de ' + length; }
-      length = Math.max(length, 0);
-      const startIndex = page * pageSize;
-      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
-      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-    };
-  }
+    }
+    initPaginator() {
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+        if (length === 0 || pageSize === 0) {
+          return '0 de ' + length;
+        }
+        length = Math.max(length, 0);
+        const startIndex = page * pageSize;
+        // If the start index exceeds the list length, do not try and fix the end index to the end.
+        const endIndex = startIndex < length ?
+          Math.min(startIndex + pageSize, length) :
+          startIndex + pageSize;
+        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+      };
+    }
 
-  openDialog(modalTitle: string, modalText: string) {
-    const dialogRef = this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText }
-    });
-  }
+  
+    openDialog(modalTitle: string, modalText: string,reload:boolean=false) {
+      const dialogRef = this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle, modalText }
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if(reload)
+          location.reload();
+      })
+    }
 
   enviarSolicitud(e: number) {
     console.log(e);
@@ -105,7 +116,7 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
         this.budgetAvailabilityService.deleteRequest( e )
         .subscribe( respuesta => {
           console.log(respuesta);
-        this.openDialog( '', `<b>${respuesta.message}</b>` );
+        this.openDialog( '', `<b>${respuesta.message}</b>` ,true);
         if (respuesta.code == "200")
           this.ngOnInit();
       })

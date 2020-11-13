@@ -37,7 +37,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div align="left">
+        <div align="left" style="margin-top: 2em;">
           <mat-card class="border">
             <mat-card-content>
               <p><b>Nombre del contratista</b>: {{ contratacion?.contratista.nombre }} </p>
@@ -90,9 +90,15 @@
                   
                 </div>
               </section>
-              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
+              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'documento' ).value }} </p>
             </mat-card-content>
           </mat-card>
+        </div>
+
+        <div class="text-center" style="width: 20%;display: inline-block;">
+          <button mat-raised-button color="accent" class="btn-table" (click)="getDocumento( form.get( 'rutaDocumento' ).value )">
+            Descargar documento
+          </button>
         </div>
 
       </mat-expansion-panel>
@@ -100,8 +106,12 @@
   </div>
 
   <div class="mt-2em" align="left" *ngIf="estadoCodigo !== estadoCodigos.firmado">
-    <mat-card class="border">
-      <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
+    <mat-card>
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          Registrar trámite
+        </mat-card-title>
+      </mat-card-header>
       <mat-card-content class="mt-2em">
         <p><b>Fecha del trámite</b> <span class="color-titulo ml-1em"> {{ ( contratacion?.contrato.length > 0 ? contratacion?.contrato[0].fechaTramite : fechaTramite ) | date: 'dd/MM/yyyy' }} </span></p>
         <app-form-registro-tramite  [fechaTramite]="contratacion?.contrato.length > 0 ? contratacion?.contrato[0].fechaTramite : fechaTramite"

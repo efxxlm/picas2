@@ -50,6 +50,16 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.archivo = this.dataFormulario.get( 'documento' ).value;
+  };
+
+  campoSinDiligenciar ( campoFormulario: string ) {
+    if ( campoFormulario === 'numeroContrato' && this.dataFormulario.get( campoFormulario ).value.length === 0 ) {
+      this.dataFormulario.get( campoFormulario ).markAsTouched();
+    };
+    if ( this.dataFormulario.get( campoFormulario ).value === null ) {
+      this.dataFormulario.get( campoFormulario ).markAsTouched();
+    };
   };
 
   fileName ( event: any ) {
@@ -161,9 +171,24 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       pContrato.append( 'observaciones', `${ this.dataFormulario.get( 'observaciones' ).value }` );
     };
 
-    if ( this.dataFormulario.get( 'rutaDocumento' ).value !== null ) {
-      pContrato.append( 'rutaDocumento', this.dataFormulario.get( 'rutaDocumento' ).value );
-      this.estadoCodigo = this.estadoCodigos.firmado;
+    if ( this.dataFormulario.get( 'documentoFile' ).value !== null ) {
+
+      if (this.dataFormulario.get('documentoFile').value.size > 1048576) {
+        this.openDialog('', '<b>El tamaño del archivo es superior al permitido, debe subir un archivo máximo de 1MB.</b>');
+        return;
+      };
+
+      let pFile = this.dataFormulario.get('documentoFile').value;
+      pFile = pFile.name.split('.');
+      pFile = pFile[pFile.length - 1];
+      if ( pFile === 'pdf' ) {
+        pContrato.append( 'pFile', this.dataFormulario.get( 'documentoFile' ).value );
+        this.estadoCodigo = this.estadoCodigos.firmado;
+      } else {
+        this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .pdf</b>');
+        return;
+      };
+
     };
 
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigo )

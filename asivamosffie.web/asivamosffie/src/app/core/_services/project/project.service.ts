@@ -186,6 +186,7 @@ export interface Proyecto{
   fechaSesionJunta?: Date,
   numeroActaJunta?:number,
   tipoIntervencionCodigo?:number,
+  tipoIntervencionString?:number,
   llaveMen?:string,
   localizacionIdMunicipio?:string,
   institucionEducativaId?:number,
@@ -204,6 +205,13 @@ export interface Proyecto{
   usuarioCreacion?:string,
   fechaModificacion?: Date,
   usuarioModificacion?:string,
+
+  plazoMesesObra?:number,
+  plazoDiasObra?:number ,
+  plazoMesesInterventoria?:number ,
+  plazoDiasInterventoria?:number ,
+  coordinacionResponsableCodigo?:string ,
+
   //no modelado
   cantidadAportantes?:number;
   regid?:string;
@@ -218,6 +226,9 @@ export interface Proyecto{
   infraestructuraIntervenirProyecto?:InfraestructuraIntervenirProyecto[],
   proyectoAportante?:ProyectoAportante[],
   proyectoPredio?:ProyectoPredio[],
+  sedeString?:string,
+  institucionEducativaString?:string,
+  stringAportante?:string,
   
 }
 
@@ -265,11 +276,7 @@ export interface InfraestructuraIntervenirProyecto{
   usuarioCreacion:string ,
   fechaEliminacion?:Date ,
   usuarioEliminacion:string ,
-  plazoMesesObra :number,
-  plazoDiasObra:number ,
-  plazoMesesInterventoria:number ,
-  plazoDiasInterventoria:number ,
-  coordinacionResponsableCodigo:string ,
+  
 }
 export interface ProyectoAportante{
   mun?: string;

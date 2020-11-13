@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -18,6 +19,7 @@ export class ConValidacionPresupuestalComponent implements OnInit {
     ) { }
     detailavailabilityBudget:any=null;
     esModificacion=false;
+    pTipoDDP=TipoDDP;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

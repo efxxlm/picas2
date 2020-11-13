@@ -43,11 +43,13 @@
                 <!-- <section class="example-section">
                   <mat-checkbox formControlName="aprobacion"></mat-checkbox>
                 </section> -->
-                <mat-radio-group class="radioInput" formControlName="aprobacion">
-                  <mat-radio-button [value]="true">Sí</mat-radio-button>
-                  <mat-radio-button [value]="false">No</mat-radio-button>
-                </mat-radio-group>
-                <span class="required-form-group">*</span>
+                <div class="d-flex">
+                  <mat-radio-group class="radioInput d-flex sino" formControlName="aprobacion">
+                    <mat-radio-button [value]="true">Sí</mat-radio-button>
+                    <mat-radio-button [value]="false">No</mat-radio-button>
+                  </mat-radio-group>
+                  <span class="required-form-group">*</span>
+                </div>
               </td>
               <!-- <td class="mat-cell cdk-cell ng-star-inserted">
                 <section class="example-section">
@@ -67,10 +69,10 @@
                     </quill-editor>
 
                     <div class="d-flex align-items-center">
-                      <span class="contador miles" *ngIf="temas.get('observaciones').value !== null">
+                      <span class="contador miles" *ngIf="temas.get('observaciones').value">
                         {{1000 - (textoLimpio(temas.get('observaciones').value)>1000?1000:textoLimpio(temas.get('observaciones').value))}}
                       </span>
-                      <span class="contador miles" *ngIf="temas.get('observaciones').value === null">
+                      <span class="contador miles" *ngIf="!temas.get('observaciones').value">
                         1000
                       </span>
                     </div>

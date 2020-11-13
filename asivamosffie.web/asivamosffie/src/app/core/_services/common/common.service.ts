@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 import { Usuario } from '../autenticacion/autenticacion.service';
 import { promise } from 'protractor';
+import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +96,6 @@ export class CommonService {
   }
   
   listaAportanteByTipoAportanteId(pTipoAportanteID:number){
-    console.log(environment.apiUrl);
     return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
   }
 
@@ -187,6 +187,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=50`);
   }
 
+  listaPerfil () {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=11`);
+  }
+
   listaEstadoCompromisos(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=45`);
   }
@@ -258,6 +262,10 @@ export class CommonService {
 
   listaTipoDDPEspecial(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=49`);
+  }
+
+  listaGarantiasPolizas(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
 
   vigenciasDesde2015(): number[]{

@@ -15,7 +15,8 @@
                   (keyup)="validaMinimo3()" maxlength="2" (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{2 - cuantosProponentes.value.length}}</span>
             </div>
           </div>
         </div>

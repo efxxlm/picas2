@@ -87,7 +87,10 @@ export class FormOtrosTemasComponent implements OnInit {
 
     this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
 
-
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
   }
 
   maxLength(e: any, n: number) {
@@ -129,7 +132,7 @@ export class FormOtrosTemasComponent implements OnInit {
     this.technicalCommitteSessionService.deleteTemaCompromiso(compromiso.get('temaCompromisoId').value)
       .subscribe(respuesta => {
         if (respuesta.code == "200") {
-          this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+          this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
           this.compromisos.removeAt(i)
           this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
         }
@@ -184,7 +187,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
   CambioCantidadCompromisos() {
     const FormGrupos = this.addressForm.value;
-    if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos < 100) {
+    if (FormGrupos.cuantosCompromisos > this.compromisos.length && FormGrupos.cuantosCompromisos <= 10) {
       while (this.compromisos.length < FormGrupos.cuantosCompromisos) {
         this.compromisos.push(this.crearCompromiso());
       }
@@ -254,11 +257,28 @@ export class FormOtrosTemasComponent implements OnInit {
 
   cargarRegistro() {
 
-    if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-    }else if ( this.sesionComiteTema.estadoTemaCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
-      this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+    if ( this.sesionComiteTema.requiereVotacion ){
+      this.sesionComiteTema.sesionTemaVoto.forEach(sv => {
+        if (sv.esAprobado)
+          this.cantidadAprobado++;
+        else
+          this.cantidadNoAprobado++;
+      })
+  
+      if (this.cantidadNoAprobado == 0){
+        this.resultadoVotacion = 'Aprobó'
+        this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+      }else if ( this.cantidadAprobado == 0 ){
+        this.resultadoVotacion = 'No Aprobó'
+        this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
+      }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+        this.resultadoVotacion = 'Aprobó'
+      }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+        this.resultadoVotacion = 'No Aprobó'
+      }
     }
+    
+  
 
     this.responsable = this.listaResponsables.find( r => r.codigo == this.sesionComiteTema.responsableCodigo )
 
@@ -290,18 +310,7 @@ export class FormOtrosTemasComponent implements OnInit {
 
         this.compromisos.push(grupoCompromiso)
       })
-
-      this.sesionComiteTema.sesionTemaVoto.forEach( sv => {
-        if (sv.esAprobado)
-          this.cantidadAprobado++;
-        else
-          this.cantidadNoAprobado++;
-      })
-  
-      if ( this.cantidadNoAprobado > 0 )
-        this.resultadoVotacion = 'No Aprobó'
-      else
-        this.resultadoVotacion = 'Aprobó'
+     
   
         this.tieneVotacion = this.sesionComiteTema.requiereVotacion;
 

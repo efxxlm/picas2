@@ -111,7 +111,8 @@
               onKeyPress="if(this.value.length>=this.maxLength) return false;" (keyup)="CambioNumeroAportantes()"
               required>
           </mat-form-field>
-          <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
+          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+          matTooltipClass="info-tooltip">{{2 - cuantosGrupos.value.length}}</span>
         </div>
       </div>
 
@@ -160,7 +161,8 @@
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
                     formControlName="valor" (focusout)="nosuperarlimite(i,1)" required>
                 </mat-form-field>
-                <span class="contador">{{20 - valor.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                matTooltipClass="info-tooltip">{{20 - valor.value.length}}</span>
               </div>
             </div>
             <div class="row"
@@ -174,7 +176,8 @@
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
                     required formControlName="valorMinimoCategoria" (focusout)="nosuperarlimite(i,3)">
                 </mat-form-field>
-                <span class="contador">{{20 - valorMinimoCategoria.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                matTooltipClass="info-tooltip">{{20 - valorMinimoCategoria.value.length}}</span>
               </div>
             </div>
             <div class="row"
@@ -188,7 +191,8 @@
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
                     required formControlName="valorMaximoCategoria" (focusout)="nosuperarlimite(i,2)">
                 </mat-form-field>
-                <span class="contador">{{20 - valorMaximoCategoria.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                matTooltipClass="info-tooltip">{{20 - valorMaximoCategoria.value.length}}</span>
               </div>
             </div>
             <div class="row">
@@ -202,7 +206,8 @@
                     onKeyPress="if(this.value.length>=this.maxLength) return false;" (keyup)="CambioNumeroMeses(i)"
                     formControlName="plazoMeses" required>
                 </mat-form-field>
-                <span class="contador">{{2 - plazoMeses.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{2 - plazoMeses.value.length}}</span>
               </div>
               <div class="col-md-4 text-right" *ngIf="addressForm.value.grupos.length > 1">
                 <button *ngIf="editar" mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(grupos, i)">

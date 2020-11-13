@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -14,7 +15,11 @@ export class CancelarDrpComponent implements OnInit {
     modalTitle: string,
     modalText: string
   };
-  constructor(public dialog: MatDialog,private fb: FormBuilder) { }
+  id: any;
+  tipo: any;
+  fecha:any;
+  nSolicitud: any;
+  constructor(public dialog: MatDialog,private fb: FormBuilder, private disponibilidadServices:DisponibilidadPresupuestalService) { }
 
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -50,7 +55,10 @@ export class CancelarDrpComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
-    this.openDialog('<b>La información ha sido guardada exitosamente.</b>', "");
+    let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.id,Observacion:this.addressForm.value.objeto};
+    this.disponibilidadServices.SetCancelDDR(DisponibilidadPresupuestalObservacion).subscribe(listas => {
+      console.log(listas);
+      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    });
   }
 }

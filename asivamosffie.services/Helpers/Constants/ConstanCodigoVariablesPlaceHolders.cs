@@ -183,7 +183,13 @@
         public const string DDP_VALOR_SOLICITADO_FUENTE = "23";
         public const string DDP_NUEVO_SALDO_FUENTE = "24";
         public const string DDP_LIMITACION_ESPECIAL = "25";
-        
+        public const string DDP_TABLA_LIMITACION_ESPECIAL = "26";
+        public const string NUMEROCONTRATO = "27";
+        public const string DRP_NO = "28";
+        public const string FECHACONTRATO = "29";
+        public const string TABLAFUENTES  = "30";
+        public const string TABLAUSOS = "31";
+        public const string CABECERAPROYECTOS = "32";
 
         #endregion
 

@@ -22,5 +22,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public List<SesionComiteSolicitud> sesionComiteSolicitud { get; set; }
+        /*jflorez, dejo el notmapped en el nombre par no generar confusión*/
+        [NotMapped]
+        public DateTime? FechaComiteTecnicoNotMapped { get; set; }
     }
 }

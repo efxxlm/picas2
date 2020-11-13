@@ -21,6 +21,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CambiarEstadoPoliza(int pContratoPolizaId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica);
 
+        Task<Respuesta> CambiarEstadoPolizaByContratoId(int pContratoId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica);
+
         Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza();
 
         Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId);
@@ -29,7 +31,12 @@ namespace asivamosffie.services.Interfaces
 
         Task<ContratoPoliza> GetContratoPolizaByIdContratoPolizaId(int pContratoPolizaId);
 
-        Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings);
+        Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoId);
+
+        Task<NotificacionMensajeGestionPoliza> GetNotificacionContratoPolizaByIdContratoId(int pContratoId);
+
+
+        Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario);
         
 
 
