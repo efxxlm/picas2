@@ -135,13 +135,13 @@ namespace asivamosffie.services
                            .Include(r => r.Contrato).FirstOrDefaultAsync();
 
                 contratacion.FechaTramite = DateTime.Now;
-     
+
                 contratacion.sesionComiteSolicitud = _context.SesionComiteSolicitud
                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                     .Include(r => r.ComiteTecnico)
                     .Include(r => r.ComiteTecnicoFiduciario)
                     .ToList();
-                
+
                 if (contratacion.Contratista != null)
                 {
                     if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
@@ -155,12 +155,12 @@ namespace asivamosffie.services
                 }
                 foreach (var Contrato in contratacion.Contrato)
                 {
-                     
+
                     if (!string.IsNullOrEmpty(Contrato.TipoContratoCodigo))
                     {
                         Contrato.FechaTramite = DateTime.Now;
                         Contrato.TipoContratoCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).FirstOrDefault().Nombre;
-                    } 
+                    }
                 }
 
                 _context.SaveChanges();
@@ -195,8 +195,8 @@ namespace asivamosffie.services
                 //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
                 //    contratoOld.RutaDocumento = pContrato.RutaDocumento;
 
-                if (contratoOld.FechaTramite == null)
-                    contratoOld.FechaTramite = DateTime.Now;
+
+                contratoOld.FechaTramite = DateTime.Now;
 
 
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
@@ -239,18 +239,26 @@ namespace asivamosffie.services
 
                 if (!string.IsNullOrEmpty(pContrato.Observaciones))
                     contratoOld.Observaciones = pContrato.Observaciones;
-                 
+
                 //Enviar Notificaciones
                 contratoOld.Estado = ValidarRegistroCompletoContrato(contratoOld);
-                if ((bool)contratoOld.Estado)
+
+                //Cambio pedido por yuly que se envia cuando
+                if (pEstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
                     await EnviarNotificaciones(pContrato, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
 
                 //Save Files  
                 if (pContrato.pFile != null && pContrato.pFile.Length > 0)
                 {
                     string pFilePath = Path.Combine(pPatchfile, pContrato.ContratoId.ToString());
-                    if(await _documentService.SaveFileContratacion(pContrato.pFile, pFilePath, pContrato.pFile.FileName))
+                    if (await _documentService.SaveFileContratacion(pContrato.pFile, pFilePath, pContrato.pFile.FileName))
+                    {
                         contratoOld.RutaDocumento = Path.Combine(pFilePath, pContrato.pFile.FileName);
+                        contratoOld.FechaTramite = DateTime.Now;
+
+
+                    }
                 }
 
             }
@@ -264,23 +272,21 @@ namespace asivamosffie.services
                 _context.Contrato.Add(pContrato);
                 _context.SaveChanges();
 
-                //Save Files  
-                //Save Files  
                 if (pContrato.pFile != null && pContrato.pFile.Length > 0)
                 {
                     string pFilePath = Path.Combine(pPatchfile, pContrato.ContratoId.ToString());
                     if (await _documentService.SaveFileContratacion(pContrato.pFile, pFilePath, pContrato.pFile.FileName))
                         pContrato.RutaDocumento = Path.Combine(pFilePath, pContrato.pFile.FileName);
                 }
-
             }
- 
+
             //Cambiar estado contratacion
             Contratacion contratacion = _context.Contratacion.Find(pContrato.ContratacionId);
 
             contratacion.EstadoSolicitudCodigo = pEstadoCodigo;
             contratacion.UsuarioModificacion = pContrato.UsuarioModificacion;
             contratacion.FechaModificacion = pContrato.FechaModificacion;
+            contratacion.FechaTramite = DateTime.Now;
 
             _context.SaveChanges();
 
