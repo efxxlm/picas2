@@ -418,6 +418,7 @@ namespace asivamosffie.services
                         cp.NombrePerfil = nombrePerfil != null ? nombrePerfil.Nombre : "";
 
                         cp.ObservacionApoyo = getObservacionPerfil( cp, false);
+                        cp.ObservacionSupervisor = getObservacionPerfil( cp, true);
 
                     });
 
@@ -2102,7 +2103,7 @@ namespace asivamosffie.services
                     {
                         FechaCreacion = DateTime.Now,
                         UsuarioCreacion = pUsuarioCreacion,
-
+                        ConstruccionPerfilId = pObservacion.ConstruccionPerfilId,
                         ConstruccionPerfilObservacionId = pObservacion.ConstruccionPerfilObservacionId,
                         TipoObservacionCodigo = "0", // no se usa
                         Observacion = pObservacion.Observacion,

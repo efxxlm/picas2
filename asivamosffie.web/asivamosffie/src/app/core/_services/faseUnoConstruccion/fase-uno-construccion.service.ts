@@ -78,6 +78,10 @@ export class FaseUnoConstruccionService {
     return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionFlujoInversion?esSupervisor=false`, contratoConstruccion );
   }
 
+  createEditObservacionPerfil( contratacionPerfil ){  
+    return this.http.post<Respuesta>( `${ this.urlApi }/createEditObservacionPerfil?esSupervisor=false`, contratacionPerfil );
+  }
+
   
 
   //Peticiones POST Carga Masiva "Programación de obra"

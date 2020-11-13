@@ -18,12 +18,13 @@ namespace asivamosffie.model.Models
     public partial class ConstruccionPerfil
     {
         [NotMapped] 
+        public string NombrePerfil  { get; set; }
+
+        [NotMapped] 
         public ConstruccionPerfilObservacion ObservacionApoyo  { get; set; }
 
         [NotMapped] 
-        public string NombrePerfil  { get; set; }
-
-        
+        public ConstruccionPerfilObservacion ObservacionSupervisor  { get; set; }
 
     }
 }

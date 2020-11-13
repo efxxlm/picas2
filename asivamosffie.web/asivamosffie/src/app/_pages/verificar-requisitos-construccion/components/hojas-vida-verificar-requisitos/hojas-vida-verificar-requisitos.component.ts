@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
@@ -13,6 +14,7 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
+    construccionPerfilObservacionId:[]
   });
 
   editorStyle = {
@@ -31,9 +33,21 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   @Input() observacionesCompleted;
   @Input() perfil: any;
 
-  constructor(private dialog: MatDialog, private fb: FormBuilder) { }
+  constructor(
+      private dialog: MatDialog, 
+      private fb: FormBuilder,
+      private faseUnoConstruccionService: FaseUnoConstruccionService,
+      
+      ) { }
 
   ngOnInit(): void {
+    if (this.perfil){
+
+        this.addressForm.get('tieneObservaciones').setValue(this.perfil.tieneObservacionesApoyo)
+        this.addressForm.get('observaciones').setValue(this.perfil.observacionApoyo ? this.perfil.observacionApoyo.observacion : null)
+        this.addressForm.get('construccionPerfilObservacionId').setValue(this.perfil.observacionApoyo ? this.perfil.observacionApoyo.construccionPerfilObservacionId : null)
+  
+    }
   }
 
   maxLength(e: any, n: number) {
@@ -55,7 +69,34 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   };
 
   onSubmit(){
-    this.openDialog( 'La información ha sido guardada exitosamente.', '' );
+
+    let ConstraccionPerfil = {
+      construccionPerfilId: this.perfil.construccionPerfilId,
+      tieneObservacionesApoyo: this.addressForm.value.tieneObservaciones,
+
+      construccionPerfilObservacion: [
+        {
+          ConstruccionPerfilObservacionId: this.addressForm.value.construccionPerfilObservacionId,
+          construccionPerfilId: this.perfil.construccionPerfilId,
+          esSupervision: false,
+          esActa: false,
+          observacion: this.addressForm.value.observaciones,
+
+        }
+      ]
+    }
+
+    console.log();
+
+    this.faseUnoConstruccionService.createEditObservacionPerfil( ConstraccionPerfil )
+      .subscribe(respuesta => {
+        this.openDialog('', respuesta.message);
+        if (respuesta.code == "200"){
+
+        }
+          //this.createEdit.emit(true);
+      });
+
   }
 
 }
