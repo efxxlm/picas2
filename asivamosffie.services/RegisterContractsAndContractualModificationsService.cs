@@ -194,9 +194,8 @@ namespace asivamosffie.services
                 //Contrato  
                 //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
                 //    contratoOld.RutaDocumento = pContrato.RutaDocumento;
-
-
-                contratoOld.FechaTramite = DateTime.Now;
+                 
+                contratacionOld.FechaTramite = DateTime.Now;
 
 
                 if (!string.IsNullOrEmpty(pContrato.NumeroContrato))
