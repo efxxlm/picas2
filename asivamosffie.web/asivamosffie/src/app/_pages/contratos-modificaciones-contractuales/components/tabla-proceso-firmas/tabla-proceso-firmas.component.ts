@@ -46,7 +46,7 @@ export class TablaProcesoFirmasComponent implements OnInit {
 
   getGrilla () {
     this.contratosContractualesSvc.getGrilla()
-      .subscribe( ( resp: any ) => {     
+      .subscribe( ( resp: any ) => {
         let conTrue = 0;
         let conFalse = 0;
         let firmado = 0;
