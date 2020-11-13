@@ -105,6 +105,15 @@ strong {
   margin-bottom: 0 !important;
 }
 
+.mt-0,
+.header-card--text.sub-text.mt-0 {
+  margin-top: 0 !important;
+}
+
+.mt-05em {
+  margin-top: .5em !important;
+}
+
 .mt-1em {
   margin-top: 1em;
 }
@@ -119,6 +128,11 @@ strong {
 
 .mr-0 {
   margin-right: 0 !important;
+}
+
+.mx-1em {
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 .pl-0 {

@@ -1,0 +1,241 @@
+<div class="container">
+  <div class="text-right">
+    <a routerLink="../../" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Registrar seguimiento diario LJ776554
+    </h1>
+    <p class="colorMainColor mt-05em">
+      <span class="mx-1em">Remodelación</span>
+      <span class="mx-1em">Atlántico</span>
+      <span class="mx-1em">Baranoa</span>
+      <span class="mx-1em">María</span>
+      <span class="mx-1em">Inmaculada</span>
+      <span class="mx-1em">Sede 2</span>
+    </p>
+  </div>
+
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('fechaSeguimiento').invalid && addressForm.get('fechaSeguimiento').touched">
+                  Fecha de seguimiento
+                </label>
+              </div>
+              <div class="col d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA" formControlName="fechaSeguimiento"
+                    required [min]="minDate" readonly (click)="picker.open()">
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-title class="header-card--text sub-text">
+          Personal (obreros/técnicos)
+        </mat-card-title>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadPersonal"
+                  [class.color-secondaryColor]="addressForm.get('disponibilidadPersonal').invalid && addressForm.get('disponibilidadPersonal').touched">
+                  Disponibilidad de personal
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="disponibilidadPersonal">
+                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
+                      {{ selectValue.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span class="label-left"
+              [class.color-secondaryColor]="addressForm.get('disponibilidadPersonalObservaciones').invalid && addressForm.get('disponibilidadPersonalObservaciones').touched">
+              Observaciones
+            </span>
+          </div>
+          <div class="col d-flex">
+            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadPersonalObservaciones"
+              required>
+            </quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadPersonalObservaciones').value">
+                {{500 - (textoLimpio(addressForm.get('disponibilidadPersonalObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadPersonalObservaciones').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadPersonalObservaciones').value">
+                500
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-title class="header-card--text sub-text">
+          Material
+        </mat-card-title>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadMaterial"
+                  [class.color-secondaryColor]="addressForm.get('disponibilidadMaterial').invalid && addressForm.get('disponibilidadMaterial').touched">
+                  Disponibilidad de material
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="disponibilidadMaterial">
+                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
+                      {{ selectValue.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span class="label-left"
+              [class.color-secondaryColor]="addressForm.get('disponibilidadMaterialObservaciones').invalid && addressForm.get('disponibilidadMaterialObservaciones').touched">
+              Observaciones
+            </span>
+          </div>
+          <div class="col d-flex">
+            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadMaterialObservaciones"
+              required>
+            </quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadMaterialObservaciones').value">
+                {{500 - (textoLimpio(addressForm.get('disponibilidadMaterialObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadMaterialObservaciones').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadMaterialObservaciones').value">
+                500
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-title class="header-card--text sub-text">
+          Equipo
+        </mat-card-title>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadEquipo"
+                  [class.color-secondaryColor]="addressForm.get('disponibilidadEquipo').invalid && addressForm.get('disponibilidadEquipo').touched">
+                  Disponibilidad de equipo
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="disponibilidadEquipo">
+                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
+                      {{ selectValue.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span class="label-left"
+              [class.color-secondaryColor]="addressForm.get('disponibilidadEquipoObservaciones').invalid && addressForm.get('disponibilidadEquipoObservaciones').touched">
+              Observaciones
+            </span>
+          </div>
+          <div class="col d-flex">
+            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadEquipoObservaciones" required>
+            </quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadEquipoObservaciones').value">
+                {{500 - (textoLimpio(addressForm.get('disponibilidadEquipoObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadEquipoObservaciones').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadEquipoObservaciones').value">
+                500
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-title class="header-card--text sub-text">
+          Productividad
+        </mat-card-title>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="Productividad"
+                  [class.color-secondaryColor]="addressForm.get('Productividad').invalid && addressForm.get('Productividad').touched">
+                  Productividad
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="Productividad">
+                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
+                      {{ selectValue.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span class="label-left"
+              [class.color-secondaryColor]="addressForm.get('ProductividadObservaciones').invalid && addressForm.get('ProductividadObservaciones').touched">
+              Observaciones
+            </span>
+          </div>
+          <div class="col d-flex">
+            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="ProductividadObservaciones" required>
+            </quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('ProductividadObservaciones').value">
+                {{500 - (textoLimpio(addressForm.get('ProductividadObservaciones').value)>5000?5000:textoLimpio(addressForm.get('ProductividadObservaciones').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('ProductividadObservaciones').value">
+                500
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      </button>
+    </div>
+  </form>
+</div>

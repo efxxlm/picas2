@@ -101,11 +101,12 @@ mat-form-field {
   &:hover::before {
     @extend %tooltip;
     content: 'Lista desplegable de selección única';
-    .mat-table & {
-      right: -12em;
-    }
+    .mat-table &,
     .mat-card & {
       right: -12em;
+    }
+    .col-md-8 & {
+      right: auto;
     }
     .mat-paginator & {
       content: none;

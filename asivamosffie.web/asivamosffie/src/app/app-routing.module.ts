@@ -167,7 +167,13 @@ const routes: Routes = [
           .then( module => module.CompromisosActasComiteModule ),
           
           
-      }
+      },
+      {
+        path: 'registroSeguimientoDiario',
+        loadChildren: () => import('./_pages/registro-seguimiento-diario/registro-seguimiento-diario.module')
+        .then(m => m.RegistroSeguimientoDiarioModule),
+        
+      },
     ]
 
   },
