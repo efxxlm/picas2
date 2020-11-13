@@ -127,6 +127,6 @@ public const string Inicio_de_sesion = "1";
         public const string Crear_Editar_Observacion_Construccion_ProgramacionObra = "119";
         public const string Crear_Editar_Observacion_Construccion_FlujoInversion = "120";
         public const string Enviar_Al_Supervisor = "123";
-    
+        public const string Cambiar_Estado_Contrato_Construccion ="142";
     }
 }

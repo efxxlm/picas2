@@ -45,6 +45,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        [Route("CambiarEstadoContratoEstadoVerificacionConstruccionCodigo")]
+        [HttpPost]
+        public async Task<IActionResult> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo([FromQuery] int ContratoId, string pEstado)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta =await _technicalRequirementsConstructionPhaseService.CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(ContratoId, pEstado, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+ 
+
         [Route("CreateEditObservacion")]
         [HttpPost]
         public async Task<Respuesta> CreateEditObservacion([FromBody] ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
@@ -463,6 +482,8 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
+
+
 
         [Route("GenerateDRP")]
         [HttpGet]

@@ -10,6 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ITechnicalRequirementsConstructionPhaseService
     {
+        Task<Respuesta> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(int ContratoId, string pEstado, string pUsuarioMod);
         Task<Respuesta> CreateEditObservacion(ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion);
         Task<List<dynamic>> GetContractsGrid(int pUsuarioId);
         Task<Contrato> GetContratoByContratoId(int pContratoId, string pUsuarioCreacion);

@@ -7,8 +7,7 @@
         public const string En_proceso_de_aprobación_de_requisitos_tecnicos="2";
         public const string Con_requisitos_tecnicos_aprobados= "3";
         public const string Enviado_por_el_supervisor = "4";
-
-
+         
         //Sin_verificación_de_requisitos
         //Requisitos_del_contratista_de_obra_en_proceso_de_verificación
         //Con_requisitos_del_contratista_de_obra_verificados
