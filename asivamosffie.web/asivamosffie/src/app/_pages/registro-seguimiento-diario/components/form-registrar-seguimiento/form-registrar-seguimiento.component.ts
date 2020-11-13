@@ -9,13 +9,20 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-registrar-seguimiento.component.html',
   styleUrls: ['./form-registrar-seguimiento.component.scss']
 })
-export class FormRegistrarSeguimientoComponent {
+export class FormRegistrarSeguimientoComponent implements OnInit {
 
   seguimientoId: string;
 
   addressForm = this.fb.group({
     fechaSeguimiento: [null, Validators.required],
     disponibilidadPersonal: [null, Validators.required],
+    cantidadPersonalOperativoProgramado: [null, Validators.compose([
+      Validators.required, Validators.maxLength(3), Validators.max(999)])
+    ],
+    cantidadPersonalOperativoTrabajando: [null, Validators.compose([
+      Validators.required, Validators.maxLength(3), Validators.max(999)])
+    ],
+    retraso: [null, Validators.required],
     disponibilidadPersonalObservaciones: [null, Validators.required],
     disponibilidadMaterial: [null, Validators.required],
     disponibilidadMaterialObservaciones: [null, Validators.required],
@@ -65,13 +72,20 @@ export class FormRegistrarSeguimientoComponent {
     this.minDate = new Date();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.seguimientoId = params.id;
       console.log(this.seguimientoId);
-      
-    })
+
+    });
   }
+
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
+
 
   openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
