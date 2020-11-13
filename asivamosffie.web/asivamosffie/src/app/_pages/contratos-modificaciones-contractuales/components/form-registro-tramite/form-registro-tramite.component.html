@@ -155,11 +155,11 @@
           <label class="label-left">Observaciones</label>
         </div>
         <div class="col d-flex">
-          <quill-editor class="quill-editor-style ml-1em card"
+          <quill-editor class="quill-editor-style ml-1em card position-relative"
                         [styles]="editorStyle"
                         [modules]="config"
                         (onContentChanged)="maxLength($event, 2000)"
-                        formControlName="observaciones">
+                        formControlName="observaciones" required>
           </quill-editor>
           <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null" style="margin-top: 1.8em;">
             {{2000 - (textoLimpio(dataFormulario.get('observaciones').value)>2000?2000:textoLimpio(dataFormulario.get('observaciones').value))}}
