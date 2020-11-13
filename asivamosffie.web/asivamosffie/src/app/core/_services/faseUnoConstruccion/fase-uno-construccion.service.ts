@@ -114,8 +114,8 @@ export class FaseUnoConstruccionService {
     return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteConstruccionPerfilNumeroRadicado?pConstruccionPerfilNumeroRadicadoId=${ pConstruccionPerfilNumeroRadicadoId }` )
   };
 
-  deleteArchivoCargue ( pArchivoCargueId: number ) {
-    return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteArchivoCargue?pArchivoCargueId=${ pArchivoCargueId }` );
+  deleteArchivoCargue ( pArchivoCargueId: number, pContratoConstruccionId:number, pEsFlujoInvserion: boolean ) {
+    return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteArchivoCargue?pArchivoCargueId=${ pArchivoCargueId }&pContratoConstruccionId=${ pContratoConstruccionId }&pEsFlujoInvserion=${ pEsFlujoInvserion }` );
   };
   
 

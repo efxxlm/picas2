@@ -119,7 +119,9 @@
         <mat-expansion-panel class="expansion-style sub-expansion">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
-              {{ contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra ? 'completo' : 'sin-diligenciar' }}">
+            {{ contratacion.proyecto.contratoConstruccion[0].registroCompletoProgramacionObra == true ? 
+              'completo' : contratacion.proyecto.contratoConstruccion[0].registroCompletoProgramacionObra == false ? 
+                    'en-proceso' : 'sin-diligenciar' }}">
               Programación de obra
             </mat-panel-title>
           </mat-expansion-panel-header>
@@ -128,6 +130,7 @@
             <app-programacion-obra-flujo-inversion 
                                                   [esFlujoInversion]="false" 
                                                   [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
+                                                  [observacionDevolucionProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionProgramacionObra"
                                                   (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 

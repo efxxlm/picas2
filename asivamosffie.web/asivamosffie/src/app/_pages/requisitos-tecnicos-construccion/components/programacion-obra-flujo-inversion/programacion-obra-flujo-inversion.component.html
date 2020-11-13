@@ -26,6 +26,7 @@
         <app-tabla-programacion-obra  [contratoConstruccionId]="contratoConstruccionId"
                                       (tieneRegistros)="tieneRegistrosObra = $event"
                                       (realizoObservacion)="esObservacion( $event )"
+                                      [observacionDevolucionProgramacionObra]="observacionDevolucionProgramacionObra"
                                       *ngIf="tieneRegistrosObra">
         </app-tabla-programacion-obra>
 </div>

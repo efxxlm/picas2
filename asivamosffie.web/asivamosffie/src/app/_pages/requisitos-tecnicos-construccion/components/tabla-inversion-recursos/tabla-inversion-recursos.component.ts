@@ -91,7 +91,7 @@ export class TablaInversionRecursosComponent implements OnInit {
   };
 
   deleteArchivoCargue( pArchivoCargueId: number ){
-    this.faseUnoConstruccionSvc.deleteArchivoCargue( pArchivoCargueId )
+    this.faseUnoConstruccionSvc.deleteArchivoCargue( pArchivoCargueId, this.contratoConstruccionId, true )
       .subscribe(
         response => {
           this.openDialog( '', response.message );

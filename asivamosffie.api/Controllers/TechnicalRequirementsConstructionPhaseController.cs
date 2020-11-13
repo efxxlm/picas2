@@ -384,12 +384,12 @@ namespace asivamosffie.api.Controllers
 
         [Route("DeleteArchivoCargue")]
         [HttpDelete]
-        public async Task<IActionResult> DeleteArchivoCargue(int pArchivoCargueId)
+        public async Task<IActionResult> DeleteArchivoCargue(int pArchivoCargueId, int pContratoConstruccionId, bool pEsFlujoInvserion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteArchivoCargue(pArchivoCargueId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _technicalRequirementsConstructionPhaseService.DeleteArchivoCargue(pArchivoCargueId, pContratoConstruccionId, pEsFlujoInvserion, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)

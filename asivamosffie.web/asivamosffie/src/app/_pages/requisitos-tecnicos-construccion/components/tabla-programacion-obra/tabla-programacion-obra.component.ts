@@ -17,6 +17,7 @@ export class TablaProgramacionObraComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
   @Input() contratoConstruccionId: number;
+  @Input() observacionDevolucionProgramacionObra: number;
   @Output() tieneRegistros = new EventEmitter();
   @Output() realizoObservacion = new EventEmitter();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -91,7 +92,7 @@ export class TablaProgramacionObraComponent implements OnInit {
   };
 
   deleteArchivoCargue( pArchivoCargueId: number ){
-    this.faseUnoConstruccionSvc.deleteArchivoCargue( pArchivoCargueId )
+    this.faseUnoConstruccionSvc.deleteArchivoCargue( pArchivoCargueId, this.contratoConstruccionId, false )
       .subscribe(
         response => {
           this.openDialog( '', response.message );

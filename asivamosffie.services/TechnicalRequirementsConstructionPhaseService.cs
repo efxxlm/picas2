@@ -375,6 +375,7 @@ namespace asivamosffie.services
                     cc.ObservacionDevolucionDiagnostico = _context.ConstruccionObservacion.Find(cc.ObservacionDiagnosticoSupervisorId);
                     cc.ObservacionDevolucionPlanesProgramas = _context.ConstruccionObservacion.Find(cc.ObservacionPlanesProgramasSupervisorId);
                     cc.ObservacionDevolucionManejoAnticipo = _context.ConstruccionObservacion.Find(cc.ObservacionManejoAnticipoSupervisorId);
+                    cc.ObservacionDevolucionProgramacionObra = _context.ConstruccionObservacion.Find(cc.ObservacionProgramacionObraSupervisorId);
 
                 });
 
@@ -1403,8 +1404,11 @@ namespace asivamosffie.services
 
                     ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(contratoConstruccionId);
 
-                    if (contratoConstruccion != null)
+                    if (contratoConstruccion != null){
                         contratoConstruccion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
+                        contratoConstruccion.RegistroCompletoProgramacionObra = true;
+                        }
+
 
 
                     return respuesta =
@@ -1731,9 +1735,9 @@ namespace asivamosffie.services
 
             List<TempFlujoInversion> lista = _context.TempFlujoInversion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
 
-            lista.ForEach(c =>
+            lista.GroupBy( r => r.ArchivoCargueId ).ToList().ForEach(c =>
             {
-                ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
+                ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.Key && a.Eliminado != true).FirstOrDefault();
                 if (archivo != null)
                 {
                     archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
@@ -1790,7 +1794,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, string pUsuarioModificacion)
+        public async Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, int pContratoConstruccionId, bool pEsFlujoInvserion, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
 
@@ -1801,6 +1805,13 @@ namespace asivamosffie.services
                 archivoCargue.UsuarioModificacion = pUsuarioModificacion;
                 archivoCargue.FechaModificacion = DateTime.Now;
                 archivoCargue.Eliminado = true;
+
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( pContratoConstruccionId );
+
+                if ( pEsFlujoInvserion )
+                    contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
+                else
+                    contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
 
                 _context.SaveChanges();
 
