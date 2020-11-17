@@ -84,9 +84,9 @@
           </mat-card-title>
       </mat-card-header>
       <mat-card-content align="left" >
-          <p><b>{{ observacionDevolucionProgramacionObra.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+          <p><b>{{ observacionDevolucionProgramacionObra['fechaCreacion'] | date: "dd/MM/yyyy" }}</b></p>
           <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-          <p>{{ observacionDevolucionProgramacionObra.observaciones }}</p>
+          <p>{{ observacionDevolucionProgramacionObra['observaciones'] }}</p>
       </mat-card-content>
   </mat-card>
 </div>
