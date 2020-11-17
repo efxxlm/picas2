@@ -244,7 +244,7 @@ namespace asivamosffie.services
 
                 //Cambio pedido por yuly que se envia cuando
                 if (pEstadoCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
-                    await EnviarNotificaciones(pContrato, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    await EnviarNotificaciones(contratoOld, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
 
                 //Save Files  
