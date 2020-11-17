@@ -1,16 +1,9 @@
-import { Injectable, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Respuesta } from '../autenticacion/autenticacion.service';
-import { environment } from 'src/environments/environment';
-import { pid } from 'process';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ContractualControversyService implements OnInit {
+export class ContractualControversyService {
 
-  constructor(private http: HttpClient) { }
-  ngOnInit(): void {
-
-  }
+  constructor() { }
 }
