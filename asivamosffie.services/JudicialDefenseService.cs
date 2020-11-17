@@ -141,6 +141,7 @@ namespace asivamosffie.services
                     fichaEstudio.FechaCreacion = DateTime.Now;
                     fichaEstudio.UsuarioCreacion = fichaEstudio.UsuarioCreacion;
                     //fichaEstudio.DefensaJudicialId = fichaEstudio.DefensaJudicialId;
+                    fichaEstudio.EsCompleto = ValidarRegistroCompletoFichaEstudio(fichaEstudio);
                     fichaEstudio.Eliminado = false;
                     _context.FichaEstudio.Add(fichaEstudio);
                 }
@@ -168,6 +169,8 @@ namespace asivamosffie.services
 
                     fichaEstudioBD.EsAprobadoAperturaProceso = fichaEstudio.EsAprobadoAperturaProceso;
                     fichaEstudioBD.EsPresentadoAnteComiteFfie = fichaEstudio.EsPresentadoAnteComiteFfie;
+
+                    fichaEstudio.EsCompleto = ValidarRegistroCompletoFichaEstudio(fichaEstudio);
 
                     _context.FichaEstudio.Update(fichaEstudio);
 
@@ -200,6 +203,28 @@ namespace asivamosffie.services
                 };
             }
 
+        }
+
+
+        private bool ValidarRegistroCompletoFichaEstudio(FichaEstudio fichaEstudio)
+        {
+            if (string.IsNullOrEmpty(fichaEstudio.Antecedentes)
+             || string.IsNullOrEmpty(fichaEstudio.HechosRelevantes)
+            || string.IsNullOrEmpty(fichaEstudio.JurisprudenciaDoctrina)
+            || string.IsNullOrEmpty(fichaEstudio.DecisionComiteDirectrices)
+            || string.IsNullOrEmpty(fichaEstudio.AnalisisJuridico)
+            || string.IsNullOrEmpty(fichaEstudio.Recomendaciones)
+            || string.IsNullOrEmpty(fichaEstudio.TipoActuacionCodigo)
+                || (fichaEstudio.EsPresentadoAnteComiteFfie == null)
+                || (fichaEstudio.EsAprobadoAperturaProceso == null)
+               || (fichaEstudio.RecomendacionFinalComite == null)
+               || string.IsNullOrEmpty(fichaEstudio.RutaSoporte))
+
+            {
+                return false;
+            }
+
+            return true;
         }
         public async Task<List<ProyectoGrilla>> GetListProyects(/*int pContratoId*/ int pProyectoId)
         {
