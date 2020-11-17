@@ -749,10 +749,10 @@ namespace asivamosffie.services
         //            //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
         //            string strEstadoAvanceTramiteCodigo = "sin definir";
 
-            
+
 
         //            //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-        //            Dominio EstadoAvanceCodigo  ;
+        //            Dominio EstadoAvanceCodigo;
         //            Dominio TipoControversiaCodigo;
 
         //            if (contrato != null)
@@ -776,9 +776,15 @@ namespace asivamosffie.services
         //            //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
         //            GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
         //            {
-                        
+
         //                FechaActuacion = controversia.FechaModificacion != null ? Convert.ToDateTime(controversia.FechaModificacion).ToString("dd/MM/yyyy") : controversia.FechaModificacion.ToString(),
         //                DescripcionActuacion = "Actuación" + controversia.ControversiaActuacionId.ToString(),
+        //                ActuacionId=controversia.ControversiaActuacionId,
+                        
+        //                EstadoActuacion= "pendiente",//controversia.EstadoAvanceTramiteCodigo
+        //                NumeroActuacion=controversia.num
+
+                        
 
 
         //                //ControversiaContractualId = controversia.ControversiaContractualId,
