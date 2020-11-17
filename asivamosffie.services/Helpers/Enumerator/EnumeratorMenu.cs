@@ -36,6 +36,7 @@ namespace asivamosffie.services.Helpers.Enumerator
      	Registrar_Programacion_Personal_Obra = 48,
         Gestionar_controversias_contractuales=47,
 
+        Gestionar_procesos_Defensa_Judicial = 52,
 
     }
 

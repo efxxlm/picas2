@@ -56,7 +56,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateOrEditDemandadoConvocado(DemandadoConvocado demandadoConvocado)
         {
             Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Demandado_Convocado, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
             DemandadoConvocado demandadoConvocadoBD = null;
@@ -103,8 +103,8 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Data = demandadoConvocado,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, demandadoConvocado.UsuarioCreacion, strCrearEditar)
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, demandadoConvocado.UsuarioCreacion, strCrearEditar)
 
                 };
             }
@@ -117,8 +117,8 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Data = demandadoConvocado,
-                    Code = ConstantMessagesSesionComiteTema.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, demandadoConvocado.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, demandadoConvocado.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
 
@@ -127,7 +127,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateOrEditFichaEstudio(FichaEstudio fichaEstudio)
         {
             Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Compromiso, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Ficha_Estudio, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = string.Empty;
             FichaEstudio fichaEstudioBD = null;
@@ -184,8 +184,8 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Data = fichaEstudio,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, fichaEstudio.UsuarioCreacion, strCrearEditar)
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, fichaEstudio.UsuarioCreacion, strCrearEditar)
 
                 };
             }
@@ -198,13 +198,12 @@ namespace asivamosffie.services
                     IsException = true,
                     IsValidation = false,
                     Data = fichaEstudio,
-                    Code = ConstantMessagesSesionComiteTema.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, fichaEstudio.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, fichaEstudio.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
 
         }
-
 
         private bool ValidarRegistroCompletoFichaEstudio(FichaEstudio fichaEstudio)
         {
