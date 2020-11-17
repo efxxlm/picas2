@@ -1324,7 +1324,7 @@ namespace asivamosffie.services
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
+                    string strTipoSolicitudCodigoContratoPoliza = "Sin radicación de pólizas";
                     string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
@@ -1464,7 +1464,7 @@ namespace asivamosffie.services
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
                     Dominio TipoSolicitudCodigoContratoPoliza=null;
-                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
+                    string strTipoSolicitudCodigoContratoPoliza = "Sin radicación de pólizas";
                     string strFechaFirmaContrato = string.Empty;
 
                     if (contratoPoliza != null)
