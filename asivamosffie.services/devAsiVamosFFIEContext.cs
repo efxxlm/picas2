@@ -3875,7 +3875,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
-
+                /*
                 entity.HasOne(d => d.ProcesoSeleccionCronogramaMonitoreo)
                     .WithMany(p => p.SesionSolicitudObservacionActualizacionCronograma)
                     .HasForeignKey(d => d.ProcesoSeleccionCronogramaMonitoreoId)
@@ -3892,6 +3892,7 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.SesionSolicitudObservacionActualizacionCronograma)
                     .HasForeignKey(d => d.SesionParticipanteId)
                     .HasConstraintName("FK_SesionSolicitudObservacionActualizacionCronograma_SesionParticipante");
+                */
             });
 
             modelBuilder.Entity<SesionSolicitudObservacionProyecto>(entity =>
