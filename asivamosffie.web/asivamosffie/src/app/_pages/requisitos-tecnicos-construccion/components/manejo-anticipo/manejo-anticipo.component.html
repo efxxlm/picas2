@@ -43,7 +43,7 @@
       </div>
     </section>
     
-    <div class="text-center" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+    <div class="text-center" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value === true || formAnticipo.get( 'requiereAnticipo' ).value === false">
       <button mat-button 
               color="warn" 
               class="btn-guardar" 
