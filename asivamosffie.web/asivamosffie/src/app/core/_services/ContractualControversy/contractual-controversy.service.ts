@@ -26,7 +26,16 @@ export class ContractualControversyService implements OnInit{
     return this.http.get<GetVistaContratoContratista>(`${environment.apiUrl}/ContractualControversy/GetVistaContratoContratista?pContratoId=${pContratoId}`);
   }
   CambiarEstadoControversiaContractual(pControversiaContractualId:number, pNuevoCodigoEstado:string){
-    
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoControversiaContractual?pControversiaContractualId=${pControversiaContractualId}&pNuevoCodigoEstado=${pNuevoCodigoEstado}`, null);  
+  }
+  EliminarControversiaContractual(pControversiaContractualId:number){
+    return this.http.get<EliminarControversiaContractual>(`${environment.apiUrl}/ContractualControversy/EliminarControversiaContractual?pControversiaContractualId=${pControversiaContractualId}`);
+  }
+  EliminarControversiaActuacion(pControversiaActuacionId:number){
+    return this.http.get<EliminarControversiaContractual>(`${environment.apiUrl}/ContractualControversy/EliminarControversiaActuacion?pControversiaActuacionId=${pControversiaActuacionId}`);
+  }
+  CambiarEstadoControversiaActuacion(pControversiaActuacionId:number, pNuevoCodigoEstadoAvance:string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoControversiaActuacion?pControversiaActuacionId=${pControversiaActuacionId}&pNuevoCodigoEstadoAvance=${pNuevoCodigoEstadoAvance}`, null);
   }
 }
 
@@ -35,5 +44,9 @@ export interface GetListGrillaTipoSolicitudControversiaContractual{
 }
 
 export interface GetVistaContratoContratista{
+
+}
+
+export interface EliminarControversiaContractual{
 
 }

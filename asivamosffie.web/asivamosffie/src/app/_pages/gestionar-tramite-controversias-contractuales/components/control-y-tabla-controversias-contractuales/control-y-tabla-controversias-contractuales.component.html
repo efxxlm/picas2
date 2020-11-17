@@ -28,6 +28,7 @@
                     <div *ngIf="element.tipoControversia=='2'">Terminación anticipada por imposibilidad de ejecución (TAIE)</div>
                     <div *ngIf="element.tipoControversia=='3'">Arreglo Directo (AD)</div>
                     <div *ngIf="element.tipoControversia=='4'">Otras controversias contractuales (OCC)</div>
+                    <div *ngIf="element.tipoControversia=='PENDIENTE'">PENDIENTE</div>
                 </td>
             </ng-container>
     
@@ -40,6 +41,7 @@
                     <div *ngIf="element.estadoControversia=='4'">En trámite</div>
                     <div *ngIf="element.estadoControversia=='5'">Cerrada</div>
                     <div *ngIf="element.estadoControversia=='6'">Registrada</div>
+                    <div *ngIf="element.estadoControversia=='PENDIENTE'">PENDIENTE</div>
                     </td>
             </ng-container>
     

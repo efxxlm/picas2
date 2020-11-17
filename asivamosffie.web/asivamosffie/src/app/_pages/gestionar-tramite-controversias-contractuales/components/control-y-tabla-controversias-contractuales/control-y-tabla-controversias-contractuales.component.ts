@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-control-y-tabla-controversias-contractuales',
@@ -20,6 +21,7 @@ export class ControlYTablaControversiasContractualesComponent implements OnInit 
     'estadoControversia',
     'gestion',
   ];
+  /*
   dataTable: any[] = [
     {
       fechaSolicitud: '20/08/2020',
@@ -42,15 +44,27 @@ export class ControlYTablaControversiasContractualesComponent implements OnInit 
       estadoControversia: '6',
       id: 3
     }
-  ];  
-  constructor(private router: Router) {
+  ];  */
+  public dataTable;
+  constructor(private router: Router, private services: ContractualControversyService) {
    }
 
   ngOnInit(): void {
+    this.services.GetListGrillaTipoSolicitudControversiaContractual().subscribe(data=>{
+      this.dataTable = data;
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.nextPageLabel = 'Siguiente';
+      this.paginator._intl.previousPageLabel = 'Anterior';
+    });
+    /*
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    */
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
