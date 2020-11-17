@@ -67,7 +67,8 @@ export class TablaSinRegistroContratoComponent implements OnInit {
 
         if ( this.dataTable.length === 0 ) {
           this.sinData.emit( false );
-          this.estadoSemaforo.emit( '' );
+          this.estadoSemaforo.emit( 'completo' );
+          return;
         };
 
         this.dataSource                        = new MatTableDataSource( this.dataTable );
