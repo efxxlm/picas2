@@ -64,6 +64,8 @@ export class TablaProcesoFirmasComponent implements OnInit {
         };
         if ( this.dataTable.length === 0 ) {
           this.sinData.emit( false );
+          this.estadoAcordeon.emit( 'completo' );
+          return;
         };
         if ( firmaContratista === this.dataTable.length ) {
           this.estadoAcordeon.emit( 'sin-diligenciar' );
