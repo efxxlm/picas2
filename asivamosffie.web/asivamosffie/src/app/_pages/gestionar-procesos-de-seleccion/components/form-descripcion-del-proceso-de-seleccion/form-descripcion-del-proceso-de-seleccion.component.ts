@@ -20,6 +20,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   listaTipoIntervencion: Dominio[];
@@ -34,6 +35,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     color: 'var(--mainColor)',
   };
 
+
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -44,6 +46,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   };
   listaLimite: Dominio[]=[];
   listaSalarioMinimo: Dominio[]=[];
+  listaetapaActualProceso: Dominio[]=[];
   
 
   constructor(
@@ -54,9 +57,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    
     this.addressForm = this.crearFormulario();
-    console.log(this.addressForm.get("grupos"));
     return new Promise(resolve => {
       forkJoin([
 
@@ -65,7 +67,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.commonService.listaPresupuestoProcesoSeleccion(),
         this.commonService.getUsuariosByPerfil(2),
         this.commonService.listaLimiteSalarios(),
-        this.commonService.listaSalarios()
+        this.commonService.listaSalarios(),
+        this.commonService.listaEtapaActualProceso(),
 
       ]).subscribe(respuesta => {
 
@@ -75,10 +78,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.listaResponsables = respuesta[3];
         this.listaLimite = respuesta[4].filter(x=>x.codigo==this.procesoSeleccion.tipoProcesoCodigo);
         this.listaSalarioMinimo = respuesta[5];
-        console.log("ha ver, reviso el salario minimo");
-        console.log(this.listaLimite);
-
-        
+        this.listaetapaActualProceso = respuesta[6];            
 
         this.listaTipoAlcance = this.listaTipoAlcance.filter( t => t.codigo == "1" || t.codigo == "2" || t.codigo == "3" )
 
@@ -231,7 +231,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionCronogramaId: [],
       descripcion: [null, Validators.required],
-      fechaMaxima: [null, Validators.required]
+      fechaMaxima: [null, Validators.required],
+      etapaActualProceso: [null, Validators.required],
     });
   }
 
@@ -267,7 +268,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.fb.group({
           procesoSeleccionGrupoId: [],
           nombreGrupo: [null, Validators.compose([
-            Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+            Validators.required, Validators.minLength(1), Validators.maxLength(100)])
           ],
           tipoPresupuesto: [null, Validators.required],
           valor: [],
@@ -282,7 +283,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         this.fb.group({
           procesoSeleccionCronogramaId: [],
           descripcion: [null, Validators.required],
-          fechaMaxima: [null, Validators.required]
+          fechaMaxima: [null, Validators.required],
+          etapaActualProceso: [null, Validators.required],
         })
       ]),
     });
@@ -292,7 +294,8 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionCronogramaId: [],
       descripcion: [null, Validators.required],
-      fechaMaxima: [null, Validators.required]
+      fechaMaxima: [null, Validators.required],
+      etapaActualProceso: [null, Validators.required],
     });
   }
 
@@ -351,6 +354,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
         fechaMaxima: control.get('fechaMaxima').value,
         numeroActividad: posicion,
         procesoSeleccionCronogramaId: control.get('procesoSeleccionCronogramaId').value,
+        etapaActualProcesoCodigo: control.get('etapaActualProceso').value?control.get('etapaActualProceso').value.codigo:null,
         procesoSeleccionId: this.procesoSeleccion.procesoSeleccionId,
         estadoActividadCodigo: null,
       };
@@ -407,14 +411,14 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
       });
 
       this.procesoSeleccion.procesoSeleccionCronograma.forEach(cronograma => {
+        const etapaActualproceso = this.listaetapaActualProceso.find(p => p.codigo === cronograma.etapaActualProcesoCodigo);
         const control = this.createCronograma();
-
         control.get('descripcion').setValue(cronograma.descripcion),
-          control.get('fechaMaxima').setValue(cronograma.fechaMaxima),
-          control.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
-
+        control.get('fechaMaxima').setValue(cronograma.fechaMaxima),
+        control.get('procesoSeleccionCronogramaId').setValue(cronograma.procesoSeleccionCronogramaId);
+        control.get('etapaActualProceso').setValue(etapaActualproceso),
         listaCronograma.push(control);
-      });
+      });      
     });
   }
   validateNumberKeypress(event: KeyboardEvent) {

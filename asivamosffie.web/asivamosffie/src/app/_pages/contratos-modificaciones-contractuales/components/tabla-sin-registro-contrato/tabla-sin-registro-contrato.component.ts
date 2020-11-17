@@ -14,6 +14,7 @@ export class TablaSinRegistroContratoComponent implements OnInit {
 
   dataTable: any[] = [];
   @Output() sinData = new EventEmitter<boolean>();
+  @Output() estadoSemaforo = new EventEmitter<string>();
   dataSource                = new MatTableDataSource();
   estadoCodigo: string;
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -24,6 +25,7 @@ export class TablaSinRegistroContratoComponent implements OnInit {
     { titulo: 'Tipo de solicitud', name: 'tipoSolicitud' }
   ];
   estadoCodigos = {
+    enviadaFiduciaria: '4',
     enRevision: '2'
   }
 
@@ -38,18 +40,36 @@ export class TablaSinRegistroContratoComponent implements OnInit {
   getGrilla () {
     this.contratosContractualesSvc.getGrilla()
       .subscribe( ( resp: any ) => {
-        
+        let sinDiligenciar = 0;
+        let enProceso = 0;
         for ( let contrataciones of resp ) {
-          if ( contrataciones.contratacion.estadoSolicitudCodigo === this.estadoCodigos.enRevision ) {
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enviadaFiduciaria ) {
             this.dataTable.push( contrataciones );
+            sinDiligenciar++;
           };
+          if ( contrataciones.estadoCodigo === this.estadoCodigos.enRevision ) {
+            this.dataTable.push( contrataciones );
+            enProceso++;
+          };
+        };
+
+        if ( sinDiligenciar === this.dataTable.length ) {
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
+        };
+
+        if ( enProceso === this.dataTable.length ) {
+          this.estadoSemaforo.emit( 'en-proceso' );
+        };
+
+        if ( ( sinDiligenciar > 0 && sinDiligenciar < this.dataTable.length ) && ( enProceso > 0 && enProceso < this.dataTable.length ) ) {
+          this.estadoSemaforo.emit( 'sin-diligenciar' );
         };
 
         if ( this.dataTable.length === 0 ) {
           this.sinData.emit( false );
-        }
+          this.estadoSemaforo.emit( '' );
+        };
 
-        console.log( resp );
         this.dataSource                        = new MatTableDataSource( this.dataTable );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -11,14 +11,15 @@ import { Contrato } from '../../../../_interfaces/contratos-modificaciones.inter
   templateUrl: './form-registro-tramite.component.html',
   styleUrls: ['./form-registro-tramite.component.scss']
 })
-export class FormRegistroTramiteComponent implements OnInit {
+export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
 
   archivo                : string;
+  seRealizoPeticion      : boolean = false;
   @Input() dataFormulario: FormGroup;
   @Input() contratoId    : number;
   @Input() contratacionId: number;
   @Input() fechaTramite  : Date;
-  estadoCodigo  : string;
+  estadoCodigo           : string;
   estadoCodigos = {
     enRevision: '2',
     enFirmaFiduciaria: '5',
@@ -39,9 +40,26 @@ export class FormRegistroTramiteComponent implements OnInit {
 
   constructor ( private dialog: MatDialog,
                 private routes: Router,
-                private contratosContractualesSvc: ContratosModificacionesContractualesService ) { }
+                private contratosContractualesSvc: ContratosModificacionesContractualesService )
+  {}
+  
+  ngOnDestroy(): void {
+    if ( this.dataFormulario.dirty === true && this.seRealizoPeticion === false ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    };
+  }
 
   ngOnInit(): void {
+    this.archivo = this.dataFormulario.get( 'documento' ).value;
+  };
+
+  campoSinDiligenciar ( campoFormulario: string ) {
+    if ( campoFormulario === 'numeroContrato' && this.dataFormulario.get( campoFormulario ).value.length === 0 ) {
+      this.dataFormulario.get( campoFormulario ).markAsTouched();
+    };
+    if ( this.dataFormulario.get( campoFormulario ).value === null ) {
+      this.dataFormulario.get( campoFormulario ).markAsTouched();
+    };
   };
 
   fileName ( event: any ) {
@@ -54,6 +72,20 @@ export class FormRegistroTramiteComponent implements OnInit {
       });
     };
 
+  };
+
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.guardar();
+        }
+      } );
   };
 
   textoLimpio (texto: string) {
@@ -84,27 +116,31 @@ export class FormRegistroTramiteComponent implements OnInit {
   };
 
   guardar () {
-    console.log( this.dataFormulario );
 
-    if ( this.dataFormulario.invalid ) {
-      this.openDialog( 'Falta registrar información.', '' );
+    if ( this.dataFormulario.get( 'numeroContrato' ).value.length === 0 ) {
+      this.openDialog( '', '<b>Falta registrar información</b>.' );
+      this.dataFormulario.get( 'numeroContrato' ).markAsTouched();
       return;
-    };
+    }
 
     let pContrato = new FormData();
     pContrato.append( 'contratacionId', `${ this.contratacionId }` );
-    pContrato.append( 'contratoId', `${ this.contratoId }` );
+    
+    if ( this.contratoId !== null ) {
+      pContrato.append( 'contratoId', `${ this.contratoId }` );
+    };
+
     if ( this.dataFormulario.get( 'numeroContrato' ).value !== null ) {
       pContrato.append( 'numeroContrato', `${ this.dataFormulario.get( 'numeroContrato' ).value }` );
       this.estadoCodigo = this.estadoCodigos.enRevision;
-    }
+    };
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null ) {
       let fechaEnvioFirma = new Date( this.dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value );
       let fechaEnvioFirmas = fechaEnvioFirma.toISOString();
       pContrato.append( 'fechaEnvioFirma', `${ fechaEnvioFirmas }` );
       this.estadoCodigo = this.estadoCodigos.enFirmaContratista;
-    }
+    };
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null ) {
       let fechaFirmaContratista = new Date( this.dataFormulario.get( 'fechaFirmaPorParteContratista' ).value );
@@ -112,7 +148,7 @@ export class FormRegistroTramiteComponent implements OnInit {
       pContrato.append( 'fechaFirmaContratista', `${ fechaFirmaContratistas }` );
     } else {
       pContrato.append( 'fechaFirmaContratista', null );
-    }
+    };
 
     if ( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null ) {
       let fechaFirmaFiduciaria = new Date( this.dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value );
@@ -121,7 +157,7 @@ export class FormRegistroTramiteComponent implements OnInit {
       this.estadoCodigo = this.estadoCodigos.enFirmaFiduciaria;
     } else {
       pContrato.append( 'fechaFirmaFiduciaria', null );
-    }
+    };
 
     if ( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value !== null ) {
       let fechaFirmaContrato = new Date( this.dataFormulario.get( 'fechaFirmaPorParteFiduciaria' ).value );
@@ -129,31 +165,44 @@ export class FormRegistroTramiteComponent implements OnInit {
       pContrato.append( 'fechaFirmaContrato', `${ fechaFirmaContratos }` );
     } else {
       pContrato.append( 'fechaFirmaContrato', null );
-    }
+    };
 
     if ( this.dataFormulario.get( 'observaciones' ).value ) {
       pContrato.append( 'observaciones', `${ this.dataFormulario.get( 'observaciones' ).value }` );
-    }
+    };
 
-    if ( this.dataFormulario.get( 'rutaDocumento' ).value !== null ) {
-      pContrato.append( 'rutaDocumento', this.dataFormulario.get( 'rutaDocumento' ).value );
-      this.estadoCodigo = this.estadoCodigos.firmado;
-    }
+    if ( this.dataFormulario.get( 'documentoFile' ).value !== null ) {
+
+      if (this.dataFormulario.get('documentoFile').value.size > 1048576) {
+        this.openDialog('', '<b>El tamaño del archivo es superior al permitido, debe subir un archivo máximo de 1MB.</b>');
+        return;
+      };
+
+      let pFile = this.dataFormulario.get('documentoFile').value;
+      pFile = pFile.name.split('.');
+      pFile = pFile[pFile.length - 1];
+      if ( pFile === 'pdf' ) {
+        pContrato.append( 'pFile', this.dataFormulario.get( 'documentoFile' ).value );
+        this.estadoCodigo = this.estadoCodigos.firmado;
+      } else {
+        this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .pdf</b>');
+        return;
+      };
+
+    };
 
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigo )
       .subscribe( 
         ( resp: any ) => {
-          this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+          this.seRealizoPeticion = true;
+          this.openDialog( '', `<b>${resp.message}</b>` );
           this.routes.navigate( [ '/contratosModificacionesContractuales' ] );
         },
         ( error: any ) => {
-          console.log( error );
-          this.openDialog( error.message, '' );
+          this.openDialog( '', `<b>${error.message}</b>` );
         }
       );
 
-    //
-    //
   };
 
 }

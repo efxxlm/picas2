@@ -5,7 +5,7 @@ import { ProcesoSeleccion, ProcesoSeleccionService, EstadosProcesoSeleccion, Tip
 import { pid } from 'process';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Respuesta } from 'src/app/core/_services/autenticacion/autenticacion.service';
-
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ver-observaciones',
@@ -19,6 +19,7 @@ export class VerObservacionesComponent implements OnInit{
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
   tiposProcesoSeleccion = TiposProcesoSeleccion; 
   observaciones: any[];
+  procesoseleccion: ProcesoSeleccion;
   
   constructor(
               public dialogRef: MatDialogRef<VerObservacionesComponent>,
@@ -26,17 +27,19 @@ export class VerObservacionesComponent implements OnInit{
               private router: Router,
               private procesoseleccionService: ProcesoSeleccionService,
               public dialog: MatDialog,
+              private sanitized: DomSanitizer
              ) 
   {
 
   }
-  ngOnInit(): void {
-    //this.activarBotones();
-    console.log(this.data);
+  ngOnInit(): void {    
     this.procesoseleccionService.getObservacionesByID(this.data.id).subscribe(result=>
       {
-        this.observaciones=result;
+        this.observaciones=result[0];
       });
+    this.procesoseleccionService.getProcesoSeleccionById(this.data.id).subscribe(result=>{
+      this.procesoseleccion=result;
+    })
   }
 
   

@@ -11,9 +11,9 @@
 <div class="margin-70 table-responsive">
   <table mat-table [dataSource]="dataSource" matSort>
 
-    <ng-container matColumnDef="fechaCreacion">
+    <ng-container matColumnDef="fechaOrdenDia">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de comité </th>
-      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaCreacion | date: 'dd/MM/yyyy' }} </td>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaOrdenDia | date: 'dd/MM/yyyy' }} </td>
     </ng-container>
 
     <ng-container matColumnDef="numeroComite">

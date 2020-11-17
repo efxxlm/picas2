@@ -148,10 +148,9 @@ export class ControlDeRecursosComponent implements OnInit {
       data: { modalTitle, modalText }
     });   
     dialogRef.afterClosed().subscribe(result => {
-      if(result)
-      {
+      
         location.reload();
-      }
+      
     });
   }
 
@@ -173,11 +172,11 @@ console.log(this.addressForm);
 
       if (control.controlRecursoId > 0)
         this.fuenteFinanciacionServices.updateControlRecurso( control ).subscribe( respuesta => {
-          this.openDialog( '', respuesta.message );
+          this.openDialog( '', `<b>${respuesta.message}</b>` );
         })  
       else
         this.fuenteFinanciacionServices.registrarControlRecurso( control ).subscribe( respuesta => {
-          this.openDialog( '', respuesta.message );
+          this.openDialog( '', `<b>${respuesta.message}</b>` );
         })
 
     }

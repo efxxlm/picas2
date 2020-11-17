@@ -22,7 +22,10 @@ export class DisponibilidadPresupuestalService {
     return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetListGenerarRegistroPresupuestal`);
   }
 
-  
+  GetDisponibilidadPresupuestalByID(id) {
+    return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetDisponibilidadPresupuestalByID?DisponibilidadPresupuestalId=${id}`);
+  }
+
   GetDetailAvailabilityBudgetProyect(id)
   {
     return this.http.get<any[]>(`${environment.apiUrl}/AvailabilityBudgetProyect/GetDetailAvailabilityBudgetProyect?disponibilidadPresupuestalId=${id}`);
@@ -34,7 +37,10 @@ export class DisponibilidadPresupuestalService {
     var json = JSON.stringify(pdf[0]);    
     return this.http.get(`${environment.apiUrl}/AvailabilityBudgetProyect/StartDownloadPDF?detailValidarDisponibilidadPresupuesal=${encodeURIComponent(json)}`, { responseType: "blob" } );
   }
-
+  GenerateDRP(id)
+  {        
+    return this.http.get(`${environment.apiUrl}/BudgetAvailability/GenerateDRP?id=${id}`, { responseType: "blob" } );
+  }
   
   GenerateDDP(id)
   {        
@@ -60,7 +66,7 @@ export class DisponibilidadPresupuestalService {
   }
   SetValidarValidacionDDP(id)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/SetValidarValidacionDDP?id=${id}`,null);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/SetValidarValidacionDDP?id=${id}`,null);
   }
   SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion:any)
   {
@@ -80,9 +86,9 @@ export class DisponibilidadPresupuestalService {
   {
     return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/CreateFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
   }
-  DeleteFinancialFundingGestion(DisponibilidadPresupuestalObservacion:any)
+  DeleteFinancialFundingGestion(pIdDisponibilidadPresObservacion:number)
   {
-    return this.http.post<any[]>(`${environment.apiUrl}/BudgetAvailability/DeleteFinancialFundingGestion`,DisponibilidadPresupuestalObservacion);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/BudgetAvailability/DeleteFinancialFundingGestion?pIdDisponibilidadPresObservacion=${pIdDisponibilidadPresObservacion}`,null);
   }
   GetFinancialFundingGestionByDDPP(DisponibilidadPresupuestalObservacion:any)
   {

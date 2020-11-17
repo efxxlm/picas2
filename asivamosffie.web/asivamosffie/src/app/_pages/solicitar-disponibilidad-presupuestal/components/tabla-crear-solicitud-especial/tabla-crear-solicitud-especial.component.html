@@ -9,63 +9,65 @@
 </div>
 <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort>
-    
+
         <ng-container matColumnDef="fecha">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de la solicitud </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fechaSolicitud}}</b> </td>
+            <td mat-cell *matCellDef="let element"> <b>{{element.fechaSolicitud | date: 'dd/MM/yyyy'}}</b> </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="numero">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
             <td mat-cell *matCellDef="let element"> {{element.numeroSolicitud}} </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="valorSolicitado">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor solicitado </th>
             <td mat-cell *matCellDef="let element"> {{element.valorSolicitud | currency:'USD':'symbol':'1.0'}} </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="estadoSolicitud">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la solicitud </th>
             <td mat-cell *matCellDef="let element"> {{element.estadoSolicitudNombre}} </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="estadoRegistro">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element"> 
-                <span class="info-text info-text__table" 
-                [ngClass]="{'completo': element.registroCompleto === true, 'sin-diligenciar': element.registroCompleto === false}">
-                {{ element.registroCompleto === true ? 'Completo' : 'incompleto' }}
-                </span> 
+            <td mat-cell *matCellDef="let element">
+                <span class="info-text info-text__table"
+                    [ngClass]="{'completo': element.registroCompleto === true, 'sin-diligenciar': element.registroCompleto === false}">
+                    {{ element.registroCompleto === true ? 'Completo' : 'Incompleto' }}
+                </span>
             </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                
-                <button mat-raised-button color="accent" 
-                        class="btn-table" 
-                        (click)="enviarSolicitud(element.disponibilidadPresupuestalId)"
-                        *ngIf="element.estadoSolicitudCodigo == '8'">
-                        Enviar solicitud
+
+                <button mat-raised-button color="accent" class="btn-table" 
+                *ngIf="(element.estadoSolicitudCodigo==2||element.estadoSolicitudCodigo==8) && element.registroCompleto"
+                    (click)="enviarSolicitud(element.disponibilidadPresupuestalId)">
+                    Enviar solicitud
                 </button>
-    
-                <button mat-raised-button color="accent" 
-                        class="btn-table" 
-                        (click)="editar(element.disponibilidadPresupuestalId)">
-                        Ver detalle /Editar
+
+                <button mat-raised-button color="accent" class="btn-table" *ngIf="
+                    element.estadoSolicitudCodigo==8 || element.estadoSolicitudCodigo==2"
+                    (click)="editar(element.disponibilidadPresupuestalId)">
+                    Ver detalle /Editar
                 </button>
-    
-                <button mat-raised-button color="accent" 
-                        class="btn-table" 
-                        (click)="eliminar(element.disponibilidadPresupuestalId)"
-                        *ngIf="element.estadoSolicitudCodigo == '8'">
-                        Eliminar
+
+                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo==8"
+                    (click)="eliminar(element.disponibilidadPresupuestalId)">
+                    Eliminar
+                </button>
+
+                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo!=8 && element.estadoSolicitudCodigo!=2"
+                    (click)="verDetalle(element.disponibilidadPresupuestalId)">
+                    Ver detalle
                 </button>
             </td>
         </ng-container>
-    
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>

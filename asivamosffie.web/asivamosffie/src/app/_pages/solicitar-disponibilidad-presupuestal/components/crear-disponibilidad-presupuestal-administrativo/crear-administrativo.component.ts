@@ -25,7 +25,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
   })
 
   listaProyectos: ListConcecutivoProyectoAdministrativo[] = []
-  listaAportantes: ListAdminProyect[] = []
+  listaAportantes: ListAdminProyect = {}
   objetoDispinibilidad: DisponibilidadPresupuestal = {}
 
   editorStyle = {
@@ -56,26 +56,30 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
     this.activatedRoute.params.subscribe( parametros => {
       forkJoin([
-        this.budgetAvailabilityService.getListCocecutivoProyecto(),
-        this.budgetAvailabilityService.getDisponibilidadPresupuestalById( parametros.id )
+        this.budgetAvailabilityService.getListCocecutivoProyecto(),        
       ]).subscribe( respuesta => {
           this.listaProyectos = respuesta[0];
-
-          this.objetoDispinibilidad = respuesta[1];
-
-          //console.log( this.objetoDispinibilidad );
-
-          let proyecto = this.objetoDispinibilidad.disponibilidadPresupuestalProyecto[0];
-
-          let proyectoSeleccionado = this.listaProyectos.find( p => p.proyectoId == proyecto.proyectoAdministrativoId );
-
-          this.formulario.get('consecutivo').setValue( proyectoSeleccionado )
-          this.formulario.get('objeto').setValue( this.objetoDispinibilidad.objeto )
-          this.formulario.get('proyectoAdministrativoId').setValue( proyecto.proyectoAdministrativoId )
-          this.formulario.get('disponibilidadPresupuestalId').setValue( this.objetoDispinibilidad.disponibilidadPresupuestalId )
-
-          this.changeProyecto();
-
+          if(parametros.id>0)
+          {
+            this.budgetAvailabilityService.getDisponibilidadPresupuestalById( parametros.id ).subscribe(
+              result=>{
+                this.objetoDispinibilidad = result;
+  
+                //console.log( this.objetoDispinibilidad );
+      
+                let proyecto = this.objetoDispinibilidad.disponibilidadPresupuestalProyecto[0];
+      
+                let proyectoSeleccionado = this.listaProyectos.find( p => p.proyectoId == proyecto.proyectoAdministrativoId );
+      
+                this.formulario.get('consecutivo').setValue( proyectoSeleccionado )
+                this.formulario.get('objeto').setValue( this.objetoDispinibilidad.objeto )
+                this.formulario.get('proyectoAdministrativoId').setValue( proyecto.proyectoAdministrativoId )
+                this.formulario.get('disponibilidadPresupuestalId').setValue( this.objetoDispinibilidad.disponibilidadPresupuestalId )
+      
+                this.changeProyecto();              
+              }
+            )            
+          }          
         })
     })
 
@@ -86,10 +90,11 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
     let proyecto = this.formulario.get('consecutivo').value;
     console.log( proyecto )
-    this.budgetAvailabilityService.getAportantesByProyectoAdminId( proyecto.proyectoId )
+    this.listaAportantes = proyecto;
+    /*this.budgetAvailabilityService.getAportantesByProyectoAdminId( proyecto.proyectoId )
       .subscribe( lista  => {
-        this.listaAportantes = lista;
-      })
+        
+      })*/
   }
 
   maxLength(e: any, n: number) {
@@ -114,20 +119,24 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
     let aportante = this.listaAportantes[0];
 
+    let valor=0;
+    this.listaAportantes.aportanteFuenteFinanciacion.forEach(element => {
+      valor+=element.valorFuente;
+    });
     let disponibilidad: DisponibilidadPresupuestal = {
       disponibilidadPresupuestalId: this.formulario.get('disponibilidadPresupuestalId').value,
       objeto: this.formulario.get('objeto').value,
       tipoSolicitudCodigo: '3',
-      valorSolicitud: aportante ? aportante.valorAporte : 0,
+      valorSolicitud: valor,
      
       disponibilidadPresupuestalProyecto: []
       
     }
 
     let proyectoSeleccionado = this.formulario.get('consecutivo').value
-
+    let iddiproyectoid=this.objetoDispinibilidad.disponibilidadPresupuestalProyecto?this.objetoDispinibilidad.disponibilidadPresupuestalProyecto[0].disponibilidadPresupuestalProyectoId:0;
     let proyecto: DisponibilidadPresupuestalProyecto = {
-       disponibilidadPresupuestalProyectoId: this.formulario.get('proyectoAdministrativoId').value,
+       disponibilidadPresupuestalProyectoId: iddiproyectoid,
       proyectoAdministrativoId: proyectoSeleccionado ? proyectoSeleccionado.proyectoId : null,
     }
 
@@ -135,7 +144,7 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
 
     this.budgetAvailabilityService.createOrEditProyectoAdministrtivo( disponibilidad )
       .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message )
+        this.openDialog( '', `<b>${respuesta.message}</b>` )
         if ( respuesta.code == "200" )
           this.router.navigate(['/solicitarDisponibilidadPresupuestal'])
       })

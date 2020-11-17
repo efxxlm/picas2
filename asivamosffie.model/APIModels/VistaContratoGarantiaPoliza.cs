@@ -18,6 +18,8 @@ namespace asivamosffie.model.APIModels
         
         public string NumeroIdentificacion { get; set; }
 
+        public string TipoDocumento { get; set; }
+
         //Nit  ????
 
         public string ValorContrato { get; set; }
@@ -33,7 +35,6 @@ namespace asivamosffie.model.APIModels
         public string? DescripcionModificacion { get; set; }
 
         public string? TipoModificacion { get; set; }
-
-
+        public string? FechaFirmaContrato { get; set; }
     }
 }

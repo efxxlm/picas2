@@ -56,11 +56,11 @@ export class AplazarSesionComponent implements OnInit {
 
     this.technicalCommitteeSessionService.aplazarSesionComite( comiteTecnico )
       .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message )
-        if ( respuesta.code == "200" )
+        this.openDialog( '', `<b>${respuesta.message}</b>` )
+        if ( respuesta.code == "202" )
         {
           this.dialogRef.close();
-          this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico', this.data.comite.comiteTecnicoId]);
+          this.router.navigate(['/comiteTecnico']);
         }
       })
     

@@ -3,7 +3,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Interfaces;
-using asivamosffie.services.PostParameters;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,19 +25,193 @@ namespace asivamosffie.services
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly string _connectionString;
-        
+
+        public async Task<dynamic> GetListAportanteByTipoAportanteByProyectoId(int pProyectoId , int pTipoAportanteId) 
+        { 
+            try
+            {
+                return await _context.ProyectoAportante
+                        .Where(r => r.ProyectoId == pProyectoId)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(r=> r.Departamento)
+                        .Include(r => r.Aportante)
+                        .ThenInclude(r => r.Municipio)
+                           .Include(r => r.Aportante)
+                        .ThenInclude(r => r.NombreAportante)
+                        .Select(r=> r.Aportante)
+                        .Where(r=> r.TipoAportanteId == pTipoAportanteId)
+                     .ToListAsync();
+            }
+            catch (Exception)
+            {
+                return new CofinanciacionAportante();
+            }         
+        }
 
         public RequestBudgetAvailabilityService(devAsiVamosFFIEContext context, ICommonService commonService, IConfiguration configuration)
         {
             _context = context;
             _commonService = commonService;
             _connectionString = configuration.GetConnectionString("asivamosffieDatabase");
-
-
         }
 
+        public async Task<Contrato> GetListContatoByNumeroContrato(string pNumeroContrato)
+        {
+            //Si el aportante es tercero include dominio
+            Contrato Contrato = await _context.Contrato
+               .Where(r => r.NumeroContrato.Contains(pNumeroContrato) && !(bool)r.Eliminado)
+               .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.Contratista)
+                .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.NombreAportante)
 
+                 //Si el aportante es Et include Depto
+                 .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.Departamento)
 
+                 //Si el aportante es Et include mun
+                 .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.Municipio)
+
+                 //incluir fuente de financiacion al aportante
+                 .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.FuenteFinanciacion)
+
+                 //incluir fuente de DDP al aportante
+                 .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                                   .ThenInclude(r => r.ProyectoAportante)
+                                          .ThenInclude(r => r.Aportante)
+                                                 .ThenInclude(r => r.DisponibilidadPresupuestal)
+               .FirstOrDefaultAsync();
+
+            foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
+            {
+                foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado))
+                {
+                    decimal? SaldoFuentesFinanciacion, SaldoDisponibilidadPresupuestal = 0;
+                    SaldoFuentesFinanciacion = ProyectoAportante.Aportante.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorFuente);
+                    SaldoDisponibilidadPresupuestal = ProyectoAportante.Aportante.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorAportante);
+
+                    ProyectoAportante.Aportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
+                }
+            } 
+
+            return Contrato;
+        }
+
+        /*jflorez, versión light del metodo anterior*/
+        public async Task<Contrato> GetContratoByNumeroContrato(string pNumeroContrato)
+        {
+                       
+            //Si el aportante es tercero include dominio
+            Contrato Contrato = await _context.Contrato
+               .Where(r => r.NumeroContrato.Contains(pNumeroContrato) && !(bool)r.Eliminado)
+               .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.ContratacionProyecto)
+               .Include(r => r.Contratacion)
+                  .ThenInclude(r => r.Contratista)
+               .FirstOrDefaultAsync();
+            try
+            {
+                Contrato.ListAportantes = new List<CofinanicacionAportanteGrilla>();
+                foreach (var ContratacionProyecto in Contrato.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
+                {
+                    var proyectoAportante = _context.ProyectoAportante.Where(x => x.Proyecto.ProyectoId == ContratacionProyecto.ProyectoId && !(bool)x.Eliminado).Include(x => x.Aportante).ThenInclude(x => x.Cofinanciacion).ToList();
+                    foreach (var ProyectoAportante in proyectoAportante)
+                    {
+                        decimal? SaldoFuentesFinanciacion, SaldoDisponibilidadPresupuestal = 0;
+                        SaldoFuentesFinanciacion = ProyectoAportante.Aportante.FuenteFinanciacion.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorFuente);
+                        SaldoDisponibilidadPresupuestal = ProyectoAportante.Aportante.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado).Sum(r => r.ValorAportante);
+
+                        ProyectoAportante.Aportante.SaldoDisponible = SaldoFuentesFinanciacion - SaldoDisponibilidadPresupuestal;
+                        var nombre = "";
+                        if (ProyectoAportante.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
+                        {
+                            nombre = ConstanStringTipoAportante.Ffie;
+                        }
+                        else if (ProyectoAportante.Aportante.TipoAportanteId == ConstanTipoAportante.ET)
+                        {
+                            //verifico si tiene municipio
+                            if (ProyectoAportante.Aportante.MunicipioId != null)
+                            {
+                                nombre = "Alcaldía de " + _context.Localizacion.Find(ProyectoAportante.Aportante.MunicipioId).Descripcion;
+                            }
+                            else//solo departamento
+                            {
+                                if (ProyectoAportante.Aportante.DepartamentoId == null)
+                                {
+                                    nombre = "";
+                                }
+                                else
+                                {
+                                    nombre = "Gobernación de " + ProyectoAportante.Aportante.DepartamentoId == null ? "" :
+                                    _context.Localizacion.Find(ProyectoAportante.Aportante.DepartamentoId).Descripcion;
+                                }
+
+                            }
+
+                        }
+                        else
+                        {
+                            nombre = _context.Dominio.Find(ProyectoAportante.Aportante.NombreAportanteId).Nombre;
+                        }
+                        CofinanicacionAportanteGrilla cofinanicacionAportanteGrilla = new CofinanicacionAportanteGrilla
+                        {
+                            CofinanciacionAportanteId = ProyectoAportante.Aportante.CofinanciacionAportanteId,
+                            Nombre = nombre,
+                            TipoAportante = await _commonService.GetNombreDominioByDominioID((int)ProyectoAportante.Aportante.TipoAportanteId),
+                            Vigencia = ProyectoAportante.Aportante.Cofinanciacion.VigenciaCofinanciacionId,
+                            FechaCreacion = ProyectoAportante.Aportante.FechaCreacion,
+                            MunicipioId = ProyectoAportante.Aportante.MunicipioId,
+                            DepartamentoId = ProyectoAportante.Aportante.DepartamentoId,
+                            RegistroCompleto = ProyectoAportante.Aportante.Cofinanciacion.RegistroCompleto
+                        };
+                        if (Contrato.ListAportantes.Where(x => x.CofinanciacionAportanteId == ProyectoAportante.Aportante.CofinanciacionAportanteId).Count() == 0)
+                        {
+                            Contrato.ListAportantes.Add(cofinanicacionAportanteGrilla);
+                        }
+                    }
+                }
+                return Contrato;
+            }
+            catch(Exception e)
+            {
+                return Contrato;
+            }
+            //return Contrato;
+        }
+
+        public async Task<DisponibilidadPresupuestal> GetDisponibilidadPresupuestalByID(int id)
+        {
+            DisponibilidadPresupuestal disponibilidadPresupuestal = await _context.DisponibilidadPresupuestal
+                .Where(r => r.DisponibilidadPresupuestalId == id)
+                   .Include(r => r.DisponibilidadPresupuestalObservacion)
+                   .Include(r => r.DisponibilidadPresupuestalProyecto)
+                    .ThenInclude(r => r.Proyecto)
+                      .ThenInclude(r => r.ProyectoAportante)
+                        .ThenInclude(r => r.Aportante)
+                .FirstOrDefaultAsync();
+
+            return disponibilidadPresupuestal;
+        }
         //Avance compromisos
         public async Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento)
         {
@@ -103,13 +277,11 @@ namespace asivamosffie.services
             }
 
         }
-
+         
         public async Task<List<ListAportantes>> GetAportantesByProyectoId(int proyectoId)
         {
             try
-            {
-
-
+            { 
                 return await (
                                 from cp in _context.ContratacionProyecto
                                 join ct in _context.Contratacion on cp.ContratacionId equals ct.ContratacionId
@@ -130,61 +302,46 @@ namespace asivamosffie.services
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Nombre_Aportante_Aportante)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),
                                     ValorAporte = ctp.ValorAporte,
-                                    TipoAportanteText = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(cf.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
-                                }).ToListAsync();
-
-
-
+                                    TipoAportanteText = _context.Dominio
+                                    .Where(r => (bool)r.Activo && r.DominioId
+                                    .Equals(cf.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante)
+                                    .Select(r => r.Nombre).FirstOrDefault(),
+                                }).ToListAsync(); 
             }
-            catch (Exception)
-            {
-
+            catch (Exception ex)
+            {  
                 throw;
             }
         }
-
-
-
 
         //Aportantes por proyectoId
         public async Task<List<ListAdminProyect>> GetAportantesByProyectoAdministrativoId(int proyectoId)
         {
             try
             {
-
-                using (SqlConnection sql = new SqlConnection(_connectionString))
+                using SqlConnection sql = new SqlConnection(_connectionString);
+                using SqlCommand cmd = new SqlCommand("GetAportantesByProyectoId", sql)
                 {
-                    using (SqlCommand cmd = new SqlCommand("GetAportantesByProyectoId", sql))
+                    CommandType = System.Data.CommandType.StoredProcedure
+                };
+                cmd.Parameters.Add("@ProyectoId", SqlDbType.Int).Value = proyectoId;
+                var response = new List<ListAdminProyect>();
+                await sql.OpenAsync();
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
                     {
-                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                        cmd.Parameters.Add("@ProyectoId", SqlDbType.Int).Value = proyectoId;
-                        var response = new List<ListAdminProyect>();
-                        await sql.OpenAsync();
-
-                        using (var reader = await cmd.ExecuteReaderAsync())
-                        {
-                            while (await reader.ReadAsync())
-                            {
-                                response.Add(MapToValueProyectoAdmnistrativo(reader));
-                            }
-                        }
-
-                        return response;
+                        response.Add(MapToValueProyectoAdmnistrativo(reader));
                     }
                 }
-
-
-
+                return response;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
-
-
-
 
         //Crear solciitud proyecto administrativo
         public async Task<Respuesta> CreateOrEditProyectoAdministrtivo(DisponibilidadPresupuestal disponibilidad)
@@ -210,10 +367,11 @@ namespace asivamosffie.services
                     disponibilidad.EstadoSolicitudCodigo = "8";
                     disponibilidad.Eliminado = false;
 
-                    disponibilidad.DisponibilidadPresupuestalProyecto.ToList().ForEach( pro => {
+                    disponibilidad.DisponibilidadPresupuestalProyecto.ToList().ForEach(pro =>
+                    {
                         pro.UsuarioCreacion = disponibilidad.UsuarioCreacion;
                         pro.FechaCreacion = disponibilidad.FechaCreacion;
-                        
+
 
                     });
 
@@ -231,10 +389,11 @@ namespace asivamosffie.services
                     //Registros
                     disponibilidadPresupuestalAntiguo.Objeto = disponibilidad.Objeto;
                     disponibilidadPresupuestalAntiguo.AportanteId = disponibilidad.AportanteId;
-                    
 
-                    disponibilidad.DisponibilidadPresupuestalProyecto.ToList().ForEach( pro => {
-                        if ( string.IsNullOrEmpty(pro.DisponibilidadPresupuestalProyectoId.ToString()) || pro.DisponibilidadPresupuestalProyectoId == 0 )
+
+                    disponibilidad.DisponibilidadPresupuestalProyecto.ToList().ForEach(pro =>
+                    {
+                        if (string.IsNullOrEmpty(pro.DisponibilidadPresupuestalProyectoId.ToString()) || pro.DisponibilidadPresupuestalProyectoId == 0)
                         {
                             DisponibilidadPresupuestalProyecto proyecto = new DisponibilidadPresupuestalProyecto();
 
@@ -244,14 +403,14 @@ namespace asivamosffie.services
                             proyecto.DisponibilidadPresupuestalId = disponibilidad.DisponibilidadPresupuestalId;
                             proyecto.ProyectoAdministrativoId = pro.ProyectoAdministrativoId;
 
-                            disponibilidadPresupuestalAntiguo.DisponibilidadPresupuestalProyecto.Add( proyecto );
-                        }else
+                            disponibilidadPresupuestalAntiguo.DisponibilidadPresupuestalProyecto.Add(proyecto);
+                        }
+                        else
                         {
-                            DisponibilidadPresupuestalProyecto proyecto = _context.DisponibilidadPresupuestalProyecto.Find( pro.DisponibilidadPresupuestalProyectoId );
+                            DisponibilidadPresupuestalProyecto proyecto = _context.DisponibilidadPresupuestalProyecto.Find(pro.DisponibilidadPresupuestalProyectoId);
 
                             proyecto.UsuarioModificacion = disponibilidad.UsuarioCreacion;
                             proyecto.FechaModificacion = disponibilidad.FechaModificacion;
-
                             proyecto.ProyectoAdministrativoId = pro.ProyectoAdministrativoId;
                         }
 
@@ -289,9 +448,6 @@ namespace asivamosffie.services
 
         }
 
-
-
-
         //Registrar informacion Adicional en una solicitud
         public async Task<Respuesta> CreateOrEditInfoAdditional(DisponibilidadPresupuestal pDisponibilidad, string user)
         {
@@ -318,7 +474,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.PlazoMeses = pDisponibilidad.PlazoMeses;
                     //disponibilidadPresupuestal.AportanteId = pdo.aportanteId;
                     _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
-                    
+
                 }
                 else
                 {
@@ -331,17 +487,18 @@ namespace asivamosffie.services
                      * jflorez, no estoy seguro de esto pero en estos ddp tradicionales no se estaba relacionando los proyectos que lo comprenden
                      */
                     var contratosproyecto = _context.ContratacionProyecto.Where(x => x.ContratacionId == pDisponibilidad.ContratacionId && !(bool)x.Eliminado).ToList();
-                    foreach(var contratoproyecto in contratosproyecto)
+                    foreach (var contratoproyecto in contratosproyecto)
                     {
                         _context.DisponibilidadPresupuestalProyecto.Add(
-                            new DisponibilidadPresupuestalProyecto { 
-                                DisponibilidadPresupuestalId=pDisponibilidad.DisponibilidadPresupuestalId,
-                                Eliminado=false,
-                                FechaCreacion=DateTime.Now,
-                                ProyectoId=contratoproyecto.ProyectoId,
-                                UsuarioCreacion=user
+                            new DisponibilidadPresupuestalProyecto
+                            {
+                                DisponibilidadPresupuestalId = pDisponibilidad.DisponibilidadPresupuestalId,
+                                Eliminado = false,
+                                FechaCreacion = DateTime.Now,
+                                ProyectoId = contratoproyecto.ProyectoId,
+                                UsuarioCreacion = user
                             });
-                    }                    
+                    }
                 }
                 _context.SaveChanges();
                 return respuesta = new Respuesta
@@ -371,20 +528,48 @@ namespace asivamosffie.services
 
         }
 
-
         //Ver detalle
         public async Task<DisponibilidadPresupuestal> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId)
         {
-            return await _context.DisponibilidadPresupuestal
-                                        .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
-                                        .Include( r => r.DisponibilidadPresupuestalProyecto )
-                                            .ThenInclude( r => r.Proyecto )
-                                        .FirstOrDefaultAsync();
+            try
+            {
+                DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
+                                                .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
+                                                .Include(r => r.DisponibilidadPresupuestalProyecto)
+                                                   .ThenInclude(r => r.Proyecto)
+                                                   .ThenInclude(r => r.LocalizacionIdMunicipioNavigation)
+                                                .Include(r => r.Aportante)
+                                                   .ThenInclude(r => r.NombreAportante)
+                                                .Include(r => r.Aportante)
+                                                   .ThenInclude(r => r.Departamento)
+                                                .Include(r => r.Aportante)
+                                                   .ThenInclude(r => r.Municipio)
+                                                .OrderByDescending(r => r.DisponibilidadPresupuestalId).FirstOrDefaultAsync();
+
+                foreach (var DisponibilidadPresupuestalProyecto in disponibilidad.DisponibilidadPresupuestalProyecto)
+                {
+                    if (DisponibilidadPresupuestalProyecto.Proyecto != null)
+                    {
+                        if (!string.IsNullOrEmpty(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio))
+                        { 
+                            Localizacion Municipio = _context.Localizacion.Find(DisponibilidadPresupuestalProyecto.Proyecto.LocalizacionIdMunicipio);
+                            DisponibilidadPresupuestalProyecto.Proyecto.MunicipioObj = Municipio;
+                            DisponibilidadPresupuestalProyecto.Proyecto.DepartamentoObj = _context.Localizacion.Find(Municipio.IdPadre);
+                        }
+                    }
+                } 
+                
+                return disponibilidad;
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            return new DisponibilidadPresupuestal();
         }
 
-
-        //Registrar nueva solicitud DDp Especial
-        
+        //Registrar nueva solicitud DDp Especial 
         public async Task<Respuesta> CreateOrEditDDPRequest(DisponibilidadPresupuestal disponibilidadPresupuestal)
         {
             Respuesta respuesta = new Respuesta();
@@ -400,11 +585,11 @@ namespace asivamosffie.services
 
 
 
-                if (string.IsNullOrEmpty(disponibilidadPresupuestal.DisponibilidadPresupuestalId.ToString()) || disponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
+                if (disponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
                 {
                     //Auditoria
 
-                    strCrearEditar = "REGISTRAR SOLICITUD DDP ESPECIAL";
+                    strCrearEditar = "";
                     disponibilidadPresupuestal.FechaCreacion = DateTime.Now;
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.Eliminado = false;
@@ -412,7 +597,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", countMaxId);
                     disponibilidadPresupuestal.OpcionContratarCodigo = "Validando";
                     disponibilidadPresupuestal.ValorSolicitud = 0;
-                    disponibilidadPresupuestal.EstadoSolicitudCodigo = "8"; // Sin registrar => TipoDominioId = 39
+                    disponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
                     disponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
                     disponibilidadPresupuestal.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestal.Objeto = disponibilidadPresupuestal.Objeto;
@@ -421,7 +606,7 @@ namespace asivamosffie.services
 
                     disponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
                     {
-                        if (string.IsNullOrEmpty(p.DisponibilidadPresupuestalProyectoId.ToString()) || p.DisponibilidadPresupuestalProyectoId == 0)
+                        if (p.DisponibilidadPresupuestalProyectoId == 0)
                         {
                             entity.ProyectoId = p.ProyectoId;
                             entity.DisponibilidadPresupuestalId = disponibilidadPresupuestal.DisponibilidadPresupuestalId;
@@ -439,28 +624,24 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    strCrearEditar = "EDIT SOLICITUD DDP ESPECIAL";
+                    strCrearEditar = "EDITAR SOLICITUD DDP ESPECIAL";
                     disponibilidadPresupuestalAntiguo = _context.DisponibilidadPresupuestal.Find(disponibilidadPresupuestal.DisponibilidadPresupuestalId);
 
                     //Auditoria
                     disponibilidadPresupuestalAntiguo.UsuarioModificacion = disponibilidadPresupuestal.UsuarioModificacion;
-                    disponibilidadPresupuestalAntiguo.Eliminado = false;
-
 
                     //Registros
-                    //disponibilidadPresupuestalAntiguo.OpcionContratarCodigo = disponibilidadPresupuestal.OpcionContratarCodigo;
+
                     disponibilidadPresupuestalAntiguo.ValorSolicitud = disponibilidadPresupuestal.ValorSolicitud;
-                    //disponibilidadPresupuestalAntiguo.NumeroSolicitud = disponibilidadPresupuestal.NumeroSolicitud;
-                    //disponibilidadPresupuestalAntiguo.FechaSolicitud = disponibilidadPresupuestal.FechaSolicitud;
                     disponibilidadPresupuestalAntiguo.Objeto = disponibilidadPresupuestal.Objeto;
-                    //disponibilidadPresupuestalAntiguo.EstadoSolicitudCodigo = disponibilidadPresupuestal.EstadoSolicitudCodigo;
                     disponibilidadPresupuestalAntiguo.TipoSolicitudCodigo = disponibilidadPresupuestal.TipoSolicitudCodigo;
                     disponibilidadPresupuestalAntiguo.AportanteId = disponibilidadPresupuestal.AportanteId;
                     disponibilidadPresupuestalAntiguo.NumeroRadicadoSolicitud = disponibilidadPresupuestal.NumeroRadicadoSolicitud;
+                    disponibilidadPresupuestalAntiguo.CuentaCartaAutorizacion = disponibilidadPresupuestal.CuentaCartaAutorizacion;
 
                     disponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
                     {
-                        if (string.IsNullOrEmpty(p.DisponibilidadPresupuestalProyectoId.ToString()) || p.DisponibilidadPresupuestalProyectoId == 0)
+                        if (p.DisponibilidadPresupuestalProyectoId == 0)
                         {
                             entity.ProyectoId = p.ProyectoId;
                             entity.DisponibilidadPresupuestalId = disponibilidadPresupuestal.DisponibilidadPresupuestalId;
@@ -610,9 +791,8 @@ namespace asivamosffie.services
 
         }
 
-
         //Enviar solicitud
-        public async Task<Respuesta> SendRequest(int disponibilidadPresupuestalId)
+        public async Task<Respuesta> SendRequest(int disponibilidadPresupuestalId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
 
             Respuesta respuesta = new Respuesta();
@@ -634,7 +814,34 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.EstadoSolicitudCodigo = "1"; // Se cambia el estado a "En validación presupuestal" => TipoDominioId = 39
                     _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
+                    //envio correo
+                    //envio correo a fiduciaria
+                    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ddpSolicitudCreada);
+                    /*<b>Número del contrato:</b> [NumeroContrato]<br>
+                    <b>Fecha de firma del contrato:</b> [FechaContrato]<br>
+                    <b>Número del solicitud:</b> [NumeroSolicitud]<br>
+                    <b>Tipo de solicitud:</b> [TipoDeSolicitud]<br>*/
+                    string ncontrato = "";
+                    string fechaContrato = "";
+                    if(disponibilidadPresupuestal.ContratacionId>0)
+                    {
+                        var contrato = _context.Contratacion.Find(disponibilidadPresupuestal.ContratacionId);
+                        ncontrato = contrato.NumeroSolicitud;
+                        fechaContrato = contrato.FechaTramite!=null? Convert.ToDateTime(contrato.FechaTramite).ToString("dd/MM/yyy"):"";
+                    }
+                    string tiposolicut = _context.Dominio.Where(x=>x.TipoDominioId== (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal && x.Codigo==disponibilidadPresupuestal.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+                    string template = TemplateRecoveryPassword.Contenido.Replace("[NumeroContrato]",
+                        ncontrato).Replace("_LinkF_", pDominioFront).
+                        Replace("[FechaContrato]", fechaContrato).
+                        Replace("[NumeroSolicitud]", disponibilidadPresupuestal.NumeroSolicitud).
+                        Replace("[TipoDeSolicitud]", tiposolicut);
 
+                    
+                    var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Financiera).Include(y => y.Usuario).ToList();
+                    foreach (var usuarioadmin in usuariosadmin)
+                    {
+                        bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Solicitud de disponibilidad presupuetal creada", template, pSender, pPassword, pMailServer, pMailPort);                        
+                    }
                 }
 
                 return respuesta = new Respuesta
@@ -684,8 +891,7 @@ namespace asivamosffie.services
                     disponibilidadPresupuestal.FechaModificacion = DateTime.Now;
                     disponibilidadPresupuestal.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
                     disponibilidadPresupuestal.Eliminado = true;
-                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestal);
-
+                    _context.SaveChanges();
                 }
 
                 return respuesta = new Respuesta
@@ -694,8 +900,8 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Data = disponibilidadPresupuestal,
-                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, disponibilidadPresupuestal.UsuarioCreacion, strCrearEditar)
+                    Code = ConstantMessagesDisponibilidadPresupuesta.EliminacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesDisponibilidadPresupuesta.EliminacionExitosa, idAccion, disponibilidadPresupuestal.UsuarioCreacion, strCrearEditar)
 
                 };
             }
@@ -714,13 +920,12 @@ namespace asivamosffie.services
             }
         }
 
-
         //Grilla DDP Especial
         public async Task<List<DisponibilidadPresupuestal>> GetDDPEspecial()
         {
             return await (
                             from dp in _context.DisponibilidadPresupuestal
-                            where dp.NumeroSolicitud.Contains("DE_")
+                            where dp.NumeroSolicitud.Contains("DE_") && !(bool)dp.Eliminado
                             select new DisponibilidadPresupuestal
                             {
                                 DisponibilidadPresupuestalId = dp.DisponibilidadPresupuestalId,
@@ -730,11 +935,11 @@ namespace asivamosffie.services
                                 EstadoSolicitudCodigo = dp.EstadoSolicitudCodigo,
                                 RegistroCompleto = dp.RegistroCompleto,
                                 EstadoSolicitudNombre = _context.Dominio.Where(r => (bool)r.Activo &&
-                                                                             r.Codigo.Equals(dp.EstadoSolicitudCodigo) && 
+                                                                             r.Codigo.Equals(dp.EstadoSolicitudCodigo) &&
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),
 
-                            }).ToListAsync();
+                            }).OrderByDescending(r => r.DisponibilidadPresupuestalId).ToListAsync();
         }
 
         public async Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa()
@@ -750,15 +955,14 @@ namespace asivamosffie.services
                                 ValorSolicitud = dp.ValorSolicitud,
                                 EstadoSolicitudCodigo = dp.EstadoSolicitudCodigo,
                                 RegistroCompleto = dp.RegistroCompleto,
+                                Objeto = dp.Objeto,
                                 EstadoSolicitudNombre = _context.Dominio.Where(r => (bool)r.Activo &&
-                                                                             r.Codigo.Equals(dp.EstadoSolicitudCodigo) && 
+                                                                             r.Codigo.Equals(dp.EstadoSolicitudCodigo) &&
                                                                              r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal)
                                                                        .Select(r => r.Nombre).FirstOrDefault(),
 
-                            }).ToListAsync();
+                            }).OrderByDescending(r => r.DisponibilidadPresupuestalId).ToListAsync();
         }
-
-
 
         //Solicitudes de comite tecnico
         public async Task<List<CustonReuestCommittee>> GetReuestCommittee()
@@ -815,23 +1019,68 @@ namespace asivamosffie.services
                 FuenteAportanteId = (int)reader["FuenteAportanteId"],
                 FuenteRecursosCodigo = reader["FuenteRecursosCodigo"].ToString(),
                 NombreFuente = reader["NombreFuente"].ToString(),
-                
+
 
             };
         }
 
-        //Lista Concecutivo admnistrativo
+        //Lista Consecutivo admnistrativo
         public async Task<List<ListConcecutivoProyectoAdministrativo>> GetListCocecutivoProyecto()
         {
             try
             {
-                return await ( from cp in _context.ProyectoAdministrativoAportante select new ListConcecutivoProyectoAdministrativo {
-                                   ProyectoId = cp.ProyectoAdminstrativoId,
-                                   Concecutivo = Helpers.Helpers.Consecutive("D4", cp.ProyectoAdminstrativoId),
-                                }).ToListAsync();
+                var proyectoadminapo = _context.ProyectoAdministrativoAportante.Where(x => (bool)x.ProyectoAdminstrativo.Enviado).ToList();
+                List<ListConcecutivoProyectoAdministrativo> proyectoreturn = new List<ListConcecutivoProyectoAdministrativo>();
+                foreach(var proy in proyectoadminapo)
+                {
+                    List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
+
+                    List<AportanteFuenteFinanciacion> aportantefuente = new List<AportanteFuenteFinanciacion>();
+                    foreach(var apor in _context.AportanteFuenteFinanciacion.Include(x=>x.FuenteFinanciacion).ThenInclude(x=>x.Aportante).Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId).ToList())
+                    {
+                        apor.FuenteFinanciacionString = _context.Dominio.Where(x => x.Codigo == apor.FuenteFinanciacion.FuenteRecursosCodigo 
+                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                        if (apor.FuenteFinanciacion.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+                        {
+                            apor.NombreAportanteString = ConstanStringTipoAportante.Ffie;
+                        }
+                        else if (apor.FuenteFinanciacion.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+                        {
+                            apor.NombreAportanteString = apor.FuenteFinanciacion.Aportante.NombreAportanteId == null
+                                ? "" :
+                                _context.Dominio.Find(apor.FuenteFinanciacion.Aportante.NombreAportanteId).Nombre;
+                        }
+                        else
+                        {
+                            if (apor.FuenteFinanciacion.Aportante.MunicipioId == null)
+                            {
+                                apor.FuenteFinanciacion.Aportante.NombreAportanteString = apor.FuenteFinanciacion.Aportante.DepartamentoId == null
+                                ? "" :
+                                "Gobernación " + _context.Localizacion.Find(apor.FuenteFinanciacion.Aportante.DepartamentoId).Descripcion;
+                            }
+                            else
+                            {
+                                apor.NombreAportanteString = apor.FuenteFinanciacion.Aportante.MunicipioId == null
+                                ? "" :
+                                "Alcaldía " + _context.Localizacion.Find(apor.FuenteFinanciacion.Aportante.MunicipioId).Descripcion;
+                            }
+                        }
+                        
+                        aportantefuente.Add(apor);
+                    }
+                    proyectoreturn.Add(new ListConcecutivoProyectoAdministrativo
+                    {
+                        ProyectoId = proy.ProyectoAdminstrativoId,
+                        Concecutivo = Helpers.Helpers.Consecutive("D4", proy.ProyectoAdminstrativoId),
+                        NombreAportante= ConstanStringTipoAportante.Ffie,
+                        AportanteFuenteFinanciacion = aportantefuente,//_context.AportanteFuenteFinanciacion.Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId).ToList(),
+                        ListaAportantes = _context.Dominio.Find(proy.AportanteId)
+                    });
+                }
+                return proyectoreturn;
             }
 
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 throw;
@@ -840,26 +1089,29 @@ namespace asivamosffie.services
 
 
 
-
         public async Task<List<Proyecto>> SearchLlaveMEN(string LlaveMEN)
         {
             var Id = await _context.Proyecto
                 .Where(r => r.LlaveMen == LlaveMEN.ToString().Trim() && !(bool)r.Eliminado)
-                
-                
                 .Select(r => r.LlaveMen).FirstOrDefaultAsync();
             if (!string.IsNullOrEmpty(Id))
-                return await _context.Proyecto
+            {
+
+                var proyectos= await _context.Proyecto
                 .Where(r => r.LlaveMen.Equals(Id))
                 .Include(r => r.InstitucionEducativa)
                 .Include(r => r.Sede)
                 .ToListAsync();
-
+                foreach(var proyecto in proyectos)
+                {
+                    proyecto.tipoIntervencionString = _context.Dominio.Where(x => x.Codigo == proyecto.TipoIntervencionCodigo
+                          && x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre;
+                }
+                return proyectos;
+            }
             else
-                throw new Exception("Esta llave no existe, por favor verificar los datos registrados");
-
+                return new List<Proyecto>();
         }
-
 
         //plantlla - rubro por financiar es infraestructura y el tipo de solicitud es contratación
         public async Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal obj)
@@ -1322,106 +1574,195 @@ namespace asivamosffie.services
         {
             List<DisponibilidadPresupuestal> ListDP = await _context.DisponibilidadPresupuestal.
                 Where(r => !r.Eliminado && r.DisponibilidadPresupuestalId == disponibilidadPresupuestalId).
-                Include(x=>x.DisponibilidadPresupuestalProyecto).
-                    ThenInclude(y=>y.Proyecto).
-                    ThenInclude(v=>v.ProyectoAportante).
-                    ThenInclude(c=>c.Aportante).
-                Include(x=>x.DisponibilidadPresupuestalObservacion).ToListAsync();
+                Include(x => x.DisponibilidadPresupuestalProyecto).
+                    ThenInclude(y => y.Proyecto).
+                    ThenInclude(v => v.ProyectoAportante).
+                    ThenInclude(c => c.Aportante).
+                        ThenInclude(c => c.FuenteFinanciacion).
+                Include(x => x.DisponibilidadPresupuestalObservacion).ToListAsync();
+            
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
-
+            decimal saldototal = 0;
             foreach (var detailDP in ListDP)
             {
                 List<CofinanicacionAportanteGrilla> aportantes = new List<CofinanicacionAportanteGrilla>();
                 List<ProyectoGrilla> proyecto = new List<ProyectoGrilla>();
                 string nombreAportante = "";
                 decimal? valorAportate = 0;
+                decimal valorGestionado = 0;
                 foreach (var proyectospp in detailDP.DisponibilidadPresupuestalProyecto)
                 {
+                    List<CofinanicacionAportanteGrilla> aportantesxProyecto = new List<CofinanicacionAportanteGrilla>();
                     if (proyectospp.ProyectoId == null) //proyecto administrativo
                     {
+                        valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == proyectospp.DisponibilidadPresupuestalId).Sum(x => x.ValorSolicitado);
+                        int intaportante = 0;
                         var proyectoadministrativo = _context.ProyectoAdministrativo.Where(x => x.ProyectoAdministrativoId == proyectospp.ProyectoAdministrativoId).
-                            Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.AportanteFuenteFinanciacion).ThenInclude(x => x.FuenteFinanciacion);
-                        foreach(var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
+                            Include(x => x.ProyectoAdministrativoAportante).ThenInclude(x => x.AportanteFuenteFinanciacion).ThenInclude(x => x.FuenteFinanciacion).ToList();
+                        if(proyectoadministrativo.Count()>0)
                         {
-                            List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
-                            foreach (var font in apo.AportanteFuenteFinanciacion)
+
+                            foreach (var apo in proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoAportante)
                             {
-                                fuentes.Add(new GrillaFuentesFinanciacion
+                                List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
+                                foreach (var font in apo.AportanteFuenteFinanciacion)
                                 {
-                                    Fuente = _context.Dominio.Where(x=>x.Codigo==font.FuenteFinanciacion.FuenteRecursosCodigo 
-                                        && x.TipoDominioId== (int)EnumeratorTipoDominio.Fuente_de_Recurso).FirstOrDefault().Nombre,
-                                    Estado_de_las_fuentes = "",
-                                    FuenteFinanciacionID=font.FuenteFinanciacionId,
-                                    Valor_solicitado_de_la_fuente=font.FuenteFinanciacion.ValorFuente,
-                                    Nuevo_saldo_de_la_fuente=0,
-                                    Saldo_actual_de_la_fuente=0
-                                });
+                                    //el saldo actual de la fuente son todas las solicitudes a la fuentes
+                                    var saldofuente = _context.GestionFuenteFinanciacion.
+                                        Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId
+                                        //debo quitar lo que ya tengo gestionado de esta solicitud
+                                        && x.DisponibilidadPresupuestalProyectoId != proyectospp.DisponibilidadPresupuestalProyectoId
+                                        ).Sum(x => x.ValorSolicitado);
+                                    var funtename = _context.Dominio.Where(x => x.Codigo == font.FuenteFinanciacion.FuenteRecursosCodigo
+                                              && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+                                    string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : "";
+                                    fuentes.Add(new GrillaFuentesFinanciacion
+                                    {
+                                        Fuente = namefuente,
+                                        Estado_de_las_fuentes = "",
+                                        FuenteFinanciacionID = font.FuenteFinanciacionId,
+                                        Valor_solicitado_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente,
+                                        Nuevo_saldo_de_la_fuente = 0,
+                                        Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente
+                                    });
+                                    saldototal += (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente;
+                                    nombreAportante = getNombreAportante(_context.CofinanciacionAportante.Find(font.FuenteFinanciacion.AportanteId));
+                                    valorAportate = font.ValorFuente;
+                                    if (!aportantes.Any(c => c.CofinanciacionAportanteId == apo.AportanteId))
+                                    {
+                                        aportantes.Add(new CofinanicacionAportanteGrilla
+                                        {
+                                            CofinanciacionAportanteId = apo.AportanteId,
+                                            Nombre = nombreAportante,
+                                            TipoAportante = "",
+                                            ValorAportanteAlProyecto = valorAportate,
+                                            FuentesFinanciacion = fuentes
+                                        });
+                                    }
+                                }
+                                intaportante = apo.AportanteId == null ? 0 : apo.AportanteId;
+
                             }
-                            aportantes.Add(new CofinanicacionAportanteGrilla
+                            proyecto.Add(new ProyectoGrilla
                             {
-                                CofinanciacionAportanteId = apo.AportanteId,
-                                Nombre = "",
-                                TipoAportante = "",
-                                ValorAportanteAlProyecto = 0,
-                                FuentesFinanciacion= fuentes
-                            }); 
-                            
-                        }
+                                LlaveMen = proyectoadministrativo.FirstOrDefault().ProyectoAdministrativoId.ToString(),
+                                Departamento = "",
+                                Municipio = "",
+                                TipoIntervencion = "",
+                                InstitucionEducativa = "",
+                                Sede = "",
+                                NombreAportante = nombreAportante,
+                                ValorAportante = valorAportate,
+                                AportanteID = intaportante,
+                                DisponibilidadPresupuestalProyecto = 0,
+                                ValorGestionado = 0,
+                                ComponenteGrilla = null
+                            });
+                        }                        
                     }
                     else
                     {
+                        valorGestionado += _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
+                        
                         var localizacion = _context.Localizacion.Where(x => x.LocalizacionId == proyectospp.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                         var sede = _context.InstitucionEducativaSede.Find(proyectospp.Proyecto.SedeId);
                         List<GrillaComponentes> grilla = new List<GrillaComponentes>();
                         int intaportante = 0;
-                        decimal valorgestionado = 0;
-                        foreach (var aportante in proyectospp.Proyecto.ProyectoAportante)
-                        {                            
+                        decimal valorgestionado = 0;                        
+                        
+                        foreach (var ppapor in proyectospp.Proyecto.ProyectoAportante)
+                        {
+                            List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
 
-                            var confinanciacion = _context.CofinanciacionAportante.Where(x=>x.CofinanciacionAportanteId==aportante.AportanteId).Include(x=>x.CofinanciacionDocumento).FirstOrDefault() ;                            
-                            var intfuentes = _context.FuenteFinanciacion.Where(y => y.AportanteId == aportante.AportanteId).Select(t => t.FuenteFinanciacionId).ToList();
+                            foreach (var font in ppapor.Aportante.FuenteFinanciacion)
+                            {
+                                //el saldo de la fuente realmente es lo que tengo en control de recursos
+                                //var saldo = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x=>x.ValorConsignacion);
+                                decimal saldo = Convert.ToDecimal(_context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorFuente));
+                                decimal valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == 
+                                proyectospp.DisponibilidadPresupuestalProyectoId && x.FuenteFinanciacionId==font.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
+
+                                decimal valorsolicitadoxotros = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId !=
+                                proyectospp.DisponibilidadPresupuestalProyectoId && x.FuenteFinanciacionId == font.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
+                                var funtename = _context.Dominio.Where(x => x.Codigo == font.FuenteRecursosCodigo
+                                          && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion);
+                                string namefuente = funtename.Any() ? funtename.FirstOrDefault().Nombre : "";
+                                fuentes.Add(new GrillaFuentesFinanciacion
+                                {
+                                    Fuente = namefuente,
+                                    Estado_de_las_fuentes = "",
+                                    FuenteFinanciacionID = font.FuenteFinanciacionId,
+                                    Valor_solicitado_de_la_fuente = valorsolicitado,
+                                    Nuevo_saldo_de_la_fuente = saldo - valorsolicitadoxotros- valorsolicitado,
+                                    Saldo_actual_de_la_fuente = saldo- valorsolicitadoxotros
+                                });
+                            }
+                            if(detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
+                            {
+                                aportantes.Add(new CofinanicacionAportanteGrilla
+                                {
+                                    CofinanciacionAportanteId = ppapor.AportanteId,
+                                    Nombre = getNombreAportante(ppapor.Aportante),
+                                    TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(ppapor.Aportante.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
+                                    ValorAportanteAlProyecto = ppapor.ValorTotalAportante,
+                                    FuentesFinanciacion = fuentes
+                                });
+                                aportantesxProyecto.Add(new CofinanicacionAportanteGrilla
+                                {
+                                    CofinanciacionAportanteId = ppapor.AportanteId,
+                                    Nombre = getNombreAportante(ppapor.Aportante),
+                                    TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(ppapor.Aportante.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
+                                    ValorAportanteAlProyecto = ppapor.ValorTotalAportante,
+                                    FuentesFinanciacion = fuentes
+                                });
+                            }
                             
-                            if (confinanciacion!=null)
+
+                            var confinanciacion = _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == ppapor.AportanteId).Include(x => x.CofinanciacionDocumento).FirstOrDefault();
+                            var intfuentes = _context.FuenteFinanciacion.Where(y => y.AportanteId == ppapor.AportanteId).Select(t => t.FuenteFinanciacionId).ToList();
+
+                            if (confinanciacion != null)
                             {
                                 intaportante = confinanciacion == null ? 0 : confinanciacion.CofinanciacionAportanteId;
                                 nombreAportante = getNombreAportante(confinanciacion);
-                                valorAportate = _context.ProyectoAportante.Where(x=>x.ProyectoId==proyectospp.ProyectoId && x.AportanteId==aportante.AportanteId).Sum(x=>x.ValorTotalAportante);
-                                
-                                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId).Include(x=>x.ComponenteUso).ToList();
-                                foreach(var compAp in componenteAp)
-                                {
-                                    foreach(var comp in compAp.ComponenteUso )
-                                    {
-                                        try
-                                        {
-                                            var dom = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
-                                            var uso = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
-                                            grilla.Add(
-                                            new GrillaComponentes
-                                            {
-                                                ComponenteAportanteId = comp.ComponenteAportanteId,
-                                                Componente = dom.Count()>0 ? dom.FirstOrDefault().Nombre : "",
-                                                ComponenteUsoId = comp.ComponenteUsoId,
-                                                Uso = uso.Count() > 0 ? uso.FirstOrDefault().Nombre : "",
-                                                ValorTotal = comp.ValorUso,
-                                                ValorUso = comp.ValorUso
-                                            });
-                                        }
-                                        catch(Exception e)
-                                        {
+                                valorAportate = _context.ProyectoAportante.Where(x => x.ProyectoId == proyectospp.ProyectoId && x.AportanteId == ppapor.AportanteId).Sum(x => x.ValorTotalAportante);
 
-                                        }
-                                    }                                    
+                                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId).Include(x => x.ComponenteUso).ToList();
+                                foreach (var compAp in componenteAp)
+                                {
+                                    List<string> uso = new List<string>();
+                                    List<decimal> usovalor = new List<decimal>();
+                                    decimal total = 0;
+                                    foreach (var comp in compAp.ComponenteUso)
+                                    {
+                                        var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
+                                        uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
+                                        usovalor.Add(comp.ValorUso);
+                                        total += comp.ValorUso;
+                                    }
+                                    var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
+                                    grilla.Add(
+                                        new GrillaComponentes
+                                        {
+                                            ComponenteAportanteId = compAp.ComponenteAportanteId,
+                                            Componente = dom.Count() > 0 ? dom.FirstOrDefault().Nombre : "",
+                                            ComponenteUsoCodigo = compAp.TipoComponenteCodigo,
+                                            Uso = uso,
+                                            ValorTotal = total,
+                                            ValorUso = usovalor
+                                        });
                                 }
-                                valorgestionado= _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && intfuentes.Contains(x.FuenteFinanciacionId)).Sum(x => x.ValorSolicitado);
-                            }                            
+                                valorgestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && intfuentes.Contains(x.FuenteFinanciacionId)).Sum(x => x.ValorSolicitado);
+
+                                
+                            }
                         }
                         proyecto.Add(new ProyectoGrilla
                         {
                             LlaveMen = proyectospp.Proyecto.LlaveMen,
                             Departamento = _context.Localizacion.Find(localizacion.IdPadre).Descripcion,
                             Municipio = localizacion.Descripcion,
-                            TipoIntervencion = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Intervencion) : "",
+                            TipoIntervencion = proyectospp.Proyecto.TipoIntervencionCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(proyectospp.Proyecto.TipoIntervencionCodigo, (int)EnumeratorTipoDominio.Tipo_de_Intervencion) : "",
                             InstitucionEducativa = _context.InstitucionEducativaSede.Find(sede.PadreId).Nombre,
                             Sede = sede.Nombre,
                             NombreAportante = nombreAportante,
@@ -1429,58 +1770,111 @@ namespace asivamosffie.services
                             AportanteID = intaportante,
                             DisponibilidadPresupuestalProyecto = proyectospp.DisponibilidadPresupuestalProyectoId,
                             ValorGestionado = valorgestionado,
-                            ComponenteGrilla = grilla
+                            ComponenteGrilla = grilla,
+                            Aportantes =aportantesxProyecto
                         });
-                        foreach (var ppapor in proyectospp.Proyecto.ProyectoAportante)
-                        {
-                            List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
-                            
-                            foreach (var font in ppapor.Aportante.FuenteFinanciacion)
-                            {
-                                fuentes.Add(new GrillaFuentesFinanciacion
-                                {
-                                    Fuente = font.FuenteRecursosString,
-                                    Estado_de_las_fuentes = "",
-                                    FuenteFinanciacionID = font.FuenteFinanciacionId,
-                                    Valor_solicitado_de_la_fuente = font.ValorFuente,
-                                    Nuevo_saldo_de_la_fuente = 0,
-                                    Saldo_actual_de_la_fuente = 0
-                                });
-                            }
-                            aportantes.Add(new CofinanicacionAportanteGrilla
-                            {
-                                CofinanciacionAportanteId = ppapor.AportanteId,
-                                Nombre = getNombreAportante(ppapor.Aportante),
-                                TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(ppapor.Aportante.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
-                                ValorAportanteAlProyecto = ppapor.ValorTotalAportante,
-                                FuentesFinanciacion = fuentes
-                            });
-                        }
                     }
-                    
+
                 }
                 //busco comite técnico
                 DateTime fechaComitetecnico = DateTime.Now;
+                
                 string numerocomietetecnico = "";
-                if(detailDP.ContratacionId!=null)
-                {
-                    var contratacion = _context.Contratacion.Where(x => x.ContratacionId == detailDP.ContratacionId).
-                        Include(x => x.ContratacionObservacion).ThenInclude(y => y.ComiteTecnico).ToList();
-                    if(contratacion.FirstOrDefault().ContratacionObservacion.Count()>0)
+                
+                    if (detailDP.ContratacionId != null)
                     {
-                        numerocomietetecnico = contratacion.FirstOrDefault().ContratacionObservacion.FirstOrDefault().ComiteTecnico.NumeroComite;
-                        fechaComitetecnico = Convert.ToDateTime(contratacion.FirstOrDefault().ContratacionObservacion.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
-                    }                    
+                        var contratacion = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == detailDP.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
+                            Include(x => x.ComiteTecnico).ToList();
+                        if (contratacion.Count() > 0)
+                        {
+                        numerocomietetecnico = contratacion.FirstOrDefault().ComiteTecnico.NumeroComite;
+                            fechaComitetecnico = Convert.ToDateTime(contratacion.FirstOrDefault().ComiteTecnico.FechaOrdenDia);
+                        }
+                    }
+                if(detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
+                {
+                    if (detailDP.NumeroContrato != null)//otros costos
+                    {
+                        valorGestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId).Sum(x => x.ValorSolicitado);
+                        var aportanteotroscostos = _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == detailDP.AportanteId).
+                            Include(x => x.FuenteFinanciacion).ToList();
+                        if (aportanteotroscostos.Any())
+                        {
+                            aportantes.Add(new CofinanicacionAportanteGrilla
+                            {
+                                CofinanciacionAportanteId = aportanteotroscostos.FirstOrDefault().CofinanciacionAportanteId,
+                                Nombre = getNombreAportante(aportanteotroscostos.FirstOrDefault()),
+                                TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(aportanteotroscostos.FirstOrDefault().TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
+                                ValorAportanteAlProyecto = detailDP.ValorAportante,
+                                FuentesFinanciacion = null
+                            });
+                            saldototal = Convert.ToDecimal(aportanteotroscostos.FirstOrDefault().FuenteFinanciacion.Sum(x => x.ValorFuente));
+                        }
+                    }
+                    else//expensas
+                    {
+                        valorGestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == detailDP.DisponibilidadPresupuestalId).Sum(x => x.ValorSolicitado);
+                        var aportanteotroscostos = _context.CofinanciacionAportante.Where(x => x.CofinanciacionAportanteId == detailDP.AportanteId).
+                            Include(x => x.FuenteFinanciacion).ToList();
+                        if (aportanteotroscostos.Any())
+                        {
+                            List<GrillaFuentesFinanciacion> fnt = new List<GrillaFuentesFinanciacion>();
+                            foreach (var fuente in aportanteotroscostos.FirstOrDefault().FuenteFinanciacion)
+                            {
+                                fnt.Add(new GrillaFuentesFinanciacion
+                                {
+                                    Fuente = _context.Dominio.Where(x => x.Codigo == fuente.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
+                                    Valor_solicitado_de_la_fuente = Convert.ToDecimal(fuente.ValorFuente),
+                                    Estado_de_las_fuentes = "",
+                                    FuenteFinanciacionID = fuente.FuenteFinanciacionId,
+                                    GestionFuenteFinanciacionID = 0,
+                                    Nuevo_saldo_de_la_fuente = 0,
+                                    Saldo_actual_de_la_fuente = 0
+                                });
+
+                            }
+                            aportantes.Add(new CofinanicacionAportanteGrilla
+                            {
+                                CofinanciacionAportanteId = aportanteotroscostos.FirstOrDefault().CofinanciacionAportanteId,
+                                Nombre = getNombreAportante(aportanteotroscostos.FirstOrDefault()),
+                                TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(aportanteotroscostos.FirstOrDefault().TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
+                                ValorAportanteAlProyecto = detailDP.ValorAportante,
+                                FuentesFinanciacion = fnt
+                            });
+                            saldototal = Convert.ToDecimal(aportanteotroscostos.FirstOrDefault().FuenteFinanciacion.Sum(x => x.ValorFuente));
+                        }
+                    }
                 }
+                var contrato = _context.Contrato.Where(x => x.Contratacion.ContratacionId == detailDP.ContratacionId);
+                var fechaContrato = "";
+                if (contrato.Any())
+                {
+                    var fechafi = contrato.Select(x => x.FechaFirmaContrato).FirstOrDefault();
+                    fechaContrato = Convert.ToDateTime(fechafi).ToString("dd/MM/yyyy");
+                }
+                
+                
+                string contratoNumero = !contrato.Any()?"":contrato.Select(x => x.NumeroContrato).FirstOrDefault().ToString();
+                var contratista = _context.Contratista.Where(x => x.Contratacion.FirstOrDefault().ContratacionId == detailDP.ContratacionId);
+                string nombreEntidad = !contratista.Any()?"": contratista.Select(x => x.Nombre).FirstOrDefault().ToString();
+                var observaciones = _context.DisponibilidadPresupuestalObservacion.Where(x=>x.DisponibilidadPresupuestalId==detailDP.DisponibilidadPresupuestalId).ToList();
+                string observacionString = !observaciones.Any() ? "" : string.Join("<br><br>", observaciones.Select(x => x.Observacion));
+                var aportant = aportantes.Distinct();
+                var tiporubro = detailDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
+                    //si no viene el campo puede ser contratación
+                    detailDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
+                    "Contratación";
                 DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
                 {
                     //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
                     Id = detailDP.DisponibilidadPresupuestalId,
                     NumeroSolicitud = detailDP.NumeroSolicitud,
                     TipoSolicitudCodigo = detailDP.TipoSolicitudCodigo,
-                    TipoSolicitudText = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud) : "",
+                    NUmeroSaldoFuente=saldototal,
+                    TipoSolicitudText = detailDP.TipoSolicitudCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal) : "",
                     NumeroDDP = detailDP.NumeroDdp,
-                    RubroPorFinanciar = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal
+                    NumeroDRP = detailDP.NumeroDrp,
+                    RubroPorFinanciar  = detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial?tiporubro:_context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal
                                 && r.Codigo == detailDP.TipoSolicitudCodigo).FirstOrDefault().Descripcion,
                     Objeto = detailDP.Objeto,
                     ValorSolicitud = detailDP.ValorSolicitud,
@@ -1488,16 +1882,27 @@ namespace asivamosffie.services
                     FechaComiteTecnico = fechaComitetecnico,
                     NumeroComite = numerocomietetecnico,
                     FechaSolicitud = detailDP.FechaSolicitud,
-                    EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Disponibilidad_Presupuestal
+                    EstadoStr = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal
                                 && r.Codigo == detailDP.EstadoSolicitudCodigo).FirstOrDefault().Nombre,
                     Plazo = detailDP.PlazoMeses.ToString() + " meses / " + detailDP.PlazoDias.ToString() + " dias",
-
+                    CuentaCarta = detailDP.CuentaCartaAutorizacion,
+                    TipoSolicitudEspecial = detailDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
+                    //si no viene el campo puede ser contratación
+                    detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :                    
+                    "Contratación",
+                    ContratoNumero= contratoNumero,
+                    NombreEntidad =nombreEntidad,
+                    UrlConSoporte=detailDP.UrlSoporte,
+                    Limitacion=detailDP.LimitacionEspecial,
                     /*//*las modificaciones aun no existen*/
-
-                    
+                    ValorGestionado= valorGestionado,
+                    Observaciones=observacionString,
                     Proyectos = proyecto,
+                    FechaContrato= fechaContrato,
                     //Aportantes
-                    Aportantes = aportantes,
+                    Aportantes = aportant.ToList(),
+                    NumeroRadicado=detailDP.NumeroRadicadoSolicitud,
+                    ObservacioensCancelacion=_context.DisponibilidadPresupuestalObservacion.Where(x=>x.DisponibilidadPresupuestalId==detailDP.DisponibilidadPresupuestalId).ToList()
                 };
 
                 ListDetailValidarDisponibilidadPresupuesal.Add(detailDisponibilidadPresupuesal);
@@ -1509,7 +1914,7 @@ namespace asivamosffie.services
 
         private string getNombreAportante(CofinanciacionAportante confinanciacion)
         {
-            string nombreAportante = "";
+            string nombreAportante;
             if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
             {
                 nombreAportante = ConstanStringTipoAportante.Ffie;
@@ -1536,6 +1941,150 @@ namespace asivamosffie.services
                 }
             }
             return nombreAportante;
+        }
+
+        //Crear DDP Especial 
+        public async Task<Respuesta> CreateUpdateDisponibilidaPresupuestalEspecial(DisponibilidadPresupuestal pDisponibilidadPresupuestal)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_DDP, (int)EnumeratorTipoDominio.Acciones);
+            DisponibilidadPresupuestalProyecto entity = new DisponibilidadPresupuestalProyecto();
+            Contrato contrato = _context.Contrato
+                .Where(r => r.NumeroContrato == pDisponibilidadPresupuestal.NumeroContrato)
+                .Include(r => r.Contratacion)
+                .FirstOrDefault();
+            try
+            {
+                if (pDisponibilidadPresupuestal.DisponibilidadPresupuestalId == 0)
+                {
+                    pDisponibilidadPresupuestal.FechaCreacion = DateTime.Now;
+                    pDisponibilidadPresupuestal.Eliminado = false;
+                    pDisponibilidadPresupuestal.FechaSolicitud = DateTime.Now;
+                    pDisponibilidadPresupuestal.RegistroCompleto = ValidarDisponibilidadPresupuestal(pDisponibilidadPresupuestal);
+                    pDisponibilidadPresupuestal.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
+                    if(contrato!=null)
+                    {
+                        pDisponibilidadPresupuestal.OpcionContratarCodigo = contrato.TipoContratoCodigo;
+                    }                    
+                    pDisponibilidadPresupuestal.TipoSolicitudCodigo = ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial;
+                    pDisponibilidadPresupuestal.NumeroSolicitud = Helpers.Helpers.Consecutive("DE", _context.DisponibilidadPresupuestal.Count((r => r.NumeroSolicitud.Contains("DE"))));
+
+                    if (pDisponibilidadPresupuestal.ValorAportante != null)
+                        pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
+                      
+                    pDisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
+                    {
+                        if (p.DisponibilidadPresupuestalProyectoId == 0)
+                        {
+                            entity.ProyectoId = p.ProyectoId;
+                            entity.DisponibilidadPresupuestalId = pDisponibilidadPresupuestal.DisponibilidadPresupuestalId;
+                            entity.FechaCreacion = DateTime.Now;
+                            entity.UsuarioCreacion = pDisponibilidadPresupuestal.UsuarioCreacion;
+                            entity.Eliminado = false; 
+                            pDisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Add(entity);
+                        }
+
+
+                    });
+
+                    _context.DisponibilidadPresupuestal.Add(pDisponibilidadPresupuestal);
+                }
+                else
+                {
+                    DisponibilidadPresupuestal disponibilidadPresupuestalOld = _context.DisponibilidadPresupuestal.Find(pDisponibilidadPresupuestal.DisponibilidadPresupuestalId);
+
+                    //disponibilidadPresupuestalOld.FechaSolicitud = pDisponibilidadPresupuestal.FechaSolicitud;
+                    disponibilidadPresupuestalOld.TipoSolicitudCodigo = pDisponibilidadPresupuestal.TipoSolicitudCodigo;
+                    //disponibilidadPresupuestalOld.NumeroSolicitud = pDisponibilidadPresupuestal.NumeroSolicitud;
+                    //disponibilidadPresupuestalOld.OpcionContratarCodigo = pDisponibilidadPresupuestal.OpcionContratarCodigo;
+                    //disponibilidadPresupuestalOld.EstadoSolicitudCodigo = pDisponibilidadPresupuestal.EstadoSolicitudCodigo;
+                    disponibilidadPresupuestalOld.Objeto = pDisponibilidadPresupuestal.Objeto;
+                    //disponibilidadPresupuestalOld.FechaDdp = pDisponibilidadPresupuestal.FechaDdp;
+                    //disponibilidadPresupuestalOld.NumeroDdp = pDisponibilidadPresupuestal.NumeroDdp;
+                    //disponibilidadPresupuestalOld.RutaDdp = pDisponibilidadPresupuestal.RutaDdp;
+                    disponibilidadPresupuestalOld.FechaModificacion = DateTime.Now;
+                    disponibilidadPresupuestalOld.UsuarioModificacion = pDisponibilidadPresupuestal.UsuarioCreacion;
+                    //disponibilidadPresupuestalOld.ContratacionId = pDisponibilidadPresupuestal.ContratacionId;
+                    //disponibilidadPresupuestalOld.NumeroDrp = pDisponibilidadPresupuestal.NumeroDrp;
+                    //disponibilidadPresupuestalOld.PlazoMeses = pDisponibilidadPresupuestal.PlazoMeses;
+                    ///disponibilidadPresupuestalOld.PlazoDias = pDisponibilidadPresupuestal.PlazoDias;
+                    disponibilidadPresupuestalOld.LimitacionEspecial = pDisponibilidadPresupuestal.LimitacionEspecial==null? disponibilidadPresupuestalOld.LimitacionEspecial : pDisponibilidadPresupuestal.LimitacionEspecial;
+                    disponibilidadPresupuestalOld.UrlSoporte = pDisponibilidadPresupuestal.UrlSoporte == null ? disponibilidadPresupuestalOld.UrlSoporte : pDisponibilidadPresupuestal.UrlSoporte;
+                    disponibilidadPresupuestalOld.CuentaCartaAutorizacion = pDisponibilidadPresupuestal.CuentaCartaAutorizacion==null? disponibilidadPresupuestalOld.CuentaCartaAutorizacion: pDisponibilidadPresupuestal.CuentaCartaAutorizacion;
+                    disponibilidadPresupuestalOld.AportanteId = pDisponibilidadPresupuestal.AportanteId;
+                    disponibilidadPresupuestalOld.ValorAportante = pDisponibilidadPresupuestal.ValorAportante;
+                    if (pDisponibilidadPresupuestal.ValorAportante != null)
+                        pDisponibilidadPresupuestal.ValorSolicitud = (decimal)pDisponibilidadPresupuestal.ValorAportante;
+                    disponibilidadPresupuestalOld.NumeroContrato = pDisponibilidadPresupuestal.NumeroContrato==null? disponibilidadPresupuestalOld.NumeroContrato:pDisponibilidadPresupuestal.NumeroContrato;
+                    disponibilidadPresupuestalOld.RegistroCompleto = ValidarDisponibilidadPresupuestal(disponibilidadPresupuestalOld);
+                    //disponibilidadPresupuestalOld.EstadoSolicitudCodigo = ConstanCodigoSolicitudDisponibilidadPresupuestal.Sin_Registrar;
+                    _context.DisponibilidadPresupuestal.Update(disponibilidadPresupuestalOld);
+                    pDisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.ToList().ForEach(p =>
+                    {
+                        if (p.DisponibilidadPresupuestalProyectoId == 0)
+                        {
+                            entity.ProyectoId = p.ProyectoId;
+                            entity.DisponibilidadPresupuestalId = pDisponibilidadPresupuestal.DisponibilidadPresupuestalId;
+                            entity.FechaCreacion = DateTime.Now;
+                            entity.UsuarioCreacion = pDisponibilidadPresupuestal.UsuarioCreacion;
+                            entity.Eliminado = false;
+
+                            disponibilidadPresupuestalOld.DisponibilidadPresupuestalProyecto.Add(entity);
+                        }
+                        else
+                        {
+                            entity = _context.DisponibilidadPresupuestalProyecto.Find(p.DisponibilidadPresupuestalProyectoId);
+
+                            entity.UsuarioModificacion = pDisponibilidadPresupuestal.UsuarioCreacion;
+                            entity.FechaModificacion = DateTime.Now;
+                            entity.FechaCreacion = entity.FechaCreacion==null?DateTime.Now: entity.FechaCreacion;
+                            entity.ProyectoId = p.ProyectoId;
+                            _context.DisponibilidadPresupuestalProyecto.Update(entity);
+                        } 
+                    });
+                }
+
+                await _context.SaveChangesAsync();
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesSesionComiteTema.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.DisponibilidadPresupuestal, ConstantMessagesSesionComiteTema.OperacionExitosa, idAccion, pDisponibilidadPresupuestal.UsuarioCreacion, ConstantCommonMessages.CREAR_EDITAR_DDP_ESPECIAL)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesSesionComiteTema.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.SesionComiteTema, ConstantMessagesSesionComiteTema.Error, idAccion, pDisponibilidadPresupuestal.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        private bool? ValidarDisponibilidadPresupuestal(DisponibilidadPresupuestal pDisponibilidadPresupuestal)
+        {
+            if (
+                     string.IsNullOrEmpty(pDisponibilidadPresupuestal.Objeto)
+                  || string.IsNullOrEmpty(pDisponibilidadPresupuestal.NumeroRadicadoSolicitud)
+                  //|| string.IsNullOrEmpty(pDisponibilidadPresupuestal.NumeroContrato)
+                  || pDisponibilidadPresupuestal.AportanteId == null
+                  || pDisponibilidadPresupuestal.ValorAportante == null)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<dynamic> GetContratos()
+        {
+            return _context.Contrato.Where(x => !(bool)x.Eliminado).ToList();
         }
     }
 }

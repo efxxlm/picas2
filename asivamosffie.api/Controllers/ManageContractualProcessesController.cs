@@ -26,6 +26,7 @@ namespace asivamosffie.api.Controllers
             _manageContractualProcessesService = IManageContractualProcessesService;
             _settings = settings;
         }
+  
 
         [Route("GetListSesionComiteSolicitud")]
         [HttpGet]
@@ -59,8 +60,8 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                pSesionComiteSolicitud.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
-                respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud);
+                pSesionComiteSolicitud.UsuarioCreacion =  HttpContext.User.FindFirst("User").Value;
+                respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -89,8 +90,7 @@ namespace asivamosffie.api.Controllers
                     pContratacion.FechaEnvioDocumentacion = DateTime.Parse(FechaEnvioDocumentacion);
                     }
         
-                pContratacion.UsuarioCreacion = "";//HttpContext.User.FindFirst("User").Value;
-
+               pContratacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
                respuesta = await _manageContractualProcessesService.RegistrarTramiteContratacion(pContratacion, pContratacion.pFile
                   , _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseContratacionMinuta);
 

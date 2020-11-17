@@ -36,7 +36,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -66,7 +65,6 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
 
         [HttpPost]
         public async Task<IActionResult> post(CofinanciacionAportante CofnaAportante)
@@ -139,8 +137,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-        //[Route("GetRegisterBudgetById")]
+         
         [Route("GetRegisterBudgetById/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetRegisterBudgetById(int id)
@@ -162,9 +159,8 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal)
         {
             try
-            {
-                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
-                registroPresupuestal.UsuarioCreacion = pUsuarioModifico.ToUpper();
+            { 
+                registroPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 var result = await _contributor.CreateEditBudgetRecords(registroPresupuestal);
                 return Ok(result);
             }

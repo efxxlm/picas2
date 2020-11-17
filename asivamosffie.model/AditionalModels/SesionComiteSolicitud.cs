@@ -10,6 +10,8 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string NumeroSolicitud { get; set; }
         [NotMapped]
+        public string NumeroHijo { get; set; }
+        [NotMapped]
         public DateTime? FechaSolicitud { get; set; }
         [NotMapped]
         public string TipoSolicitud { get; set; }
@@ -23,6 +25,8 @@ namespace asivamosffie.model.Models
         public bool EstadoRegistro { get; set; }
         [NotMapped]
         public bool EstaTramitado { get; set; }
+        [NotMapped]
+        public ProcesoSeleccionMonitoreo ProcesoSeleccionMonitoreo { get; set; }
     }
 
 }

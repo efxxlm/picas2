@@ -46,6 +46,10 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
   activarBotones()
   {
     this.editarVerDetalle=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
+      ((this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Abierta||
+        this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Cerrada) &&
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)||
+
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
@@ -63,6 +67,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
+        this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobacionDeSeleccionEnTramite &&
         this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite)
         ;
     
@@ -72,13 +77,13 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
         this.data.tipoProcesoCodigo==this.tiposProcesoSeleccion.Cerrada)
       && this.data.procesoSeleccionProponente.length>0;
 
-    this.eliminar=this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
+    this.eliminar=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado;/*this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
-      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite;
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite;*/
 
     this.monitorear=this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaAperturaPorComiteTecnico &&
@@ -86,7 +91,9 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario &&
       this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.RechazadoPorComiteTecnico &&
-      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite ;
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AperturaEntramite &&
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.AprobacionDeSeleccionEnTramite
+      this.data.estadoProcesoSeleccionCodigo!=this.estadosProcesoSeleccion.Cerrado ;
 
     this.cerrarProceso=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado;
     this.obervaciones=this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaAperturaPorComiteFiduciario ||
@@ -94,7 +101,14 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteFiduciario ||
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadaSeleccionPorComiteTecnico ||
       this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadoPorComiteFiduciario ||
-      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadoPorComiteTecnico;
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.RechazadoPorComiteTecnico||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
+      this.data.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico
+      ;
     
     
   }
@@ -123,7 +137,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
 
   onEliminar( pId: number ){
 
-    this.openDialogSiNo('','¿Está seguro de eliminar este registro?', pId)
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>', pId)
   }
 
   eliminarRegistro( pId: number ){
@@ -131,9 +145,9 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
       let r = respuesta as Respuesta;
        if ( r.code == "200" )
        {
-         this.openDialog("", "La información se ha eliminado correctamente,",true);         
+         this.openDialog("", "<b>La información ha sido eliminada correctamente.</b>",true);
        }else
-        this.openDialog("Proceso Seleccion", r.message,false);
+        this.openDialog("", r.message,false);
     })
   }
 
@@ -202,7 +216,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.eliminarRegistro(e);
       }           
@@ -225,7 +239,7 @@ export class VerDetalleTablaProcesosComponent implements OnInit{
   onObservaciones(id)
   {
     let dialogRef =this.dialog.open(VerObservacionesComponent, {
-      width: '28em',
+      width: '50em',
       data: { id }
     });   
     dialogRef.afterClosed().subscribe(result => {

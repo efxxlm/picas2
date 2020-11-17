@@ -11,6 +11,7 @@ namespace asivamosffie.services.Interfaces
     public interface IBankAccountService
     {
         Task<ActionResult<List<CuentaBancaria>>> GetBankAccount();
+
         Task<CuentaBancaria> GetBankAccountById(int id);
 
         Task<Respuesta> Insert(CuentaBancaria cuentaBancaria);

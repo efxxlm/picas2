@@ -8,7 +8,7 @@
     <h1 class="title-menu--h1">
         Detallar la solicitud {{ contratacion.numeroSolicitud }}
     </h1>
-    <p class="text-primary" *ngIf="contratacion.contratacionProyecto"> Proyectos incluidos: <b> {{ contratacion.contratacionProyecto.length }} </b></p>
+    <p class="text-primary" *ngIf="contratacion.contratacionProyecto" style="margin-top: 1em;"> Proyectos incluidos: <b> {{ contratacion.contratacionProyecto.length }} </b></p>
   </div>
 
   <mat-accordion>
@@ -34,7 +34,6 @@
         <mat-card class="border" style="margin-top: 3em;">
           <mat-card-content class="mt-1em">
             <p><b>Nombre del contratista</b>: {{ contratacion['contratista'].nombre }}</p>
-            <p><b>Tipo de identificación</b>: {{ '' }}</p>
             <p><b>Número de identificación</b>: {{ contratacion['contratista'].numeroIdentificacion }}</p>
             <p><b>Nombre del representante legal</b>: {{ contratacion['contratista'].representanteLegal }}</p>
             <p><b>Número de la invitación</b>: {{ contratacion['contratista'].numeroInvitacion }}</p>
@@ -84,7 +83,7 @@
             <p *ngIf="!proyecto.esAvanceobra">
               <b>¿El proyecto tiene avance de obra?</b>: No
             </p>
-            <p *ngIf="proyecto.porcentajeAvanceObra.length > 0">
+            <p *ngIf="proyecto['porcentajeAvanceObra'] > 0">
               <b>¿Cuál es el porcentaje de avance de obra?</b>: {{ contratacion.contratacionProyecto[0].porcentajeAvanceObra }}%
             </p>
             <p *ngIf="proyecto.requiereLicencia">
@@ -123,11 +122,13 @@
       <p *ngIf="contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: Si</p>
       <p *ngIf="!contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: No</p>
 
-      <div align="left" class="div-center">
+      <div align="left" class="div-center" *ngIf="contratacion.esObligacionEspecial === true">
         <mat-card class="border" style="margin-top: 2em;">
           <mat-card-title class="text-area-quill--label">Descripción</mat-card-title>
           <mat-card-content class="mt-1em">
-            <p *ngIf="contratacion.esObligacionEspecial"><b>Observaciones</b>: {{ contratacion.consideracionDescripcion }}</p>
+            <section>
+              <b>Observaciones</b>: <div [innerHTML]="innerObservacion( contratacion.consideracionDescripcion )"></div>
+            </section>
           </mat-card-content>
         </mat-card>
       </div>

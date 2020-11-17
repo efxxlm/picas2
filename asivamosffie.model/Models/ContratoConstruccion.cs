@@ -12,6 +12,7 @@ namespace asivamosffie.model.Models
             ConstruccionPerfil = new HashSet<ConstruccionPerfil>();
             FlujoInversion = new HashSet<FlujoInversion>();
             Programacion = new HashSet<Programacion>();
+            ProgramacionPersonalContratoConstruccion = new HashSet<ProgramacionPersonalContratoConstruccion>();
             TempFlujoInversion = new HashSet<TempFlujoInversion>();
             TempProgramacion = new HashSet<TempProgramacion>();
         }
@@ -111,6 +112,9 @@ namespace asivamosffie.model.Models
         public bool? TieneObservacionesFlujoInversionApoyo { get; set; }
         public bool? TieneObservacionesFlujoInversionSupervisor { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public int? ArchivoCargueIdProgramacionObra { get; set; }
+        public int? ArchivoCargueIdFlujoInversion { get; set; }
+        public bool? RegistroCompletoVerificacion { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
@@ -119,6 +123,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ConstruccionPerfil> ConstruccionPerfil { get; set; }
         public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }
         public virtual ICollection<Programacion> Programacion { get; set; }
+        public virtual ICollection<ProgramacionPersonalContratoConstruccion> ProgramacionPersonalContratoConstruccion { get; set; }
         public virtual ICollection<TempFlujoInversion> TempFlujoInversion { get; set; }
         public virtual ICollection<TempProgramacion> TempProgramacion { get; set; }
     }

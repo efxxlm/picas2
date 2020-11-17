@@ -9,13 +9,15 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
+using System; 
 using System.IO;
 using asivamosffie.model.APIModels;
 using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Reflection;
-
+using System.Threading.Tasks;
+ 
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
@@ -26,24 +28,44 @@ namespace asivamosffie.services.Helpers
         {
             _context = context;
         }
+
+
         public static string HtmlConvertirTextoPlano(string origen)
         {
             DocumentoHtml documento = new DocumentoHtml();
             origen = documento.ConvertirATextoPlano(origen);
             return origen.Replace("<", "").Replace(">", "").Replace("/", "").Replace("\\", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "");
         }
+
         public static string HtmlStringLimpio(string valor)
         {
             valor = Regex.Replace(valor, @"\t|\n|\r", "");
             return HtmlConvertirTextoPlano(valor);
         }
 
+        public static string HtmlEntities(string valor)
+        {
+            valor = valor.Replace("á", "&aacute;")
+                .Replace("é", "&eacute;")
+                .Replace("í", "&iacute;")
+                .Replace("ó", "&oacute;")
+                .Replace("ú", "&uacute;")
+                .Replace("ñ", "&ntilde;")
+                .Replace("Á", "&Aacute;")
+                .Replace("É", "&Eacute;")
+                .Replace("Í", "&Iacute;")
+                .Replace("Ó", "&Oacute;")
+                .Replace("Ó", "&Uacute;")
+                .Replace("Ñ", "&Ntilde;")
+                ;
+            return valor;
+        }
 
         public double CentimetrosAMedidaPDF(double centimetros)
         {
             return (double)(centimetros * 0.393701 * 72);
         }
-         
+
         public static string encryptSha1(string password)
         {
 
@@ -54,7 +76,7 @@ namespace asivamosffie.services.Helpers
 
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
-            result = sha.ComputeHash(data) ;
+            result = sha.ComputeHash(data);
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
@@ -127,6 +149,12 @@ namespace asivamosffie.services.Helpers
                 return $"{(number).ToString("D4")}";
             }
 
+            //Concecutivo actualizacion de conograma proceso de seleccion 3.1.3
+            if (input == "ACTCRONO")
+            {
+                return $"{"ACTCRONO"}{(number).ToString("D4")}";
+            }
+
 
             //Invitacion Abierta SA
             else
@@ -172,7 +200,6 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-
         public static object ConvertToUpercase(object dataObject)
         {
             try
@@ -206,9 +233,9 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort, bool pMailHighPriority=false)
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort, bool pMailHighPriority = false)
 
-   {
+        {
             try
             {
                 MailMessage mail = new MailMessage();
@@ -219,7 +246,7 @@ namespace asivamosffie.services.Helpers
                 mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
 
-                if(pMailHighPriority)
+                if (pMailHighPriority)
                     mail.Priority = MailPriority.High;
                 mail.Body = pMensajeHtml;
                 SmtpServer.Port = pSmtpPort;

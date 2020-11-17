@@ -28,6 +28,8 @@ export class DevolverPorValidacionComponent implements OnInit {
   };
   solicitudID: any;
   tipo: any;
+  tipoSolicitud: any;
+  numeroSolicitud: any;
 
   constructor(public dialog: MatDialog,  private router: Router,
     @Inject(MAT_DIALOG_DATA) public data,private disponibilidadServices: DisponibilidadPresupuestalService) {
@@ -38,6 +40,8 @@ export class DevolverPorValidacionComponent implements OnInit {
   ngOnInit(): void {
     this.solicitudID=this.data.solicitudID;
     this.tipo=this.data.tipo;
+    this.tipoSolicitud=this.data.tipoSolicitud;
+    this.numeroSolicitud=this.data.numeroSolicitud;
   }
 
   maxLength(e: any, n: number) {
@@ -61,10 +65,9 @@ export class DevolverPorValidacionComponent implements OnInit {
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(result)
-      {
+
         this.router.navigate(['/validarDisponibilidadPresupuesto']);
-      }
+        dialogRef.close();
     });
   }
 
@@ -74,18 +77,18 @@ export class DevolverPorValidacionComponent implements OnInit {
     if(this.tipo==0)
     {
       this.disponibilidadServices.SetReturnValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
-      
+        this.openDialog('', '<b>La solicitud ha sido devuelta al responsable técnico.</b>');
+
       });
     }
     else
     {
       this.disponibilidadServices.SetRechazarValidacionDDP(DisponibilidadPresupuestalObservacion).subscribe(listas => {
-      this.openDialog('', 'La información ha sido guardada exitosamente.');
-    
+      this.openDialog('', '<b>La solicitud ha sido rechazada.</b>');
+
       });
     }
-    
-    
+
+
   }
 }

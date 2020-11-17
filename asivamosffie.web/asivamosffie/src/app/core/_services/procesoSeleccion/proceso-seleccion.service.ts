@@ -8,7 +8,7 @@ import { pid } from 'process';
   providedIn: 'root'
 })
 export class ProcesoSeleccionService implements OnInit {
-  
+    
   
 
   constructor(
@@ -41,6 +41,23 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/CreateEditarProcesoSeleccionCronograma`, cronograma );
   }
 
+  createEditarProcesoSeleccionCronogramaMonitoreo( cronograma: ProcesoSeleccionMonitoreo ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcessSchedule/setProcesoSeleccionMonitoreoCronograma`, cronograma );
+  }
+  deleteProcesoSeleccionCronogramaMonitoreo(pId:number)
+  {
+    return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccionCronogramaMonitoreo?pId=${ pId }`);
+  }
+
+  deleteProcesoSeleccionIntegranteByID(procesoSeleccionIntegranteId: any) {
+    return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccionIntegrante?pId=${ procesoSeleccionIntegranteId }`);
+  }
+
+
+  listaProcesoSeleccionCronogramaMonitoreo( id: number ){
+    return this.http.get<ProcesoSeleccionMonitoreo[]>(`${environment.apiUrl}/SelectionProcessSchedule/GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId?pProcesoSeleccionId=${id}`);
+  }
+
   deleteProcesoSeleccion( pId: number ){
     return this.http.delete(`${environment.apiUrl}/SelectionProcess/DeleteProcesoSeleccion?pId=${ pId }`);
   }
@@ -57,10 +74,10 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.get<ProcesoSeleccionProponente[]>(`${environment.apiUrl}/SelectionProcess/getProcesoSeleccionProponentes`);
   }
 
-  setValidateMassiveLoadElegibilidad( archivoParaSubir: File ){
+  setValidateMassiveLoadElegibilidad( archivoParaSubir: File , procesoSeleccionId:number){
     const formData = new FormData(); 
-    formData.append('file', archivoParaSubir, archivoParaSubir.name);
-    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/setValidateMassiveLoadElegibilidad`, formData);
+    formData.append('file', archivoParaSubir, archivoParaSubir.name);    
+    return this.http.post<Respuesta>(`${environment.apiUrl}/SelectionProcess/setValidateMassiveLoadElegibilidad/${procesoSeleccionId}`, formData);
   }
 
   uploadMassiveLoadElegibilidad( pId: string,procesoSeleccionId:number ){
@@ -86,6 +103,23 @@ export class ProcesoSeleccionService implements OnInit {
     return this.http.get<any[]>(`${environment.apiUrl}/SelectionProcess/getObservacionesProcesoSeleccionProponentes?id=${id}`);
   }
   
+  public downloadOrdenElegibilidadFilesByName(name: string) {   
+    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadOrdenElegibilidadFilesByName?pNameFiles=${name}`, { responseType: "blob" });
+    return retorno;
+  }
+
+}
+export interface ProcesoSeleccionMonitoreo{
+  procesoSeleccionMonitoreoId:number,
+  procesoSeleccionId:number,
+  numeroProceso:string,
+  estadoActividadCodigo:string,
+  fechaCreacion?:string,
+  usuarioCreacion?:string,
+  eliminado?:boolean,
+  enviadoComiteTecnico?:boolean,
+  procesoSeleccionCronogramaMonitoreo?:ProcesoSeleccionCronogramaMonitoreo[]
+  procesoSeleccion?:ProcesoSeleccion
 }
 
 export interface ProcesoSeleccion{
@@ -145,13 +179,29 @@ export interface ProcesoSeleccionGrupo{
 }
 
 export interface ProcesoSeleccionCronograma{
+  
   procesoSeleccionCronogramaId?: number,
   procesoSeleccionId?: number,
   numeroActividad?: number,
   descripcion?: string,
   fechaMaxima?: Date,
   estadoActividadCodigo?: string,
-  procesoSeleccion?: ProcesoSeleccion
+  etapaActualProcesoCodigo?:string,
+  procesoSeleccion?: ProcesoSeleccion,
+  cronogramaSeguimiento?: CronogramaSeguimiento[];
+
+}
+
+export interface ProcesoSeleccionCronogramaMonitoreo{
+  procesoSeleccionCronogramaId?: number,
+  procesoSeleccionMonitoreoId?: number,
+  numeroActividad?: number,
+  descripcion?: string,
+  fechaMaxima?: Date,
+  estadoActividadCodigo?: string,
+  etapaActualProcesoCodigo?:string,
+  eliminado?:boolean,
+  procesoSeleccionMonitoreo?: ProcesoSeleccionMonitoreo
 }
 
 export interface ProcesoSeleccionCotizacion {
@@ -194,11 +244,13 @@ export interface ProcesoSeleccionIntegrante {
 }
 
 export interface CronogramaSeguimiento{
+  
   cronogramaSeguimientoId?: number,
   procesoSeleccionCronogramaId?: number,
   estadoActividadInicialCodigo?: string,
   estadoActividadFinalCodigo?: string,
   observacion?: string,
+  fechaCreacion?: Date,
   procesoSeleccionCronograma?: ProcesoSeleccionCronograma
 
 }
@@ -265,4 +317,22 @@ export const EstadosProcesoSeleccion: EstadoProcesoSeleccion = {
   RechazadoPorComiteFiduciario: "21",
   DevueltoPorComiteTecnico: "22",
   DevueltoPorComiteFiduciario: "23",
+}
+interface EstadoProcesoSeleccionMonitoreo{
+  Creada: string,
+	AprobadoPorComiteTecnico: string,
+	AprobadoPorComiteFiduciario: string,
+	RechazadoPorComiteTecnico: string,
+	RechazadoPorComiteFiduciario: string,
+	DevueltoPorComiteTecnico: string,
+	DevueltoPorComiteFiduciario: string,
+}
+export const EstadosProcesoSeleccionMonitoreo: EstadoProcesoSeleccionMonitoreo = {
+  Creada: "1",  
+  AprobadoPorComiteTecnico: "2",
+  AprobadoPorComiteFiduciario: "3",
+  RechazadoPorComiteTecnico: "4",
+  RechazadoPorComiteFiduciario: "5",
+  DevueltoPorComiteTecnico: "6",
+  DevueltoPorComiteFiduciario: "7",
 }

@@ -4,7 +4,7 @@
         <label class="mr-label" for="numeroContrato" class="label-left"><b>Número de otrosí</b></label>
       <div class="col d-flex">
         <mat-form-field class="w-38">
-          <input matInput type="text" maxlength="10" formControlName="numeroOtroSi">          
+          <input matInput type="text" maxlength="10" formControlName="numeroOtroSi">
         </mat-form-field>
         <span class="contador">{{10 - dataFormulario.get( 'numeroOtroSi' ).value.length}}</span>
       </div>
@@ -12,97 +12,97 @@
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'numeroOtroSi' ).value.length > 0">
       <label class="mr-label"><b>Fecha de envío para firma del contratista</b></label>
-      <mat-form-field class="w-21" 
-                      appearance="fill">
-        <input  matInput 
-                [matDatepicker]="pickerFechaEnvioTramite" 
+      <mat-form-field class="w-21">
+        <input  matInput
+                [matDatepicker]="pickerFechaEnvioTramite"
                 formControlName="fechaEnvioParaFirmaContratista"
-                placeholder="DD/MM/AAAA">
+                placeholder="DD/MM/AAAA" readonly
+                (click)="pickerFechaEnvioTramite.open()">
         <mat-datepicker #pickerFechaEnvioTramite></mat-datepicker>
       </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaEnvioTramite.open()" 
+      <button mat-button
+              color="primary"
+              type="button"
+              (click)="pickerFechaEnvioTramite.open()"
               class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
+        <img  class="mr-bottom-1"
+              src="assets/img/icon/calendarioCirculo.svg"
               alt="Abrir Calendario">
       </button>
     </div>
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaContratista' ).value !== null">
       <label class="mr-label"><b>Fecha de firma por parte del contratista</b></label>
-      <mat-form-field class="w-22" 
-                      appearance="fill">
-        <input  matInput 
-                [matDatepicker]="pickerFechaFirmaContratista" 
+      <mat-form-field class="w-22">
+        <input  matInput
+                [matDatepicker]="pickerFechaFirmaContratista"
                 formControlName="fechaFirmaPorParteContratista"
-                placeholder="DD/MM/AAAA">
+                placeholder="DD/MM/AAAA"readonly
+                (click)="pickerFechaFirmaContratista.open()">
         <mat-datepicker #pickerFechaFirmaContratista></mat-datepicker>
       </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaFirmaContratista.open()" 
+      <button mat-button
+              color="primary"
+              type="button"
+              (click)="pickerFechaFirmaContratista.open()"
               class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
+        <img  class="mr-bottom-1"
+              src="assets/img/icon/calendarioCirculo.svg"
               alt="Abrir Calendario">
       </button>
     </div>
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaFirmaPorParteContratista' ).value !== null">
       <label class="mr-label"><b>Fecha de envío para la firma de la fiduciaria</b></label>
-      <mat-form-field class="w-20" 
-                      appearance="fill">
-        <input  matInput 
-                [matDatepicker]="pickerFechaEnvioFirmaFiduciaria" 
+      <mat-form-field class="w-20">
+        <input  matInput
+                [matDatepicker]="pickerFechaEnvioFirmaFiduciaria"
                 formControlName="fechaEnvioParaFirmaFiduciaria"
-                placeholder="DD/MM/AAAA">
+                placeholder="DD/MM/AAAA" readonly
+                (click)="pickerFechaEnvioFirmaFiduciaria.open()">
         <mat-datepicker #pickerFechaEnvioFirmaFiduciaria></mat-datepicker>
       </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaEnvioFirmaFiduciaria.open()" 
+      <button mat-button
+              color="primary"
+              type="button"
+              (click)="pickerFechaEnvioFirmaFiduciaria.open()"
               class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
+        <img  class="mr-bottom-1"
+              src="assets/img/icon/calendarioCirculo.svg"
               alt="Abrir Calendario">
       </button>
     </div>
 
     <div class="d-flex mt-1em" *ngIf="dataFormulario.get( 'fechaEnvioParaFirmaFiduciaria' ).value !== null">
       <label class="mr-label"><b>Fecha de firma por parte de la fiduciaria</b></label>
-      <mat-form-field class="w-22" 
-                      appearance="fill">
-        <input  matInput 
-                [matDatepicker]="pickerFechaFirmaFiduciaria" 
+      <mat-form-field class="w-22">
+        <input  matInput
+                [matDatepicker]="pickerFechaFirmaFiduciaria"
                 formControlName="fechaFirmaPorParteFiduciaria"
-                placeholder="DD/MM/AAAA">
+                placeholder="DD/MM/AAAA" readonly
+                (click)="pickerFechaFirmaFiduciaria.open()">
         <mat-datepicker #pickerFechaFirmaFiduciaria></mat-datepicker>
       </mat-form-field>
-      <button mat-button 
-              color="primary" 
-              type="button" 
-              (click)="pickerFechaFirmaFiduciaria.open()" 
+      <button mat-button
+              color="primary"
+              type="button"
+              (click)="pickerFechaFirmaFiduciaria.open()"
               class="btn-calendario">
-        <img  class="mr-bottom-1" 
-              src="assets/img/icon/calendarioCirculo.svg" 
+        <img  class="mr-bottom-1"
+              src="assets/img/icon/calendarioCirculo.svg"
               alt="Abrir Calendario">
       </button>
     </div>
 
     <div class="d-flex mt-1em">
       <label class="mr-label"><b>Observaciones</b></label>
-      <quill-editor class="quill-editor-style w-65" 
+      <quill-editor class="quill-editor-style w-65"
                     [styles]="editorStyle"
                     [modules]="config"
-                    (onContentChanged)="maxLength($event, 2000)" 
+                    (onContentChanged)="maxLength($event, 2000)"
                     formControlName="observaciones"></quill-editor>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value !== null">
-        {{2000 - textoLimpio(dataFormulario.get('observaciones').value)}}
+        {{2000 - (textoLimpio(dataFormulario.get('observaciones').value)>2000?2000:textoLimpio(dataFormulario.get('observaciones').value))}}
       </span>
       <span class="contador miles" *ngIf="dataFormulario.get('observaciones').value === null">
         2000
@@ -113,19 +113,19 @@
       <label class="mr-3em"><b>Adjuntar documento suscrito</b></label>
       <div class="input w-65">
         <span class="input-file-text text-center">{{archivo}}</span>
-        <button mat-raised-button 
-                color="primary" 
-                type="button" 
-                (click)="fileInput.click()" 
+        <button mat-raised-button
+                color="primary"
+                type="button"
+                (click)="fileInput.click()"
                 class="input-file--btn">
                 Adjuntar
         </button>
-        <input  hidden 
-                (change)="fileName( $event )" 
-                #fileInput 
-                type="file" 
-                id="file" 
-                formControlName="documento" 
+        <input  hidden
+                (change)="fileName( $event )"
+                #fileInput
+                type="file"
+                id="file"
+                formControlName="documento"
                 accept=".pdf">
       </div>
     </div>
@@ -135,11 +135,11 @@
     </div>
 
     <div class="text-center w-90">
-      <button mat-button 
-              color="warn" 
-              class="btn-guardar" 
+      <button mat-button
+              color="warn"
+              class="btn-guardar"
               type="submit">
-              <img  src="assets/img/icon/guardar.svg" 
+              <img  src="assets/img/icon/guardar.svg"
                     alt="Regresar">
       </button>
     </div>

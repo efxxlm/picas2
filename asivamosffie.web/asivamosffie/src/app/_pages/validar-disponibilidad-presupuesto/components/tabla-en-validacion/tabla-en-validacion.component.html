@@ -29,9 +29,10 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de registro </th>
             <td mat-cell *matCellDef="let element">
                 <span class="info-text tabla"
-                    [ngClass]="{'completo': element.estadoRegistro === true, 'sin-diligenciar': element.estadoRegistro === false}"></span>
+                    [ngClass]="{'completo': element.estadoRegistro, 'sin-diligenciar': !element.estadoRegistro}"></span>
                 {{element.estadoRegistro?"Completo":"Incompleto"}}
             </td>
+            
         </ng-container>
     
         <ng-container matColumnDef="id">

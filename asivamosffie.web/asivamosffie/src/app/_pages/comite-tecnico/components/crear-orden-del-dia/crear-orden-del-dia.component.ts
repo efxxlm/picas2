@@ -146,7 +146,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
   eliminarTema(i) {
     let tema = this.addressForm.get('tema');
-    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', i, tema);
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i, tema);
 
   }
 
@@ -156,10 +156,10 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
     console.log(tema)
 
-    this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value ? tema.get('sesionTemaId').value.sesionTemaId : 0)
+    this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
       .subscribe(respuesta => {
         this.borrarArray(grupo, i)
-        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.ngOnInit();
       })
 
@@ -172,7 +172,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if (result) {
+      if (result===true) {
         this.deleteTema(e)
       }
     });
@@ -215,14 +215,14 @@ export class CrearOrdenDelDiaComponent implements OnInit {
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(1000)])
       ],
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(3)])
       ],
       url: [null, [
-        //Validators.required,
+        Validators.required,
         //Validators.pattern('/^(http[s]?:\/\/){0,1}(www\.){0,1}[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,5}[\.]{0,1}/')
       ]],
     });
@@ -232,7 +232,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
 
     console.log(this.addressForm);
     if (this.addressForm.invalid) {
-      this.openDialog('Falta registrar información', '');
+      this.openDialog('', '<b>Falta registrar información</b>');
 
     } else {
       let comite: ComiteTecnico = {
@@ -273,7 +273,7 @@ export class CrearOrdenDelDiaComponent implements OnInit {
       console.log(comite)
 
       this.techicalCommitteeSessionService.createEditComiteTecnicoAndSesionComiteTemaAndSesionComiteSolicitud(comite).subscribe(respuesta => {
-        this.openDialog('Sesion Comite', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         if (respuesta.code == "200")
           this.router.navigate(['/comiteTecnico']);
       });
