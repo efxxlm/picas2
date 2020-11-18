@@ -134,7 +134,7 @@ export class GestionarDrpComponent implements OnInit {
     this.disponibilidadServices.CreateDRP(this.detailavailabilityBudget.id).subscribe(listas => {
       console.log(listas);
       //this.detailavailabilityBudget=listas;
-      this.openDialog("",listas.message);
+      this.openDialog("",listas.message,true);
       if(listas.code=="200")
       {
         this.descargarDRPBoton();
