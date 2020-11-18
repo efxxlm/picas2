@@ -178,7 +178,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             { 
-                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionConstruccionPerfil(pObservacion, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionConstruccionPerfilSave(pObservacion, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
