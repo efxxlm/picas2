@@ -59,7 +59,7 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="disponibilidadPersonal">
-                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
+                    <mat-option *ngFor="let selectValue of personalArray" [value]="selectValue.value">
                       {{ selectValue.name }}
                     </mat-option>
                   </mat-select>
@@ -68,63 +68,87 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('cantidadPersonalOperativoProgramado').invalid && addressForm.get('cantidadPersonalOperativoProgramado').touched">
                   Cantidad de personal operativo programado
                 </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #cantidadPersonalOperativoProgramado type="number" formControlName="cantidadPersonalOperativoProgramado"
-                    maxlength="3" min="1" max="999" required (keypress)="validateNumberKeypress($event)"
+                  <input matInput #cantidadPersonalOperativoProgramado type="number"
+                    formControlName="cantidadPersonalOperativoProgramado" maxlength="3" min="1" max="999" required
+                    (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoProgramado.value.length}}</span>
+                  matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoProgramado.value.length}}</span>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('cantidadPersonalOperativoTrabajando').invalid && addressForm.get('cantidadPersonalOperativoTrabajando').touched">
                   Cantidad de personal operativo trabajando
                 </label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #cantidadPersonalOperativoTrabajando type="number" formControlName="cantidadPersonalOperativoTrabajando"
-                    maxlength="3" min="1" max="999" required (keypress)="validateNumberKeypress($event)"
+                  <input matInput #cantidadPersonalOperativoTrabajando type="number"
+                    formControlName="cantidadPersonalOperativoTrabajando" maxlength="3" min="1" max="999" required
+                    (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoTrabajando.value.length}}</span>
+                  matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoTrabajando.value.length}}</span>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="retraso"
-                  [class.color-secondaryColor]="addressForm.get('retraso').invalid && addressForm.get('retraso').touched">
+                <label class="label-left" for="retrasoPersonal"
+                  [class.color-secondaryColor]="addressForm.get('retrasoPersonal').invalid && addressForm.get('retrasoPersonal').touched">
                   ¿Se generó retraso en la obra?
                 </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
-                  <mat-select required formControlName="retraso">
-                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
-                      {{ selectValue.name }}
-                    </mat-option>
+                  <mat-select required formControlName="retrasoPersonal">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
                   </mat-select>
                 </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('retrasoPersonal').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('horasRetrasoPersonal').invalid && addressForm.get('horasRetrasoPersonal').touched">
+                  Número de horas de retraso generado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #horasRetrasoPersonal type="number" formControlName="horasRetrasoPersonal"
+                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{1 - horasRetrasoPersonal.value.length}}</span>
               </div>
             </div>
           </div>
@@ -168,11 +192,73 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="disponibilidadMaterial">
-                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
+                    <mat-option *ngFor="let selectValue of materialArray" [value]="selectValue.value">
                       {{ selectValue.name }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === 'media' || addressForm.get('disponibilidadMaterial').value === 'baja'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="causaMaterial"
+                  [class.color-secondaryColor]="addressForm.get('causaMaterial').invalid && addressForm.get('causaMaterial').touched">
+                  Causa
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="causaMaterial">
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadMaterial" [value]="selectValue.value">
+                      {{ selectValue.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === 'media' || addressForm.get('disponibilidadMaterial').value === 'baja'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="retrasoMaterial"
+                  [class.color-secondaryColor]="addressForm.get('retrasoMaterial').invalid && addressForm.get('retrasoMaterial').touched">
+                  ¿Se generó retraso en la obra?
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="retrasoMaterial">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('retrasoMaterial').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('horasRetrasoMaterial').invalid && addressForm.get('horasRetrasoMaterial').touched">
+                  Número de horas de retraso generado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #horasRetrasoMaterial type="number" formControlName="horasRetrasoMaterial"
+                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{1 - horasRetrasoMaterial.value.length}}</span>
               </div>
             </div>
           </div>
@@ -216,11 +302,73 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="disponibilidadEquipo">
-                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
+                    <mat-option *ngFor="let selectValue of equipolArray" [value]="selectValue.value">
                       {{ selectValue.name }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === 'parcial' || addressForm.get('disponibilidadEquipo').value === 'baja'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="causaEquipo"
+                  [class.color-secondaryColor]="addressForm.get('causaEquipo').invalid && addressForm.get('causaEquipo').touched">
+                  Causa
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="causaEquipo">
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadEquipo" [value]="selectValue.value">
+                      {{ selectValue.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === 'parcial' || addressForm.get('disponibilidadEquipo').value === 'baja'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="retrasoEquipo"
+                  [class.color-secondaryColor]="addressForm.get('retrasoEquipo').invalid && addressForm.get('retrasoEquipo').touched">
+                  ¿Se generó retraso en la obra?
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="retrasoEquipo">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('retrasoEquipo').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('horasRetrasoEquipo').invalid && addressForm.get('horasRetrasoEquipo').touched">
+                  Número de horas de retraso generado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #horasRetrasoEquipo type="number" formControlName="horasRetrasoEquipo"
+                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{1 - horasRetrasoEquipo.value.length}}</span>
               </div>
             </div>
           </div>
@@ -264,11 +412,73 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="Productividad">
-                    <mat-option *ngFor="let selectValue of arraySelect" [value]="selectValue.value">
+                    <mat-option *ngFor="let selectValue of productividadArray" [value]="selectValue.value">
                       {{ selectValue.name }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === 'baja'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="causaProductividad"
+                  [class.color-secondaryColor]="addressForm.get('causaProductividad').invalid && addressForm.get('causaProductividad').touched">
+                  Causa
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="causaProductividad">
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadProductividad" [value]="selectValue.value">
+                      {{ selectValue.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === 'baja'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="retrasoProductividad"
+                  [class.color-secondaryColor]="addressForm.get('retrasoProductividad').invalid && addressForm.get('retrasoProductividad').touched">
+                  ¿Se generó retraso en la obra?
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="retrasoProductividad">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('retrasoProductividad').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('horasRetrasoProductividad').invalid && addressForm.get('horasRetrasoProductividad').touched">
+                  Número de horas de retraso generado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #horasRetrasoProductividad type="number" formControlName="horasRetrasoProductividad"
+                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{1 - horasRetrasoProductividad.value.length}}</span>
               </div>
             </div>
           </div>
