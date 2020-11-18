@@ -241,6 +241,7 @@ namespace asivamosffie.services
                     "Contratación",
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
                     NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
+                    NumeroDDP = DisponibilidadPresupuestal.NumeroDdp,
                     FechaFirmaContrato = fechaContrato == null ? "" : Convert.ToDateTime(fechaContrato).ToString("dd/MM/yyyy"),
                     NumeroContrato = numeroContrato,
                     Contratacion = contratacion
