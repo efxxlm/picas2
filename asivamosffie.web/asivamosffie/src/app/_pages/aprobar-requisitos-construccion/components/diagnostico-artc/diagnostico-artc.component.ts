@@ -76,8 +76,10 @@ export class DiagnosticoArtcComponent implements OnInit {
   };
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    if ( texto !== undefined ) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    };
   };
   
   openDialog (modalTitle: string, modalText: string) {

@@ -24,7 +24,7 @@
         <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header w-45">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="contratacion[ 'estadoSemaforoContratacion' ]">
                         {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -48,7 +48,7 @@
                 <mat-accordion *ngFor="let perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil; index as j">
                     <mat-expansion-panel class="expansion-style sub-expansion aux">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title  sin-diligenciar">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="perfil[ 'estadoSemaforo' ]">
                               Perfil {{ j+1 }}
                             </mat-panel-title>
                           </mat-expansion-panel-header>
@@ -78,7 +78,8 @@
                         </div>
                         <app-hojas-vida-interventoria-artc  [observacionesCompleted]="false"
                                                             [observacionesPerfil]="perfil.construccionPerfilObservacion"
-                                                            [construccionPerfilId]="perfil.construccionPerfilId">
+                                                            [construccionPerfilId]="perfil.construccionPerfilId"
+                                                            (seRealizoPeticion)="recargarComponente( $event )">
                         </app-hojas-vida-interventoria-artc>
                     </mat-expansion-panel>
                 </mat-accordion>

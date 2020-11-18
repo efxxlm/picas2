@@ -27,7 +27,10 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
         this.contrato = response;
         console.log( this.contrato );
         for ( let contratacion of this.contrato.contratacion.contratacionProyecto ) {
-
+          const totalAcordeones: number = 6;
+          let semaforoSinDiligenciar = 0;
+          let semaforoEnProceso = 0;
+          let semaforoCompleto = 0;
           //Semaforo Diagnostico
           contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = "sin-diligenciar";
           if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor !== undefined 
@@ -39,6 +42,10 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
             if ( contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
           };
+
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'sin-diligenciar' ) semaforoSinDiligenciar++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'en-proceso' ) semaforoEnProceso++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'completo' ) semaforoCompleto++;
 
           //Semaforo planes y programas
           contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = "sin-diligenciar";
@@ -53,6 +60,10 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
               contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'en-proceso';
           };
 
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoPlanes === 'sin-diligenciar' ) semaforoSinDiligenciar++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoPlanes === 'en-proceso' ) semaforoEnProceso++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoPlanes === 'completo' ) semaforoCompleto++;
+
           //Semaforo manejo de anticipo
           contratacion.proyecto.contratoConstruccion[0].semaforoManejo = "sin-diligenciar";
           if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoSupervisor !== undefined 
@@ -64,6 +75,10 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
             if ( contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipoSupervisor === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoSupervisor === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'en-proceso';
           };
+
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoManejo === 'sin-diligenciar' ) semaforoSinDiligenciar++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoManejo === 'en-proceso' ) semaforoEnProceso++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoManejo === 'completo' ) semaforoCompleto++;
 
           //Semaforo perfiles CV
           let perfilSinDiligenciar = 0;
@@ -97,6 +112,9 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
                 || ( perfilCompleto > 0 && perfilCompleto < contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length ) ) {
             contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles = "en-proceso";
           };
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles === 'sin-diligenciar' ) semaforoSinDiligenciar++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles === 'en-proceso' ) semaforoEnProceso++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles === 'completo' ) semaforoCompleto++;
 
           //Semaforo programacion de obra
           contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = "sin-diligenciar";
@@ -110,6 +128,10 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
               contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'en-proceso';
           };
 
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion === 'sin-diligenciar' ) semaforoSinDiligenciar++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion === 'en-proceso' ) semaforoEnProceso++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion === 'completo' ) semaforoCompleto++;
+
           //Semaforo flujo inversion de recursos
           contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = "sin-diligenciar";
           if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionSupervisor !== undefined 
@@ -122,6 +144,15 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
               contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'en-proceso';
           };
 
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoFlujo === 'sin-diligenciar' ) semaforoSinDiligenciar++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoFlujo === 'en-proceso' ) semaforoEnProceso++;
+          if ( contratacion.proyecto.contratoConstruccion[0].semaforoFlujo === 'completo' ) semaforoCompleto++;
+
+          //Condiciones semaforos del proyecto
+          if ( semaforoCompleto > 0 && semaforoCompleto === totalAcordeones ) contratacion[ 'estadoSemaforo' ] = 'completo';
+          if ( semaforoSinDiligenciar > 0 && semaforoSinDiligenciar === totalAcordeones ) contratacion[ 'estadoSemaforo' ] = 'sin-diligenciar';
+          if ( semaforoEnProceso > 0 && semaforoEnProceso < totalAcordeones ) contratacion[ 'estadoSemaforo' ] = 'en-proceso';
+          if ( semaforoCompleto > 0 && semaforoSinDiligenciar > 0 && semaforoCompleto + semaforoSinDiligenciar === totalAcordeones ) contratacion[ 'estadoSemaforo' ] = 'en-proceso';
         };
       } );
   };

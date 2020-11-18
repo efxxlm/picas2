@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
@@ -15,6 +15,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
   @Input() observacionesPerfil;
   @Input() tieneObservacion;
   @Input() construccionPerfilId: number;
+  @Output() seRealizoPeticion = new EventEmitter<boolean>();
   observacionSupervisor: string = '3';
   editorStyle = {
     height: '100px'
@@ -47,7 +48,6 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
         };
       };
       if ( observacionTipo3.length > 0 ) {
-        console.log( observacionTipo3[ observacionTipo3.length -1 ] );
         this.addressForm.get( 'tieneObservaciones' ).setValue( observacionTipo3[ observacionTipo3.length -1 ].esSupervision !== undefined ? observacionTipo3[ observacionTipo3.length -1 ].esSupervision : null )
         if ( this.addressForm.get( 'tieneObservaciones' ).value === true && observacionTipo3[ observacionTipo3.length -1 ].observacion === undefined ) {
           this.addressForm.get( 'construccionPerfilObservacionId' ).setValue( observacionTipo3[ observacionTipo3.length -1 ].construccionPerfilObservacionId );
@@ -94,12 +94,12 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
     this.faseDosAprobarConstruccionSvc.createEditObservacionConstruccionPerfil( observacionPerfil )
       .subscribe(
         response => {
-          console.log( response );
-          //this.openDialog( '', `<b>${ response.message }</b>` )
+          this.openDialog( '', `<b>${ response.message }</b>` );
+          this.seRealizoPeticion.emit(true);
         },
         err => {
-          console.log( err );
-          //this.openDialog( '', `<b>${ err.error !== undefined || err.error !== null ? err.error.message : err.message }</b>` )
+          this.openDialog( '', `<b>${ err.error !== undefined || err.error !== null ? err.error.message : err.message }</b>` );
+          this.seRealizoPeticion.emit(true);
         }
       )
   }

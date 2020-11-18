@@ -57,7 +57,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    if ( texto ){
+    if ( texto !== undefined ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
     }
