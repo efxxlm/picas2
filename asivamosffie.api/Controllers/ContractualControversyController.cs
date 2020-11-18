@@ -40,6 +40,27 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
+        }        
+
+        [HttpPost]
+        [Route("CreateEditarActuacionSeguimiento")]
+        public async Task<IActionResult> CreateEditarActuacionSeguimiento(ActuacionSeguimiento actuacionSeguimiento)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (actuacionSeguimiento.ActuacionSeguimientoId == 0)
+                    actuacionSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    actuacionSeguimiento.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.CreateEditarActuacionSeguimiento(actuacionSeguimiento);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
         }
 
         [HttpPost]

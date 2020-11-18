@@ -364,11 +364,126 @@ namespace asivamosffie.services
             return true;
         }
 
+        public async Task<Respuesta> CreateEditarActuacionSeguimiento(ActuacionSeguimiento actuacionSeguimiento )
+        {
+            Respuesta _response = new Respuesta();
+            
+            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
+
+            //try
+            //{
+            //    Respuesta respuesta = new Respuesta();
+            //    string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
+            //    respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
+
+            //    return Ok(respuesta);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex.ToString());
+            //}
+            string strCrearEditar = string.Empty;
+            try
+            {
+                if (actuacionSeguimiento != null)
+                {
+                    if (string.IsNullOrEmpty(actuacionSeguimiento.ActuacionSeguimientoId.ToString()) || actuacionSeguimiento.ActuacionSeguimientoId == 0)
+                    {
+                        strCrearEditar = "REGISTRAR ACTUACION SEGUIMIENTO";
+                        
+                        //Auditoria
+                        //strCrearEditar = "REGISTRAR AVANCE COMPROMISOS";
+                        actuacionSeguimiento.FechaCreacion = DateTime.Now;
+                        //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;                             
+        
+                         actuacionSeguimiento.Observaciones = Helpers.Helpers.CleanStringInput(actuacionSeguimiento.Observaciones);
+                                               
+                        //actuacionSeguimiento.Eliminado = false;
+                        _context.ActuacionSeguimiento.Add(actuacionSeguimiento);
+                        await _context.SaveChangesAsync();
+
+                    }
+                    else
+                    {
+                        strCrearEditar = "EDITAR ACTUACION SEGUIMIENTO";
+                        ActuacionSeguimiento actuacionSeguimientoBD = null;
+                        actuacionSeguimientoBD = _context.ActuacionSeguimiento.Where(r => r.ActuacionSeguimientoId == actuacionSeguimiento.ActuacionSeguimientoId).FirstOrDefault();
+
+                        actuacionSeguimiento.Observaciones = Helpers.Helpers.CleanStringInput(actuacionSeguimiento.Observaciones);
+                        //actuacionSeguimiento.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(actuacionSeguimiento.ConclusionComitePreTecnico);
+                        //ControversiaContractual.FechaCreacion = DateTime.Now;
+                        //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+                        //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+
+                        //_context.Add(contratoPoliza);
+                        if (actuacionSeguimientoBD != null)
+                        {
+                            actuacionSeguimientoBD.EstadoReclamacionCodigo = actuacionSeguimiento.EstadoReclamacionCodigo ;
+                            actuacionSeguimientoBD.SeguimientoCodigo = actuacionSeguimiento.SeguimientoCodigo;
+                            actuacionSeguimientoBD.ActuacionAdelantada = actuacionSeguimiento.ActuacionAdelantada;
+                            actuacionSeguimientoBD.ProximaActuacion = actuacionSeguimiento.ProximaActuacion;
+                            actuacionSeguimientoBD.Observaciones = actuacionSeguimiento.Observaciones;
+                            actuacionSeguimientoBD.EstadoDerivadaCodigo = actuacionSeguimiento.EstadoDerivadaCodigo;
+                            actuacionSeguimientoBD.RutaSoporte = actuacionSeguimiento.RutaSoporte;
+                            actuacionSeguimientoBD.FechaCreacion = DateTime.Now;
+                            actuacionSeguimientoBD.UsuarioCreacion = actuacionSeguimiento.UsuarioCreacion;
+                            actuacionSeguimientoBD.UsuarioModificacion = actuacionSeguimiento.UsuarioModificacion;
+
+                        }
+                                                
+                        //actuacionSeguimiento.EsCompleto = ValidarRegistroCompletoactuacionSeguimiento(actuacionSeguimiento);
+
+                        //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+
+                        //LimpiarEntradasContratoPoliza(ref contratoPoliza);
+                        actuacionSeguimientoBD.FechaModificacion = DateTime.Now;
+                        //_context.ContratoPoliza.Add(contratoPoliza);
+                        _context.ActuacionSeguimiento.Update(actuacionSeguimientoBD);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    return
+                        new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                            Message =
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                            ConstantMessagesContractualControversy.OperacionExitosa,
+                            //contratoPoliza
+                            idAccionCrearContratoPoliza
+                            , actuacionSeguimiento.UsuarioModificacion
+                            //"UsuarioCreacion"
+                            , "EDITAR ACTUACION SEGUIMIENTO"
+                            //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
+                            )
+                        };
+
+                    //return _response = new Respuesta { IsSuccessful = true,
+                    //    IsValidation = false, Data = cuentaBancaria,
+                    //    Code = ConstantMessagesBankAccount.OperacionExitosa };
+                }
+                else
+                {
+                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContractualControversy.RecursoNoEncontrado };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContractualControversy.ErrorInterno };
+            }
+
+        }
+
         public async Task<Respuesta> CreateEditarControversiaTAI(ControversiaContractual controversiaContractual )
         {
             Respuesta _response = new Respuesta();
 
-            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContractualControversy.OperacionExitosa, (int)EnumeratorTipoDominio.Acciones);
+            int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Controversia_Contractual, (int)EnumeratorTipoDominio.Acciones);
 
             //try
             //{
@@ -722,6 +837,82 @@ namespace asivamosffie.services
                 }
             }
             return ListControversiaContractualGrilla.OrderByDescending(r => r.ControversiaContractualId).ToList();
+
+        }
+
+
+        public async Task<List<GrillaActuacionSeguimiento>> ListGrillaActuacionSeguimiento()
+        {
+            //await AprobarContratoByIdContrato(1);
+
+            List<GrillaActuacionSeguimiento> LstActuacionSeguimientoGrilla = new List<GrillaActuacionSeguimiento>();
+            //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
+
+            //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo      
+
+            //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
+            List<ActuacionSeguimiento> lstActuacionSeguimiento = await _context.ActuacionSeguimiento.Distinct().ToListAsync();
+
+            foreach (var actuacionSeguimiento in lstActuacionSeguimiento)
+            {
+                try
+                {
+                   
+                    //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                    string strEstadoReclamacionCodigo = "sin definir";
+                    string strEstadoReclamacion = "sin definir";
+                    //string strEstadoAvanceTramite = "sin definir";
+
+                    //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                    Dominio EstadoReclamacionCodigo;
+
+                    EstadoReclamacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(actuacionSeguimiento.EstadoReclamacionCodigo, (int)EnumeratorTipoDominio.Estado_avance_reclamacion);
+                    if (EstadoReclamacionCodigo != null)
+                    {
+                        strEstadoReclamacion = EstadoReclamacionCodigo.Nombre;
+                        strEstadoReclamacionCodigo = EstadoReclamacionCodigo.Codigo;
+
+                    }
+
+                    //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    //if (EstadoSolicitudCodigoContratoPoliza != null)
+                    //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+
+                    //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    GrillaActuacionSeguimiento RegistroActuacionSeguimiento = new GrillaActuacionSeguimiento
+                    {
+                        NumeroActuacion = actuacionSeguimiento.ActuacionAdelantada,
+                        EstadoReclamacion=strEstadoReclamacion,
+                        FechaActualizacion = actuacionSeguimiento.FechaModificacion != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
+                        NumeroReclamacion=actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
+                        Actuacion = "Actuación " +actuacionSeguimiento.ActuacionSeguimientoId.ToString()
+                        
+                        //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
+                        
+
+                    };
+
+                    //if (!(bool)proyecto.RegistroCompleto)
+                    //{
+                    //    proyectoGrilla.EstadoRegistro = "INCOMPLETO";
+                    //}
+                    LstActuacionSeguimientoGrilla.Add(RegistroActuacionSeguimiento);
+                }
+                catch (Exception e)
+                {
+                    GrillaActuacionSeguimiento RegistroActuacionSeguimiento = new GrillaActuacionSeguimiento
+                    {
+                        NumeroActuacion = "ERROR",
+                        EstadoReclamacion = e.InnerException.ToString(),
+                        FechaActualizacion = e.ToString(),
+                        NumeroReclamacion = "ERROR",
+                        Actuacion = "ERROR"                       
+
+                    };
+                    LstActuacionSeguimientoGrilla.Add(RegistroActuacionSeguimiento);
+                }
+            }
+            return LstActuacionSeguimientoGrilla.OrderByDescending(r => r.ActuacionSeguimientoId).ToList();
 
         }
 

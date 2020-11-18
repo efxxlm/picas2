@@ -128,6 +128,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipo_de_controversia=80,
 
         Estado_controversia_contractual_TAI = 90,
-             
+
+        Estado_avance_reclamacion = 91,
+
+        
+
     }
 }
