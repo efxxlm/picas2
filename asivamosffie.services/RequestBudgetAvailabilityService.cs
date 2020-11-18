@@ -1727,7 +1727,10 @@ namespace asivamosffie.services
                                 nombreAportante = getNombreAportante(confinanciacion);
                                 valorAportate = _context.ProyectoAportante.Where(x => x.ProyectoId == proyectospp.ProyectoId && x.AportanteId == ppapor.AportanteId).Sum(x => x.ValorTotalAportante);
 
-                                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId).Include(x => x.ComponenteUso).ToList();
+                                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId==detailDP.ContratacionId
+                                && x.ContratacionProyectoAportante.ContratacionProyecto.ProyectoId==proyectospp.ProyectoId &&
+                                x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId)
+                                    .Include(x => x.ComponenteUso).ToList();
                                 foreach (var compAp in componenteAp)
                                 {
                                     List<string> uso = new List<string>();

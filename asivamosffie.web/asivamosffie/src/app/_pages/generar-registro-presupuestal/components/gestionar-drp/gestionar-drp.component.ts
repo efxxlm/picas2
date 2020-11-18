@@ -6,6 +6,7 @@ import { DisponibilidadPresupuestalService } from 'src/app/core/_services/dispon
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CurrencyPipe } from '@angular/common';
 
 export interface tablaEjemplo {
   componente: string;
@@ -39,7 +40,7 @@ export class GestionarDrpComponent implements OnInit {
   dataSource = [];
   detailavailabilityBudget: any;
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute,private currencyPipe:CurrencyPipe,
     private router: Router,private sanitized: DomSanitizer,) { }
   
     openDialog(modalTitle: string, modalText: string,relocate=false) {
@@ -69,7 +70,7 @@ export class GestionarDrpComponent implements OnInit {
                 componente: element2.componente, uso: [
                   { nombre: element2.uso }//, { nombre: "Diagnostico" }, { nombre: "Obra Principal" }
                 ], valorUso: [
-                  { valor: element2.valorUso }//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
+                  { valor: element2.valorUso.map(y=>{let convert=y.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,"); return "$"+convert;})}//, { valor: "$ 12.000.000" }, { valor: "$ 60.000.000" }
                 ], valorTotal: element2.valorTotal
               });
             });
@@ -85,6 +86,8 @@ export class GestionarDrpComponent implements OnInit {
     //this.dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   }
+
+  
   cancelarDRPBoton(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
