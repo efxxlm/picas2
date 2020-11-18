@@ -70,6 +70,9 @@ export class TablaConPolizaObservadaYDevueltaComponent implements OnInit {
     if (enrevisionC > 0 && enrevisionInc > 0) {
       this.estadoSemaforo2.emit('en-proceso');
     };
+    if(this.dataTable.length == 0){
+      this.estadoSemaforo2.emit('completo');
+    };
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
