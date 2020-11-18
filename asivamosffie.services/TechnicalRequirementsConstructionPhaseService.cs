@@ -2121,12 +2121,11 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateEditObservacionConstruccionPerfilSave(ConstruccionPerfilObservacion pObservacion, string pUsuarioCreacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Construccion, (int)EnumeratorTipoDominio.Acciones);
-
-            string strCrearEditar = "";
-
             Respuesta respuesta = new Respuesta();
             try
             {
+
+                string strCrearEditar;
                 if (pObservacion.ConstruccionPerfilObservacionId > 0)
                 {
                     strCrearEditar = "EDITAR OBSERVACION CONSTRUCCION PERFIL";
@@ -2156,7 +2155,17 @@ namespace asivamosffie.services
                     _context.ConstruccionPerfilObservacion.Add(construccionObservacionPerfil);
                 }
                 _context.SaveChanges();
-                return respuesta;
+
+                return
+                    new Respuesta
+                    {
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, strCrearEditar)
+                    };
             }
             catch (Exception ex)
             {
