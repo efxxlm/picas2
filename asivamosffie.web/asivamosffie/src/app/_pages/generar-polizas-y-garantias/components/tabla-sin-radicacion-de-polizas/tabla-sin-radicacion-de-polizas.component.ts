@@ -18,12 +18,13 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public dataTable;
+  dataTable: any[] = [];
 
   loadDataItems: Subscription;
   constructor(private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
+    /*
     this.loadDataItems = this.polizaService.loadDataItems.subscribe((loadDataItems: any) => {
       if(loadDataItems!=''){
       this.dataTable=loadDataItems;
@@ -44,12 +45,41 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
           startIndex + pageSize;
         return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
       };
-      this.applyFilter("Sin radicación de pólizas");
     }); 
+    */
+    this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe((resp: any) => {
+      let sinRadicacion = 0;
+      for (let polizas of resp) {
+        if (polizas.estadoPoliza === 'Sin radicación de pólizas' && polizas.registroCompletoNombre=='Incompleto') {
+          this.dataTable.push(polizas);
+          sinRadicacion++;
+        };
+      };
+      if (sinRadicacion === this.dataTable.length) {
+        this.estadoSemaforo.emit('sin-diligenciar');
+      };
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+        if (length === 0 || pageSize === 0) {
+          return '0 de ' + length;
+        }
+        length = Math.max(length, 0);
+        const startIndex = page * pageSize;
+        // If the start index exceeds the list length, do not try and fix the end index to the end.
+        const endIndex = startIndex < length ?
+          Math.min(startIndex + pageSize, length) :
+          startIndex + pageSize;
+        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+      };
+    });
   }
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue;
-  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  };
 
 }

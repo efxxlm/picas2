@@ -12,18 +12,19 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
 })
 export class TablaConAprobacionDePolizasComponent implements OnInit {
 
-  @Output() estadoSemaforo = new EventEmitter<string>();
+  @Output() estadoSemaforo3 = new EventEmitter<string>();
   displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public dataTable;
+  dataTable: any[] = [];
   loadDataItems: Subscription;
   constructor(private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
+    /*
     this.loadDataItems = this.polizaService.loadDataItems.subscribe((loadDataItems: any) => {
       if(loadDataItems!=''){
       this.dataTable=loadDataItems;
@@ -44,12 +45,43 @@ export class TablaConAprobacionDePolizasComponent implements OnInit {
           startIndex + pageSize;
         return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
       };
-      this.applyFilter("Con aprobación de pólizas");
-    });    
+    });  */
+    this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe((resp: any) => {
+      let enrevisionC  = 0;
+      for (let polizas of resp) {
+        if (polizas.estadoPoliza === 'Con aprobación de pólizas' && polizas.registroCompletoNombre=='Completo') {
+          this.dataTable.push(polizas);
+          enrevisionC++;
+        };
+      };
+      if (enrevisionC === this.dataTable.length) {
+        this.estadoSemaforo3.emit('completo');
+      }
+      else{
+        this.estadoSemaforo3.emit('sin-diligenciar');
+      };
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+        if (length === 0 || pageSize === 0) {
+          return '0 de ' + length;
+        }
+        length = Math.max(length, 0);
+        const startIndex = page * pageSize;
+        // If the start index exceeds the list length, do not try and fix the end index to the end.
+        const endIndex = startIndex < length ?
+          Math.min(startIndex + pageSize, length) :
+          startIndex + pageSize;
+        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+      };
+    });  
   }
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue;
-  }
+  applyFilter ( event: Event ) {
+    const filterValue      = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  };
 
 }

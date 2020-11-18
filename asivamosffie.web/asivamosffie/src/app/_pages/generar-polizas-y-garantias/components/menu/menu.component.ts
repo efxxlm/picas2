@@ -8,13 +8,18 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
 })
 export class MenuComponent implements OnInit {
   estadoAcordeon: string;
+  estadoAcordeon1: string;
+  estadoAcordeon2: string;
+  estadoAcordeon3: string;
   verAyuda = false;
   dataTable = [];
   constructor(private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
+    /*
     this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe(data=>{
       this.polizaService.loadDataItems.next(data);
     });
+    */
   }
 }
