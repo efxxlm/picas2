@@ -19,7 +19,7 @@
             (onContentChanged)="maxLength($event, 2000)" formControlName="objeto"></quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.get('objeto').value">
-          {{2000 - addressForm.get('objeto').value.length}}
+          {{2000 - (textoLimpio(addressForm.get('objeto').value)>2000?2000:textoLimpio(addressForm.get('objeto').value))}}
         </span>
         <span class="contador miles" *ngIf="addressForm.get('objeto').value === null">
           2000

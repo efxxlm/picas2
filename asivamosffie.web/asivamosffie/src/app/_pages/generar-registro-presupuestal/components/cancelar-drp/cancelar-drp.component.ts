@@ -54,6 +54,12 @@ export class CancelarDrpComponent implements OnInit {
     }
   }
 
+  textoLimpio ( texto: string ) {
+    if ( texto ) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    };
+
   onSubmit() {
     let DisponibilidadPresupuestalObservacion={DisponibilidadPresupuestalId:this.id,Observacion:this.addressForm.value.objeto};
     this.disponibilidadServices.SetCancelDDR(DisponibilidadPresupuestalObservacion).subscribe(listas => {
