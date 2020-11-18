@@ -1,0 +1,33 @@
+.flex-table {
+    display: flex;
+    align-items: center;
+    width: 100%;
+};
+
+.cabecera-table {
+    width: 99.8%;
+    border: solid 1px #174193;
+    background-color: #174193;
+    color: white;
+    height: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+};
+
+.size-semana {
+    width: 4em;
+    height: 10em;
+};
+
+.border-semana {
+    border: solid 1px #174193;
+    height: 4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+};
+
+.color-text-descriptivo {
+    color: rgba(0, 0, 0, 0.555);
+}

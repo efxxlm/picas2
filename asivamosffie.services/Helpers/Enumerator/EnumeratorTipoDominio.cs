@@ -132,7 +132,17 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estados_actas_inicio_obra = 85,
 
-        Estados_actas_inicio_interventoria = 86,
-          
+        Estados_actas_inicio_interventoria = 86,    
+               
+        Estado_Programacion_Inicial = 88,
+        
+        Tipo_de_controversia=80,
+
+        Estado_controversia_contractual_TAI = 90,
+
+        Estado_avance_reclamacion = 91,
+
+        
+
     }
 }
