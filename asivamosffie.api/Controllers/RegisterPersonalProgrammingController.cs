@@ -28,10 +28,10 @@ namespace asivamosffie.api.Controllers
         }
         [Route("GetListProyectos")]
         [HttpGet]
-        public async Task<List<dynamic>> GetListProyectos()
+        public async Task<List<VRegistrarPersonalObra>> GetListProyectos()
         {
-            var result = await _IRegisterPersonalProgrammingService.GetListProyectos();
-            return result;
+            return await _IRegisterPersonalProgrammingService.GetListProyectos();
+        
         }
 
         [Route("GetProgramacionPersonalByContratoId")]
