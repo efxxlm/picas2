@@ -2129,7 +2129,7 @@ namespace asivamosffie.services
                 if (pObservacion.ConstruccionPerfilObservacionId > 0)
                 {
                     strCrearEditar = "EDITAR OBSERVACION CONSTRUCCION PERFIL";
-                    ConstruccionPerfilObservacion construccionObservacionPerfil = _context.ConstruccionPerfilObservacion.Find(pObservacion.ConstruccionPerfilObservacionId);
+                    ConstruccionPerfilObservacion construccionObservacionPerfil = _context.ConstruccionPerfilObservacion.Where(r=> r.ConstruccionPerfilObservacionId == pObservacion.ConstruccionPerfilObservacionId).FirstOrDefault();
 
                     construccionObservacionPerfil.FechaModificacion = DateTime.Now;
                     construccionObservacionPerfil.UsuarioModificacion = pUsuarioCreacion;

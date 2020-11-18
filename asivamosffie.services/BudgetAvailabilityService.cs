@@ -719,7 +719,7 @@ public async Task<Respuesta> CreateEditarDisponibilidadPresupuestal(Disponibilid
                 
                 var valoresSolicitados= _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == pDisponibilidadPresObservacion.FuenteFinanciacionId).Sum(x => x.ValorSolicitado);
                 var fuente = _context.FuenteFinanciacion.Find(pDisponibilidadPresObservacion.FuenteFinanciacionId);
-                pDisponibilidadPresObservacion.SaldoActual = fuente.ValorFuente - valoresSolicitados;
+                pDisponibilidadPresObservacion.SaldoActual = (decimal)fuente.ValorFuente - valoresSolicitados;
                 pDisponibilidadPresObservacion.NuevoSaldo = pDisponibilidadPresObservacion.SaldoActual - pDisponibilidadPresObservacion.ValorSolicitado;
                 int estado = (int)EnumeratorEstadoGestionFuenteFinanciacion.Solicitado;
                 pDisponibilidadPresObservacion.FechaCreacion = DateTime.Now;

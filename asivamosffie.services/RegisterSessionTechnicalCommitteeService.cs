@@ -2270,13 +2270,13 @@ namespace asivamosffie.services
                             DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, RegistrosAlcance);
                             break;
 
-                        case ConstanCodigoVariablesPlaceHolders.PLAZO_OBRA_MESES:
-                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, proyecto.Proyecto.InfraestructuraIntervenirProyecto.Sum(r => r.PlazoMesesObra).ToString());
-                            break;
+                        //case ConstanCodigoVariablesPlaceHolders.PLAZO_OBRA_MESES:
+                        //    DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, proyecto.Proyecto.InfraestructuraIntervenirProyecto.Sum(r => r.PlazoMesesObra).ToString());
+                        //    break;
 
-                        case ConstanCodigoVariablesPlaceHolders.PLAZO_OBRA_DIAS:
-                            DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, proyecto.Proyecto.InfraestructuraIntervenirProyecto.Sum(r => r.PlazoDiasObra).ToString());
-                            break;
+                        //case ConstanCodigoVariablesPlaceHolders.PLAZO_OBRA_DIAS:
+                        //    DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, proyecto.Proyecto.InfraestructuraIntervenirProyecto.Sum(r => r.PlazoDiasObra).ToString());
+                        //    break;
 
                         case ConstanCodigoVariablesPlaceHolders.VALOR_OBRA:
                             DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorObra));
@@ -3266,7 +3266,7 @@ namespace asivamosffie.services
 
                                                     case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio3.Nombre, compromiso.FechaCumplimiento.ToString("dd-MM-yyyy"));
+                                                            .Replace(placeholderDominio3.Nombre, ((DateTime)compromiso.FechaCumplimiento).ToString("dd-MM-yyyy"));
                                                         break;
                                                 }
                                             }
@@ -3391,7 +3391,7 @@ namespace asivamosffie.services
 
                                                     case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                         registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                            .Replace(placeholderDominio.Nombre, compromiso.FechaCumplimiento.ToString("dd-MM-yyyy"));
+                                                            .Replace(placeholderDominio.Nombre, ((DateTime)compromiso.FechaCumplimiento).ToString("dd-MM-yyyy"));
                                                         break;
                                                 }
                                             }
@@ -3487,7 +3487,7 @@ namespace asivamosffie.services
 
                                             case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                 registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                    .Replace(placeholderDominio4.Nombre, compromiso.FechaCumplimiento.ToString("dd-MM-yyyy"));
+                                                    .Replace(placeholderDominio4.Nombre, ((DateTime)compromiso.FechaCumplimiento).ToString("dd-MM-yyyy"));
                                                 break;
                                         }
                                     }
@@ -3668,7 +3668,7 @@ namespace asivamosffie.services
 
                                             case ConstanCodigoVariablesPlaceHolders.FECHA_CUMPLIMIENTO_COMPROMISO:
                                                 registrosCompromisosSolicitud = registrosCompromisosSolicitud
-                                                    .Replace(placeholderDominio5.Nombre, compromiso.FechaCumplimiento.ToString("dd-MM-yyyy"));
+                                                    .Replace(placeholderDominio5.Nombre, ((DateTime)compromiso.FechaCumplimiento).ToString("dd-MM-yyyy"));
                                                 break;
                                         }
                                     }
