@@ -252,6 +252,8 @@ namespace asivamosffie.services
 
         }
 
+        /*3.3.4 listado de rp
+         jflorez: cambio 20201118 deben filtrarse por los contratos que esten en estado registrado*/
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalContratacionByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
         {
             int codigocondvalidacionpre = (int)EnumeratorEstadoSolicitudPresupuestal.Con_registro_presupuestal;
@@ -260,8 +262,9 @@ namespace asivamosffie.services
                 await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado
                     && (r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud) || r.EstadoSolicitudCodigo.Equals(codigocondvalidacionpre.ToString())
                     || r.EstadoSolicitudCodigo.Equals(codigocancelada.ToString()))
-                    && r.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional )
-                .Include(x => x.DisponibilidadPresupuestalProyecto)
+                    && r.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional
+                    && r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
+                .Include(x => x.DisponibilidadPresupuestalProyecto).Include(x=>x.Contratacion).ThenInclude(x=>x.Contrato)
                 .ToListAsync();
 
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
@@ -333,6 +336,7 @@ namespace asivamosffie.services
                         x.Codigo==DisponibilidadPresupuestal.EstadoSolicitudCodigo).FirstOrDefault().Nombre
 
                 };
+               
                 ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
             }
             return ListDisponibilidadPresupuestalGrilla.OrderByDescending(r => r.DisponibilidadPresupuestalId).ToList();
