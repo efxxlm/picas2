@@ -31,35 +31,35 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon">
                     Sin radicación de pólizas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-sin-radicacion-de-polizas [dataTableAux]="this.dataTable"></app-tabla-sin-radicacion-de-polizas>
+            <app-tabla-sin-radicacion-de-polizas (estadoSemaforo)="estadoAcordeon = $event"></app-tabla-sin-radicacion-de-polizas>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon1">
                     En revisión de pólizas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-en-revision-de-polizas [dataTableAux]="this.dataTable"></app-tabla-en-revision-de-polizas>
+            <app-tabla-en-revision-de-polizas (estadoSemaforo1)="estadoAcordeon1 = $event"></app-tabla-en-revision-de-polizas>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon2">
                     Con póliza observada y devuelta
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-con-poliza-observada-y-devuelta [dataTableAux]="this.dataTable"></app-tabla-con-poliza-observada-y-devuelta>
+            <app-tabla-con-poliza-observada-y-devuelta (estadoSemaforo2)="estadoAcordeon2 = $event"></app-tabla-con-poliza-observada-y-devuelta>
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon3">
                     Con aprobación de pólizas
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-tabla-con-aprobacion-de-polizas [dataTableAux]="this.dataTable"></app-tabla-con-aprobacion-de-polizas>
+            <app-tabla-con-aprobacion-de-polizas (estadoSemaforo3)="estadoAcordeon3 = $event"></app-tabla-con-aprobacion-de-polizas>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

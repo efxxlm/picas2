@@ -162,7 +162,7 @@
     <div class="botones">
         <button mat-raised-button color="accent" (click)="download()"
             *ngIf="detailavailabilityBudget?.numeroDDP">Descargar DDP</button>
-        <button mat-raised-button color="accent" (click)="validar()" [disabled]="!sePuedeValidarFuente()">Validar
+        <button mat-raised-button color="accent" (click)="validar()" [disabled]="!sePuedeValidarFuente() && !detailavailabilityBudget">Validar
             solicitud</button>
         <button mat-raised-button color="accent" [disabled]="sePuedeValidarFuente()"
             (click)="openDialogDevolver(0,detailavailabilityBudget?.numeroSolicitud,detailavailabilityBudget?.tipoSolicitudText)">Devolver
