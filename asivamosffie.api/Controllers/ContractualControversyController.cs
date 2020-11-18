@@ -79,6 +79,21 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetListGrillaControversiaActuacion")]
+        
+        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaActuacion()
+        {
+            try
+            {
+                return await _contractualControversy.ListGrillaControversiaActuacion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
         [Route("GetVistaContratoContratista")]
         public async Task<ActionResult<VistaContratoContratista>> GetVistaContratoContratista(int pContratoId)
         {
