@@ -2148,7 +2148,7 @@ namespace asivamosffie.services
                         UsuarioCreacion = pUsuarioCreacion,
                         ConstruccionPerfilId = pObservacion.ConstruccionPerfilId,
                         ConstruccionPerfilObservacionId = pObservacion.ConstruccionPerfilObservacionId,
-                        TipoObservacionCodigo = "0", // no se usa
+                        TipoObservacionCodigo = pObservacion.TipoObservacionCodigo, // no se usa
                         Observacion = pObservacion.Observacion,
                         EsSupervision = pObservacion.EsSupervision,
                     };
