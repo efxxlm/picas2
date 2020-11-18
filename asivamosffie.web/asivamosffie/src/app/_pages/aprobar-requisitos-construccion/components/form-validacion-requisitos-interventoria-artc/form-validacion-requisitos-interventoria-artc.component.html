@@ -76,7 +76,10 @@
                                 </mat-card-content>
                             </mat-card>
                         </div>
-                        <app-hojas-vida-interventoria-artc  [observacionesCompleted]="false"></app-hojas-vida-interventoria-artc>
+                        <app-hojas-vida-interventoria-artc  [observacionesCompleted]="false"
+                                                            [observacionesPerfil]="perfil.construccionPerfilObservacion"
+                                                            [construccionPerfilId]="perfil.construccionPerfilId">
+                        </app-hojas-vida-interventoria-artc>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>
