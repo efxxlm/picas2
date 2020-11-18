@@ -10,7 +10,7 @@
 <div align="left" *ngIf="contratacion" style="margin-left: 7em;">
     <p><b>Url con soporte</b>: {{ contratacion.manejoAnticipoRutaSoporte }}</p>
 </div>
-<div align="center" class="mt-2em">
+<div align="center" class="mt-2em" *ngIf="contratacion.observacionManejoAnticipoApoyo !== undefined">
     <mat-card class="border mt-2em">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
@@ -18,9 +18,12 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p style="margin-left: 2em;"><b>08/08/2020</b></p>
-            <p style="margin-left: 2em;"><b>¿Tiene observaciones al manejo del anticipo?:</b> Sí</p>
-            <p style="margin-left: 2em;">El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000</p>
+            <p style="margin-left: 2em;"><b> {{ contratacion.observacionManejoAnticipoApoyo.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="contratacion.tieneObservacionesManejoAnticipoApoyo === true"><b>¿Tiene observaciones al manejo del anticipo?:</b> Si</p>
+            <p style="margin-left: 2em;" *ngIf="contratacion.tieneObservacionesManejoAnticipoApoyo === false"><b>¿Tiene observaciones al manejo del anticipo?:</b> No</p>
+            <section style="margin-left: 2em;" *ngIf="contratacion.tieneObservacionesManejoAnticipoApoyo === true">
+                <div [innerHTML]="contratacion.observacionManejoAnticipoApoyo.observaciones"></div>
+            </section>
         </mat-card-content>
     </mat-card>
 </div>

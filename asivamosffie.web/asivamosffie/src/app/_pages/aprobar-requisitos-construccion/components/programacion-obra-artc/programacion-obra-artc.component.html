@@ -3,7 +3,7 @@
         <button mat-raised-button color="accent" (click)="descargar()">Descargar archivo</button>
     </section>
 </div>
-<div align="center" class="mt-2em">
+<div align="center" class="mt-2em" *ngIf="contratoConstruccion.observacionProgramacionObraApoyo !== undefined">
     <mat-card class="border mt-2em">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
@@ -11,9 +11,12 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>08/08/2020</b></p>
-            <p><b>¿Tiene observaciones a la programación de obra?:</b> Sí</p>
-            <p>No se encuentra la programación de la totalidad del proyecto. Revisar y volver a cargar.</p>
+            <p style="margin-left: 2em;"><b> {{ contratoConstruccion.observacionProgramacionObraApoyo.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="contratoConstruccion.tieneObservacionesProgramacionObraApoyo === true"><b>¿Tiene observaciones a la programación de obra?:</b> Si</p>
+            <p style="margin-left: 2em;" *ngIf="contratoConstruccion.tieneObservacionesProgramacionObraApoyo === false"><b>¿Tiene observaciones a la programación de obra?:</b> No</p>
+            <section style="margin-left: 2em;">
+                <div [innerHTML]="contratoConstruccion.observacionProgramacionObraApoyo.observaciones"></div>
+            </section>
         </mat-card-content>
     </mat-card>
 </div>

@@ -64,7 +64,7 @@
         <p><b>URL con soporte</b>: {{ urlSoporte }} </p>
     </div>
 </section>
-<div align="center" class="mt-3em">
+<div align="center" class="mt-3em" *ngIf="planesProgramas.observacionPlanesProgramasApoyo !== undefined">
     <mat-card class="border">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
@@ -72,9 +72,12 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p style="margin-left: 2em;"><b>08/08/2020</b></p>
-            <p style="margin-left: 2em;"><b>¿Tiene observaciones a los planes y programas?:</b> Sí</p>
-            <p style="margin-left: 2em;">En el Item ¿Cuenta con plan de manejo ambiental aprobado? la fecha es incorrecta verifique y ajuste</p>
+            <p style="margin-left: 2em;"><b> {{ planesProgramas.observacionPlanesProgramasApoyo.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="planesProgramas.tieneObservacionesPlanesProgramasApoyo === true"><b>¿Tiene observaciones a los planes y programas?:</b> Si</p>
+            <p style="margin-left: 2em;" *ngIf="planesProgramas.tieneObservacionesPlanesProgramasApoyo === false"><b>¿Tiene observaciones a los planes y programas?:</b> No</p>
+            <section style="margin-left: 2em;" *ngIf="planesProgramas.tieneObservacionesPlanesProgramasApoyo === true">
+                <div [innerHTML]="planesProgramas.observacionPlanesProgramasApoyo.observaciones"></div>
+            </section>
         </mat-card-content>
     </mat-card>
 </div>

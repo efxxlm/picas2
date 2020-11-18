@@ -24,6 +24,24 @@
     </mat-card>
 </div>
 
+<div align="center" class="mt-3em" *ngIf="perfil.observacionApoyo !== undefined">
+    <mat-card class="border">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+               Verificación del apoyo a la supervisión
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p style="margin-left: 2em;"><b> {{ perfil.observacionApoyo.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="perfil.tieneObservacionesApoyo === true"><b>¿Tiene observaciones al diagnóstico?:</b> Si</p>
+            <p style="margin-left: 2em;" *ngIf="perfil.tieneObservacionesApoyo === false"><b>¿Tiene observaciones al diagnóstico?:</b> No</p>
+            <section style="margin-left: 2em;" *ngIf="perfil.tieneObservacionesApoyo === true">
+                <div [innerHTML]="perfil.observacionApoyo.observacion"></div>
+            </section>
+        </mat-card-content>
+    </mat-card>
+</div>
+
 <div align="center" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row justify-content-center">

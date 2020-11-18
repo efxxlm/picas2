@@ -3,7 +3,7 @@
         <button mat-raised-button color="accent" (click)="descargar()">Descargar archivo</button>
     </section>
 </div>
-<div align="center" class="mt-2em">
+<div align="center" class="mt-2em" *ngIf="contratoConstruccion.observacionFlujoInversionApoyo !== undefined">
     <mat-card class="border mt-2em">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
@@ -11,9 +11,12 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>08/08/2020</b></p>
-            <p><b>¿Tiene observaciones al flujo de inversión de recursos?:</b> Sí</p>
-            <p>Cargar archivo actualizado del flujo de inversión</p>
+            <p style="margin-left: 2em;"><b> {{ contratoConstruccion.observacionFlujoInversionApoyo.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="contratoConstruccion.tieneObservacionesFlujoInversionApoyo === true"><b>¿Tiene observaciones al flujo de inversión de recursos?:</b> Si</p>
+            <p style="margin-left: 2em;" *ngIf="contratoConstruccion.tieneObservacionesFlujoInversionApoyo === false"><b>¿Tiene observaciones al flujo de inversión de recursos?:</b> No</p>
+            <section style="margin-left: 2em;" *ngIf="contratoConstruccion.tieneObservacionesFlujoInversionApoyo === true">
+                <div [innerHTML]="contratoConstruccion.observacionFlujoInversionApoyo.observaciones"></div>
+            </section>
         </mat-card-content>
     </mat-card>
 </div>
