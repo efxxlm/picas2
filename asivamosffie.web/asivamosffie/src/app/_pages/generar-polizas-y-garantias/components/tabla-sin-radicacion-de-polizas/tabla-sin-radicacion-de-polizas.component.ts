@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,6 +11,7 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./tabla-sin-radicacion-de-polizas.component.scss']
 })
 export class TablaSinRadicacionDePolizasComponent implements OnInit {
+  @Output() estadoSemaforo = new EventEmitter<string>();
   displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
   dataSource = new MatTableDataSource();
 
@@ -18,7 +19,7 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataTable;
-  @Input() dataTableAux;
+
   loadDataItems: Subscription;
   constructor(private polizaService: PolizaGarantiaService) { }
 

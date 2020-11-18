@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,7 +12,7 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./tabla-con-poliza-observada-y-devuelta.component.scss']
 })
 export class TablaConPolizaObservadaYDevueltaComponent implements OnInit {
-  @Input() dataTableAux;
+  @Output() estadoSemaforo = new EventEmitter<string>();
   
   displayedColumns: string[] = ['fechaFirma', 'numeroContrato', 'tipoSolicitud', 'estadoPoliza', 'contratoId'];
   dataSource = new MatTableDataSource();

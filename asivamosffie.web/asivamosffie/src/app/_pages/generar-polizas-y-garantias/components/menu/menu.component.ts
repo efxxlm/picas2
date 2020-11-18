@@ -7,7 +7,7 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
-
+  estadoAcordeon: string;
   verAyuda = false;
   dataTable = [];
   constructor(private polizaService: PolizaGarantiaService) { }
