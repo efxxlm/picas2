@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 
 @Component({
   selector: 'app-tabla-contrato-interventoria-artc',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 export class TablaContratoInterventoriaArtcComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
+  tipoContratoInterventoria: string = '2';
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 
@@ -23,34 +25,21 @@ export class TablaContratoInterventoriaArtcComponent implements OnInit {
     'estadoRequisito',
     'gestion'
   ];
-  dataTable: any [] = [
-    {
-      fechaAprobacion: '10/08/2020',
-      numeroContratoObra: 'N801801',
-      proyectosAsociados: '1',
-      proyectosAprobados: '0',
-      proyectosPendientes: '1',
-      estadoRequisito: '1',
-      id: 1
-    },
-    {
-      fechaAprobacion: '10/08/2020',
-      numeroContratoObra: 'A513513',
-      proyectosAsociados: '1',
-      proyectosAprobados: '0',
-      proyectosPendientes: '1',
-      estadoRequisito: '3',
-      id: 2
-    }
-  ]
 
-  constructor ( private routes: Router ) { }
+  constructor ( private routes: Router,
+                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  { }
 
   ngOnInit(): void {
-    this.dataSource                        = new MatTableDataSource( this.dataTable );
-    this.dataSource.paginator              = this.paginator;
-    this.dataSource.sort                   = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.faseDosAprobarConstruccionSvc.getContractsGrid( this.tipoContratoInterventoria )
+      .subscribe(
+        response => {
+          this.dataSource                        = new MatTableDataSource( response );
+          this.dataSource.paginator              = this.paginator;
+          this.dataSource.sort                   = this.sort;
+          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        }
+      )
   };
 
   applyFilter ( event: Event ) {

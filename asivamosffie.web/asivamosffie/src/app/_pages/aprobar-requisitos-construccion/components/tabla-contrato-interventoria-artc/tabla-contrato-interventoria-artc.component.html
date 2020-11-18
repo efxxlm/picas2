@@ -12,36 +12,39 @@
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
       <ng-container matColumnDef="fechaAprobacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de requisitos </th>
-        <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaAprobacion }} </b> </td>
+        <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaAprobacion | date: 'dd/MM/yyyy' }} </b> </td>
       </ng-container>
   
       <ng-container matColumnDef="numeroContratoObra">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContratoObra }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
       </ng-container>
   
       <ng-container matColumnDef="proyectosAsociados">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de proyectos asociados </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.proyectosAsociados }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadProyectosAsociados }} </td>
       </ng-container>
   
       <ng-container matColumnDef="proyectosAprobados">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de proyectos con requisitos verificados </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.proyectosAprobados }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadProyectosRequisitosAprobados }} </td>
       </ng-container>
   
       <ng-container matColumnDef="proyectosPendientes">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de proyectos con requisitos pendientes </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.proyectosPendientes }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadProyectosRequisitosPendientes }} </td>
       </ng-container>
   
       <ng-container matColumnDef="estadoRequisito">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
         <td mat-cell *matCellDef="let element" align="center">
-          <span *ngIf="element.estadoRequisito === '1'">Sin validacón del supervisor</span>
-          <span *ngIf="element.estadoRequisito === '2'">En proceso de validación de requisitos técnicos</span>
-          <span *ngIf="element.estadoRequisito === '3'">Con requisitos técnicos validados</span>
-          <span *ngIf="element.estadoRequisito === '4'">Enviado al interventor</span>
+          {{ element.estadoNombre }}
+          <!--
+            <span *ngIf="element.estadoRequisito === '1'">Sin validacón del supervisor</span>
+            <span *ngIf="element.estadoRequisito === '2'">En proceso de validación de requisitos técnicos</span>
+            <span *ngIf="element.estadoRequisito === '3'">Con requisitos técnicos validados</span>
+            <span *ngIf="element.estadoRequisito === '4'">Enviado al interventor</span>
+          -->
         </td>
       </ng-container>
   
@@ -52,11 +55,11 @@
           <button mat-raised-button
                   color="accent" 
                   class="btn-table"
-                  *ngIf="element.estadoRequisito === '1'"
-                  (click)="getForm( element.id )">
+                  (click)="getForm( element.contratoId )">
                   Verificar requisitos de inicio
           </button>
   
+          <!--
           <button mat-raised-button
                   color="accent" 
                   class="btn-table"
@@ -80,6 +83,7 @@
                   (click)="verDetalle(element.id)">
                   Ver detalle
           </button>
+          -->
     
         </td>
       </ng-container>
