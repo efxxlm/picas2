@@ -16,7 +16,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
   @Input() tieneObservacion;
   @Input() construccionPerfilId: number;
   @Output() seRealizoPeticion = new EventEmitter<boolean>();
-  observacionSupervisor: string = '3';
+  observacionSupervisor = '3';
   editorStyle = {
     height: '100px'
   };
@@ -34,29 +34,36 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
     construccionPerfilObservacionId: [ null ]
   });
 
-  constructor ( private dialog: MatDialog, 
-                private fb: FormBuilder,
-                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
   { }
 
   ngOnInit(): void {
     if ( this.observacionesPerfil !== undefined ) {
       const observacionTipo3 = [];
-      for ( let observacion of this.observacionesPerfil ) {             
+      for ( const observacion of this.observacionesPerfil ) {
         if ( observacion.tipoObservacionCodigo === this.observacionSupervisor ) {
           observacionTipo3.push( observacion );
-        };
-      };
+        }
+      }
       if ( observacionTipo3.length > 0 ) {
-        this.addressForm.get( 'tieneObservaciones' ).setValue( observacionTipo3[ observacionTipo3.length -1 ].esSupervision !== undefined ? observacionTipo3[ observacionTipo3.length -1 ].esSupervision : null )
-        if ( this.addressForm.get( 'tieneObservaciones' ).value === true && observacionTipo3[ observacionTipo3.length -1 ].observacion === undefined ) {
-          this.addressForm.get( 'construccionPerfilObservacionId' ).setValue( observacionTipo3[ observacionTipo3.length -1 ].construccionPerfilObservacionId );
-        };
-        if ( this.addressForm.get( 'tieneObservaciones' ).value === true && observacionTipo3[ observacionTipo3.length -1 ].observacion !== undefined ) {
-          this.addressForm.get( 'construccionPerfilObservacionId' ).setValue( observacionTipo3[ observacionTipo3.length -1 ].construccionPerfilObservacionId );
-          this.addressForm.get( 'observaciones' ).setValue( observacionTipo3[ observacionTipo3.length -1 ].observacion );
-        };
-      };
+        this.addressForm.get( 'tieneObservaciones' )
+          .setValue(  observacionTipo3[ observacionTipo3.length - 1 ].esSupervision !== undefined ?
+                      observacionTipo3[ observacionTipo3.length - 1 ].esSupervision : null );
+        if (  this.addressForm.get( 'tieneObservaciones' ).value === true
+              && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
+          this.addressForm.get( 'construccionPerfilObservacionId' )
+            .setValue( observacionTipo3[ observacionTipo3.length - 1 ].construccionPerfilObservacionId );
+        }
+        if (  this.addressForm.get( 'tieneObservaciones' ).value === true
+              && observacionTipo3[ observacionTipo3.length - 1 ].observacion !== undefined ) {
+          this.addressForm.get( 'construccionPerfilObservacionId' )
+            .setValue( observacionTipo3[ observacionTipo3.length - 1 ].construccionPerfilObservacionId );
+          this.addressForm.get( 'observaciones' ).setValue( observacionTipo3[ observacionTipo3.length - 1 ].observacion );
+        }
+      }
     }
   }
 
@@ -70,24 +77,25 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
   }
-  
-  openDialog (modalTitle: string, modalText: string) {
+
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
 
-  onSubmit (){
-    const observacionPerfil = {
+  onSubmit(){
+    const observacionPerfil: any = {
       construccionPerfilId: this.construccionPerfilId,
       observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : null,
-      esSupervision: this.addressForm.get( 'tieneObservaciones' ).value !== null ? this.addressForm.get( 'tieneObservaciones' ).value : null,
+      esSupervision:  this.addressForm.get( 'tieneObservaciones' ).value !== null ?
+                      this.addressForm.get( 'tieneObservaciones' ).value : null,
       tipoObservacionCodigo: this.observacionSupervisor
     };
     if ( this.addressForm.get( 'construccionPerfilObservacionId' ).value !== null ) {
-      observacionPerfil[ 'construccionPerfilObservacionId' ] = this.addressForm.get( 'construccionPerfilObservacionId' ).value;
-    };
+      observacionPerfil.construccionPerfilObservacionId = this.addressForm.get( 'construccionPerfilObservacionId' ).value;
+    }
 
     console.log( observacionPerfil );
 
@@ -101,7 +109,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
           this.openDialog( '', `<b>${ err.error !== undefined || err.error !== null ? err.error.message : err.message }</b>` );
           this.seRealizoPeticion.emit(true);
         }
-      )
+      );
   }
 
 }

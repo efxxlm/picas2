@@ -13,10 +13,10 @@ import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDo
 export class TablaContratoInterventoriaArtcComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
-  tipoContratoInterventoria: string = '2';
+  tipoContratoInterventoria = '2';
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
-  @ViewChild( MatSort, { static: true } ) sort          : MatSort;
-  displayedColumns: string[] = [ 
+  @ViewChild( MatSort, { static: true } ) sort: MatSort;
+  displayedColumns: string[] = [
     'fechaAprobacion',
     'numeroContratoObra',
     'proyectosAsociados',
@@ -26,8 +26,9 @@ export class TablaContratoInterventoriaArtcComponent implements OnInit {
     'gestion'
   ];
 
-  constructor ( private routes: Router,
-                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  constructor(
+    private routes: Router,
+    private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
   { }
 
   ngOnInit(): void {
@@ -39,24 +40,24 @@ export class TablaContratoInterventoriaArtcComponent implements OnInit {
           this.dataSource.sort                   = this.sort;
           this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
         }
-      )
-  };
+      );
+  }
 
-  applyFilter ( event: Event ) {
+  applyFilter( event: Event ) {
     const filterValue      = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
+  }
 
-  getForm ( id: number ) {
-    this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/verificarRequisitosInicioInterventoria', id ] )
-  };
+  getForm( id: number ) {
+    this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/verificarRequisitosInicioInterventoria', id ] );
+  }
 
-  aprobarInicio ( id: number ) {
+  aprobarInicio( id: number ) {
     console.log( id );
-  };
+  }
 
-  verDetalle ( id: number ) {
-    this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/verDetalleInterventoria', id ] )
+  verDetalle( id: number ) {
+    this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/verDetalleInterventoria', id ] );
   }
 
 }

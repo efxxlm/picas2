@@ -39,57 +39,63 @@ export class ManejoAnticipoArtcComponent implements OnInit {
 
   @Output() createEdit = new EventEmitter();
 
-  constructor ( private dialog: MatDialog, 
-                private fb: FormBuilder,
-                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
-  { };
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  { }
 
   ngOnInit(): void {
     if (this.contratacion) {
 
-      this.addressForm.get('tieneObservaciones').setValue( this.contratacion.tieneObservacionesManejoAnticipoSupervisor !== undefined ? this.contratacion.tieneObservacionesManejoAnticipoSupervisor : null );
-      this.addressForm.get('observaciones').setValue( this.contratacion.observacionManejoAnticipoSupervisor !== undefined ? this.contratacion.observacionManejoAnticipoSupervisor.observaciones : null );
-      this.addressForm.get('construccionObservacionId').setValue(this.contratacion.observacionManejoAnticipoSupervisor !== undefined ? this.contratacion.observacionManejoAnticipoSupervisor.construccionObservacionId : null)
-
-      //this.validarSemaforo();
+      this.addressForm.get('tieneObservaciones')
+        .setValue( this.contratacion.tieneObservacionesManejoAnticipoSupervisor !== undefined ?
+          this.contratacion.tieneObservacionesManejoAnticipoSupervisor : null );
+      this.addressForm.get('observaciones')
+        .setValue( this.contratacion.observacionManejoAnticipoSupervisor !== undefined ?
+          this.contratacion.observacionManejoAnticipoSupervisor.observaciones : null );
+      this.addressForm.get('construccionObservacionId')
+        .setValue(this.contratacion.observacionManejoAnticipoSupervisor !== undefined ?
+          this.contratacion.observacionManejoAnticipoSupervisor.construccionObservacionId : null );
     }
   }
 
   validarSemaforo() {
 
-    this.contratacion.semaforoManejo = "sin-diligenciar";
+    this.contratacion.semaforoManejo = 'sin-diligenciar';
 
     if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
       this.contratacion.semaforoManejo = 'completo';
 
-      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
+      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones) {
         this.contratacion.semaforoManejo = 'en-proceso';
+      }
     }
   }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
-    };
-  };
+    }
+  }
 
   textoLimpio(texto: string) {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
-    };
-  };
+    }
+  }
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-  };
+  }
 
   guardarManejo() {
 
-    let construccion = {
+    const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesManejoAnticipoSupervisor: this.addressForm.value.tieneObservaciones,
 
@@ -104,7 +110,7 @@ export class ManejoAnticipoArtcComponent implements OnInit {
 
         }
       ]
-    }
+    };
 
     console.log( construccion );
     this.faseDosAprobarConstruccionSvc.createEditObservacionManejoAnticipoSupervisor( construccion )
@@ -113,6 +119,6 @@ export class ManejoAnticipoArtcComponent implements OnInit {
         err => this.openDialog( '', err.message )
       );
 
-  };
+  }
 
-};
+}

@@ -14,7 +14,7 @@ export class AprobarRequisitosConstruccionComponent implements OnInit {
   ngOnInit(): void {
   }
   cambiarTab(opc) {
-    this.selTab=opc;
+    this.selTab = opc;
   }
 
 }

@@ -14,7 +14,7 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
-    construccionPerfilObservacionId:[]
+    construccionPerfilObservacionId: []
   });
   editorStyle = {
     height: '100px'
@@ -30,20 +30,25 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   };
 
   @Input() observacionesCompleted;
-  @Input() perfil: any;  
+  @Input() perfil: any;
 
-  constructor ( private dialog: MatDialog, 
-                private fb: FormBuilder,
-                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
-  {};
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  {}
 
   ngOnInit(): void {
     if (this.perfil){
-      this.addressForm.get('tieneObservaciones').setValue( this.perfil.tieneObservacionesSupervisor !== undefined ? this.perfil.tieneObservacionesSupervisor : null );
-      this.addressForm.get('observaciones').setValue( this.perfil.observacionSupervisor !== undefined ? this.perfil.observacionSupervisor.observacion : null );
-      this.addressForm.get('construccionPerfilObservacionId').setValue( this.perfil.observacionSupervisor !== undefined ? this.perfil.observacionSupervisor.construccionPerfilObservacionId : null );
-    };
-  };
+      this.addressForm.get('tieneObservaciones')
+        .setValue( this.perfil.tieneObservacionesSupervisor !== undefined ? this.perfil.tieneObservacionesSupervisor : null );
+      this.addressForm.get('observaciones')
+        .setValue( this.perfil.observacionSupervisor !== undefined ? this.perfil.observacionSupervisor.observacion : null );
+      this.addressForm.get('construccionPerfilObservacionId')
+        .setValue( this.perfil.observacionSupervisor !== undefined
+          ? this.perfil.observacionSupervisor.construccionPerfilObservacionId : null );
+    }
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -55,26 +60,26 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
-    };
+    }
   }
 
-  innerObservacion ( observacion: string ) {
+  innerObservacion( observacion: string ) {
     if ( observacion !== undefined ) {
       const observacionHtml = observacion.replace( '"', '' );
       return observacionHtml;
-    };
-  };
-  
-  openDialog (modalTitle: string, modalText: string) {
+    }
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
 
   onSubmit(){
 
-    let ConstruccionPerfil = {
+    const ConstruccionPerfil = {
       construccionPerfilId: this.perfil.construccionPerfilId,
       tieneObservacionesSupervisor: this.addressForm.value.tieneObservaciones,
       construccionPerfilObservacion: [
@@ -86,7 +91,7 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
           observacion: this.addressForm.value.observaciones
         }
       ]
-    }
+    };
 
     console.log( ConstruccionPerfil );
 

@@ -37,18 +37,30 @@ export class ProgramacionObraArtcComponent implements OnInit {
   @Input() contratoConstruccionId: any;
 
   @Output() createEdit = new EventEmitter();
-  
-  constructor ( private dialog: MatDialog, 
-                private fb: FormBuilder,
-                private commonSvc: CommonService,
-                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private commonSvc: CommonService,
+    private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService
+  )
   { }
 
   ngOnInit(): void {
-    this.addressForm.get('tieneObservaciones').setValue( this.contratoConstruccion.tieneObservacionesProgramacionObraSupervisor !== undefined ? this.contratoConstruccion.tieneObservacionesProgramacionObraSupervisor : null );
-    this.addressForm.get('observaciones').setValue( this.contratoConstruccion.observacionProgramacionObraSupervisor !== undefined ? this.contratoConstruccion.observacionProgramacionObraSupervisor.observaciones : null );
-    this.addressForm.get('construccionObservacionId').setValue( this.contratoConstruccion.observacionProgramacionObraSupervisor !== undefined ? this.contratoConstruccion.observacionProgramacionObraSupervisor.construccionObservacionId : null );
-  };
+    this.addressForm.get('tieneObservaciones')
+      .setValue(
+        this.contratoConstruccion.tieneObservacionesProgramacionObraSupervisor !== undefined ?
+        this.contratoConstruccion.tieneObservacionesProgramacionObraSupervisor : null
+      );
+    this.addressForm.get('observaciones')
+      .setValue(
+        this.contratoConstruccion.observacionProgramacionObraSupervisor !== undefined ?
+        this.contratoConstruccion.observacionProgramacionObraSupervisor.observaciones : null );
+    this.addressForm.get('construccionObservacionId')
+      .setValue(
+        this.contratoConstruccion.observacionProgramacionObraSupervisor !== undefined ?
+        this.contratoConstruccion.observacionProgramacionObraSupervisor.construccionObservacionId : null );
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -68,15 +80,14 @@ export class ProgramacionObraArtcComponent implements OnInit {
       width: '28em',
       data: { modalTitle, modalText }
     });
-  };
+  }
 
   descargar() {
     this.commonSvc.getFileById(this.contratoConstruccion.archivoCargueIdProgramacionObra)
       .subscribe(respuesta => {
-        let documento = "ProgramacionObra.xlsx";
-        var text = documento,
-          blob = new Blob([respuesta], { type: 'application/octet-stream' }),
-          anchor = document.createElement('a');
+        const documento = 'ProgramacionObra.xlsx';
+        const blob = new Blob([respuesta], { type: 'application/octet-stream' });
+        const anchor = document.createElement('a');
         anchor.download = documento;
         anchor.href = window.URL.createObjectURL(blob);
         anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
@@ -86,7 +97,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
 
   guardarProgramacion() {
 
-    let construccion = {
+    const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesProgramacionObraSupervisor: this.addressForm.value.tieneObservaciones,
       construccionObservacion: [
@@ -106,8 +117,8 @@ export class ProgramacionObraArtcComponent implements OnInit {
       .subscribe(
         response => this.openDialog( '', response.message ),
         err => this.openDialog( '', err.message )
-      )
+      );
 
-  };
+  }
 
-};
+}

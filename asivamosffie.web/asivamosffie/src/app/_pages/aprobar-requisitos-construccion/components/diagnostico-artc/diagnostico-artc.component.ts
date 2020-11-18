@@ -40,58 +40,72 @@ export class DiagnosticoArtcComponent implements OnInit {
 
   dataTablaHistorialObservacion: any[] = [];
   dataSource                 = new MatTableDataSource();
-  displayedColumns: string[] = [ 
+  displayedColumns: string[] = [
     'fechaRevision',
     'observacionesSupervision'
   ];
-  constructor ( private dialog: MatDialog, 
-                private fb: FormBuilder,
-                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService
+  )
   {
     this.getDataPlanesProgramas();
-  };
+  }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
     if (this.construccion) {
-      this.addressForm.get('tieneObservaciones').setValue( this.construccion.tieneObservacionesDiagnosticoSupervisor !== undefined ? this.construccion.tieneObservacionesDiagnosticoSupervisor : null )
-      this.addressForm.get('observaciones').setValue( this.construccion.observacionDiagnosticoSupervisor !== undefined ? this.construccion.observacionDiagnosticoSupervisor.observaciones : null )
-      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoSupervisor !== undefined ? this.construccion.observacionDiagnosticoSupervisor.construccionObservacionId : null);
-    };
-  };
+      this.addressForm.get('tieneObservaciones')
+        .setValue(
+          this.construccion.tieneObservacionesDiagnosticoSupervisor !== undefined ?
+          this.construccion.tieneObservacionesDiagnosticoSupervisor : null
+        );
+      this.addressForm.get('observaciones')
+        .setValue(
+          this.construccion.observacionDiagnosticoSupervisor !== undefined ?
+          this.construccion.observacionDiagnosticoSupervisor.observaciones : null
+        );
+      this.addressForm.get('construccionObservacionId')
+        .setValue(
+          this.construccion.observacionDiagnosticoSupervisor !== undefined ?
+          this.construccion.observacionDiagnosticoSupervisor.construccionObservacionId : null
+        );
+    }
+  }
 
-  getDataPlanesProgramas () {
+  getDataPlanesProgramas() {
     this.dataTablaHistorialObservacion.push(
       {
-        fechaRevision:'10/08/2020',
+        fechaRevision: '10/08/2020',
         observacionesSupervision: 'El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000, realice el ajuste y tenga en cuenta que estos valores deben ser corregidos para poder continuar.'
       }
     );
-  };
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
-    };
-  };
+    }
+  }
 
   textoLimpio(texto: string) {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
-    };
-  };
-  
-  openDialog (modalTitle: string, modalText: string) {
+    }
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
 
   guardarDiagnostico() {
 
-    let construccion = {
+    const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesDiagnosticoSupervisor: this.addressForm.value.tieneObservaciones,
       construccionObservacion: [
@@ -113,6 +127,6 @@ export class DiagnosticoArtcComponent implements OnInit {
         err => this.openDialog( '', err.message )
       );
 
-  };
+  }
 
 }

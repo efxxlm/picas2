@@ -17,7 +17,7 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
-    construccionObservacionId:[],
+    construccionObservacionId: [],
   });
 
 
@@ -40,31 +40,46 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
 
   @Output() createEdit = new EventEmitter();
 
-  constructor ( private dialog: MatDialog, 
-                private fb: FormBuilder,
-                private commonSvc: CommonService,
-                private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
-  { };
+  constructor(
+    private dialog: MatDialog,
+    private fb: FormBuilder,
+    private commonSvc: CommonService,
+    private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService
+  )
+  { }
 
   ngOnInit(): void {
 
     if (this.contratoConstruccion) {
-      this.addressForm.get('tieneObservaciones').setValue( this.contratoConstruccion.tieneObservacionesFlujoInversionSupervisor !== undefined ? this.contratoConstruccion.tieneObservacionesFlujoInversionSupervisor : null );
-      this.addressForm.get('observaciones').setValue( this.contratoConstruccion.observacionFlujoInversionSupervisor !== undefined ? this.contratoConstruccion.observacionFlujoInversionSupervisor.observaciones : null );
-      this.addressForm.get('construccionObservacionId').setValue(this.contratoConstruccion.observacionFlujoInversionSupervisor !== undefined ? this.contratoConstruccion.observacionFlujoInversionSupervisor.construccionObservacionId : null);
+      this.addressForm.get('tieneObservaciones')
+        .setValue(
+          this.contratoConstruccion.tieneObservacionesFlujoInversionSupervisor !== undefined ?
+          this.contratoConstruccion.tieneObservacionesFlujoInversionSupervisor : null
+        );
+      this.addressForm.get('observaciones')
+        .setValue(
+          this.contratoConstruccion.observacionFlujoInversionSupervisor !== undefined ?
+          this.contratoConstruccion.observacionFlujoInversionSupervisor.observaciones : null
+        );
+      this.addressForm.get('construccionObservacionId')
+        .setValue(
+          this.contratoConstruccion.observacionFlujoInversionSupervisor !== undefined ?
+          this.contratoConstruccion.observacionFlujoInversionSupervisor.construccionObservacionId : null
+        );
     }
 
   }
 
   validarSemaforo() {
 
-    this.contratoConstruccion.semaforoFlujo = "sin-diligenciar";
+    this.contratoConstruccion.semaforoFlujo = 'sin-diligenciar';
 
     if (this.addressForm.value.tieneObservaciones === true || this.addressForm.value.tieneObservaciones === false) {
       this.contratoConstruccion.semaforoFlujo = 'completo';
 
-      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones)
+      if (this.addressForm.value.tieneObservaciones === true && !this.addressForm.value.observaciones) {
         this.contratoConstruccion.semaforoFlujo = 'en-proceso';
+      }
     }
   }
 
@@ -78,23 +93,22 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
-    };
+    }
   }
-  
-  openDialog (modalTitle: string, modalText: string) {
+
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
 
   descargar() {
     this.commonSvc.getFileById(this.contratoConstruccion.archivoCargueIdFlujoInversion)
       .subscribe(respuesta => {
-        let documento = "FlujoInversion.xlsx";
-        var text = documento,
-          blob = new Blob([respuesta], { type: 'application/octet-stream' }),
-          anchor = document.createElement('a');
+        const documento = 'FlujoInversion.xlsx';
+        const  blob = new Blob([respuesta], { type: 'application/octet-stream' });
+        const  anchor = document.createElement('a');
         anchor.download = documento;
         anchor.href = window.URL.createObjectURL(blob);
         anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
@@ -104,7 +118,7 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
 
   guardarFlujo() {
 
-    let construccion = {
+    const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesFlujoInversionSupervisor: this.addressForm.value.tieneObservaciones,
 
@@ -119,14 +133,14 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
 
         }
       ]
-    }
+    };
 
     console.log( construccion );
     this.faseDosAprobarConstruccionSvc.createEditObservacionFlujoInversionSupervisor( construccion )
       .subscribe(
         response => this.openDialog( '', response.message ),
         err => this.openDialog( '', err.message )
-      )
+      );
 
   }
 
