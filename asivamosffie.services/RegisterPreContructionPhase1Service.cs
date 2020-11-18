@@ -32,7 +32,7 @@ namespace asivamosffie.services
         /// 
         public async Task<List<VRegistrarFase1>> GetListContratacion2() 
         {
-            return await _context.VRegistrarFase1.ToListAsync();
+            return null; //await _context.VRegistrarFase1.ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
