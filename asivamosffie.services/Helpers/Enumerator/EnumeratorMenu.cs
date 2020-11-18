@@ -32,10 +32,15 @@ namespace asivamosffie.services.Helpers.Enumerator
         GenerarDisponibilidadPresupuestal = 28,
 
         
-       GestionarGarantias= 35,
+        GestionarGarantias= 35,
  
         Generar_Registro_Presupuestal=36,
         Registrar_contratos_modificaciones_contractuales = 46,
+
+     	Registrar_Programacion_Personal_Obra = 48,
+        Gestionar_controversias_contractuales=47,
+
+        Gestionar_procesos_Defensa_Judicial = 52,
 
     }
 

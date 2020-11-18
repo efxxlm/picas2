@@ -104,12 +104,15 @@
         public const string Crear_Cronograma_monitoreo = "114";
 
         public const string Eliminar_Compromisos_Solicitud = "125";
+
         public const string Eliminar_Compromisos_Tema = "126";
 
         public const string Crear_Editar_DDP = "127";
 
         public const string Observacion_Compromisos = "132";
+
         public const string Eliminar_Compromiso_Solicitud = "133";
+
         public const string Eliminar_Compromiso_Tema = "134";
 
         public const string Cambiar_estado_Gestion_Poliza = "135";
@@ -132,5 +135,23 @@
 
         public const string Cambiar_Estado_Verificacion_Contrato = "103";
 
+        public const string RegistrarProgramacionPersonal = "138";
+
+        public const string Cambiar_Estado_Programacion_Especial = "139";
+        public const string Crear_Editar_Controversia_Contractual = "128";
+       	public const string Crear_Editar_Controversia_Actuacion= "129";
+        public const string Eliminar_Controversia_Contractual= "130";
+        public const string Eliminar_Controversia_Actuacion= "131";
+        public const string Crear_Editar_Actuacion_Seguimiento = "148";        
+
+        public const string Cambiar_estado_Controversia_Actuacion = "136";
+        public const string  Cambiar_estado_Controversia_Contractual = "137";
+        public const string  Notificacion_Controversia_Contractual= "140";
+
+        //4.2.2 Gestionar procesos de Defensa Judicial
+        public const string  Crear_Editar_Ficha_Estudio= "145";
+        public const string  Crear_Editar_Demandado_Convocado= "146";
+        public const string  Cambiar_Estado_Proceso= "147";
+        
     }
 }
