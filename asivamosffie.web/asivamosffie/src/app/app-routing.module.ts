@@ -144,6 +144,11 @@ const routes: Routes = [
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule )
+      },
+      {
+        path: 'gestionarTramiteControversiasContractuales',
+        loadChildren: () => import( './_pages/gestionar-tramite-controversias-contractuales/gestionar-tramite-controversias-contractuales.module' )
+          .then( module => module.GestionarTramiteControversiasContractualesModule )
       }
     ]
 
