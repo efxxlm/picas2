@@ -57,6 +57,9 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
       };
       if (sinRadicacion === this.dataTable.length) {
         this.estadoSemaforo.emit('sin-diligenciar');
+      }
+      else{
+        this.estadoSemaforo.emit('completo');
       };
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
