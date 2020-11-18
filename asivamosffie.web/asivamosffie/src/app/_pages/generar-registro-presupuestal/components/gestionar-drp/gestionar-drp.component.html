@@ -116,15 +116,15 @@
                         <td mat-cell *matCellDef="let element">
                             <div  class="supportElement" *ngFor="let el of element.uso ; let i = index">
                                     {{el.nombre}}
-                            </div>
-                        </td>
-                    </ng-container>
-        
-                    <ng-container matColumnDef="valorUso">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de Uso </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="supportElement" *ngFor="let el of element.valorUso ; let i = index">
-                                    {{el.valor}}
+                                </div>
+                            </td>
+                        </ng-container>
+                        
+                        <ng-container matColumnDef="valorUso">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de Uso </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="supportElement" *ngFor="let el of element.valorUso ; let i = index">
+                                    {{el.valor }}
                             </div>
                         </td>
                     </ng-container>
