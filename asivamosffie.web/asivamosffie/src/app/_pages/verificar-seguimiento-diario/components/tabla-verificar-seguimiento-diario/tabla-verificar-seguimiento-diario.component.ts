@@ -2,43 +2,48 @@ import { Component, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { DatePipe } from '@angular/common';
 
-export interface SeguimientoDiario {
+export interface VerificacionDiaria {
   id: string;
+  fechaReporte: string;
   llaveMEN: string;
   tipoInterventor: string;
   institucionEducativa: string;
-  Sede: string;
-  fechaUltimoReporte: string;
+  sede: string;
+  alertas: string;
+  estadoVerificacion: string;
 }
 
-const ELEMENT_DATA: SeguimientoDiario[] = [
+const ELEMENT_DATA: VerificacionDiaria[] = [
   {
     id: '1',
+    fechaReporte: 'Sin registro',
     llaveMEN: 'LJ776554',
     tipoInterventor: 'Remodelación',
     institucionEducativa: 'I.E. María Villa Campo',
-    Sede: 'Única sede',
-    fechaUltimoReporte: 'Sin registro'
+    sede: 'Única sede',
+    alertas: 'Si',
+    estadoVerificacion: 'Sin verificar'
   }
 ];
 
 @Component({
-  selector: 'app-tabla-registro-seguimiento-diario',
-  templateUrl: './tabla-registro-seguimiento-diario.component.html',
-  styleUrls: ['./tabla-registro-seguimiento-diario.component.scss']
+  selector: 'app-tabla-verificar-seguimiento-diario',
+  templateUrl: './tabla-verificar-seguimiento-diario.component.html',
+  styleUrls: ['./tabla-verificar-seguimiento-diario.component.scss']
 })
-export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
+export class TablaVerificarSeguimientoDiarioComponent implements AfterViewInit {
+
   displayedColumns: string[] = [
+    'fechaReporte',
     'llaveMEN',
     'tipoInterventor',
     'institucionEducativa',
     'sede',
-    'fechaUltimoReporte',
+    'alertas',
+    'estadoVerificacion',
     'id'
   ];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
@@ -67,4 +72,5 @@ export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
 }

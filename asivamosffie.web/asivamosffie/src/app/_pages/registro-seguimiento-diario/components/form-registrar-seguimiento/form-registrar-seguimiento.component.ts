@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -146,6 +146,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    this.addressForm.markAllAsTouched();
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 }
