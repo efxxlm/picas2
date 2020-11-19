@@ -166,6 +166,7 @@ export class GestionarPolizasComponent implements OnInit {
   onSubmit() {
     console.log(this.addressForm.value);
     let polizasList;
+    console.log(this.addressForm.value.polizasYSeguros);
     if(this.addressForm.value.polizasYSeguros!=undefined){
         polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
       for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
@@ -224,7 +225,7 @@ export class GestionarPolizasComponent implements OnInit {
       "contratoPolizaId":this.contratoPolizaId, 
       "Observacion": this.addressForm.value.observacionesGenerales,
       "FechaRevision": this.addressForm.value.fechaRevision,
-      "EstadoRevisionCodigo": this.addressForm.value.estadoRevision
+      "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
     }
     let garantiaArray;
     if(this.addressForm.value.polizasYSeguros!=undefined){
