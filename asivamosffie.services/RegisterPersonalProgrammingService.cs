@@ -65,10 +65,10 @@ namespace asivamosffie.services
         {
             try
             {
-                List<SeguimientoSemanal> List = _context.SeguimientoSemanal
+                List<SeguimientoSemanal> List = await _context.SeguimientoSemanal
                     .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
                     .Include(r => r.SeguimientoSemanalPersonalObra)
-                    .ToList();
+                    .ToListAsync();
 
                 if (List.Count() == 0)
                 {
@@ -118,8 +118,7 @@ namespace asivamosffie.services
                 {
 
                     if (SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId == 0)
-                    {
-
+                    { 
                         pSeguimientoSemanal.UsuarioCreacion = pSeguimientoSemanal.UsuarioCreacion;
                     }
 
