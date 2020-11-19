@@ -166,8 +166,7 @@ export class GestionarPolizasComponent implements OnInit {
   onSubmit() {
     console.log(this.addressForm.value);
     let polizasList;
-    console.log(this.addressForm.value.polizasYSeguros);
-    if(this.addressForm.value.polizasYSeguros!=undefined){
+    if(this.addressForm.value.polizasYSeguros!=undefined || this.addressForm.value.polizasYSeguros!=null ){
         polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
       for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
         const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
@@ -175,7 +174,7 @@ export class GestionarPolizasComponent implements OnInit {
       console.log(polizasList);
     }
     let nombreAprobado;
-    if(this.addressForm.value.responsableAprob!=undefined){
+    if(this.addressForm.value.responsableAprob!=undefined || this.addressForm.value.responsableAprob!=null ){
       if (!this.addressForm.value.responsableAprob.name) {
         nombreAprobado = null;
       }
@@ -228,7 +227,7 @@ export class GestionarPolizasComponent implements OnInit {
       "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
     }
     let garantiaArray;
-    if(this.addressForm.value.polizasYSeguros!=undefined){
+    if(this.addressForm.value.polizasYSeguros!=undefined || this.addressForm.value.polizasYSeguros!=null){
       for (let i = 0; i < polizasList.length; i++) {
         switch (polizasList[i]) {
           case '1':
