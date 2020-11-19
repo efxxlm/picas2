@@ -13,10 +13,11 @@ export class DialogRegistroProgramacionComponent implements OnInit {
 
   registroSemanas: DetalleProgramacionPersonal[];
 
-  constructor ( private programacionPersonalSvc: ProgramacionPersonalObraService,
-                private routes: Router,
-                private dialogRef: MatDialogRef<DialogRegistroProgramacionComponent>,
-                @Inject(MAT_DIALOG_DATA) public dataContrato )
+  constructor(
+    private programacionPersonalSvc: ProgramacionPersonalObraService,
+    private routes: Router,
+    private dialogRef: MatDialogRef<DialogRegistroProgramacionComponent>,
+    @Inject(MAT_DIALOG_DATA) public dataContrato )
   {
     this.programacionPersonalSvc.getProgramacionPersonalByContratoConstruccionId( dataContrato.contrato.contratoConstruccionId )
       .subscribe(
@@ -25,15 +26,15 @@ export class DialogRegistroProgramacionComponent implements OnInit {
           console.log( this.registroSemanas );
         }
       );
-  };
-
-  ngOnInit(): void {
-  };
-
-  seRealizoPeticion ( peticion: boolean ) {
-    if ( peticion === true ) {
-      this.dialogRef.close( true );
-    };
   }
 
-};
+  ngOnInit(): void {
+  }
+
+  seRealizoPeticion( peticion: boolean ) {
+    if ( peticion === true ) {
+      this.dialogRef.close( true );
+    }
+  }
+
+}
