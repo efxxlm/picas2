@@ -118,8 +118,20 @@ namespace asivamosffie.services
                 {
 
                     if (SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId == 0)
-                    { 
-                        pSeguimientoSemanal.UsuarioCreacion = pSeguimientoSemanal.UsuarioCreacion;
+                    {
+                        SeguimientoSemanalPersonalObra.UsuarioCreacion = pSeguimientoSemanal.UsuarioCreacion;
+                        SeguimientoSemanalPersonalObra.FechaCreacion = DateTime.Now;
+                        SeguimientoSemanalPersonalObra.Eliminado = true;
+
+                        _context.SeguimientoSemanalPersonalObra.Add(SeguimientoSemanalPersonalObra);
+                    }
+                    else
+                    {
+                        SeguimientoSemanalPersonalObra SeguimientoSemanalPersonalObraOld = _context.SeguimientoSemanalPersonalObra.Find(SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId);
+                        SeguimientoSemanalPersonalObraOld.CantidadPersonal = SeguimientoSemanalPersonalObra.CantidadPersonal;
+                        SeguimientoSemanalPersonalObraOld.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
+                        SeguimientoSemanalPersonalObraOld.FechaModificacion = DateTime.Now;
+
                     }
 
                 }
