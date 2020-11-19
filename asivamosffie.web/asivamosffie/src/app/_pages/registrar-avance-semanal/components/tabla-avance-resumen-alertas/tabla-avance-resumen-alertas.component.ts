@@ -32,17 +32,17 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
         }
     ];
 
-    constructor ( private dialog: MatDialog ) { };
+    constructor( private dialog: MatDialog ) { }
 
     ngOnInit(): void {
         this.tablaAvanceResumen = new MatTableDataSource( this.dataTable );
-    };
+    }
 
-    openDialogObservaciones ( observacion: string ) {
+    openDialogObservaciones( observacion: string ) {
         this.dialog.open( DialogTablaAvanceResumenComponent, {
             width: '60em',
             data : observacion
         } );
-    };
+    }
 
-};
+}
