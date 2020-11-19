@@ -9,7 +9,7 @@
     </h1>
     <section class="container margin-1em color-primary">
         <div class="text-center section-flex">
-            <p class="mr-1em">Fecha de aprobacion de póliza: <b>Pendiente por integrar</b></p>
+            <p class="mr-1em">Fecha de aprobacion de póliza: <b>{{ contrato['fechaPolizaAprobacion'] | date: 'dd/MM/yyyy' }}</b></p>
             <p>Proyectos asociados: <b>{{ contrato.contratacion.contratacionProyecto.length }}</b></p>
         </div>
     </section>
