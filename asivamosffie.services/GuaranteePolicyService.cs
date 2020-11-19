@@ -114,6 +114,7 @@ namespace asivamosffie.services
 
             //includefilter
             ContratoPoliza contratoPoliza = new ContratoPoliza();
+            
             if (contrato != null)
             { 
                 //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
@@ -125,13 +126,16 @@ namespace asivamosffie.services
 
             PolizaObservacion polizaObservacion=null;
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-            
+
+            contratoPoliza.ContratacionId = 0;
             if (contratoPoliza != null)
             {
                 //List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == p && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
                 List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).ToListAsync();
 
                 contratoPoliza.PolizaGarantia = contratoPolizaGarantia;
+
+                contratoPoliza.ContratacionId = contrato.ContratacionId;
 
                 polizaObservacion = _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
             
