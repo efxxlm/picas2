@@ -136,28 +136,32 @@ namespace asivamosffie.services
                     {
                         RegistroCompleto = false;
                     }
-
-                    if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId == 0)
-                    {
-                        SeguimientoSemanalPersonalObra seguimientoSemanalPersonalObra = new SeguimientoSemanalPersonalObra
+                    else {
+                         
+                        if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId == 0)
                         {
-                            SeguimientoSemanalId = SeguimientoSemanal.SeguimientoSemanalId,
-                            UsuarioCreacion = proyecto.UsuarioModificacion,
-                            Eliminado = false,
-                            FechaCreacion = DateTime.Now,
-                            CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal
-                        };
+                            SeguimientoSemanalPersonalObra seguimientoSemanalPersonalObra = new SeguimientoSemanalPersonalObra
+                            {
+                                SeguimientoSemanalId = SeguimientoSemanal.SeguimientoSemanalId,
+                                UsuarioCreacion = proyecto.UsuarioModificacion,
+                                Eliminado = false,
+                                FechaCreacion = DateTime.Now,
+                                CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal
+                            };
 
-                        _context.SeguimientoSemanalPersonalObra.Add(seguimientoSemanalPersonalObra);
-                    }
-                    else
-                    {
-                        SeguimientoSemanalPersonalObra SeguimientoSemanalPersonalObraOld = _context.SeguimientoSemanalPersonalObra.Find(SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId);
-                        SeguimientoSemanalPersonalObraOld.CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal;
-                        SeguimientoSemanalPersonalObraOld.UsuarioModificacion = proyecto.UsuarioModificacion;
-                        SeguimientoSemanalPersonalObraOld.FechaModificacion = DateTime.Now;
+                            _context.SeguimientoSemanalPersonalObra.Add(seguimientoSemanalPersonalObra);
+                        }
+                        else
+                        {
+                            SeguimientoSemanalPersonalObra SeguimientoSemanalPersonalObraOld = _context.SeguimientoSemanalPersonalObra.Find(SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId);
+                            SeguimientoSemanalPersonalObraOld.CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal;
+                            SeguimientoSemanalPersonalObraOld.UsuarioModificacion = proyecto.UsuarioModificacion;
+                            SeguimientoSemanalPersonalObraOld.FechaModificacion = DateTime.Now;
 
+                        }
                     }
+
+                 
 
                 }
                 if (RegistroCompleto)
