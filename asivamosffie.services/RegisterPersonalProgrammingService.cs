@@ -47,6 +47,8 @@ namespace asivamosffie.services
                 .ThenInclude(r=> r.Contrato)
                 .FirstOrDefault();
 
+            // contratacionProyecto.Contratacion.Contrato.FirstOrDefault().fecha
+
             //if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
             //{
 
@@ -70,19 +72,19 @@ namespace asivamosffie.services
             try
             {
                 List<SeguimientoSemanal> List = await _context.SeguimientoSemanal
-                    .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
+                    .Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
                     .Include(r => r.SeguimientoSemanalPersonalObra)
                     .ToListAsync();
 
                 if (List.Count() == 0)
                 {
 
-                    for (int i = 1; i < CalcularSemanasPlazoProyecto(ContratacionProyectoId) + 1; i++)
+                    for (int i = 1; i < CalcularSemanasPlazoProyecto(pContratacionProyectoId) + 1; i++)
                     {
                         SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal
                         {
 
-                            ContratacionProyectoId = ContratacionProyectoId,
+                            ContratacionProyectoId = pContratacionProyectoId,
                             NumeroSemana = i,
 
                             Eliminado = false,
