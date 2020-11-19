@@ -1343,9 +1343,10 @@ namespace asivamosffie.services
 
                     }                        
 
-                    ContratoPoliza contratoPoliza;
-
+                    ContratoPoliza contratoPoliza=null;
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
+
+                    int ContratoPolizaIdValor = 0;
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     string strTipoSolicitudCodigoContratoPoliza = (Convert.ToInt32( ConstanCodigoTipoSolicitud.Contratacion)).ToString();
@@ -1360,6 +1361,7 @@ namespace asivamosffie.services
 
                     if (contratoPoliza != null)
                     {
+                        ContratoPolizaIdValor = contratoPoliza.ContratoPolizaId;
                         if (contratoPoliza.TipoSolicitudCodigo != null)
                         {
                             //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
@@ -1394,6 +1396,7 @@ namespace asivamosffie.services
                     GrillaContratoGarantiaPoliza contratoGrilla = new GrillaContratoGarantiaPoliza
                     {
                         ContratoId = contrato.ContratoId,
+                        ContratoPolizaId = ContratoPolizaIdValor,
                         //FechaFirma = contrato.FechaFirmaContrato.ToString("dd/mm/yyyy")?"":"",
                         FechaFirma = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString(),
                         //FechaFirma = contrato.FechaFirmaContrato.ToString(),
@@ -1433,6 +1436,7 @@ namespace asivamosffie.services
                     {
 
                         ContratoId = contrato.ContratoId,
+                        ContratoPolizaId= 0,
                         FechaFirma = e.ToString(),
                         NumeroContrato = e.InnerException.ToString(),
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
