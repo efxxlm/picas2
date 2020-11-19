@@ -31,7 +31,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<VRegistrarPersonalObra>> GetListProyectos()
-        { 
+        {
             return await _context.VRegistrarPersonalObra.ToListAsync();
         }
 
@@ -77,9 +77,6 @@ namespace asivamosffie.services
                     {
                         SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal
                         {
-                            UsuarioCreacion = pUsuario,
-                            FechaCreacion = DateTime.Now,
-                            Eliminado = false,
 
                             ContratacionProyectoId = ContratacionProyectoId,
                             NumeroSemana = i,
@@ -87,13 +84,14 @@ namespace asivamosffie.services
                             Eliminado = false,
                             FechaCreacion = DateTime.Now,
                             UsuarioCreacion = pUsuario
-                        }; 
+                        };
+
                         List.Add(seguimientoSemanal);
                         _context.SeguimientoSemanal.Add(seguimientoSemanal);
                         _context.SaveChanges();
                     }
                 }
-                 
+
                 return List;
             }
             catch (Exception ex)
@@ -104,30 +102,27 @@ namespace asivamosffie.services
 
         public async Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(SeguimientoSemanal pSeguimientoSemanal)
         {
+
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
-             bool RegistroCompleto = true;
+            bool RegistroCompleto = true;
 
             try
             {
-                ContratoConstruccion pContratoConstruccionOld = _context.ContratoConstruccion.Find(pContratoConstruccion.ContratoConstruccionId);
-
-                Proyecto proyecto = _context.Proyecto.Find(pContratoConstruccionOld.ProyectoId);
                 ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId).FirstOrDefault();
                 Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault();
 
-                 proyecto.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
-                 proyecto.FechaModificacion = DateTime.Now;
+                proyecto.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
+                proyecto.FechaModificacion = DateTime.Now;
 
                 foreach (var SeguimientoSemanalPersonalObra in pSeguimientoSemanal.SeguimientoSemanalPersonalObra)
                 {
 
-                    if (programacionPersonalContratoConstruccion.CantidadPersonal == null)
-                        RegistroCompleto = false;
-                    if (SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId == 0) {
+                    if (SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId == 0)
+                    {
 
                         pSeguimientoSemanal.UsuarioCreacion = pSeguimientoSemanal.UsuarioCreacion;
                     }
-                 
+
                 }
                 if (RegistroCompleto)
                     proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_de_programacion_personal;
@@ -142,8 +137,6 @@ namespace asivamosffie.services
                          IsSuccessful = true,
                          IsException = false,
                          IsValidation = false,
-                         Code = ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pContratoConstruccion.UsuarioCreacion, "REGISTRAR PROGRAMACION DE PERSONAL")
                          Code = ConstantSesionComiteTecnico.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pSeguimientoSemanal.UsuarioCreacion, "REGISTRAR PROGRAMACION DE PERSONAL")
                      };
@@ -156,8 +149,6 @@ namespace asivamosffie.services
                         IsSuccessful = false,
                         IsException = true,
                         IsValidation = false,
-                        Code = ConstantMessagesRegistrarProgramacionPersonal.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pContratoConstruccion.UsuarioCreacion, ex.InnerException.ToString())
                         Code = ConstantSesionComiteTecnico.OperacionExitosa,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pSeguimientoSemanal.UsuarioCreacion, ex.InnerException.ToString())
                     };
@@ -186,7 +177,7 @@ namespace asivamosffie.services
                          IsSuccessful = true,
                          IsException = false,
                          IsValidation = false,
-                         Code = ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa,
+                         Code = ConstantSesionComiteTecnico.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pUsuario, "CAMBIAR ESTADO PROGRAMACION PERSONAL")
                      };
             }
@@ -198,7 +189,7 @@ namespace asivamosffie.services
                         IsSuccessful = false,
                         IsException = true,
                         IsValidation = false,
-                        Code = ConstantMessagesRegistrarProgramacionPersonal.Error,
+                        Code = ConstantSesionComiteTecnico.OperacionExitosa,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pUsuario, ex.InnerException.ToString())
                     };
             }
