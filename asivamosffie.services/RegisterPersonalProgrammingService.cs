@@ -42,11 +42,13 @@ namespace asivamosffie.services
 
             ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
                 .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
-                .Include(r => r.Proyecto)
-                .Include(r => r.Contratacion).FirstOrDefault();
+                .Include(r => r.Proyecto) 
+                .Include(r => r.Contratacion)
+                .ThenInclude(r=> r.Contrato)
+                .FirstOrDefault();
 
-            if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-            {
+            //if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+            //{
 
                 CantidadDias = contratacionProyecto.Proyecto.PlazoMesesObra ?? 0;
                 CantidadDias *= 30;
@@ -56,12 +58,14 @@ namespace asivamosffie.services
 
                 if (CantidadDias % 7 == 1)
                     CantidadSemanas = (CantidadDias / 7) + 1;
-            }
+            //}
+             
+
 
             return CantidadSemanas;
         }
 
-        public async Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId(int ContratacionProyectoId, string pUsuario)
+        public async Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId(int pContratacionProyectoId, string pUsuario)
         {
             try
             {
