@@ -31,17 +31,16 @@ namespace asivamosffie.api.Controllers
         public async Task<List<VRegistrarPersonalObra>> GetListProyectos()
         {
             return await _IRegisterPersonalProgrammingService.GetListProyectos();
-        
+
         }
 
         [Route("GetProgramacionPersonalByContratoId")]
         [HttpGet]
-        public async Task<List<ProgramacionPersonalContrato>> GetProgramacionPersonalByContratoId([FromQuery] int pContratoId)
+        public async Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId([FromQuery] int pContratoId)
         {
-            var result = await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoId(pContratoId, HttpContext.User.FindFirst("User").Value.ToUpper());
-            return result;
+            return await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoId(pContratoId, HttpContext.User.FindFirst("User").Value.ToUpper());
         }
-         
+
         [Route("UpdateProgramacionContratoPersonal")]
         [HttpPost]
         public async Task<IActionResult> UpdateProgramacionContratoPersonal([FromBody] ContratoConstruccion pContratoConstruccion)
@@ -57,7 +56,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-         
+
         [Route("ChangeStatusProgramacionContratoPersonal")]
         [HttpPost]
         public async Task<IActionResult> ChangeStatusProgramacionContratoPersonal([FromQuery] int pContratoConstruccionId, string pEstadoProgramacionCodigo)

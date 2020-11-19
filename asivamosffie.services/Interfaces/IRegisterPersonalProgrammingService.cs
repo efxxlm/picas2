@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<List<VRegistrarPersonalObra>> GetListProyectos();
         
-        Task<List<ProgramacionPersonalContrato>> GetProgramacionPersonalByContratoId(int pContratoId, string pUsuario);
+        Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId(int pContratoId, string pUsuario);
         
         Task<Respuesta> UpdateProgramacionContratoPersonal(ContratoConstruccion pContratoConstruccion);
        

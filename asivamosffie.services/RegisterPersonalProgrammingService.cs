@@ -32,45 +32,72 @@ namespace asivamosffie.services
 
         public async Task<List<VRegistrarPersonalObra>> GetListProyectos()
         {
-            return await _context.VRegistrarPersonalObra.ToListAsync(); 
+            return await _context.VRegistrarPersonalObra.ToListAsync();
         }
 
-        public async Task<List<ProgramacionPersonalContrato>> GetProgramacionPersonalByContratoId(int pContrato, string pUsuario)
+        private int CalcularSemanasPlazoProyecto(int ContratacionProyectoId)
         {
+            int CantidadDias = 0;
+            int CantidadSemanas = 0;
 
-            try
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
+                .Include(r => r.Proyecto)
+                .Include(r => r.Contratacion).FirstOrDefault();
+
+            if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
             {
 
-                List<ProgramacionPersonalContrato> List = _context.ProgramacionPersonalContrato.Where(r => r.ContratoId == pContrato).ToList();
+                CantidadDias = contratacionProyecto.Proyecto.PlazoMesesObra ?? 0;
+                CantidadDias *= 30;
+                CantidadDias += contratacionProyecto.Proyecto.PlazoDiasObra.HasValue ? (int)contratacionProyecto.Proyecto.PlazoDiasObra : 0;
 
-                ////Crear Los registros De programacion Si no existen
-                //if (List.Count() == 0)
-                //{
-                //    for (int i = 1; i < contratoConstruccion.Programacion.FirstOrDefault().Duracion + 1; i++)
-                //    {
-                //        ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = new ProgramacionPersonalContratoConstruccion
-                //        {
-                //            UsuarioCreacion = pUsuario,
-                //            FechaCreacion = DateTime.Now,
-                //            Eliminado = true,
+                CantidadSemanas = CantidadDias / 7;
 
-                //            ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
-                //            NumeroSemana = i,
-                //        };
-                //        _context.ProgramacionPersonalContratoConstruccion.Add(programacionPersonalContratoConstruccion);
-                //        List.Add(programacionPersonalContratoConstruccion);
-                //    }
-                _context.SaveChanges();
+                if (CantidadDias % 7 == 1)
+                    CantidadSemanas = (CantidadDias / 7) + 1;
+            }
 
+            return CantidadSemanas;
+        }
+
+        public async Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId(int ContratacionProyectoId, string pUsuario)
+        {
+            try
+            {
+                List<SeguimientoSemanal> List = _context.SeguimientoSemanal
+                    .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
+                    .Include(r => r.SeguimientoSemanalPersonalObra)
+                    .ToList();
+
+                if (List.Count() == 0)
+                {
+
+                    for (int i = 1; i < CalcularSemanasPlazoProyecto(ContratacionProyectoId) + 1; i++)
+                    {
+                        SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal
+                        {
+
+                            ContratacionProyectoId = ContratacionProyectoId,
+                            NumeroSemana = i,
+
+                            Eliminado = false,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = pUsuario
+                        };
+
+                        List.Add(seguimientoSemanal);
+                        _context.SeguimientoSemanal.Add(seguimientoSemanal);
+                        _context.SaveChanges();
+                    }
+                }
+                 
                 return List;
             }
             catch (Exception ex)
             {
-                return new List<ProgramacionPersonalContrato>();
+                return new List<SeguimientoSemanal>();
             }
-
-
-
         }
 
         public async Task<Respuesta> UpdateProgramacionContratoPersonal(ContratoConstruccion pContratoConstruccion)

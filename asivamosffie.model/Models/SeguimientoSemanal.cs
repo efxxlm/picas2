@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class SeguimientoSemanal
     {
+        public SeguimientoSemanal()
+        {
+            SeguimientoSemanalPersonalObra = new HashSet<SeguimientoSemanalPersonalObra>();
+        }
+
         public int SeguimientoSemanalId { get; set; }
         public int ContratacionProyectoId { get; set; }
         public int NumeroSemana { get; set; }
@@ -15,5 +20,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
+        public virtual ICollection<SeguimientoSemanalPersonalObra> SeguimientoSemanalPersonalObra { get; set; }
     }
 }

@@ -101,6 +101,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SeguimientoDiario> SeguimientoDiario { get; set; }
         public virtual DbSet<SeguimientoDiarioObservaciones> SeguimientoDiarioObservaciones { get; set; }
         public virtual DbSet<SeguimientoSemanal> SeguimientoSemanal { get; set; }
+        public virtual DbSet<SeguimientoSemanalPersonalObra> SeguimientoSemanalPersonalObra { get; set; }
         public virtual DbSet<SesionComentario> SesionComentario { get; set; }
         public virtual DbSet<SesionComiteSolicitud> SesionComiteSolicitud { get; set; }
         public virtual DbSet<SesionComiteTecnicoCompromiso> SesionComiteTecnicoCompromiso { get; set; }
@@ -3584,6 +3585,22 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ContratacionProyectoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RegistroSemanal_ContratacionProyecto");
+            });
+
+            modelBuilder.Entity<SeguimientoSemanalPersonalObra>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SeguimientoSemanal)
+                    .WithMany(p => p.SeguimientoSemanalPersonalObra)
+                    .HasForeignKey(d => d.SeguimientoSemanalId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SeguimientoSemanalPersonalObra_SeguimientoSemanal");
             });
 
             modelBuilder.Entity<SesionComentario>(entity =>
