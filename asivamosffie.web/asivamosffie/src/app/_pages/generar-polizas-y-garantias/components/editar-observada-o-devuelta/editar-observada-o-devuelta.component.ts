@@ -172,33 +172,35 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data => {
       const tipoGarantiaCodigo = [];
       this.arrayGarantias = data;
-      const polizasListRead = [this.arrayGarantias[0].tipoGarantiaCodigo];
-      for (let i = 1; i < this.arrayGarantias.length; i++) {
-        const Garantiaaux = polizasListRead.push(this.arrayGarantias[i].tipoGarantiaCodigo);
-      }
-      for (let i = 0; i < polizasListRead.length; i++) {
-        const polizaSeleccionada = this.polizasYSegurosArray.filter(t => t.codigo === polizasListRead[i]);
-        if (polizaSeleccionada.length > 0) { tipoGarantiaCodigo.push(polizaSeleccionada[0]) };
-      }
-      this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
-      for (let j = 0; j < polizasListRead.length; j++) {
-        switch (polizasListRead[j]) {
-          case '1':
-            this.obj1 = true;
-            this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(this.arrayGarantias[j].esIncluidaPoliza);
-            break;
-          case '2':
-            this.obj2 = true;
-            this.addressForm.get('estabilidadYCalidad').setValue(this.arrayGarantias[j].esIncluidaPoliza);
-            break;
-          case '3':
-            this.obj3 = true;
-            this.addressForm.get('polizaYCoumplimiento').setValue(this.arrayGarantias[j].esIncluidaPoliza);
-            break;
-          case '4':
-            this.obj4 = true;
-            this.addressForm.get('polizasYSegurosCompleto').setValue(this.arrayGarantias[j].esIncluidaPoliza);
-            break;
+      if (this.arrayGarantias.length > 0) {
+        const polizasListRead = [this.arrayGarantias[0].tipoGarantiaCodigo];
+        for (let i = 1; i < this.arrayGarantias.length; i++) {
+          const Garantiaaux = polizasListRead.push(this.arrayGarantias[i].tipoGarantiaCodigo);
+        }
+        for (let i = 0; i < polizasListRead.length; i++) {
+          const polizaSeleccionada = this.polizasYSegurosArray.filter(t => t.codigo === polizasListRead[i]);
+          if (polizaSeleccionada.length > 0) { tipoGarantiaCodigo.push(polizaSeleccionada[0]) };
+        }
+        this.addressForm.get('polizasYSeguros').setValue(tipoGarantiaCodigo);
+        for (let j = 0; j < polizasListRead.length; j++) {
+          switch (polizasListRead[j]) {
+            case '1':
+              this.obj1 = true;
+              this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(this.arrayGarantias[j].esIncluidaPoliza);
+              break;
+            case '2':
+              this.obj2 = true;
+              this.addressForm.get('estabilidadYCalidad').setValue(this.arrayGarantias[j].esIncluidaPoliza);
+              break;
+            case '3':
+              this.obj3 = true;
+              this.addressForm.get('polizaYCoumplimiento').setValue(this.arrayGarantias[j].esIncluidaPoliza);
+              break;
+            case '4':
+              this.obj4 = true;
+              this.addressForm.get('polizasYSegurosCompleto').setValue(this.arrayGarantias[j].esIncluidaPoliza);
+              break;
+          }
         }
       }
     });

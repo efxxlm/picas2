@@ -42,32 +42,32 @@ export class VerDetallePolizaComponent implements OnInit {
   estabilidadYCalidad: any;
   polizaYCoumplimiento: any;
   polizasYSegurosCompleto: any;
-  
+
   cumpleDatosAsegurado: any;
   cumpleDatosBeneficiario: any;
   cumpleDatosTomador: any;
   incluyeReciboPago: any;
   incluyeCondicionesGenerales: any;
 
-  fechaRevision:any;
+  fechaRevision: any;
   estadoRevision: any;
   fechaAprobacion: any;
   nomAprobado: any;
   observaciones: any;
 
 
-  constructor(    
+  constructor(
     private polizaService: PolizaGarantiaService,
     private activatedRoute: ActivatedRoute,
     private common: CommonService
-    ) { }
+  ) { }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe( param => {
+    this.activatedRoute.params.subscribe(param => {
       this.cargarDatosGenerales(param.id);
     });
   }
-  cargarDatosGenerales(id){
+  cargarDatosGenerales(id) {
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;
       this.tipoSolicitud = data[0].tipoSolicitud;
@@ -80,7 +80,7 @@ export class VerDetallePolizaComponent implements OnInit {
       this.plazoContrato = data[0].plazoContrato;
       this.numContrato = data[0].numeroContrato;
     });
-    this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data0=>{
+    this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data0 => {
       this.nomAseguradora = data0.nombreAseguradora;
       this.numPoliza = data0.numeroPoliza;
       this.numCertificado = data0.numeroCertificado;
@@ -94,7 +94,7 @@ export class VerDetallePolizaComponent implements OnInit {
     this.common.listaGarantiasPolizas().subscribe(data00 => {
       this.polizasYSegurosArray = data00;
     });
-    this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data01=>{
+    this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data01 => {
       this.fechaRevision = data01.fechaRevisionDateTime;
       this.estadoRevision = data01.estadoRevision;
       this.fechaAprobacion = data01.fechaAprobacion;
@@ -102,42 +102,44 @@ export class VerDetallePolizaComponent implements OnInit {
     })
   }
 
-  loadGarantia(polizaId){
-    this.polizaService.GetListPolizaGarantiaByContratoPolizaId(polizaId).subscribe(data1=>{
+  loadGarantia(polizaId) {
+    this.polizaService.GetListPolizaGarantiaByContratoPolizaId(polizaId).subscribe(data1 => {
       const tipoGarantiaCodigo = [];
       this.arrayGarantias = data1;
-      const polizasListRead = [this.arrayGarantias[0].tipoGarantiaCodigo];
-      for (let i = 1; i < this.arrayGarantias.length; i++) {
-        const Garantiaaux = polizasListRead.push(this.arrayGarantias[i].tipoGarantiaCodigo);
-      }
-      for (let i = 0; i < polizasListRead.length; i++) {
-        const polizaSeleccionada = this.polizasYSegurosArray.filter(t => t.codigo === polizasListRead[i]);
-        if (polizaSeleccionada.length > 0) { tipoGarantiaCodigo.push(polizaSeleccionada[0]) };
-      }
-      for (let j = 0; j < polizasListRead.length; j++) {
-        switch (polizasListRead[j]) {
-          case '1':
-            this.obj1 = true;
-            this.buenManejoCorrectaInversionAnticipo = this.arrayGarantias[j].esIncluidaPoliza;
-            break;
-          case '2':
-            this.obj2 = true;
-            this.estabilidadYCalidad = this.arrayGarantias[j].esIncluidaPoliza;
-            break;
-          case '3':
-            this.obj3 = true;
-            this.polizaYCoumplimiento = this.arrayGarantias[j].esIncluidaPoliza;
-            break;
-          case '4':
-            this.obj4 = true;
-            this.polizasYSegurosCompleto = this.arrayGarantias[j].esIncluidaPoliza;
-            break;
+      if (this.arrayGarantias.length > 0) {
+        const polizasListRead = [this.arrayGarantias[0].tipoGarantiaCodigo];
+        for (let i = 1; i < this.arrayGarantias.length; i++) {
+          const Garantiaaux = polizasListRead.push(this.arrayGarantias[i].tipoGarantiaCodigo);
+        }
+        for (let i = 0; i < polizasListRead.length; i++) {
+          const polizaSeleccionada = this.polizasYSegurosArray.filter(t => t.codigo === polizasListRead[i]);
+          if (polizaSeleccionada.length > 0) { tipoGarantiaCodigo.push(polizaSeleccionada[0]) };
+        }
+        for (let j = 0; j < polizasListRead.length; j++) {
+          switch (polizasListRead[j]) {
+            case '1':
+              this.obj1 = true;
+              this.buenManejoCorrectaInversionAnticipo = this.arrayGarantias[j].esIncluidaPoliza;
+              break;
+            case '2':
+              this.obj2 = true;
+              this.estabilidadYCalidad = this.arrayGarantias[j].esIncluidaPoliza;
+              break;
+            case '3':
+              this.obj3 = true;
+              this.polizaYCoumplimiento = this.arrayGarantias[j].esIncluidaPoliza;
+              break;
+            case '4':
+              this.obj4 = true;
+              this.polizasYSegurosCompleto = this.arrayGarantias[j].esIncluidaPoliza;
+              break;
+          }
         }
       }
     });
   }
 
-  loadChequeo(data){
+  loadChequeo(data) {
     this.cumpleDatosAsegurado = data.cumpleDatosAsegurado;
     this.cumpleDatosBeneficiario = data.cumpleDatosBeneficiario;
     this.cumpleDatosTomador = data.cumpleDatosTomador;
