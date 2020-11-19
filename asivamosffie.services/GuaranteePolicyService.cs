@@ -1348,8 +1348,8 @@ namespace asivamosffie.services
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string strTipoSolicitudCodigoContratoPoliza = ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas).ToString();
-                    string strTipoSolicitudNombreContratoPoliza = "Sin radicación de pólizas";
+                    string strTipoSolicitudCodigoContratoPoliza = (Convert.ToInt32( ConstanCodigoTipoSolicitud.Contratacion)).ToString();
+                    string strTipoSolicitudNombreContratoPoliza = "Contratación"; //contratacion o modif contractual - 
 
                     string strEstadoSolicitudCodigoContratoPoliza = ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas).ToString();
                     string strEstadoSolicitudNombreContratoPoliza = "Sin radicación de pólizas";
