@@ -31,6 +31,8 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CambiarEstadoControversiaContractual(int pControversiaContractualId, string pNuevoCodigoEstado, string pUsuarioModifica);
 
+        Task<Respuesta> ActualizarRutaSoporteControversiaContractual(int pControversiaContractualId, string pRutaSoporte, string pUsuarioModifica);
+        Task<Respuesta> ActualizarRutaSoporteControversiaActuacion(int pControversiaActuacionId, string pRutaSoporte, string pUsuarioModifica);
         Task<Respuesta> EliminarControversiaActuacion(int pControversiaActuacionId, string pUsuario);
         Task<Respuesta> EliminarControversiaContractual(int pControversiaContractualId, string pUsuario);
     }
