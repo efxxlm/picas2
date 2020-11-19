@@ -24,10 +24,12 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public DateTime? FechaFirmaFiduciariaFormat { get; set; }
-
-
+         
         [NotMapped]
         public DateTime? FechaFirmaContratoFormat { get; set; }
-        
+
+        [NotMapped]
+        public DateTime? FechaPolizaAprobacion { get; set; }
+
     }
 }

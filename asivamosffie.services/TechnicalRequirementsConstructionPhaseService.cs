@@ -398,7 +398,8 @@ namespace asivamosffie.services
                                                                                 .ToList();
 
                 //contrato.ContratoConstruccion.ToList().RemoveAll( r => r.eliminado == true )
-
+                contrato.FechaPolizaAprobacion = contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue ? contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion : DateTime.Now;
+                
                 contrato.ContratoConstruccion.ToList().ForEach(cc =>
                 {
                     cc.ConstruccionPerfil = cc.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList();
