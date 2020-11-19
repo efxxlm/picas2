@@ -106,22 +106,8 @@ namespace asivamosffie.services
 
                         List.Add(seguimientoSemanal);
                         _context.SeguimientoSemanal.Add(seguimientoSemanal);
-                    
-                        SeguimientoSemanalPersonalObra seguimientoSemanalPersonalObra = new SeguimientoSemanalPersonalObra
-                        {
-                            Eliminado = false,
-                            FechaCreacion = DateTime.Now,
-                            UsuarioCreacion = pUsuario,
-                            CantidadPersonal = null
-
-                        };  
-
-                        List<SeguimientoSemanalPersonalObra> seguimientoSemanalPersonalObras = new List<SeguimientoSemanalPersonalObra>
-                        {
-                            seguimientoSemanalPersonalObra
-                        };
-                        seguimientoSemanal.SeguimientoSemanalPersonalObra = seguimientoSemanalPersonalObras;
-
+                     
+  
                     }
                 }
 
