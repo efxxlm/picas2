@@ -100,35 +100,35 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> UpdateProgramacionContratoPersonal(ContratoConstruccion pContratoConstruccion)
+        public async Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(SeguimientoSemanal pSeguimientoSemanal)
         {
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
-            //bool RegistroCompleto = true;
+             bool RegistroCompleto = true;
 
             try
             {
-                //Proyecto proyecto = _context.Proyecto.Find(pContratoConstruccion.ProyectoId);
+                ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId).FirstOrDefault();
+                Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault();
 
-                //proyecto.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
-                //proyecto.FechaModificacion = DateTime.Now;
+                 proyecto.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
+                 proyecto.FechaModificacion = DateTime.Now;
 
-                //foreach (var item in pContratoConstruccion.ProgramacionPersonalContrato)
-                //{
-                //    ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = _context.ProgramacionPersonalContratoConstruccion.Find(item.ProgramacionPersonalContratoConstruccionId);
-                //    programacionPersonalContratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
-                //    programacionPersonalContratoConstruccion.FechaModificacion = DateTime.Now;
-                //    programacionPersonalContratoConstruccion.CantidadPersonal = item.CantidadPersonal;
+                foreach (var SeguimientoSemanalPersonalObra in pSeguimientoSemanal.SeguimientoSemanalPersonalObra)
+                {
 
-                //    if (programacionPersonalContratoConstruccion.CantidadPersonal == 0)
-                //        RegistroCompleto = false;
-                //}
-                //if (RegistroCompleto)
-                //    proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_de_programacion_personal;
-                //else
-                //    proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.En_registro_programacion;
+                    if (SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId == 0) {
 
-                //await _context.SaveChangesAsync();
+                        pSeguimientoSemanal.UsuarioCreacion = pSeguimientoSemanal.UsuarioCreacion;
+                    }
+                 
+                }
+                if (RegistroCompleto)
+                    proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_de_programacion_personal;
+                else
+                    proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.En_registro_programacion;
+
+                await _context.SaveChangesAsync();
 
                 return
                      new Respuesta
@@ -137,7 +137,7 @@ namespace asivamosffie.services
                          IsException = false,
                          IsValidation = false,
                          Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pContratoConstruccion.UsuarioCreacion, "REGISTRAR PROGRAMACION DE PERSONAL")
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pSeguimientoSemanal.UsuarioCreacion, "REGISTRAR PROGRAMACION DE PERSONAL")
                      };
             }
             catch (Exception ex)
@@ -149,7 +149,7 @@ namespace asivamosffie.services
                         IsException = true,
                         IsValidation = false,
                         Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pContratoConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pSeguimientoSemanal.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
 

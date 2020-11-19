@@ -43,11 +43,11 @@ namespace asivamosffie.api.Controllers
 
         [Route("UpdateProgramacionContratoPersonal")]
         [HttpPost]
-        public async Task<IActionResult> UpdateProgramacionContratoPersonal([FromBody] ContratoConstruccion pContratoConstruccion)
+        public async Task<IActionResult> UpdateSeguimientoSemanalPersonalObra([FromBody]SeguimientoSemanal pSeguimientoSemanal)
         {
             try
             {
-                Task<Respuesta> result = _IRegisterPersonalProgrammingService.UpdateProgramacionContratoPersonal(pContratoConstruccion);
+                Task<Respuesta> result = _IRegisterPersonalProgrammingService.UpdateSeguimientoSemanalPersonalObra(pSeguimientoSemanal);
                 object respuesta = await result;
                 return Ok(respuesta);
             }

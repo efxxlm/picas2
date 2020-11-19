@@ -13,7 +13,7 @@ namespace asivamosffie.services.Interfaces
         
         Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId(int pContratoId, string pUsuario);
         
-        Task<Respuesta> UpdateProgramacionContratoPersonal(ContratoConstruccion pContratoConstruccion);
+        Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(SeguimientoSemanal pSeguimientoSemanal);
        
         Task<Respuesta> ChangeStatusProgramacionContratoPersonal(int pContratoConstruccionId, string pEstadoProgramacionCodigo, string pUsuario);
     }
