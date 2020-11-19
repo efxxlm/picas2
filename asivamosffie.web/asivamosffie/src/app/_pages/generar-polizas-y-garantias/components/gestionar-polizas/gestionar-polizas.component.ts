@@ -7,6 +7,7 @@ import { OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Dominio } from 'src/app/core/_services/common/common.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 @Component({
   selector: 'app-gestionar-polizas',
   templateUrl: './gestionar-polizas.component.html',
@@ -93,7 +94,8 @@ export class GestionarPolizasComponent implements OnInit {
     private fb: FormBuilder,
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
-    private common: CommonService
+    private common: CommonService,
+    private contratacion:ProjectContractingService 
   ) {
     this.minDate = new Date();
   }
@@ -106,17 +108,11 @@ export class GestionarPolizasComponent implements OnInit {
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;
       this.tipoSolicitud = data[0].tipoSolicitud;
-      this.tipoContrato = data[0].tipoContrato;
-      this.objeto = data[0].descripcionModificacion;
-      this.nombreContratista = data[0].nombreContratista;
-      this.tipoIdentificacion = data[0].tipoDocumento;
-      this.numeroIdentificacion = data[0].numeroIdentificacion;
-      this.valorContrato = data[0].valorContrato;
-      this.plazoContrato = data[0].plazoContrato;
       this.numContrato = data[0].numeroContrato;
     });
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(a=>{
       this.loadPolizaId(a);
+      this.loadContratacionId(a);
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
@@ -130,6 +126,35 @@ export class GestionarPolizasComponent implements OnInit {
     else{
       this.contratoPolizaId = 0;
     }
+    
+  }
+
+  loadContratacionId(a){
+    this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
+      this.loadInfoContratacion(data);
+    });
+  }
+  loadInfoContratacion(data){
+    if(data.disponibilidadPresupuestal.length>0){
+      this.tipoContrato = data.disponibilidadPresupuestal[0].opcionContratarCodigo;
+      this.objeto = data.disponibilidadPresupuestal[0].objeto;
+      this.valorContrato = data.disponibilidadPresupuestal[0].valorSolicitud;
+      this.plazoContrato = data.disponibilidadPresupuestal[0].plazoMeses + 'meses / ' + data.disponibilidadPresupuestal[0].plazoDias + 'días';
+    }
+    else{
+      this.tipoContrato = 'Pendiente';
+      this.objeto = 'Pendiente';
+      this.valorContrato = 0;
+      this.plazoContrato =' 0 meses / 0 días';
+    }
+    this.nombreContratista = data.contratista.nombre;
+    if(data.contratista.tipoIdentificacionCodigo != undefined || data.contratista.tipoIdentificacionCodigo != undefined){
+      this.tipoIdentificacion = data.contratista.tipoIdentificacionCodigo;
+    }
+    else{
+      this.tipoIdentificacion = 'Pendiente';
+    }
+    this.numeroIdentificacion = data.contratista.numeroIdentificacion;
     
   }
   // evalua tecla a tecla
