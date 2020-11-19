@@ -102,15 +102,12 @@ namespace asivamosffie.services
                             Eliminado = false,
                             FechaCreacion = DateTime.Now,
                             UsuarioCreacion = pUsuario
-                        };
-
+                        }; 
                         List.Add(seguimientoSemanal);
                         _context.SeguimientoSemanal.Add(seguimientoSemanal);
-                     
-  
+                        _context.SaveChanges();
                     }
-                }
-
+                } 
                 return List;
             }
             catch (Exception ex)
