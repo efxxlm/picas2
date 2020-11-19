@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:44372/api'
+  apiUrl: 'http://localhost/asivamosffie/api'
   // apiUrl: 'https://pruebasasivamosffiebackend.ivolucion.com/api'
 };
 

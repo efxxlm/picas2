@@ -24,5 +24,6 @@ namespace asivamosffie.model.APIModels
         public string MunicipioId { get; set; }
         public string DepartamentoId { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public decimal ValorGestionado { get; set; }
     }
 }
