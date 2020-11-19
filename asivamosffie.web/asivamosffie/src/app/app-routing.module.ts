@@ -174,6 +174,11 @@ const routes: Routes = [
           .then( module => module.ProgramacionPersonalObraModule )
       },
       {
+        path: 'programacionPersonalObra',
+        loadChildren: () => import( './_pages/programacion-personal-obra/programacion-personal-obra.module' )
+          .then( module => module.ProgramacionPersonalObraModule )
+      },
+      {
         path: 'registrarAvanceSemanal',
         loadChildren: () => import( './_pages/registrar-avance-semanal/registrar-avance-semanal.module' )
           .then( module => module.RegistrarAvanceSemanalModule )

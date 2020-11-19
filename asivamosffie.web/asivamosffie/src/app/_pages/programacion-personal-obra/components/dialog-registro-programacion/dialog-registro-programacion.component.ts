@@ -19,7 +19,7 @@ export class DialogRegistroProgramacionComponent implements OnInit {
     private dialogRef: MatDialogRef<DialogRegistroProgramacionComponent>,
     @Inject(MAT_DIALOG_DATA) public dataContrato )
   {
-    this.programacionPersonalSvc.getProgramacionPersonalByContratoConstruccionId( dataContrato.contrato.contratoConstruccionId )
+    this.programacionPersonalSvc.getProgramacionPersonalByContratoConstruccionId( dataContrato.contrato.contratacionProyectoId )
       .subscribe(
         response => {
           this.registroSemanas = response;
