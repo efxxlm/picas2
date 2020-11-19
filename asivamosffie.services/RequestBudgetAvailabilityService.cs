@@ -1713,8 +1713,9 @@ namespace asivamosffie.services
                                     Nombre = getNombreAportante(ppapor.Aportante),
                                     TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(ppapor.Aportante.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
                                     ValorAportanteAlProyecto = ppapor.ValorTotalAportante,
-                                    FuentesFinanciacion = fuentes
-                                });
+                                    FuentesFinanciacion = fuentes,
+                                    ValorGestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && fuentes.Select(x=>x.FuenteFinanciacionID).Contains(x.FuenteFinanciacionId)).Sum(x => x.ValorSolicitado)
+                            });
                             }
                             
 
@@ -1727,7 +1728,10 @@ namespace asivamosffie.services
                                 nombreAportante = getNombreAportante(confinanciacion);
                                 valorAportate = _context.ProyectoAportante.Where(x => x.ProyectoId == proyectospp.ProyectoId && x.AportanteId == ppapor.AportanteId).Sum(x => x.ValorTotalAportante);
 
-                                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId).Include(x => x.ComponenteUso).ToList();
+                                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId==detailDP.ContratacionId
+                                && x.ContratacionProyectoAportante.ContratacionProyecto.ProyectoId==proyectospp.ProyectoId &&
+                                x.ContratacionProyectoAportante.CofinanciacionAportanteId == confinanciacion.CofinanciacionAportanteId)
+                                    .Include(x => x.ComponenteUso).ToList();
                                 foreach (var compAp in componenteAp)
                                 {
                                     List<string> uso = new List<string>();
