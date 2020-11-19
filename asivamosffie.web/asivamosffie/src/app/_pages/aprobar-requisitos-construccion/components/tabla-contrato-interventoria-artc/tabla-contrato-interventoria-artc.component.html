@@ -38,27 +38,36 @@
       <ng-container matColumnDef="estadoRequisito">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
         <td mat-cell *matCellDef="let element" align="center">
-          {{ element.estadoNombre }}
-          <!--
-            <span *ngIf="element.estadoRequisito === '1'">Sin validacón del supervisor</span>
-            <span *ngIf="element.estadoRequisito === '2'">En proceso de validación de requisitos técnicos</span>
-            <span *ngIf="element.estadoRequisito === '3'">Con requisitos técnicos validados</span>
-            <span *ngIf="element.estadoRequisito === '4'">Enviado al interventor</span>
-          -->
+          <section *ngIf="estadosConstruccionInterventoria !== undefined && element.estadoCodigo === estadosConstruccionInterventoria.enviadoAlSupervisor.codigo">
+            {{ estadosConstruccionInterventoria.enviadoAlSupervisor.nombre }}
+          </section>
+          <section *ngIf="estadosConstruccionInterventoria !== undefined && element.estadoCodigo === estadosConstruccionInterventoria.enProcesoValidacionReqTecnicos.codigo">
+              {{ estadosConstruccionInterventoria.enProcesoValidacionReqTecnicos.nombre }}
+          </section>
+          <section *ngIf="estadosConstruccionInterventoria !== undefined && element.estadoCodigo === estadosConstruccionInterventoria.conReqTecnicosValidados.codigo">
+              {{ estadosConstruccionInterventoria.conReqTecnicosValidados.nombre }}
+          </section>
+          <section *ngIf="estadosConstruccionInterventoria !== undefined && element.estadoCodigo === estadosConstruccionInterventoria.conReqTecnicosAprobadosPorSupervisor.codigo">
+              {{ estadosConstruccionInterventoria.conReqTecnicosAprobadosPorSupervisor.nombre }}
+          </section>
+          <section *ngIf="estadosConstruccionInterventoria !== undefined && element.estadoCodigo === estadosConstruccionInterventoria.enviadoAlApoyo.codigo">
+              {{ estadosConstruccionInterventoria.enviadoAlApoyo.nombre }}
+          </section>
         </td>
       </ng-container>
   
       <ng-container matColumnDef="gestion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Gestión </th>
         <td mat-cell *matCellDef="let element">
-  
+
           <button mat-raised-button
                   color="accent" 
                   class="btn-table"
-                  (click)="getForm( element.contratoId )">
+                  (click)="getForm( element.contratoId )"
+                  *ngIf="element.estadoCodigo === estadosConstruccionInterventoria.enviadoAlSupervisor.codigo">
                   Verificar requisitos de inicio
           </button>
-  
+
           <!--
           <button mat-raised-button
                   color="accent" 
@@ -67,23 +76,33 @@
                   (click)="aprobarInicio( element.id )">
                   Aprobar inicio
           </button>
-  
+
           <button mat-raised-button
                   color="accent" 
                   class="btn-table"
                   *ngIf="element.estadoRequisito === '2' || element.estadoRequisito === '4'"
-                  (click)="getForm( element.id )">
+                  (click)="aprobarInicio( element.id )">
+                  Enviar al apoyo de la supervisión
+          </button>
+          -->
+
+          <button mat-raised-button
+                  color="accent"
+                  class="btn-table"
+                  (click)="getForm( element.contratoId )"
+                  *ngIf=" element.estadoCodigo === estadosConstruccionInterventoria.conReqTecnicosValidados.codigo
+                          || element.estadoCodigo === estadosConstruccionInterventoria.enProcesoValidacionReqTecnicos.codigo">
                   Ver detalle / Editar
           </button>
   
           <button mat-raised-button
                   color="accent" 
                   class="btn-table"
-                  *ngIf="element.estadoRequisito === '3'"
-                  (click)="verDetalle(element.id)">
+                  (click)="verDetalle( element.contratoId )"
+                  *ngIf=" element.estadoCodigo === estadosConstruccionInterventoria.enviadoAlApoyo.codigo
+                          || element.estadoCodigo === estadosConstruccionInterventoria.conReqTecnicosAprobadosPorSupervisor.codigo">
                   Ver detalle
           </button>
-          -->
     
         </td>
       </ng-container>

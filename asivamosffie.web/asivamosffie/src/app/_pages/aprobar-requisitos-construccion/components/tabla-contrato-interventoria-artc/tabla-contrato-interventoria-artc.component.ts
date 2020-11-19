@@ -13,6 +13,7 @@ import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDo
 export class TablaContratoInterventoriaArtcComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
+  estadosConstruccionInterventoria: any;
   tipoContratoInterventoria = '2';
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
@@ -32,13 +33,21 @@ export class TablaContratoInterventoriaArtcComponent implements OnInit {
   { }
 
   ngOnInit(): void {
-    this.faseDosAprobarConstruccionSvc.getContractsGrid( this.tipoContratoInterventoria )
+    this.faseDosAprobarConstruccionSvc.listaEstadosAprobarConstruccion( 'interventoria' )
       .subscribe(
         response => {
-          this.dataSource                        = new MatTableDataSource( response );
-          this.dataSource.paginator              = this.paginator;
-          this.dataSource.sort                   = this.sort;
-          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+          this.estadosConstruccionInterventoria = response;
+          console.log( this.estadosConstruccionInterventoria );
+          this.faseDosAprobarConstruccionSvc.getContractsGrid( this.tipoContratoInterventoria )
+            .subscribe(
+              listas => {
+                console.log( listas );
+                this.dataSource                        = new MatTableDataSource( listas );
+                this.dataSource.paginator              = this.paginator;
+                this.dataSource.sort                   = this.sort;
+                this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+              }
+            );
         }
       );
   }

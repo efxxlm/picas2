@@ -10,28 +10,28 @@ import { Contrato, ContratoModificado } from '../../../_interfaces/faseUnoPrecon
 })
 export class FaseUnoPreconstruccionService {
 
-  private url_api: string = `${ environment.apiUrl }/RegisterPreContructionPhase1`;
+  private urlApi = `${ environment.apiUrl }/RegisterPreContructionPhase1`;
 
-  constructor ( private http: HttpClient ) {};
+  constructor( private http: HttpClient ) {}
 
-  getListContratacion () {
-    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.url_api }/GetListContratacion` );
-  };
+  getListContratacion() {
+    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.urlApi }/GetListContratacion` );
+  }
 
-  getContratacionByContratoId ( pContratoId: string ) {
-    return this.http.get<Contrato>( `${ this.url_api }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
-  };
+  getContratacionByContratoId( pContratoId: string ) {
+    return this.http.get<Contrato>( `${ this.urlApi }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
+  }
 
   createEditContratoPerfil ( pContrato: Contrato ) {
-    return this.http.post( `${ this.url_api }/CreateEditContratoPerfil`, pContrato );
-  };
+    return this.http.post( `${ this.urlApi }/CreateEditContratoPerfil`, pContrato );
+  }
 
   deleteContratoPerfil ( contratoPerfilId: number ) {
-    return ( this.http.delete( `${ this.url_api }/DeleteContratoPerfil?ContratoPerfilId=${ contratoPerfilId }` ) );
-  };
+    return ( this.http.delete( `${ this.urlApi }/DeleteContratoPerfil?ContratoPerfilId=${ contratoPerfilId }` ) );
+  }
 
   deleteContratoPerfilNumeroRadicado ( contratoPerfilNumeroRadicadoId: number ) {
-    return this.http.post( `${ this.url_api }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' )
-  };
+    return this.http.post( `${ this.urlApi }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' );
+  }
 
-};
+}

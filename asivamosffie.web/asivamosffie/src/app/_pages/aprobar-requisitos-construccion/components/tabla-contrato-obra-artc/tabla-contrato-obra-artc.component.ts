@@ -25,6 +25,7 @@ export class TablaContratoObraArtcComponent implements OnInit {
     'gestion'
   ];
   tipoContratoObra = '1';
+  estadosConstruccionObra: any;
 
   constructor(
     private routes: Router,
@@ -32,14 +33,21 @@ export class TablaContratoObraArtcComponent implements OnInit {
   {}
 
   ngOnInit(): void {
-    this.faseDosAprobarConstruccionSvc.getContractsGrid( this.tipoContratoObra )
-      .subscribe( response => {
-        console.log( response );
-        this.dataSource                        = new MatTableDataSource( response );
-        this.dataSource.paginator              = this.paginator;
-        this.dataSource.sort                   = this.sort;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-      } );
+    this.faseDosAprobarConstruccionSvc.listaEstadosAprobarConstruccion( 'obra' )
+      .subscribe(
+        response => {
+          this.estadosConstruccionObra = response;
+          console.log( this.estadosConstruccionObra );
+          this.faseDosAprobarConstruccionSvc.getContractsGrid( this.tipoContratoObra )
+            .subscribe( listas => {
+              console.log( listas );
+              this.dataSource                        = new MatTableDataSource( listas );
+              this.dataSource.paginator              = this.paginator;
+              this.dataSource.sort                   = this.sort;
+              this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+            } );
+        }
+      );
   }
 
   applyFilter( event: Event ) {
@@ -52,6 +60,10 @@ export class TablaContratoObraArtcComponent implements OnInit {
   }
 
   aprobarInicio( id: number ) {
+    console.log( id );
+  }
+
+  enviarAlInterventor( id: number ) {
     console.log( id );
   }
 
