@@ -1351,8 +1351,8 @@ namespace asivamosffie.services
                     string strTipoSolicitudCodigoContratoPoliza = ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas).ToString();
                     string strTipoSolicitudNombreContratoPoliza = "Sin radicación de pólizas";
 
-                    string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
-                    string strEstadoSolicitudNombreContratoPoliza = "sin definir";
+                    string strEstadoSolicitudCodigoContratoPoliza = ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas).ToString();
+                    string strEstadoSolicitudNombreContratoPoliza = "Sin radicación de pólizas";
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio TipoSolicitudCodigoContratoPoliza;
