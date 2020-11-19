@@ -31,14 +31,14 @@ export class TablaRegistroSemanasComponent implements OnInit {
       this.registroSemanasTabla.push( [] );
       console.log( this.registroSemanas );
       this.registroSemanas.forEach( registro => {
-        if ( registro.seguimientoSemanalPersonalObra.length === 0 ) {
-          registro.seguimientoSemanalPersonalObra.push(
-            {
-              cantidadPersonal: null
-            }
-          );
-        }
         if ( this.registroSemanasTabla[ numeroregistros ].length < 20 ) {
+          if ( registro.seguimientoSemanalPersonalObra.length === 0 ) {
+            registro.seguimientoSemanalPersonalObra.push(
+              {
+                cantidadPersonal: null
+              }
+            );
+          }
           registro.cantidadPersonal = registro.cantidadPersonal !== undefined ? String( registro.cantidadPersonal ) : null;
           this.registroSemanasTabla[ numeroregistros ].push( [ registro ] );
         }
@@ -79,8 +79,10 @@ export class TablaRegistroSemanasComponent implements OnInit {
               seguimientoSemanalPersonalObra: [
                 {
                   seguimientoSemanalId: registro[0].seguimientoSemanalId,
-                  cantidadPersonal: registro[0].seguimientoSemanalPersonalObra[0].cantidadPersonal !== null
-                                    && registro[0].seguimientoSemanalPersonalObra[0].cantidadPersonal.length > 0 ?
+                  seguimientoSemanalPersonalObraId: registro[0].seguimientoSemanalPersonalObra[0].seguimientoSemanalPersonalObraId
+                                                    !== undefined ?
+                                                    registro[0].seguimientoSemanalPersonalObra[0].seguimientoSemanalPersonalObraId : 0,
+                  cantidadPersonal: registro[0].seguimientoSemanalPersonalObra[0].cantidadPersonal !== null ?
                                     Number( registro[0].seguimientoSemanalPersonalObra[0].cantidadPersonal ) : null
                 }
               ]
