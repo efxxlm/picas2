@@ -35,9 +35,13 @@ namespace asivamosffie.services
         public async Task<List<dynamic>> GetContractsGrid(string pUsuarioId, string pTipoContrato)
         {
             List<dynamic> listaContrats = new List<dynamic>();
-
-            List<VRequisitosTecnicosInicioConstruccion> lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r=> Int32.Parse(r.EstadoCodigo) > 5).ToListAsync();
-
+            List<VRequisitosTecnicosInicioConstruccion> lista = new List<VRequisitosTecnicosInicioConstruccion>();
+            if (pTipoContrato == ConstanCodigoTipoContratacion.Obra.ToString())
+                lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10").ToListAsync();
+            else
+                lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10" || r.EstadoCodigo == "11").ToListAsync();
+           
+            
             lista.Where(c => c.TipoContratoCodigo == pTipoContrato).ToList()
                 .ForEach(c =>
                 {
@@ -51,7 +55,7 @@ namespace asivamosffie.services
                         CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
                         EstadoCodigo = c.EstadoCodigo,
                         EstadoNombre = c.EstadoNombre,
-                        Existeregistro = c.ExisteRegistro, 
+                        Existeregistro = c.ExisteRegistro,
                     });
                 });
             return listaContrats;
