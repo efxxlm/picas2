@@ -11,7 +11,9 @@ namespace asivamosffie.model.APIModels
         //    idContrato        
         public int ContratoId { get; set; }
         public string  FechaFirma { get; set; }
-        public string NumeroContrato { get; set; }          
+        public string NumeroContrato { get; set; }
+        public string NumeroSolicitudContratacion { get; set; }
+        
         public string TipoSolicitud   { get; set; }
         public string TipoSolicitudCodigo { get; set; }
 

@@ -1319,6 +1319,14 @@ namespace asivamosffie.services
             {
                 try
                 {
+                    Contratacion contratacion = null;
+                    contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+                    string strNumeroSolicitudContratacion="";
+
+                    if (contratacion != null)
+                        strNumeroSolicitudContratacion = contratacion.NumeroSolicitud;
+
                     ContratoPoliza contratoPoliza;
 
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
@@ -1345,10 +1353,8 @@ namespace asivamosffie.services
                             {
                                 strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
                                 strTipoSolicitudNombreContratoPoliza= TipoSolicitudCodigoContratoPoliza.Codigo;
-                            }
-                            
-                    }
-                    
+                            }                            
+                    }                    
 
                         EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         if (EstadoSolicitudCodigoContratoPoliza != null)
@@ -1356,8 +1362,7 @@ namespace asivamosffie.services
                             strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Codigo;
                             strEstadoSolicitudNombreContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
-                        }
-                            
+                        }                            
 
                     }
                     bool bRegistroCompleto=false;
@@ -1379,7 +1384,7 @@ namespace asivamosffie.services
                         NumeroContrato = contrato.NumeroContrato,
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
                         //EstadoRegistro { get; set; }
-
+                        NumeroSolicitudContratacion=strNumeroSolicitudContratacion,
                         //Departamento = departamento.Descripcion,
                         //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
