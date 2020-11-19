@@ -54,7 +54,7 @@
       <mat-card-content>
         <div class="row">
           <div class="pr-1">
-            <label for="nombre" class="label-left">Nombre del grupo</label>
+            <label for="nombre" class="label-left">Nombre de la aseguradora</label>
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
@@ -163,7 +163,8 @@
                 <mat-form-field class="full-width">
                   <input matInput #valorAmparo maxlength="20" type="number" required formControlName="valorAmparo"
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
@@ -203,7 +204,7 @@
                     <mat-radio-button [value]="true"  [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===true ? true : null) : null   )">Sí</mat-radio-button>
                     <mat-radio-button [value]="false"  [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===false ? false : null) : null   )">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group">*</span>
+                  <span class="required-form-group" style="margin-left: 1px;">*</span>
                 </div>
               </div>
             </div>
@@ -225,7 +226,7 @@
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group">*</span>
+                  <span class="required-form-group" style="margin-left: 1px;">*</span>
                 </div>
               </div>
             </div>
@@ -247,7 +248,7 @@
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group">*</span>
+                  <span class="required-form-group" style="margin-left: 1px;">*</span>
                 </div>
               </div>
             </div>
@@ -269,7 +270,7 @@
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group">*</span>
+                  <span class="required-form-group" style="margin-left: 1px;">*</span>
                 </div>
               </div>
             </div>
@@ -289,7 +290,7 @@
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
-                <span class="required-form-group">*</span>
+                <span class="required-form-group" style="margin-left: 1px;">*</span>
               </div>
             </div>
           </div>
@@ -307,7 +308,7 @@
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
-                <span class="required-form-group">*</span>
+                <span class="required-form-group" style="margin-left: 1px;">*</span>
               </div>
             </div>
           </div>
@@ -325,7 +326,7 @@
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
-                <span class="required-form-group">*</span>
+                <span class="required-form-group" style="margin-left: 1px;">*</span>
               </div>
             </div>
           </div>
@@ -343,7 +344,7 @@
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
-                <span class="required-form-group">*</span>
+                <span class="required-form-group" style="margin-left: 1px;">*</span>
               </div>
             </div>
           </div>
@@ -361,7 +362,7 @@
                   <mat-radio-button [value]="true">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
-                <span class="required-form-group">*</span>
+                <span class="required-form-group" style="margin-left: 1px;">*</span>
               </div>
             </div>
           </div>

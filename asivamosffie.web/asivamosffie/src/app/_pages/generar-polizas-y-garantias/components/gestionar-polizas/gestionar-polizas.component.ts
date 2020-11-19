@@ -124,7 +124,13 @@ export class GestionarPolizasComponent implements OnInit {
     this.idContrato = id;
   }
   loadPolizaId(a){
-    this.contratoPolizaId = a.contratoPolizaId;
+    if(this.contratoPolizaId!=null){
+      this.contratoPolizaId = a.contratoPolizaId;
+    }
+    else{
+      this.contratoPolizaId = 0;
+    }
+    
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
