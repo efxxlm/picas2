@@ -114,10 +114,14 @@ namespace asivamosffie.services
                             Eliminado = false,
                             FechaCreacion = DateTime.Now,
                             UsuarioCreacion = pUsuario
-                        };
-
+                        }; 
                         _context.SeguimientoSemanalPersonalObra.Add(seguimientoSemanalPersonalObra);
                         _context.SaveChanges();
+                        List<SeguimientoSemanalPersonalObra> seguimientoSemanalPersonalObras = new List<SeguimientoSemanalPersonalObra>
+                        {
+                            seguimientoSemanalPersonalObra
+                        };
+                        seguimientoSemanal.SeguimientoSemanalPersonalObra = seguimientoSemanalPersonalObras;
 
                     }
                 }
