@@ -102,12 +102,12 @@ namespace asivamosffie.services
                             Eliminado = false,
                             FechaCreacion = DateTime.Now,
                             UsuarioCreacion = pUsuario
-                        }; 
+                        };
                         List.Add(seguimientoSemanal);
                         _context.SeguimientoSemanal.Add(seguimientoSemanal);
                         _context.SaveChanges();
                     }
-                } 
+                }
                 return List;
             }
             catch (Exception ex)
@@ -117,17 +117,17 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(List<SeguimientoSemanal> pListSeguimientoSemanal)
-        { 
+        {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
             bool RegistroCompleto = true;
 
             try
             {
                 ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pListSeguimientoSemanal.FirstOrDefault().ContratacionProyectoId).FirstOrDefault();
-               
+
                 Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault();
 
-                proyecto.UsuarioModificacion = pListSeguimientoSemanal.FirstOrDefault().UsuarioCreacion;
+                proyecto.UsuarioModificacion = pListSeguimientoSemanal.FirstOrDefault().UsuarioModificacion;
                 proyecto.FechaModificacion = DateTime.Now;
 
                 foreach (var SeguimientoSemanal in pListSeguimientoSemanal)
@@ -139,11 +139,16 @@ namespace asivamosffie.services
 
                     if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId == 0)
                     {
-                        SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().UsuarioCreacion = proyecto.UsuarioModificacion;
-                        SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().FechaCreacion = DateTime.Now;
-                        SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().Eliminado = true;
+                        SeguimientoSemanalPersonalObra seguimientoSemanalPersonalObra = new SeguimientoSemanalPersonalObra
+                        {
+                            SeguimientoSemanalId = SeguimientoSemanal.SeguimientoSemanalId,
+                            UsuarioCreacion = proyecto.UsuarioModificacion,
+                            Eliminado = false,
+                            FechaCreacion = DateTime.Now,
+                            CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal
+                        };
 
-                        _context.SeguimientoSemanalPersonalObra.Add(SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault());
+                        _context.SeguimientoSemanalPersonalObra.Add(seguimientoSemanalPersonalObra);
                     }
                     else
                     {
