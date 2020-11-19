@@ -61,7 +61,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pSesionComiteSolicitud.UsuarioCreacion =  HttpContext.User.FindFirst("User").Value;
-                respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud);
+                respuesta = await _manageContractualProcessesService.CambiarEstadoSesionComiteSolicitud(pSesionComiteSolicitud, _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)

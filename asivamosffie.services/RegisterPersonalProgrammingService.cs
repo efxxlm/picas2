@@ -30,117 +30,104 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
-        public async Task<List<dynamic>> GetListProyectos()
-        {
-            List<ContratoConstruccion> ListContratoConstruccion = await _context.ContratoConstruccion
-                .Include(e => e.Programacion)
-                .Include(e => e.Proyecto)
-                  .ThenInclude(i => i.InstitucionEducativa)
-                .Include(e => e.Proyecto)
-                   .ThenInclude(i => i.Sede)
-                .Include(e => e.Proyecto)
-                   .ThenInclude(i => i.ContratacionProyecto)
-                      .ThenInclude(i => i.Contratacion)
-                          .ThenInclude(i => i.Contrato).Distinct().OrderByDescending(r => r.ContratoConstruccionId).ToListAsync();
-
-            List<dynamic> LisDyna = new List<dynamic>();
-            List<Dominio> ListDominio = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion || r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Programacion_Inicial).ToList();
-
-            List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
-            //Departamento Municipio Plazo
-            foreach (var ContratoConstruccion in ListContratoConstruccion)
-            {
-                if (ContratoConstruccion.Programacion.Count() > 0)
-                {
-                    Localizacion Municipio = ListLocalizacion.Find(r => r.LocalizacionId == ContratoConstruccion.Proyecto.LocalizacionIdMunicipio);
-                    Localizacion Departamento = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-
-                    LisDyna.Add(new
-                    {
-                        FechaFirmaActaInicio = ContratoConstruccion.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.HasValue ? ((DateTime)ContratoConstruccion.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2).ToString("dd-MM-yyyy") : " ",
-                        ContratoConstruccion.Proyecto.LlaveMen,
-                        ContratoConstruccion.Proyecto.ContratacionProyecto.FirstOrDefault().Contratacion.Contrato.FirstOrDefault().NumeroContrato,
-                        TipoIntervencion = ListDominio.Where(r => r.Codigo == ContratoConstruccion.Proyecto.TipoIntervencionCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre,
-                        InstitucionEducativaSede = ContratoConstruccion.Proyecto.InstitucionEducativa.Nombre,
-                        Sede = ContratoConstruccion.Proyecto.Sede.Nombre,
-                        EstadoProgramacionInicial = !string.IsNullOrEmpty(ContratoConstruccion.Proyecto.EstadoProgramacionCodigo)
-                        ? ListDominio.Where(r => r.Codigo == ContratoConstruccion.Proyecto.EstadoProgramacionCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Programacion_Inicial).FirstOrDefault().Nombre
-                        : ListDominio.Where(r => r.Codigo == ConstanCodigoEstadoProgramacionInicial.Sin_Programacion_Personal && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Programacion_Inicial).FirstOrDefault().Nombre,
-                        EstadoProgramacionInicialCodigo = !string.IsNullOrEmpty(ContratoConstruccion.Proyecto.EstadoProgramacionCodigo) ? ContratoConstruccion.Proyecto.EstadoProgramacionCodigo : ConstanCodigoEstadoProgramacionInicial.Sin_Programacion_Personal,
-                        Municipio = Municipio.Descripcion,
-                        Departamento = Departamento.Descripcion,
-                        PlazoProyecto = ContratoConstruccion.Programacion.FirstOrDefault().Duracion,
-                        ContratoConstruccion.ContratoConstruccionId
-                    });
-                }
-            }
-            return LisDyna;
+        public async Task<List<VRegistrarPersonalObra>> GetListProyectos()
+        { 
+            return await _context.VRegistrarPersonalObra.ToListAsync();
         }
 
-        public async Task<List<ProgramacionPersonalContratoConstruccion>> GetProgramacionPersonalByContratoConstruccionId(int pContratoConstruccionId, string pUsuario)
+        private int CalcularSemanasPlazoProyecto(int ContratacionProyectoId)
         {
+            int CantidadDias = 0;
+            int CantidadSemanas = 0;
 
+            ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
+                .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
+                .Include(r => r.Proyecto)
+                .Include(r => r.Contratacion).FirstOrDefault();
+
+            if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+            {
+
+                CantidadDias = contratacionProyecto.Proyecto.PlazoMesesObra ?? 0;
+                CantidadDias *= 30;
+                CantidadDias += contratacionProyecto.Proyecto.PlazoDiasObra.HasValue ? (int)contratacionProyecto.Proyecto.PlazoDiasObra : 0;
+
+                CantidadSemanas = CantidadDias / 7;
+
+                if (CantidadDias % 7 == 1)
+                    CantidadSemanas = (CantidadDias / 7) + 1;
+            }
+
+            return CantidadSemanas;
+        }
+
+        public async Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId(int ContratacionProyectoId, string pUsuario)
+        {
             try
             {
-                ContratoConstruccion contratoConstruccion = await
-                    _context.ContratoConstruccion.Where(r => r.ContratoConstruccionId == pContratoConstruccionId)
-                    .Include(r => r.Programacion).FirstOrDefaultAsync();
+                List<SeguimientoSemanal> List = _context.SeguimientoSemanal
+                    .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
+                    .Include(r => r.SeguimientoSemanalPersonalObra)
+                    .ToList();
 
-                List<ProgramacionPersonalContratoConstruccion> List = _context.ProgramacionPersonalContratoConstruccion.Where(r => r.ContratoConstruccionId == pContratoConstruccionId).ToList();
-
-                //Crear Los registros De programacion Si no existen
                 if (List.Count() == 0)
                 {
-                    for (int i = 1; i < contratoConstruccion.Programacion.FirstOrDefault().Duracion + 1; i++)
+
+                    for (int i = 1; i < CalcularSemanasPlazoProyecto(ContratacionProyectoId) + 1; i++)
                     {
-                        ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = new ProgramacionPersonalContratoConstruccion
+                        SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal
                         {
                             UsuarioCreacion = pUsuario,
                             FechaCreacion = DateTime.Now,
                             Eliminado = false,
 
-                            ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId,
+                            ContratacionProyectoId = ContratacionProyectoId,
                             NumeroSemana = i,
-                        };
-                        _context.ProgramacionPersonalContratoConstruccion.Add(programacionPersonalContratoConstruccion);
-                        List.Add(programacionPersonalContratoConstruccion);
+
+                            Eliminado = false,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = pUsuario
+                        }; 
+                        List.Add(seguimientoSemanal);
+                        _context.SeguimientoSemanal.Add(seguimientoSemanal);
                         _context.SaveChanges();
                     }
                 }
+                 
                 return List;
             }
             catch (Exception ex)
             {
-                return new List<ProgramacionPersonalContratoConstruccion>();
+                return new List<SeguimientoSemanal>();
             }
-
-
-
         }
 
-        public async Task<Respuesta> UpdateProgramacionContratoPersonal(ContratoConstruccion pContratoConstruccion)
+        public async Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(SeguimientoSemanal pSeguimientoSemanal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
-            bool RegistroCompleto = true;
+             bool RegistroCompleto = true;
 
             try
             {
                 ContratoConstruccion pContratoConstruccionOld = _context.ContratoConstruccion.Find(pContratoConstruccion.ContratoConstruccionId);
 
                 Proyecto proyecto = _context.Proyecto.Find(pContratoConstruccionOld.ProyectoId);
+                ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId).FirstOrDefault();
+                Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault();
 
-                proyecto.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
-                proyecto.FechaModificacion = DateTime.Now;
+                 proyecto.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
+                 proyecto.FechaModificacion = DateTime.Now;
 
-                foreach (var item in pContratoConstruccion.ProgramacionPersonalContratoConstruccion)
+                foreach (var SeguimientoSemanalPersonalObra in pSeguimientoSemanal.SeguimientoSemanalPersonalObra)
                 {
-                    ProgramacionPersonalContratoConstruccion programacionPersonalContratoConstruccion = _context.ProgramacionPersonalContratoConstruccion.Find(item.ProgramacionPersonalContratoConstruccionId);
-                    programacionPersonalContratoConstruccion.UsuarioModificacion = pContratoConstruccion.UsuarioCreacion;
-                    programacionPersonalContratoConstruccion.FechaModificacion = DateTime.Now;
-                    programacionPersonalContratoConstruccion.CantidadPersonal = item.CantidadPersonal;
 
                     if (programacionPersonalContratoConstruccion.CantidadPersonal == null)
                         RegistroCompleto = false;
+                    if (SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId == 0) {
+
+                        pSeguimientoSemanal.UsuarioCreacion = pSeguimientoSemanal.UsuarioCreacion;
+                    }
+                 
                 }
                 if (RegistroCompleto)
                     proyecto.EstadoProgramacionCodigo = ConstanCodigoEstadoProgramacionInicial.Sin_aprobacion_de_programacion_personal;
@@ -157,6 +144,8 @@ namespace asivamosffie.services
                          IsValidation = false,
                          Code = ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pContratoConstruccion.UsuarioCreacion, "REGISTRAR PROGRAMACION DE PERSONAL")
+                         Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pSeguimientoSemanal.UsuarioCreacion, "REGISTRAR PROGRAMACION DE PERSONAL")
                      };
             }
             catch (Exception ex)
@@ -169,6 +158,8 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Code = ConstantMessagesRegistrarProgramacionPersonal.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pContratoConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                        Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pSeguimientoSemanal.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
 
@@ -180,14 +171,14 @@ namespace asivamosffie.services
 
             try
             {
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
+                //ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
 
-                Proyecto proyecto = _context.Proyecto.Find(contratoConstruccion.ProyectoId);
-                proyecto.UsuarioModificacion = pUsuario;
-                proyecto.FechaModificacion = DateTime.Now;
-                proyecto.EstadoProgramacionCodigo = pEstadoProgramacionCodigo;
+                //Proyecto proyecto = _context.Proyecto.Find(contratoConstruccion.ProyectoId);
+                //proyecto.UsuarioModificacion = pUsuario;
+                //proyecto.FechaModificacion = DateTime.Now;
+                //proyecto.EstadoProgramacionCodigo = pEstadoProgramacionCodigo;
 
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 return
                      new Respuesta

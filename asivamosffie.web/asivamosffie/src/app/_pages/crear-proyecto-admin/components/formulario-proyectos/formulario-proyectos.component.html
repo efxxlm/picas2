@@ -74,7 +74,8 @@
                           currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                            (keypress)="blockNumber($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
                       </mat-form-field>
-                      <span class="contador">{{20 - (fuente.valorFuente?fuente.valorFuente.toString().length:0)}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                      matTooltipClass="info-tooltip">{{20 - (fuente.valorFuente?fuente.valorFuente.toString().length:0)}}</span>
                     </div>
                   </div>
                 </div>

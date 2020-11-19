@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using asivamosffie.services.PostParameters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -37,6 +36,12 @@ namespace asivamosffie.api.Controllers
         public async Task<Contrato> GetListContatoByNumeroContrato([FromQuery] string pNumero)
         {
             return await _managementCommitteeReportService.GetListContatoByNumeroContrato(pNumero);
+        }
+         
+        [Route("GetContratoByNumeroContrato")]
+        public async Task<Contrato> GetContratoByNumeroContrato([FromQuery] string pNumero)
+        {
+            return await _managementCommitteeReportService.GetContratoByNumeroContrato(pNumero);
         }
 
         [Route("GetReuestCommittee")]
@@ -337,6 +342,13 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
+        }
+
+        
+        [Route("GetContratos")]
+        public async Task<dynamic> GetContratos()
+        {
+            return await _managementCommitteeReportService.GetContratos();
         }
 
     }

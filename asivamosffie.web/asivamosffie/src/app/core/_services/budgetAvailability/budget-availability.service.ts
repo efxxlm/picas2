@@ -4,11 +4,12 @@ import { environment } from 'src/environments/environment';
 import { GrillaDisponibilidadPresupuestal, DisponibilidadPresupuestal, CustonReuestCommittee, ListAportantes, ListConcecutivoProyectoAdministrativo, ListAdminProyect } from 'src/app/_interfaces/budgetAvailability';
 import { Respuesta } from '../common/common.service';
 import { Proyecto } from '../project/project.service';
+import { DisponibilidadPresupuestalService } from '../disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BudgetAvailabilityService {
+export class BudgetAvailabilityService {  
 
   constructor(
     private http: HttpClient
@@ -20,7 +21,7 @@ export class BudgetAvailabilityService {
   //   return this.http.get<any>(`${environment.apiUrl}/BudgetAvailability/GetGridBudgetAvailability`);
   // }
 
-  getDisponibilidadPresupuestalById( id: number ){
+  getDisponibilidadPresupuestalById( id: number ){    
     return this.http.get<DisponibilidadPresupuestal>(`${environment.apiUrl}/BudgetAvailability/${ id }`);
   }
 
@@ -65,7 +66,7 @@ export class BudgetAvailabilityService {
   }
 
   getListCocecutivoProyecto(){
-    return this.http.get<ListConcecutivoProyectoAdministrativo[]>(`${environment.apiUrl}/RequestBudgetAvailability/getListCocecutivoProyecto`);    
+    return this.http.get<ListConcecutivoProyectoAdministrativo[]>(`${environment.apiUrl}/RequestBudgetAvailability/getListCocecutivoProyecto`);
   }
 
   getAportantesByProyectoAdminId( id: number ){
@@ -88,6 +89,10 @@ export class BudgetAvailabilityService {
     return this.http.get( `${ environment.apiUrl }/RequestBudgetAvailability/GetListContatoByNumeroContrato?pNumero=${ numeroContrato }` );
   }
 
+  getContratoByNumeroContrato ( numeroContrato: string ) {
+    return this.http.get( `${ environment.apiUrl }/RequestBudgetAvailability/GetContratoByNumeroContrato?pNumero=${ numeroContrato }` );
+  }
+
   createUpdateDisponibilidaPresupuestalEspecial ( pDisponibilidadPresupuestal: any ) {
     return this.http.post<Respuesta>( `${ environment.apiUrl }/RequestBudgetAvailability/CreateUpdateDisponibilidaPresupuestalEspecial`, pDisponibilidadPresupuestal )
   };
@@ -95,6 +100,10 @@ export class BudgetAvailabilityService {
   getAportanteTerritorial ( pProyectoId: number, pTipoAportanteId: number ) {
     return this.http.get( `${ environment.apiUrl }/RequestBudgetAvailability/GetListAportanteByTipoAportanteByProyectoId?pProyectoId=${ pProyectoId }&pTipoAportanteId=${ pTipoAportanteId }` );
   };
+
+  getContratosList(): any {
+    return this.http.get<any[]>( `${ environment.apiUrl }/RequestBudgetAvailability/GetContratos` );
+  }
 
   
 };

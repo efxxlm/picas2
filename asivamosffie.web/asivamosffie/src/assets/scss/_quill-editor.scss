@@ -23,6 +23,10 @@
   margin-bottom: 1.5em;
   position: relative;
 
+  &.color-secondaryColor {
+    border-color: $secondaryColor;
+  }
+
   &--label {
     font-weight: 500;
     position: absolute;
@@ -43,6 +47,11 @@
   .ql-editor {
     color: $mainColor !important;
     padding: 0 1em;
+
+    * {
+      color: $mainColor !important;
+    }
+
     &::before {
       content: "";
     }
@@ -74,6 +83,10 @@
     .ql-container.ql-snow {
       max-width: 70em;
       border-bottom: $fontColor solid 1px;
+
+      .quill-sin-borde & {
+        border-bottom: none;
+      }
 
       .w-quill & {
         max-width: 30em;

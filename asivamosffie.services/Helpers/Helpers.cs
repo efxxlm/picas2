@@ -9,6 +9,7 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
+using System; 
 using System.IO;
 using asivamosffie.model.APIModels;
 using System.Data.Common;
@@ -40,6 +41,24 @@ namespace asivamosffie.services.Helpers
         {
             valor = Regex.Replace(valor, @"\t|\n|\r", "");
             return HtmlConvertirTextoPlano(valor);
+        }
+
+        public static string HtmlEntities(string valor)
+        {
+            valor = valor.Replace("á", "&aacute;")
+                .Replace("é", "&eacute;")
+                .Replace("í", "&iacute;")
+                .Replace("ó", "&oacute;")
+                .Replace("ú", "&uacute;")
+                .Replace("ñ", "&ntilde;")
+                .Replace("Á", "&Aacute;")
+                .Replace("É", "&Eacute;")
+                .Replace("Í", "&Iacute;")
+                .Replace("Ó", "&Oacute;")
+                .Replace("Ó", "&Uacute;")
+                .Replace("Ñ", "&Ntilde;")
+                ;
+            return valor;
         }
 
         public double CentimetrosAMedidaPDF(double centimetros)

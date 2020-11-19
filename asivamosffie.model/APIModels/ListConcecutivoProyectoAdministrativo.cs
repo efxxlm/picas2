@@ -11,5 +11,6 @@ namespace asivamosffie.model.APIModels
         public string Concecutivo {get; set;}
         public Dominio ListaAportantes { get; set; }
         public List<AportanteFuenteFinanciacion> AportanteFuenteFinanciacion { get; set; }
+        public string NombreAportante { get; set; }
     }
 }

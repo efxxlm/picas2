@@ -92,7 +92,6 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
       return;
     }
     this.comite = this.routes.getCurrentNavigation().extras.state.elemento;
-    console.log(this.comite);
   }
 
   maxLength(e: any, n: number) {
@@ -104,7 +103,6 @@ export class ReporteAvanceCompromisoComponent implements OnInit, OnDestroy {
   textoLimpio ( texto: string, maxLength: number ) {
     if (texto !== undefined) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      console.log( textolimpio.length );
       return textolimpio.length > maxLength ? maxLength : textolimpio.length;
     } else {
       return 0;

@@ -1,4 +1,4 @@
-<section>
+<section class="scroll">
   <div class="text-center">
     <h1 class="title-menu--h1">
       Observaciones para la devolución o rechazo del proyecto
@@ -41,10 +41,10 @@
       <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
         (onContentChanged)="maxLength($event, 3000)" [(ngModel)]="observacion"></quill-editor>
     </div>
-    <span class="contador" *ngIf="observacion">
+    <span class="contador miles" *ngIf="observacion">
       {{3000 - textoLimpio(observacion)}}
     </span>
-    <span class="contador" *ngIf="observacion">
+    <span class="contador miles" *ngIf="!observacion">
       3000
     </span>
   </div>

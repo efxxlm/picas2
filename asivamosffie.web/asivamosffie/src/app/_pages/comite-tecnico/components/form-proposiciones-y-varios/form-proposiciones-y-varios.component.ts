@@ -44,7 +44,12 @@ export class FormProposicionesYVariosComponent implements OnInit {
   }
 
   constructor(private fb: FormBuilder) { }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {

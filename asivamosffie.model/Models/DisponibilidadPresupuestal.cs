@@ -9,6 +9,7 @@ namespace asivamosffie.model.Models
         {
             DisponibilidadPresupuestalObservacion = new HashSet<DisponibilidadPresupuestalObservacion>();
             DisponibilidadPresupuestalProyecto = new HashSet<DisponibilidadPresupuestalProyecto>();
+            GestionFuenteFinanciacion = new HashSet<GestionFuenteFinanciacion>();
         }
 
         public int DisponibilidadPresupuestalId { get; set; }
@@ -46,5 +47,6 @@ namespace asivamosffie.model.Models
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalObservacion> DisponibilidadPresupuestalObservacion { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
+        public virtual ICollection<GestionFuenteFinanciacion> GestionFuenteFinanciacion { get; set; }
     }
 }

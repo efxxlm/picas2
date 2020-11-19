@@ -51,7 +51,6 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }

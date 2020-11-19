@@ -49,10 +49,10 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
+            {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _registerContractsService.RegistrarTramiteContrato(pContrato,
-               Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseRutaDocumentoContrato), pEstadoCodigo);
+                 Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseRutaDocumentoContrato ), pEstadoCodigo , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -60,6 +60,17 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
             }
+        }
+
+
+        [HttpGet]
+        [Route("EnviarNotificaciones")]
+        public async Task<bool> EnviarNotificaciones(int idPContrato)
+        {
+            Contrato contrato = new Contrato { 
+               ContratoId = idPContrato
+            }; 
+            return await _registerContractsService.EnviarNotificaciones(contrato , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
         }
 
     }

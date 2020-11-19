@@ -92,7 +92,7 @@ export class TableSolicitudContratacionComponent implements OnInit {
     console.log(id);
     this.projectContractingService.eliminarContratacion(id)
       .subscribe(respuesta => {
-        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
         this.ngOnInit();
       });
   }

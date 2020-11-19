@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { DevolverActa } from '../../../_interfaces/compromisos-actas-comite.interfaces';
 import { Respuesta } from '../autenticacion/autenticacion.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,43 @@ export class CompromisosActasComiteService {
   constructor ( private http: HttpClient ) {};
 
   getGrillaCompromisos () {
-    return this.http.get( `${ this.url }/GetListCompromisos` )
+    return this.http.get<any[]>( `${ this.url }/GetListCompromisos` )
+      .pipe(
+        map(
+          listas => {
+            listas.sort( ( listaA, listaB ) => {
+              if ( listaA.fechaComite < listaB.fechaComite ) {
+                return 1;
+              };
+              if ( listaA.fechaComite > listaB.fechaComite ) {
+                return -1;
+              };
+              return 0;
+            } );
+            return listas;
+          }
+        )
+      )
+  };
+
+  getGrillaActas () {
+    return this.http.get<any[]>( `${ this.url }/GetManagementReport` )
+      .pipe(
+        map(
+          listas => {
+            listas.sort( ( listaA, listaB ) => {
+              if ( listaA.fechaOrdenDia < listaB.fechaOrdenDia ) {
+                return 1;
+              };
+              if ( listaA.fechaOrdenDia > listaB.fechaOrdenDia ) {
+                return -1;
+              };
+              return 0;
+            } );
+            return listas;
+          }
+        )
+      )
   };
 
   getCompromiso ( compromisoId: number, tipoCompromiso: number ) {
@@ -74,10 +111,6 @@ export class CompromisosActasComiteService {
         localStorage.setItem( 'observacionGestion', JSON.stringify( observacionGestion ) );
       }
     }
-  };
-
-  getGrillaActas () {
-    return this.http.get ( `${ this.url }/GetManagementReport` )
   };
 
   getActa ( comiteTecnicoId: number ) {

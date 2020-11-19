@@ -160,6 +160,14 @@ export class FormRegistrarParticipantesComponent {
   }
 
   validarSolicitudes() {
+
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length == 0) {
+
+      this.estadoSolicitudes = this.estadoFormulario.completo;
+
+    return true;
+  }
+
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
@@ -178,7 +186,7 @@ export class FormRegistrarParticipantesComponent {
               sol.completo = false;
             }
           })
-        } else if (sol.requiereVotacion == false) {
+        } else if (sol.requiereVotacionFiduciario == false) {
           cantidadSolicitudes++;
           cantidadSolicitudesCompletas++;
         }
@@ -186,6 +194,8 @@ export class FormRegistrarParticipantesComponent {
           cantidadSolicitudesCompletas--;
         }
       })
+
+      console.log(cantidadSolicitudes, cantidadSolicitudesCompletas);
 
       if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0) {
         if (cantidadSolicitudes > 0) {
@@ -201,57 +211,78 @@ export class FormRegistrarParticipantesComponent {
   }
 
   validarTemas(esProposicion: boolean) {
+
+    if (this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).length == 0) {
+
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+
+      return true;
+    }
+
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
+    let sinDiligenciar = true;
 
-      this.objetoComiteTecnico.sesionComiteTema
-        .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
-          tem.completo = true;
+    this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
+        tem.completo = true;
 
-          if (tem.requiereVotacion == true) {
-            //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-            if (tem.sesionTemaVoto.length == 0)
-              cantidadTemas++;
-
-            tem.sesionTemaVoto.forEach(vot => {
-              cantidadTemas++;
-
-              if (vot.esAprobado == false || vot.esAprobado == true) {
-                cantidadTemasCompletas++;
-              } else {
-                tem.completo = false;
-
-              }
-            })
-            //})
-          } else if (tem.requiereVotacion == false) {
+        if (tem.requiereVotacion == true) {
+          //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
+          if (tem.sesionTemaVoto.length == 0)
             cantidadTemas++;
-            cantidadTemasCompletas++;
-          }
-          else {
-            cantidadTemasCompletas--;
-          }
-        })
+
+          tem.sesionTemaVoto.forEach(vot => {
+            cantidadTemas++;
+
+            if (vot.esAprobado == false || vot.esAprobado == true) {
+              cantidadTemasCompletas++;
+            } else {
+              tem.completo = false;
+
+            }
+          })
+          sinDiligenciar = false;
+          //})
+        } else if (tem.requiereVotacion == false) {
+          cantidadTemas++;
+          cantidadTemasCompletas++;
+          sinDiligenciar = false;
+        }
+        else {
+          cantidadTemas++;
+        }
+      })
 
 
 
-      if (cantidadTemas > 0) {
+    if (cantidadTemas > 0) {
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.enProceso;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.enProceso;
+
+      if (sinDiligenciar) // no se ha llenado nada
         if (esProposicion)
-          this.estadoProposiciones = this.estadoFormulario.enProceso;
+          this.estadoProposiciones = this.estadoFormulario.sinDiligenciar;
         else
-          this.estadoOtrosTemas = this.estadoFormulario.enProceso;
+          this.estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
 
-        if (cantidadTemas == cantidadTemasCompletas)
-          if (esProposicion)
-            this.estadoProposiciones = this.estadoFormulario.completo;
-          else
-            this.estadoOtrosTemas = this.estadoFormulario.completo;
-      }else{
+      if (cantidadTemas == cantidadTemasCompletas)
         if (esProposicion)
           this.estadoProposiciones = this.estadoFormulario.completo;
-        else 
+        else
           this.estadoOtrosTemas = this.estadoFormulario.completo;
-      }
+    } else {
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+    }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
 
@@ -277,9 +308,9 @@ export class FormRegistrarParticipantesComponent {
     }
 
     if (this.estadoSolicitudes == this.estadoFormulario.completo &&
-        this.estadoOtrosTemas == this.estadoFormulario.completo &&
-        this.estadoProposiciones == this.estadoFormulario.completo  
-    ){
+      this.estadoOtrosTemas == this.estadoFormulario.completo &&
+      this.estadoProposiciones == this.estadoFormulario.completo
+    ) {
       this.estaTodo = true;
     }
   }
@@ -290,7 +321,7 @@ export class FormRegistrarParticipantesComponent {
     let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
     this.fiduciaryCommitteeSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
-        this.openDialog('', '<b>La información se ha eliminado correctamente.</b>')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.borrarArray(this.invitados, i)
       })
 
@@ -302,7 +333,7 @@ export class FormRegistrarParticipantesComponent {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result===true) {
+      if (result === true) {
         this.onDelete(e)
       }
     });

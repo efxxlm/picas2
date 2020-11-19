@@ -7,6 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { RechasadaPorValidacionComponent } from '../rechasada-por-validacion/rechasada-por-validacion.component';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
+import { FormGestionarFuentesAdministrativasComponent } from '../form-gestionar-fuentes-administrativas/form-gestionar-fuentes-administrativas.component';
 
 @Component({
   selector: 'app-validacion-presupuestal',
@@ -57,20 +58,77 @@ export class ValidacionPresupuestalComponent implements OnInit {
       width: '70em',data:{solicitudID:this.route.snapshot.paramMap.get('id'),tipo:tipo,numeroSolicitud:numero,tipoSolicitud:tipoSolicitud}
     });
   }
+
+  sePuedeValidarFuente()
+  {
+    if(this.detailavailabilityBudget)
+    {
+      if(this.detailavailabilityBudget.tipoSolicitudCodigo==this.pTipoDDP.DDP_administrativo ||
+        this.detailavailabilityBudget.tipoSolicitudCodigo==this.pTipoDDP.DDP_especial)
+      {
+        if(this.detailavailabilityBudget.valorGestionado==this.detailavailabilityBudget.valorSolicitud)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+      }
+      else{//para tradicional
+        if(this.detailavailabilityBudget.valorSolicitud==this.detailavailabilityBudget.valorGestionado)
+        {
+          return true;
+        }
+        else{
+          return false;
+        }
+        
+      } 
+    }
+    else{
+      return true;
+    }    
+  }
+
   validar() {
+      if(!this.sePuedeValidarFuente())        
+      {
+        this.openDialog('', '<b>El valor de la solicitud supera el valor de las fuentes de financiación.</b>');
+        return false;
+      }
     this.disponibilidadServices.SetValidarValidacionDDP(this.route.snapshot.paramMap.get('id')).subscribe(listas => {
-      this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+      if(listas.code=="200")
+      {
+        this.openDialog('', listas.message,true);
+      }
+      else
+      {
+        this.openDialog('', listas.message,false);
+      }
+      
       });
   }
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string, retorno:boolean=false) {
     let dialogRef= this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
     dialogRef.afterClosed().subscribe(result => {
-
+      if(retorno)
         this.router.navigate(['/validarDisponibilidadPresupuesto']);
 
+    });
+  }
+  gestionarFuentes(id: any) {
+    console.log(id);
+    // this.openDialog('', `El saldo actual de la fuente <b>Recursos propios</b> es menor
+    // al valor solicitado de la fuente, verifique por favor.`);
+    let dialogRef=this.dialog.open(FormGestionarFuentesAdministrativasComponent, {
+      width: '70em', data: { elemento: id, codigo:this.detailavailabilityBudget.numeroSolicitud,ver:this.esModificacion }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      location.reload();
     });
   }
 

@@ -234,7 +234,12 @@ namespace asivamosffie.services
         {
             return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).FirstOrDefaultAsync();
         }
-        
+
+        public async Task<ContratoPoliza> GetLastContratoPolizaByContratoId(int pContratoId)
+        {
+            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).OrderByDescending(x=>x.ContratoPolizaId).FirstOrDefaultAsync();
+        }
+
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
             return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();

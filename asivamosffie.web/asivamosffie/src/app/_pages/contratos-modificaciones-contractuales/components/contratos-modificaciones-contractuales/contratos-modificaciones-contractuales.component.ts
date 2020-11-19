@@ -12,6 +12,7 @@ export class ContratosModificacionesContractualesComponent implements OnInit {
   sinDataProcesoFirmas: boolean = true;
   sinDataRegistrados: boolean = true;
   estadoAcordeon: string;
+  estadoAcordeonSinRegistro: string;
 
   constructor() { }
 

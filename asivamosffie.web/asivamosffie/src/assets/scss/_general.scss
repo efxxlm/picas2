@@ -236,4 +236,27 @@ input[type="number"]::-webkit-outer-spin-button {
   border-radius: 50em;
   padding: 0 1em;
   font-size: 1em !important;
+  text-align: center;
+}
+
+%tooltip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  min-width: 11em;
+  max-height: 15px;
+  font-size: 1em !important;
+  font-weight: 400;
+  text-transform: initial;
+  color: $tertiaryColorFont;
+  background-color: $tertiaryColor;
+  border-radius: 50em;
+  padding: .2em 1em;
+  position: absolute;
+  top: -2em;
+  transform-origin: bottom;
+  animation-name: animatedSelect;
+  animation-duration: .2s;
+  animation-fill-mode: forwards;
 }

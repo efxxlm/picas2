@@ -28,28 +28,26 @@ namespace asivamosffie.api.Controllers
         }
         [Route("GetListProyectos")]
         [HttpGet]
-        public async Task<List<dynamic>> GetListProyectos()
+        public async Task<List<VRegistrarPersonalObra>> GetListProyectos()
         {
-            var result = await _IRegisterPersonalProgrammingService.GetListProyectos();
-            return result;
+            return await _IRegisterPersonalProgrammingService.GetListProyectos();
+
         }
 
-        [Route("GetProgramacionPersonalByContratoConstruccionId")]
+        [Route("GetProgramacionPersonalByContratoId")]
         [HttpGet]
-        public async Task<List<ProgramacionPersonalContratoConstruccion>> GetProgramacionPersonalByContratoConstruccionId([FromQuery] int pContratoConstruccionId)
+        public async Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId([FromQuery] int pContratoId)
         {
-            var result = await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoConstruccionId(pContratoConstruccionId, HttpContext.User.FindFirst("User").Value.ToUpper());
-            return result;
+            return await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoId(pContratoId, HttpContext.User.FindFirst("User").Value.ToUpper());
         }
-         
+
         [Route("UpdateProgramacionContratoPersonal")]
         [HttpPost]
-        public async Task<IActionResult> UpdateProgramacionContratoPersonal([FromBody] ContratoConstruccion pContratoConstruccion)
+        public async Task<IActionResult> UpdateSeguimientoSemanalPersonalObra([FromBody]SeguimientoSemanal pSeguimientoSemanal)
         {
             try
             {
-                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                Task<Respuesta> result = _IRegisterPersonalProgrammingService.UpdateProgramacionContratoPersonal(pContratoConstruccion);
+                Task<Respuesta> result = _IRegisterPersonalProgrammingService.UpdateSeguimientoSemanalPersonalObra(pSeguimientoSemanal);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -58,7 +56,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(ex.ToString());
             }
         }
-         
+
         [Route("ChangeStatusProgramacionContratoPersonal")]
         [HttpPost]
         public async Task<IActionResult> ChangeStatusProgramacionContratoPersonal([FromQuery] int pContratoConstruccionId, string pEstadoProgramacionCodigo)

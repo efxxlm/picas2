@@ -24,6 +24,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   editorStyle = {
     height: '45px'
   };
+  observacionInvalida: boolean = false;
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -140,6 +141,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   onSubmit () {
 
     if ( this.form.invalid ) {
+      this.observacionInvalida = true;
       this.openDialog('', '<b>Falta registrar información.</b>');
       return;
     };

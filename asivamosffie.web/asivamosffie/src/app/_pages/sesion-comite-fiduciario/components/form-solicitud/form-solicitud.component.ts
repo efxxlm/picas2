@@ -92,7 +92,11 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       return 'none';
   }
   ngOnInit(): void {
-    console.log( this.fechaMaxima );
+    // console.log( this.fechaMaxima );
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
   }
 
   maxLength(e: any, n: number) {
@@ -166,13 +170,13 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.technicalCommitteSessionService.deleteSesionComiteCompromiso(compromiso.get('sesionSolicitudCompromisoId').value)
       .subscribe(respuesta => {
         if (respuesta.code == "200") {
-          this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
+          this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
           this.compromisos.removeAt(i)
           this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
         }
       })
   }
-  
+
 
   validarCompromisosDiligenciados(): boolean {
     let vacio = true;
@@ -289,14 +293,27 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       .subscribe(response => {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
-        if (this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteFiduciario) {
-          this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
-        } else if (this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteFiduciario) {
-          this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo))
-        }
-        console.log(this.estadosArray)
+      if ( this.sesionComiteSolicitud.requiereVotacionFiduciario ){
+        this.sesionComiteSolicitud.sesionSolicitudVoto.filter(sv => sv.comiteTecnicoFiduciarioId == this.sesionComiteSolicitud.comiteTecnicoFiduciarioId).forEach(sv => {
+          if (sv.esAprobado)
+            this.cantidadAprobado++;
+          else
+            this.cantidadNoAprobado++;
+        })
 
-      })
+        if (this.cantidadNoAprobado == 0){
+          this.resultadoVotacion = 'Aprobó'
+          this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
+        }else if ( this.cantidadAprobado == 0 ){
+          this.resultadoVotacion = 'No Aprobó'
+          this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo))
+        }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+          this.resultadoVotacion = 'Aprobó'
+        }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+          this.resultadoVotacion = 'No Aprobó'
+        }
+      }
+    });
 
     this.addressForm.get('estadoSolicitud').setValue(this.sesionComiteSolicitud.estadoCodigo)
     this.addressForm.get('observaciones').setValue(this.sesionComiteSolicitud.observacionesFiduciario)
@@ -329,24 +346,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     });
 
-    this.sesionComiteSolicitud.sesionSolicitudVoto.filter(sv => sv.comiteTecnicoFiduciarioId == this.sesionComiteSolicitud.comiteTecnicoFiduciarioId).forEach(sv => {
-      if (sv.esAprobado)
-        this.cantidadAprobado++;
-      else
-        this.cantidadNoAprobado++;
-    })
-
-    if (this.cantidadNoAprobado > 0)
-      this.resultadoVotacion = 'No Aprobó'
-    else
-      this.resultadoVotacion = 'Aprobó'
-
-    // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
-
-    // btnSolicitudMultiple.forEach( element =>{
-    //   element.click();
-    // })
-
+    this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacionFiduciario;
 
     if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion) {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion

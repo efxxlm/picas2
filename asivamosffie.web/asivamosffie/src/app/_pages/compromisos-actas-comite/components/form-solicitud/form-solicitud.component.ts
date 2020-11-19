@@ -41,7 +41,6 @@ export class FormSolicitudComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    //console.log( this.tipoSolicitud );
     this.resultadosVotaciones( this.solicitudes )
     this.commonSvc.listaEstadoSolicitud()
     .subscribe( ( resp: any[] ) => {

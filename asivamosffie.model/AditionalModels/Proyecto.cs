@@ -28,6 +28,12 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public Localizacion MunicipioObj { get; set; }
+        [NotMapped]
+        public string tipoIntervencionString { get; set; }
 
+        [NotMapped]
+        public string sedeString { get; set; }
+        [NotMapped]
+        public string institucionEducativaString { get; set; }
     }
 }

@@ -1,5 +1,5 @@
 .shipping-card {
-    padding-top: 2.5em !important;
+    // padding-top: 2.5em !important;
 
     .expansion-style & {
         margin-left: -24px;
@@ -17,4 +17,9 @@
         line-height: 1.2;
         min-height: 33px;
     }
+}
+
+.mat-card-header.header-card {
+    margin-top: -3.2em !important;
+    margin-left: -4.2em;
 }

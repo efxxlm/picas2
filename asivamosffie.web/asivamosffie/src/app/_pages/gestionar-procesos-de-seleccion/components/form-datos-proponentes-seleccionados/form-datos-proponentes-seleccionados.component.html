@@ -54,7 +54,8 @@
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{12 - numeroIdentificacion.value.length}}</span>
             </div>
           </div>
         </div>
@@ -118,7 +119,8 @@
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{10 - telefono.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{10 - telefono.value.length}}</span>
             </div>
           </div>
         </div>
@@ -185,7 +187,8 @@
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{12 - numeroIdentificacion2.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{12 - numeroIdentificacion2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -224,7 +227,8 @@
                   formControlName="cedulaRepresentanteLegal" (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{12 - cedulaRepresentanteLegal2.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{12 - cedulaRepresentanteLegal2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -292,7 +296,8 @@
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{10 - telefono2.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{10 - telefono2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -341,7 +346,8 @@
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
                 <input type="hidden" formControlName="procesoSeleccionProponenteId">
               </mat-form-field>
-              <span class="contador">{{2 - cuantasEntidades.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{2 - cuantasEntidades.value.length}}</span>
             </div>
           </div>
         </div>
@@ -465,7 +471,8 @@
                     formControlName="cedulaRepresentanteLegal" (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
                 </mat-form-field>
-                <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{12 - numeroIdentificacion.value.length}}</span>
               </div>
             </div>
           </div>
@@ -534,7 +541,8 @@
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
-                <span class="contador">{{10 - telefono3.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{10 - telefono3.value.length}}</span>
               </div>
             </div>
           </div>

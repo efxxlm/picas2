@@ -96,10 +96,10 @@
                               <input type="hidden" formControlName="contratacionProyectoId">
                             </quill-editor>
                             <div class="d-flex align-items-center">
-                              <span class="contador miles" *ngIf="observacion.get('observacion').value !== null">
-                                {{1000 - textoLimpio(observacion.get('observacion').value)}}
+                              <span class="contador miles" *ngIf="observacion.get('observacion').value">
+                                {{1000 - (textoLimpio(observacion.get('observacion').value)>1000?1000:textoLimpio(observacion.get('observacion').value))}}
                               </span>
-                              <span class="contador miles" *ngIf="observacion.get('observacion').value === null">
+                              <span class="contador miles" *ngIf="!observacion.get('observacion').value">
                                 1000
                               </span>
                             </div>

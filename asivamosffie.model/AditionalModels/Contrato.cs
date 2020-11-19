@@ -28,6 +28,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public DateTime? FechaFirmaContratoFormat { get; set; }
-        
+
+        [NotMapped]
+        public List<CofinanicacionAportanteGrilla> ListAportantes{ get; set; }
     }
 }

@@ -44,12 +44,14 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
 
-                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo==8 && element.registroCompleto"
+                <button mat-raised-button color="accent" class="btn-table" 
+                *ngIf="(element.estadoSolicitudCodigo==2||element.estadoSolicitudCodigo==8) && element.registroCompleto"
                     (click)="enviarSolicitud(element.disponibilidadPresupuestalId)">
                     Enviar solicitud
                 </button>
 
-                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo==8"
+                <button mat-raised-button color="accent" class="btn-table" *ngIf="
+                    element.estadoSolicitudCodigo==8 || element.estadoSolicitudCodigo==2"
                     (click)="editar(element.disponibilidadPresupuestalId)">
                     Ver detalle /Editar
                 </button>
@@ -59,7 +61,7 @@
                     Eliminar
                 </button>
 
-                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo!=8"
+                <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoSolicitudCodigo!=8 && element.estadoSolicitudCodigo!=2"
                     (click)="verDetalle(element.disponibilidadPresupuestalId)">
                     Ver detalle
                 </button>
