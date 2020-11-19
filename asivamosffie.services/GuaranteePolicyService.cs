@@ -1323,9 +1323,25 @@ namespace asivamosffie.services
                     contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
 
                     string strNumeroSolicitudContratacion="";
+                    string strTipoConContratacion = "";
+
+                    Dominio TipoSolicitudCodigoContratacion= null;
+                    string strTipoSolicitudContratacion = "";
+                    string strTipoSolicitudCodigoContratacion = "";
 
                     if (contratacion != null)
+                    {
                         strNumeroSolicitudContratacion = contratacion.NumeroSolicitud;
+
+                        TipoSolicitudCodigoContratacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.EstadoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Solicitud);
+                        if (TipoSolicitudCodigoContratacion != null)
+                        {
+                            strTipoSolicitudCodigoContratacion = TipoSolicitudCodigoContratacion.Codigo;
+                            strTipoSolicitudContratacion = TipoSolicitudCodigoContratacion.Nombre;
+                        }                                             
+                                                    
+
+                    }                        
 
                     ContratoPoliza contratoPoliza;
 
@@ -1391,6 +1407,9 @@ namespace asivamosffie.services
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
                         TipoSolicitud = strTipoSolicitudNombreContratoPoliza,
                         TipoSolicitudCodigo = strTipoSolicitudCodigoContratoPoliza,
+
+                        TipoSolicitudCodigoContratacion=strTipoSolicitudCodigoContratacion,
+                        TipoSolicitudContratacion=strTipoSolicitudContratacion,
 
                         EstadoPoliza = strEstadoSolicitudNombreContratoPoliza
                         ,
