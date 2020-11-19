@@ -106,7 +106,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(SeguimientoSemanal pSeguimientoSemanal)
+        public async Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(List<SeguimientoSemanal> pListSeguimientoSemanal)
         {
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
@@ -114,28 +114,27 @@ namespace asivamosffie.services
 
             try
             {
-                ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId).FirstOrDefault();
+                ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pListSeguimientoSemanal.FirstOrDefault().ContratacionProyectoId).FirstOrDefault();
                 Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault();
 
-                proyecto.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
+                proyecto.UsuarioModificacion = pListSeguimientoSemanal.FirstOrDefault().UsuarioCreacion;
                 proyecto.FechaModificacion = DateTime.Now;
 
-                foreach (var SeguimientoSemanalPersonalObra in pSeguimientoSemanal.SeguimientoSemanalPersonalObra)
-                {
+                foreach (var SeguimientoSemanal in pListSeguimientoSemanal)
+                { 
+                    if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId == 0)
+                    { 
+                        SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().UsuarioCreacion = proyecto.UsuarioModificacion;
+                        SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().FechaCreacion = DateTime.Now;
+                        SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().Eliminado = true;
 
-                    if (SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId == 0)
-                    {
-                        SeguimientoSemanalPersonalObra.UsuarioCreacion = pSeguimientoSemanal.UsuarioCreacion;
-                        SeguimientoSemanalPersonalObra.FechaCreacion = DateTime.Now;
-                        SeguimientoSemanalPersonalObra.Eliminado = true;
-
-                        _context.SeguimientoSemanalPersonalObra.Add(SeguimientoSemanalPersonalObra);
+                        _context.SeguimientoSemanalPersonalObra.Add(SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault());
                     }
                     else
                     {
-                        SeguimientoSemanalPersonalObra SeguimientoSemanalPersonalObraOld = _context.SeguimientoSemanalPersonalObra.Find(SeguimientoSemanalPersonalObra.SeguimientoSemanalPersonalObraId);
-                        SeguimientoSemanalPersonalObraOld.CantidadPersonal = SeguimientoSemanalPersonalObra.CantidadPersonal;
-                        SeguimientoSemanalPersonalObraOld.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
+                        SeguimientoSemanalPersonalObra SeguimientoSemanalPersonalObraOld = _context.SeguimientoSemanalPersonalObra.Find(SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId);
+                        SeguimientoSemanalPersonalObraOld.CantidadPersonal = SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal;
+                        SeguimientoSemanalPersonalObraOld.UsuarioModificacion = proyecto.UsuarioModificacion;
                         SeguimientoSemanalPersonalObraOld.FechaModificacion = DateTime.Now;
 
                     }
@@ -155,7 +154,7 @@ namespace asivamosffie.services
                          IsException = false,
                          IsValidation = false,
                          Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, pSeguimientoSemanal.UsuarioCreacion, "REGISTRAR PROGRAMACION DE PERSONAL")
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.OperacionExitosa, idAccion, proyecto.UsuarioModificacion, "REGISTRAR PROGRAMACION DE PERSONAL")
                      };
             }
             catch (Exception ex)
@@ -167,7 +166,7 @@ namespace asivamosffie.services
                         IsException = true,
                         IsValidation = false,
                         Code = ConstantSesionComiteTecnico.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pSeguimientoSemanal.UsuarioCreacion, ex.InnerException.ToString())
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Programacion_Personal_Obra, ConstantMessagesRegistrarProgramacionPersonal.Error, idAccion, pListSeguimientoSemanal.FirstOrDefault().UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
 

@@ -43,7 +43,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("UpdateProgramacionContratoPersonal")]
         [HttpPost]
-        public async Task<IActionResult> UpdateSeguimientoSemanalPersonalObra([FromBody]SeguimientoSemanal pSeguimientoSemanal)
+        public async Task<IActionResult> UpdateSeguimientoSemanalPersonalObra([FromBody] List<SeguimientoSemanal> pSeguimientoSemanal)
         {
             try
             {
