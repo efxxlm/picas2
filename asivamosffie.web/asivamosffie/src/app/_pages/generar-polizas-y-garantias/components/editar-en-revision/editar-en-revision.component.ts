@@ -144,6 +144,8 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
+      const responAprob = this.aprobadosArray.find(p => p.name === data.responsableAprobacion);
+      this.addressForm.get('responsableAprob').setValue(responAprob);
       this.loadGarantia(data.contratoPolizaId);
       this.dataLoad2(data);
     });
