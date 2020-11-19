@@ -183,6 +183,27 @@ namespace asivamosffie.services
             return await _context.ControversiaActuacion.FindAsync(id);
         }
 
+        //public async Task<List<Contrato>> GetListContratos(/*int id*/)
+        //{
+        //    return await _context.Contrato.Where(r=>r.Eliminado==false).ToList<Contrato>();
+        //}
+
+        public async Task<List<Contrato>> GetListContratos(/*int id*/)
+        {
+            List<Contrato> ListContratos = new List<Contrato>();
+
+            try
+            {
+                ListContratos=await _context.Contrato.Where(r => !(bool)r.Eliminado).ToListAsync();     
+                                
+                return ListContratos.OrderByDescending(r => r.ContratoId).ToList();
+            }
+            catch (Exception ex)
+            {
+                return ListContratos;
+            }
+        }
+
         public async Task<Respuesta> CambiarEstadoControversiaActuacion (int pControversiaActuacionId, string pNuevoCodigoEstadoAvance, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);

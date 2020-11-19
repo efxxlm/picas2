@@ -185,6 +185,14 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
+        [Route("GetListContratos")]
+        [HttpGet]
+        public async Task<List<Contrato>> GetListContratos()
+        {
+            var respuesta = await _contractualControversy.GetListContratos();
+            return respuesta;
+        }
+                
 
         [Route("EliminarControversiaActuacion")]
         [HttpPost]
