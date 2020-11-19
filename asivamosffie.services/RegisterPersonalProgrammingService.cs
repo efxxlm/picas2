@@ -42,15 +42,15 @@ namespace asivamosffie.services
 
             ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto
                 .Where(r => r.ContratacionProyectoId == ContratacionProyectoId)
-                .Include(r => r.Proyecto) 
+                .Include(r => r.Proyecto)
                 .Include(r => r.Contratacion)
-                .ThenInclude(r=> r.Contrato)
+                .ThenInclude(r => r.Contrato)
                 .FirstOrDefault();
 
             // contratacionProyecto.Contratacion.Contrato.FirstOrDefault().fecha
 
-            //if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-            //{
+            if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+            {
 
                 CantidadDias = contratacionProyecto.Proyecto.PlazoMesesObra ?? 0;
                 CantidadDias *= 30;
@@ -60,8 +60,20 @@ namespace asivamosffie.services
 
                 if (CantidadDias % 7 == 1)
                     CantidadSemanas = (CantidadDias / 7) + 1;
-            //}
-             
+            }
+            else
+            {
+
+                CantidadDias = contratacionProyecto.Proyecto.PlazoMesesInterventoria ?? 0;
+                CantidadDias *= 30;
+                CantidadDias += contratacionProyecto.Proyecto.PlazoDiasInterventoria.HasValue ? (int)contratacionProyecto.Proyecto.PlazoDiasInterventoria : 0;
+
+                CantidadSemanas = CantidadDias / 7;
+
+                if (CantidadDias % 7 == 1)
+                    CantidadSemanas = (CantidadDias / 7) + 1;
+            }
+
 
 
             return CantidadSemanas;
@@ -95,6 +107,18 @@ namespace asivamosffie.services
                         List.Add(seguimientoSemanal);
                         _context.SeguimientoSemanal.Add(seguimientoSemanal);
                         _context.SaveChanges();
+
+                        SeguimientoSemanalPersonalObra seguimientoSemanalPersonalObra = new SeguimientoSemanalPersonalObra
+                        {
+                            SeguimientoSemanalId = seguimientoSemanal.SeguimientoSemanalId,
+                            Eliminado = false,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion = pUsuario
+                        };
+
+                        _context.SeguimientoSemanalPersonalObra.Add(seguimientoSemanalPersonalObra);
+                        _context.SaveChanges();
+
                     }
                 }
 
@@ -122,13 +146,14 @@ namespace asivamosffie.services
 
                 foreach (var SeguimientoSemanal in pListSeguimientoSemanal)
                 {
-                    if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal == null) {
+                    if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal == null)
+                    {
 
                         RegistroCompleto = false;
                     }
 
                     if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId == 0)
-                    { 
+                    {
                         SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().UsuarioCreacion = proyecto.UsuarioModificacion;
                         SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().FechaCreacion = DateTime.Now;
                         SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().Eliminado = true;
@@ -177,20 +202,21 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> ChangeStatusProgramacionContratoPersonal(int pContratoConstruccionId, string pEstadoProgramacionCodigo, string pUsuario)
+        public async Task<Respuesta> ChangeStatusProgramacionContratoPersonal(int pContratacionProyecto, string pEstadoProgramacionCodigo, string pUsuario)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Programacion_Especial, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                //ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
+                ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyecto);
 
-                //Proyecto proyecto = _context.Proyecto.Find(contratoConstruccion.ProyectoId);
-                //proyecto.UsuarioModificacion = pUsuario;
-                //proyecto.FechaModificacion = DateTime.Now;
-                //proyecto.EstadoProgramacionCodigo = pEstadoProgramacionCodigo;
+                Proyecto proyecto = _context.Proyecto.Find(contratacionProyecto.ProyectoId);
 
-                //await _context.SaveChangesAsync();
+                proyecto.UsuarioModificacion = pUsuario;
+                proyecto.FechaModificacion = DateTime.Now;
+                proyecto.EstadoProgramacionCodigo = pEstadoProgramacionCodigo;
+
+                await _context.SaveChangesAsync();
 
                 return
                      new Respuesta
