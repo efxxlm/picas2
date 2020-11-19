@@ -47,6 +47,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
+                pSeguimientoSemanal.FirstOrDefault().UsuarioModificacion = HttpContext.User.FindFirst("User").Value.ToUpper();
                 Task<Respuesta> result = _IRegisterPersonalProgrammingService.UpdateSeguimientoSemanalPersonalObra(pSeguimientoSemanal);
                 object respuesta = await result;
                 return Ok(respuesta);

@@ -117,14 +117,14 @@ namespace asivamosffie.services
         }
 
         public async Task<Respuesta> UpdateSeguimientoSemanalPersonalObra(List<SeguimientoSemanal> pListSeguimientoSemanal)
-        {
-
+        { 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.RegistrarProgramacionPersonal, (int)EnumeratorTipoDominio.Acciones);
             bool RegistroCompleto = true;
 
             try
             {
                 ContratacionProyecto ContratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionProyectoId == pListSeguimientoSemanal.FirstOrDefault().ContratacionProyectoId).FirstOrDefault();
+               
                 Proyecto proyecto = _context.Proyecto.Where(r => r.ProyectoId == ContratacionProyecto.ProyectoId).FirstOrDefault();
 
                 proyecto.UsuarioModificacion = pListSeguimientoSemanal.FirstOrDefault().UsuarioCreacion;
@@ -134,7 +134,6 @@ namespace asivamosffie.services
                 {
                     if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal == null)
                     {
-
                         RegistroCompleto = false;
                     }
 
