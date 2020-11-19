@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormEstudioDeMercadoComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   addressForm: FormGroup = this.fb.group({});
@@ -108,7 +109,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
+        if(result === true)
         {
           //this.router.navigate(["/gestionarFuentes"], {});
         }
@@ -143,8 +144,12 @@ export class FormEstudioDeMercadoComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    if(texto!=undefined)
+    {const textolimpio = texto.replace(/<[^>]*>/g, '');
+    return textolimpio.length;}
+    else{
+      return 0;
+    }
   }
 
   onSubmit() {

@@ -47,27 +47,38 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
     private projectContractingService: ProjectContractingService,
     private projectService: ProjectService,
 
-  ) { }
+  ) {
+    this.activatedroute.params.subscribe((params: Params) => {
+      console.log(params);
+      this.objetoDisponibilidad.contratacionId = params.idContratacion;
+      this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
+      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
+      if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
+        this.cargarDisponibilidadPre();
+
+      } else {
+        this.cargarDisponibilidadNueva();
+      }
+
+    });
+  }
 
   cargarDisponibilidadPre() {
 
     this.budgetAvailabilityService.getDisponibilidadPresupuestalById(this.objetoDisponibilidad.disponibilidadPresupuestalId)
       .subscribe(response => {
         this.objetoDisponibilidad = response;
-        console.log(response);
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
 
-        this.objetoDisponibilidad.disponibilidadPresupuestalProyecto.forEach(dp => {
-          this.projectService.getProjectById(dp.proyectoId)
-            .subscribe(proyecto => {
-              dp.proyecto = proyecto;
-              
-
-              this.listaProyectos.push(proyecto);
-
-            })
+        this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
+        .subscribe(
+          contratacion => {
+          contratacion.contratacionProyecto.forEach(cp => {
+            cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
+            this.listaProyectos.push(cp.proyecto);
+          });
         });
       })
 
@@ -77,57 +88,53 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
 
     this.objetoDisponibilidad.disponibilidadPresupuestalProyecto = [];
 
-    
-
     this.budgetAvailabilityService.getReuestCommittee()
-      .subscribe( listaSolicitudes => {
+      .subscribe( 
+        listaSolicitudes => {
         listaSolicitudes.forEach( solicitud => {
           if ( solicitud.contratacionId == this.objetoDisponibilidad.contratacionId ){
             this.objetoDisponibilidad.fechaSolicitud = solicitud.fechaSolicitud;
             this.objetoDisponibilidad.numeroSolicitud = solicitud.numeroSolicitud;
             this.objetoDisponibilidad.opcionContratarCodigo = solicitud.opcionContratar;
             this.objetoDisponibilidad.valorSolicitud = solicitud.valorSolicitud;
-            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo? solicitud.tipoSolicitudCodigo:this.objetoDisponibilidad.tipoSolicitudCodigo;
+            this.objetoDisponibilidad.tipoSolicitudCodigo = solicitud.tipoSolicitudCodigo? solicitud.tipoSolicitudCodigo:this.objetoDisponibilidad.tipoSolicitudCodigo;            
           }
-        })
+          
+        }),
+        err => {
+          console.log( err );
+        }
       })
 
     this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
-      .subscribe(contratacion => {
-        console.log(contratacion, '0');
+      .subscribe(
+        contratacion => {
+          this.objetoDisponibilidad.fechaComiteTecnicoNotMapped=contratacion.fechaComiteTecnicoNotMapped;
         contratacion.contratacionProyecto.forEach(cp => {
-          this.projectService.getProjectById(cp.proyectoId)
+          cp.proyecto.contratacionProyectoAportante=cp.contratacionProyectoAportante;
+          
+          this.listaProyectos.push(cp.proyecto);
+          /*this.projectService.getProjectById(cp.proyectoId)
             .subscribe(proyecto => {
+              let aporntantes=cp.contratacionProyectoAportante;
               cp.proyecto = proyecto;
+              cp.proyecto.apo
               console.log(proyecto);
-
-              this.listaProyectos.push(proyecto);
-
-            })
+        
+              
+        
+            })*/
         });
-      });
+        console.log(this.listaProyectos);
+        },
+        err => {
+          console.log( err );
+        }
+      );
 
   }
 
   ngOnInit(): void {
-
-
-
-    this.activatedroute.params.subscribe((params: Params) => {
-      console.log(params);
-      this.objetoDisponibilidad.contratacionId = params.idContratacion;
-      this.objetoDisponibilidad.disponibilidadPresupuestalId = params.idDisponibilidadPresupuestal;
-      this.objetoDisponibilidad.tipoSolicitudCodigo=params.idTipoSolicitud;
-      console.log(this.objetoDisponibilidad);
-      if (this.objetoDisponibilidad.disponibilidadPresupuestalId > 0) {
-        this.cargarDisponibilidadPre();
-
-      } else {
-        this.cargarDisponibilidadNueva();
-      }
-
-
-    });
   }
 
   // evalua tecla a tecla
@@ -140,6 +147,14 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
+    }
+  }
+  validatenomore30()
+  {
+    if(this.addressForm.value.plazoDias>30)
+    {
+      this.openDialog("","<b>El valor ingresado en dias no puede ser superior a 30</b>");
+      this.addressForm.get("plazoDias").setValue("");
     }
   }
 
@@ -165,11 +180,14 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       console.log(this.objetoDisponibilidad);
     this.budgetAvailabilityService.createOrEditInfoAdditional(this.objetoDisponibilidad)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         if (respuesta.code == "200")
           this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
       })
 
+    }
+    else{
+      this.openDialog('','<b>Por favor ingrese todos los campos obligatorios.</b>')
     }
     
     console.log(this.objetoDisponibilidad);

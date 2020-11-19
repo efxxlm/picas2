@@ -17,12 +17,16 @@ namespace asivamosffie.api.Controllers
     public class PublicController : ControllerBase
     {
         public readonly ISourceFundingService _sourceFunding;
+        public readonly ISelectionProcessService _selectionProcess;
+        public readonly IManagementCommitteeReportService _managementCommitteeReportService;
         private readonly IOptions<AppSettings> _settings;
 
-        public PublicController(ISourceFundingService sourceFunding, IOptions<AppSettings> settings)
+        public PublicController(IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings)
         {
             _sourceFunding = sourceFunding;
             _settings = settings;
+            _selectionProcess = selectionProcess;
+            _managementCommitteeReportService = managementCommitteeReportService;
         }
 
         [HttpGet("GetConsignationValue")]
@@ -36,6 +40,41 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetMonitorWithoutFollow")]
+        public async Task GetMonitorWithoutFollow()
+        {
+            try
+            {
+                await _selectionProcess.getActividadesVencidas(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// JMartinez
+        // Aprobar Actas de
+        // Comité Con Fecha
+        // vencida Según Fecha paramétrica 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetApproveExpiredMinutes")]
+        public async Task GetApproveExpiredMinutes()
+        {
+            try
+            {
+                await _managementCommitteeReportService.GetApproveExpiredMinutes(_settings.Value.Sender);
+            }
+            catch (Exception ex)
+            { 
                 throw ex;
             }
         }

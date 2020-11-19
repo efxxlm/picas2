@@ -140,8 +140,8 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
           let listaObservaciones = grupoProyecto.get('observaciones') as FormArray;
 
           grupoProyecto.get('llaveMen').setValue(cp.proyecto.llaveMen);
-          grupoProyecto.get('nombreInstitucion').setValue(''/*cp.proyecto.institucionEducativa.nombre*/);
-          grupoProyecto.get('nombreSede').setValue(''/*response.sede.nombre*/);
+          grupoProyecto.get('nombreInstitucion').setValue(cp.proyecto.institucionEducativa.nombre);
+          grupoProyecto.get('nombreSede').setValue(cp.proyecto.sede.nombre);
 
           this.data.sesionComiteSolicitud.sesionSolicitudObservacionProyecto
             .filter(o => o.contratacionProyectoId == cp.contratacionProyectoId)
@@ -219,7 +219,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
 
     this.fiduciaryCommitteeSessionService.createEditSesionSolicitudVoto(sesionComiteSolicitud)
       .subscribe(respuesta => {
-        this.openDialog('Comité técnico', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         if (respuesta.code == "200") {
           this.dialogRef.close(this.data.objetoComiteTecnico);
           //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])

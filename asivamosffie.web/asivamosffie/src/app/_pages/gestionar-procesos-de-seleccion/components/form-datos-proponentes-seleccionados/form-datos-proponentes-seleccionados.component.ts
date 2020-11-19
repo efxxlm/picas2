@@ -15,6 +15,7 @@ import { startWith, map } from 'rxjs/operators';
 export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
   listaDepartamentos: Localizacion[] = [];
@@ -37,20 +38,24 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(100)])
-    ]
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(1000),
+      // Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])]
   });
 
   personaJuridicaIndividualForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -64,14 +69,18 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(100)])
-    ]
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(1000),
+      // Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])]
   });
 
   unionTemporalForm = this.fb.group({
@@ -80,7 +89,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
       Validators.required,])
     ],
     nombreConsorcio: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     entidades: this.fb.array([]),
     nombre: [null, Validators.compose([
@@ -95,14 +104,18 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.maxLength(100)])
-    ]
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(1000),
+      // Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])]
   });
   listaProponentesNombres: any[] = [];
   nombresapo: string[] = [];
@@ -269,10 +282,17 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     return value.toLowerCase().replace(/\s/g, '');
   }
 
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string,refresh:boolean=false) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if(refresh)
+      {
+        location.reload();
+      }
+      
     });
   }
 
@@ -337,7 +357,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     return this.fb.group({
       procesoSeleccionIntegranteId: [],
       nombre: [null, Validators.compose([
-        Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
       ],
       porcentaje: [null, Validators.compose([
         Validators.required, Validators.min(1), Validators.max(100), Validators.maxLength(2)])
@@ -348,6 +368,21 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
     this.unionTemporalForm.get("cuantasEntidades").setValue(borrarForm.length);
+  }
+
+  borrarIntegrante(borrarForm: any, i: number) {
+    if(borrarForm.value[i].procesoSeleccionIntegranteId>0)
+    {
+      this.procesoSeleccionService.deleteProcesoSeleccionIntegranteByID(borrarForm.value[i].procesoSeleccionIntegranteId).subscribe(
+        respuesta=>
+        {
+          this.openDialog("","<b>La información ha sido eliminada correctamente.</b>",true);
+        }
+      );
+    }
+    console.log(borrarForm);
+    /*borrarForm.removeAt(i);
+    this.unionTemporalForm.get("cuantasEntidades").setValue(borrarForm.length);*/
   }
 
   onSubmitPersonaNatural() {
@@ -383,7 +418,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
       nombreProponente: this.personaJuridicaIndividualForm.get('nombre').value ? this.personaJuridicaIndividualForm.get('nombre').value : this.myJuridica.value,
       numeroIdentificacion: this.personaJuridicaIndividualForm.get('numeroIdentificacion').value,
-      nombreRepresentanteLegal: this.personaJuridicaIndividualForm.get('representanteLegal').value,
+      nombreRepresentanteLegal: this.personaJuridicaIndividualForm.get('representanteLegal').value?this.personaJuridicaIndividualForm.get('representanteLegal').value:this.representanteLegal.value,
       cedulaRepresentanteLegal: this.personaJuridicaIndividualForm.get('cedulaRepresentanteLegal').value,
       localizacionIdMunicipio: this.personaJuridicaIndividualForm.get('municipio').value ? this.personaJuridicaIndividualForm.get('municipio').value.localizacionId : null,
       direccionProponente: this.personaJuridicaIndividualForm.get('direccion').value,
@@ -455,7 +490,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
     let mensajeValidaciones = this.validacionesUnionTemporal(porcentaje);
     if (mensajeValidaciones.length > 0) {
-      this.openDialog('', mensajeValidaciones);
+      this.openDialog('', `<b>${mensajeValidaciones}</b>`);
       return false;
     }
 
@@ -467,6 +502,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   cargarRegistro() {
 
     this.ngOnInit().then(() => {
+      
       this.procesoSeleccion.procesoSeleccionProponente.forEach(proponente => {
         let tipoProponente = this.listaProponentes.find(p => p.codigo == proponente.tipoProponenteCodigo)
         if (tipoProponente) this.tipoProponente.setValue(tipoProponente);
@@ -511,7 +547,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
               this.personaJuridicaIndividualForm.get('correoElectronico').setValue(proponente.emailProponente);
             }
             case "4": {
-
+              (<FormArray>this.unionTemporalForm.get('entidades')).clear();
               let listaIntegrantes = this.unionTemporalForm.get('entidades') as FormArray;
 
               this.unionTemporalForm.get('depaetamento').setValue(departamentoSeleccionado);
@@ -525,7 +561,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
               this.unionTemporalForm.get('direccion').setValue(proponente.direccionProponente);
               this.unionTemporalForm.get('telefono').setValue(proponente.telefonoProponente);
               this.unionTemporalForm.get('correoElectronico').setValue(proponente.emailProponente);
-
+              
               this.procesoSeleccion.procesoSeleccionIntegrante.forEach(integrante => {
                 let control = this.createIntegrante();
                 control.get('nombre').setValue(integrante.nombreIntegrante);

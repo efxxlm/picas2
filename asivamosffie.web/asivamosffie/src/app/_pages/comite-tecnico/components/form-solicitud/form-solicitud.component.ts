@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { Router } from '@angular/router';
 import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { opendir } from 'fs';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -21,7 +22,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   @Input() listaMiembros: SesionParticipante[];
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
-  
+  minDate: Date;
+
   tiposSolicitud = TiposSolicitud;
 
   fechaSolicitud: Date;
@@ -39,7 +41,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     desarrolloSolicitud: [],
     estadoSolicitud: [null, Validators.required],
     observaciones: [null, Validators.required],
-    url: null,
+    url: [null, Validators.required],
     tieneCompromisos: [null, Validators.required],
     cuantosCompromisos: [null, Validators.required],
     compromisos: this.fb.array([])
@@ -71,31 +73,38 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     public dialog: MatDialog,
     private router: Router,
 
-  ) 
-  {
-    
+  ) {
+
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.sesionComiteSolicitud.currentValue)
       this.cargarRegistro();
   }
 
-  ActualizarProyectos( lista ){
+  ActualizarProyectos(lista) {
     this.proyectos = lista;
   }
 
-  getMostrarProyectos(){
-    if ( this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion )
+  getMostrarProyectos() {
+    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.Contratacion)
       return 'block';
     else
       return 'none';
   }
+
+  getMostrarActulizacionCronograma() {
+    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == this.tiposSolicitud.ActualizacionCronogramaProcesoseleccion)
+      return 'block';
+    else
+      return 'none';
+  }
+
   ngOnInit(): void {
-
-    
-
-    
-
+    this.minDate = new Date();
+    this.addressForm.valueChanges
+      .subscribe(value => {
+        if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+      });
   }
 
   maxLength(e: any, n: number) {
@@ -111,8 +120,28 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     }
   }
 
+  textoLimpioString(texto: string) {
+    if (texto) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio;
+    }
+  }
+
   borrarArray(borrarForm: any, i: number) {
-    borrarForm.removeAt(i);
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este compromiso?</b>', i);
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        this.eliminarCompromisos(e);
+      }
+    });
   }
 
   agregaCompromiso() {
@@ -124,11 +153,28 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       sesionSolicitudCompromisoId: [],
       sesionComiteSolicitudId: [],
       tarea: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(500)])
       ],
       responsable: [null, Validators.required],
       fecha: [null, Validators.required]
     });
+  }
+
+  validarCompromisosDiligenciados(): boolean {
+    let vacio = true;
+    this.compromisos.controls.forEach(control => {
+      if (control.value.tarea ||
+        control.value.responsable ||
+        control.value.fecha
+      )
+        vacio = false;
+    })
+
+    return vacio;
+  }
+
+  borrarCompromiso(borrarForm: any, i: number) {
+    borrarForm.removeAt(i);
   }
 
   CambioCantidadCompromisos() {
@@ -138,8 +184,18 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         this.compromisos.push(this.crearCompromiso());
       }
     } else if (FormGrupos.cuantosCompromisos <= this.compromisos.length && FormGrupos.cuantosCompromisos >= 0) {
-      while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
-        this.borrarArray(this.compromisos, this.compromisos.length - 1);
+      if (this.validarCompromisosDiligenciados()) {
+
+        while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
+          this.borrarCompromiso(this.compromisos, this.compromisos.length - 1);
+        }
+
+      }
+      else {
+
+        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
+        this.addressForm.get('cuantosCompromisos').setValue(this.compromisos.length);
+
       }
     }
   }
@@ -151,24 +207,51 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     });
   }
 
-  getObservableEstadoSolicitud(){
+  getObservableEstadoSolicitud() {
     return this.addressForm.get('estadoSolicitud').valueChanges;
+  }
+
+  changeCompromisos(requiereCompromisos) {
+
+    if (requiereCompromisos.value === false) {
+      console.log(requiereCompromisos.value);
+      this.technicalCommitteSessionService.eliminarCompromisosSolicitud(this.sesionComiteSolicitud.sesionComiteSolicitudId)
+        .subscribe(respuesta => {
+          if (respuesta.code == "200") {
+            this.compromisos.clear();
+            this.addressForm.get("cuantosCompromisos").setValue(null);
+          }
+        })
+    }
+  }
+
+  eliminarCompromisos(i) {
+
+    let compromiso = this.compromisos.controls[i];
+
+    this.technicalCommitteSessionService.deleteSesionComiteCompromiso(compromiso.get('sesionSolicitudCompromisoId').value)
+      .subscribe(respuesta => {
+        if (respuesta.code == "200") {
+          this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+          this.compromisos.removeAt(i)
+          this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
+        }
+      })
   }
 
   onSubmit() {
 
     if (this.proyectos)
-      this.proyectos.forEach( p => 
-        {
-            let proyecto = p.proyecto
-            p.proyecto = {
-              EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
-              proyectoId: proyecto.proyectoId,
-              
+      this.proyectos.forEach(p => {
+        let proyecto = p.proyecto
+        p.proyecto = {
+          EstadoProyectoCodigo: proyecto.estadoProyectoCodigo,
+          proyectoId: proyecto.proyectoId,
 
-            }
-            p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
-        })
+
+        }
+        p.proyecto.estadoProyecto = p.proyecto.estadoProyecto ? p.proyecto.estadoProyecto.codigo : null
+      })
 
     let Solicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.sesionComiteSolicitud.sesionComiteSolicitudId,
@@ -204,9 +287,9 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     this.technicalCommitteSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
-        console.log( respuesta.data )
-        this.validar.emit( respuesta.data );
+        this.openDialog('', `<b>${respuesta.message}</b>`)
+        console.log(respuesta.data)
+        this.validar.emit(respuesta.data);
         if (respuesta.code == "200" && !respuesta.data)
           this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteSolicitud.comiteTecnicoId])
       })
@@ -215,7 +298,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   cargarRegistro() {
 
-    console.log( this.sesionComiteSolicitud )
+    console.log(this.sesionComiteSolicitud)
 
     let estados: string[] = ['1', '3', '5']
 
@@ -224,16 +307,30 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
 
-        if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteTecnico ){
-          this.estadosArray = this.estadosArray.filter( e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
-        }else if ( this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteTecnico ){
-          this.estadosArray = this.estadosArray.filter( e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes( e.codigo ))
+        if ( this.sesionComiteSolicitud.requiereVotacion ){
+          this.sesionComiteSolicitud.sesionSolicitudVoto.forEach(sv => {
+            if (sv.esAprobado)
+              this.cantidadAprobado++;
+            else
+              this.cantidadNoAprobado++;
+          })
+      
+          if (this.cantidadNoAprobado == 0){
+            this.resultadoVotacion = 'Aprobó'
+            this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteTecnico)
+          }else if ( this.cantidadAprobado == 0 ){
+            this.resultadoVotacion = 'No Aprobó'
+            this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteTecnico, EstadosSolicitud.DevueltaPorComiteTecnico].includes(e.codigo))
+          }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+            this.resultadoVotacion = 'Aprobó'
+          }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+            this.resultadoVotacion = 'No Aprobó'
+          }
         }
-    console.log(this.estadosArray)
-
+        
       })
 
-    
+
 
     //let estadoSeleccionado = this.estadosArray.find(e => e.codigo == this.sesionComiteSolicitud.estadoCodigo)
 
@@ -243,7 +340,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     this.addressForm.get('tieneCompromisos').setValue(this.sesionComiteSolicitud.generaCompromiso)
     this.addressForm.get('cuantosCompromisos').setValue(this.sesionComiteSolicitud.cantCompromisos)
     this.addressForm.get('desarrolloSolicitud').setValue(this.sesionComiteSolicitud.desarrolloSolicitud)
-    
+
 
     this.commonService.listaUsuarios().then((respuesta) => {
 
@@ -268,29 +365,20 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     });
 
-    this.sesionComiteSolicitud.sesionSolicitudVoto.forEach( sv => {
-      if (sv.esAprobado)
-        this.cantidadAprobado++;
-      else
-        this.cantidadNoAprobado++;
-    })
-
-    if ( this.cantidadNoAprobado > 0 )
-      this.resultadoVotacion = 'No Aprobó'
-    else
-      this.resultadoVotacion = 'Aprobó'
+    
+    this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacion;
 
     // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
-    
+
     // btnSolicitudMultiple.forEach( element =>{
     //   element.click();
     // })
-    
 
-    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion){
+
+    if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion) {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion
     }
-    
+
 
   }
 

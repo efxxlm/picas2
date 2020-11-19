@@ -13,7 +13,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormularioProyectosComponent implements OnInit {
 
-
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+    permiso que tenga el usuario
+    */
+  bitPuedoEditar=true;
   proyectoAdmin: ProyectoAdministrativo;
   listadoAportantes: Dominio[];
   listadoFuentes: Dominio[];
@@ -21,7 +24,7 @@ export class FormularioProyectosComponent implements OnInit {
   addFont(index: number) {
     console.log("push");
     console.log(index);
-    this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
+    this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
   }
 
   openDialogSiNo(modalTitle: string, modalText: string,key: AportanteFuenteFinanciacion, aportante: Aportante) {
@@ -31,7 +34,7 @@ export class FormularioProyectosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         const index = this.proyectoAdmin.proyectoAdministrativoAportante.indexOf(aportante, 0);
     const index2 = this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.indexOf(key, 0);
@@ -89,17 +92,20 @@ export class FormularioProyectosComponent implements OnInit {
           this.onchangeFont(i);
           i++
         });
-        
+        if(this.proyectoAdmin.enviado)
+        {
+          this.bitPuedoEditar=false;
+        }
         console.log(this.proyectoAdmin);
       }
       else{
         let idcontador = 0;
-        idcontador = respuesta[0].proyectoAdminitracionId;
+        idcontador = respuesta[0]?respuesta[0].proyectoAdminitracionId:0;
         this.proyectoAdmin = { identificador: (idcontador + 1).toString(), proyectoAdministrativoAportante: [{
-          aportanteId: 0,
-          proyectoAdminstrativoId: 0,
+          aportanteId: null,
+          proyectoAdminstrativoId: null,
           
-          aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
+          aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
         }] };
       }
       
@@ -164,9 +170,9 @@ export class FormularioProyectosComponent implements OnInit {
 
   addAportant() {
     this.proyectoAdmin.proyectoAdministrativoAportante.push({
-      aportanteId: 0,
-      proyectoAdminstrativoId: 0,      
-      aportanteFuenteFinanciacion: [{ valorFuente: 0, fuenteRecursosCodigo: '',fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
+      aportanteId: null,
+      proyectoAdminstrativoId: null,      
+      aportanteFuenteFinanciacion: [{ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null,aportanteFuenteFinanciacionId:null }]
     });
   }
   deleteAportant(key: Aportante) {
@@ -186,7 +192,7 @@ export class FormularioProyectosComponent implements OnInit {
 
   onSubmit() {
     this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
-      this.openDialog('', respuesta.message,true);
+      this.openDialog('', `<b>${respuesta.message}</b>`,true);
     },
       err => {
         let mensaje: string;
@@ -222,10 +228,9 @@ export class FormularioProyectosComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
-        {
+        
           this.router.navigate(["/crearProyectoAdministrativo"], {});
-        }
+        
       });
     }
   }

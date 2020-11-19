@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" *ngIf="objetoDisponibilidad">
     <div class="text-right">
         <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional" mat-button color="primary"
             class="btn-regresar">
@@ -7,18 +7,22 @@
     </div>
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar información adicional solucitud CO_001
+            Registrar información adicional solicitud {{ objetoDisponibilidad.numeroSolicitud }}
         </h1>
     </div>
 
     <div class="d-flex justify-content-center">
-        <p class="solicitud">
-            <strong>Tipo de solicitud: </strong>
-            Modificación contractual
+        <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '1'">
+            <strong>Contratación</strong>
+
         </p>
-        <p class="solicitud">
+        <p class="solicitud" *ngIf="objetoDisponibilidad.tipoSolicitudCodigo === '3'">
+            <strong>Modificación Contractual</strong>
+
+        </p>
+        <p class="solicitud" *ngIf="objetoDisponibilidad.fechaComiteTecnicoNotMapped">
             <strong>Fecha de comité técnico:</strong>
-            24/06/2020
+            {{ objetoDisponibilidad.fechaComiteTecnicoNotMapped | date: 'dd/MM/yyyy' }}
         </p>
     </div>
 
@@ -39,46 +43,44 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <p class="text-center color-mainColor departamento">Atlántico/
-                {{ proyecto.localizacionIdMunicipioNavigation.descripcion }}</p>
-            <mat-card class="shipping-card var-main-gris sub-card">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text">
-                        Aportantes
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content>
-                    <div class="row">
-                        <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.proyectoAportante ">
-                            <p class="mb1-em"><b>Aportante 1</b></p>
+            <section style="width: 80%;margin: auto;">
+                <p class="text-center color-mainColor departamento">
+                    {{ proyecto.localizacionIdMunicipio }}</p>
+                <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em;">
+                    <mat-card-header class="header-card header-card--margin-1">
+                        <mat-card-title class="header-card--text">
+                            Aportantes
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="row">
+                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.contratacionProyectoAportante; index as i" style="margin-top: .5em;">
+                                <p class="mb1-em"><b>Aportante {{ i+1 }} </b></p>
 
-                            <p>
-                                <b>Tipo de aportante:</b>
-                                {{ aportante.aportante.tipoAportanteId }}
-                            </p>
-                            <p>
-                                <b>Aportante:</b>
-                                {{ aportante.aportante.nombreAportanteId }}
-                            </p>
-                            <p>
-                                <b>Valor del aportante:</b>
-                                {{ aportante.valorTotalAportante | currency }}
+                                <p style="margin-top: .5em;">
+                                    <b>Tipo de aportante:</b>
+                                    {{aportante.cofinanciacionAportante.tipoAportanteString}}
+                                </p>
+                                <p >
+                                    <b>Aportante:</b>
+                                    {{aportante.cofinanciacionAportante.nombreAportanteString}}
+                                </p>
+                                <p>
+                                    <b>Valor del aportante:</b>
+                                    {{ aportante.valorAporte | currency }}
 
-                            </p>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </mat-card-content>
-            </mat-card>
-
-
-
-
+                    </mat-card-content>
+                </mat-card>
+            </section>
 
         </mat-expansion-panel>
 
     </mat-accordion>
 
-    
+
 
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row justify-content-center mt-2em mb-2em">
@@ -94,7 +96,8 @@
                                 (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
-                        <span class="contador">{{3 - plazoMeses.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">{{3 - plazoMeses.value.length}}</span>
                     </div>
                 </div>
             </div>
@@ -107,22 +110,24 @@
                         <mat-form-field class="full-width">
                             <input matInput #plazoDias type="number" min="1" max="99" maxlength="2" required
                                 formControlName="plazoDias" name="plazoDias"
+                                (change)="validatenomore30()"
                                 (keypress)="validateNumberKeypress($event)"
                                 onKeyPress="if(this.value.length>=this.maxLength) return false;">
                         </mat-form-field>
-                        <span class="contador">{{2 - plazoDias.value.length}}</span>
+                        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                        matTooltipClass="info-tooltip">{{2 - plazoDias.value.length}}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="d-flex align-items-center">
-            <div class="text-area-quill">
-                <label for="objeto" class="text-area-quill--label">Objeto</label>
+        <div class="d-flex align-items-center" style="margin: auto;width: 85%;">
+            <div class="text-area-quill quill-sin-borde">
+                <label for="objeto" class="text-area-quill--label title-objeto">Objeto</label>
                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                     (onContentChanged)="maxLength($event, 1000)" formControlName="objeto" required></quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('objeto').value !== null">
-                {{1000 - textoLimpio(addressForm.get('objeto').value)}}
+                {{1000 - (textoLimpio(addressForm.get('objeto').value)>1000?1000:textoLimpio(addressForm.get('objeto').value))}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('objeto').value === null">
                 1000

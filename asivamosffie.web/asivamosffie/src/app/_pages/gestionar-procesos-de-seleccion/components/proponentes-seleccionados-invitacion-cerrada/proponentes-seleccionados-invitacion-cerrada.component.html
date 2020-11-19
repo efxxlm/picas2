@@ -15,7 +15,8 @@
                   (keyup)="validaMinimo3()" maxlength="2" (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{2 - cuantosProponentes.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{2 - cuantosProponentes.value.length}}</span>
             </div>
           </div>
         </div>
@@ -26,7 +27,7 @@
         </div>
         <div class="col">
           <mat-form-field class="select-width">
-            <mat-select formControlName="nombresProponentes" required (selectionChange)="changeProponente()" multiple>
+            <mat-select formControlName="nombresProponentes" required (selectionChange)="changeProponente($event)" multiple>
               <mat-option *ngFor="let nombreProponente of nombresProponentesList" [value]="nombreProponente">
                 {{ nombreProponente.nombreProponente }}
               </mat-option>
@@ -50,11 +51,11 @@
         </p>
         <p>
           <strong>Departamento del domicilio del proponente:</strong>
-          {{ proponente.nombreDepartamento }}
+          {{ proponente.departamentoString?proponente.departamentoString:proponente.nombreDepartamento }}
         </p>
         <p>
           <strong>Municipio del domicilio del proponente:</strong>
-          {{ proponente.nombreMunicipio }}
+          {{ proponente.municipioString?proponente.municipioString:proponente.nombreMunicipio }}
         </p>
         <p>
           <strong>Dirección del proponente:</strong>
@@ -71,7 +72,7 @@
       </div>
       <!-- </div> -->
       <div *ngIf="nuevo">
-        <app-form-datos-proponentes-nuevo #proponente [procesoSeleccion]="procesoSeleccion"
+        <app-form-datos-proponentes-nuevo #proponente [procesoSeleccion]="procesoSeleccion" [noTanNuevo]="true"
           (guardar)="onSubmitNuevoProponente()">
         </app-form-datos-proponentes-nuevo>
         <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente">
@@ -80,8 +81,8 @@
 
     </mat-card-content>
   </mat-card>
-  <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+  <div class="text-center" *ngIf="!nuevo">
+    <button *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>

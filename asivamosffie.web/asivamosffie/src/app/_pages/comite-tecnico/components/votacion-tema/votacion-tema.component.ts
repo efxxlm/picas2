@@ -67,27 +67,27 @@ export class VotacionTemaComponent implements OnInit{
 
   constructor(
               private fb: FormBuilder,
-              public dialogRef: MatDialogRef<VotacionTemaComponent>, 
-              @Inject(MAT_DIALOG_DATA) public data: { 
-                                                      sesionComiteTema: SesionComiteTema, 
-                                                      //objetoComiteTecnico: ComiteTecnico 
+              public dialogRef: MatDialogRef<VotacionTemaComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: {
+                                                      sesionComiteTema: SesionComiteTema,
+                                                      //objetoComiteTecnico: ComiteTecnico
                                                     },
               private technicalCommitteSessionService: TechnicalCommitteSessionService,
               public dialog: MatDialog,
               private router: Router,
 
-             ) 
+             )
   {
 
   }
 
   ngOnInit(): void {
 
-    
+
 
     this.data.sesionComiteTema.sesionTemaVoto.forEach( v => {
       let grupoVotacion = this.crearParticipante();
-      
+
       grupoVotacion.get('nombreParticipante').setValue( v.nombreParticipante );
       grupoVotacion.get('aprobacion').setValue( v.esAprobado );
       grupoVotacion.get('observaciones').setValue( v.observacion );
@@ -139,23 +139,23 @@ export class VotacionTemaComponent implements OnInit{
     sesionComiteTema.estadoTemaCodigo = EstadosSolicitud.AprobadaPorComiteTecnico;
     sesionComiteTema.sesionTemaVoto.forEach( tv => {
       if (tv.esAprobado != true )
-      sesionComiteTema.estadoTemaCodigo = EstadosSolicitud.RechazadaPorComiteTecnico; 
+      sesionComiteTema.estadoTemaCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
     })
 
     console.log( sesionComiteTema )
 
     this.technicalCommitteSessionService.createEditSesionTemaVoto( sesionComiteTema )
     .subscribe( respuesta => {
-      this.openDialog('Comité técnico', respuesta.message)
+      this.openDialog('', `<b>${respuesta.message}</b>`)
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.sesionComiteTema);
         //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])
-        
-        
+
+
       }
 
     })
-    
+
   }
- 
+
 }

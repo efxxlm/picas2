@@ -13,14 +13,26 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion);
 
+         Task<Respuesta> CreateEditarActuacionSeguimiento(ActuacionSeguimiento actuacionSeguimiento);
+
         Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual();
 
+        Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion();
+
          Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId);
+
+        Task<ControversiaContractual> GetControversiaContractualById(int pControversiaContractualId);
+
+        Task<ControversiaActuacion> GetControversiaActuacionById(int id);
+
+        Task<List<Contrato>> GetListContratos();
 
         Task<Respuesta> CambiarEstadoControversiaActuacion(int pControversiaActuacionId, string pNuevoCodigoEstadoAvance, string pUsuarioModifica);
 
         Task<Respuesta> CambiarEstadoControversiaContractual(int pControversiaContractualId, string pNuevoCodigoEstado, string pUsuarioModifica);
 
+        Task<Respuesta> ActualizarRutaSoporteControversiaContractual(int pControversiaContractualId, string pRutaSoporte, string pUsuarioModifica);
+        Task<Respuesta> ActualizarRutaSoporteControversiaActuacion(int pControversiaActuacionId, string pRutaSoporte, string pUsuarioModifica);
         Task<Respuesta> EliminarControversiaActuacion(int pControversiaActuacionId, string pUsuario);
         Task<Respuesta> EliminarControversiaContractual(int pControversiaContractualId, string pUsuario);
     }

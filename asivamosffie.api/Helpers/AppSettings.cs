@@ -43,6 +43,9 @@
         public string DirectoryBaseContratacionMinuta { get; set; }
          
         public string DirectoryBaseRutaDocumentoContrato { get; set; }
+
+        public string DirectoryActaSuscritaContrato { get; set; }
+
     }
   
 }

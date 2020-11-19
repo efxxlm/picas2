@@ -74,7 +74,8 @@
                           currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }"
                            (keypress)="blockNumber($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
                       </mat-form-field>
-                      <span class="contador">{{20 - (fuente.valorFuente?fuente.valorFuente.toString().length:0)}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                      matTooltipClass="info-tooltip">{{20 - (fuente.valorFuente?fuente.valorFuente.toString().length:0)}}</span>
                     </div>
                   </div>
                 </div>
@@ -82,12 +83,14 @@
               <div class="row">
   
                 <div class="col text-right">
-                  <button mat-button color="warn" type="button" *ngIf="aportantes.aportanteFuenteFinanciacion.length>1"
+                  <button mat-button color="warn" type="button"
+                   *ngIf="aportantes.aportanteFuenteFinanciacion.length>1 && bitPuedoEditar"
                     class="btn-eliminar" (click)="deleteFont(fuente,aportantes)">
                     <img src="assets/img/icon/menos.svg" alt="Eliminar otra fuente">
                     Eliminar fuente
                   </button>  
-                  <button *ngIf="aportantes.aportanteFuenteFinanciacion.length==i+1" mat-button color="warn" 
+                  <button *ngIf="aportantes.aportanteFuenteFinanciacion.length==i+1 
+                   && bitPuedoEditar" mat-button color="warn" 
                   type="button" class="btn-eliminar" (click)="addFont(a)">
                     <img src="assets/img/icon/mas.svg" alt="Agregar otra fuente">
                     Agregar otra fuente
@@ -100,7 +103,8 @@
       </mat-card>
       <div class="row">
         <div class="col text-right">
-          <button mat-button color="warn" type="button" *ngIf="proyectoAdmin.proyectoAdministrativoAportante.length>1" class="btn-eliminar"
+          <button mat-button color="warn" type="button" 
+          *ngIf="proyectoAdmin.proyectoAdministrativoAportante.length>1 && bitPuedoEditar" class="btn-eliminar"
             (click)="deleteAportant(aportantes)">
             <img src="assets/img/icon/menos.svg" alt="Eliminar otro aportante">
             Eliminar aportante
@@ -115,7 +119,7 @@
       </div>
     </div>
     <div class="text-center animatedOpacity">
-      <button mat-button color="warn" class="btn-guardar"
+      <button mat-button color="warn" class="btn-guardar" *ngIf="bitPuedoEditar"
          type="button" (click)="onSubmit()">
         <img src="assets/img/icon/guardar.svg" alt="Guardar">
       </button>

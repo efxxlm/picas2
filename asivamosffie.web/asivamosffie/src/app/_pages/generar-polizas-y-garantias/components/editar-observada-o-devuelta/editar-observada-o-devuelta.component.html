@@ -8,11 +8,11 @@
       Ver detalle/Editar contrato {{this.numContrato}}
     </h1>
     <p class="info-sub-title">
-      <span>Fecha de firma del contrato <b>29/06/2020</b></span>
-      <span><b>Contratación</b></span>
-      <span>Estado: <b>Sin radicación de pólizas</b></span>
+      <span>Fecha de firma del contrato <b>{{this.fechaFirmaContrato}}</b></span>
+      <span><b>{{this.tipoSolicitud}}</b></span>
+      <span>Estado: <b>Con póliza observada y devuelta</b></span>
     </p>
-  
+
   </section>
   <section class="container">
     <mat-card class="shipping-card var-main-gris">
@@ -103,7 +103,7 @@
                 <div class="col d-flex align-items-center">
                   <mat-form-field class="example-full-width">
                     <input matInput formControlName="fecha" [matDatepicker]="pickerFecha" [min]="minDate" readonly
-                      (click)="pickerFecha.open()" required>
+                      (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
                     <mat-datepicker #pickerFecha></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="pickerFecha.open()" class="btn-calendario">
@@ -122,7 +122,7 @@
                 <div class="col d-flex align-items-center">
                   <mat-form-field class="example-full-width">
                     <input matInput formControlName="vigenciaPoliza" [matDatepicker]="pickerPoliza" [min]="minDate"
-                      readonly (click)="pickerPoliza.open()" required>
+                      readonly (click)="pickerPoliza.open()" required placeholder="DD/MM/AAAA">
                     <mat-datepicker #pickerPoliza></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="pickerPoliza.open()" class="btn-calendario">
@@ -141,7 +141,7 @@
                 <div class="col d-flex align-items-center">
                   <mat-form-field class="example-full-width">
                     <input matInput formControlName="vigenciaAmparo" [matDatepicker]="pickerAmparo" [min]="minDate"
-                      readonly (click)="pickerAmparo.open()" required>
+                      readonly (click)="pickerAmparo.open()" required placeholder="DD/MM/AAAA">
                     <mat-datepicker #pickerAmparo></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="pickerAmparo.open()" class="btn-calendario">
@@ -161,11 +161,12 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #valorAmparo maxlength="3" type="number" required formControlName="valorAmparo"
+                    <input matInput #valorAmparo maxlength="20" type="number" required formControlName="valorAmparo"
                       (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{3 - valorAmparo.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -177,50 +178,98 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="polizasYSeguros" multiple required>
-                  <mat-option *ngFor="let polizaYSeguro of polizasYSegurosArray" [value]="polizaYSeguro.value">
-                    {{ polizaYSeguro.name }}
+                <mat-select formControlName="polizasYSeguros" multiple required  (selectionChange)="getvalues($event.value)">
+                  <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
+                    {{ polizasYSeguros.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
           </div>
-          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-            Buen manejo y correcta inversión del anticipo
-          </mat-card-title>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="buenManejoCorrectaInversionAnticipo">¿Está incluida en la
-                    póliza presentada?</label>
-                </div>
-                <div class="col">
-                  <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group">*</span>
+          <div *ngIf="this.obj1==true">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+              Buen manejo y correcta inversión del anticipo
+            </mat-card-title>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="buenManejoCorrectaInversionAnticipo">¿Está incluida en la
+                      póliza presentada?</label>
+                  </div>
+                  <div class="col">
+                    <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
+                      <mat-radio-button [value]="true">Sí</mat-radio-button>
+                      <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group">*</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
-            Garantía de estabilidad y calidad de la obra
-          </mat-card-title>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="estabilidadYCalidad">¿Está incluida en la póliza
-                    presentada?</label>
+          <div *ngIf="this.obj2==true">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+              Garantía de estabilidad y calidad de la obra
+            </mat-card-title>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="estabilidadYCalidad">¿Está incluida en la póliza
+                      presentada?</label>
+                  </div>
+                  <div class="col">
+                    <mat-radio-group class="radioInput" formControlName="estabilidadYCalidad" required>
+                      <mat-radio-button [value]="true">Sí</mat-radio-button>
+                      <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group">*</span>
+                  </div>
                 </div>
-                <div class="col">
-                  <mat-radio-group class="radioInput" formControlName="estabilidadYCalidad" required>
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group">*</span>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="this.obj3==true">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+              Póliza de cumplimiento
+            </mat-card-title>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="polizaYCoumplimiento">¿Está incluida en la póliza
+                      presentada?</label>
+                  </div>
+                  <div class="col">
+                    <mat-radio-group class="radioInput" formControlName="polizaYCoumplimiento" required>
+                      <mat-radio-button [value]="true">Sí</mat-radio-button>
+                      <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group">*</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="this.obj4==true">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+              Pólizas y seguros
+            </mat-card-title>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="polizasYSegurosCompleto">¿Está incluida en la póliza
+                      presentada?</label>
+                  </div>
+                  <div class="col">
+                    <mat-radio-group class="radioInput" formControlName="polizasYSegurosCompleto" required>
+                      <mat-radio-button [value]="true">Sí</mat-radio-button>
+                      <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group">*</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -318,7 +367,7 @@
           </div>
         </mat-card-content>
       </mat-card>
-  
+
       <mat-card class="shipping-card">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text">
@@ -330,12 +379,12 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="fechaRevision">Fecha de la revisión</label>
+                  <label class="label-left" for="fechaRevision">Fecha de la revisión 2</label>
                 </div>
                 <div class="col d-flex align-items-center">
                   <mat-form-field class="example-full-width">
                     <input matInput formControlName="fechaRevision" [matDatepicker]="pickerFechaRevision" [min]="minDate"
-                      readonly (click)="pickerFechaRevision.open()" required>
+                      readonly (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA">
                     <mat-datepicker #pickerFechaRevision></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
@@ -350,7 +399,7 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="estadoRevision">Estado de la revisión</label>
+                  <label class="label-left" for="estadoRevision">Estado de la revisión 2</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -364,9 +413,49 @@
               </div>
             </div>
           </div>
+          <div *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.value == '2'">
+            <h2 class="card-subTitle">Aprobación</h2>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="fecha">Fecha de aprobacion</label>
+                  </div>
+                  <div class="col d-flex align-items-center">
+                    <mat-form-field class="example-full-width">
+                      <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22" [min]="minDate" readonly
+                        (click)="pickerFecha22.open()" required placeholder="DD/MM/AAAA">
+                      <mat-datepicker #pickerFecha22></mat-datepicker>
+                    </mat-form-field>
+                    <button mat-button color="primary" type="button" (click)="pickerFecha22.open()" class="btn-calendario">
+                      <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left" for="responsableAprob">Responsable de aprobación</label>
+                  </div>
+                  <div class="col">
+                    <mat-form-field class="select-width">
+                      <mat-select formControlName="responsableAprob" required>
+                        <mat-option *ngFor="let responsableAprob of aprobadosArray" [value]="responsableAprob">
+                          {{ responsableAprob.name }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
-  
+
       <div class="d-flex align-items-center">
         <div class="text-area-quill">
           <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
@@ -375,13 +464,13 @@
           </quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-          {{2000 - textoLimpio(addressForm.controls.observacionesGenerales.value)}}
+          {{2000 - (textoLimpio(addressForm.controls.observacionesGenerales.value)>2000?2000:textoLimpio(addressForm.controls.observacionesGenerales.value))}}
         </span>
         <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value">
           2000
         </span>
       </div>
-  
+      <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
       <div class="text-center mb-2em">
         <button mat-button color="warn" class="btn-guardar" type="submit">
           <img src="assets/img/icon/guardar.svg" alt="Regresar">

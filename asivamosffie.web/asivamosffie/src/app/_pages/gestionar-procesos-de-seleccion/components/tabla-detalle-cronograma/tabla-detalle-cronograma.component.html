@@ -13,17 +13,17 @@
 
             <ng-container matColumnDef="tipo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de proceso </th>
-                <td mat-cell *matCellDef="let element"> {{element.tipoProcesoNombre}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
             </ng-container>
 
             <ng-container matColumnDef="numero">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de proceso </th>
-                <td mat-cell *matCellDef="let element"> {{element.numeroProceso}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
             </ng-container>
 
             <ng-container matColumnDef="fechaSolicitud">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de solicitud </th>
-                <td mat-cell *matCellDef="let element"> {{element.fechaCreacion | date}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.fechaSolicitud | date: 'dd/MM/yyyy'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="numeroSolicitud">
@@ -33,26 +33,31 @@
 
             <ng-container matColumnDef="estadoDelSolicitud">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de solicitud </th>
-                <td mat-cell *matCellDef="let element"> {{element.estadoProcesoSeleccionNombre}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.estadoDelSolicitud}} </td>
             </ng-container>
 
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-                <td mat-cell *matCellDef="let element">
-                    <button mat-raised-button color="accent" class="btn-table" (click)="onDetalle()"
-                        *ngIf=" element.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.Creado ">Ver detalle/
-                        Editar</button>
+                <td mat-cell *matCellDef="let element">       
+                    <button mat-raised-button color="accent" class="btn-table" (click)="onDetalle(element.id,0)"
+                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true">
+                        Ver detalle/ Editar
+                        </button>
 
-                    <button mat-raised-button color="accent" class="btn-table" (click)="onEnviarSolicitud()"
-                        *ngIf=" element.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.Creado ">Enviar
-                        solicitud a comité</button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="onEnviarSolicitud(element.id)"
+                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true ">
+                        Enviar solicitud a comité
+                        </button>
 
-                    <button mat-raised-button color="accent" class="btn-table" (click)="onEliminar()"
-                        *ngIf=" element.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.Creado ">Eliminar</button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="onEliminar(element.id)"
+                        *ngIf=" element.id.estadoActividadCodigo == estadosProcesoSeleccionMonitoreo.Creada &&  element.id.enviadoComiteTecnico!=true ">
+                        Eliminar
+                        </button>
 
-                    <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf=" element.estadoProcesoSeleccionCodigo != estadosProcesoSeleccion.Creado ">Ver
-                        detalle</button>
+                    <button mat-raised-button color="accent" class="btn-table"  (click)="onDetalle(element.id,1)"
+                        *ngIf=" element.id.estadoActividadCodigo != estadosProcesoSeleccionMonitoreo.Creada   ">
+                        Ver detalle 1
+                        </button>
                 </td>
             </ng-container>
 

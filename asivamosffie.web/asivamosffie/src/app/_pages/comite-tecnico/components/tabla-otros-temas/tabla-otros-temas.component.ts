@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -24,7 +25,7 @@ export class TablaOtrosTemasComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor() { }
+  constructor(@Inject(DOCUMENT) readonly document: Document) { }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
@@ -44,8 +45,10 @@ export class TablaOtrosTemasComponent implements OnInit {
     };
   }
 
+  get window(): Window { return this.document.defaultView; }
+
   goToLink(url: string){
-    window.open('//' + url, "_blank");
+    this.window.open(url, "_blank");
   }
 
   cargarRegistros(){

@@ -28,7 +28,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                if(controversiaContractual.ControversiaContractualId==0)
+                if (controversiaContractual.ControversiaContractualId == 0)
                     controversiaContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 else
                     controversiaContractual.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
@@ -43,8 +43,28 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
+        [Route("CreateEditarActuacionSeguimiento")]
+        public async Task<IActionResult> CreateEditarActuacionSeguimiento(ActuacionSeguimiento actuacionSeguimiento)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (actuacionSeguimiento.ActuacionSeguimientoId == 0)
+                    actuacionSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    actuacionSeguimiento.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.CreateEditarActuacionSeguimiento(actuacionSeguimiento);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
         [Route("CreateEditNuevaActualizacionTramite")]
-        
         public async Task<IActionResult> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
         {
             Respuesta respuesta = new Respuesta();
@@ -80,6 +100,21 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetListGrillaControversiaActuacion")]
+
+        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaActuacion()
+        {
+            try
+            {
+                return await _contractualControversy.ListGrillaControversiaActuacion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
         [Route("GetVistaContratoContratista")]
         public async Task<ActionResult<VistaContratoContratista>> GetVistaContratoContratista(int pContratoId)
         {
@@ -92,7 +127,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-     
+
         [HttpPut]
         [Route("CambiarEstadoControversiaContractual")]
         public async Task<IActionResult> CambiarEstadoControversiaContractual([FromQuery] int pControversiaContractualId, string pNuevoCodigoEstado)
@@ -100,7 +135,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _contractualControversy.CambiarEstadoControversiaContractual(pControversiaContractualId,  pNuevoCodigoEstado, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _contractualControversy.CambiarEstadoControversiaContractual(pControversiaContractualId, pNuevoCodigoEstado, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -110,7 +145,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
 
 
 
@@ -133,6 +168,31 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [Route("GetControversiaContractualById")]
+        [HttpGet]
+
+        public async Task<ControversiaContractual> GetControversiaContractualById(int pControversiaContractualId)
+        {
+            var respuesta = await _contractualControversy.GetControversiaContractualById(pControversiaContractualId);
+            return respuesta;
+        }
+
+        [Route("GetControversiaActuacionById")]
+        [HttpGet]
+        public async Task<ControversiaActuacion> GetControversiaActuacionById(int pControversiaActuacionId)
+        {
+            var respuesta = await _contractualControversy.GetControversiaActuacionById(pControversiaActuacionId);
+            return respuesta;
+        }
+
+        [Route("GetListContratos")]
+        [HttpGet]
+        public async Task<List<Contrato>> GetListContratos()
+        {
+            var respuesta = await _contractualControversy.GetListContratos();
+            return respuesta;
+        }
+
 
         [Route("EliminarControversiaActuacion")]
         [HttpPost]
@@ -152,6 +212,43 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+
+        [HttpPost]
+        [Route("ActualizarRutaSoporteControversiaContractual")]
+        public async Task<IActionResult> ActualizarRutaSoporteControversiaContractual( int pControversiaContractualId, string pRutaSoporte)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.ActualizarRutaSoporteControversiaContractual(pControversiaContractualId, pRutaSoporte, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        
+
+        [HttpPost]
+        [Route("ActualizarRutaSoporteControversiaActuacion")]
+        public async Task<IActionResult> ActualizarRutaSoporteControversiaActuacion([FromQuery] int pControversiaActuacionId, string pRutaSoporte)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.ActualizarRutaSoporteControversiaActuacion(pControversiaActuacionId, pRutaSoporte, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         [HttpPut]
         [Route("CambiarEstadoControversiaActuacion")]

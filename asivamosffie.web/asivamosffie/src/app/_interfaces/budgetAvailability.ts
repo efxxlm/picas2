@@ -18,9 +18,12 @@ export interface GrillaDisponibilidadPresupuestal{
 }
 
 export interface DisponibilidadPresupuestal{
+    
+    
     disponibilidadPresupuestalId?: number,
     fechaSolicitud?: Date,
-    tipoSolicitudCodigo?: string,
+    tipoSolicitudCodigo?: string,//tradicional, especial o administrativo
+    tipoSolicitudEspecialCodigo?:string,//si es especial puede ser expensas o otros costos
     numeroSolicitud?: string,
     opcionContratarCodigo?: string,
     valorSolicitud?: number,
@@ -46,8 +49,11 @@ export interface DisponibilidadPresupuestal{
     limitacionEspecial?: string,
     numeroRadicadoSolicitud?: string,
     urlSoporte?: string,
-
+    /*not mapped on backend*/
+    fechaComiteTecnicoNotMapped?: any;
+    aportante?: any;
     disponibilidadPresupuestalProyecto?: DisponibilidadPresupuestalProyecto[],
+    stringAportante?:string
 
 }
 
@@ -68,6 +74,7 @@ export interface DisponibilidadPresupuestalProyecto{
 }
 
 export interface CustonReuestCommittee{
+    
     contratacionId?: number,
     disponibilidadPresupuestalId?: number,
     sesionComiteSolicitudId?: number,
@@ -81,7 +88,6 @@ export interface CustonReuestCommittee{
     valorSolicitado?: number,
     estadoSolicitudCodigo?: string,
     estadoSolicitudText?: string,
-    
 }
 
 export interface ListAportantes{
@@ -104,6 +110,7 @@ export interface ListConcecutivoProyectoAdministrativo {
 }
 
 export interface ListAdminProyect{
+    aportanteFuenteFinanciacion?: any;
     proyectoId?: number,
     valorAporte?: number,
     aportanteId?: number,
