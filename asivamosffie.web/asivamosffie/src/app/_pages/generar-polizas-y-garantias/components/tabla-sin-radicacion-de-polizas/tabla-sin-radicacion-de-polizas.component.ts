@@ -50,7 +50,7 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
     this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe((resp: any) => {
       let sinRadicacion = 0;
       for (let polizas of resp) {
-        if (polizas.estadoPoliza === 'Sin radicación de pólizas' && polizas.registroCompletoNombre=='Incompleto') {
+        if ((polizas.estadoPoliza === 'Sin radicación de pólizas' || polizas.estadoPoliza === 'sin definir') && polizas.registroCompletoNombre == 'Incompleto' && polizas.tipoSolicitudCodigoContratacion == '6') {
           this.dataTable.push(polizas);
           sinRadicacion++;
         };
@@ -58,7 +58,7 @@ export class TablaSinRadicacionDePolizasComponent implements OnInit {
       if (sinRadicacion === this.dataTable.length) {
         this.estadoSemaforo.emit('sin-diligenciar');
       };
-      if(this.dataTable.length==0){
+      if (this.dataTable.length == 0) {
         this.estadoSemaforo.emit('completo');
       }
       this.dataSource = new MatTableDataSource(this.dataTable);
