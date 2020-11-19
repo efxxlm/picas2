@@ -121,7 +121,12 @@ namespace asivamosffie.services
                 proyecto.FechaModificacion = DateTime.Now;
 
                 foreach (var SeguimientoSemanal in pListSeguimientoSemanal)
-                { 
+                {
+                    if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().CantidadPersonal == null) {
+
+                        RegistroCompleto = false;
+                    }
+
                     if (SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().SeguimientoSemanalPersonalObraId == 0)
                     { 
                         SeguimientoSemanal.SeguimientoSemanalPersonalObra.FirstOrDefault().UsuarioCreacion = proyecto.UsuarioModificacion;

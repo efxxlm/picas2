@@ -41,7 +41,7 @@ namespace asivamosffie.api.Controllers
             return await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoId(pContratacionProyectoId, HttpContext.User.FindFirst("User").Value.ToUpper());
         }
 
-        [Route("UpdateProgramacionContratoPersonal")]
+        [Route("UpdateSeguimientoSemanalPersonalObra")]
         [HttpPost]
         public async Task<IActionResult> UpdateSeguimientoSemanalPersonalObra([FromBody] List<SeguimientoSemanal> pSeguimientoSemanal)
         {
