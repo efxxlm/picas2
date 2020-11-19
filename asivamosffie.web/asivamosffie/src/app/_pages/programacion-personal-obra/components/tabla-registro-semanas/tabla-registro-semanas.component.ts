@@ -75,6 +75,7 @@ export class TablaRegistroSemanasComponent implements OnInit {
           contratoConstruccion.push(
             {
               seguimientoSemanalId: registro[0].seguimientoSemanalId,
+              contratacionProyectoId: registro[0].contratacionProyectoId,
               seguimientoSemanalPersonalObra: [
                 {
                   seguimientoSemanalId: registro[0].seguimientoSemanalId,
