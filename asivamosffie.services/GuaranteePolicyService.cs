@@ -1324,8 +1324,11 @@ namespace asivamosffie.services
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string strTipoSolicitudCodigoContratoPoliza = "Sin radicación de pólizas";
+                    string strTipoSolicitudCodigoContratoPoliza = ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas).ToString();
+                    string strTipoSolicitudNombreContratoPoliza = "Sin radicación de pólizas";
+
                     string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
+                    string strEstadoSolicitudNombreContratoPoliza = "sin definir";
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio TipoSolicitudCodigoContratoPoliza;
@@ -1339,13 +1342,22 @@ namespace asivamosffie.services
                             TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
                         
                         if (TipoSolicitudCodigoContratoPoliza != null)
-                            strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                            {
+                                strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                                strTipoSolicitudNombreContratoPoliza= TipoSolicitudCodigoContratoPoliza.Codigo;
+                            }
+                            
                     }
                     
 
                         EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         if (EstadoSolicitudCodigoContratoPoliza != null)
-                            strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+                        {
+                            strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Codigo;
+                            strEstadoSolicitudNombreContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+
+                        }
+                            
 
                     }
                     bool bRegistroCompleto=false;
@@ -1372,10 +1384,12 @@ namespace asivamosffie.services
                         //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
-                        TipoSolicitud = strTipoSolicitudCodigoContratoPoliza,
+                        TipoSolicitud = strTipoSolicitudNombreContratoPoliza,
+                        TipoSolicitudCodigo = strTipoSolicitudCodigoContratoPoliza,
 
-                        EstadoPoliza = strEstadoSolicitudCodigoContratoPoliza
+                        EstadoPoliza = strEstadoSolicitudNombreContratoPoliza
                         ,
+                        EstadoPolizaCodigo= strEstadoSolicitudCodigoContratoPoliza,
                         RegistroCompleto = contrato.RegistroCompleto,
                         RegistroCompletoNombre = strRegistroCompleto,
 
