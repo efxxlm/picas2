@@ -15,9 +15,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
+import { VerObservacionesComponent } from './components/ver-observaciones/ver-observaciones.component';
 
 @NgModule({
-  declarations: [HomeComponent, TablaVerificarSeguimientoDiarioComponent, VerificarSeguimientoComponent, FormObservacionesComponent],
+  declarations: [HomeComponent, TablaVerificarSeguimientoDiarioComponent, VerificarSeguimientoComponent, FormObservacionesComponent, VerObservacionesComponent],
   imports: [
     CommonModule,
     VerificarSeguimientoDiarioRoutingModule,

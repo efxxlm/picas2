@@ -1,5 +1,5 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-  <div class="row">
+  <div class="tieneObservaciones">
     <div class="row">
       <div class="col-md-12">
         <div class="row">
@@ -20,7 +20,8 @@
       </div>
     </div>
   </div>
-  <div class="d-flex align-items-center var-main-gris mt-2em">
+  <div class="d-flex align-items-center var-main-gris mt-2em animatedDown"
+    *ngIf="addressForm.get('tieneObservaciones').value === true">
     <div class="text-area-quill">
       <label for="observacion" class="text-area-quill--label header">
         Observaciones al seguimiento diario
