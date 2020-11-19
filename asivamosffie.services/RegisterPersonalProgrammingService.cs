@@ -90,8 +90,8 @@ namespace asivamosffie.services
 
                 if (List.Count() == 0)
                 {
-
-                    for (int i = 1; i < CalcularSemanasPlazoProyecto(pContratacionProyectoId) + 1; i++)
+                    int CantidadSemanas = CalcularSemanasPlazoProyecto(pContratacionProyectoId);
+                    for (int i = 1; i < CantidadSemanas + 1; i++)
                     {
                         SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal
                         {
@@ -106,17 +106,16 @@ namespace asivamosffie.services
 
                         List.Add(seguimientoSemanal);
                         _context.SeguimientoSemanal.Add(seguimientoSemanal);
-                        _context.SaveChanges();
-
+                    
                         SeguimientoSemanalPersonalObra seguimientoSemanalPersonalObra = new SeguimientoSemanalPersonalObra
                         {
-                            SeguimientoSemanalId = seguimientoSemanal.SeguimientoSemanalId,
                             Eliminado = false,
                             FechaCreacion = DateTime.Now,
-                            UsuarioCreacion = pUsuario
-                        }; 
-                        _context.SeguimientoSemanalPersonalObra.Add(seguimientoSemanalPersonalObra);
-                        _context.SaveChanges();
+                            UsuarioCreacion = pUsuario,
+                            CantidadPersonal = null
+
+                        };  
+
                         List<SeguimientoSemanalPersonalObra> seguimientoSemanalPersonalObras = new List<SeguimientoSemanalPersonalObra>
                         {
                             seguimientoSemanalPersonalObra
