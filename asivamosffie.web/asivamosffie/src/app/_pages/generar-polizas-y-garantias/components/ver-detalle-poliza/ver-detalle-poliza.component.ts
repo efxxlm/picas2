@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
+import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
 
 @Component({
   selector: 'app-ver-detalle-poliza',
@@ -59,7 +60,8 @@ export class VerDetallePolizaComponent implements OnInit {
   constructor(
     private polizaService: PolizaGarantiaService,
     private activatedRoute: ActivatedRoute,
-    private common: CommonService
+    private common: CommonService,
+    private contratacion:ProjectContractingService
   ) { }
 
   ngOnInit(): void {
@@ -71,13 +73,6 @@ export class VerDetallePolizaComponent implements OnInit {
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;
       this.tipoSolicitud = data[0].tipoSolicitud;
-      this.tipoContrato = data[0].tipoContrato;
-      this.objeto = data[0].descripcionModificacion;
-      this.nombreContratista = data[0].nombreContratista;
-      this.tipoIdentificacion = data[0].tipoDocumento;
-      this.numeroIdentificacion = data[0].numeroIdentificacion;
-      this.valorContrato = data[0].valorContrato;
-      this.plazoContrato = data[0].plazoContrato;
       this.numContrato = data[0].numeroContrato;
     });
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data0 => {
@@ -90,6 +85,7 @@ export class VerDetallePolizaComponent implements OnInit {
       this.valorAmparo = data0.valorAmparo;
       this.loadGarantia(data0.contratoPolizaId);
       this.loadChequeo(data0);
+      this.loadContratacionId(data0);
     });
     this.common.listaGarantiasPolizas().subscribe(data00 => {
       this.polizasYSegurosArray = data00;
@@ -147,5 +143,33 @@ export class VerDetallePolizaComponent implements OnInit {
     this.incluyeCondicionesGenerales = data.incluyeCondicionesGenerales;
     //Para el nombre aprobado de la granatia de la poliza
     this.nomAprobado = data.responsableAprobacion;
+  }
+  loadContratacionId(a){
+    this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
+      this.loadInfoContratacion(data);
+    });
+  }
+  loadInfoContratacion(data){
+    if(data.disponibilidadPresupuestal.length>0){
+      this.tipoContrato = data.disponibilidadPresupuestal[0].opcionContratarCodigo;
+      this.objeto = data.disponibilidadPresupuestal[0].objeto;
+      this.valorContrato = data.disponibilidadPresupuestal[0].valorSolicitud;
+      this.plazoContrato = data.disponibilidadPresupuestal[0].plazoMeses + 'meses / ' + data.disponibilidadPresupuestal[0].plazoDias + 'días';
+    }
+    else{
+      this.tipoContrato = 'Pendiente';
+      this.objeto = 'Pendiente';
+      this.valorContrato = 0;
+      this.plazoContrato =' 0 meses / 0 días';
+    }
+    this.nombreContratista = data.contratista.nombre;
+    if(data.contratista.tipoIdentificacionCodigo != undefined || data.contratista.tipoIdentificacionCodigo != undefined){
+      this.tipoIdentificacion = data.contratista.tipoIdentificacionCodigo;
+    }
+    else{
+      this.tipoIdentificacion = 'Pendiente';
+    }
+    this.numeroIdentificacion = data.contratista.numeroIdentificacion;
+    
   }
 }
