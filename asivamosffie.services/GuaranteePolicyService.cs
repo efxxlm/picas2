@@ -122,6 +122,8 @@ namespace asivamosffie.services
             //&&(bool)r.Estado==true&&r.Eliminado==0
             ).OrderByDescending(r=>r.ContratoPolizaId).FirstOrDefault();
 
+                contratoPoliza.ContratacionId = contrato.ContratacionId;
+
             }
 
             PolizaObservacion polizaObservacion=null;
@@ -135,7 +137,7 @@ namespace asivamosffie.services
 
                 contratoPoliza.PolizaGarantia = contratoPolizaGarantia;
 
-                contratoPoliza.ContratacionId = contrato.ContratacionId;
+                
 
                 polizaObservacion = _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
             
