@@ -75,6 +75,13 @@ export class FormPerfilComponent implements OnInit {
         if ( this.formContratista.get( 'perfiles' ).dirty === true && Number( value ) > 0 ) {
           this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
           const nuevosPerfiles = Number( value ) - this.perfiles.length;
+          if ( value < this.perfiles.length ) {
+            this.openDialog(
+              '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+            );
+            this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfiles.length ) );
+            return;
+          }
           for ( let i = 0; i < nuevosPerfiles; i++ ) {
             this.perfiles.push(
               this.fb.group(
@@ -127,6 +134,13 @@ export class FormPerfilComponent implements OnInit {
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
         .subscribe(
           value => {
+            if ( value < this.perfilProyecto.length && value > 0 ) {
+              this.openDialog(
+                '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+              );
+              this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
+              return;
+            }
             const nuevosPerfiles = Number( value ) - this.perfiles.length;
             for ( let i = 0; i < nuevosPerfiles; i++ ) {
               this.perfiles.push(
