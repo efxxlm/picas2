@@ -8,6 +8,7 @@ namespace asivamosffie.model.APIModels
     {
 
         public int? IdContrato { get; set; }
+        public int? ContratacionId { get; set; }
         //tipo identificacion
         public string TipoContrato { get; set; }
         public string NumeroContrato { get; set; }   

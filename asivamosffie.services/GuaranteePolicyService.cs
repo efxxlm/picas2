@@ -1571,6 +1571,7 @@ namespace asivamosffie.services
                     Dominio TipoSolicitudCodigoContratoPoliza=null;
                     string strTipoSolicitudCodigoContratoPoliza = "Sin radicación de pólizas";
                     string strFechaFirmaContrato = string.Empty;
+                    int contratacionIdValor = 0;
 
                     if (contratoPoliza != null)
                     {
@@ -1594,6 +1595,8 @@ namespace asivamosffie.services
                     Dominio TipoDocumentoCodigoContratista;
                     string strTipoDocumentoContratista = string.Empty;
 
+                    Dominio TipoContratoCodigoContrato=null;
+
                     Contratista contratista=null;
                     if (contratacion != null)
                     {
@@ -1611,6 +1614,10 @@ namespace asivamosffie.services
                             if (TipoDocumentoCodigoContratista != null)
                                 strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
                         }
+
+                        TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
+
+                        contratacionIdValor = contratacion.ContratacionId;
                     }
 
                     //TipoContrato = contrato.TipoContratoCodigo   ??? Obra  ????
@@ -1633,7 +1640,7 @@ namespace asivamosffie.services
                     string PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
+                    //Dominio TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
                                                                                 
                     string strTipoContratoCodigoContratoNombre = string.Empty;
 
@@ -1643,6 +1650,7 @@ namespace asivamosffie.services
                     //Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
                     VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
                     {
+                        ContratacionId= contratacionIdValor,
                         IdContrato = contrato.ContratoId,
                         TipoContrato = strTipoContratoCodigoContratoNombre,
                         NumeroContrato = contrato.NumeroContrato,
