@@ -22,57 +22,61 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
   };
   estado: string;
 
-  constructor ( private activatedRoute: ActivatedRoute,
-                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private dialog: MatDialog,
-                private routes: Router ) {
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+    private dialog: MatDialog,
+    private routes: Router ) {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
     if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
       this.routes.navigateByUrl('/preconstruccion');
       return;
-    };
+    }
     if ( this.routes.getCurrentNavigation().extras.state ) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
       this.estado = this.routes.getCurrentNavigation().extras.state.estado;
-    };
-  };
+    }
+  }
 
   ngOnInit(): void {
-  };
+  }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
-  getContratacionByContratoId ( pContratoId: string ) {
+  getContratacionByContratoId( pContratoId: string ) {
     this.faseUnoPreconstruccionSvc.getContratacionByContratoId( pContratoId )
       .subscribe( contrato => {
         this.contrato = contrato;
         console.log( this.contrato );
       } );
-  };
+  }
 
-  estadoSemaforo ( index: number, semaforo: string ) {
+  estadoSemaforo( index: number, semaforo: string ) {
+    // tslint:disable-next-line: no-string-literal
     this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
   }
 
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
+    // tslint:disable-next-line: deprecation
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
-  };
+  }
 
-  getPerfilesContrato ( index: number, perfilContrato: ContratoPerfil[] ) {
+  getPerfilesContrato( index: number, perfilContrato: ContratoPerfil[] ) {
     this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoPerfil = perfilContrato;
 
     console.log( this.contrato );
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
-      .subscribe( 
+      .subscribe(
         response => {
+          // tslint:disable-next-line: no-string-literal
           this.openDialog( '', response['message'] );
           this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
         },
@@ -80,6 +84,6 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
           this.openDialog( '', err.message );
         }
       );
-  };
+  }
 
-};
+}

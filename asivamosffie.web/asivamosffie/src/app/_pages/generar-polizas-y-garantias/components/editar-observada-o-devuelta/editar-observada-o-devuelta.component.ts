@@ -128,6 +128,8 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;
       this.tipoSolicitud = data[0].tipoSolicitud;
       this.numContrato = data[0].numeroContrato;
+      this.tipoIdentificacion = data[0].tipoDocumento;
+      this.loadContratacionId(data[0].contratacionId);
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
@@ -153,11 +155,11 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
       this.dataLoad2(data);
-      this.loadContratacionId(data);
+      
     });
   }
   loadContratacionId(a){
-    this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
+    this.contratacion.getContratacionByContratacionId(a).subscribe(data=>{
       this.loadInfoContratacion(data);
     });
   }
@@ -175,12 +177,14 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.plazoContrato =' 0 meses / 0 días';
     }
     this.nombreContratista = data.contratista.nombre;
+    /*
     if(data.contratista.tipoIdentificacionCodigo != undefined || data.contratista.tipoIdentificacionCodigo != undefined){
       this.tipoIdentificacion = data.contratista.tipoIdentificacionCodigo;
     }
     else{
       this.tipoIdentificacion = 'Pendiente';
     }
+    */
     this.numeroIdentificacion = data.contratista.numeroIdentificacion;
     
   }
