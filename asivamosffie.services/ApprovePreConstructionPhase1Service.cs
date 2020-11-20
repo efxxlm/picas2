@@ -104,7 +104,7 @@ namespace asivamosffie.services
                     listaContrats.Add(new
                     {
                         c.ContratoId,
-                        FechaAprobacion = ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy"),
+                        c.ContratoPoliza.FirstOrDefault().FechaAprobacion,
                         c.Contratacion.TipoSolicitudCodigo,
                         c.NumeroContrato,
                         CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
