@@ -1,1 +1,182 @@
-<p>gestion-sst works!</p>
+<section class="text-center">
+    <form autocomplete="off" [formGroup]="formSst" (ngSubmit)="guardar()">
+        <div align="left">
+            <mat-card>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left">Cantidad de accidentes laborales registrados en la semana</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field>
+                                            <input matInput type="text" maxlength="3" formControlName="cantidadAccidentes" required>
+                                        </mat-form-field>
+                                    </section>
+                                    <span class="contador">{{3 - formSst.get( 'cantidadAccidentes' ).value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" style="margin-top: 1.5em;">Principales causas de los accidentes o incidentes laborales ocurridos durante la semana</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field appearance="fill">
+                                          <mat-select class="padding-left" formControlName="principalesCausasAccidente" required>
+                                            <mat-option *ngFor="let causa of causasDeAccidentes" [value]="causa">
+                                                {{causa.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" style="margin-top: 1.5em;">¿Se realizaron capacitaciones relacionadas con seguridad y salud en el trabajo durante la semana?</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field class="w-50" appearance="fill">
+                                          <mat-select class="padding-left" formControlName="seRealizaronCapacitaciones" required>
+                                            <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                          <div>
+                            <div class="pr-1">
+                              <label class="label-left">Tema de capacitación</label>
+                            </div>
+                            <div class="col d-flex" style="width: 100%;">
+                                <quill-editor   class="quill-editor-style card-80em position-relative"
+                                                [styles]="editorStyle"
+                                                [modules]="config"
+                                                (onContentChanged)="maxLength($event, 200)"
+                                                formControlName="temaCapacitacion"
+                                                required>
+                                </quill-editor>
+                                <span class="contador miles" *ngIf="formSst.get('temaCapacitacion').value !== null" style="margin-top: 3.5em;">
+                                    {{200 - (textoLimpio(formSst.get('temaCapacitacion').value))}}
+                                </span>
+                                <span class="contador miles" *ngIf="formSst.get('temaCapacitacion').value === null" style="margin-top: 3.5em;">
+                                    200
+                                </span>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" style="margin-top: 1.5em;">¿Se realizaron revisiones de uso de elementos de protección personal y dotación durante la semana?</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field appearance="fill">
+                                          <mat-select class="padding-left" formControlName="seRealizaronRevisiones" required>
+                                            <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" style="margin-top: 1.5em;">Resultado de revisión</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field appearance="fill">
+                                          <mat-select class="padding-left" formControlName="resultadoRevision" required>
+                                            <mat-option *ngFor="let requisito of resultadosRevision" [value]="requisito">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" style="margin-top: 1.5em;">¿Se realizaron revisiones de señalización de seguridad y salud en el trabajo y kit de emergencias durante la semana?</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field appearance="fill">
+                                          <mat-select class="padding-left" formControlName="seRealizoRevisionSeñalizacion" required>
+                                            <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-1em">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left">URL soporte de la gestión de calidad</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field style="width: 100%;">
+                                    <input  matInput
+                                            type="text"
+                                            formControlName="urlSoporte">
+                                </mat-form-field>
+                            </div>
+                            <div class="d-flex justify-content-center size-text-descriptivo">
+                                <p class="color-text-descriptivo">
+                                    <i> 
+                                        Indique la ruta en la que se encuentran los documentos de soporte de la Gestión de seguridad y salud en el trabajo.
+                                    </i>
+                                </p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="text-center" style="margin-top: 2em;">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit">
+                    <img  src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </form>
+</section>

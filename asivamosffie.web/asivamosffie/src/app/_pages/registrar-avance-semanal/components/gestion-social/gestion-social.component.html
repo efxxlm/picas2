@@ -1,1 +1,95 @@
-<p>gestion-social works!</p>
+<section class="text-center">
+    <form autocomplete="off" [formGroup]="formGestionSocial" (ngSubmit)="guardar()">
+        <div align="left">
+            <mat-card>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left">Cantidad de empleos directos generados</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field>
+                                            <input matInput type="text" maxlength="3" formControlName="cantidadEmpleosDirectos" required>
+                                        </mat-form-field>
+                                    </section>
+                                    <span class="contador">{{3 - formGestionSocial.get( 'cantidadEmpleosDirectos' ).value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left">Cantidad de empleos indirectos generados</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field>
+                                            <input matInput type="text" maxlength="3" formControlName="cantidadEmpleosIndirectos" required>
+                                        </mat-form-field>
+                                    </section>
+                                    <span class="contador">{{3 - formGestionSocial.get( 'cantidadEmpleosIndirectos' ).value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left">Total de empleos generados</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field>
+                                            <input matInput type="text" maxlength="3" formControlName="totalEmpleosGenerados" required>
+                                        </mat-form-field>
+                                    </section>
+                                    <span class="contador">{{3 - formGestionSocial.get( 'totalEmpleosGenerados' ).value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div align="left">
+            <mat-card>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" style="margin-top: 1.5em;">¿Se realizaron reuniones, socializaciones o capacitaciones con la comunidad durante la semana?</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <section style="width: 100%;">
+                                        <mat-form-field class="w-50" appearance="fill">
+                                          <mat-select class="padding-left" formControlName="seRealizaronReuniones" required>
+                                            <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
+                                                {{requisito.viewValue}}
+                                            </mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </section>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="text-center" style="margin-top: 2em;">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit">
+                    <img  src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </form>
+</section>
