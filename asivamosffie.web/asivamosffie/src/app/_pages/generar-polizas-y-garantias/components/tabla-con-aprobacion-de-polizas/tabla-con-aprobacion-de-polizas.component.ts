@@ -49,7 +49,7 @@ export class TablaConAprobacionDePolizasComponent implements OnInit {
     this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe((resp: any) => {
       let enrevisionC  = 0;
       for (let polizas of resp) {
-        if (polizas.estadoPoliza === 'Con aprobación de pólizas' && polizas.registroCompletoNombre=='Completo') {
+        if (polizas.estadoPoliza === 'Con aprobación de pólizas' && polizas.registroCompletoPolizaNombre=='Completo') {
           this.dataTable.push(polizas);
           enrevisionC++;
         };

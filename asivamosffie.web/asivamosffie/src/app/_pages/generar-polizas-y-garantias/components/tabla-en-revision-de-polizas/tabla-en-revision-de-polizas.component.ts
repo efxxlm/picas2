@@ -49,11 +49,11 @@ export class TablaEnRevisionDePolizasComponent implements OnInit {
       let enrevisionInc = 0;
       let enrevisionC  = 0;
       for (let polizas of resp) {
-        if (polizas.estadoPoliza === 'En revisión de pólizas' && polizas.registroCompletoNombre=='Incompleto') {
+        if (polizas.estadoPoliza === 'En revisión de pólizas' && polizas.registroCompletoPolizaNombre=='Incompleto') {
           this.dataTable.push(polizas);
           enrevisionInc++;
         };
-        if (polizas.estadoPoliza === 'En revisión de pólizas' && polizas.registroCompletoNombre=='Completo') {
+        if (polizas.estadoPoliza === 'En revisión de pólizas' && polizas.registroCompletoPolizaNombre=='Completo') {
           this.dataTable.push(polizas);
           enrevisionC++;
         };
