@@ -1039,6 +1039,85 @@ namespace asivamosffie.services
 
         }
 
+        public static bool ConsultarRegistroCompletoCumple(int ContratoPolizaId)
+        {
+            ContratoPoliza contratoPoliza = null;
+
+
+            if (string.IsNullOrEmpty(contratoPoliza.NombreAseguradora.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.NumeroPoliza.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.NumeroCertificado.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.FechaExpedicion.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.Vigencia.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.VigenciaAmparo.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.ValorAmparo.ToString()))
+            {
+                return false;
+            }
+
+            else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosAsegurado.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosBeneficiario.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosTomador.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.IncluyeReciboPago.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.IncluyeCondicionesGenerales.ToString()))
+            {
+                return false;
+            }
+
+            else if (string.IsNullOrEmpty(contratoPoliza.IncluyeCondicionesGenerales.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.ResponsableAprobacion.ToString()))
+            {
+                return false;
+            }
+            else if (string.IsNullOrEmpty(contratoPoliza.EstadoPolizaCodigo.ToString()))
+            {
+                return false;
+            }
+
+            else
+            {
+                return true;
+            }
+
+        }
+
 
         public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario)
         {
@@ -1615,7 +1694,7 @@ namespace asivamosffie.services
                                 strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
                         }
 
-                        TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
+                        TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud_Obra_Interventorias);
 
                         contratacionIdValor = contratacion.ContratacionId;
                     }
