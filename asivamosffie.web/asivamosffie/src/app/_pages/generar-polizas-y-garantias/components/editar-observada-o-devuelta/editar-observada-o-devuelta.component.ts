@@ -151,11 +151,6 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.dataLoad2(data);
       this.loadContratacionId(data);
     });
-    this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data_1 => {
-      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === data_1.estadoRevision);
-      this.addressForm.get('fechaRevision').setValue(data_1.fechaRevisionDateTime);
-      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
-    });
   }
   loadContratacionId(a){
     this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
@@ -188,8 +183,18 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   dataLoad2(data) {
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
+    this.loadEstadoRevision(this.idPoliza);
     this.loadGarantia(this.idPoliza);
     this.loadObservations(this.idPoliza);
+  }
+  loadEstadoRevision(id){
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
+      for (let i=0; i< data.length; i++){
+        const estadoRevSeleccionado = this.estadoArray.find(t => t.value === data[i].estadoRevisionCodigo);
+        this.addressForm.get('fechaRevision').setValue(data[i].fechaRevision);
+        this.addressForm.get('estadoRevision').setValue(estadoRevSeleccionado);
+      }
+    });
   }
   loadGarantia(id) {
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data => {

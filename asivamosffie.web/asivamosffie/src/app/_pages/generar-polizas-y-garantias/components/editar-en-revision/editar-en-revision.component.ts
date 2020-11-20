@@ -145,17 +145,22 @@ export class EditarEnRevisionComponent implements OnInit {
       this.dataLoad2(data);
       this.loadContratacionId(data);
     });
-    this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data_1 => {
-      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === data_1.estadoRevision);
-      this.addressForm.get('fechaRevision').setValue(data_1.fechaRevisionDateTime);
-      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
-    });
   }
   dataLoad2(data) {
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
     this.loadGarantia(this.idPoliza);
-    this.loadObservations(this.idPoliza)
+    this.loadObservations(this.idPoliza);
+    this.loadEstadoRevision(this.idPoliza);
+  }
+  loadEstadoRevision(id){
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
+      for (let i=0; i< data.length; i++){
+        const estadoRevSeleccionado = this.estadoArray.find(t => t.value === data[i].estadoRevisionCodigo);
+        this.addressForm.get('fechaRevision').setValue(data[i].fechaRevision);
+        this.addressForm.get('estadoRevision').setValue(estadoRevSeleccionado);
+      }
+    });
   }
   loadContratacionId(a){
     this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
@@ -298,11 +303,13 @@ export class EditarEnRevisionComponent implements OnInit {
       const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
     }
     let nombreAprobado;
-    if (!this.addressForm.value.responsableAprob.value) {
-      nombreAprobado = null;
-    }
-    else {
-      nombreAprobado = this.addressForm.value.responsableAprob.value;
+    if(this.addressForm.value.responsableAprob!=undefined || this.addressForm.value.responsableAprob!=null ){
+      if (!this.addressForm.value.responsableAprob.name) {
+        nombreAprobado = "pendiente";
+      }
+      else {
+        nombreAprobado = this.addressForm.value.responsableAprob.name;
+      }
     }
     var statePoliza;
     if (this.addressForm.value.estadoRevision.value == "1") {
@@ -321,6 +328,7 @@ export class EditarEnRevisionComponent implements OnInit {
     console.log(this.addressForm.value);
     let auxValue = this.addressForm.value.estadoRevision;
     let auxValue2 = this.addressForm.value.polizasYSeguros;
+    console.log(nombreAprobado);
     const contratoArray = {
       'contratoId': this.idContrato,
       "contratoPolizaId": this.idPoliza,
