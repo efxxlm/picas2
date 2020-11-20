@@ -411,7 +411,7 @@ export class EditarEnRevisionComponent implements OnInit {
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza, this.idContrato).subscribe(resp1 => {
 
         });
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
       else {

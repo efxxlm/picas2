@@ -188,7 +188,7 @@
             </div>
           </div>
           <div *ngIf="this.obj1==true">
-            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;">
               Buen manejo y correcta inversión del anticipo
             </mat-card-title>
             <div class="row">
@@ -210,7 +210,7 @@
             </div>
           </div>
           <div *ngIf="this.obj2==true">
-            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;">
               Garantía de estabilidad y calidad de la obra
             </mat-card-title>
             <div class="row">
@@ -232,7 +232,7 @@
             </div>
           </div>
           <div *ngIf="this.obj3==true">
-            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;">
               Póliza de cumplimiento
             </mat-card-title>
             <div class="row">
@@ -254,7 +254,7 @@
             </div>
           </div>
           <div *ngIf="this.obj4==true">
-            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;">
               Pólizas y seguros
             </mat-card-title>
             <div class="row">
@@ -370,7 +370,7 @@
       </mat-card>
 
       <mat-card class="shipping-card">
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card" style="margin-left: -27px;">
           <mat-card-title class="header-card--text">
             Revisión
           </mat-card-title>
@@ -460,7 +460,7 @@
       <div class="d-flex align-items-center">
         <div class="text-area-quill">
           <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
-          <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+          <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
             (onContentChanged)="maxLength($event, 2000)" formControlName="observacionesGenerales">
           </quill-editor>
         </div>

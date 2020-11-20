@@ -130,9 +130,14 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   loadContratacionId(a){
-    this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
-      this.loadInfoContratacion(data);
-    });
+    if(a.contratacionId!=null || a.contratacionId!=undefined){
+      this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
+        this.loadInfoContratacion(data);
+      });
+    }
+    else{
+      this.loadNoContratacionID();
+    }
   }
   loadInfoContratacion(data){
     if(data.disponibilidadPresupuestal.length>0){
@@ -156,6 +161,14 @@ export class GestionarPolizasComponent implements OnInit {
     }
     this.numeroIdentificacion = data.contratista.numeroIdentificacion;
     
+  }
+
+  loadNoContratacionID(){
+    this.tipoContrato = 'Pendiente';
+    this.objeto = 'Pendiente';
+    this.valorContrato = 0;
+    this.tipoIdentificacion = 'Pendiente';
+    this.plazoContrato =' 0 meses / 0 días';
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
@@ -310,7 +323,7 @@ export class GestionarPolizasComponent implements OnInit {
 
           });
         });
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
       else {
