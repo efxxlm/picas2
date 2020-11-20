@@ -263,7 +263,7 @@ export class GestionarPolizasComponent implements OnInit {
         switch (polizasList[i]) {
           case '1':
             garantiaArray = {
-              'contratoPolizaId':this.contratoPolizaId,
+              'contratoPolizaId': null,
               'TipoGarantiaCodigo': '1',
               'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
             };
@@ -272,7 +272,7 @@ export class GestionarPolizasComponent implements OnInit {
             break;
           case '2':
             garantiaArray = {
-              'contratoPolizaId':this.contratoPolizaId,
+              'contratoPolizaId': null,
               'TipoGarantiaCodigo': '2',
               'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
             };
@@ -281,7 +281,7 @@ export class GestionarPolizasComponent implements OnInit {
             break;
           case '3':
             garantiaArray = {
-              'contratoPolizaId':this.contratoPolizaId,
+              'contratoPolizaId': null,
               'TipoGarantiaCodigo': '3',
               'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
             };
@@ -290,7 +290,7 @@ export class GestionarPolizasComponent implements OnInit {
             break;
           case '4':
             garantiaArray = {
-              'contratoPolizaId':this.contratoPolizaId,
+              'contratoPolizaId': null,
               'TipoGarantiaCodigo': '4',
               'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
             };
