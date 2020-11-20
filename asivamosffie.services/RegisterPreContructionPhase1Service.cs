@@ -32,7 +32,7 @@ namespace asivamosffie.services
         /// 
         public async Task<List<VRegistrarFase1>> GetListContratacion2() 
         {
-            return null; //await _context.VRegistrarFase1.ToListAsync();
+            return await _context.VRegistrarFase1.Where(r=> r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -88,7 +88,7 @@ namespace asivamosffie.services
                         {
                             c.Contratacion.NumeroSolicitud,
                             c.ContratoId,
-                            FechaAprobacion = c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue ? ((DateTime)c.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yyyy") : " ",
+                            FechaAprobacion = c.ContratoPoliza.FirstOrDefault().FechaAprobacion.HasValue ? c.ContratoPoliza.FirstOrDefault().FechaAprobacion : DateTime.Now,
                             c.Contratacion.TipoSolicitudCodigo,
                             c.NumeroContrato,
                             CantidadProyectosAsociados = c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado),
