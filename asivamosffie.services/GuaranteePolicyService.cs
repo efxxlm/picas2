@@ -387,18 +387,27 @@ namespace asivamosffie.services
             {
                 if (contratoPoliza != null)
                 {
-                    contratoPoliza.FechaModificacion = DateTime.Now;
 
-                    //_context.Add(contratoPoliza);
+                    ContratoPoliza contratoPolizaBD = null;
 
-                    contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
-                    //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+                    if(contratoPolizaBD!= null)
+                    {
+                        contratoPolizaBD = _context.ContratoPoliza.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
 
-                    LimpiarEntradasContratoPoliza(ref contratoPoliza);
+                        contratoPolizaBD.FechaModificacion = DateTime.Now;
 
-                    //_context.ContratoPoliza.Add(contratoPoliza);
-                    _context.ContratoPoliza.Update(contratoPoliza);
-                    //await _context.SaveChangesAsync();
+                        //_context.Add(contratoPoliza);
+
+                        contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+
+                        LimpiarEntradasContratoPoliza(ref contratoPolizaBD);
+
+                        //_context.ContratoPoliza.Add(contratoPoliza);
+                        _context.ContratoPoliza.Update(contratoPolizaBD);
+                        //await _context.SaveChangesAsync();
+                    }
+
 
 
                     return
@@ -462,6 +471,7 @@ namespace asivamosffie.services
             {
                 if (contratoPoliza != null)
                 {
+                    
                     contratoPoliza.FechaCreacion = DateTime.Now;
                     DateTime? dt = null;
                     //DateTime? dt;
