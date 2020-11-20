@@ -95,6 +95,23 @@
     }
   }
 
+  &.card-80em {
+    width: 100%;
+    .ql-container.ql-snow {
+      max-width: 80em;
+      border-bottom: $fontColor solid 1px;
+
+      .quill-sin-borde & {
+        border-bottom: none;
+      }
+
+      .w-quill & {
+        max-width: 30em;
+        margin: auto;
+      }
+    }
+  }
+
   &[required] {
     // position: relative;
     &::after {

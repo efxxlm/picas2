@@ -1,3 +1,4 @@
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,28 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionAmbientalComponent implements OnInit {
 
-  constructor() { }
+    formGestionAmbiental: FormGroup;
+    booleanosActividadRelacionada: any[] = [
+        { value: true, viewValue: 'Si' },
+        { value: false, viewValue: 'No' }
+    ];
 
-  ngOnInit(): void {
-  }
+    constructor( private fb: FormBuilder )
+    {
+        this.crearFormulario();
+    }
+
+    ngOnInit(): void {
+    }
+
+    crearFormulario() {
+        this.formGestionAmbiental = this.fb.group({
+            actividadRelacionada: [ null ]
+        });
+    }
+
+    guardar() {
+        console.log( this.formGestionAmbiental.value );
+    }
 
 }
