@@ -826,9 +826,55 @@ namespace asivamosffie.services
                 //PolizaObservacion polizaObservacion;           
                  correo = "cdaza@ivolucion.com";
 
-                Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, settings.MailServer,
-                settings.MailPort, settings.Password, settings.Sender,
-                objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate, msjNotificacion);
+                //Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, settings.MailServer,
+                //settings.MailPort, settings.Password, settings.Sender,
+                //objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate, msjNotificacion);
+
+
+                bool blEnvioCorreo = false;
+                //Respuesta respuesta = new Respuesta();
+
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
+
+                string template = TemplateRecoveryPassword.Contenido;
+
+                Contrato contrato;
+                contrato = _context.Contrato.Where(r => r.ContratoId == objVistaContratoGarantiaPoliza.IdContrato).FirstOrDefault();
+
+                fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
+
+                //datos basicos generales, aplican para los 4 mensajes
+                template = template.Replace("_Tipo_Contrato_", objVistaContratoGarantiaPoliza.TipoContrato);
+                template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
+                template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/MM/aaaa)
+                template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
+                template = template.Replace("_Valor_Contrato_", objVistaContratoGarantiaPoliza.ValorContrato);  //fomato miles .
+                template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
+
+                if (msjNotificacion != null)
+                {
+                    template = template.Replace("_Nombre_Aseguradora_", msjNotificacion.NombreAseguradora);
+                    template = template.Replace("_Numero_Poliza_", msjNotificacion.NumeroPoliza);
+                    template = template.Replace("_Fecha_Revision_", msjNotificacion.FechaRevision);
+                    template = template.Replace("_Estado_Revision_", msjNotificacion.EstadoRevision);
+                    template = template.Replace("_Observaciones_", msjNotificacion.Observaciones);
+
+                    template = template.Replace("_Fecha_Aprobacion_Poliza", msjNotificacion.FechaAprobacion);
+
+                    if (!string.IsNullOrEmpty(msjNotificacion.NumeroDRP))
+                        template = template.Replace("_NumeroDRP_", msjNotificacion.NumeroDRP);
+
+                }
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(correo, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+
+                if (blEnvioCorreo)
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+
+                else
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, correo, "Gestión Pólizas");
+                //return respuesta;
 
                 //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
 
