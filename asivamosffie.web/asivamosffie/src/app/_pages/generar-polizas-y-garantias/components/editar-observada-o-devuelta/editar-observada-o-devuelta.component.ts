@@ -90,6 +90,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   fechaFirmaContrato: any;
   tipoSolicitud: any;
   public arrayGarantias = [];
+  listaUsuarios: any[]=[];
 
   constructor(
     private router: Router,
@@ -130,6 +131,9 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
+    });
+    this.common.getUsuariosByPerfil(10).subscribe(resp=>{
+      this.listaUsuarios = resp;
     });
   }
   loadData(id) {

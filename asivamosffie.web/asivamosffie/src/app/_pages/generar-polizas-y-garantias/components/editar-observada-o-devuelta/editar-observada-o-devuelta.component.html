@@ -447,8 +447,8 @@
                 <div class="col">
                   <mat-form-field class="select-width">
                     <mat-select formControlName="responsableAprob" required>
-                      <mat-option *ngFor="let responsableAprob of aprobadosArray" [value]="responsableAprob">
-                        {{ responsableAprob.name }}
+                      <mat-option *ngFor="let responsableAprob of listaUsuarios" [value]="responsableAprob">
+                        {{ responsableAprob.nombres }} {{responsableAprob.apellidos}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

@@ -94,6 +94,7 @@ export class EditarEnRevisionComponent implements OnInit {
   tipoSolicitud: any;
   ultimoEstadoRevision: any;
   ultimaFechaRevision: any;
+  listaUsuarios: any[]=[];
 
   constructor(
     private router: Router,
@@ -121,6 +122,9 @@ export class EditarEnRevisionComponent implements OnInit {
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
+    });
+    this.common.getUsuariosByPerfil(10).subscribe(resp=>{
+      this.listaUsuarios = resp;
     });
   }
   loadData(id) {
