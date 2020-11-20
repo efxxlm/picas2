@@ -72,34 +72,82 @@ export class FormPerfilComponent implements OnInit {
     if ( this.perfilProyecto.length === 0 ) {
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
       .subscribe( value => {
-        this.perfiles.clear();
-        for ( let i = 0; i < Number(value); i++ ) {
-          this.perfiles.push(
-            this.fb.group(
-              {
-                estadoSemaforo              : [ 'sin-diligenciar' ],
-                contratoPerfilId            : [ 0 ],
-                perfilCodigo                : [ null ],
-                cantidadHvRequeridas        : [ '' ],
-                cantidadHvRecibidas         : [ '' ],
-                cantidadHvAprobadas         : [ '' ],
-                fechaAprobacion             : [ null ],
-                observacion                 : [ null ],
-                observacionSupervisor       : [ null ],
-                fechaObservacion            : [ null ],
-                contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                rutaSoporte                 : [ '' ]
-              }
-            )
-          );
+        if ( this.formContratista.get( 'perfiles' ).dirty === true && Number( value ) > 0 ) {
+          this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
+          const nuevosPerfiles = Number( value ) - this.perfiles.length;
+          for ( let i = 0; i < nuevosPerfiles; i++ ) {
+            this.perfiles.push(
+              this.fb.group(
+                {
+                  estadoSemaforo              : [ 'sin-diligenciar' ],
+                  contratoPerfilId            : [ 0 ],
+                  perfilCodigo                : [ null ],
+                  cantidadHvRequeridas        : [ '' ],
+                  cantidadHvRecibidas         : [ '' ],
+                  cantidadHvAprobadas         : [ '' ],
+                  fechaAprobacion             : [ null ],
+                  observacion                 : [ null ],
+                  observacionSupervisor       : [ null ],
+                  fechaObservacion            : [ null ],
+                  contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
+                  rutaSoporte                 : [ '' ]
+                }
+              )
+            );
+          }
+        }
+        if ( this.formContratista.get( 'perfiles' ).dirty === false && Number( value ) > 0 ) {
+          this.perfiles.clear();
+          for ( let i = 0; i < Number(value); i++ ) {
+            this.perfiles.push(
+              this.fb.group(
+                {
+                  estadoSemaforo              : [ 'sin-diligenciar' ],
+                  contratoPerfilId            : [ 0 ],
+                  perfilCodigo                : [ null ],
+                  cantidadHvRequeridas        : [ '' ],
+                  cantidadHvRecibidas         : [ '' ],
+                  cantidadHvAprobadas         : [ '' ],
+                  fechaAprobacion             : [ null ],
+                  observacion                 : [ null ],
+                  observacionSupervisor       : [ null ],
+                  fechaObservacion            : [ null ],
+                  contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
+                  rutaSoporte                 : [ '' ]
+                }
+              )
+            );
+          }
         }
       } );
       this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
+      this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
-        .subscribe( () => {
-          this.cantidadPerfiles.nativeElement.value = String( this.perfilProyecto.length );
+        .subscribe(
+          value => {
+            const nuevosPerfiles = Number( value ) - this.perfiles.length;
+            for ( let i = 0; i < nuevosPerfiles; i++ ) {
+              this.perfiles.push(
+                this.fb.group(
+                  {
+                    estadoSemaforo              : [ 'sin-diligenciar' ],
+                    contratoPerfilId            : [ 0 ],
+                    perfilCodigo                : [ null ],
+                    cantidadHvRequeridas        : [ '' ],
+                    cantidadHvRecibidas         : [ '' ],
+                    cantidadHvAprobadas         : [ '' ],
+                    fechaAprobacion             : [ null ],
+                    observacion                 : [ null ],
+                    observacionSupervisor       : [ null ],
+                    fechaObservacion            : [ null ],
+                    contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
+                    rutaSoporte                 : [ '' ]
+                  }
+                )
+              );
+            }
         } );
       for ( const perfil of this.perfilProyecto ) {
         const observacionTipo3 = [];
