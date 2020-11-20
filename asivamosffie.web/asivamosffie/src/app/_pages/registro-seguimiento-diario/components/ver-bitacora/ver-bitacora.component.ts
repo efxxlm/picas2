@@ -7,7 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DatePipe } from '@angular/common';
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 
 export interface SeguimientoDiario {
@@ -50,6 +50,7 @@ export class VerBitacoraComponent implements AfterViewInit {
   constructor(
     private followUpDailyService: FollowUpDailyService,
     private route: ActivatedRoute,
+    private router: Router,
   ) 
   { }
 
@@ -83,7 +84,8 @@ export class VerBitacoraComponent implements AfterViewInit {
     }
   }
 
-  // verDetalle(){
-  //   contratacionProyecto.proyecto.infoProyecto
-  // }
+   verDetalle( seguimiento ){
+    this.router.navigate( [ '/registroSeguimientoDiario/verDetalle', seguimiento.seguimientoDiarioId ? seguimiento.seguimientoDiarioId : 0 ], { state: { proyecto: seguimiento.contratacionProyecto.proyecto.infoProyecto } } )
+     
+   }
 }
