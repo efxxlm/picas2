@@ -68,7 +68,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -192,8 +192,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="disponibilidadMaterial">
-                    <mat-option *ngFor="let selectValue of materialArray" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of materialArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -201,7 +201,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === 'media' || addressForm.get('disponibilidadMaterial').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -213,8 +213,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="causaMaterial">
-                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadMaterial" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadMaterial" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -222,7 +222,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === 'media' || addressForm.get('disponibilidadMaterial').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -302,8 +302,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="disponibilidadEquipo">
-                    <mat-option *ngFor="let selectValue of equipolArray" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of equipolArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -311,7 +311,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === 'parcial' || addressForm.get('disponibilidadEquipo').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -323,8 +323,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="causaEquipo">
-                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadEquipo" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadEquipo" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -332,7 +332,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === 'parcial' || addressForm.get('disponibilidadEquipo').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -412,8 +412,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="Productividad">
-                    <mat-option *ngFor="let selectValue of productividadArray" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of productividadArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -421,7 +421,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -433,8 +433,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="causaProductividad">
-                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadProductividad" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadProductividad" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -442,7 +442,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">

@@ -127,6 +127,13 @@ namespace asivamosffie.services
             SeguimientoDiario seguimiento = _context.SeguimientoDiario.Find( pId );
 
             return seguimiento;
+        }
+        
+        public async Task<List<SeguimientoDiario>> GetDailyFollowUpByContratacionProyectoId( int pId )
+        {
+            List<SeguimientoDiario> listaSeguimientos = _context.SeguimientoDiario.Where( r => r.ContratacionProyectoId == pId ).ToList();
+
+            return listaSeguimientos;
         } 
 
     }

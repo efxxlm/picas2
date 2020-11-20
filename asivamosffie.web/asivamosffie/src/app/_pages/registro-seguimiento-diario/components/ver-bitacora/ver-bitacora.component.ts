@@ -45,15 +45,26 @@ export class VerBitacoraComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+
+  ) { }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => (page + 1).toString() + ' de ' + length.toString();
-    this.paginator._intl.previousPageLabel = 'Anterior';
+
+    this.followUpDailyService.gridRegisterDailyFollowUp()
+      .subscribe(respuesta => {
+        this.dataSource = new MatTableDataSource(respuesta);
+
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => (page + 1).toString() + ' de ' + length.toString();
+        this.paginator._intl.previousPageLabel = 'Anterior';
+
+      });
+
+    
   }
 
   applyFilter(event: Event) {

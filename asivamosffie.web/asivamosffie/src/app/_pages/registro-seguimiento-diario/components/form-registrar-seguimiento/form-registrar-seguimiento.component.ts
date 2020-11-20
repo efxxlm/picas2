@@ -5,6 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { SeguimientoDiario } from 'src/app/_interfaces/DailyFollowUp';
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
+import { forkJoin } from 'rxjs';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-form-registrar-seguimiento',
@@ -66,41 +68,41 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   };
 
   personalArray = [
-    { name: 'Suficiente', value: true },
-    { name: 'Insuficiente', value: false }
+     { name: 'Suficiente', value: true },
+     { name: 'Insuficiente', value: false }
   ];
   materialArray = [
-    { name: 'Óptima', value: 'optima' },
-    { name: 'Media', value: 'media' },
-    { name: 'Baja', value: 'baja' }
+    // { name: 'Óptima', value: 'optima' },
+    // { name: 'Media', value: 'media' },
+    // { name: 'Baja', value: 'baja' }
   ];
   equipolArray = [
-    { name: 'Total', value: 'total' },
-    { name: 'Parcial', value: 'parcial' },
-    { name: 'Baja', value: 'baja' }
+    // { name: 'Total', value: 'total' },
+    // { name: 'Parcial', value: 'parcial' },
+    // { name: 'Baja', value: 'baja' }
   ];
   productividadArray = [
-    { name: 'Alta', value: 'Alta' },
-    { name: 'Media', value: 'media' },
-    { name: 'Baja', value: 'baja' }
+    // { name: 'Alta', value: 'Alta' },
+    // { name: 'Media', value: 'media' },
+    // { name: 'Baja', value: 'baja' }
   ];
   causaBajaDisponibilidadMaterial = [
-    { name: 'No se realizó el pedido del material', value: '1' },
-    { name: 'incumplimiento proveedor', value: '2' },
-    { name: 'imposibilidad de entrega de material por motivos de fuerza mayor', value: '3' }
+    // { name: 'No se realizó el pedido del material', value: '1' },
+    // { name: 'incumplimiento proveedor', value: '2' },
+    // { name: 'imposibilidad de entrega de material por motivos de fuerza mayor', value: '3' }
   ];
   causaBajaDisponibilidadEquipo = [
-    { name: 'En mantenimiento', value: '1' },
-    { name: 'No contratado', value: '2' },
-    { name: 'incumplimiento de proveedor', value: '3' },
-    { name: 'imposibilidad de entrega de equipos por motivos de fuerza mayor', value: '4' }
+    // { name: 'En mantenimiento', value: '1' },
+    // { name: 'No contratado', value: '2' },
+    // { name: 'incumplimiento de proveedor', value: '3' },
+    // { name: 'imposibilidad de entrega de equipos por motivos de fuerza mayor', value: '4' }
   ];
   causaBajaDisponibilidadProductividad = [
-    { name: 'Condiciones climáticas', value: '1' },
-    { name: 'Paros o inconvenientes con la comunidad', value: '2' },
-    { name: 'Accidente laboral', value: '3' },
-    { name: 'Orden público', value: '4' },
-    { name: 'Otros', value: '5' },
+    // { name: 'Condiciones climáticas', value: '1' },
+    // { name: 'Paros o inconvenientes con la comunidad', value: '2' },
+    // { name: 'Accidente laboral', value: '3' },
+    // { name: 'Orden público', value: '4' },
+    // { name: 'Otros', value: '5' },
   ];
 
 
@@ -125,6 +127,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private dailyFollowUpService: FollowUpDailyService,
+    private commonServcie: CommonService,
 
   ) {
     this.minDate = new Date();
@@ -138,6 +141,27 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.seguimientoId = params.id;
       console.log(this.seguimientoId, this.router.getCurrentNavigation());
+
+      forkJoin(
+        this.commonServcie.listaDisponibilidadMaterial(),
+        this.commonServcie.listaDisponibilidadEquipo(),
+        this.commonServcie.listaProductividad(),
+        this.commonServcie.listaCausaBajaDisponibilidadMaterial(),
+        this.commonServcie.listaCausaBajaDisponibilidadEquipo(),
+        this.commonServcie.listaCausaBajaDisponibilidadProductividad(), 
+
+      ).subscribe( respuesta => {
+        this.materialArray = respuesta[0];
+        this.equipolArray = respuesta[1];
+        this.productividadArray = respuesta[2];
+        this.causaBajaDisponibilidadMaterial = respuesta[3];
+        this.causaBajaDisponibilidadEquipo = respuesta[4];
+        this.causaBajaDisponibilidadProductividad = respuesta[5];
+
+      });
+
+
+
       if (this.seguimientoId > 0)
         this.editMode()
     });

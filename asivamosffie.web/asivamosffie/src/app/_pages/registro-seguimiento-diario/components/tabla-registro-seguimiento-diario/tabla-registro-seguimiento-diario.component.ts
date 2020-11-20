@@ -62,8 +62,16 @@ export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
     }
   }
 
-  Registrar( proyecto ){
+  Editar( proyecto ){
     this.router.navigate( [ '/registroSeguimientoDiario/registrarSeguimiento', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
+  }
+
+  RegistrarNuevo( proyecto ){
+    this.router.navigate( [ '/registroSeguimientoDiario/registrarSeguimiento', 0 ], { state: { proyecto } } )
+  }
+
+  VerDetalle( proyecto ){
+    this.router.navigate( [ '/registroSeguimientoDiario/verDetalle', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
   }
 
 }

@@ -264,6 +264,30 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
 
+  listaDisponibilidadMaterial(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=92`);
+  }
+
+  listaDisponibilidadEquipo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=93`);
+  }
+
+  listaProductividad(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=94`);
+  }
+
+  listaCausaBajaDisponibilidadMaterial(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=95`);
+  }
+
+  listaCausaBajaDisponibilidadEquipo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=96`);
+  }
+
+  listaCausaBajaDisponibilidadProductividad(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=97`);
+  }
+
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];

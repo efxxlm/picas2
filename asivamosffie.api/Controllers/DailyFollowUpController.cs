@@ -54,12 +54,19 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetDailyFollowUpById")]
-        public async Task< SeguimientoDiario > GetDailyFollowUpById( [FromQuery] int pId )
+        public async Task< SeguimientoDiario > GetDailyFollowUpById([FromQuery] int pId )
         {
             var result = await _dailyFollowUp.GetDailyFollowUpById( pId );
             return result;
         }
 
+        [HttpGet]
+        [Route("GetDailyFollowUpByContratacionProyectoId")]
+        public async Task<List<SeguimientoDiario>> GetDailyFollowUpByContratacionProyectoId([FromQuery] int pId)
+        {
+            var result = await _dailyFollowUp.GetDailyFollowUpByContratacionProyectoId( pId);
+            return result;
+        }
  
     }
 }
