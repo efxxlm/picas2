@@ -94,7 +94,7 @@ export class EditarEnRevisionComponent implements OnInit {
   tipoSolicitud: any;
   ultimoEstadoRevision: any;
   ultimaFechaRevision: any;
-  listaUsuarios: any[]=[];
+  listaUsuarios: any[] = [];
 
   constructor(
     private router: Router,
@@ -103,7 +103,7 @@ export class EditarEnRevisionComponent implements OnInit {
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private common: CommonService,
-    private contratacion:ProjectContractingService 
+    private contratacion: ProjectContractingService
   ) {
     this.minDate = new Date();
   }
@@ -120,12 +120,26 @@ export class EditarEnRevisionComponent implements OnInit {
       this.tipoSolicitud = data[0].tipoSolicitud;
       this.numContrato = data[0].numeroContrato;
       this.tipoIdentificacion = data[0].tipoDocumento;
+      if (data[0].objetoContrato != undefined || data[0].objetoContrato != null) {
+        this.objeto = data[0].objetoContrato;
+      }
+      else {
+        this.objeto = '';
+      };
+      this.tipoContrato = data[0].tipoContrato;
+      if (data[0].valorContrato != undefined || data[0].valorContrato != null) {
+        this.valorContrato = data[0].valorContrato;
+      }
+      else {
+        this.valorContrato = 0;
+      }
+      this.plazoContrato = data[0].plazoContrato;
       this.loadContratacionId(data[0].contratacionId);
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
     });
-    this.common.getUsuariosByPerfil(10).subscribe(resp=>{
+    this.common.getUsuariosByPerfil(10).subscribe(resp => {
       this.listaUsuarios = resp;
     });
   }
@@ -145,8 +159,10 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
-      const responAprob = this.aprobadosArray.find(p => p.name === data.responsableAprobacion);
-      this.addressForm.get('responsableAprob').setValue(responAprob);
+      for (let i=0; i<this.listaUsuarios.length; i++){
+        const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
+        this.addressForm.get('responsableAprob').setValue(responAprob);
+      }
       this.loadGarantia(data.contratoPolizaId);
       this.dataLoad2(data);
     });
@@ -158,44 +174,24 @@ export class EditarEnRevisionComponent implements OnInit {
     this.loadObservations(this.idPoliza);
     this.loadEstadoRevision(this.idPoliza);
   }
-  loadEstadoRevision(id){
-    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
-      for (let i=0; i< data.length; i++){
+  loadEstadoRevision(id) {
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data => {
+      for (let i = 0; i < data.length; i++) {
         const estadoRevSeleccionado = this.estadoArray.find(t => t.value === data[i].estadoRevisionCodigo);
         this.addressForm.get('fechaRevision').setValue(data[i].fechaRevision);
         this.addressForm.get('estadoRevision').setValue(estadoRevSeleccionado);
       }
     });
   }
-  loadContratacionId(a){
-    this.contratacion.getContratacionByContratacionId(a).subscribe(data=>{
+  loadContratacionId(a) {
+    this.contratacion.getContratacionByContratacionId(a).subscribe(data => {
       this.loadInfoContratacion(data);
     });
   }
-  loadInfoContratacion(data){
-    if(data.disponibilidadPresupuestal.length>0){
-      this.tipoContrato = data.disponibilidadPresupuestal[0].opcionContratarCodigo;
-      this.objeto = data.disponibilidadPresupuestal[0].objeto;
-      this.valorContrato = data.disponibilidadPresupuestal[0].valorSolicitud;
-      this.plazoContrato = data.disponibilidadPresupuestal[0].plazoMeses + 'meses / ' + data.disponibilidadPresupuestal[0].plazoDias + 'días';
-    }
-    else{
-      this.tipoContrato = 'Pendiente';
-      this.objeto = 'Pendiente';
-      this.valorContrato = 0;
-      this.plazoContrato =' 0 meses / 0 días';
-    }
+  loadInfoContratacion(data) {
     this.nombreContratista = data.contratista.nombre;
-    /*
-    if(data.contratista.tipoIdentificacionCodigo != undefined || data.contratista.tipoIdentificacionCodigo != undefined){
-      this.tipoIdentificacion = data.contratista.tipoIdentificacionCodigo;
-    }
-    else{
-      this.tipoIdentificacion = '';
-    }
-    */
     this.numeroIdentificacion = data.contratista.numeroIdentificacion;
-    
+
   }
   loadObservations(id) {
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data_1 => {
@@ -310,12 +306,12 @@ export class EditarEnRevisionComponent implements OnInit {
       const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
     }
     let nombreAprobado;
-    if(this.addressForm.value.responsableAprob!=undefined || this.addressForm.value.responsableAprob!=null ){
-      if (!this.addressForm.value.responsableAprob.name) {
+    if (this.addressForm.value.responsableAprob != undefined || this.addressForm.value.responsableAprob != null) {
+      if (!this.addressForm.value.responsableAprob.usuarioId) {
         nombreAprobado = "pendiente";
       }
       else {
-        nombreAprobado = this.addressForm.value.responsableAprob.name;
+        nombreAprobado = this.addressForm.value.responsableAprob.usuarioId;
       }
     }
     var statePoliza;
