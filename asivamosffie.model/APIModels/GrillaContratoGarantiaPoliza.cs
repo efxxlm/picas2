@@ -26,9 +26,7 @@ namespace asivamosffie.model.APIModels
         public bool? RegistroCompleto { get; set; }
 
         public string RegistroCompletoNombre { get; set; }
-
-
-
-
+        public bool RegistroCompletoPoliza { get; set; }
+        public string RegistroCompletoPolizaNombre { get; set; }
     }
 }

@@ -1460,9 +1460,23 @@ namespace asivamosffie.services
                     Dominio TipoSolicitudCodigoContratoPoliza;
                     Dominio EstadoSolicitudCodigoContratoPoliza;
 
+                    string strRegistroCompletoPolizaNombre = "Incompleto";
+                    bool bRegistroCompletoPoliza= false;
+
                     if (contratoPoliza != null)
                     {
-                        ContratoPolizaIdValor = contratoPoliza.ContratoPolizaId;
+                       if( contrato.EstaDevuelto!=null)
+                        if (!(bool)contrato.EstaDevuelto)
+                        {
+                            if (contratoPoliza.RegistroCompleto != null) {
+                            strRegistroCompletoPolizaNombre = (bool)contratoPoliza.RegistroCompleto ? "Completo" : "Incompleto";
+                            bRegistroCompletoPoliza = (bool)contratoPoliza.RegistroCompleto;
+                        }
+
+                        }
+                        
+                          
+                           ContratoPolizaIdValor = contratoPoliza.ContratoPolizaId;
                         if (contratoPoliza.TipoSolicitudCodigo != null)
                         {
                             //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
@@ -1520,6 +1534,9 @@ namespace asivamosffie.services
                         EstadoPolizaCodigo= strEstadoSolicitudCodigoContratoPoliza,
                         RegistroCompleto = contrato.RegistroCompleto,
                         RegistroCompletoNombre = strRegistroCompleto,
+
+                        RegistroCompletoPoliza = bRegistroCompletoPoliza,
+                        RegistroCompletoPolizaNombre = strRegistroCompletoPolizaNombre,                        
 
                         //Fecha = contrato.FechaCreacion != null ? Convert.ToDateTime(contrato.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
                         //,EstadoRegistro = "COMPLETO"
