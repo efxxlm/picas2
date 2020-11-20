@@ -120,6 +120,10 @@ export class EditarEnRevisionComponent implements OnInit {
       this.tipoSolicitud = data[0].tipoSolicitud;
       this.numContrato = data[0].numeroContrato;
       this.tipoIdentificacion = data[0].tipoDocumento;
+      this.objeto = data[0].objetoContrato;
+      this.tipoContrato = data[0].tipoContrato;
+      this.valorContrato = data[0].valorContrato;
+      this.plazoContrato = data[0].plazoContrato;
       this.loadContratacionId(data[0].contratacionId);
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
@@ -173,27 +177,7 @@ export class EditarEnRevisionComponent implements OnInit {
     });
   }
   loadInfoContratacion(data){
-    if(data.disponibilidadPresupuestal.length>0){
-      this.tipoContrato = data.disponibilidadPresupuestal[0].opcionContratarCodigo;
-      this.objeto = data.disponibilidadPresupuestal[0].objeto;
-      this.valorContrato = data.disponibilidadPresupuestal[0].valorSolicitud;
-      this.plazoContrato = data.disponibilidadPresupuestal[0].plazoMeses + 'meses / ' + data.disponibilidadPresupuestal[0].plazoDias + 'días';
-    }
-    else{
-      this.tipoContrato = 'Pendiente';
-      this.objeto = 'Pendiente';
-      this.valorContrato = 0;
-      this.plazoContrato =' 0 meses / 0 días';
-    }
     this.nombreContratista = data.contratista.nombre;
-    /*
-    if(data.contratista.tipoIdentificacionCodigo != undefined || data.contratista.tipoIdentificacionCodigo != undefined){
-      this.tipoIdentificacion = data.contratista.tipoIdentificacionCodigo;
-    }
-    else{
-      this.tipoIdentificacion = '';
-    }
-    */
     this.numeroIdentificacion = data.contratista.numeroIdentificacion;
     
   }
