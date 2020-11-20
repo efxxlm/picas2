@@ -161,10 +161,10 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorAmparo maxlength="20" type="number" required formControlName="valorAmparo"
-                    (keypress)="validateNumberKeypress($event)"
+                  <input matInput #valorAmparo currencyMask maxlength="20" type="number" required
+                    formControlName="valorAmparo" (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    currencyMask [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
                   matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
@@ -180,8 +180,8 @@
           <div class="col">
             <mat-form-field class="select-width">
               <mat-select formControlName="polizasYSeguros" multiple required
-                (selectionChange)="getvalues($event.value)" >
-                <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros" >
+                (selectionChange)="getvalues($event.value)">
+                <mat-option *ngFor="let polizasYSeguros of polizasYSegurosArray" [value]="polizasYSeguros">
                   {{ polizasYSeguros.nombre }}
                 </mat-option>
               </mat-select>
@@ -201,8 +201,12 @@
                 </div>
                 <div class="col">
                   <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
-                    <mat-radio-button [value]="true"  [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===true ? true : null) : null   )">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false"  [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===false ? false : null) : null   )">No</mat-radio-button>
+                    <mat-radio-button [value]="true"
+                      [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===true ? true : null) : null   )">
+                      Sí</mat-radio-button>
+                    <mat-radio-button [value]="false"
+                      [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===false ? false : null) : null   )">
+                      No</mat-radio-button>
                   </mat-radio-group>
                   <span class="required-form-group" style="margin-left: 1px;">*</span>
                 </div>

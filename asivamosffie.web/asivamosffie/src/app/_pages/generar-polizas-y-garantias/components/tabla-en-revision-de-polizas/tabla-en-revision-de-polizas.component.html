@@ -39,7 +39,9 @@
                     Aprobar
                 </button>
                 <a [routerLink]="['enRevision', element.contratoId]" mat-raised-button color="accent"
-                    class="btn-table">Ver detalle / editar </a>
+                    class="btn-table" *ngIf="element.registroCompletoNombre=='Incompleto'">Ver detalle / editar </a>
+                <a [routerLink]="['verDetalle', element.contratoId]" mat-raised-button color="accent"
+                    class="btn-table" *ngIf="element.registroCompletoNombre=='Completo'">Ver detalle </a>
             </td>
         </ng-container>
 
