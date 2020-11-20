@@ -250,19 +250,9 @@ export class GestionarPolizasComponent implements OnInit {
       'FechaModificacion': null,
       'Eliminado': false
     };
-    const observacionArray = {
-      'contratoId': this.idContrato,
-      "contratoPolizaId":this.contratoPolizaId, 
-      "Observacion": this.addressForm.value.observacionesGenerales,
-      "FechaRevision": this.addressForm.value.fechaRevision,
-      "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
-    }
     let garantiaArray;
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
-        this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
-
-        });
         this.polizaService.CambiarEstadoPolizaByContratoId("2", this.idContrato).subscribe(resp0 => {
 
         });
@@ -309,6 +299,16 @@ export class GestionarPolizasComponent implements OnInit {
               }
             }
           }
+          const observacionArray = {
+            'contratoId': this.idContrato,
+            "contratoPolizaId":rep1.contratoPolizaId, 
+            "Observacion": this.addressForm.value.observacionesGenerales,
+            "FechaRevision": this.addressForm.value.fechaRevision,
+            "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
+          }
+          this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
+
+          });
         });
         this.openDialog('', 'La información ha sido guardada exitosamente.');
         this.router.navigate(['/generarPolizasYGarantias']);
