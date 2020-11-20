@@ -153,25 +153,7 @@
         public const string  Crear_Editar_Ficha_Estudio= "145";
         public const string  Crear_Editar_Demandado_Convocado= "146";
         public const string  Cambiar_Estado_Proceso= "147";
-        
-
-        public const string Crear_Editar_Contrato_Perfil = "82";
-
-        public const string Eliminar_Contrato_Perfil = "83";
-
-        public const string Aprobar_Inicio_Contrato = "84";
-
-        public const string Editar_Acta_De_Inicio_De_Contrato = "94";
-
-        public const string Cargar_Acta_Subscrita = "95";
-
-        public const string Cambiar_Estado_Acta_Contrato = "96";
-
-        public const string Eliminar_Numero_Radicado = "99";
-
-        public const string Crear_Observacion_Contrato_Perfil = "100";
-
-        public const string Cambiar_Estado_Verificacion_Contrato = "103";
+                
 
     }
 }
