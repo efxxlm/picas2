@@ -5,29 +5,12 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="requiereReclamacionAseguradora">¿El trámite requiere reclamación ante la aseguradora?</label>
-                        </div>
-                        <div class="col">
-                            <mat-radio-group class="radioInput" formControlName="requiereReclamacionAseguradora"
-                                required>
-                                <mat-radio-button [value]="true">Sí</mat-radio-button>
-                                <mat-radio-button [value]="false">No</mat-radio-button>
-                            </mat-radio-group>
-                            <span class="required-form-group">*</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row" *ngIf="addressForm.value.requiereReclamacionAseguradora===true">
-                <div class="col-md-12" style="padding-left: 0;">
-                    <div class="row">
-                        <div class="pr-1">
                             <label class="label-left" for="resumenReclamacionFiduciaria">Resumen de la propuesta de reclamación ante la fiduciaria</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="d-flex align-items-center mtop" *ngIf="addressForm.value.requiereReclamacionAseguradora===true">
+            <div class="d-flex align-items-center mtop">
                 <div class="text-area-quill izqTitle auxBox">
                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                         (onContentChanged)="maxLength($event, 1000)" formControlName="resumenReclamacionFiduciaria"></quill-editor>
@@ -39,29 +22,7 @@
                     1000
                 </span>
             </div>
-            <!--
-            <div class="row" *ngIf="addressForm.value.requiereReclamacionAseguradora===true">
-                <div class="col-md-12" style="padding-left: 0;">
-                    <div>
-                        <div class="d-flex align-items-center">
-                            <div>
-                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="resumenReclamacionFiduciaria">
-                                </quill-editor>
-                            </div>
-                            <span class="contador miles" *ngIf="addressForm.controls.resumenReclamacionFiduciaria.value">
-                                {{1000 - textoLimpio(addressForm.controls.resumenReclamacionFiduciaria.value)}}
-                            </span>
-                            <span class="contador miles" *ngIf="!addressForm.controls.resumenReclamacionFiduciaria.value">
-                                1000
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            -->
-            <div class="row" *ngIf="addressForm.value.requiereReclamacionAseguradora===true">
+            <div class="row">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -78,19 +39,27 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.value.requiereReclamacionAseguradora===true">
-                <div class="col-md-12" style="padding-left: 0;">
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text">
+                Soporte de la actuación
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="definitivoyCerrado">¿El proceso tiene resultado definitivo y se considera cerrado el proceso?</label>
+                            <label class="label-left" for="urlSoporte">URL con soporte</label>
                         </div>
                         <div class="col">
-                            <mat-radio-group class="radioInput" formControlName="definitivoyCerrado"
-                                required>
-                                <mat-radio-button [value]="true">Sí</mat-radio-button>
-                                <mat-radio-button [value]="false">No</mat-radio-button>
-                            </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <mat-form-field class="full-width">
+                                <input matInput #urlSoporte type="text" 
+                                    formControlName="urlSoporte" required>
+                            </mat-form-field>
+                            <div align="center">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite</div>
                         </div>
                     </div>
                 </div>

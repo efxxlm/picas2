@@ -25,6 +25,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
     participacionFiduciaria: [null, Validators.required],
     requiereComiteTecnico: [null, Validators.required],
     observaciones: [null, Validators.required],
+    urlSoporte: [null, Validators.required]
   });
   estadoAvanceTramiteArray = [
     { name: 'Aprobación de Comunicación de Inicio de TAI', value: '1' },

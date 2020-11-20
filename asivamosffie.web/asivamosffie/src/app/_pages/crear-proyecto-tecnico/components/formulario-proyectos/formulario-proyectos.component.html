@@ -338,15 +338,15 @@
               </label>
               <mat-form-field class="w-8em"  [matTooltipPosition]="'above'" matTooltip="Este campo  permite ingresar números decimales"
               matTooltipClass="info-tooltip">
-                <input matInput 
-                  [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud" 
-                  maxlength="10" 
-                  min="1" 
+                <input matInput
+                  [(ngModel)]="proyecto.predioPrincipal.ubicacionLatitud"
+                  maxlength="10"
+                  min="1"
                   max="99"
-                  
+
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required
-                  
-                  appOchoDecimales 
+
+                  appOchoDecimales
                   >
               </mat-form-field>
 
@@ -355,7 +355,7 @@
               >
                 º
               </label>
-              
+
               <span
                 class="contador">{{10 - (proyecto.predioPrincipal.ubicacionLatitud?proyecto.predioPrincipal.ubicacionLatitud.toString().length:0)}}</span>
               <label class="label-left sub-label"
@@ -732,7 +732,7 @@
       </div>
 
       <h2 class="card-subTitle">Plazos</h2>
-      
+
       <div class="row">
         <div class="col-md-8">
           <div class="row">
@@ -759,7 +759,7 @@
               <mat-form-field class="w-8em">
                 <input matInput [(ngModel)]="proyecto.plazoDiasObra" type="number" maxlength="2" min="1"
                   max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 29 días"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 31 días"
                   matTooltipClass="info-tooltip">
               </mat-form-field>
             </div>
@@ -792,7 +792,7 @@
               <mat-form-field class="w-8em">
                 <input matInput [(ngModel)]="proyecto.plazoDiasInterventoria" type="number" maxlength="2"
                   min="1" max="31" required (keypress)="number($event)" onkeyup="if(this.value>31) this.value = 31;"
-                  onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 29 días"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 31 días"
                   matTooltipClass="info-tooltip">
               </mat-form-field>
             </div>
@@ -843,8 +843,8 @@
             </div>
           </div>
         </div>
-        
-        
+
+
         <div class="text-right" *ngIf="proyecto.infraestructuraIntervenirProyecto.length>1">
           <button mat-button color="warn" type="button"  *ngIf="bitPuedoEditar"
           class="btn-eliminar" (click)="deleteInfraestructura(i)">

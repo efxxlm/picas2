@@ -10,42 +10,6 @@
     <p class="info-sub-title">
         <span>Solicitud: <b>CO00001</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación anticipada por incumplimiento (TAI)</b></span>
     </p>
-    <div class="text-center">
-        <p class="info-container">
-            <span class="info-text sin-diligenciar">Sin diligenciar</span>
-            <span class="info-text en-proceso">En proceso</span>
-            <span class="info-text completo">Completo</span>
-        </p>
-    </div>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
-                    Descripción de la actuación
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-form-descripcion-actuacion [isEditable]="false"></app-form-descripcion-actuacion>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
-                    Reclamación ante aseguradora
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-           <app-form-reclamacion-aseguradora-actuacion [isEditable]="false"></app-form-reclamacion-aseguradora-actuacion>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
-                    Soporte de la actuación
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-form-soporte-actuacion-acttram [isEditable]="false"></app-form-soporte-actuacion-acttram>
-        </mat-expansion-panel>
-    </mat-accordion>
+    <app-form-descripcion-actuacion></app-form-descripcion-actuacion>
 </div>
 

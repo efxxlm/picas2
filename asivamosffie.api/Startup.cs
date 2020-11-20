@@ -149,7 +149,7 @@ namespace asivamosffie.api
             services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
-
+            services.AddTransient<IContractualControversy, ContractualControversyService>();
 
         }
 

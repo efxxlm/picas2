@@ -1313,19 +1313,47 @@ namespace asivamosffie.services
 
 
             //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-            List<Contrato> ListContratos = await _context.Contrato.Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Firmado.ToString()&& !(bool)r.Eliminado).ToListAsync();
+            List<Contrato> ListContratos = await _context.Contrato.Where(r => r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados.ToString()&& !(bool)r.Eliminado).ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
                 try
                 {
-                    ContratoPoliza contratoPoliza;
+                    Contratacion contratacion = null;
+                    contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
 
+                    string strNumeroSolicitudContratacion="";
+                    string strTipoConContratacion = "";
+
+                    Dominio TipoSolicitudCodigoContratacion= null;
+                    string strTipoSolicitudContratacion = "";
+                    string strTipoSolicitudCodigoContratacion = "";
+
+                    if (contratacion != null)
+                    {
+                        strNumeroSolicitudContratacion = contratacion.NumeroSolicitud;
+
+                        TipoSolicitudCodigoContratacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.EstadoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Solicitud);
+                        if (TipoSolicitudCodigoContratacion != null)
+                        {
+                            strTipoSolicitudCodigoContratacion = TipoSolicitudCodigoContratacion.Codigo;
+                            strTipoSolicitudContratacion = TipoSolicitudCodigoContratacion.Nombre;
+                        }                                             
+                                                    
+
+                    }                        
+
+                    ContratoPoliza contratoPoliza=null;
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
+                    int ContratoPolizaIdValor = 0;
+
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
-                    string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
+                    string strTipoSolicitudCodigoContratoPoliza = (Convert.ToInt32( ConstanCodigoTipoSolicitud.Contratacion)).ToString();
+                    string strTipoSolicitudNombreContratoPoliza = "Contratación"; //contratacion o modif contractual - 
+
+                    string strEstadoSolicitudCodigoContratoPoliza = ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas).ToString();
+                    string strEstadoSolicitudNombreContratoPoliza = "Sin radicación de pólizas";
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio TipoSolicitudCodigoContratoPoliza;
@@ -1333,19 +1361,26 @@ namespace asivamosffie.services
 
                     if (contratoPoliza != null)
                     {
+                        ContratoPolizaIdValor = contratoPoliza.ContratoPolizaId;
                         if (contratoPoliza.TipoSolicitudCodigo != null)
                         {
                             //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
                             TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
                         
                         if (TipoSolicitudCodigoContratoPoliza != null)
-                            strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
-                    }
-                    
+                            {
+                                strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                                strTipoSolicitudNombreContratoPoliza= TipoSolicitudCodigoContratoPoliza.Codigo;
+                            }                            
+                    }                    
 
                         EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         if (EstadoSolicitudCodigoContratoPoliza != null)
-                            strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+                        {
+                            strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Codigo;
+                            strEstadoSolicitudNombreContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+
+                        }                            
 
                     }
                     bool bRegistroCompleto=false;
@@ -1361,21 +1396,27 @@ namespace asivamosffie.services
                     GrillaContratoGarantiaPoliza contratoGrilla = new GrillaContratoGarantiaPoliza
                     {
                         ContratoId = contrato.ContratoId,
+                        ContratoPolizaId = ContratoPolizaIdValor,
                         //FechaFirma = contrato.FechaFirmaContrato.ToString("dd/mm/yyyy")?"":"",
                         FechaFirma = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString(),
                         //FechaFirma = contrato.FechaFirmaContrato.ToString(),
                         NumeroContrato = contrato.NumeroContrato,
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
                         //EstadoRegistro { get; set; }
-
+                        NumeroSolicitudContratacion=strNumeroSolicitudContratacion,
                         //Departamento = departamento.Descripcion,
                         //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
-                        TipoSolicitud = strTipoSolicitudCodigoContratoPoliza,
+                        TipoSolicitud = strTipoSolicitudNombreContratoPoliza,
+                        TipoSolicitudCodigo = strTipoSolicitudCodigoContratoPoliza,
 
-                        EstadoPoliza = strEstadoSolicitudCodigoContratoPoliza
+                        TipoSolicitudCodigoContratacion=strTipoSolicitudCodigoContratacion,
+                        TipoSolicitudContratacion=strTipoSolicitudContratacion,
+
+                        EstadoPoliza = strEstadoSolicitudNombreContratoPoliza
                         ,
+                        EstadoPolizaCodigo= strEstadoSolicitudCodigoContratoPoliza,
                         RegistroCompleto = contrato.RegistroCompleto,
                         RegistroCompletoNombre = strRegistroCompleto,
 
@@ -1395,6 +1436,7 @@ namespace asivamosffie.services
                     {
 
                         ContratoId = contrato.ContratoId,
+                        ContratoPolizaId= 0,
                         FechaFirma = e.ToString(),
                         NumeroContrato = e.InnerException.ToString(),
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
@@ -1464,7 +1506,7 @@ namespace asivamosffie.services
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
                     Dominio TipoSolicitudCodigoContratoPoliza=null;
-                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
+                    string strTipoSolicitudCodigoContratoPoliza = "Sin radicación de pólizas";
                     string strFechaFirmaContrato = string.Empty;
 
                     if (contratoPoliza != null)

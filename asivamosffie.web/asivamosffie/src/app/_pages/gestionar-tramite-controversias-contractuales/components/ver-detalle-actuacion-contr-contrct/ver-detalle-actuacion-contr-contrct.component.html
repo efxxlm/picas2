@@ -1,6 +1,7 @@
 <div class="container text-center">
     <div class="text-right">
-        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button
+            color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -8,36 +9,9 @@
         Ver detalle actuación 0001
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>CO00001</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación anticipada por incumplimiento (TAI)</b></span>
+        <span>Solicitud: <b>CO00001</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación
+                anticipada por incumplimiento (TAI)</b></span>
     </p>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Descripción de la actuación
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-detalle-descr-act-cc></app-detalle-descr-act-cc>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Reclamación ante aseguradora
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-detalle-reclm-aseguradora-cc></app-detalle-reclm-aseguradora-cc>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Soporte de la actuación
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-detalle-sop-actuacion-cc></app-detalle-sop-actuacion-cc>
-        </mat-expansion-panel>
-    </mat-accordion>
+    <app-detalle-descr-act-cc></app-detalle-descr-act-cc>
+    <app-detalle-sop-actuacion-cc></app-detalle-sop-actuacion-cc>
 </div>

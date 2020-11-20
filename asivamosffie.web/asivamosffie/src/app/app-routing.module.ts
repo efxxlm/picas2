@@ -169,9 +169,10 @@ const routes: Routes = [
           .then( module => module.CompromisosActasComiteModule )
       },
       {
-        path: 'registrarProgramacionPersonalObra',
-        loadChildren: () => import( './_pages/programacion-personal-obra/programacion-personal-obra.module' )
-          .then( module => module.ProgramacionPersonalObraModule )
+        path: 'gestionarTramiteControversiasContractuales',
+        loadChildren: () => import( './_pages/gestionar-tramite-controversias-contractuales/gestionar-tramite-controversias-contractuales.module' )
+          .then( module => module.GestionarTramiteControversiasContractualesModule ),
+
       },
       {
         path: 'programacionPersonalObra',
