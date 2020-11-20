@@ -55,6 +55,9 @@ export class ContractualControversyService implements OnInit{
   ActualizarRutaSoporteControversiaActuacion(pControversiaActuacionId:number, pRutaSoporte:string){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/ActualizarRutaSoporteControversiaActuacion?pControversiaActuacionId=${pControversiaActuacionId}&pRutaSoporte=${pRutaSoporte}`, null);
   }
+  CambiarEstadoActuacionSeguimiento(pActuacionSeguimientoId:number, pEstadoReclamacionCodigo:string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoActuacionSeguimiento?pActuacionSeguimientoId=${pActuacionSeguimientoId}&pEstadoReclamacionCodigo=${pEstadoReclamacionCodigo}`,null);
+  }
   CambiarEstadoControversiaActuacion(pControversiaActuacionId:number, pNuevoCodigoEstadoAvance:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoControversiaActuacion?pControversiaActuacionId=${pControversiaActuacionId}&pNuevoCodigoEstadoAvance=${pNuevoCodigoEstadoAvance}`, null);
   }
