@@ -964,7 +964,7 @@ namespace asivamosffie.services
         }
         public static bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza)
         {
-
+            
             if (string.IsNullOrEmpty(contratoPoliza.NombreAseguradora.ToString()))
             {
                 return false;
@@ -1039,82 +1039,41 @@ namespace asivamosffie.services
 
         }
 
-        public static bool ConsultarRegistroCompletoCumple(int ContratoPolizaId)
+        public async Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId)        
         {
+            bool respuesta=false; 
             ContratoPoliza contratoPoliza = null;
+            
+            //return respuesta;
 
+            contratoPoliza = await _context.ContratoPoliza.Where(r => r.ContratoPolizaId == ContratoPolizaId).FirstOrDefaultAsync();
 
-            if (string.IsNullOrEmpty(contratoPoliza.NombreAseguradora.ToString()))
+            if (contratoPoliza != null)
             {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.NumeroPoliza.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.NumeroCertificado.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.FechaExpedicion.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.Vigencia.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.VigenciaAmparo.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.ValorAmparo.ToString()))
-            {
-                return false;
-            }
+                if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosAsegurado.ToString()))
+                {                    
+                    return respuesta;
+                }
+                else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosBeneficiario.ToString()))
+                {                    
+                    return respuesta;
+                }
+                else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosTomador.ToString()))
+                {                    
+                    return respuesta;
+                }
+                else
+                {
+                    respuesta = true;
+                    return true;
+                }
 
-            else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosAsegurado.ToString()))
-            {
-                return false;
             }
-            else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosBeneficiario.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosTomador.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.IncluyeReciboPago.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.IncluyeCondicionesGenerales.ToString()))
-            {
-                return false;
-            }
-
-            else if (string.IsNullOrEmpty(contratoPoliza.IncluyeCondicionesGenerales.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.ResponsableAprobacion.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.EstadoPolizaCodigo.ToString()))
-            {
-                return false;
-            }
-
             else
             {
-                return true;
-            }
+                respuesta = false;
+                return respuesta;
+            }                
 
         }
 
