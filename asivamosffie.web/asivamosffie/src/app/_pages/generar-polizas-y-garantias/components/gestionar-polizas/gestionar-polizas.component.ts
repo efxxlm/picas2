@@ -110,10 +110,10 @@ export class GestionarPolizasComponent implements OnInit {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;
       this.tipoSolicitud = data[0].tipoSolicitud;
       this.numContrato = data[0].numeroContrato;
+      this.loadContratacionId(data[0].contratacionId);
     });
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(a=>{
       this.loadPolizaId(a);
-      this.loadContratacionId(a);
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
@@ -134,14 +134,9 @@ export class GestionarPolizasComponent implements OnInit {
   }
 
   loadContratacionId(a){
-    if(a.contratacionId!=null || a.contratacionId!=undefined){
-      this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
+      this.contratacion.getContratacionByContratacionId(a).subscribe(data=>{
         this.loadInfoContratacion(data);
       });
-    }
-    else{
-      this.loadNoContratacionID();
-    }
   }
   loadInfoContratacion(data){
     if(data.disponibilidadPresupuestal.length>0){

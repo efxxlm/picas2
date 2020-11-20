@@ -119,6 +119,7 @@ export class EditarEnRevisionComponent implements OnInit {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;
       this.tipoSolicitud = data[0].tipoSolicitud;
       this.numContrato = data[0].numeroContrato;
+      this.loadContratacionId(data[0].contratacionId);
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
@@ -147,7 +148,6 @@ export class EditarEnRevisionComponent implements OnInit {
       this.addressForm.get('responsableAprob').setValue(responAprob);
       this.loadGarantia(data.contratoPolizaId);
       this.dataLoad2(data);
-      this.loadContratacionId(data);
     });
   }
   dataLoad2(data) {
@@ -167,7 +167,7 @@ export class EditarEnRevisionComponent implements OnInit {
     });
   }
   loadContratacionId(a){
-    this.contratacion.getContratacionByContratacionId(a.contratacionId).subscribe(data=>{
+    this.contratacion.getContratacionByContratacionId(a).subscribe(data=>{
       this.loadInfoContratacion(data);
     });
   }
