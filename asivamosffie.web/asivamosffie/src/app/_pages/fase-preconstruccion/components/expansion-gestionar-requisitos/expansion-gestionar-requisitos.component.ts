@@ -28,10 +28,10 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
     private dialog: MatDialog,
     private routes: Router ) {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
-    // if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
-    //   this.routes.navigateByUrl('/preconstruccion');
-    //   return;
-    // }
+    if ( this.routes.getCurrentNavigation().extras.replaceUrl ) {
+      this.routes.navigateByUrl('/preconstruccion');
+      return;
+    }
     if ( this.routes.getCurrentNavigation().extras.state ) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
       this.estado = this.routes.getCurrentNavigation().extras.state.estado;

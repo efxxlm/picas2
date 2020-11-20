@@ -127,9 +127,11 @@ export class GestionarPolizasComponent implements OnInit {
       this.plazoContrato = data[0].plazoContrato;
       this.loadContratacionId(data[0].contratacionId);
     });
+    /*
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(a => {
       this.loadPolizaId(a);
     });
+    */
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
     });
