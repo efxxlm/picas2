@@ -12,5 +12,6 @@ namespace asivamosffie.services.Interfaces
     {
         Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp();
         Task<Respuesta> CreateEditDailyFollowUp( SeguimientoDiario pSeguimientoDiario );
+        Task<SeguimientoDiario> GetDailyFollowUpById( int pId );
     }
 }

@@ -94,7 +94,7 @@ namespace asivamosffie.services
                         seguimientoDiario.NumeroHorasRetrasoProductividad = pSeguimientoDiario.NumeroHorasRetrasoProductividad;
 
                     }
-                    
+
                 _context.SaveChanges();
 
                 return
@@ -122,6 +122,12 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<SeguimientoDiario> GetDailyFollowUpById( int pId )
+        {
+            SeguimientoDiario seguimiento = _context.SeguimientoDiario.Find( pId );
+
+            return seguimiento;
+        } 
 
     }
 }

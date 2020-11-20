@@ -22,5 +22,9 @@ export class FollowUpDailyService {
   };
 
   
+  getDailyFollowUpById( id: number ) {
+    return this.http.get<SeguimientoDiario>( `${ this.url }/getDailyFollowUpById?pId=${ id }`);
+  };
+  
 
 }

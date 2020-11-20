@@ -138,7 +138,45 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.seguimientoId = params.id;
       console.log(this.seguimientoId, this.router.getCurrentNavigation());
+      if (this.seguimientoId > 0)
+        this.editMode()
     });
+  }
+
+  editMode(){
+    this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
+      .subscribe( seguimiento => {
+        this.addressForm.setValue(
+          {
+            fechaSeguimiento:  seguimiento.fechaSeguimiento,    
+            
+            disponibilidadPersonal:               seguimiento.disponibilidadPersonal !== undefined ? seguimiento.disponibilidadPersonal : null,
+            cantidadPersonalOperativoProgramado:  seguimiento.cantidadPersonalProgramado !== undefined ? seguimiento.cantidadPersonalProgramado : null,
+            cantidadPersonalOperativoTrabajando:  seguimiento.cantidadPersonalTrabajando !== undefined ? seguimiento.cantidadPersonalTrabajando : null,
+            retrasoPersonal:                      seguimiento.seGeneroRetrasoPersonal !== undefined ? seguimiento.seGeneroRetrasoPersonal : null,
+            horasRetrasoPersonal:                 seguimiento.numeroHorasRetrasoPersonal !== undefined ? seguimiento.numeroHorasRetrasoPersonal : null,
+            disponibilidadPersonalObservaciones:  seguimiento.disponibilidadPersonalObservaciones !== undefined ? seguimiento.disponibilidadPersonalObservaciones : null,
+
+            disponibilidadMaterial:               seguimiento.disponibilidadMaterialCodigo !== undefined ? seguimiento.disponibilidadMaterialCodigo : null,
+            causaMaterial:                        seguimiento.causaIndisponibilidadMaterialCodigo !== undefined ? seguimiento.causaIndisponibilidadMaterialCodigo : null,
+            retrasoMaterial:                      seguimiento.seGeneroRetrasoMaterial !== undefined ? seguimiento.seGeneroRetrasoMaterial : null,
+            horasRetrasoMaterial:                 seguimiento.numeroHorasRetrasoMaterial !== undefined ? seguimiento.numeroHorasRetrasoMaterial : null,
+            disponibilidadMaterialObservaciones:  seguimiento.disponibilidadMaterialObservaciones !== undefined ? seguimiento.disponibilidadMaterialObservaciones : null,
+
+            disponibilidadEquipo:                 seguimiento.disponibilidadEquipoCodigo !== undefined ? seguimiento.disponibilidadEquipoCodigo : null,
+            causaEquipo:                          seguimiento.causaIndisponibilidadEquipoCodigo !== undefined ? seguimiento.causaIndisponibilidadEquipoCodigo : null,
+            retrasoEquipo:                        seguimiento.seGeneroRetrasoEquipo !== undefined ? seguimiento.seGeneroRetrasoEquipo : null,
+            horasRetrasoEquipo:                   seguimiento.numeroHorasRetrasoEquipo !== undefined ? seguimiento.numeroHorasRetrasoEquipo : null,
+            disponibilidadEquipoObservaciones:    seguimiento.disponibilidadEquipoObservaciones !== undefined ? seguimiento.disponibilidadEquipoObservaciones : null,
+
+            Productividad:                        seguimiento.productividadCodigo !== undefined ? seguimiento.productividadCodigo : null,
+            causaProductividad:                   seguimiento.causaIndisponibilidadProductividadCodigo !== undefined ? seguimiento.causaIndisponibilidadProductividadCodigo : null,
+            retrasoProductividad:                 seguimiento.seGeneroRetrasoProductividad !== undefined ? seguimiento.seGeneroRetrasoProductividad : null,
+            horasRetrasoProductividad:            seguimiento.numeroHorasRetrasoProductividad !== undefined ? seguimiento.numeroHorasRetrasoProductividad : null,
+            ProductividadObservaciones:           seguimiento.productividadObservaciones !== undefined ? seguimiento.productividadObservaciones : null,
+          }
+        )
+      });
   }
 
   validateNumberKeypress(event: KeyboardEvent) {

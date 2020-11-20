@@ -52,6 +52,14 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetDailyFollowUpById")]
+        public async Task< SeguimientoDiario > GetDailyFollowUpById( [FromQuery] int pId )
+        {
+            var result = await _dailyFollowUp.GetDailyFollowUpById( pId );
+            return result;
+        }
+
  
     }
 }
