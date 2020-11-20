@@ -228,6 +228,7 @@ namespace asivamosffie.services
                     else
                     {
                         strCrearEditar = "EDIT POLIZA GARANTIA";
+                        //PolizaGarantia poli
                         _context.PolizaGarantia.Update(polizaGarantia);
 
                         //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
@@ -1497,14 +1498,22 @@ namespace asivamosffie.services
 
                     if (contratoPoliza != null)
                     {
-                       if( contrato.EstaDevuelto!=null)
-                        if (!(bool)contrato.EstaDevuelto)
+                       if(contrato.EstaDevuelto != null)
                         {
-                            if (contratoPoliza.RegistroCompleto != null) {
-                            strRegistroCompletoPolizaNombre = (bool)contratoPoliza.RegistroCompleto ? "Completo" : "Incompleto";
-                            bRegistroCompletoPoliza = (bool)contratoPoliza.RegistroCompleto;
-                        }
+                        
+                                if (!(bool)contrato.EstaDevuelto)
+                                {
+                                    if (contratoPoliza.RegistroCompleto != null) {
+                                    strRegistroCompletoPolizaNombre = (bool)contratoPoliza.RegistroCompleto ? "Completo" : "Incompleto";
+                                    bRegistroCompletoPoliza = (bool)contratoPoliza.RegistroCompleto;
+                                     }
+                                 }
 
+                        }
+                       else if (contrato.EstaDevuelto == null)
+                        {
+                             strRegistroCompletoPolizaNombre = "Completo";
+                             bRegistroCompletoPoliza = true;
                         }
                         
                           
