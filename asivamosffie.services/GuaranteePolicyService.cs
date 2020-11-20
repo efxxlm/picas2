@@ -122,23 +122,18 @@ namespace asivamosffie.services
             //&&(bool)r.Estado==true&&r.Eliminado==0
             ).OrderByDescending(r=>r.ContratoPolizaId).FirstOrDefault();
 
-                contratoPoliza.ContratacionId = contrato.ContratacionId;
-
             }
 
             PolizaObservacion polizaObservacion=null;
             //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-
-            
+                        
             if (contratoPoliza != null)
             {
                 contratoPoliza.ContratacionId = 0;
                 //List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == p && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
                 List<PolizaGarantia> contratoPolizaGarantia = await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).ToListAsync();
 
-                contratoPoliza.PolizaGarantia = contratoPolizaGarantia;
-
-                
+                contratoPoliza.PolizaGarantia = contratoPolizaGarantia;                              
 
                 polizaObservacion = _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
             
@@ -146,6 +141,21 @@ namespace asivamosffie.services
                 List<PolizaObservacion> contratoPolizaObservacion = await _context.PolizaObservacion.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).ToListAsync();
 
                 contratoPoliza.PolizaObservacion = contratoPolizaObservacion;
+
+                if (contrato != null)
+                {
+                    //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
+                    contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == pContratoId
+                    //&&(bool)r.Estado==true&&r.Eliminado==0
+                    ).OrderByDescending(r => r.ContratoPolizaId).FirstOrDefault();
+
+                    if (contratoPoliza != null)
+                    {
+                        contratoPoliza.ContratacionId = contrato.ContratacionId;
+
+                    }
+
+                }
             }
 
             return contratoPoliza;
