@@ -161,7 +161,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorAmparo currencyMask maxlength="20" type="number" required
+                  <input matInput #valorAmparo currencyMask maxlength="20" required
                     formControlName="valorAmparo" (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">

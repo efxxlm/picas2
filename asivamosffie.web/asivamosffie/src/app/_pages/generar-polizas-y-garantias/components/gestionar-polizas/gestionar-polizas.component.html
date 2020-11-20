@@ -161,12 +161,13 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorAmparo maxlength="20" type="number" required formControlName="valorAmparo"
+                  <input matInput #valorAmparo currencyMask maxlength="20" required formControlName="valorAmparo"
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
+                  matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
               </div>
             </div>
           </div>

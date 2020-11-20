@@ -13,8 +13,10 @@ import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/pol
 export class TablaHistorialObservacionesPolizaComponent implements OnInit {
   displayedColumns: string[] = ['fechaRevision', 'observacion', 'estadoRevisionCodigo'];
   dataSource = new MatTableDataSource();
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
