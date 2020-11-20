@@ -90,7 +90,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   fechaFirmaContrato: any;
   tipoSolicitud: any;
   public arrayGarantias = [];
-  listaUsuarios: any[]=[];
+  listaUsuarios: any[] = [];
 
   constructor(
     private router: Router,
@@ -99,7 +99,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     public dialog: MatDialog,
     private activatedRoute: ActivatedRoute,
     private common: CommonService,
-    private contratacion:ProjectContractingService 
+    private contratacion: ProjectContractingService
   ) {
     this.minDate = new Date();
   }
@@ -128,17 +128,27 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;
       this.tipoSolicitud = data[0].tipoSolicitud;
       this.numContrato = data[0].numeroContrato;
-      this.objeto = data[0].objetoContrato;
+      if (data[0].objetoContrato != undefined || data[0].objetoContrato != null) {
+        this.objeto = data[0].objetoContrato;
+      }
+      else {
+        this.objeto = '';
+      };
       this.tipoIdentificacion = data[0].tipoDocumento;
       this.tipoContrato = data[0].tipoContrato;
-      this.valorContrato = 0;
-      this.plazoContrato =' 0 meses / 0 días';
+      if (data[0].valorContrato != undefined || data[0].valorContrato != null) {
+        this.valorContrato = data[0].valorContrato;
+      }
+      else {
+        this.valorContrato = 0;
+      }
+      this.plazoContrato = data[0].plazoContrato;
       this.loadContratacionId(data[0].contratacionId);
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
     });
-    this.common.getUsuariosByPerfil(10).subscribe(resp=>{
+    this.common.getUsuariosByPerfil(10).subscribe(resp => {
       this.listaUsuarios = resp;
     });
   }
@@ -158,19 +168,23 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
+      for (let i=0; i<this.listaUsuarios.length; i++){
+        const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
+        this.addressForm.get('responsableAprob').setValue(responAprob);
+      }
       this.dataLoad2(data);
-      
+
     });
   }
-  loadContratacionId(a){
-    this.contratacion.getContratacionByContratacionId(a).subscribe(data=>{
+  loadContratacionId(a) {
+    this.contratacion.getContratacionByContratacionId(a).subscribe(data => {
       this.loadInfoContratacion(data);
     });
   }
-  loadInfoContratacion(data){
+  loadInfoContratacion(data) {
     this.nombreContratista = data.contratista.nombre;
     this.numeroIdentificacion = data.contratista.numeroIdentificacion;
-    
+
   }
   dataLoad2(data) {
     this.idContrato = data.contratoId;
@@ -179,9 +193,9 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     this.loadGarantia(this.idPoliza);
     this.loadObservations(this.idPoliza);
   }
-  loadEstadoRevision(id){
-    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
-      for (let i=0; i< data.length; i++){
+  loadEstadoRevision(id) {
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data => {
+      for (let i = 0; i < data.length; i++) {
         const estadoRevSeleccionado = this.estadoArray.find(t => t.value === data[i].estadoRevisionCodigo);
         this.addressForm.get('fechaRevision').setValue(data[i].fechaRevision);
         this.addressForm.get('estadoRevision').setValue(estadoRevSeleccionado);
@@ -262,11 +276,11 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     }
     console.log(polizasList);
     let nombreAprobado;
-    if (!this.addressForm.value.responsableAprob.name) {
+    if (!this.addressForm.value.responsableAprob.usuarioId) {
       nombreAprobado = 'null';
     }
     else {
-      nombreAprobado = this.addressForm.value.responsableAprob.name;
+      nombreAprobado = this.addressForm.value.responsableAprob.usuarioId;
     }
     var statePoliza;
     if (this.addressForm.value.estadoRevision == "1") {
