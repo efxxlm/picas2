@@ -697,4 +697,30 @@ namespace asivamosffie.services.Helpers.Constant
         public const string CorreoNoExiste = "106";
         #endregion
     }
+
+    public class GeneralCodes
+    {
+
+        #region Mensajes Informativos
+
+        public const string NoExitenArchivos = "100";
+        public const string CamposVacios = "101";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+        
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
 }

@@ -20,38 +20,106 @@ namespace asivamosffie.services
     public class DailyFollowUpService : IDailyFollowUpService
     {
         private readonly devAsiVamosFFIEContext _context;
+        private readonly ICommonService _commonService;
 
-        public DailyFollowUpService(devAsiVamosFFIEContext context)
+        public DailyFollowUpService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _context = context;
+            _commonService = commonService;
         }
 
-        public async void gridRegisterDailyFollowUp()
+        public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
         {
-            List<Dominio> ListParametricas = _context.Dominio.ToList();
-            List<Localizacion> Listlocalizacion = _context.Localizacion.ToList();
-                
+            List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
+                                                                        .Where( r => r.FechaActaInicioFase2 <= DateTime.Now  )
+                                                                        .ToListAsync();
+            
+            listaInfoProyectos.ForEach( p => {
+                SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario
+                                                                .Where( s => s.ContratacionProyectoId == p.ContratacionProyectoId )
+                                                                .OrderByDescending( r => r.FechaSeguimiento ).FirstOrDefault();
 
-            Contrato contrato = await _context.Contrato
-                     .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.ContratacionProyecto)
-                              .ThenInclude(r => r.Proyecto)
-                                 .ThenInclude(r => r.InstitucionEducativa)
-                    .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.ContratacionProyecto)
-                              .ThenInclude(r => r.Proyecto)
-                                  .ThenInclude(r => r.Sede)
-                     .Include(r => r.Contratacion)
-                         .ThenInclude(r => r.Contratista)
-                    .FirstOrDefaultAsync();
-
-            foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
-                {
-                    Localizacion Municipio = Listlocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                    ContratacionProyecto.Proyecto.Departamento = Listlocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault().Descripcion;
-                    ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
-                    ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                if ( seguimientoDiario != null ){
+                    p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
+                    p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
                 }
+            });
+
+            return listaInfoProyectos;                                   
+        }
+
+        public async Task<Respuesta> CreateEditDailyFollowUp( SeguimientoDiario pSeguimientoDiario )
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Create_Edit_Seguimiento_Diario, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+            try
+            {
+                    if (pSeguimientoDiario.SeguimientoDiarioId == 0)
+                    {
+                        CreateEdit = "CREAR SEGUIMIENTO DIARIO";
+                        pSeguimientoDiario.FechaCreacion = DateTime.Now;
+                        pSeguimientoDiario.Eliminado = false;
+
+                        _context.SeguimientoDiario.Add( pSeguimientoDiario );
+                    }
+                    else
+                    {
+                        CreateEdit = "CREAR SEGUIMIENTO DIARIO";
+                        SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario.Find( pSeguimientoDiario.SeguimientoDiarioId );
+
+                        seguimientoDiario.FechaModificacion = DateTime.Now;
+                        seguimientoDiario.UsuarioModificacion = pSeguimientoDiario.UsuarioCreacion;
+
+                        seguimientoDiario.FechaSeguimiento = pSeguimientoDiario.FechaSeguimiento;
+                        seguimientoDiario.DisponibilidadPersonal = pSeguimientoDiario.DisponibilidadPersonal;
+                        seguimientoDiario.DisponibilidadPersonalObservaciones = pSeguimientoDiario.DisponibilidadPersonalObservaciones;
+                        seguimientoDiario.CantidadPersonalProgramado = pSeguimientoDiario.CantidadPersonalProgramado;
+                        seguimientoDiario.CantidadPersonalTrabajando = pSeguimientoDiario.CantidadPersonalTrabajando;
+                        seguimientoDiario.SeGeneroRetrasoPersonal = pSeguimientoDiario.SeGeneroRetrasoPersonal;
+                        seguimientoDiario.NumeroHorasRetrasoPersonal = pSeguimientoDiario.NumeroHorasRetrasoPersonal;
+                        seguimientoDiario.DisponibilidadMaterialCodigo = pSeguimientoDiario.DisponibilidadMaterialCodigo;
+                        seguimientoDiario.DisponibilidadMaterialObservaciones = pSeguimientoDiario.DisponibilidadMaterialObservaciones;
+                        seguimientoDiario.CausaIndisponibilidadMaterialCodigo = pSeguimientoDiario.CausaIndisponibilidadMaterialCodigo;
+                        seguimientoDiario.SeGeneroRetrasoMaterial = pSeguimientoDiario.SeGeneroRetrasoMaterial;
+                        seguimientoDiario.NumeroHorasRetrasoMaterial = pSeguimientoDiario.NumeroHorasRetrasoMaterial;
+                        seguimientoDiario.DisponibilidadEquipoCodigo = pSeguimientoDiario.DisponibilidadEquipoCodigo;
+                        seguimientoDiario.DisponibilidadEquipoObservaciones = pSeguimientoDiario.DisponibilidadEquipoObservaciones;
+                        seguimientoDiario.CausaIndisponibilidadEquipoCodigo = pSeguimientoDiario.CausaIndisponibilidadEquipoCodigo;
+                        seguimientoDiario.SeGeneroRetrasoEquipo = pSeguimientoDiario.SeGeneroRetrasoEquipo;
+                        seguimientoDiario.NumeroHorasRetrasoEquipo = pSeguimientoDiario.NumeroHorasRetrasoEquipo;
+                        seguimientoDiario.ProductividadCodigo = pSeguimientoDiario.ProductividadCodigo;
+                        seguimientoDiario.ProductividadObservaciones = pSeguimientoDiario.ProductividadObservaciones;
+                        seguimientoDiario.CausaIndisponibilidadProductividadCodigo = pSeguimientoDiario.CausaIndisponibilidadProductividadCodigo;
+                        seguimientoDiario.SeGeneroRetrasoProductividad = pSeguimientoDiario.SeGeneroRetrasoProductividad;
+                        seguimientoDiario.NumeroHorasRetrasoProductividad = pSeguimientoDiario.NumeroHorasRetrasoProductividad;
+
+                    }
+                    
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.OperacionExitosa, idAccion, pSeguimientoDiario.UsuarioCreacion, CreateEdit)
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                  new Respuesta
+                  {
+                      IsSuccessful = false,
+                      IsException = true,
+                      IsValidation = false,
+                      Code = GeneralCodes.Error,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.Error, idAccion, pSeguimientoDiario.UsuarioCreacion, ex.InnerException.ToString())
+                  };
+            }
+
         }
 
 

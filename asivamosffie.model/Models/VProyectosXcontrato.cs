@@ -15,5 +15,8 @@ namespace asivamosffie.model.Models
         public int ProyectoId { get; set; }
         public int ContratacionId { get; set; }
         public int ContratacionProyectoId { get; set; }
+        public DateTime? FechaActaInicioFase2 { get; set; }
+
+        
     }
 }

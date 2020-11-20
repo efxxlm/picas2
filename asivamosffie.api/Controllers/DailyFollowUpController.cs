@@ -26,6 +26,32 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [HttpGet]
+        [Route("gridRegisterDailyFollowUp")]
+        public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
+        {
+            var result = await _dailyFollowUp.gridRegisterDailyFollowUp();
+            return result;
+        }
+
+        [HttpPost]
+        [Route("CreateEditDailyFollowUp")]
+        public async Task<IActionResult> CreateEditDailyFollowUp([FromBody] SeguimientoDiario pSeguimientoDiario)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSeguimientoDiario.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _dailyFollowUp.CreateEditDailyFollowUp( pSeguimientoDiario );
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
  
     }
 }

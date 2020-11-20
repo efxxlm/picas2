@@ -3,6 +3,8 @@ import { FormBuilder, Validators, FormGroup, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { SeguimientoDiario } from 'src/app/_interfaces/DailyFollowUp';
+import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 
 @Component({
   selector: 'app-form-registrar-seguimiento',
@@ -11,7 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarSeguimientoComponent implements OnInit {
 
-  seguimientoId: string;
+  seguimientoId?: number;
 
   addressForm = this.fb.group({
     fechaSeguimiento: [null, Validators.required],
@@ -64,8 +66,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   };
 
   personalArray = [
-    { name: 'Suficiente', value: 'suficiente' },
-    { name: 'Insuficiente', value: 'insuficiente' }
+    { name: 'Suficiente', value: true },
+    { name: 'Insuficiente', value: false }
   ];
   materialArray = [
     { name: 'Óptima', value: 'optima' },
@@ -115,19 +117,27 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     }
   }
 
+  proyecto: any;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dailyFollowUpService: FollowUpDailyService,
+
   ) {
     this.minDate = new Date();
+    if (this.router.getCurrentNavigation().extras.state)
+      this.proyecto = this.router.getCurrentNavigation().extras.state.proyecto;
+
+    console.log( this.proyecto )
   }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
       this.seguimientoId = params.id;
-      console.log(this.seguimientoId);
+      console.log(this.seguimientoId, this.router.getCurrentNavigation());
     });
   }
 
@@ -145,7 +155,49 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    //console.log(this.addressForm.value);
+    let values = this.addressForm.value;
+
+    let seguimiento: SeguimientoDiario = {
+      fechaSeguimiento:                     values.fechaSeguimiento,
+      contratacionProyectoId:               this.proyecto.contratacionProyectoId,
+      seguimientoDiarioId:                  this.seguimientoId,
+
+      disponibilidadPersonal:               values.disponibilidadPersonal,
+      cantidadPersonalProgramado:           values.cantidadPersonalOperativoProgramado,
+      cantidadPersonalTrabajando:           values.cantidadPersonalOperativoTrabajando,
+      seGeneroRetrasoPersonal:              values.retrasoPersonal,
+      numeroHorasRetrasoPersonal:           values.horasRetrasoPersonal,
+      disponibilidadPersonalObservaciones:  values.disponibilidadPersonalObservaciones,
+      
+      disponibilidadMaterialCodigo:         values.disponibilidadMaterial,
+      causaIndisponibilidadMaterialCodigo:  values.causaMaterial,
+      seGeneroRetrasoMaterial:              values.retrasoMaterial,
+      numeroHorasRetrasoMaterial:           values.horasRetrasoMaterial,
+      disponibilidadMaterialObservaciones:  values.disponibilidadMaterialObservaciones,
+      
+      disponibilidadEquipoCodigo:           values.disponibilidadEquipo,
+      causaIndisponibilidadEquipoCodigo:    values.causaEquipo,
+      seGeneroRetrasoEquipo:                values.retrasoEquipo,
+      numeroHorasRetrasoEquipo:             values.horasRetrasoEquipo,
+      disponibilidadEquipoObservaciones:    values.disponibilidadEquipoObservaciones,
+      
+      productividadCodigo:                  values.Productividad,
+      causaIndisponibilidadProductividadCodigo:  values.causaProductividad,
+      seGeneroRetrasoProductividad:         values.retrasoProductividad,
+      numeroHorasRetrasoProductividad:      values.horasRetrasoProductividad,
+      productividadObservaciones:           values.ProductividadObservaciones,
+
+    } 
+
+    console.log(seguimiento);
+
+    this.dailyFollowUpService.createEditDailyFollowUp( seguimiento )
+      .subscribe( respuesta => {
+        this.openDialog('', respuesta.message);
+        if ( respuesta.code == "200" )
+          this.router.navigate(['registroSeguimientoDiario'])
+      });
+
   }
 }

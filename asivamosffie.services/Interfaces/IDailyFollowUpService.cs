@@ -10,6 +10,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IDailyFollowUpService
     {
-        
+        Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp();
+        Task<Respuesta> CreateEditDailyFollowUp( SeguimientoDiario pSeguimientoDiario );
     }
 }
