@@ -389,10 +389,10 @@ namespace asivamosffie.services
                 {
 
                     ContratoPoliza contratoPolizaBD = null;
+                    contratoPolizaBD = _context.ContratoPoliza.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
 
-                    if(contratoPolizaBD!= null)
-                    {
-                        contratoPolizaBD = _context.ContratoPoliza.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
+                    if (contratoPolizaBD!= null)
+                    {                       
 
                         contratoPolizaBD.FechaModificacion = DateTime.Now;
 
@@ -400,8 +400,30 @@ namespace asivamosffie.services
 
                         contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
                         //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+                        contratoPolizaBD.NombreAseguradora = contratoPoliza.NombreAseguradora;
+                        contratoPolizaBD.Observaciones = contratoPoliza.Observaciones;
+                        contratoPolizaBD.NumeroPoliza = contratoPoliza.NumeroPoliza;
+
+                        contratoPolizaBD.NumeroCertificado = contratoPoliza.NumeroCertificado;
+                        contratoPolizaBD.ObservacionesRevisionGeneral = contratoPoliza.ObservacionesRevisionGeneral;
+                        contratoPolizaBD.ResponsableAprobacion = contratoPoliza.ResponsableAprobacion;
+                        contratoPolizaBD.EstadoPolizaCodigo = contratoPoliza.EstadoPolizaCodigo;
+                        //contratoPolizaBD.UsuarioCreacion = contratoPoliza.UsuarioModificacion;
+                        contratoPolizaBD.FechaExpedicion = contratoPoliza.FechaExpedicion;
+
+                        contratoPolizaBD.Vigencia = contratoPoliza.Vigencia;
+                        contratoPolizaBD.VigenciaAmparo = contratoPoliza.VigenciaAmparo;
+                        contratoPolizaBD.ValorAmparo = contratoPoliza.ValorAmparo;
+                        contratoPolizaBD.CumpleDatosAsegurado = contratoPoliza.CumpleDatosAsegurado;
+                        contratoPolizaBD.CumpleDatosBeneficiario = contratoPoliza.CumpleDatosBeneficiario;
+                        contratoPolizaBD.CumpleDatosTomador = contratoPoliza.CumpleDatosTomador;
+                        contratoPolizaBD.IncluyeReciboPago = contratoPoliza.IncluyeReciboPago;
+                        contratoPolizaBD.IncluyeCondicionesGenerales = contratoPoliza.IncluyeCondicionesGenerales;
+                        contratoPolizaBD.FechaAprobacion = contratoPoliza.FechaAprobacion;
+                        contratoPolizaBD.Estado = contratoPoliza.Estado;
 
                         LimpiarEntradasContratoPoliza(ref contratoPolizaBD);
+                                                   
 
                         //_context.ContratoPoliza.Add(contratoPoliza);
                         _context.ContratoPoliza.Update(contratoPolizaBD);
