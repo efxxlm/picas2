@@ -110,6 +110,7 @@ export class GestionarPolizasComponent implements OnInit {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;
       this.tipoSolicitud = data[0].tipoSolicitud;
       this.numContrato = data[0].numeroContrato;
+      this.tipoIdentificacion = data[0].tipoDocumento;
       this.loadContratacionId(data[0].contratacionId);
     });
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(a=>{
@@ -152,12 +153,14 @@ export class GestionarPolizasComponent implements OnInit {
       this.plazoContrato =' 0 meses / 0 días';
     }
     this.nombreContratista = data.contratista.nombre;
+    /*
     if(data.contratista.tipoIdentificacionCodigo != undefined || data.contratista.tipoIdentificacionCodigo != undefined){
       this.tipoIdentificacion = data.contratista.tipoIdentificacionCodigo;
     }
     else{
       this.tipoIdentificacion = 'Pendiente';
     }
+    */
     this.numeroIdentificacion = data.contratista.numeroIdentificacion;
     
   }
