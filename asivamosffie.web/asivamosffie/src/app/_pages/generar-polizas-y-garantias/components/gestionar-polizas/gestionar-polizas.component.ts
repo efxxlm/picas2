@@ -56,6 +56,7 @@ export class GestionarPolizasComponent implements OnInit {
     { name: 'Andres Montealegre', value: '1' },
     { name: 'David Benitez', value: '2' }
   ];
+  listaUsuarios: any[]=[];
   minDate: Date;
 
   editorStyle = {
@@ -116,6 +117,9 @@ export class GestionarPolizasComponent implements OnInit {
     });
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
+    });
+    this.common.getUsuariosByPerfil(10).subscribe(resp=>{
+      this.listaUsuarios = resp;
     });
     this.idContrato = id;
   }

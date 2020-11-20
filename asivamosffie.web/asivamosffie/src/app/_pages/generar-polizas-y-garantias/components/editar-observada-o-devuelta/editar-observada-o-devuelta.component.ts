@@ -90,6 +90,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   fechaFirmaContrato: any;
   tipoSolicitud: any;
   public arrayGarantias = [];
+  listaUsuarios: any[]=[];
 
   constructor(
     private router: Router,
@@ -131,6 +132,9 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     this.common.listaGarantiasPolizas().subscribe(data0 => {
       this.polizasYSegurosArray = data0;
     });
+    this.common.getUsuariosByPerfil(10).subscribe(resp=>{
+      this.listaUsuarios = resp;
+    });
   }
   loadData(id) {
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data => {
@@ -150,11 +154,6 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
       this.dataLoad2(data);
       this.loadContratacionId(data);
-    });
-    this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data_1 => {
-      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === data_1.estadoRevision);
-      this.addressForm.get('fechaRevision').setValue(data_1.fechaRevisionDateTime);
-      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
     });
   }
   loadContratacionId(a){
@@ -188,8 +187,18 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   dataLoad2(data) {
     this.idContrato = data.contratoId;
     this.idPoliza = data.contratoPolizaId;
+    this.loadEstadoRevision(this.idPoliza);
     this.loadGarantia(this.idPoliza);
     this.loadObservations(this.idPoliza);
+  }
+  loadEstadoRevision(id){
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data=>{
+      for (let i=0; i< data.length; i++){
+        const estadoRevSeleccionado = this.estadoArray.find(t => t.value === data[i].estadoRevisionCodigo);
+        this.addressForm.get('fechaRevision').setValue(data[i].fechaRevision);
+        this.addressForm.get('estadoRevision').setValue(estadoRevSeleccionado);
+      }
+    });
   }
   loadGarantia(id) {
     this.polizaService.GetListPolizaGarantiaByContratoPolizaId(id).subscribe(data => {
