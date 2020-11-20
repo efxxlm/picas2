@@ -15,6 +15,10 @@ const routes: Routes = [
     component: FormRegistrarSeguimientoComponent
   },
   {
+    path: 'verBitacora/:id',
+    component: VerDetalleRegistroComponent
+  },
+  {
     path: 'verDetalle/:id',
     component: VerDetalleRegistroComponent
   }
