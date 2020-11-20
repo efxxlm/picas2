@@ -45,8 +45,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
 
+        public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual SeguimientoDiarioObservaciones ObservacionSupervisor { get; set; }
-        public virtual ContratacionProyecto SeguimientoDiarioNavigation { get; set; }
         public virtual ICollection<SeguimientoDiarioObservaciones> SeguimientoDiarioObservaciones { get; set; }
     }
 }

@@ -3501,8 +3501,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoDiario>(entity =>
             {
-                entity.Property(e => e.SeguimientoDiarioId).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.CausaIndisponibilidadEquipoCodigo).HasMaxLength(2);
 
                 entity.Property(e => e.CausaIndisponibilidadMaterialCodigo).HasMaxLength(2);
@@ -3532,16 +3530,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.ContratacionProyecto)
+                    .WithMany(p => p.SeguimientoDiario)
+                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SeguimientoDiario_ContratacionProyecto");
+
                 entity.HasOne(d => d.ObservacionSupervisor)
                     .WithMany(p => p.SeguimientoDiario)
                     .HasForeignKey(d => d.ObservacionSupervisorId)
                     .HasConstraintName("FK_SeguimientoDiario_SeguimientoDiarioObservaciones");
-
-                entity.HasOne(d => d.SeguimientoDiarioNavigation)
-                    .WithOne(p => p.SeguimientoDiario)
-                    .HasForeignKey<SeguimientoDiario>(d => d.SeguimientoDiarioId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SeguimientoDiario_ContratacionProyecto");
             });
 
             modelBuilder.Entity<SeguimientoDiarioObservaciones>(entity =>
@@ -4613,6 +4611,8 @@ namespace asivamosffie.model.Models
                     .HasColumnName("departamento")
                     .HasMaxLength(300)
                     .IsUnicode(false);
+
+                entity.Property(e => e.FechaActaInicioFase2).HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
                     .IsRequired()

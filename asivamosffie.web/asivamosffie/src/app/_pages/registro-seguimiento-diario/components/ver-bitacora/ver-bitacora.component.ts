@@ -6,6 +6,8 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DatePipe } from '@angular/common';
+import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
+import { ActivatedRoute, Params } from '@angular/router';
 
 
 export interface SeguimientoDiario {
@@ -34,24 +36,27 @@ const ELEMENT_DATA: SeguimientoDiario[] = [
 export class VerBitacoraComponent implements AfterViewInit {
 
   displayedColumns: string[] = [
-    'fechaRegistro',
+    'fechaSeguimiento',
     'fechaValidacion',
-    'productividad',
-    'estadoSeguimiento',
-    'id'
+    'productividadCodigo',
+    'estadoCodigo',
+    'seguimientoDiarioId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-
-  ) { }
+    private followUpDailyService: FollowUpDailyService,
+    private route: ActivatedRoute,
+  ) 
+  { }
 
   ngAfterViewInit() {
-
-    this.followUpDailyService.gridRegisterDailyFollowUp()
+    this.route.params.subscribe((params: Params) => {
+      //this.seguimientoId = params.id;
+      this.followUpDailyService.getDailyFollowUpByContratacionProyectoId( params.id )
       .subscribe(respuesta => {
         this.dataSource = new MatTableDataSource(respuesta);
 
@@ -64,6 +69,8 @@ export class VerBitacoraComponent implements AfterViewInit {
 
       });
 
+    });
+    
     
   }
 
@@ -75,4 +82,8 @@ export class VerBitacoraComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  // verDetalle(){
+  //   contratacionProyecto.proyecto.infoProyecto
+  // }
 }

@@ -27,7 +27,7 @@ export class FollowUpDailyService {
   };
 
   getDailyFollowUpByContratacionProyectoId( id: number ) {
-    return this.http.get<SeguimientoDiario>( `${ this.url }/getDailyFollowUpByContratacionProyectoId?pId=${ id }`);
+    return this.http.get<SeguimientoDiario[]>( `${ this.url }/getDailyFollowUpByContratacionProyectoId?pId=${ id }`);
   };
   
 

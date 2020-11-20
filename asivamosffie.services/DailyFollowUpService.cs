@@ -131,7 +131,18 @@ namespace asivamosffie.services
         
         public async Task<List<SeguimientoDiario>> GetDailyFollowUpByContratacionProyectoId( int pId )
         {
-            List<SeguimientoDiario> listaSeguimientos = _context.SeguimientoDiario.Where( r => r.ContratacionProyectoId == pId ).ToList();
+            List<VProyectosXcontrato> listaProyectos = _context.VProyectosXcontrato.ToList();
+
+            List<SeguimientoDiario> listaSeguimientos = _context.SeguimientoDiario
+                                                                    .Where( r => r.ContratacionProyectoId == pId )
+                                                                    .Include( r => r.ContratacionProyecto )
+                                                                    .ToList();
+
+            listaSeguimientos.ForEach( s => {
+
+                s.ContratacionProyecto.Proyecto = new Proyecto();
+                s.ContratacionProyecto.Proyecto.InfoProyecto = listaProyectos.Where( r => r.ProyectoId == s.ContratacionProyecto.ProyectoId ).FirstOrDefault();
+            });
 
             return listaSeguimientos;
         } 
