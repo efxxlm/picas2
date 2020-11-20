@@ -258,48 +258,6 @@ export class GestionarPolizasComponent implements OnInit {
       "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
     }
     let garantiaArray;
-    if(this.addressForm.value.polizasYSeguros!=undefined || this.addressForm.value.polizasYSeguros!=null){
-      for (let i = 0; i < polizasList.length; i++) {
-        switch (polizasList[i]) {
-          case '1':
-            garantiaArray = {
-              'contratoPolizaId': null,
-              'TipoGarantiaCodigo': '1',
-              'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
-            };
-            this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r => {
-            });
-            break;
-          case '2':
-            garantiaArray = {
-              'contratoPolizaId': null,
-              'TipoGarantiaCodigo': '2',
-              'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
-            };
-            this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r1 => {
-            });
-            break;
-          case '3':
-            garantiaArray = {
-              'contratoPolizaId': null,
-              'TipoGarantiaCodigo': '3',
-              'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
-            };
-            this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r2 => {
-            });
-            break;
-          case '4':
-            garantiaArray = {
-              'contratoPolizaId': null,
-              'TipoGarantiaCodigo': '4',
-              'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
-            };
-            this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r3 => {
-            });
-            break;
-        }
-      }
-    }
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
         this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
@@ -307,6 +265,50 @@ export class GestionarPolizasComponent implements OnInit {
         });
         this.polizaService.CambiarEstadoPolizaByContratoId("2", this.idContrato).subscribe(resp0 => {
 
+        });
+        this.polizaService.GetContratoPolizaByIdContratoId(this.idContrato).subscribe(rep1=>{
+          if(this.addressForm.value.polizasYSeguros!=undefined || this.addressForm.value.polizasYSeguros!=null){
+            for (let i = 0; i < polizasList.length; i++) {
+              switch (polizasList[i]) {
+                case '1':
+                  garantiaArray = {
+                    'contratoPolizaId': rep1.contratoPolizaId,
+                    'TipoGarantiaCodigo': '1',
+                    'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
+                  };
+                  this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r => {
+                  });
+                  break;
+                case '2':
+                  garantiaArray = {
+                    'contratoPolizaId': rep1.contratoPolizaId,
+                    'TipoGarantiaCodigo': '2',
+                    'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
+                  };
+                  this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r1 => {
+                  });
+                  break;
+                case '3':
+                  garantiaArray = {
+                    'contratoPolizaId': rep1.contratoPolizaId,
+                    'TipoGarantiaCodigo': '3',
+                    'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
+                  };
+                  this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r2 => {
+                  });
+                  break;
+                case '4':
+                  garantiaArray = {
+                    'contratoPolizaId': rep1.contratoPolizaId,
+                    'TipoGarantiaCodigo': '4',
+                    'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
+                  };
+                  this.polizaService.CreatePolizaGarantia(garantiaArray).subscribe(r3 => {
+                  });
+                  break;
+              }
+            }
+          }
         });
         this.openDialog('', 'La información ha sido guardada exitosamente.');
         this.router.navigate(['/generarPolizasYGarantias']);
