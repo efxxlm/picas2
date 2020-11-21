@@ -1498,22 +1498,34 @@ namespace asivamosffie.services
 
                     if (contratoPoliza != null)
                     {
-                       if(contrato.EstaDevuelto != null)
-                        {
-                        
-                                if (!(bool)contrato.EstaDevuelto)
+                       if(contrato.EstaDevuelto != null )
+                        {                        
+                                if ((bool)contrato.EstaDevuelto==false)
                                 {
                                     if (contratoPoliza.RegistroCompleto != null) {
-                                    strRegistroCompletoPolizaNombre = (bool)contratoPoliza.RegistroCompleto ? "Completo" : "Incompleto";
-                                    bRegistroCompletoPoliza = (bool)contratoPoliza.RegistroCompleto;
+                                        strRegistroCompletoPolizaNombre = (bool)contratoPoliza.RegistroCompleto ? "Completo" : "Incompleto";
+                                        bRegistroCompletoPoliza = (bool)contratoPoliza.RegistroCompleto;
                                      }
-                                 }
-
+                                    else
+                                    {
+                                        strRegistroCompletoPolizaNombre = "Incompleto";
+                                        bRegistroCompletoPoliza = false;
+                                    }
+                                }
                         }
-                       else if (contrato.EstaDevuelto == null)
+                       else /*if (contrato.EstaDevuelto == null)*/
                         {
-                             strRegistroCompletoPolizaNombre = "Completo";
-                             bRegistroCompletoPoliza = true;
+                            if (contratoPoliza.RegistroCompleto != null)
+                            {
+                                strRegistroCompletoPolizaNombre = (bool)contratoPoliza.RegistroCompleto ? "Completo" : "Incompleto";
+                                bRegistroCompletoPoliza = (bool)contratoPoliza.RegistroCompleto;
+                            }
+                            else
+                            {
+                                strRegistroCompletoPolizaNombre =  "Incompleto";
+                                bRegistroCompletoPoliza = false;
+
+                            }
                         }
                         
                           
