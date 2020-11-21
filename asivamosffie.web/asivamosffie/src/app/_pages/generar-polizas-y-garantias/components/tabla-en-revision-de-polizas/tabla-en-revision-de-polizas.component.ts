@@ -96,6 +96,7 @@ export class TablaEnRevisionDePolizasComponent implements OnInit {
     this.polizaService.CambiarEstadoPolizaByContratoId("4",id).subscribe(resp1=>{
       if(resp1.isSuccessful==true){
         this.polizaService.GetListGrillaContratoGarantiaPoliza().subscribe(data0=>{
+          this.ngOnInit();
           this.polizaService.loadDataItems.next(data0);
         });
         this.polizaService.AprobarContratoByIdContrato(id).subscribe(data1=>{
