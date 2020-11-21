@@ -1,0 +1,86 @@
+<section class="text-center">
+    <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+
+    <form autocomplete="off" [formGroup]="formRegistroFotografico" (ngSubmit)="guardar()">
+        <div align="left">
+            <mat-card>
+                <mat-card-content>
+                    <button mat-mini-fab color="primary" class="btn-info" type="button" (click)="verAyuda = !verAyuda">?</button>
+                    <div class="text-info mt-1em" *ngIf="verAyuda">
+                        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+                            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+                        </button>
+                        Recuerde que el registro fotográfico debe tener las siguientes características:
+                        <br>
+                        • <b>Dos (2) fotografías panorámicas</b>: Deben ser tomadas desde el mismo ángulo todas las semanas para
+                        evidenciar el avance.
+                        <br>
+                        • <b>Dos (2) fotografías de detalles</b>: En ellas se debe evidenciar el avance en el capítulo de la programación
+                        de obra en el que se encuentra el proyecto.
+                        <br>
+                        • <b>Dos (2) fotografías de actividades especiales en la ejecución de la obra.</b>
+                        <br>
+                        • <b>Cada foto debe contener una breve descripción.</b>
+                    </div>
+                    <div class="row mt-1em">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left">URL con soporte</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field style="width: 100%;">
+                                    <input  matInput
+                                            type="text"
+                                            formControlName="urlSoporte"
+                                            required>
+                                </mat-form-field>
+                            </div>
+                            <div class="d-flex justify-content-center size-text-descriptivo">
+                                <p class="color-text-descriptivo">
+                                    <i> 
+                                        Indique la ruta en la que se encuentran las fotografías que se tomaron en la semana y evidencian el avance del proyecto
+                                    </i>
+                                </p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-bottom: 1em;">
+                        <div class="col-md-12">
+                          <div>
+                            <div class="pr-1">
+                              <label class="label-left">Descripción</label>
+                            </div>
+                            <div class="col d-flex">
+                                <quill-editor   class="quill-editor-style card-80em position-relative"
+                                                [styles]="editorStyle"
+                                                [modules]="config"
+                                                (onContentChanged)="maxLength($event, 2000)"
+                                                formControlName="observaciones"
+                                                required>
+                                </quill-editor>
+                                <span class="contador miles" *ngIf="formRegistroFotografico.get('observaciones').value !== null" style="margin-top: 3.5em;">
+                                    {{2000 - (textoLimpio(formRegistroFotografico.get('observaciones').value))}}
+                                </span>
+                                <span class="contador miles" *ngIf="formRegistroFotografico.get('observaciones').value === null" style="margin-top: 3.5em;">
+                                    2000
+                                </span>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="text-center" style="margin-top: 2em;">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit">
+                    <img  src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </form>
+</section>
