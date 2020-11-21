@@ -1182,6 +1182,12 @@ namespace asivamosffie.services
             try
             {
                 contrato = _context.Contrato.Where(r => r.ContratoId == pIdContrato).FirstOrDefault();
+                if (contrato != null)
+                {
+                    contrato.EstaDevuelto = false;
+                    _context.Update(contrato);
+                    _context.SaveChanges();
+                }                    
 
                 //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
                 contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == contrato.ContratoId)
