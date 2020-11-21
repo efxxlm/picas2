@@ -898,7 +898,32 @@ namespace asivamosffie.services
                         template = template.Replace("_NumeroDRP_", msjNotificacion.NumeroDRP);
 
                 }
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(correo, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+
+                //string lstCorreos = "";
+
+                //            1   Administrador  - //2   Técnica
+                //3   Financiera - //4   Jurídica
+                //5   Administrativa - //6   Miembros Comite
+                //7   Secretario comité - //8   Supervisor
+                List<UsuarioPerfil> lstUsuariosPerfil = new List<UsuarioPerfil>();
+
+                lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
+
+                List<Usuario> lstUsuarios = new List<Usuario>();
+
+                foreach (var item in lstUsuariosPerfil)
+                {
+                    lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                    foreach (var usuario in lstUsuarios)
+                    {
+                        //lstCorreos = lstCorreos += usuario.Email + "";
+
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                    }
+                }
+
+                
 
                 if (blEnvioCorreo)
                     respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
@@ -1243,7 +1268,30 @@ namespace asivamosffie.services
                                 template = template.Replace("_NumeroDRP_", msjNotificacion.NumeroDRP);
 
                         }
-                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(correo, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+
+                        string lstCorreos = "";
+
+                        //            1   Administrador  - //2   Técnica
+                        //3   Financiera - //4   Jurídica
+                        //5   Administrativa - //6   Miembros Comite
+                        //7   Secretario comité - //8   Supervisor
+                        List<UsuarioPerfil> lstUsuariosPerfil = new List<UsuarioPerfil>();
+
+                        lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
+
+                        List<Usuario> lstUsuarios = new List<Usuario>();
+
+                        foreach (var item in lstUsuariosPerfil)
+                        {
+                            lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                            foreach (var usuario in lstUsuarios)
+                            {
+                                //lstCorreos = lstCorreos += usuario.Email + "";
+                                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                            }
+                        }
+                        
 
                         if (blEnvioCorreo)
                             respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
