@@ -1515,7 +1515,7 @@ namespace asivamosffie.services
                     {
                         strNumeroSolicitudContratacion = contratacion.NumeroSolicitud;
 
-                        TipoSolicitudCodigoContratacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_Contrato);
+                        TipoSolicitudCodigoContratacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.EstadoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Solicitud);
                         if (TipoSolicitudCodigoContratacion != null)
                         {
                             strTipoSolicitudCodigoContratacion = TipoSolicitudCodigoContratacion.Codigo;
