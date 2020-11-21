@@ -1515,7 +1515,7 @@ namespace asivamosffie.services
                     {
                         strNumeroSolicitudContratacion = contratacion.NumeroSolicitud;
 
-                        TipoSolicitudCodigoContratacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.EstadoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Solicitud);
+                        TipoSolicitudCodigoContratacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_Contrato);
                         if (TipoSolicitudCodigoContratacion != null)
                         {
                             strTipoSolicitudCodigoContratacion = TipoSolicitudCodigoContratacion.Codigo;
@@ -1581,12 +1581,12 @@ namespace asivamosffie.services
                         if (contratoPoliza.TipoSolicitudCodigo != null)
                         {
                             //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
-                            TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                            TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_Solicitud);
                         
                         if (TipoSolicitudCodigoContratoPoliza != null)
                             {
-                                strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
-                                strTipoSolicitudNombreContratoPoliza= TipoSolicitudCodigoContratoPoliza.Codigo;
+                                strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Codigo;
+                                strTipoSolicitudNombreContratoPoliza= TipoSolicitudCodigoContratoPoliza.Nombre;
                             }                            
                     }                    
 
