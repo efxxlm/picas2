@@ -163,7 +163,6 @@ export class EditarEnRevisionComponent implements OnInit {
         const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
         this.addressForm.get('responsableAprob').setValue(responAprob);
       }
-      this.loadGarantia(data.contratoPolizaId);
       this.dataLoad2(data);
     });
   }
@@ -419,9 +418,11 @@ export class EditarEnRevisionComponent implements OnInit {
         this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
 
         });
+        /*
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza, this.idContrato).subscribe(resp1 => {
 
         });
+        */
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
