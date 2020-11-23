@@ -164,7 +164,6 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.addressForm.get('nombre').setValue(data.nombreAseguradora);
       this.addressForm.get('numeroPoliza').setValue(data.numeroPoliza);
       this.addressForm.get('numeroCertificado').setValue(data.numeroCertificado);
-      this.addressForm.get('observacionesGenerales').setValue(data.observacionesRevisionGeneral);
       this.addressForm.get('fecha').setValue(data.fechaExpedicion);
       this.addressForm.get('fechaAprob').setValue(data.fechaAprobacion);
       this.addressForm.get('cumpleAsegurado').setValue(data.cumpleDatosAsegurado);
