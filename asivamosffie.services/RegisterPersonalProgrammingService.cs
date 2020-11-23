@@ -45,9 +45,9 @@ namespace asivamosffie.services
                 .Include(r => r.Proyecto)
                 .Include(r => r.Contratacion).FirstOrDefault();
 
+            //Interventoria no tiene seguimiento 
             if (contratacionProyecto.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-            {
-
+            { 
                 CantidadDias = contratacionProyecto.Proyecto.PlazoMesesObra ?? 0;
                 CantidadDias *= 30;
                 CantidadDias += contratacionProyecto.Proyecto.PlazoDiasObra.HasValue ? (int)contratacionProyecto.Proyecto.PlazoDiasObra : 0;
