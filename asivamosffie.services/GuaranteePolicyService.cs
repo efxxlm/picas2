@@ -220,6 +220,7 @@ namespace asivamosffie.services
                     {
                         //Auditoria
                         strCrearEditar = "REGISTRAR POLIZA GARANTIA";
+                        polizaGarantia.FechaCreacion = DateTime.Now;
                         _context.PolizaGarantia.Add(polizaGarantia);
                         //await _context.SaveChangesAsync();
                         _context.SaveChanges();
@@ -228,8 +229,18 @@ namespace asivamosffie.services
                     else
                     {
                         strCrearEditar = "EDIT POLIZA GARANTIA";
-                        //PolizaGarantia poli
-                        _context.PolizaGarantia.Update(polizaGarantia);
+                        PolizaGarantia polizaGarantiaBD = null;
+                        polizaGarantiaBD = _context.PolizaGarantia.Where(r => r.PolizaGarantiaId == polizaGarantia.PolizaGarantiaId).FirstOrDefault();
+
+                        if (polizaGarantiaBD != null)
+                        {
+                            //PolizaGarantia poli
+                            polizaGarantia.FechaModificacion = DateTime.Now;
+                            polizaGarantiaBD.TipoGarantiaCodigo = polizaGarantia.TipoGarantiaCodigo;
+                            polizaGarantiaBD.EsIncluidaPoliza = polizaGarantia.EsIncluidaPoliza;
+                        _context.PolizaGarantia.Update(polizaGarantiaBD);
+
+                        }                      
 
                         //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
                     }
@@ -253,9 +264,10 @@ namespace asivamosffie.services
                             await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
                             ConstantMessagesContratoPoliza.OperacionExitosa,
                             //contratoPoliza
-                            1
-                            ,
-                            "UsuarioCreacion", strCrearEditar
+                            idAccionCrearContratoPoliza
+                            , polizaGarantia.UsuarioCreacion
+                            //"UsuarioCreacion"
+                            , strCrearEditar
                             //contratoPoliza.UsuarioCreacion, "REGISTRAR POLIZA GARANTIA"
                             )
                         };
@@ -286,7 +298,7 @@ namespace asivamosffie.services
             //PolizaObservacion - FechaRevision
             //    EstadoRevisionCodigo - PolizaObservacion
 
-            string strCrearEditar;
+            string strCrearEditar, strUsuario="";
             try
             {
                 polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
@@ -297,6 +309,9 @@ namespace asivamosffie.services
                     {
                         //Auditoria
                         strCrearEditar = "REGISTRAR POLIZA OBSERVACION";
+                        strUsuario = polizaObservacion.UsuarioCreacion;
+                        polizaObservacion.FechaCreacion = DateTime.Now;
+
                         _context.PolizaObservacion.Add(polizaObservacion);
                         await _context.SaveChangesAsync();
 
@@ -304,11 +319,13 @@ namespace asivamosffie.services
                     else
                     {
                         strCrearEditar = "EDIT POLIZA OBSERVACION";
+                        strUsuario = polizaObservacion.UsuarioModificacion;
                         PolizaObservacion polizaObservacionBD = null;
 
                         polizaObservacionBD = _context.PolizaObservacion.Where(r => r.PolizaObservacionId == polizaObservacion.PolizaObservacionId).FirstOrDefault();
                         if (polizaObservacion != null)
                         {
+                            polizaObservacion.FechaModificacion = DateTime.Now;
                             polizaObservacionBD.Observacion = polizaObservacion.Observacion;
                             polizaObservacionBD.FechaRevision = polizaObservacion.FechaRevision;
                             polizaObservacionBD.EstadoRevisionCodigo = polizaObservacion.EstadoRevisionCodigo;
@@ -337,9 +354,10 @@ namespace asivamosffie.services
                             await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias,
                             ConstantMessagesContratoPoliza.OperacionExitosa,
                             //contratoPoliza
-                            1
-                            ,
-                            "UsuarioCreacion", "REGISTRAR POLIZA OBSERVACION"
+                            idAccionCrearContratoPoliza
+                            ,polizaObservacion.UsuarioCreacion
+                            //"UsuarioCreacion"
+                            , "REGISTRAR POLIZA OBSERVACION"
                             //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
                             )
                         };
@@ -1333,7 +1351,7 @@ namespace asivamosffie.services
                         IsValidation = false,
                         Data = contratoPoliza,
                         Code = ConstantMessagesContratoPoliza.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccionEditarContratoPoliza, contratoPoliza.UsuarioCreacion, strCrearEditar)
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.OperacionExitosa, idAccionEditarContratoPoliza, pUsuario, strCrearEditar)
 
                     };
 
@@ -1346,7 +1364,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesContratoPoliza.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.ErrorInterno, idAccionEditarContratoPoliza, contratoPoliza.UsuarioCreacion, "Error desconocido")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.ErrorInterno, idAccionEditarContratoPoliza, pUsuario, "Error desconocido")
                 };
 
             }
@@ -1359,7 +1377,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = null,
                     Code = ConstantMessagesContratoPoliza.ErrorInterno,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.ErrorInterno, idAccionEditarContratoPoliza, contratoPoliza.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.ErrorInterno, idAccionEditarContratoPoliza, pUsuario, ex.InnerException.ToString().Substring(0, 500))
                 };
             }
         }
