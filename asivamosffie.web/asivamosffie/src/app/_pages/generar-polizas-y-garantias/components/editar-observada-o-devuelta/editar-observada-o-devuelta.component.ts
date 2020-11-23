@@ -91,6 +91,8 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   tipoSolicitud: any;
   public arrayGarantias = [];
   listaUsuarios: any[] = [];
+  observacionesHistorial: any;
+  verFormularioEstadoRevision: boolean = false;
 
   ultimoEstadoRevision: any;
   ultimaFechaRevision: any;
@@ -154,6 +156,9 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.listaUsuarios = resp;
     });
   }
+  addObservacion(){
+    this.verFormularioEstadoRevision = !this.verFormularioEstadoRevision;
+  }
   loadData(id) {
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data => {
       this.addressForm.get('nombre').setValue(data.nombreAseguradora);
@@ -196,11 +201,6 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   }
   loadEstadoRevision(id) {
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data => {
-      for (let i = 0; i < data.length; i++) {
-        const estadoRevSeleccionado = this.estadoArray.find(t => t.value === data[i].estadoRevisionCodigo);
-        this.addressForm.get('fechaRevision').setValue(data[i].fechaRevision);
-        this.addressForm.get('estadoRevision').setValue(estadoRevSeleccionado);
-      }
     });
   }
   loadGarantia(id) {
@@ -243,13 +243,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
   loadObservations(id) {
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data_1 => {
       this.polizaService.loadTableObservaciones.next(data_1);
-      for (let i = 0; i < data_1.length; i++) {
-        this.ultimoEstadoRevision = data_1[i].estadoRevisionCodigo;
-        this.ultimaFechaRevision = data_1[i].fechaRevision;
-      }
-      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === this.ultimoEstadoRevision);
-      this.addressForm.get('fechaRevision').setValue(this.ultimaFechaRevision);
-      this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
+      this.observacionesHistorial = data_1.length;
     });
   }
   // evalua tecla a tecla
