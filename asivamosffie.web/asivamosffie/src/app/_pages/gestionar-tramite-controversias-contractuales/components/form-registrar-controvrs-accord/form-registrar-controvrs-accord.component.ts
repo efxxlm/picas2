@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -44,7 +45,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
   ngOnInit(): void {
     if (this.isEditable == true) {
       this.addressForm.get('tipoControversia').setValue('1');
@@ -83,6 +84,17 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    if(this.addressForm.value.tipoControversia.value=='1'){
+      let formArrayTai ={
+
+      };
+      this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0=>{
+
+      });
+    }
+    else{
+      console.log('servicio que no va el TAI');
+    }
     this.openDialog('', 'La información ha sido guardada exitosamente.');
   }
 
