@@ -1051,7 +1051,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion()
+        public async Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion(int id=0)
         {
             //await AprobarContratoByIdContrato(1);
 
@@ -1062,6 +1062,12 @@ namespace asivamosffie.services
 
             //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
             List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.Distinct().ToListAsync();
+
+            if(id!=0)
+            {
+                lstControversiaActuacion = lstControversiaActuacion.Where(r => r.ControversiaActuacionId == id).ToList();
+
+            }
 
             foreach (var controversia in lstControversiaActuacion)
             {

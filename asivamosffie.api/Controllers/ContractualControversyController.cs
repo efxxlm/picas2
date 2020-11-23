@@ -102,11 +102,11 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         [Route("GetListGrillaControversiaActuacion")]
 
-        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaActuacion()
+        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaActuacion(int id = 0)
         {
             try
             {
-                return await _contractualControversy.ListGrillaControversiaActuacion();
+                return await _contractualControversy.ListGrillaControversiaActuacion(id);
             }
             catch (Exception ex)
             {

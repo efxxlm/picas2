@@ -33,7 +33,7 @@
 
     <ng-container matColumnDef="institucionEducativaSede">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución Educativa </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativaSede }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
     </ng-container>
 
     <ng-container matColumnDef="sede">
@@ -61,7 +61,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                (click)="aprobarProgramacion( element.contratoConstruccionId )"
+                (click)="aprobarProgramacion( element.contratacionProyectoId )"
                 *ngIf="element.estadoProgramacionInicialCodigo === estadosProgramacion.sinAprobacionProgramacionPersonal">
                 Aprobar programación
         </button>
