@@ -372,6 +372,7 @@
         </div>
       </mat-card-content>
     </mat-card>
+
     <div
       *ngIf="addressForm.get('condicionesGenerales').value!=null && addressForm.get('reciboDePago').value!=null && addressForm.get('cumpleAfianzado').value!=null && addressForm.get('cumpleBeneficiario').value!=null && addressForm.get('cumpleAsegurado').value!=null">
       <mat-card class="shipping-card">
@@ -381,60 +382,26 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="fechaRevision">Fecha de la revisión 2</label>
-                </div>
-                <div class="col d-flex align-items-center">
-                  <mat-form-field class="example-full-width">
-                    <input matInput formControlName="fechaRevision" [matDatepicker]="pickerFechaRevision"
-                      [min]="minDate" readonly (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA">
-                    <mat-datepicker #pickerFechaRevision></mat-datepicker>
-                  </mat-form-field>
-                  <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
-                    class="btn-calendario">
-                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div class="text-right">
+            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="this.addObservacion()">
+              <img src="assets/img/icon/mas.svg" alt="Agregar observacion">
+              Agregar  observacion
+            </button>
           </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="estadoRevision">Estado de la revisión 2</label>
-                </div>
-                <div class="col">
-                  <mat-form-field class="select-width">
-                    <mat-select formControlName="estadoRevision" required>
-                      <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
-                        {{ estadoRevision.name }}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.value == '2'">
-            <h2 class="card-subTitle">Aprobación</h2>
+          <div *ngIf="this.verFormularioEstadoRevision==true">
             <div class="row">
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="fecha">Fecha de aprobación</label>
+                    <label class="label-left" for="fechaRevision">Fecha de la revisión {{this.observacionesHistorial + 1}}</label>
                   </div>
                   <div class="col d-flex align-items-center">
                     <mat-form-field class="example-full-width">
-                      <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22" [min]="minDate"
-                        readonly (click)="pickerFecha22.open()" required placeholder="DD/MM/AAAA">
-                      <mat-datepicker #pickerFecha22></mat-datepicker>
+                      <input matInput formControlName="fechaRevision" [matDatepicker]="pickerFechaRevision"
+                        [min]="minDate" readonly (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA">
+                      <mat-datepicker #pickerFechaRevision></mat-datepicker>
                     </mat-form-field>
-                    <button mat-button color="primary" type="button" (click)="pickerFecha22.open()"
+                    <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
                       class="btn-calendario">
                       <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                     </button>
@@ -446,13 +413,13 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="responsableAprob">Responsable de aprobación</label>
+                    <label class="label-left" for="estadoRevision">Estado de la revisión {{this.observacionesHistorial + 1}}</label>
                   </div>
                   <div class="col">
                     <mat-form-field class="select-width">
-                      <mat-select formControlName="responsableAprob" required>
-                        <mat-option *ngFor="let responsableAprob of listaUsuarios" [value]="responsableAprob">
-                          {{ responsableAprob.nombres }} {{responsableAprob.apellidos}}
+                      <mat-select formControlName="estadoRevision" required>
+                        <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
+                          {{ estadoRevision.name }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
@@ -460,26 +427,66 @@
                 </div>
               </div>
             </div>
+            <div
+              *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.value == '2'">
+              <h2 class="card-subTitle">Aprobación</h2>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left" for="fecha">Fecha de aprobación</label>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                      <mat-form-field class="example-full-width">
+                        <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22" [min]="minDate"
+                          readonly (click)="pickerFecha22.open()" required placeholder="DD/MM/AAAA">
+                        <mat-datepicker #pickerFecha22></mat-datepicker>
+                      </mat-form-field>
+                      <button mat-button color="primary" type="button" (click)="pickerFecha22.open()"
+                        class="btn-calendario">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left" for="responsableAprob">Responsable de aprobación</label>
+                    </div>
+                    <div class="col">
+                      <mat-form-field class="select-width">
+                        <mat-select formControlName="responsableAprob" required>
+                          <mat-option *ngFor="let responsableAprob of listaUsuarios" [value]="responsableAprob">
+                            {{ responsableAprob.nombres }} {{responsableAprob.apellidos}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </mat-card-content>
       </mat-card>
-
-      <div class="d-flex align-items-center">
-        <div class="text-area-quill">
-          <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
-          <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-            (onContentChanged)="maxLength($event, 2000)" formControlName="observacionesGenerales">
-          </quill-editor>
-        </div>
-        <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-          {{2000 - (textoLimpio(addressForm.controls.observacionesGenerales.value)>2000?2000:textoLimpio(addressForm.controls.observacionesGenerales.value))}}
-        </span>
-        <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value">
-          2000
-        </span>
-      </div>
     </div>
-
+    <div class="d-flex align-items-center">
+      <div class="text-area-quill">
+        <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
+        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+          (onContentChanged)="maxLength($event, 2000)" formControlName="observacionesGenerales">
+        </quill-editor>
+      </div>
+      <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
+        {{2000 - (textoLimpio(addressForm.controls.observacionesGenerales.value)>2000?2000:textoLimpio(addressForm.controls.observacionesGenerales.value))}}
+      </span>
+      <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value">
+        2000
+      </span>
+    </div>
     <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
     <div class="text-center mb-2em">
       <button mat-button color="warn" class="btn-guardar" type="submit">

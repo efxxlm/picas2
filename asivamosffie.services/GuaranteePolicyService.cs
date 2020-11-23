@@ -1907,9 +1907,9 @@ namespace asivamosffie.services
                     if (TipoContratoCodigoContrato != null)
                         strTipoContratoCodigoContratoNombre = TipoContratoCodigoContrato.Nombre;
 
-                    
-                    if (contrato.Objeto != null)
-                        contratoObjeto = contrato.Objeto;
+                    string contratoObjeto = "";
+                    //if (contrato.Objeto != null)
+                    //    contratoObjeto = contrato.Objeto;
                     //Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
                     VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
                     {

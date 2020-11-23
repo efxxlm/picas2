@@ -33,9 +33,19 @@ export class TablaConPolizaObservadaYDevueltaComponent implements OnInit {
         this.dataTable.push(polizas);
         enrevisionInc++;
       };
+      if (polizas.estadoPoliza === 'Con póliza observada y devuelta' && polizas.registroCompletoPolizaNombre=='Completo') {
+        this.dataTable.push(polizas);
+        enrevisionC++;
+      };
     };
     if (enrevisionInc === this.dataTable.length && enrevisionC==0) {
       this.estadoSemaforo2.emit('sin-diligenciar');
+    };
+    if (enrevisionC === this.dataTable.length && enrevisionInc==0) {
+      this.estadoSemaforo2.emit('completo');
+    };
+    if (enrevisionC > 0 && enrevisionInc > 0) {
+      this.estadoSemaforo2.emit('en-proceso');
     };
     if(this.dataTable.length == 0){
       this.estadoSemaforo2.emit('completo');

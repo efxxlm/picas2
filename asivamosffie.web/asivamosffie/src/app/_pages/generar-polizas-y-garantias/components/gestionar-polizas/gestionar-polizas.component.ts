@@ -264,9 +264,11 @@ export class GestionarPolizasComponent implements OnInit {
     let garantiaArray;
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
+        /*
         this.polizaService.CambiarEstadoPolizaByContratoId("2", this.idContrato).subscribe(resp0 => {
 
         });
+        */
         this.polizaService.GetContratoPolizaByIdContratoId(this.idContrato).subscribe(rep1 => {
           if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
             for (let i = 0; i < polizasList.length; i++) {
