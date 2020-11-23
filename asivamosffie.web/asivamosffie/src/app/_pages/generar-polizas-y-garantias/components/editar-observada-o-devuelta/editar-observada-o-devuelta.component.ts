@@ -157,7 +157,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
     });
   }
   addObservacion(){
-    this.verFormularioEstadoRevision = !this.verFormularioEstadoRevision;
+    this.verFormularioEstadoRevision = true;
   }
   loadData(id) {
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data => {

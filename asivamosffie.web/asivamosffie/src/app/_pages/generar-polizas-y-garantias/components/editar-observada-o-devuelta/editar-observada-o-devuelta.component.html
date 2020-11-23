@@ -382,16 +382,10 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="text-right" *ngIf="this.verFormularioEstadoRevision==false">
+          <div class="text-right">
             <button mat-button color="warn" type="button" class="btn-eliminar" (click)="this.addObservacion()">
               <img src="assets/img/icon/mas.svg" alt="Agregar observacion">
               Agregar  observacion
-            </button>
-          </div>
-          <div class="text-right" *ngIf="this.verFormularioEstadoRevision==true">
-            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="this.addObservacion()">
-              <img src="assets/img/icon/menos.svg" alt="Eliminar observacion">
-              Eliminar  observacion
             </button>
           </div>
           <div *ngIf="this.verFormularioEstadoRevision==true">
