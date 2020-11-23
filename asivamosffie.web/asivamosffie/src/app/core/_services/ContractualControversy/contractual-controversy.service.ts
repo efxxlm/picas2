@@ -68,7 +68,12 @@ export interface GetListGrillaTipoSolicitudControversiaContractual{
 }
 
 export interface GetVistaContratoContratista{
-
+  fechaFinContrato: any;
+  fechaInicioContrato: any;
+  idContratista: number;
+  nombreContratista: any;
+  numeroContrato: any;
+  plazoFormat: any;
 }
 
 export interface EliminarControversiaContractual{

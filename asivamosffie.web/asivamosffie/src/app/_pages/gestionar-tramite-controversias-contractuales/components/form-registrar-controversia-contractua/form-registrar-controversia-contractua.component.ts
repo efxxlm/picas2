@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -12,13 +13,33 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   addressForm = this.fb.group({
     contrato: [null, Validators.required],
   });
+  /*
   contratosArray = [
     { name: 'C223456789', value: '1' },
     { name: 'C223456999', value: '2' },
   ];
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  */
+  contratosArray:any;
+
+  nombreContratista: any;
+  tipoIdentificacion: any;
+  numIdentificacion: any;
+  tipoIntervencion: any;
+  valorContrato: any;
+  plazoContrato: any;
+  fechaInicioContrato: any;
+  fechaFinalizacionContrato: any;
+
+  constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
+    this.loadContractList();
+  }
+
+  loadContractList(){
+    this.services.GetListContratos().subscribe(data=>{
+      this.contratosArray = data;
+    });
   }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
@@ -27,8 +48,18 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
-  seleccionAutocomplete(nombre:string){
-    this.addressForm.value.contrato = nombre;
+  seleccionAutocomplete(id:any){
+    this.addressForm.value.contrato = id;
+    this.services.GetVistaContratoContratista(id).subscribe(resp=>{
+      this.nombreContratista = resp.nombreContratista;
+      this.tipoIdentificacion = 'Pendiente de lectura del servicio';
+      this.numIdentificacion = 'Pendiente de lectura del servicio';
+      this.tipoIntervencion = 'Pendiente de lectura del servicio';
+      this.valorContrato = 'Pendiente de lectura del servicio';
+      this.plazoContrato = resp.plazoFormat;
+      this.fechaInicioContrato = resp.fechaInicioContrato;
+      this.fechaFinalizacionContrato = resp.fechaFinContrato;
+    });
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
