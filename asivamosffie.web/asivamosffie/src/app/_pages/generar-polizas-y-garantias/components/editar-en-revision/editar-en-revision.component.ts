@@ -163,7 +163,6 @@ export class EditarEnRevisionComponent implements OnInit {
         const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
         this.addressForm.get('responsableAprob').setValue(responAprob);
       }
-      this.loadGarantia(data.contratoPolizaId);
       this.dataLoad2(data);
     });
   }
