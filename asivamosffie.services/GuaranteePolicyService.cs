@@ -410,14 +410,29 @@ namespace asivamosffie.services
                     ContratoPoliza contratoPolizaBD = null;
                     contratoPolizaBD = _context.ContratoPoliza.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).FirstOrDefault();
 
+                    Contrato contrato = null;
+                    bool ContratoEsDevuelto=false;
+                    
+
                     if (contratoPolizaBD!= null)
                     {                       
 
                         contratoPolizaBD.FechaModificacion = DateTime.Now;
 
                         //_context.Add(contratoPoliza);
+                        contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
 
-                        contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+                        if (contrato != null)
+                        {
+                            if(contrato.EstaDevuelto!=null)
+                            {
+                                ContratoEsDevuelto =Convert.ToBoolean( contrato.EstaDevuelto);
+
+                            }
+                            
+                        }                        
+
+                        contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza, ContratoEsDevuelto);
                         //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
                         contratoPolizaBD.NombreAseguradora = contratoPoliza.NombreAseguradora;
                         contratoPolizaBD.Observaciones = contratoPoliza.Observaciones;
@@ -506,6 +521,8 @@ namespace asivamosffie.services
             //{
             //    return BadRequest(ex.ToString());
             //}
+            Contrato contrato = null;
+            bool ContratoEsDevuelto = false;
 
 
             try
@@ -534,8 +551,17 @@ namespace asivamosffie.services
                     //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
 
                     //_context.Add(contratoPoliza);
+                    contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
 
-                    contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+                    if (contrato != null)
+                    {
+                        if (contrato.EstaDevuelto != null)
+                        {
+                            ContratoEsDevuelto = Convert.ToBoolean(contrato.EstaDevuelto);
+                        }
+                    }
+
+                    contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza,ContratoEsDevuelto);
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
                     LimpiarEntradasContratoPoliza(ref contratoPoliza);
@@ -634,7 +660,7 @@ namespace asivamosffie.services
 
                             //string urlDestino = pDominio;
                             //asent/img/logo  
-                            Contrato contrato;
+                            //Contrato contrato;
                             contrato = _context.Contrato.Where(r => r.ContratoId == objVistaContratoGarantiaPoliza.IdContrato).FirstOrDefault();
 
                             fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
@@ -759,6 +785,8 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Gestion_Poliza, (int)EnumeratorTipoDominio.Acciones);
 
+            
+            bool ContratoEsDevuelto = false;
             try
             {
                 Contrato contrato=null;
@@ -778,7 +806,17 @@ namespace asivamosffie.services
                     contratoPoliza.FechaModificacion = DateTime.Now;
                     contratoPoliza.EstadoPolizaCodigo = pCodigoNuevoEstadoPoliza;
 
-                    contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
+                    contrato = _context.Contrato.Where(r => r.ContratoId == contratoPoliza.ContratoId).FirstOrDefault();
+
+                    if (contrato != null)
+                    {
+                        if (contrato.EstaDevuelto != null)
+                        {
+                            ContratoEsDevuelto = Convert.ToBoolean(contrato.EstaDevuelto);
+                        }
+                    }
+
+                    contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza,ContratoEsDevuelto);
 
                     _context.SaveChanges();
 
@@ -1038,9 +1076,22 @@ namespace asivamosffie.services
             //contratoPoliza.contratopoliza = "";
 
         }
-        public static bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza)
+        public static bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza, bool EsContratoDevuelto)
         {
-            
+            //si es devuelta no validar: FechaAprobacion, ResponsableAprobacion
+            if (!EsContratoDevuelto)
+            {
+                if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
+                {
+                    return false;
+                }
+                else if (string.IsNullOrEmpty(contratoPoliza.ResponsableAprobacion.ToString()))
+                {
+                    return false;
+                }
+
+            }               
+
             if (string.IsNullOrEmpty(contratoPoliza.NombreAseguradora.ToString()))
             {
                 return false;
@@ -1095,14 +1146,7 @@ namespace asivamosffie.services
             {
                 return false;
             }
-            else if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
-            {
-                return false;
-            }
-            else if (string.IsNullOrEmpty(contratoPoliza.ResponsableAprobacion.ToString()))
-            {
-                return false;
-            }
+         
             else if (string.IsNullOrEmpty(contratoPoliza.EstadoPolizaCodigo.ToString()))
             {
                 return false;
