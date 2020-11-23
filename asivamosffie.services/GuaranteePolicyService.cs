@@ -1789,7 +1789,8 @@ namespace asivamosffie.services
                             //Nit  
                             strContratistaNumeroIdentificacion = contratista.NumeroIdentificacion.ToString();
 
-                             TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
+                            //TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
+                            TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
 
                             if (TipoDocumentoCodigoContratista != null)
                                 strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
