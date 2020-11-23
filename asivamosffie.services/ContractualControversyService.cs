@@ -31,7 +31,9 @@ namespace asivamosffie.services
         //CreateEditNuevaActualizacionTramite(ControversiaActuacion
         //“Registrar nueva actualización del trámite”
 
-        public async Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
+        
+        //public async Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
+        public async Task<Respuesta> CreateEditControversiaOtros(ControversiaActuacion controversiaActuacion)
         {
             Respuesta _response = new Respuesta();
 

@@ -63,9 +63,13 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("CreateEditNuevaActualizacionTramite")]
-        public async Task<IActionResult> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
+        //[Route("CreateEditNuevaActualizacionTramite")]
+        //public async Task<IActionResult> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
+
+        [HttpPost]        
+        [Route("CreateEditControversiaOtros")]
+        public async Task<IActionResult> CreateEditControversiaOtros(ControversiaActuacion controversiaActuacion)
+        
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -75,7 +79,7 @@ namespace asivamosffie.api.Controllers
                     controversiaActuacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 else
                     controversiaActuacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _contractualControversy.CreateEditNuevaActualizacionTramite(controversiaActuacion);
+                respuesta = await _contractualControversy.CreateEditControversiaOtros(controversiaActuacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)
