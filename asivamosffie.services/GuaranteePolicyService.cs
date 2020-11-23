@@ -1834,7 +1834,7 @@ namespace asivamosffie.services
                             strContratistaNumeroIdentificacion = contratista.NumeroIdentificacion.ToString();
 
                             //TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
-                            TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
+                            TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud);
 
                             if (TipoDocumentoCodigoContratista != null)
                                 strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
@@ -1845,34 +1845,69 @@ namespace asivamosffie.services
                         contratacionIdValor = contratacion.ContratacionId;
                     }
 
+                    DisponibilidadPresupuestal disponibilidadPresupuestal = null;
+
+                    if (contratacion != null)
+                    {
+                        disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+                    }
+                    string contratoObjeto = "";
+
+                   
+
+
+                    //contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+
                     //TipoContrato = contrato.TipoContratoCodigo   ??? Obra  ????
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     Int32 plazoDias, plazoMeses;
                     //25meses / 04 días
 
-                    if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionDias.ToString()))
-                        plazoDias = Convert.ToInt32(contrato.PlazoFase1PreDias);
+                    //if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionDias.ToString()))
+                    //    plazoDias = Convert.ToInt32(contrato.PlazoFase1PreDias);
 
-                    else
-                        plazoDias = Convert.ToInt32(contrato.PlazoFase2ConstruccionDias);
+                    //else
+                    //    plazoDias = Convert.ToInt32(contrato.PlazoFase2ConstruccionDias);
 
-                    if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionMeses.ToString()))
-                        plazoMeses = Convert.ToInt32(contrato.PlazoFase1PreMeses);
-                    else
-                        plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
+                    //if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionMeses.ToString()))
+                    //    plazoMeses = Convert.ToInt32(contrato.PlazoFase1PreMeses);
+                    //else
+                    //    plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
 
-                    string PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
+                    string PlazoContratoFormat = "";/* = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias "*/;
+                    plazoMeses = 0;
+                    plazoDias = 0;
+                    if (disponibilidadPresupuestal != null)
+                    {
 
+                        contratoObjeto = disponibilidadPresupuestal.Objeto;
+
+                        if (!string.IsNullOrEmpty(disponibilidadPresupuestal.PlazoDias.ToString()))
+                            plazoDias = Convert.ToInt32(disponibilidadPresupuestal.PlazoDias);
+
+                        //else
+                        //    plazoDias = Convert.ToInt32(contrato.PlazoFase2ConstruccionDias);
+
+                        if (!string.IsNullOrEmpty(disponibilidadPresupuestal.PlazoMeses.ToString()))
+                            plazoMeses = Convert.ToInt32(disponibilidadPresupuestal.PlazoMeses);
+                        //else
+                        //    plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
+
+                         PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
+
+
+                    }
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     //Dominio TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
-                                                                                
+
                     string strTipoContratoCodigoContratoNombre = string.Empty;
 
                     if (TipoContratoCodigoContrato != null)
                         strTipoContratoCodigoContratoNombre = TipoContratoCodigoContrato.Nombre;
 
-                    string contratoObjeto = "";
+                    
                     if (contrato.Objeto != null)
                         contratoObjeto = contrato.Objeto;
                     //Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
