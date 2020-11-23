@@ -294,7 +294,7 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       }
     }
     var statePoliza;
-    if (this.addressForm.value.estadoRevision == "1") {
+    if (this.addressForm.value.estadoRevision.value == "1") {
       statePoliza = "3";
     }
     else {
@@ -308,8 +308,6 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       completo = false;
     }
     console.log(this.addressForm.value);
-    let auxValue = this.addressForm.value.estadoRevision;
-    let auxValue2 = this.addressForm.value.polizasYSeguros;
     const contratoArray = {
       'contratoId': this.idContrato,
       "contratoPolizaId": this.idPoliza,
@@ -394,9 +392,11 @@ export class EditarObservadaODevueltaComponent implements OnInit {
         this.polizaService.CreatePolizaObservacion(observacionArray).subscribe(resp => {
 
         });
+        /*
         this.polizaService.CambiarEstadoPolizaByContratoId(statePoliza, this.idContrato).subscribe(resp1 => {
 
         });
+        */
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
