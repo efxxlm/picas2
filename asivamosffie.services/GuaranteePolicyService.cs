@@ -1680,7 +1680,7 @@ namespace asivamosffie.services
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     string strTipoSolicitudCodigoContratoPoliza = (Convert.ToInt32( ConstanCodigoTipoSolicitud.Contratacion)).ToString();
-                    string strTipoSolicitudNombreContratoPoliza = "Contratación"; //contratacion o modif contractual - 
+                    string strTipoSolicitudNombreContratoPoliza = ConstanStringTipoSolicitudContratacion.contratacion; //contratacion o modif contractual - 
 
                     string strEstadoSolicitudCodigoContratoPoliza = ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas).ToString();
                     string strEstadoSolicitudNombreContratoPoliza = "Sin radicación de pólizas";
@@ -1922,9 +1922,10 @@ namespace asivamosffie.services
                             if (TipoDocumentoCodigoContratista != null)
                                 strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
                         }
-
-                        TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud);
-
+                        //jflorez -20201124 ajusto tipo dominio
+                        //TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud);
+                        TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
+                        
                         contratacionIdValor = contratacion.ContratacionId;
 
                         vlrContratoComponenteUso =  getSumVlrContratoComponente(contratacion.ContratacionId);
@@ -2017,8 +2018,8 @@ namespace asivamosffie.services
 
                         //TipoModificacion = TipoModificacionCodigoContratoPoliza.Nombre
                         TipoModificacion = "Tipo modificacion",
-
-                        TipoSolicitud = strTipoSolicitudCodigoContratoPoliza,
+                        //jflorez 20201124 ajusto el tipo de solicitud, es contratación o modificacion contractual, en este momento no existe modelo de modificaciones contractuales por lo tanto envio el string plano
+                        TipoSolicitud = ConstanStringTipoSolicitudContratacion.contratacion,
 
                         FechaFirmaContrato = strFechaFirmaContrato,
 
