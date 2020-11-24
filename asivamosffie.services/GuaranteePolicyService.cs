@@ -599,7 +599,7 @@ namespace asivamosffie.services
 
                     int perfilId = 0;
 
-                    perfilId = 8; //  Supervisor
+                    perfilId = (int)EnumeratorPerfil.Supervisor; //  Supervisor
                     correo = getCorreos(perfilId);
 
                     try
@@ -902,7 +902,7 @@ namespace asivamosffie.services
 
             int perfilId = 0;
 
-            perfilId = 8; //  Supervisor
+            perfilId = (int)EnumeratorPerfil.Supervisor; //  Supervisor
             correo = getCorreos(perfilId);
 
             try
@@ -1272,10 +1272,13 @@ namespace asivamosffie.services
             //y al interventor para que revise el gestor de tareas,
             int perfilId = 0;
 
-            perfilId = 4; //  Jurídica
+            perfilId = (int)EnumeratorPerfil.Interventor; 
             correo = getCorreos(perfilId);
 
-            perfilId = 8; //    Supervisor
+            perfilId = (int) EnumeratorPerfil.Juridica; //  Jurídica
+            correo = getCorreos(perfilId);
+
+            perfilId = (int)EnumeratorPerfil.Supervisor; //    Supervisor
             correo = correo += ";" + getCorreos(perfilId);
 
             //get
@@ -1407,7 +1410,36 @@ namespace asivamosffie.services
                                 blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
                             }
                         }
-                        
+
+                        perfilId = (int)EnumeratorPerfil.Interventor;                        
+
+                        lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
+                                                
+
+                        foreach (var item in lstUsuariosPerfil)
+                        {
+                            lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                            foreach (var usuario in lstUsuarios)
+                            {                                
+                                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                            }
+                        }
+
+                        perfilId = (int)EnumeratorPerfil.Juridica; //  Jurídica                      
+                                         
+                        lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();                                               
+
+                        foreach (var item in lstUsuariosPerfil)
+                        {
+                            lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                            foreach (var usuario in lstUsuarios)
+                            {                                
+                                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                            }
+                        }
+
 
                         if (blEnvioCorreo)
                             respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
