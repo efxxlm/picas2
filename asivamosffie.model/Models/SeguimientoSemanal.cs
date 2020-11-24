@@ -22,6 +22,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
+        public bool? RegistroCompleto { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual ICollection<SeguimientoSemanalAvanceFisico> SeguimientoSemanalAvanceFisico { get; set; }

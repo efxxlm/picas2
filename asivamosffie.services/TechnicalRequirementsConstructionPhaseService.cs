@@ -399,7 +399,7 @@ namespace asivamosffie.services
 
                 //contrato.ContratoConstruccion.ToList().RemoveAll( r => r.eliminado == true )
                 contrato.FechaPolizaAprobacion = contrato.ContratoPoliza.LastOrDefault().FechaAprobacion.HasValue ? contrato.ContratoPoliza.LastOrDefault().FechaAprobacion : DateTime.Now;
-                
+
                 contrato.ContratoConstruccion.ToList().ForEach(cc =>
                 {
                     cc.ConstruccionPerfil = cc.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList();
@@ -418,10 +418,10 @@ namespace asivamosffie.services
 
                         cp.NombrePerfil = nombrePerfil != null ? nombrePerfil.Nombre : "";
 
-                        cp.ObservacionApoyo = getObservacionPerfil( cp, false);
-                        cp.ObservacionSupervisor = getObservacionPerfil( cp, true);
+                        cp.ObservacionApoyo = getObservacionPerfil(cp, false);
+                        cp.ObservacionSupervisor = getObservacionPerfil(cp, true);
 
-                        cp.ObservacionDevolucion = _context.ConstruccionPerfilObservacion.Find( cp.ObservacionSupervisorId );
+                        cp.ObservacionDevolucion = _context.ConstruccionPerfilObservacion.Find(cp.ObservacionSupervisorId);
 
                     });
 
@@ -555,7 +555,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -805,7 +804,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -1090,7 +1088,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = await this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -1132,7 +1129,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = await this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -1173,7 +1169,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = await this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -1798,12 +1793,73 @@ namespace asivamosffie.services
                        _context.SaveChanges();
                    });
 
-                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(contratoConstruccionId);
+                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                            .Where(r => r.ContratoConstruccionId == contratoConstruccionId)
+                                                                            .Include(r => r.Contrato)
+                                                                                .ThenInclude(r => r.Contratacion)
+                                                                                    .ThenInclude(r => r.ContratacionProyecto)
+                                                                            .Include(r => r.Proyecto)
+
+                                                                            .FirstOrDefault();
 
                     if (contratoConstruccion != null)
                     {
+                        List<dynamic> listaFechas = new List<dynamic>();
+
                         contratoConstruccion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoFlujoInversion = true;
+
+                        DateTime? fechaInicio = contratoConstruccion.Contrato.FechaActaInicioFase2;
+
+                        DateTime fechaFin = fechaInicio.Value.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
+                        fechaFin = fechaFin.AddDays(contratoConstruccion.Proyecto.PlazoDiasObra.Value);
+
+                        DateTime fechaTemp = fechaInicio.Value;
+
+                        while (fechaFin >= fechaTemp)
+                        {
+                            listaFechas.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
+                            fechaTemp = fechaTemp.AddDays(7);
+                        }
+
+
+                        ContratacionProyecto contratacionProyecto = contratoConstruccion.Contrato.Contratacion.ContratacionProyecto.Where(p => p.ProyectoId == contratoConstruccion.ProyectoId).FirstOrDefault();
+                        if (contratacionProyecto != null)
+                        {
+                            int idContratacionproyecto = contratacionProyecto.ContratacionProyectoId;
+
+                            List<SeguimientoSemanal> listaSeguimientos = _context.SeguimientoSemanal
+                                                                        .Where(p => p.ContratacionProyectoId == idContratacionproyecto).ToList();
+
+                            // elimina los existentes
+                            _context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
+
+                            int i = 1;
+                            listaFechas.OrderBy( p => p.fechaInicio ).ToList().ForEach(f =>
+                            {
+                                
+                                SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
+                                {
+                                    ContratacionProyectoId = idContratacionproyecto,
+                                    Eliminado = false,
+                                    UsuarioCreacion = pUsuarioModifico,
+                                    FechaCreacion = DateTime.Now,
+                                    NumeroSemana = i,
+                                    FechaInicio = f.fechaInicio,
+                                    FechaFin = f.fechaFin,
+
+                                };
+
+                                _context.SeguimientoSemanal.Add(seguimientoSemanal);
+                                _context.SaveChanges();
+
+                                i++;
+
+                            });
+
+                        }
+
+
                     }
 
                     return respuesta =
@@ -2130,7 +2186,7 @@ namespace asivamosffie.services
                 if (pObservacion.ConstruccionPerfilObservacionId > 0)
                 {
                     strCrearEditar = "EDITAR OBSERVACION CONSTRUCCION PERFIL";
-                    ConstruccionPerfilObservacion construccionObservacionPerfil = _context.ConstruccionPerfilObservacion.Where(r=> r.ConstruccionPerfilObservacionId == pObservacion.ConstruccionPerfilObservacionId).FirstOrDefault();
+                    ConstruccionPerfilObservacion construccionObservacionPerfil = _context.ConstruccionPerfilObservacion.Where(r => r.ConstruccionPerfilObservacionId == pObservacion.ConstruccionPerfilObservacionId).FirstOrDefault();
 
                     construccionObservacionPerfil.FechaModificacion = DateTime.Now;
                     construccionObservacionPerfil.UsuarioModificacion = pUsuarioCreacion;
@@ -2217,7 +2273,7 @@ namespace asivamosffie.services
                         EsSupervision = pObservacion.EsSupervision,
                     };
 
-                    _context.ConstruccionPerfilObservacion.Add( construccionObservacionPerfil );
+                    _context.ConstruccionPerfilObservacion.Add(construccionObservacionPerfil);
                 }
 
                 return respuesta;
@@ -2718,7 +2774,7 @@ namespace asivamosffie.services
                 if (pPerfil.ConstruccionPerfilObservacion.Count() > 0)
                     idObservacion = pPerfil.ConstruccionPerfilObservacion.FirstOrDefault().ConstruccionPerfilObservacionId;
 
-                ConstruccionPerfil construccionPerfil = _context.ConstruccionPerfil.Find( pPerfil.ConstruccionPerfilId );
+                ConstruccionPerfil construccionPerfil = _context.ConstruccionPerfil.Find(pPerfil.ConstruccionPerfilId);
 
                 construccionPerfil.UsuarioModificacion = pPerfil.UsuarioCreacion;
                 construccionPerfil.FechaModificacion = DateTime.Now;
@@ -2731,7 +2787,7 @@ namespace asivamosffie.services
                     if (construccionPerfil.TieneObservacionesSupervisor.Value)
                     {
 
-                        await CreateEditObservacionConstruccionPerfil( pPerfil.ConstruccionPerfilObservacion.FirstOrDefault(), pPerfil.UsuarioCreacion);
+                        await CreateEditObservacionConstruccionPerfil(pPerfil.ConstruccionPerfilObservacion.FirstOrDefault(), pPerfil.UsuarioCreacion);
                     }
                     else
                     {
