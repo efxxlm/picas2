@@ -143,7 +143,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   editMode(){
     this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
       .subscribe( seguimiento => {
-        console.log(seguimiento.fechaSeguimiento.toISOString());
+        console.log(seguimiento.fechaSeguimiento);
         
         this.addressForm.setValue(
           {
@@ -184,10 +184,10 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   }
 
   filtroCalendario = (d: Date | null): boolean => {
-    //const day = (d || new Date()).getDay();
+    const day = (d || new Date()).getDay();
     // Bloquea sabado y domingos
     console.log( d.toISOString() , this.addressForm.value.fechaSeguimiento)
-    return this.diasPermitidos[ d.toLocaleDateString() ] // day !== 0 && day !== 6;
+    return day !== 0 && day !== 6;
   }
 
   validateNumberKeypress(event: KeyboardEvent) {
