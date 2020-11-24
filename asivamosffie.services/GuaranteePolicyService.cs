@@ -1743,7 +1743,7 @@ namespace asivamosffie.services
                     ListContratoGrilla.Add(proyectoGrilla);
                 }
             }
-            return ListContratoGrilla.OrderBy(r => r.FechaCreacionContrato).ToList();
+            return ListContratoGrilla.OrderBy(r => r.FechaCreacionContrato).ToList(); 
 
         }
 
@@ -1823,6 +1823,8 @@ namespace asivamosffie.services
                     Dominio TipoContratoCodigoContrato=null;
 
                     Contratista contratista=null;
+                    decimal vlrContratoComponenteUso = 0;
+
                     if (contratacion != null)
                     {
                         if(contratacion.ContratistaId!=null)
@@ -1844,6 +1846,9 @@ namespace asivamosffie.services
                         TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud_Obra_Interventorias);
 
                         contratacionIdValor = contratacion.ContratacionId;
+
+                        vlrContratoComponenteUso =  getSumVlrContratoComponente(contratacion.ContratacionId);
+                        
                     }
 
                     DisponibilidadPresupuestal disponibilidadPresupuestal = null;
@@ -1853,12 +1858,8 @@ namespace asivamosffie.services
                         disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
                     }
                     string contratoObjeto = "";
-
                    
-
-
                     //contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
-
 
                     //TipoContrato = contrato.TipoContratoCodigo   ??? Obra  ????
 
@@ -1882,7 +1883,6 @@ namespace asivamosffie.services
                     plazoDias = 0;
                     if (disponibilidadPresupuestal != null)
                     {
-
                         contratoObjeto = disponibilidadPresupuestal.Objeto;
 
                         if (!string.IsNullOrEmpty(disponibilidadPresupuestal.PlazoDias.ToString()))
@@ -1897,7 +1897,6 @@ namespace asivamosffie.services
                         //    plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
 
                          PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
-
 
                     }
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
@@ -1925,7 +1924,9 @@ namespace asivamosffie.services
                         //Nit  
                         NumeroIdentificacion = strContratistaNumeroIdentificacion,
 
-                        ValorContrato = contrato.Valor.ToString(),
+                        //ValorContrato = contrato.Valor.ToString(),
+                        ValorContrato = vlrContratoComponenteUso.ToString(),
+                        
 
                         PlazoContrato = PlazoContratoFormat,
 
@@ -1988,5 +1989,30 @@ namespace asivamosffie.services
 
         }
 
+        //private async Task<decimal> getSumVlrContratoComponente(int contratacionId)
+        private  decimal getSumVlrContratoComponente(int contratacionId)
+        {
+            ContratacionProyecto contratacionProyecto = null;
+            contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacionId).FirstOrDefault();
+
+            ContratacionProyectoAportante contratacionProyectoAportante = null;
+            if (contratacionProyecto != null)
+                contratacionProyectoAportante = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == contratacionProyecto.ContratacionProyectoId).FirstOrDefault();
+
+            ComponenteAportante componenteAportante = null;
+            componenteAportante = _context.ComponenteAportante.Where(r => r.ContratacionProyectoAportanteId == contratacionProyecto.ContratacionProyectoId).FirstOrDefault();
+
+            ComponenteUso componenteUso = null;
+
+            decimal SumVlrContratoComponente = 0;
+
+            if(componenteAportante != null) 
+                SumVlrContratoComponente =  _context.ComponenteUso.Where(x => x.ComponenteAportanteId == componenteAportante.ComponenteAportanteId).Sum(x => x.ValorUso);
+
+            return SumVlrContratoComponente;
+
+
+
+        }
     }
 }
