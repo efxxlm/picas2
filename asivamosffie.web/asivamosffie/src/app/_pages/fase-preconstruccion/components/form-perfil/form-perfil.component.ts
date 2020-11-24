@@ -236,10 +236,12 @@ export class FormPerfilComponent implements OnInit {
           )
         );
       }
+      console.log( this.perfilesCompletos, this.perfilesEnProceso );
       if ( this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );
       }
-      if ( this.perfilesEnProceso < this.perfilProyecto.length && this.perfilesCompletos !== this.perfilProyecto.length ) {
+      if ( (  this.perfilesEnProceso < this.perfilProyecto.length || this.perfilesEnProceso === this.perfilProyecto.length )
+              && this.perfilesCompletos !== this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'en-proceso' );
       }
     }
@@ -321,14 +323,26 @@ export class FormPerfilComponent implements OnInit {
     this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
       .subscribe( value => {
         if ( value === true ) {
-          this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
+          console.log( contratoPerfilId );
+          if ( contratoPerfilId !== 0 ) {
+            this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
             .subscribe(
               () => {
                 this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 this.perfiles.removeAt( numeroPerfil );
+                this.formContratista.patchValue({
+                  numeroPerfiles: `${ this.perfiles.length }`
+                });
               },
               err => this.openDialog( '', err.message )
             );
+          } else {
+            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+            this.perfiles.removeAt( numeroPerfil );
+            this.formContratista.patchValue({
+              numeroPerfiles: `${ this.perfiles.length }`
+            });
+          }
         }
       } );
   }
