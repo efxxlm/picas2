@@ -16,6 +16,9 @@ export class ContractualControversyService implements OnInit{
   CreateEditarControversiaTAI(controversiaContractual: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarControversiaTAI`, controversiaContractual);
   }
+  CreateEditControversiaOtros(controversiaContractual: any){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditControversiaOtros`, controversiaContractual);
+  }
   CreateEditarActuacionSeguimiento(actuacionSeguimiento: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarActuacionSeguimiento`, actuacionSeguimiento);
   }

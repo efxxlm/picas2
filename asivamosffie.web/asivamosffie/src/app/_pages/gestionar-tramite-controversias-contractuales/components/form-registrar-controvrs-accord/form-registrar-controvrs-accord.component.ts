@@ -84,15 +84,31 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    if(this.addressForm.value.tipoControversia.value=='1'){
-      let formArrayTai ={
-
+    if (this.addressForm.value.tipoControversia.value == '1') {
+      let formArrayTai = {
+        "TipoControversiaCodigo": "1",
+        "FechaSolicitud": "1-10-2020",
+        "NumeroSolicitud": "XXXww",
+        "EstadoCodigo": "0",
+        "EsCompleto": false,
+        "SolicitudId": 0,
+        "ContratoId": 11,
+        "ConclusionComitePreTecnico": "conc",
+        "NumeroRadicadoSac": 0,
+        "MotivoJustificacionRechazo": "rechaz",
+        "RutaSoporte": "ruta",
+        "FechaCreacion": "1-10-2020",
+        "UsuarioCreacion": "us cre",
+        "UsuarioModificacion": "us mod",
+        "FechaComitePreTecnico": "5-10-2020",
+        "EsProcede": true,
+        "EsRequiereComite": false
       };
-      this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0=>{
+      this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0 => {
 
       });
     }
-    else{
+    else {
       console.log('servicio que no va el TAI');
     }
     this.openDialog('', 'La información ha sido guardada exitosamente.');
