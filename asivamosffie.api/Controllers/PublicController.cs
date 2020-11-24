@@ -18,15 +18,17 @@ namespace asivamosffie.api.Controllers
     {
         public readonly ISourceFundingService _sourceFunding;
         public readonly ISelectionProcessService _selectionProcess;
+        public readonly IGuaranteePolicyService _guaranteePolicy;
         public readonly IManagementCommitteeReportService _managementCommitteeReportService;
         private readonly IOptions<AppSettings> _settings;
 
-        public PublicController(IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings)
+        public PublicController(IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy)
         {
             _sourceFunding = sourceFunding;
             _settings = settings;
             _selectionProcess = selectionProcess;
             _managementCommitteeReportService = managementCommitteeReportService;
+            _guaranteePolicy = guaranteePolicy;
         }
 
         [HttpGet("GetConsignationValue")]
@@ -58,6 +60,24 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+
+
+        [HttpGet("NoApprovedLegalFiduciaryPolicy4d")]
+        public async Task NoApprovedLegalFiduciaryPolicy4d()
+        {
+            try
+            {
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada();
+                //return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        
 
         /// <summary>
         /// JMartinez

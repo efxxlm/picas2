@@ -95,6 +95,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   ultimoEstadoRevision: any;
   ultimaFechaRevision: any;
   listaUsuarios: any[] = [];
+  realizoPeticion: boolean = false;
 
   constructor(
     private router: Router,
@@ -114,8 +115,8 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty ) {
-      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
     }
   };
 
@@ -126,11 +127,11 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     });
 
     confirmarDialog.afterClosed()
-      .subscribe( response => {
-        if ( response === true ) {
+      .subscribe(response => {
+        if (response === true) {
           this.onSubmit();
         }
-      } );
+      });
   };
   loadContrato(id) {
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
@@ -448,6 +449,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
         });
         */
+        this.realizoPeticion = true;
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/generarPolizasYGarantias']);
       }

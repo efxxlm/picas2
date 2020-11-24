@@ -96,7 +96,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
 
   ultimoEstadoRevision: any;
   ultimaFechaRevision: any;
-
+  realizoPeticion: boolean = false;
   constructor(
     private router: Router,
     private polizaService: PolizaGarantiaService,
@@ -115,7 +115,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     });
   }
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty ) {
+    if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
       this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
     }
   };
@@ -408,6 +408,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
 
         });
         */
+       this.realizoPeticion = true;
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
