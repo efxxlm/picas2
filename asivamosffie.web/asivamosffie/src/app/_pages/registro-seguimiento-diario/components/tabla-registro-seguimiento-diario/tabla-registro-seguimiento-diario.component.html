@@ -37,7 +37,11 @@
     <!-- fechaUltimoReporte Column -->
     <ng-container matColumnDef="fechaUltimoSeguimientoDiario">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha del último reporte</th>
-      <td mat-cell *matCellDef="let element">{{element.fechaUltimoSeguimientoDiario | date: 'dd/MM/yyyy'}}</td>
+      <td [ngSwitch]="element.fechaUltimoSeguimientoDiario" mat-cell *matCellDef="let element">
+        <section *ngSwitchCase="undefined"> Sin registro  </section> 
+        <section *ngSwitchDefault> {{element.fechaUltimoSeguimientoDiario | date: 'dd/MM/yyyy'}} </section> 
+      </td>
+        <!-- <td *ngSwitchDefault mat-cell *matCellDef="let element">{{element.fechaUltimoSeguimientoDiario | date: 'dd/MM/yyyy'}} </td> -->
     </ng-container>
 
     <!-- Id Column -->

@@ -71,39 +71,12 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
      { name: 'Suficiente', value: true },
      { name: 'Insuficiente', value: false }
   ];
-  materialArray = [
-    // { name: 'Óptima', value: 'optima' },
-    // { name: 'Media', value: 'media' },
-    // { name: 'Baja', value: 'baja' }
-  ];
-  equipolArray = [
-    // { name: 'Total', value: 'total' },
-    // { name: 'Parcial', value: 'parcial' },
-    // { name: 'Baja', value: 'baja' }
-  ];
-  productividadArray = [
-    // { name: 'Alta', value: 'Alta' },
-    // { name: 'Media', value: 'media' },
-    // { name: 'Baja', value: 'baja' }
-  ];
-  causaBajaDisponibilidadMaterial = [
-    // { name: 'No se realizó el pedido del material', value: '1' },
-    // { name: 'incumplimiento proveedor', value: '2' },
-    // { name: 'imposibilidad de entrega de material por motivos de fuerza mayor', value: '3' }
-  ];
-  causaBajaDisponibilidadEquipo = [
-    // { name: 'En mantenimiento', value: '1' },
-    // { name: 'No contratado', value: '2' },
-    // { name: 'incumplimiento de proveedor', value: '3' },
-    // { name: 'imposibilidad de entrega de equipos por motivos de fuerza mayor', value: '4' }
-  ];
-  causaBajaDisponibilidadProductividad = [
-    // { name: 'Condiciones climáticas', value: '1' },
-    // { name: 'Paros o inconvenientes con la comunidad', value: '2' },
-    // { name: 'Accidente laboral', value: '3' },
-    // { name: 'Orden público', value: '4' },
-    // { name: 'Otros', value: '5' },
-  ];
+  materialArray = [];
+  equipolArray = [];
+  productividadArray = [];
+  causaBajaDisponibilidadMaterial = [];
+  causaBajaDisponibilidadEquipo = [];
+  causaBajaDisponibilidadProductividad = [];
 
 
   textoLimpio(texto: string) {
@@ -170,6 +143,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   editMode(){
     this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
       .subscribe( seguimiento => {
+        console.log(seguimiento.fechaSeguimiento.toISOString());
+        
         this.addressForm.setValue(
           {
             fechaSeguimiento:  seguimiento.fechaSeguimiento,    
@@ -201,6 +176,18 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
           }
         )
       });
+  }
+
+  diasPermitidos = {
+    "2020-12-12T08:00:00": true,
+    "2020-12-11T08:00:00": true
+  }
+
+  filtroCalendario = (d: Date | null): boolean => {
+    //const day = (d || new Date()).getDay();
+    // Bloquea sabado y domingos
+    console.log( d.toISOString() , this.addressForm.value.fechaSeguimiento)
+    return this.diasPermitidos[ d.toLocaleDateString() ] // day !== 0 && day !== 6;
   }
 
   validateNumberKeypress(event: KeyboardEvent) {

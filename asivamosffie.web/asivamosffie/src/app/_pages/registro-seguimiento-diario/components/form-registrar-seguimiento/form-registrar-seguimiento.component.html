@@ -32,8 +32,15 @@
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA" formControlName="fechaSeguimiento"
-                    required [min]="minDate" readonly (click)="picker.open()">
+                  <input matInput 
+                    [matDatepicker]="picker" 
+                    [matDatepickerFilter]="filtroCalendario"
+                    placeholder="DD/MM/AAAA" 
+                    formControlName="fechaSeguimiento"
+                    required 
+                    [min]="minDate" 
+                    readonly 
+                    (click)="picker.open()">
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
@@ -90,7 +97,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -112,7 +119,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -207,7 +214,7 @@
               <div class="pr-1">
                 <label class="label-left" for="causaMaterial"
                   [class.color-secondaryColor]="addressForm.get('causaMaterial').invalid && addressForm.get('causaMaterial').touched">
-                  Causa
+                  Causa de baja disponibilidad
                 </label>
               </div>
               <div class="col">
@@ -317,7 +324,7 @@
               <div class="pr-1">
                 <label class="label-left" for="causaEquipo"
                   [class.color-secondaryColor]="addressForm.get('causaEquipo').invalid && addressForm.get('causaEquipo').touched">
-                  Causa
+                  Causa de baja disponibilidad
                 </label>
               </div>
               <div class="col">
