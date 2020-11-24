@@ -1891,7 +1891,7 @@ namespace asivamosffie.services
                                 strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
                         }
 
-                        TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_Solicitud_Obra_Interventorias);
+                        TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud);
 
                         contratacionIdValor = contratacion.ContratacionId;
 
