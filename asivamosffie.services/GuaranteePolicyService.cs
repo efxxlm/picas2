@@ -301,7 +301,7 @@ namespace asivamosffie.services
             string strCrearEditar, strUsuario="";
             try
             {
-                polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
+                //polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
                 if (polizaObservacion != null)
                 {
 
@@ -1073,8 +1073,8 @@ namespace asivamosffie.services
         {
             contratoPoliza.DescripcionModificacion = Helpers.Helpers.CleanStringInput(contratoPoliza.DescripcionModificacion);
             contratoPoliza.NumeroPoliza = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroPoliza);
-            contratoPoliza.Observaciones = Helpers.Helpers.CleanStringInput(contratoPoliza.Observaciones);
-            contratoPoliza.ObservacionesRevisionGeneral = Helpers.Helpers.CleanStringInput(contratoPoliza.ObservacionesRevisionGeneral);
+            //contratoPoliza.Observaciones = Helpers.Helpers.CleanStringInput(contratoPoliza.Observaciones);
+            //contratoPoliza.ObservacionesRevisionGeneral = Helpers.Helpers.CleanStringInput(contratoPoliza.ObservacionesRevisionGeneral);
             contratoPoliza.ResponsableAprobacion = Helpers.Helpers.CleanStringInput(contratoPoliza.ResponsableAprobacion);
             contratoPoliza.NumeroCertificado = Helpers.Helpers.CleanStringInput(contratoPoliza.NumeroCertificado);
             contratoPoliza.NombreAseguradora = Helpers.Helpers.CleanStringInput(contratoPoliza.NombreAseguradora);
