@@ -53,7 +53,9 @@
       <mat-card-content>
         <div class="row">
           <div class="pr-1">
-            <label for="nombre" class="label-left">Nombre de la aseguradora</label>
+            <label for="nombre" class="label-left"
+              [ngClass]="{'color-secondaryColor' : addressForm.controls.nombre.invalid}">Nombre de la
+              aseguradora</label>
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
@@ -66,7 +68,9 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label for="numeroPoliza" class="label-left">Número de la póliza</label>
+                <label for="numeroPoliza" class="label-left"
+                  [ngClass]="{'color-secondaryColor' : addressForm.controls.numeroPoliza.invalid}">Número de la
+                  póliza</label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
@@ -81,7 +85,9 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label for="numeroCertificado" class="label-left">Número de certificado</label>
+                <label for="numeroCertificado" class="label-left"
+                  [ngClass]="{'color-secondaryColor' : addressForm.controls.numeroCertificado.invalid}">Número de
+                  certificado</label>
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
@@ -97,8 +103,7 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left"
-                  [class.color-secondaryColor]="addressForm.get('fecha').invalid && addressForm.get('fecha').touched"
+                <label class="label-left" [ngClass]="{'color-secondaryColor' : addressForm.controls.fecha.invalid}"
                   for="fecha">Fecha de expedición de la póliza</label>
               </div>
               <div class="col d-flex align-items-center">
@@ -118,7 +123,9 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="vigenciaPoliza">Vigencia de la póliza</label>
+                <label class="label-left" for="vigenciaPoliza"
+                  [ngClass]="{'color-secondaryColor' : addressForm.controls.vigenciaPoliza.invalid}">Vigencia de la
+                  póliza</label>
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
@@ -137,7 +144,9 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="vigenciaAmparo">Vigencia del amparo</label>
+                <label class="label-left" for="vigenciaAmparo"
+                  [ngClass]="{'color-secondaryColor' : addressForm.controls.vigenciaAmparo.invalid}">Vigencia del
+                  amparo</label>
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
@@ -156,7 +165,8 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="valorAmparo">
+                <label class="label-left" for="valorAmparo"
+                  [ngClass]="{'color-secondaryColor' : addressForm.controls.valorAmparo.invalid}">
                   Valor del amparo
                 </label>
               </div>
@@ -176,7 +186,9 @@
         <h2 class="card-subTitle">Pólizas y seguros</h2>
         <div class="row">
           <div class="pr-1">
-            <label class="label-left" for="polizasYSeguros">Pólizas y seguros requeridos</label>
+            <label class="label-left" for="polizasYSeguros"
+              [ngClass]="{'color-secondaryColor' : addressForm.controls.polizasYSeguros.invalid}">Pólizas y seguros
+              requeridos</label>
           </div>
           <div class="col">
             <mat-form-field class="select-width">
@@ -197,7 +209,9 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="buenManejoCorrectaInversionAnticipo">¿Está incluida en la
+                  <label class="label-left" for="buenManejoCorrectaInversionAnticipo"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.buenManejoCorrectaInversionAnticipo.invalid}">¿Está
+                    incluida en la
                     póliza presentada?</label>
                 </div>
                 <div class="col">
@@ -221,7 +235,10 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="estabilidadYCalidad">¿Está incluida en la póliza
+                  <label class="label-left" for="estabilidadYCalidad"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.estabilidadYCalidad.invalid}">¿Está
+                    incluida en la
+                    póliza
                     presentada?</label>
                 </div>
                 <div class="col">
@@ -243,7 +260,10 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="polizaYCoumplimiento">¿Está incluida en la póliza
+                  <label class="label-left" for="polizaYCoumplimiento"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.polizaYCoumplimiento.invalid}">¿Está
+                    incluida en la
+                    póliza
                     presentada?</label>
                 </div>
                 <div class="col">
@@ -265,7 +285,10 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="polizasYSegurosCompleto">¿Está incluida en la póliza
+                  <label class="label-left" for="polizasYSegurosCompleto"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.polizasYSegurosCompleto.invalid}">¿Está
+                    incluida en la
+                    póliza
                     presentada?</label>
                 </div>
                 <div class="col">
@@ -286,7 +309,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="cumpleAsegurado">
+                  <label class="label-left" for="cumpleAsegurado"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.cumpleAsegurado.invalid}">
                     ¿Cumple con los datos del Asegurado/ Beneficiario?
                   </label>
                 </div>
@@ -304,7 +328,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="cumpleBeneficiario">
+                  <label class="label-left" for="cumpleBeneficiario"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.cumpleBeneficiario.invalid}">
                     ¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?
                   </label>
                 </div>
@@ -322,7 +347,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="cumpleAfianzado">
+                  <label class="label-left" for="cumpleAfianzado"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.cumpleAfianzado.invalid}">
                     ¿Cumple con los datos del Tomador / Afianzado?
                   </label>
                 </div>
@@ -340,7 +366,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="reciboDePago">
+                  <label class="label-left" for="reciboDePago"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.reciboDePago.invalid}">
                     ¿Se incluye el recibo de pago con los datos requeridos?
                   </label>
                 </div>
@@ -358,7 +385,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="condicionesGenerales">
+                  <label class="label-left" for="condicionesGenerales"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.condicionesGenerales.invalid}">
                     ¿Se incluyen las condiciones generales de la póliza/ o su clausulado?
                   </label>
                 </div>
@@ -388,7 +416,9 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="fechaRevision">Fecha de la revisión</label>
+                  <label class="label-left" for="fechaRevision"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaRevision.invalid}">Fecha de la
+                    revisión</label>
                 </div>
                 <div class="col d-flex align-items-center">
                   <mat-form-field class="example-full-width">
@@ -408,7 +438,9 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="estadoRevision">Estado de la revisión</label>
+                  <label class="label-left" for="estadoRevision"
+                    [ngClass]="{'color-secondaryColor' : addressForm.controls.estadoRevision.invalid}">Estado de la
+                    revisión</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
@@ -429,7 +461,9 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="fecha">Fecha de aprobación</label>
+                    <label class="label-left" for="fechaAprob"
+                      [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaAprob.invalid}">Fecha de
+                      aprobación</label>
                   </div>
                   <div class="col d-flex align-items-center">
                     <mat-form-field class="example-full-width">
@@ -449,7 +483,10 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="responsableAprob">Responsable de aprobación</label>
+                    <label class="label-left" for="responsableAprob"
+                      [ngClass]="{'color-secondaryColor' : addressForm.controls.responsableAprob.invalid}">Responsable
+                      de
+                      aprobación</label>
                   </div>
                   <div class="col">
                     <mat-form-field class="select-width">
@@ -482,7 +519,6 @@
         </span>
       </div>
     </div>
-
     <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
     <div class="text-center mb-2em">
       <button mat-button color="warn" class="btn-guardar" type="submit">

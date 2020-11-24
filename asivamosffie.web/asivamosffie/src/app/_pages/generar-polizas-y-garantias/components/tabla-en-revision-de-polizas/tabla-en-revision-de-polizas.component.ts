@@ -85,7 +85,7 @@ export class TablaEnRevisionDePolizasComponent implements OnInit {
     this.polizaService.CambiarEstadoPolizaByContratoId("4", id).subscribe(resp1 => {
       if (resp1.isSuccessful == true) {
         this.polizaService.AprobarContratoByIdContrato(id).subscribe(data1 => {
-          this.openDialog("","Se envió correo con notificación");
+          this.openDialog("Se envió correo con notificación","");
           console.log("envió correo");
         });
         this.routes.navigateByUrl('/', { skipLocationChange: true }).then(

@@ -30,9 +30,9 @@ namespace asivamosffie.services
         /// </summary>
         /// <returns></returns>
         /// 
-        public async Task<List<VRegistrarFase1>> GetListContratacion2() 
+        public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
-            return await _context.VRegistrarFase1.Where(r=> r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -47,10 +47,11 @@ namespace asivamosffie.services
               "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
               "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
               "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-              "AND ctr.TipoSolicitudCodigo = 1" +     //Solo contratos Tipo Obra
+              "AND ctr.TipoSolicitudCodigo = 1" +   //Solo contratos Tipo Obra
               "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
               "OR  c.EstadoVerificacionCodigo = 2" +  //En proceso de aprobación de requisitos técnicos
               "OR  c.EstadoVerificacionCodigo = 3" +  //Con requisitos técnicos aprobados
+              "OR  c.EstadoVerificacionCodigo = 4" +  //Con requisitos técnicos aprobados
               "OR  c.EstadoVerificacionCodigo = 10")  //Enviado al interventor -- Enviado por el supervisor
 
               .Include(r => r.ContratoPoliza)
@@ -306,8 +307,15 @@ namespace asivamosffie.services
                     .Include(r => r.ContratoPerfil)
                     .FirstOrDefault();
                 //Si  obra  
-                if (contratoOld.TipoContratoCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                {
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+                    if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
+                    {
+                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
+                    }
+                }
+
                 else
                 {   //Si el interventoria y no esta completo
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;

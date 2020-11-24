@@ -77,7 +77,7 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
       .subscribe(
         response => {
           // tslint:disable-next-line: no-string-literal
-          this.openDialog( '', response['message'] );
+          this.openDialog( '', `<b>${ response['message'] }</b>` );
           this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
         },
         err => {
