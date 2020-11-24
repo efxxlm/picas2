@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -13,7 +13,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
   templateUrl: './gestionar-polizas.component.html',
   styleUrls: ['./gestionar-polizas.component.scss']
 })
-export class GestionarPolizasComponent implements OnInit {
+export class GestionarPolizasComponent implements OnInit, OnDestroy {
   addressForm = this.fb.group({
     nombre: [null, Validators.compose([
       Validators.required, Validators.minLength(1), Validators.maxLength(50)])
