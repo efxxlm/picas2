@@ -119,12 +119,13 @@
                 <div class="col d-flex">
                   <mat-form-field class="mt-min" 
                                   appearance="fill">
-                  <input  matInput 
+                  <input  matInput
                           [matDatepicker]="fechaAprobacion" 
                           formControlName="fechaAprobacion"
                           [min]="minDate"
                           placeholder="DD/MM/AAAA"
                           required
+                          readonly
                           [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )"
                           [class.invalid]="perfil.get( 'fechaAprobacion' ).value !== null ? perfil.get( 'fechaAprobacion' ).markAsUntouched() : perfil.get( 'fechaAprobacion' ).markAsTouched()">
                   <mat-datepicker #fechaAprobacion></mat-datepicker>
@@ -248,6 +249,13 @@
                             [class.invalid]="perfil.get( 'rutaSoporte' ).value.length > 0 ? perfil.get( 'rutaSoporte' ).markAsUntouched() : perfil.get( 'rutaSoporte' ).markAsTouched()">
                   </mat-form-field>
                 </div>
+                <div class="d-flex justify-content-center size-text-descriptivo">
+                  <p class="color-text-descriptivo">
+                      <i> 
+                          Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación del personal.
+                      </i>
+                  </p>
+              </div>
               </div>
             </div>
           </div>

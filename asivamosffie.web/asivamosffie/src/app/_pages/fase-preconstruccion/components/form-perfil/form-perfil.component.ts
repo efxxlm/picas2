@@ -285,9 +285,9 @@ export class FormPerfilComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    if ( texto ){
+    if ( texto !== undefined || texto !== null ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
     }
   }
 
@@ -312,7 +312,7 @@ export class FormPerfilComponent implements OnInit {
           this.formContratista.patchValue({
             numeroPerfiles: `${ this.perfiles.length }`
           });
-          this.openDialog( '', 'La información se ha eliminado correctamente.' );
+          this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
         }
       } );
   }
@@ -324,7 +324,7 @@ export class FormPerfilComponent implements OnInit {
           this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
             .subscribe(
               () => {
-                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 this.perfiles.removeAt( numeroPerfil );
               },
               err => this.openDialog( '', err.message )
@@ -345,7 +345,7 @@ export class FormPerfilComponent implements OnInit {
         value => {
           if ( value === true ) {
             this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-            this.openDialog( '', 'La información se ha eliminado correctamente.' );
+            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
             return;
           }
         }
@@ -359,7 +359,7 @@ export class FormPerfilComponent implements OnInit {
           value => {
             if ( value === true ) {
               this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-              this.openDialog( '', 'La información se ha eliminado correctamente.' );
+              this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
               return;
             }
           }
@@ -373,7 +373,7 @@ export class FormPerfilComponent implements OnInit {
             this.faseUnoPreconstruccionSvc.deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
               .subscribe( () => {
                 this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 return;
               } );
           }
