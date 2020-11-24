@@ -100,6 +100,7 @@ export class VerDetallePolizaComponent implements OnInit {
       this.vigenciaAmparo = data0.vigenciaAmparo;
       this.valorAmparo = data0.valorAmparo;
       this.loadGarantia(data0.contratoPolizaId);
+      this.loadLastObservation(data0.contratoPolizaId);
       this.loadChequeo(data0);
     });
     this.common.listaGarantiasPolizas().subscribe(data00 => {
@@ -109,10 +110,7 @@ export class VerDetallePolizaComponent implements OnInit {
       this.listaUsuarios = resp;
     });
     this.polizaService.GetNotificacionContratoPolizaByIdContratoId(id).subscribe(data01 => {
-      this.fechaRevision = data01.fechaRevisionDateTime;
-      this.estadoRevision = data01.estadoRevision;
       this.fechaAprobacion = data01.fechaAprobacion;
-      this.observaciones = data01.observaciones;
     })
   }
 
@@ -152,7 +150,16 @@ export class VerDetallePolizaComponent implements OnInit {
       }
     });
   }
-
+  loadLastObservation(polizaId){
+    this.polizaService.GetListPolizaObservacionByContratoPolizaId(polizaId).subscribe(resp=>{
+      this.polizaService.loadTableObservaciones.next(resp);
+      for(let i=0; i<resp.length;i++){
+        this.estadoRevision = resp[i].estadoRevisionCodigo;
+        this.fechaRevision = resp[i].fechaRevision;
+        this.observaciones = resp[i].observacion;
+      }
+    });
+  }
   loadChequeo(data) {
     this.cumpleDatosAsegurado = data.cumpleDatosAsegurado;
     this.cumpleDatosBeneficiario = data.cumpleDatosBeneficiario;
