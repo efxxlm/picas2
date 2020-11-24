@@ -1916,10 +1916,13 @@ namespace asivamosffie.services
                         //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
-                        TipoSolicitud = strTipoSolicitudNombreContratoPoliza,
+                        //jflorez 20201124 no modelado, dejo el dato de contratos (puede ser contratacion o modificaion contractual)
+                        TipoSolicitud = ConstanStringTipoSolicitudContratacion.contratacion,
                         TipoSolicitudCodigo = strTipoSolicitudCodigoContratoPoliza,
 
                         TipoSolicitudCodigoContratacion=strTipoSolicitudCodigoContratacion,
+
+
                         TipoSolicitudContratacion=strTipoSolicitudContratacion,
 
                         EstadoPoliza = strEstadoSolicitudNombreContratoPoliza

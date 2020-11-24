@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -11,7 +11,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
   templateUrl: './editar-en-revision.component.html',
   styleUrls: ['./editar-en-revision.component.scss']
 })
-export class EditarEnRevisionComponent implements OnInit {
+export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
   addressForm = this.fb.group({
     nombre: [null, Validators.compose([
@@ -95,6 +95,7 @@ export class EditarEnRevisionComponent implements OnInit {
   ultimoEstadoRevision: any;
   ultimaFechaRevision: any;
   listaUsuarios: any[] = [];
+  realizoPeticion: boolean = false;
 
   constructor(
     private router: Router,
@@ -114,8 +115,8 @@ export class EditarEnRevisionComponent implements OnInit {
     });
   }
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty ) {
-      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
     }
   };
 
@@ -126,11 +127,11 @@ export class EditarEnRevisionComponent implements OnInit {
     });
 
     confirmarDialog.afterClosed()
-      .subscribe( response => {
-        if ( response === true ) {
+      .subscribe(response => {
+        if (response === true) {
           this.onSubmit();
         }
-      } );
+      });
   };
   loadContrato(id) {
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
@@ -448,6 +449,7 @@ export class EditarEnRevisionComponent implements OnInit {
 
         });
         */
+        this.realizoPeticion = true;
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/generarPolizasYGarantias']);
       }
