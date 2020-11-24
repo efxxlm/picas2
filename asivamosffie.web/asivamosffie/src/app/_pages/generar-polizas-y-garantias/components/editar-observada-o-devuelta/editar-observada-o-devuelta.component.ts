@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -11,7 +11,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
   templateUrl: './editar-observada-o-devuelta.component.html',
   styleUrls: ['./editar-observada-o-devuelta.component.scss']
 })
-export class EditarObservadaODevueltaComponent implements OnInit {
+export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
 
   addressForm = this.fb.group({
     nombre: [null, Validators.compose([

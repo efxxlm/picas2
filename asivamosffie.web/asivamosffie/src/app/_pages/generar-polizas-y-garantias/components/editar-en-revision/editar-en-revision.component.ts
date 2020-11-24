@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -11,7 +11,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
   templateUrl: './editar-en-revision.component.html',
   styleUrls: ['./editar-en-revision.component.scss']
 })
-export class EditarEnRevisionComponent implements OnInit {
+export class EditarEnRevisionComponent implements OnInit, OnDestroy {
 
   addressForm = this.fb.group({
     nombre: [null, Validators.compose([
