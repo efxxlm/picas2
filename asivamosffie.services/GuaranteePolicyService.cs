@@ -678,6 +678,7 @@ namespace asivamosffie.services
                             template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
                             template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
                             template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
+                            template = template.Replace("_LinkF_", appSettingsService.DominioFront);
 
                             if (msjNotificacion != null)
                             {
@@ -948,6 +949,7 @@ namespace asivamosffie.services
                 template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
                 template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
                 template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
+                template = template.Replace("_LinkF_", settings.DominioFront);
 
                 if (msjNotificacion != null)
                 {
@@ -1372,6 +1374,7 @@ namespace asivamosffie.services
                         template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
                         template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
                         template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
+                        template = template.Replace("_LinkF_", settings.DominioFront);
 
                         if (msjNotificacion != null)
                         {
@@ -1535,7 +1538,9 @@ namespace asivamosffie.services
 
 
         //public async Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
-        public async Task<Respuesta> EnviarCorreoGestionPoliza(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, string fechaFirmaContrato, int pIdTemplate, NotificacionMensajeGestionPoliza objNotificacionAseguradora = null)
+        public async Task<Respuesta> EnviarCorreoGestionPoliza(string lstMails, string pMailServer, int pMailPort, string pPassword,
+            string pSentender, VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, string fechaFirmaContrato, int pIdTemplate,
+            string fronturl, NotificacionMensajeGestionPoliza objNotificacionAseguradora = null)
         {
             bool blEnvioCorreo = false;
             Respuesta respuesta = new Respuesta();
@@ -1586,6 +1591,7 @@ namespace asivamosffie.services
                 template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
                 template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
                 template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
+                template = template.Replace("_LinkF_", fronturl);
 
                 if (objNotificacionAseguradora != null)
                 {
