@@ -28,5 +28,6 @@ namespace asivamosffie.model.APIModels
         public string RegistroCompletoNombre { get; set; }
         public bool RegistroCompletoPoliza { get; set; }
         public string RegistroCompletoPolizaNombre { get; set; }
+        public DateTime? FechaCreacionContrato { get; set; }
     }
 }

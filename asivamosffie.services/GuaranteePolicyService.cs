@@ -1683,6 +1683,7 @@ namespace asivamosffie.services
                         ContratoPolizaId = ContratoPolizaIdValor,
                         //FechaFirma = contrato.FechaFirmaContrato.ToString("dd/mm/yyyy")?"":"",
                         FechaFirma = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString(),
+                        FechaCreacionContrato = contrato.FechaCreacion,
                         //FechaFirma = contrato.FechaFirmaContrato.ToString(),
                         NumeroContrato = contrato.NumeroContrato,
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
@@ -1733,8 +1734,8 @@ namespace asivamosffie.services
                         //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
-                        TipoSolicitud = "ERROR"
-                        ,
+                        TipoSolicitud = "ERROR",
+                        FechaCreacionContrato=DateTime.Now,
                         RegistroCompleto = false,
                         RegistroCompletoNombre="ERROR",
 
@@ -1742,7 +1743,7 @@ namespace asivamosffie.services
                     ListContratoGrilla.Add(proyectoGrilla);
                 }
             }
-            return ListContratoGrilla.OrderByDescending(r => r.TipoSolicitud).ToList();
+            return ListContratoGrilla.OrderBy(r => r.FechaCreacionContrato).ToList();
 
         }
 
