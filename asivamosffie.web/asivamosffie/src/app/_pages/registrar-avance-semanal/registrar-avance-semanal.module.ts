@@ -24,10 +24,15 @@ import { ReporteActividadesComponent } from './components/reporte-actividades/re
 import { FormReporteActividadesRealizadasComponent } from './components/form-reporte-actividades-realizadas/form-reporte-actividades-realizadas.component';
 import { RegistroFotograficoComponent } from './components/registro-fotografico/registro-fotografico.component';
 import { ComiteObraComponent } from './components/comite-obra/comite-obra.component';
+import { ConsultarEditarBitacoraComponent } from './components/consultar-editar-bitacora/consultar-editar-bitacora.component';
+import { TablaConsultarEditarBitacoraComponent } from './components/tabla-consultar-editar-bitacora/tabla-consultar-editar-bitacora.component';
+import { VerDetalleAvanceSemanalComponent } from './components/ver-detalle-avance-semanal/ver-detalle-avance-semanal.component';
+import { VerDetalleAvanceFisicoFinancieroComponent } from './components/ver-detalle-avance-fisico-financiero/ver-detalle-avance-fisico-financiero.component';
+import { VerDetalleGestionDeObraComponent } from './components/ver-detalle-gestion-de-obra/ver-detalle-gestion-de-obra.component';
 
 
 @NgModule({
-  declarations: [RegistrarAvanceSemanalComponent, TablaRegistrarAvanceSemanalComponent, FormRegistrarSeguimientoSemanalComponent, AvanceFisicoFinancieroComponent, TablaAvanceResumenAlertasComponent, TablaAvanceFisicoComponent, DialogTablaAvanceResumenComponent, DialogAvanceAcumuladoComponent, GestionDeObraComponent, GestionAmbientalComponent, GestionCalidadComponent, GestionSSTComponent, GestionSocialComponent, AlertasRelevantesComponent, RegistrarResultadosEnsayoComponent, ReporteActividadesComponent, FormReporteActividadesRealizadasComponent, RegistroFotograficoComponent, ComiteObraComponent],
+  declarations: [RegistrarAvanceSemanalComponent, TablaRegistrarAvanceSemanalComponent, FormRegistrarSeguimientoSemanalComponent, AvanceFisicoFinancieroComponent, TablaAvanceResumenAlertasComponent, TablaAvanceFisicoComponent, DialogTablaAvanceResumenComponent, DialogAvanceAcumuladoComponent, GestionDeObraComponent, GestionAmbientalComponent, GestionCalidadComponent, GestionSSTComponent, GestionSocialComponent, AlertasRelevantesComponent, RegistrarResultadosEnsayoComponent, ReporteActividadesComponent, FormReporteActividadesRealizadasComponent, RegistroFotograficoComponent, ComiteObraComponent, ConsultarEditarBitacoraComponent, TablaConsultarEditarBitacoraComponent, VerDetalleAvanceSemanalComponent, VerDetalleAvanceFisicoFinancieroComponent, VerDetalleGestionDeObraComponent],
   imports: [
     CommonModule,
     FormsModule,

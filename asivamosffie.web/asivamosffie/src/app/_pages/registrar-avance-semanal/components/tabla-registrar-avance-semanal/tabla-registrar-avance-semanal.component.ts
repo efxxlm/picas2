@@ -40,6 +40,9 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
 
     ngOnInit(): void {
         this.tablaRegistro = new MatTableDataSource( this.dataTable );
+        this.tablaRegistro.sort = this.sort;
+        this.tablaRegistro.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     }
 
     applyFilter( event: Event ) {

@@ -56,12 +56,13 @@
                 [routerLink]="[ 'registroSeguimientoSemanal', element.id ]">
                 Registrar seguimiento semanal
         </button>
-        <!--
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
-                Enviar a verificación
+                class="btn-table"
+                [routerLink]="[ 'consultarEditarBitacora', element.id ]">
+                Consultar/Editar bitacora
         </button>
+        <!--
         <button mat-raised-button
                 color="accent" 
                 class="btn-table">
@@ -73,7 +74,7 @@
                 Eliminar
         </button>
         -->
-  
+
       </td>
     </ng-container>
   
