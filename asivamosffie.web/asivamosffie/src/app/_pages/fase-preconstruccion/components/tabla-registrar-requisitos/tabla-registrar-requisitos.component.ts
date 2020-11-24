@@ -47,10 +47,11 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private commonSvc: CommonService,
-                private dialog: MatDialog,
-                private routes: Router ) 
+  constructor(
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+    private commonSvc: CommonService,
+    private dialog: MatDialog,
+    private routes: Router )
   {
     faseUnoPreconstruccionSvc.listaEstadosVerificacionContrato()
       .subscribe(
@@ -59,15 +60,18 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
           this.faseUnoPreconstruccionSvc.getListContratacion()
           .subscribe( listas => {
             const dataTable = [];
-    
             listas.forEach( value => {
+                    // tslint:disable-next-line: no-string-literal
               if (  value[ 'estadoCodigo' ] === this.estadosPreconstruccion.sinAprobacionReqTecnicos.codigo
+                    // tslint:disable-next-line: no-string-literal
                     || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enProcesoAprobacionReqTecnicos.codigo
+                    // tslint:disable-next-line: no-string-literal
                     || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.conReqTecnicosAprobados.codigo
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enviadoAlInterventor.codigo ) 
+                    // tslint:disable-next-line: no-string-literal
+                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enviadoAlInterventor.codigo )
               {
                 dataTable.push( value );
-              };
+              }
             } );
             console.log( dataTable, this.estadosPreconstruccion );
             this.dataSource = new MatTableDataSource( dataTable );
@@ -94,14 +98,14 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openDialog (modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
-  aprobarInicio ( contratoId: number ) {
+  aprobarInicio( contratoId: number ) {
     this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccion.conReqTecnicosAprobados.codigo )
       .subscribe(
         response => {
@@ -114,8 +118,8 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
       );
   }
 
-  getForm ( id: number, fechaPoliza: string, estado: string ) {
-    this.routes.navigate( [ '/preconstruccion/gestionarRequisitos', id ], { state: { fechaPoliza, estado } } )
-  };
+  getForm( id: number, fechaPoliza: string, estado: string ) {
+    this.routes.navigate( [ '/preconstruccion/gestionarRequisitos', id ], { state: { fechaPoliza, estado } } );
+  }
 
 }
