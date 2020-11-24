@@ -433,6 +433,9 @@ namespace asivamosffie.services
                         }                        
 
                         contratoPolizaBD.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza, ContratoEsDevuelto);
+                        if (contratoPolizaBD.RegistroCompleto == true)
+                            contratoPolizaBD.RegistroCompleto = await ValidarRegistroCompletoSeguros(contratoPoliza);
+
                         //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
                         contratoPolizaBD.NombreAseguradora = contratoPoliza.NombreAseguradora;
                         contratoPolizaBD.Observaciones = contratoPoliza.Observaciones;
@@ -562,6 +565,9 @@ namespace asivamosffie.services
                     }
 
                     contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza,ContratoEsDevuelto);
+
+                    if (contratoPoliza.RegistroCompleto == true)
+                        contratoPoliza.RegistroCompleto = await ValidarRegistroCompletoSeguros(contratoPoliza);
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
                     LimpiarEntradasContratoPoliza(ref contratoPoliza);
@@ -817,6 +823,9 @@ namespace asivamosffie.services
                     }
 
                     contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza,ContratoEsDevuelto);
+
+                    if (contratoPoliza.RegistroCompleto == true)
+                        contratoPoliza.RegistroCompleto = await ValidarRegistroCompletoSeguros(contratoPoliza);
 
                     _context.SaveChanges();
 
@@ -1076,6 +1085,45 @@ namespace asivamosffie.services
             //contratoPoliza.contratopoliza = "";
 
         }
+
+        public async Task<bool> ValidarRegistroCompletoSeguros(ContratoPoliza contratoPoliza)
+        {
+            PolizaGarantia polizaGarantiaSeguro;
+            List<PolizaGarantia> lstPolizaGarantia;
+
+            lstPolizaGarantia = _context.PolizaGarantia.Where(r => r.ContratoPolizaId == contratoPoliza.ContratoPolizaId).ToList();
+
+            List<Dominio> TipoGarantiaSeguroContratoPoliza = null;
+
+            if (contratoPoliza.TipoSolicitudCodigo != null)
+            {
+                TipoGarantiaSeguroContratoPoliza = await _commonService.GetListDominioByIdTipoDominio(Convert.ToInt32(EnumeratorTipoDominio.Tipo_Garantia_Poliza));
+
+            }
+            int cntSi=0;
+
+            //tienen el mismo numero de seguros parametrizados a los disponibles
+            if(lstPolizaGarantia.Count() == TipoGarantiaSeguroContratoPoliza.Count())
+            {
+                //validar por elemento que todos esten en si
+                foreach(PolizaGarantia garantiaSeguro in lstPolizaGarantia)
+                {
+                    if (garantiaSeguro.EsIncluidaPoliza == true)
+                        cntSi += 1;
+                }
+
+                if (lstPolizaGarantia.Count() == cntSi)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
+
         public static bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza, bool EsContratoDevuelto)
         {
             //si es devuelta no validar: FechaAprobacion, ResponsableAprobacion
