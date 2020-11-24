@@ -38,8 +38,8 @@ namespace asivamosffie.services.Interfaces
 
 
         Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario);
-        
 
+        Task EnviarCorreoSupervisor4dPolizaNoAprobada();
 
         //getListPolizaGarantiaByContratoPolizaId    yaaaa y observ yaaaa
 
