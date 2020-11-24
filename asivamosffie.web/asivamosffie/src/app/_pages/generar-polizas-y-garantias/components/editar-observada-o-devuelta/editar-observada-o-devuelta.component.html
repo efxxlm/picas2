@@ -24,8 +24,7 @@
       <p>
         <strong>Objeto:</strong>
       </p>
-      <p>
-        {{this.objeto}}
+      <p [innerHtml]="this.objeto">
       </p>
       <p>
         <strong>Nombre del contratista:</strong>
@@ -385,7 +384,7 @@
           <div class="text-right">
             <button mat-button color="warn" type="button" class="btn-eliminar" (click)="this.addObservacion()">
               <img src="assets/img/icon/mas.svg" alt="Agregar observacion">
-              Agregar  observacion
+              Agregar observacion
             </button>
           </div>
           <div *ngIf="this.verFormularioEstadoRevision==true">
@@ -393,7 +392,8 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="fechaRevision">Fecha de la revisión {{this.observacionesHistorial + 1}}</label>
+                    <label class="label-left" for="fechaRevision">Fecha de la revisión
+                      {{this.observacionesHistorial + 1}}</label>
                   </div>
                   <div class="col d-flex align-items-center">
                     <mat-form-field class="example-full-width">
@@ -413,7 +413,8 @@
               <div class="col-md-8">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left" for="estadoRevision">Estado de la revisión {{this.observacionesHistorial + 1}}</label>
+                    <label class="label-left" for="estadoRevision">Estado de la revisión
+                      {{this.observacionesHistorial + 1}}</label>
                   </div>
                   <div class="col">
                     <mat-form-field class="select-width">
