@@ -1743,7 +1743,7 @@ namespace asivamosffie.services
                     ListContratoGrilla.Add(proyectoGrilla);
                 }
             }
-            return ListContratoGrilla.OrderBy(r => r.FechaFirma).ToList(); 
+            return ListContratoGrilla.OrderByDescending(r => r.FechaFirma).ToList(); 
 
         }
 
