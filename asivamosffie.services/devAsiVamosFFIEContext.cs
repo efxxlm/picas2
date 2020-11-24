@@ -147,8 +147,6 @@ namespace asivamosffie.model.Models
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
             {
-                entity.Property(e => e.ActuacionSeguimientoId).ValueGeneratedNever();
-
                 entity.Property(e => e.ActuacionAdelantada)
                     .HasMaxLength(500)
                     .IsUnicode(false);
@@ -192,6 +190,12 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ControversiaActuacion)
+                    .WithMany(p => p.ActuacionSeguimiento)
+                    .HasForeignKey(d => d.ControversiaActuacionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ActuacionSeguimiento_ControversiaActuacion");
             });
 
             modelBuilder.Entity<AportanteFuenteFinanciacion>(entity =>
