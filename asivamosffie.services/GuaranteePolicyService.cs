@@ -216,7 +216,11 @@ namespace asivamosffie.services
             {
                 if (polizaGarantia != null)
                 {
-                    if (polizaGarantia.PolizaGarantiaId == 0)
+                    //este dato no se esta enviando por frontend, me parece que es mas facil por aca
+                    //jflroez 20201124
+                    //if (polizaGarantia.PolizaGarantiaId == 0)
+                    var polizaGarantiaExiste = _context.PolizaGarantia.Where(x => x.TipoGarantiaCodigo == polizaGarantia.TipoGarantiaCodigo && x.ContratoPolizaId == polizaGarantia.ContratoPolizaId).FirstOrDefault();
+                    if (polizaGarantiaExiste==null)
                     {
                         //Auditoria
                         strCrearEditar = "REGISTRAR POLIZA GARANTIA";
@@ -230,7 +234,7 @@ namespace asivamosffie.services
                     {
                         strCrearEditar = "EDIT POLIZA GARANTIA";
                         PolizaGarantia polizaGarantiaBD = null;
-                        polizaGarantiaBD = _context.PolizaGarantia.Where(r => r.PolizaGarantiaId == polizaGarantia.PolizaGarantiaId).FirstOrDefault();
+                        polizaGarantiaBD = polizaGarantiaExiste;
 
                         if (polizaGarantiaBD != null)
                         {
@@ -1128,7 +1132,7 @@ namespace asivamosffie.services
                         {
                             //lstCorreos = lstCorreos += usuario.Email + "";
 
-                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                            //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
                         }
                     }
 

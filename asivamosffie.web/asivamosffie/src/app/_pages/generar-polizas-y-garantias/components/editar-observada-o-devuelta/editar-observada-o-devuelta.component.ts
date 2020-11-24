@@ -6,6 +6,7 @@ import { CreatePolizaGarantia, CreatePolizaObservacion, EditPoliza, InsertPoliza
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
+import { isNull } from 'util';
 @Component({
   selector: 'app-editar-observada-o-devuelta',
   templateUrl: './editar-observada-o-devuelta.component.html',
@@ -304,19 +305,36 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
         nombreAprobado = this.addressForm.value.responsableAprob.usuarioId;
       }
     }
-    var statePoliza;
-    if (this.addressForm.value.estadoRevision.value == "1") {
-      statePoliza = "3";
+    var statePoliza=null;
+    //jflorez/ esto puede o no venir
+    if(this.addressForm.value.estadoRevision)
+    {
+      if (this.addressForm.value.estadoRevision.value == "1") {
+        statePoliza = "3";
+      }
+      else {
+        statePoliza = "2";
+      }
     }
-    else {
-      statePoliza = "2";
-    }
+    
     var completo: boolean;
     if (this.addressForm.valid) {
       completo = true;
     }
     else {
       completo = false;
+      //jflorez, el registro completo no se puede deterimar por la validez del formulario, porque hay campos que dicen 
+      //ser obligatorios y no lo son
+      if(this.addressForm.value.nombre && this.addressForm.value.numeroPoliza && this.addressForm.value.numeroCertificado
+        && this.addressForm.value.numeroCertificado && this.addressForm.value.fecha &&this.addressForm.value.vigenciaPoliza 
+        && this.addressForm.value.vigenciaAmparo && this.addressForm.value.valorAmparo && polizasList.length>0 
+        && this.addressForm.value.cumpleAsegurado && this.addressForm.value.cumpleBeneficiario && this.addressForm.value.cumpleAfianzado
+        && this.addressForm.value.reciboDePago && this.addressForm.value.condicionesGenerales
+        && this.addressForm.value.fechaRevision && this.addressForm.value.estadoRevision
+        )
+        {
+          completo=true;
+        }            
     }
     console.log(this.addressForm.value);
     const contratoArray = {
@@ -355,7 +373,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       "contratoPolizaId": this.idPoliza,
       "Observacion": this.addressForm.value.observacionesGenerales,
       "FechaRevision": this.addressForm.value.fechaRevision,
-      "EstadoRevisionCodigo": this.addressForm.value.estadoRevision.value
+      "EstadoRevisionCodigo": this.addressForm.value.estadoRevision?this.addressForm.value.estadoRevision.value:null
     }
     let garantiaArray;
     for (let i = 0; i < polizasList.length; i++) {
