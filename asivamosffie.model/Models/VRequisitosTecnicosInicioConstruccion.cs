@@ -8,7 +8,7 @@ namespace asivamosffie.model.Models
         public int ContratoId { get; set; }
         public DateTime? FechaAprobacion { get; set; }
         public string NumeroContrato { get; set; }
-        public string TipoContratoCodigo { get; set; }
+        public string TipoSolicitudCodigo { get; set; }
         public int? CantidadProyectosAsociados { get; set; }
         public int? CantidadProyectosRequisitosAprobados { get; set; }
         public int? CantidadProyectosRequisitosVerificados { get; set; }
