@@ -97,7 +97,9 @@
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
-                <label class="label-left" for="fecha">Fecha de expedición de la póliza</label>
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('fecha').invalid && addressForm.get('fecha').touched"
+                  for="fecha">Fecha de expedición de la póliza</label>
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
@@ -200,11 +202,9 @@
                 </div>
                 <div class="col">
                   <mat-radio-group class="radioInput" formControlName="buenManejoCorrectaInversionAnticipo" required>
-                    <mat-radio-button [value]="true"
-                      [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===true ? true : null) : null   )">
+                    <mat-radio-button [value]="true">
                       Sí</mat-radio-button>
-                    <mat-radio-button [value]="false"
-                      [checked]="( addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value !== null ? (addressForm.get( 'buenManejoCorrectaInversionAnticipo' ).value===false ? false : null) : null   )">
+                    <mat-radio-button [value]="false">
                       No</mat-radio-button>
                   </mat-radio-group>
                   <span class="required-form-group" style="margin-left: 1px;">*</span>

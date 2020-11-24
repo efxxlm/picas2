@@ -113,7 +113,25 @@ export class EditarEnRevisionComponent implements OnInit {
       this.loadData(param.id);
     });
   }
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    }
+  };
 
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
   loadContrato(id) {
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(data => {
       this.fechaFirmaContrato = data[0].fechaFirmaContrato;

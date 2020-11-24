@@ -114,6 +114,25 @@ export class EditarObservadaODevueltaComponent implements OnInit {
       this.loadData(param.id);
     });
   }
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    }
+  };
+
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
   getvalues(values: Dominio[]) {
     console.log(values);
     const buenManejo = values.find(value => value.codigo == "1");
