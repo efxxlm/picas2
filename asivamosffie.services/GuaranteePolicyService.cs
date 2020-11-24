@@ -676,7 +676,7 @@ namespace asivamosffie.services
                             template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
                             template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/MM/aaaa)
                             template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
-                            template = template.Replace("_Valor_Contrato_", objVistaContratoGarantiaPoliza.ValorContrato);  //fomato miles .
+                            template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
                             template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
 
                             if (msjNotificacion != null)
@@ -946,7 +946,7 @@ namespace asivamosffie.services
                 template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
                 template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/MM/aaaa)
                 template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
-                template = template.Replace("_Valor_Contrato_", objVistaContratoGarantiaPoliza.ValorContrato);  //fomato miles .
+                template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
                 template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
 
                 if (msjNotificacion != null)
@@ -1370,7 +1370,7 @@ namespace asivamosffie.services
                         template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
                         template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/MM/aaaa)
                         template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
-                        template = template.Replace("_Valor_Contrato_", objVistaContratoGarantiaPoliza.ValorContrato);  //fomato miles .
+                        template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
                         template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
 
                         if (msjNotificacion != null)
@@ -1584,7 +1584,7 @@ namespace asivamosffie.services
                 template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
                 template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/MM/aaaa)
                 template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
-                template = template.Replace("_Valor_Contrato_", objVistaContratoGarantiaPoliza.ValorContrato);  //fomato miles .
+                template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
                 template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
 
                 if (objNotificacionAseguradora != null)
@@ -1916,8 +1916,8 @@ namespace asivamosffie.services
                             //Nit  
                             strContratistaNumeroIdentificacion = contratista.NumeroIdentificacion.ToString();
 
-                            //TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
-                            TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud);
+                            TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
+                            //TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud);
 
                             if (TipoDocumentoCodigoContratista != null)
                                 strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
@@ -2006,7 +2006,7 @@ namespace asivamosffie.services
                         NumeroIdentificacion = strContratistaNumeroIdentificacion,
 
                         //ValorContrato = contrato.Valor.ToString(),
-                        ValorContrato = vlrContratoComponenteUso.ToString(),
+                        ValorContrato = vlrContratoComponenteUso,
                         
 
                         PlazoContrato = PlazoContratoFormat,
@@ -2051,7 +2051,7 @@ namespace asivamosffie.services
 
                         //Nit  
                         NumeroIdentificacion = "ERROR",
-                        ValorContrato = "ERROR",
+                        ValorContrato = 0,
                         PlazoContrato = "ERROR",
 
                         //EstadoRegistro 
@@ -2071,28 +2071,31 @@ namespace asivamosffie.services
         }
 
         //private async Task<decimal> getSumVlrContratoComponente(int contratacionId)
+        /*jflorez, ajusto la suma*/
         private  decimal getSumVlrContratoComponente(int contratacionId)
         {
-            ContratacionProyecto contratacionProyecto = null;
-            contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacionId).FirstOrDefault();
+            /* ContratacionProyecto contratacionProyecto = null;
+             contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacionId).FirstOrDefault();
 
-            ContratacionProyectoAportante contratacionProyectoAportante = null;
-            if (contratacionProyecto != null)
-                contratacionProyectoAportante = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == contratacionProyecto.ContratacionProyectoId).FirstOrDefault();
+             ContratacionProyectoAportante contratacionProyectoAportante = null;
+             if (contratacionProyecto != null)
+                 contratacionProyectoAportante = _context.ContratacionProyectoAportante.Where(r => r.ContratacionProyectoId == contratacionProyecto.ContratacionProyectoId).FirstOrDefault();
 
-            ComponenteAportante componenteAportante = null;
-            componenteAportante = _context.ComponenteAportante.Where(r => r.ContratacionProyectoAportanteId == contratacionProyecto.ContratacionProyectoId).FirstOrDefault();
+             ComponenteAportante componenteAportante = null;
+             componenteAportante = _context.ComponenteAportante.Where(r => r.ContratacionProyectoAportanteId == contratacionProyecto.ContratacionProyectoId).FirstOrDefault();
 
-            ComponenteUso componenteUso = null;
+             ComponenteUso componenteUso = null;
 
-            decimal SumVlrContratoComponente = 0;
+             decimal SumVlrContratoComponente = 0;
 
-            if(componenteAportante != null) 
-                SumVlrContratoComponente =  _context.ComponenteUso.Where(x => x.ComponenteAportanteId == componenteAportante.ComponenteAportanteId).Sum(x => x.ValorUso);
+             if(componenteAportante != null) 
+                 SumVlrContratoComponente =  _context.ComponenteUso.Where(x => x.ComponenteAportanteId == componenteAportante.ComponenteAportanteId).Sum(x => x.ValorUso);
 
-            return SumVlrContratoComponente;
+             return SumVlrContratoComponente;
+             */
 
-
+            var sum = _context.ComponenteUso.Where(x=>x.ComponenteAportante.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId== contratacionId).Sum(x=>x.ValorUso);
+            return sum;
 
         }
     }

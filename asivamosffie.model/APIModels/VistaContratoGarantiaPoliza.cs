@@ -23,7 +23,7 @@ namespace asivamosffie.model.APIModels
 
         //Nit  ????
 
-        public string ValorContrato { get; set; }
+        public decimal ValorContrato { get; set; }
         
         public string PlazoContrato { get; set; }
 
