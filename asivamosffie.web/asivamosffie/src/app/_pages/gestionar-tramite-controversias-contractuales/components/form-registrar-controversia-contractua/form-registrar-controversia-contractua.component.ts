@@ -29,6 +29,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   plazoContrato: any;
   fechaInicioContrato: any;
   fechaFinalizacionContrato: any;
+  contratoId: number;
 
   constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
@@ -50,6 +51,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
 
   seleccionAutocomplete(id:any){
     this.addressForm.value.contrato = id;
+    this.contratoId = id;
     this.services.GetVistaContratoContratista(id).subscribe(resp=>{
       this.nombreContratista = resp.nombreContratista;
       this.tipoIdentificacion = 'Pendiente de lectura del servicio';

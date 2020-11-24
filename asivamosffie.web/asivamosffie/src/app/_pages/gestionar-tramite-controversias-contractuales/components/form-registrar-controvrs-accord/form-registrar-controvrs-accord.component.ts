@@ -11,6 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarControvrsAccordComponent implements OnInit {
   @Input() isEditable;
+  @Input() contratoId;
 
   addressForm = this.fb.group({
     tipoControversia: [null, Validators.required],
@@ -86,8 +87,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     console.log(this.addressForm.value);
     if (this.addressForm.value.tipoControversia.value == '1') {
       let formArrayTai = {
-        "TipoControversiaCodigo": "1",
-        "FechaSolicitud": "1-10-2020",
+        "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
+        "FechaSolicitud": this.addressForm.value.fechaSolicitud,
         "NumeroSolicitud": "XXXww",
         "EstadoCodigo": "0",
         "EsCompleto": false,
