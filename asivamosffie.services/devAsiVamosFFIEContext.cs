@@ -101,6 +101,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SeguimientoDiario> SeguimientoDiario { get; set; }
         public virtual DbSet<SeguimientoDiarioObservaciones> SeguimientoDiarioObservaciones { get; set; }
         public virtual DbSet<SeguimientoSemanal> SeguimientoSemanal { get; set; }
+        public virtual DbSet<SeguimientoSemanalAvanceFinanciero> SeguimientoSemanalAvanceFinanciero { get; set; }
         public virtual DbSet<SeguimientoSemanalAvanceFisico> SeguimientoSemanalAvanceFisico { get; set; }
         public virtual DbSet<SeguimientoSemanalGestionObra> SeguimientoSemanalGestionObra { get; set; }
         public virtual DbSet<SeguimientoSemanalPersonalObra> SeguimientoSemanalPersonalObra { get; set; }
@@ -134,14 +135,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -3603,6 +3597,15 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_RegistroSemanal_ContratacionProyecto");
             });
 
+            modelBuilder.Entity<SeguimientoSemanalAvanceFinanciero>(entity =>
+            {
+                entity.HasOne(d => d.SeguimientoSemanal)
+                    .WithMany(p => p.SeguimientoSemanalAvanceFinanciero)
+                    .HasForeignKey(d => d.SeguimientoSemanalId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SeguimientoSemanalAvanceFinanciero_SeguimientoSemanal");
+            });
+
             modelBuilder.Entity<SeguimientoSemanalAvanceFisico>(entity =>
             {
                 entity.HasOne(d => d.SeguimientoSemanal)
@@ -4657,6 +4660,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaActaInicioFase2).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaRegistroProyecto)
+                    .HasColumnName("fechaRegistroProyecto")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.InstitucionEducativa)
                     .IsRequired()
                     .HasColumnName("institucionEducativa")
@@ -4671,6 +4678,10 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Municipio)
                     .HasColumnName("municipio")
                     .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Sede)

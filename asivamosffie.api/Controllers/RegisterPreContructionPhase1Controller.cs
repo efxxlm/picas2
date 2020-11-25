@@ -29,14 +29,14 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListContratacionOld")]
+        [Route("GetListContratacion")]
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
             return await _registerPreContructionPhase1Service.GetListContratacion2();
         }
 
         [HttpGet]
-        [Route("GetListContratacion")]
+        [Route("GetListContratacionOld")]
         public async Task<List<dynamic>> GetListContratacion()
         {
             return await _registerPreContructionPhase1Service.GetListContratacion();

@@ -25,8 +25,8 @@ namespace asivamosffie.services
             _context = context;
         }
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
-        {
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
+        { 
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync(); 
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -556,7 +556,7 @@ namespace asivamosffie.services
             DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(4, DateTime.Now);
 
             List<Contrato> contratos = _context.Contrato
-                .Where(r => r.EstadoVerificacionCodigo == "1" || r.EstadoVerificacionCodigo == "2" || !string.IsNullOrEmpty(r.EstadoVerificacionCodigo))
+                .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.Sin_aprobacion_de_requisitos_tecnicos || r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos || !string.IsNullOrEmpty(r.EstadoVerificacionCodigo))
                  .Include(r => r.ContratoPoliza)
                  .Include(r => r.Contratacion)
                 .ToList();
