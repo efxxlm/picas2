@@ -25,7 +25,7 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
     'estadoNombre',
     'gestion'
   ];
-  tipoSolicitudCodigoInterventoria: string = '2';
+  tipoSolicitudCodigoInterventoria = '2';
   estadosPreconstruccionInterventoria: estadosPreconstruccion;
   dataSource = new MatTableDataSource();
 
@@ -37,13 +37,14 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( private faseUnoVerificarPreConstruccionSvc: FaseUnoVerificarPreconstruccionService,
-                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private dialog: MatDialog,
-                private routes: Router ) 
+  constructor(
+    private faseUnoVerificarPreConstruccionSvc: FaseUnoVerificarPreconstruccionService,
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+    private dialog: MatDialog,
+    private routes: Router )
   {
     this.faseUnoVerificarPreConstruccionSvc.listaEstadosVerificacionContrato( 'interventoria' )
-      .subscribe( 
+      .subscribe(
         estados => {
           this.estadosPreconstruccionInterventoria = estados;
           console.log( this.estadosPreconstruccionInterventoria );
@@ -51,14 +52,19 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
             .subscribe( listas => {
               const dataTable = [];
               listas.forEach( lista => {
+                // tslint:disable-next-line: no-string-literal
                 if (  (  lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo
+                      // tslint:disable-next-line: no-string-literal
                       || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.enProcesoVerificacionReqTecnicos.codigo
+                      // tslint:disable-next-line: no-string-literal
                       || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo
+                      // tslint:disable-next-line: no-string-literal
                       || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo )
+                      // tslint:disable-next-line: no-string-literal
                       && lista[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoInterventoria )
               {
                 dataTable.push( lista );
-              };
+              }
               } );
 
               this.dataSource = new MatTableDataSource( dataTable );
@@ -77,26 +83,27 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
                   startIndex + pageSize;
                 return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
               };
-            } )
+            } );
         }
       );
-  };
+  }
 
   ngOnInit(): void {
-  };
+  }
 
-  openDialog ( modalTitle: string, modalText: string ) {
-    let dialogRef =this.dialog.open( ModalDialogComponent, {
+  openDialog( modalTitle: string, modalText: string ) {
+    const dialogRef = this.dialog.open( ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
-  getForm ( id: number, fechaPoliza: string, estado: string ) {
-    this.routes.navigate( [ '/verificarPreconstruccion/interventoriaGestionarRequisitos', id ], { state: { fechaPoliza, estado } } )
-  };
+  getForm( id: number, fechaPoliza: string, estado: string ) {
+    console.log( estado );
+    this.routes.navigate( [ '/verificarPreconstruccion/interventoriaGestionarRequisitos', id ], { state: { fechaPoliza, estado } } );
+  }
 
-  enviarSupervisor ( contratoId: number ) {
+  enviarSupervisor( contratoId: number ) {
     this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo )
       .subscribe(
         response => {
@@ -106,7 +113,7 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
           );
         },
         err => this.openDialog( '', err.message )
-      )
-  };
+      );
+  }
 
-};
+}
