@@ -59,22 +59,7 @@ export class TablaRegistrarRequisitosComponent implements OnInit {
           this.estadosPreconstruccion = response;
           this.faseUnoPreconstruccionSvc.getListContratacion()
           .subscribe( listas => {
-            const dataTable = [];
-            listas.forEach( value => {
-                    // tslint:disable-next-line: no-string-literal
-              if (  value[ 'estadoCodigo' ] === this.estadosPreconstruccion.sinAprobacionReqTecnicos.codigo
-                    // tslint:disable-next-line: no-string-literal
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enProcesoAprobacionReqTecnicos.codigo
-                    // tslint:disable-next-line: no-string-literal
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.conReqTecnicosAprobados.codigo
-                    // tslint:disable-next-line: no-string-literal
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccion.enviadoAlInterventor.codigo )
-              {
-                dataTable.push( value );
-              }
-            } );
-            console.log( dataTable, this.estadosPreconstruccion );
-            this.dataSource = new MatTableDataSource( dataTable );
+            this.dataSource = new MatTableDataSource( listas );
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
             this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
