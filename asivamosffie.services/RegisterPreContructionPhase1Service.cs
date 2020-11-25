@@ -458,8 +458,13 @@ namespace asivamosffie.services
 
 
                 //Enviar Correo aprobar inicio
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados)
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
                     await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+
+                //Enviar Correo aprobar inicio
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados)
+                    await EnviarCorreoSupervisor(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
 
                 _context.SaveChanges();
@@ -584,5 +589,31 @@ namespace asivamosffie.services
                 }
             }
         }
+
+
+
+        private async Task<bool> EnviarCorreoSupervisor(Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarSupervisor317);
+
+            string template = TemplateRecoveryPassword.Contenido
+                .Replace("_LinkF_", pDominioFront)
+                .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
+                .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MMMM-yy"))
+                .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+
+            bool blEnvioCorreo = false;
+
+            foreach (var item in usuarios)
+            {
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Requisitos de inicio para verificación", template, pSender, pPassword, pMailServer, pMailPort);
+            }
+            return blEnvioCorreo;
+        }
+
+
+
     }
 }
