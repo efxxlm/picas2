@@ -60,7 +60,10 @@
                 mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.enviadoAlSupervisor.codigo">
+                *ngIf=" estadosPreconstruccionObra !== undefined 
+                        && ( element.estadoCodigo !== estadosPreconstruccionObra.conReqTecnicosAprobados.codigo
+                             || element.estadoCodigo !== estadosPreconstruccionObra.enProcesoAprobacionReqTecnicos.codigo
+                             || element.estadoCodigo !== estadosPreconstruccionObra.conReqTecnicosVerificados.codigo )">
                 Ver detalle
             </a>
             <a  (click)="getForm( element.contratoId, element.fechaAprobacion )"

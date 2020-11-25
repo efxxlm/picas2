@@ -26,21 +26,22 @@ export class TablaContratoDeObraComponent implements OnInit {
     'gestion'
   ];
   dataSource = new MatTableDataSource();
-  tipoSolicitudCodigoObra: string = '1';
+  tipoSolicitudCodigoObra = '1';
   estadosPreconstruccionObra: estadosPreconstruccion;
 
   @ViewChild( MatPaginator, {static: true} ) paginator: MatPaginator;
-  @ViewChild( MatSort, { static: true } ) sort        : MatSort;
+  @ViewChild( MatSort, { static: true } ) sort: MatSort;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
-                private dialog: MatDialog,
-                private routes: Router ) 
+  constructor(
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+    private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+    private dialog: MatDialog,
+    private routes: Router )
   {
     this.faseUnoVerificarPreconstruccionSvc.listaEstadosVerificacionContrato( 'obra' )
       .subscribe(
@@ -50,14 +51,13 @@ export class TablaContratoDeObraComponent implements OnInit {
           .subscribe( listas => {
             const dataTable = [];
             listas.forEach( value => {
-              if (  (value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosAprobados.codigo
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enProcesoAprobacionReqTecnicos.codigo
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosVerificados.codigo
-                    || value[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo)
+              // tslint:disable-next-line: no-string-literal
+              if (  ( Number( value[ 'estadoCodigo' ] ) >= Number( this.estadosPreconstruccionObra.conReqTecnicosAprobados.codigo ) )
+                      // tslint:disable-next-line: no-string-literal
                     && value[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoObra )
               {
                 dataTable.push( value );
-              };
+              }
             } );
             this.dataSource = new MatTableDataSource( dataTable );
             this.dataSource.sort = this.sort;
@@ -83,18 +83,18 @@ export class TablaContratoDeObraComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openDialog ( modalTitle: string, modalText: string ) {
-    let dialogRef =this.dialog.open( ModalDialogComponent, {
+  openDialog( modalTitle: string, modalText: string ) {
+    const dialogRef = this.dialog.open( ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
-  getForm ( id: number, fechaPoliza: string ) {
-    this.routes.navigate( [ '/verificarPreconstruccion/obraGestionarRequisitos', id ], { state: { fechaPoliza } } )
-  };
+  getForm( id: number, fechaPoliza: string ) {
+    this.routes.navigate( [ '/verificarPreconstruccion/obraGestionarRequisitos', id ], { state: { fechaPoliza } } );
+  }
 
-  enviarSupervisor ( contratoId: number ) {
+  enviarSupervisor( contratoId: number ) {
     this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo )
       .subscribe(
         response => {
@@ -104,7 +104,7 @@ export class TablaContratoDeObraComponent implements OnInit {
           );
         },
         err => this.openDialog( '', err.message )
-      )
-  };
+      );
+  }
 
-};
+}
