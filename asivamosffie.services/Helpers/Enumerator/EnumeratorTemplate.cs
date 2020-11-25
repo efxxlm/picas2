@@ -32,7 +32,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         DRPCancelado = 35,
         AprobarInicio316 = 36,
         AprobarPoliza4diasNoGestion = 37,
-        EnviarSupervisor317 = 38
+        EnviarSupervisor317 = 38, 
+        AlertaSupervisor317_2dias = 39
 
     }
 }

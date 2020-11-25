@@ -456,13 +456,9 @@ namespace asivamosffie.services
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor || pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
                     contratoMod.EstaDevuelto = true;
 
-
-
-                
                 //Enviar Correo Botón aprobar inicio
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                     await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-
 
                 //Enviar Correo Botón “Enviar al supervisor”
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
@@ -554,6 +550,27 @@ namespace asivamosffie.services
             return blEnvioCorreo;
         }
 
+        private async Task<bool> EnviarCorreoSupervisor(Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarSupervisor317);
+
+            string template = TemplateRecoveryPassword.Contenido
+                .Replace("_LinkF_", pDominioFront)
+                .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
+                .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MMMM-yy"))
+                .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+
+            bool blEnvioCorreo = false;
+
+            foreach (var item in usuarios)
+            {
+                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Requisitos de inicio para verificación", template, pSender, pPassword, pMailServer, pMailPort);
+            }
+            return blEnvioCorreo;
+        }
+
 
         /// <summary>
         /// Notificar Cuando pasen 4 dias despues de la aprobacion de la poliza 
@@ -587,34 +604,44 @@ namespace asivamosffie.services
                         {
                             Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
                         }
-                    }  
+                    }
                 }
             }
         }
 
 
+        //public async Task EnviarNotificacion317Diashabiles2(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        //{
+        //    DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
 
-        private async Task<bool> EnviarCorreoSupervisor(Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        {
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
+        //    List<Contrato> contratos = _context.Contrato
+        //        .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
+        //         .Include(r => r.ContratoPoliza)
+        //         .Include(r => r.Contratacion)
+        //           .ThenInclude(r => r.DisponibilidadPresupuestal)
+        //       .ToList();
 
-            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarSupervisor317);
+        //    var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+        //    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AlertaSupervisor317_2dias);
 
-            string template = TemplateRecoveryPassword.Contenido
-                .Replace("_LinkF_", pDominioFront)
-                .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
-                .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MMMM-yy"))
-                .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+        //    foreach (var contrato in contratos)
+        //    { 
+        //        if (contrato.ContratoPoliza.Count() > 0 && contrato.FechaModificacion > RangoFechaConDiasHabiles)
+        //        {
+        //            string template = TemplateRecoveryPassword.Contenido
+        //                        .Replace("_LinkF_", pDominioFront)
+        //                        .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+        //                        .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
+        //                        .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
-            bool blEnvioCorreo = false;
+        //            foreach (var item in usuarios)
+        //            {
+        //                Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
+        //            }
 
-            foreach (var item in usuarios)
-            {
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Requisitos de inicio para verificación", template, pSender, pPassword, pMailServer, pMailPort);
-            }
-            return blEnvioCorreo;
-        }
-
+        //        }
+        //    } 
+        //}
 
 
     }
