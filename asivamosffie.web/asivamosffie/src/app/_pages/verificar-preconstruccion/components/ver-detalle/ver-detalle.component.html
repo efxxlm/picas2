@@ -10,16 +10,10 @@
       </h1>
       <p class="text-primary" style="margin-top: 1em;">
           <span class="mx-2em">
-              Fecha de aprobacion de póliza:
-              <b>
-                {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
-              </b>
+              <b>Fecha de aprobacion de póliza:</b> {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
           </span>
-          <span class="mx-2em">
-              Proyectos asociados:
-              <b>
-                {{ contrato.contratacion.contratacionProyecto.length }}
-              </b>
+          <span style="margin-left: 2em;">
+              <b>Proyectos asociados:</b> {{ contrato.contratacion.contratacionProyecto.length }}
           </span>
       </p>
   </div>
