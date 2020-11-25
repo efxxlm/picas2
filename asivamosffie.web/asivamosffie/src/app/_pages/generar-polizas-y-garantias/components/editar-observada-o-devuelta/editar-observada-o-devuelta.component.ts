@@ -320,7 +320,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     //jflorez/ esto puede o no venir, aagrego if
     if(this.addressForm.value.estadoRevision)
     {
-      if (this.addressForm.value.estadoRevision.codigo == "1") {
+      if (this.addressForm.value.estadoRevision.codigo == "2") {
         statePoliza = "2";
       }
     }
@@ -332,25 +332,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     else {
       completo = false;
       //jflorez, el registro completo no se puede determinar por la validez del formulario, porque hay campos que dicen 
-      //ser obligatorios y no lo son
-      console.log("validando completitud");
-      console.log(this.addressForm.value);
-      console.log(this.addressForm.value.nombre);
-      console.log(this.addressForm.value.numeroPoliza);
-      console.log(this.addressForm.value.numeroCertificado);
-      console.log(this.addressForm.value.numeroCertificado);
-      console.log(this.addressForm.value.fecha &&this.addressForm.value.vigenciaPoliza);
-      console.log(this.addressForm.value.vigenciaAmparo);
-      console.log(this.addressForm.value.valorAmparo);
-      console.log(polizasList.length>0 );
-      console.log(this.addressForm.value.cumpleAsegurado);
-      console.log(this.addressForm.value.cumpleBeneficiario);
-      console.log(this.addressForm.value.cumpleAfianzado);
-      console.log(this.addressForm.value.reciboDePago);
-      console.log(this.addressForm.value.condicionesGenerales);
-      console.log(this.addressForm.value.fechaRevision);
-      console.log(this.addressForm.value.estadoRevision);
-
+      //ser obligatorios y no lo son      
       if(this.addressForm.value.nombre && this.addressForm.value.numeroPoliza && this.addressForm.value.numeroCertificado
         && this.addressForm.value.numeroCertificado && this.addressForm.value.fecha &&this.addressForm.value.vigenciaPoliza 
         && this.addressForm.value.vigenciaAmparo && this.addressForm.value.valorAmparo && polizasList.length>0 
@@ -376,8 +358,8 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion': nombreAprobado,
       'EstadoPolizaCodigo': statePoliza,
-      'UsuarioCreacion': this.nombreUser,
-      'UsuarioModificacion': this.nombreUser,
+      //'UsuarioCreacion': this.nombreUser,
+      //'UsuarioModificacion': this.nombreUser,
       'FechaExpedicion': this.addressForm.value.fecha,
       'Vigencia': this.addressForm.value.vigenciaPoliza,
       'VigenciaAmparo': this.addressForm.value.vigenciaAmparo,
@@ -389,7 +371,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       'IncluyeCondicionesGenerales': this.addressForm.value.condicionesGenerales,
       'FechaAprobacion': this.addressForm.value.fechaAprob,
       'Estado': false,
-      'FechaCreacion': "",
+      //'FechaCreacion': "",
       'RegistroCompleto': completo,
       'FechaModificacion': "",
       'Eliminado': false

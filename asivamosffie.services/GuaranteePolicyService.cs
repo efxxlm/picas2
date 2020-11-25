@@ -371,7 +371,7 @@ namespace asivamosffie.services
 
                     template = template.Replace("_Fecha_Revision_", polizaObservacion.FechaRevision.ToString("dd/MM/yyyy"));
                     template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == polizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
-                    template = template.Replace("_Observaciones_", Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion));
+                    template = template.Replace("_Observaciones_", Helpers.Helpers.HtmlStringLimpio(polizaObservacion.Observacion));
                     template = template.Replace("_Nombre_Aseguradora_", contratopoliza.NombreAseguradora);
                     template = template.Replace("_Numero_Poliza_", contratopoliza.NumeroPoliza);
 
@@ -1295,7 +1295,9 @@ namespace asivamosffie.services
             if(lstPolizaGarantia.Count() == TipoGarantiaSeguroContratoPoliza.Count())
             {
                 //validar por elemento que todos esten en si
-                foreach(PolizaGarantia garantiaSeguro in lstPolizaGarantia)
+                //jflorez, las polizas pueden estar en no, no importante es que este diligenciado todo
+                return true;
+                /*foreach(PolizaGarantia garantiaSeguro in lstPolizaGarantia)
                 {
                     if (garantiaSeguro.EsIncluidaPoliza == true)
                         cntSi += 1;
@@ -1308,7 +1310,7 @@ namespace asivamosffie.services
                 else
                 {
                     return false;
-                }
+                }*/
             }
             return false;
         }

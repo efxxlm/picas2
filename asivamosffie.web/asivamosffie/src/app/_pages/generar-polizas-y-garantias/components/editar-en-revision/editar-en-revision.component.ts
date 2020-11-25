@@ -47,10 +47,10 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   });
 
   polizasYSegurosArray: Dominio[] = [];
-  estadoArray = [
+  estadoArray = [];/*
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
-  ];
+  ];*/
   aprobadosArray = [
     { name: 'Andres Montealegre', value: '1' },
     { name: 'David Benitez', value: '2' }
@@ -83,7 +83,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   public idPoliza;
   public idPoliza2;
   public idObservacion;
-  public nombreUser;
   public selected = [];
   public obj1;
   public obj2;
@@ -97,11 +96,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   ultimaFechaRevision: any;
   listaUsuarios: any[] = [];
   realizoPeticion: boolean = false;
-
-  idGarantia1: any;
-  idGarantia2: any;
-  idGarantia3: any;
-  idGarantia4: any;
 
   constructor(
     private router: Router,
@@ -167,6 +161,9 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     this.common.getUsuariosByPerfil(10).subscribe(resp => {
       this.listaUsuarios = resp;
     });
+    this.common.listaEstadoRevision().subscribe(resp=>{
+      this.estadoArray=resp;
+    })
   }
   loadData(id) {
     this.polizaService.GetContratoPolizaByIdContratoId(id).subscribe(data => {
@@ -184,7 +181,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
       this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
-      this.nombreUser = data.usuarioCreacion;
       for (let i = 0; i < this.listaUsuarios.length; i++) {
         const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
         this.addressForm.get('responsableAprob').setValue(responAprob);
@@ -202,7 +198,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   loadEstadoRevision(id) {
     this.polizaService.GetListPolizaObservacionByContratoPolizaId(id).subscribe(data => {
       for (let i = 0; i < data.length; i++) {
-        const estadoRevSeleccionado = this.estadoArray.find(t => t.value === data[i].estadoRevisionCodigo);
+        const estadoRevSeleccionado = this.estadoArray.find(t => t.codigo === data[i].estadoRevisionCodigo);
         this.addressForm.get('fechaRevision').setValue(data[i].fechaRevision);
         this.addressForm.get('estadoRevision').setValue(estadoRevSeleccionado);
       }
@@ -225,7 +221,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         this.ultimoEstadoRevision = data_1[i].estadoRevisionCodigo;
         this.ultimaFechaRevision = data_1[i].fechaRevision;
       }
-      const estadoRevisionCodigo = this.estadoArray.find(p => p.value === this.ultimoEstadoRevision);
+      const estadoRevisionCodigo = this.estadoArray.find(p => p.codigo === this.ultimoEstadoRevision);
       this.addressForm.get('fechaRevision').setValue(this.ultimaFechaRevision);
       this.addressForm.get('estadoRevision').setValue(estadoRevisionCodigo);
     });
@@ -248,22 +244,18 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
           switch (polizasListRead[j]) {
             case '1':
               this.obj1 = true;
-              this.idGarantia1 = this.arrayGarantias[j].polizaGarantiaId;
               this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(this.arrayGarantias[j].esIncluidaPoliza);
               break;
             case '2':
               this.obj2 = true;
-              this.idGarantia2 = this.arrayGarantias[j].polizaGarantiaId;
               this.addressForm.get('estabilidadYCalidad').setValue(this.arrayGarantias[j].esIncluidaPoliza);
               break;
             case '3':
               this.obj3 = true;
-              this.idGarantia3 = this.arrayGarantias[j].polizaGarantiaId;
               this.addressForm.get('polizaYCoumplimiento').setValue(this.arrayGarantias[j].esIncluidaPoliza);
               break;
             case '4':
               this.obj4 = true;
-              this.idGarantia4 = this.arrayGarantias[j].polizaGarantiaId;
               this.addressForm.get('polizasYSegurosCompleto').setValue(this.arrayGarantias[j].esIncluidaPoliza);
               break;
           }
@@ -349,7 +341,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     var statePoliza = "2";
     let revEstado;
     if (this.addressForm.value.estadoRevision != undefined || this.addressForm.value.estadoRevision != null) {
-      revEstado = this.addressForm.value.estadoRevision.value;
+      revEstado = this.addressForm.value.estadoRevision.codigo;
       if (revEstado == "1") {
         statePoliza = "3";
       }
@@ -379,8 +371,8 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
       'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion': nombreAprobado,
       'EstadoPolizaCodigo': statePoliza,
-      'UsuarioCreacion': this.nombreUser,
-      'UsuarioModificacion': this.nombreUser,
+      //'UsuarioCreacion': "",
+      //'UsuarioModificacion': "",
       'FechaExpedicion': this.addressForm.value.fecha,
       'Vigencia': this.addressForm.value.vigenciaPoliza,
       'VigenciaAmparo': this.addressForm.value.vigenciaAmparo,
@@ -392,9 +384,9 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
       'IncluyeCondicionesGenerales': this.addressForm.value.condicionesGenerales,
       'FechaAprobacion': this.addressForm.value.fechaAprob,
       'Estado': false,
-      'FechaCreacion': "",
+      //'FechaCreacion': "",
       'RegistroCompleto': completo,
-      'FechaModificacion': "",
+      //'FechaModificacion': "",
       'Eliminado': false
     };
     const observacionArray = {
@@ -410,7 +402,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         switch (polizasList[i]) {
           case '1':
             garantiaArray = {
-              'polizaGarantiaId':this.idGarantia1,
               'contratoPolizaId': this.idPoliza,
               'TipoGarantiaCodigo': '1',
               'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
@@ -420,7 +411,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
             break;
           case '2':
             garantiaArray = {
-              'polizaGarantiaId':this.idGarantia2,
               'contratoPolizaId': this.idPoliza,
               'TipoGarantiaCodigo': '2',
               'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
@@ -430,7 +420,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
             break;
           case '3':
             garantiaArray = {
-              'polizaGarantiaId':this.idGarantia3,
               'contratoPolizaId': this.idPoliza,
               'TipoGarantiaCodigo': '3',
               'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
@@ -440,7 +429,6 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
             break;
           case '4':
             garantiaArray = {
-              'polizaGarantiaId':this.idGarantia4,
               'contratoPolizaId': this.idPoliza,
               'TipoGarantiaCodigo': '4',
               'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
