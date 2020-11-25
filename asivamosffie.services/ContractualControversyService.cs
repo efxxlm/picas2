@@ -1002,9 +1002,11 @@ namespace asivamosffie.services
                     GrillaTipoSolicitudControversiaContractual RegistroControversiaContractual = new GrillaTipoSolicitudControversiaContractual
                     {
                          ControversiaContractualId=controversia.ControversiaContractualId,
-                         NumeroSolicitud=controversia.NumeroSolicitud,
-                         //FechaSolicitud=controversia.FechaSolicitud,
-                         FechaSolicitud =controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
+                         //NumeroSolicitud=controversia.NumeroSolicitud,
+                        //NumeroSolicitud = string.Format("0000"+ controversia.ControversiaContractualId.ToString()),
+                        NumeroSolicitud = "CO"+controversia.ControversiaContractualId.ToString("000"),
+                        //FechaSolicitud=controversia.FechaSolicitud,
+                        FechaSolicitud =controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
                          TipoControversia =strTipoControversia,
                          TipoControversiaCodigo= strTipoControversiaCodigo,
                          ContratoId = contrato.ContratoId,
