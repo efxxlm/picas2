@@ -1,5 +1,5 @@
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-gestion-ambiental',
@@ -8,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionAmbientalComponent implements OnInit {
 
+    @Input() esVerDetalle = false;
     formGestionAmbiental: FormGroup;
     booleanosActividadRelacionada: any[] = [
         { value: true, viewValue: 'Si' },

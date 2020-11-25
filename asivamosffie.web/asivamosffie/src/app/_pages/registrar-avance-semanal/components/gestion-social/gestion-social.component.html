@@ -1,4 +1,4 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false">
     <form autocomplete="off" [formGroup]="formGestionSocial" (ngSubmit)="guardar()">
         <div align="left">
             <mat-card>
@@ -92,4 +92,25 @@
             </button>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true">
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>Cantidad de empleos directos generados</b>: 3</p>
+              <p><b>Cantidad de empleos indirectos generados</b>: 0</p>
+              <p><b>Total de empleos generados</b>: 3</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="mt-1em" align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>¿Se realizaron reuniones, socializaciones o capacitaciones con la comunidad durante la semana?</b>: No</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </section>

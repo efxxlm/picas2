@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -11,6 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class GestionCalidadComponent implements OnInit {
 
+    @Input() esVerDetalle = false;
     formGestionCalidad: FormGroup;
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },
@@ -138,6 +139,10 @@ export class GestionCalidadComponent implements OnInit {
 
     getRegistrarResultados() {
         this.routes.navigate( [ `${ this.routes.url }/registroResultadosEnsayo`, 5 ] );
+    }
+
+    getVerDetalleMuestras() {
+        this.routes.navigate( [ `${ this.routes.url }/verDetalleMuestras`, 6 ] );
     }
 
     guardar() {

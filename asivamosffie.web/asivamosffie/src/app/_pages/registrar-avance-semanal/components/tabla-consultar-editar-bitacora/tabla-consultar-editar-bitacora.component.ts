@@ -57,4 +57,8 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
         this.routes.navigate( [ `${ this.routes.url }/verDetalleAvanceSemanal`, 3 ] );
     }
 
+    enviarVerificacion() {
+        console.log( 'Metodo para enviar a verificacion.' );
+    }
+
 }

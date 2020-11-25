@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-avance-fisico-financiero',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./avance-fisico-financiero.component.scss']
 })
 export class AvanceFisicoFinancieroComponent implements OnInit {
+
+  @Input() esVerDetalle = false;
 
   constructor() { }
 

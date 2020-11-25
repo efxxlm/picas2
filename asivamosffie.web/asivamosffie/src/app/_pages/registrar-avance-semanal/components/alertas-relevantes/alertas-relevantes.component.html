@@ -1,4 +1,4 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false">
     <form autocomplete="off" [formGroup]="formAlertasRelevantes" (ngSubmit)="guardar()">
         <div align="left">
             <mat-card>
@@ -59,4 +59,19 @@
             </button>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true">
+  <div align="left">
+    <mat-card class="border">
+        <mat-card-content class="mt-1em">
+          <p><b>¿Se identificaron alertas relevantes en desarrollo de la obra?</b>: Si</p>
+          <section>
+            <p><b>Alertas relevantes identificadas</b></p>
+            <div [innerHTML]="'<p>El estado del clima ha generado retrasos importantes con los tiempos establecidos en el cronograma de obra.</p>'"></div>
+          </section>
+        </mat-card-content>
+    </mat-card>
+  </div>
 </section>

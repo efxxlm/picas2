@@ -1,5 +1,5 @@
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -10,6 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class GestionSocialComponent implements OnInit {
 
+    @Input() esVerDetalle = false;
     formGestionSocial: FormGroup;
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },

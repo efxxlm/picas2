@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,6 +11,7 @@ import { DialogTablaAvanceResumenComponent } from '../dialog-tabla-avance-resume
 })
 export class TablaAvanceResumenAlertasComponent implements OnInit {
 
+    @Input() esVerDetalle = false;
     tablaAvanceResumen = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     displayedColumns: string[]  = [

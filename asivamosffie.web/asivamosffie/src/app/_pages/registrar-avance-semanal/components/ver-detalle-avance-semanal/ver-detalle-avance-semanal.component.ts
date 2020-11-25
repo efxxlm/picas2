@@ -19,4 +19,5 @@ export class VerDetalleAvanceSemanalComponent implements OnInit {
         this.location.back();
     }
 
+
 }

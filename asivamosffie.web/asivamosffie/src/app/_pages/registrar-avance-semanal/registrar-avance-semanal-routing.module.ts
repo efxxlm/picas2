@@ -1,3 +1,4 @@
+import { VerDetalleMuestrasComponent } from './components/ver-detalle-muestras/ver-detalle-muestras.component';
 import { VerDetalleAvanceSemanalComponent } from './components/ver-detalle-avance-semanal/ver-detalle-avance-semanal.component';
 import { ConsultarEditarBitacoraComponent } from './components/consultar-editar-bitacora/consultar-editar-bitacora.component';
 import { RegistrarResultadosEnsayoComponent } from './components/registrar-resultados-ensayo/registrar-resultados-ensayo.component';
@@ -26,6 +27,14 @@ const routes: Routes = [
   {
     path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanal/:idAvance',
     component: VerDetalleAvanceSemanalComponent
+  },
+  {
+    path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanal/:idAvance/registroResultadosEnsayo/:idEnsayo',
+    component: RegistrarResultadosEnsayoComponent
+  },
+  {
+    path: 'consultarEditarBitacora/:id/verDetalleAvanceSemanal/:idAvance/verDetalleMuestras/:idEnsayo',
+    component: VerDetalleMuestrasComponent
   }
 ];
 

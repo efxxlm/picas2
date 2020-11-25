@@ -1,4 +1,4 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false">
     <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
 
     <form autocomplete="off" [formGroup]="formGestionCalidad" (ngSubmit)="guardar()">
@@ -251,4 +251,36 @@
             </mat-accordion>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true">
+  <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+
+  <div align="left">
+    <mat-card class="border">
+        <mat-card-content class="mt-1em">
+          <p><b>Tipo de ensayo</b>: Muestra de agua</p>
+          <p><b>Número de muestras</b>: 3</p>
+          <p><b>Fecha de toma</b>: 08/07/2020</p>
+          <p><b>Fecha proyectada de entrega deresultados</b>: 09/07/2020</p>
+          <p><b>¿Se realizó control a los equipos de medición durante la semana?</b>: No</p>
+          <p><b>URL con soporte de la gestión de calidad</b>: 09/07/2020</p>
+          <div class="d-flex justify-content-center mt-1em">
+            <div style="width: 20%;">
+                <button mat-raised-button color="accent" type="button" class="btn-table" (click)="getRegistrarResultados()">
+                  Registrar resultados
+                </button>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center mt-1em">
+            <div style="width: 20%;">
+                <button mat-raised-button color="accent" type="button" class="btn-table" (click)="getVerDetalleMuestras()">
+                  Ver resultados
+                </button>
+            </div>
+          </div>
+        </mat-card-content>
+    </mat-card>
+</div>
 </section>

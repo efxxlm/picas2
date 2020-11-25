@@ -8,8 +8,9 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class FormReporteActividadesRealizadasComponent implements OnInit {
 
-    formActividadesRealizadas: FormGroup;
     @Input() esSiguienteSemana: boolean;
+    @Input() esVerDetalle = false;
+    formActividadesRealizadas: FormGroup;
     editorStyle = {
         height: '45px'
     };
@@ -29,7 +30,6 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log( this.esSiguienteSemana );
     }
 
     crearFormulario() {

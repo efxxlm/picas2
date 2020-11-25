@@ -1,4 +1,5 @@
-<form autocomplete="off" [formGroup]="formActividadesRealizadas" (ngSubmit)="guardar()">
+<section *ngIf="esVerDetalle === false">
+  <form autocomplete="off" [formGroup]="formActividadesRealizadas" (ngSubmit)="guardar()">
     <div align="left">
         <mat-card>
             <mat-card-content>
@@ -85,4 +86,26 @@
                 <img  src="assets/img/icon/guardar.svg">
         </button>
     </div>
-</form>
+  </form>
+</section>
+
+<!-- Ver detalle -->
+<section *ngIf="esVerDetalle === true">
+  <div align="left">
+    <mat-card class="border">
+        <mat-card-content class="mt-1em">
+          <section>
+            <p><b>Técnicas</b></p> <div [innerHTML]="'<p>Revisión de la programación de obra.</p>'"></div>
+          </section>
+
+          <section>
+            <p><b>Legales</b></p> <div [innerHTML]="'<p>Solicitar licencia ambiental.</p>'"></div>
+          </section>
+
+          <section>
+            <p><b>Administrativas - Financieras</b></p> <div [innerHTML]="'<p>Se revisó el flujo de inversión de recursos.</p>'"></div>
+          </section>
+        </mat-card-content>
+    </mat-card>
+  </div>
+</section>

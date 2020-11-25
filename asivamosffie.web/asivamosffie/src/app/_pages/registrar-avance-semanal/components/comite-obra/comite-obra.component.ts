@@ -1,5 +1,5 @@
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class ComiteObraComponent implements OnInit {
 
+    @Input() esVerDetalle = false;
     formComiteObra: FormGroup;
 
     constructor(

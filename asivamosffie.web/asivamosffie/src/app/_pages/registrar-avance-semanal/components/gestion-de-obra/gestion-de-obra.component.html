@@ -1,4 +1,4 @@
-<mat-accordion>
+<mat-accordion *ngIf="esVerDetalle === false">
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title completo">
@@ -47,5 +47,58 @@
         </mat-expansion-panel-header>
 
         <app-alertas-relevantes></app-alertas-relevantes>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<!-- Ver detalle -->
+<mat-accordion *ngIf="esVerDetalle === true">
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Gestión ambiental
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-ambiental [esVerDetalle]="true"></app-gestion-ambiental>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title completo">
+                Gestión de calidad
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-calidad [esVerDetalle]="true"></app-gestion-calidad>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Gestión de seguridad y salud en el trabajo
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-sst [esVerDetalle]="true"></app-gestion-sst>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Gestión social
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-social [esVerDetalle]="true"></app-gestion-social>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Alertas relevantes
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-alertas-relevantes [esVerDetalle]="true"></app-alertas-relevantes>
     </mat-expansion-panel>
 </mat-accordion>

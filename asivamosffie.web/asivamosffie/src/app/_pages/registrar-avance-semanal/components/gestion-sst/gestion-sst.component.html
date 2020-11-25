@@ -1,4 +1,4 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false">
     <form autocomplete="off" [formGroup]="formSst" (ngSubmit)="guardar()">
         <div align="left">
             <mat-card>
@@ -179,4 +179,25 @@
             </button>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true">
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>Cantidad de accidentes laborales registrados en la semana</b>: 2</p>
+              <p><b>Principales causas de los accidentes o incidentes laborales ocurridos durante la semana</b>: Incumplimiento del uso de los EPP</p>
+              <p><b>¿Se realizaron capacitaciones relacionadas con seguridad y salud en el trabajo durante la semana?</b>: Si</p>
+              <section>
+                <p><b>Tema de capacitación</b></p>
+                <div [innerHTML]="'<p>Prevención de enfermedades a causa del mal uso de los implementos de utilizados para el desarrollo de las labores.</p>'"></div>
+              </section>
+              <p><b>¿Se realizaron revisiones de uso de elementos de protección personal y dotación durante la semana?</b>: Si</p>
+              <p><b>Resultado de revisión</b>: Cumple</p>
+              <p><b>¿Se realizaron revisiones de señalización de seguridad y salud en el trabajo y kit de emergencias durante la semana?</b>: No</p>
+              <p><b>URL con soporte</b>: No hay url en el pdf</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </section>

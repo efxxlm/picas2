@@ -1,4 +1,4 @@
-<section class="table-responsive size-table">
+<section class="table-responsive size-table" *ngIf="esVerDetalle === false">
     <table mat-table [dataSource]="tablaAvanceResumen" matSort>
   
       <ng-container matColumnDef="fechaReporte">
@@ -44,3 +44,6 @@
     
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </section>
+
+<!-- Ver detalle -->
+<section class="table-responsive size-table" *ngIf="esVerDetalle === true"></section>

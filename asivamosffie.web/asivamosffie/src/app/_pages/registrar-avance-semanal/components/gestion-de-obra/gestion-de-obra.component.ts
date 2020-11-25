@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-gestion-de-obra',
@@ -7,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionDeObraComponent implements OnInit {
 
-  constructor() { }
+    @Input() esVerDetalle = false;
 
-  ngOnInit(): void {
-  }
+    constructor() { }
+
+    ngOnInit(): void {
+    }
 
 }

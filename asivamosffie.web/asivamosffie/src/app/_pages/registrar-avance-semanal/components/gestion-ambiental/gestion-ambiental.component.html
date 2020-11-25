@@ -1,4 +1,4 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false">
     <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
 
     <form autocomplete="off" [formGroup]="formGestionAmbiental" (ngSubmit)="guardar()">
@@ -37,4 +37,17 @@
             </button>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true">
+  <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+
+  <div class="mt-1em" align="left">
+    <mat-card class="border">
+        <mat-card-content class="mt-1em">
+          <p><b>¿Se ejecutó alguna actividad relacionada con la gestión ambiental durante la semana?</b>: No</p>
+        </mat-card-content>
+    </mat-card>
+  </div>
 </section>

@@ -1,4 +1,4 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false">
     <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
 
     <form autocomplete="off" [formGroup]="formRegistroFotografico" (ngSubmit)="guardar()">
@@ -83,4 +83,20 @@
             </button>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true">
+    <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+                <p><b>URL con soporte</b>: https://drive.google.com/drive/registroavancesemanal/registrofotográfico</p>
+                <section>
+                    <p><b>Descripción</b></p> <div [innerHTML]="'<p>observacion del registro</p>'"></div>
+                </section>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </section>

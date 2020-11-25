@@ -1,4 +1,4 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false">
     <div class="d-flex justify-content-center colorMainColor">
         <p>Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
         <p style="margin-left: 2em;">Número de comité de obra: <b>Cobra_001</b> </p>
@@ -74,4 +74,21 @@
             </button>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true">
+    <div class="d-flex justify-content-center colorMainColor">
+        <p>Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+        <p style="margin-left: 2em;">Número de comité de obra: <b>Cobra_001</b> </p>
+    </div>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>Fecha de comité de obra</b>: 10/07/2020</p>
+              <p><b>URL con soporte</b>: https://drive.google.com/drive/registroavancesemanal/comitedeobra</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </section>
