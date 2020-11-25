@@ -17,6 +17,7 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   displayedColumns: string[] = [
     'fechaSolicitud',
     'numeroSolicitud',
+    'numeroContrato',
     'tipoControversia',
     'estadoControversia',
     'gestion',

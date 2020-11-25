@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -46,7 +47,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
+  constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
   ngOnInit(): void {
     if (this.isEditable == true) {
       this.addressForm.get('tipoControversia').setValue('1');
@@ -85,34 +86,37 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    alert(this.addressForm.value.tipoControversia.value);
     if (this.addressForm.value.tipoControversia.value == '1') {
       let formArrayTai = {
         "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
         "FechaSolicitud": this.addressForm.value.fechaSolicitud,
         "NumeroSolicitud": "XXXww",
-        "EstadoCodigo": "0",
+        "EstadoCodigo": "1",
         "EsCompleto": false,
-        "SolicitudId": 0,
-        "ContratoId": 11,
-        "ConclusionComitePreTecnico": "conc",
-        "NumeroRadicadoSac": 0,
-        "MotivoJustificacionRechazo": "rechaz",
-        "RutaSoporte": "ruta",
-        "FechaCreacion": "1-10-2020",
+        "SolicitudId": this.addressForm.value.motivosSolicitud.value,
+        "ContratoId": this.contratoId,
+        "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
         "UsuarioCreacion": "us cre",
         "UsuarioModificacion": "us mod",
-        "FechaComitePreTecnico": "5-10-2020",
-        "EsProcede": true,
-        "EsRequiereComite": false
+        "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
+        "EsProcede": this.addressForm.value.procedeSolicitud,
+        "EsRequiereComite": this.addressForm.value.requeridoComite
       };
       this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0 => {
-
+        if(resp_0.isSuccessful==true){
+          this.openDialog('', 'La información ha sido guardada exitosamente.');
+          this.router.navigate(['/gestionarTramiteControversiasContractuales'])
+        }
+        else{
+          this.openDialog('', 'La información ha sido guardada exitosamente.');
+        }
       });
     }
     else {
       console.log('servicio que no va el TAI');
     }
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    
   }
 
 }
