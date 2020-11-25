@@ -36,34 +36,35 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
     }
   ];
 
-  constructor ( private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
-                private activatedRoute: ActivatedRoute,
-                private dialog: MatDialog,
-                private routes: Router,
-                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
+  constructor(
+    private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog,
+    private routes: Router,
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
     this.declararEstado();
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
-    if (this.routes.getCurrentNavigation().extras.replaceUrl) {
-      this.routes.navigateByUrl('/verificarPreconstruccion');
-      return;
-    };
+    // if (this.routes.getCurrentNavigation().extras.replaceUrl) {
+    //   this.routes.navigateByUrl('/verificarPreconstruccion');
+    //   return;
+    // }
     if (this.routes.getCurrentNavigation().extras.state) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
       this.estadoInterventoria = this.routes.getCurrentNavigation().extras.state.estado;
-    };
+    }
   }
 
   ngOnInit(): void {
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
-  getContratacionByContratoId ( pContratoId: number ) {
+  getContratacionByContratoId( pContratoId: number ) {
     this.faseUnoVerificarPreconstruccionSvc.getContratacionByContratoId( pContratoId )
     .subscribe( contrato => {
       this.contrato = contrato;
@@ -73,26 +74,31 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
+    // tslint:disable-next-line: deprecation
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
 
   private declararEstado() {
     this.cantidadPerfiles = new FormControl('', Validators.required);
-  };
+  }
 
-  estadoSemaforo ( index: number, semaforo: string ) {
+  estadoSemaforo( index: number, semaforo: string ) {
+    // tslint:disable-next-line: no-string-literal
     this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
-  };
+  }
 
-  getPerfilesContrato ( index: number, evento: any ) {
+  getPerfilesContrato( index: number, evento: any ) {
+    // tslint:disable-next-line: no-string-literal
     this.contrato.contratacion.contratacionProyecto[index].proyecto[ 'tieneEstadoFase1EyD' ] = evento.tieneEstadoFase1EyD;
+    // tslint:disable-next-line: no-string-literal
     this.contrato.contratacion.contratacionProyecto[index].proyecto[ 'tieneEstadoFase1Diagnostico' ] = evento.tieneEstadoFase1Diagnostico;
     this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoPerfil = evento.perfiles;
 
     this.faseUnoPreconstruccionSvc.createEditContratoPerfil( this.contrato )
-      .subscribe( 
+      .subscribe(
         response => {
+          // tslint:disable-next-line: no-string-literal
           this.openDialog( '', response['message'] );
           this.contrato = null;
           this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
@@ -101,6 +107,6 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
           this.openDialog( '', err.message );
         }
       );
-  };
+  }
 
-};
+}

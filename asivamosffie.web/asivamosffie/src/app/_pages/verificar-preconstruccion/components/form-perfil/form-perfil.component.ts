@@ -247,7 +247,8 @@ export class FormPerfilComponent implements OnInit {
       if ( this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );
       }
-      if ( this.perfilesEnProceso < this.perfilProyecto.length && this.perfilesCompletos !== this.perfilProyecto.length ) {
+      if ( (  this.perfilesEnProceso < this.perfilProyecto.length || this.perfilesEnProceso === this.perfilProyecto.length )
+              && this.perfilesCompletos !== this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'en-proceso' );
       }
     }
@@ -298,9 +299,9 @@ export class FormPerfilComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    if ( texto ){
+    if ( texto !== undefined || texto !== null ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
     }
   }
 
@@ -318,30 +319,42 @@ export class FormPerfilComponent implements OnInit {
   }
 
   eliminarPerfil( numeroPerfil: number ) {
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe( value => {
         if ( value ) {
           this.perfiles.removeAt( numeroPerfil );
           this.formContratista.patchValue({
             numeroPerfiles: `${ this.perfiles.length }`
           });
-          this.openDialog( '', 'La información se ha eliminado correctamente.' );
+          this.openDialog( '', '<b>La información se ha eliminado correctamente.</b' );
         }
       } );
   }
 
   deletePerfil( contratoPerfilId: number, numeroPerfil: number ) {
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe( value => {
-        if ( value ) {
-          this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
+        if ( value === true ) {
+          console.log( contratoPerfilId );
+          if ( contratoPerfilId !== 0 ) {
+            this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
             .subscribe(
               () => {
-                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 this.perfiles.removeAt( numeroPerfil );
+                this.formContratista.patchValue({
+                  numeroPerfiles: `${ this.perfiles.length }`
+                });
               },
               err => this.openDialog( '', err.message )
             );
+          } else {
+            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+            this.perfiles.removeAt( numeroPerfil );
+            this.formContratista.patchValue({
+              numeroPerfiles: `${ this.perfiles.length }`
+            });
+          }
         }
       } );
   }
@@ -353,12 +366,12 @@ export class FormPerfilComponent implements OnInit {
   }
 
   eliminarNumeroRadicado( numeroPerfil: number, numeroRadicado ) {
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe(
         value => {
           if ( value === true ) {
             this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-            this.openDialog( '', 'La información se ha eliminado correctamente.' );
+            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
             return;
           }
         }
@@ -367,26 +380,26 @@ export class FormPerfilComponent implements OnInit {
 
   deleteRadicado( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
     if ( contratoPerfilNumeroRadicadoId === 0 ) {
-      this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+      this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
         .subscribe(
           value => {
             if ( value === true ) {
               this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-              this.openDialog( '', 'La información se ha eliminado correctamente.' );
+              this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
               return;
             }
           }
         );
       return;
     }
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe(
         value => {
           if ( value === true ) {
             this.faseUnoPreconstruccionSvc.deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
               .subscribe( () => {
                 this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 return;
               } );
           }

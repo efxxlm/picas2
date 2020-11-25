@@ -307,7 +307,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   eliminarPerfil( numeroPerfil: number ) {
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe( value => {
         if ( value === true ) {
           this.perfiles.removeAt( numeroPerfil );
@@ -320,7 +320,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   deletePerfil( contratoPerfilId: number, numeroPerfil: number ) {
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe( value => {
         if ( value === true ) {
           console.log( contratoPerfilId );
@@ -354,7 +354,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   eliminarNumeroRadicado( numeroPerfil: number, numeroRadicado ) {
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe(
         value => {
           if ( value === true ) {
@@ -368,7 +368,7 @@ export class FormPerfilComponent implements OnInit {
 
   deleteRadicado( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
     if ( contratoPerfilNumeroRadicadoId === 0 ) {
-      this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+      this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
         .subscribe(
           value => {
             if ( value === true ) {
@@ -380,7 +380,7 @@ export class FormPerfilComponent implements OnInit {
         );
       return;
     }
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe(
         value => {
           if ( value === true ) {
