@@ -316,14 +316,11 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
         nombreAprobado = this.addressForm.value.responsableAprob.usuarioId;
       }
     }
-    var statePoliza=null;
+    var statePoliza="3";
     //jflorez/ esto puede o no venir, aagrego if
     if(this.addressForm.value.estadoRevision)
     {
-      if (this.addressForm.value.estadoRevision.value == "1") {
-        statePoliza = "3";
-      }
-      else {
+      if (this.addressForm.value.estadoRevision.codigo == "1") {
         statePoliza = "2";
       }
     }

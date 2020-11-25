@@ -1322,10 +1322,13 @@ namespace asivamosffie.services
                 {
                     return false;
                 }
-                else if (string.IsNullOrEmpty(contratoPoliza.ResponsableAprobacion.ToString()))
+                if(contratoPoliza.ResponsableAprobacion!=null)
                 {
-                    return false;
-                }
+                    if (string.IsNullOrEmpty(contratoPoliza.ResponsableAprobacion.ToString()))
+                    {
+                        return false;
+                    }
+                }                
 
             }               
 
