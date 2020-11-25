@@ -11,6 +11,7 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Helpers.Constant;
 using Microsoft.AspNetCore.Http;
+using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
@@ -214,9 +215,24 @@ namespace asivamosffie.services
 
         public async Task<ControversiaContractual> GetControversiaContractualById(int id)
         {
-            ControversiaContractual controversiaContractual= await _context.ControversiaContractual.FindAsync(id);
+            string prefijo="";
+            Contrato contrato=null;
 
-            controversiaContractual.NumeroSolicitudFormat = "CO" + controversiaContractual.ControversiaContractualId.ToString("000");
+            ControversiaContractual controversiaContractual = null;
+            controversiaContractual = await _context.ControversiaContractual.FindAsync(id);
+            
+            if(controversiaContractual != null)
+                contrato = await _context.Contrato.FindAsync(controversiaContractual.ContratoId);
+
+            if (contrato != null)
+            {
+                if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
+                    prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
+                else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
+                    prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
+            }
+            
+            controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
             return controversiaContractual;
         }
 
@@ -984,6 +1000,8 @@ namespace asivamosffie.services
                     Dominio EstadoCodigoControversia;
                     Dominio TipoControversiaCodigo;
 
+                    string prefijo = "";
+
                     if (contrato != null)
                     {
                         TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
@@ -999,8 +1017,12 @@ namespace asivamosffie.services
                         {
                             strEstadoControversia = EstadoCodigoControversia.Nombre;
                             strEstadoCodigoControversia = EstadoCodigoControversia.Codigo;
-
                         }
+
+                        if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
+                            prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
+                        else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
+                            prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
 
                         //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         //if (EstadoSolicitudCodigoContratoPoliza != null)
@@ -1008,14 +1030,13 @@ namespace asivamosffie.services
 
                     }
 
-
                     //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     GrillaTipoSolicitudControversiaContractual RegistroControversiaContractual = new GrillaTipoSolicitudControversiaContractual
                     {
                          ControversiaContractualId=controversia.ControversiaContractualId,
                          //NumeroSolicitud=controversia.NumeroSolicitud,
                         //NumeroSolicitud = string.Format("0000"+ controversia.ControversiaContractualId.ToString()),
-                        NumeroSolicitud = "CO"+controversia.ControversiaContractualId.ToString("000"),
+                        NumeroSolicitud = prefijo+controversia.ControversiaContractualId.ToString("000"),
                         //FechaSolicitud=controversia.FechaSolicitud,
                         FechaSolicitud =controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
                          TipoControversia =strTipoControversia,
