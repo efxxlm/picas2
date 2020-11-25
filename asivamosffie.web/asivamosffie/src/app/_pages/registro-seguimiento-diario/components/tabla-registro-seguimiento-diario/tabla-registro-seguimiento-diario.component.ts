@@ -103,4 +103,8 @@ export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
       });
   }
 
+  Enviar( id ){
+
+  }
+
 }
