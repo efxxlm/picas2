@@ -1010,7 +1010,8 @@ namespace asivamosffie.services
                          TipoControversia =strTipoControversia,
                          TipoControversiaCodigo= strTipoControversiaCodigo,
                          ContratoId = contrato.ContratoId,
-                        EstadoControversia = "PENDIENTE",
+                        NumeroContrato = contrato.NumeroContrato,
+                        EstadoControversia = "PENDIENTE",                        
                         RegistroCompletoNombre = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
 
                     };
@@ -1031,6 +1032,9 @@ namespace asivamosffie.services
                         FechaSolicitud = controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
                         TipoControversia = e.ToString(),
                         TipoControversiaCodigo = "ERROR",
+                        NumeroContrato = "ERROR",
+                        EstadoControversia = "ERROR",
+                        RegistroCompletoNombre = "ERROR",
                         ContratoId = 0,                                                                      
 
                     };
