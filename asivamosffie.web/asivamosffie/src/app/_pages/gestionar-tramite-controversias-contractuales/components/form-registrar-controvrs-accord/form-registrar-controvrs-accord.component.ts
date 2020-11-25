@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -14,7 +14,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   @Input() isEditable;
   @Input() contratoId;
   @Input() idControversia;
+  @Output() estadoSemaforo = new EventEmitter<string>();
 
+  estadoForm: boolean = null;
   addressForm = this.fb.group({
     tipoControversia: [null, Validators.required],
     fechaSolicitud: [null, Validators.required],
@@ -27,15 +29,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     numeroRadicadoSAC: [null, Validators.required],
     resumenJustificacionSolicitud: [null, Validators.required]
   });
-  tipoControversiaArray = [
-    { name: 'Terminación anticipada por incumplimiento (TAI)', value: '1' },
-    { name: 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratista', value: '2' },
-    { name: 'Arreglo Directo (AD) a solicitud del contratista', value: '3' },
-    { name: 'Otras controversias contractuales (OCC) a solicitud del contratista', value: '4' },
-    { name: 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratante', value: '5' },
-    { name: 'Arreglo Directo (AD) a solicitud del contratante', value: '6' },
-    { name: 'Otras controversias contractuales (OCC) a solicitud del contratante', value: '7' },
-  ];
+  tipoControversiaArrayDom: Dominio[] = [];
   motivosSolicitudArray: Dominio[] = [];
   editorStyle = {
     height: '50px'
@@ -52,28 +46,53 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   userCreation: any;
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
   ngOnInit(): void {
+    this.loadtipoControversias();
     this.loadMotivosList();
     if (this.isEditable == true) {
-      this.services.GetControversiaContractualById(this.idControversia).subscribe((resp:any)=>{
-        const controversiaSelected = this.tipoControversiaArray.find( t => t.value === resp.tipoControversiaCodigo);
+      this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
+        const controversiaSelected = this.tipoControversiaArrayDom.find(t => t.codigo === resp.tipoControversiaCodigo);
         this.addressForm.get('tipoControversia').setValue(controversiaSelected);
         this.addressForm.get('fechaSolicitud').setValue(resp.fechaSolicitud);
-        this.addressForm.get('motivosSolicitud').setValue('1');
+        //this.addressForm.get('motivosSolicitud').setValue('1');
         this.addressForm.get('fechaComitePretecnico').setValue(resp.fechaComitePreTecnico);
         this.addressForm.get('conclusionComitePretecnico').setValue(resp.conclusionComitePreTecnico);
         this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
         this.addressForm.get('requeridoComite').setValue(false);
         this.numeroSolicitud = resp.numeroSolicitudFormat;
         this.userCreation = resp.usuarioCreacion;
-      })
+      });
+      this.loadSemaforos();
     }
   }
-  loadMotivosList(){
-    this.common.listaMotivosSolicitudControversiaContractual().subscribe(data=>{
+  loadtipoControversias() {
+    this.common.listaTiposDeControversiaContractual().subscribe(data => {
+      this.tipoControversiaArrayDom = data;
+    });
+  }
+  loadMotivosList() {
+    this.common.listaMotivosSolicitudControversiaContractual().subscribe(data => {
       this.motivosSolicitudArray = data;
     });
   }
-  getvalues(values:Dominio[]) {
+  loadSemaforos() {
+    this.estadoSemaforo.emit('sin-diligenciar');
+    /*
+    PEDIR AYUDA A CARLOS ESTE CASO
+    if (this.addressForm.get('tipoControversia') == null && this.addressForm.get('fechaSolicitud') == null && this.addressForm.get('motivosSolicitud') == null
+      && this.addressForm.get('fechaComitePretecnico') == null && this.addressForm.get('conclusionComitePretecnico') == null && this.addressForm.get('procedeSolicitud') == null) {
+      this.estadoSemaforo.emit('sin-diligenciar');
+    }
+    if (this.addressForm.get('tipoControversia') || this.addressForm.get('fechaSolicitud') || this.addressForm.get('motivosSolicitud')
+      || this.addressForm.get('fechaComitePretecnico') || this.addressForm.get('conclusionComitePretecnico') || this.addressForm.get('procedeSolicitud')) {
+      this.estadoSemaforo.emit('en-proceso');
+    }
+    if (this.addressForm.get('tipoControversia') != null && this.addressForm.get('fechaSolicitud') != null && this.addressForm.get('motivosSolicitud') != null
+      && this.addressForm.get('fechaComitePretecnico') != null && this.addressForm.get('conclusionComitePretecnico') != null && this.addressForm.get('procedeSolicitud') != null) {
+      this.estadoSemaforo.emit('completo');
+    }
+    */
+  }
+  getvalues(values: Dominio[]) {
     const buenManejo = values.find(value => value.codigo == "1");
     const garantiaObra = values.find(value => value.codigo == "2");
     const pCumplimiento = values.find(value => value.codigo == "3");
@@ -108,10 +127,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    alert(this.addressForm.value.tipoControversia.value);
     if (this.addressForm.value.tipoControversia.value == '1') {
       let formArrayTai
-      if(this.isEditable == true){
+      if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
           "FechaSolicitud": this.addressForm.value.fechaSolicitud,
@@ -126,10 +144,10 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
-          "ControversiaContractualId":this.idControversia
+          "ControversiaContractualId": this.idControversia
         };
       }
-      else{
+      else {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
           "FechaSolicitud": this.addressForm.value.fechaSolicitud,
@@ -147,11 +165,20 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         };
       }
       this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0 => {
-        if(resp_0.isSuccessful==true){
+        if (resp_0.isSuccessful == true) {
           this.openDialog('', 'La información ha sido guardada exitosamente.');
-          this.router.navigate(['/gestionarTramiteControversiasContractuales'])
+          if (this.isEditable == true) {
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia])
+            );
+          }
+          else {
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarControversiaContractual'])
+            );
+          }
         }
-        else{
+        else {
           this.openDialog('', 'La información ha sido guardada exitosamente.');
         }
       });
@@ -159,7 +186,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     else {
       console.log('servicio que no va el TAI');
     }
-    
+
   }
 
 }

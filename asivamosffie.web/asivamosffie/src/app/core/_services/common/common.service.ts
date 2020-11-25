@@ -267,6 +267,9 @@ export class CommonService {
   listaGarantiasPolizas(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
+  listaTiposDeControversiaContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=100`);
+  }
   listaMotivosSolicitudControversiaContractual(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=99`);
   }

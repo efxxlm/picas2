@@ -15,9 +15,9 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="tipoControversia" required>
-                                    <mat-option *ngFor="let tipoControversia of tipoControversiaArray"
+                                    <mat-option *ngFor="let tipoControversia of tipoControversiaArrayDom"
                                         [value]="tipoControversia">
-                                        {{ tipoControversia.name }}
+                                        {{ tipoControversia.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="row"
-                *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '4')">
+                *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '4')">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="row"
-            *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '4')">
+            *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '4')">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -69,7 +69,10 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '1'">
+            <div class="row" *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')
+            || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '5')
+            ||(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '6')
+            ||(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '7')">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -108,7 +111,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '1'">
+            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -129,7 +132,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '1'">
+            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -139,7 +142,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '1'">
+            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
@@ -160,7 +163,7 @@
                 </div>
             </div>
             <div class="row"
-            *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '4')">
+            *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -171,7 +174,7 @@
                 </div>
             </div>
             <div class="row"
-            *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '4')">
+            *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
@@ -193,7 +196,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '1'">
+            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -210,7 +213,7 @@
                 </div>
             </div>
             <div class="row"
-                *ngIf="addressForm.value.procedeSolicitud===true && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.value == '1')">
+                *ngIf="addressForm.value.procedeSolicitud===true && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
                 <div class="col-md-6" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
