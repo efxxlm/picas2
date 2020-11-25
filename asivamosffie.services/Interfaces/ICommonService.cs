@@ -9,13 +9,14 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
+        Task<DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular);
+
         Task<string> EnumeradorComiteTecnico();
 
         Task<string> EnumeradorComiteFiduciario();
 
         Task<string> EnumeradorContratacion();
-
-
+         
         Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil);
   
         string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId);

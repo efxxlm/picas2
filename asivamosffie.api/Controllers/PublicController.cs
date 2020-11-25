@@ -16,14 +16,16 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class PublicController : ControllerBase
     {
+        public readonly IRegisterPreContructionPhase1Service _RegisterPreContructionPhase1Service;
         public readonly ISourceFundingService _sourceFunding;
         public readonly ISelectionProcessService _selectionProcess;
         public readonly IGuaranteePolicyService _guaranteePolicy;
         public readonly IManagementCommitteeReportService _managementCommitteeReportService;
-        private readonly IOptions<AppSettings> _settings;
+        public readonly IOptions<AppSettings> _settings;
 
-        public PublicController(IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy)
-        {
+        public PublicController(IRegisterPreContructionPhase1Service  registerPreContructionPhase1Service,IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy)
+        { 
+            _RegisterPreContructionPhase1Service = registerPreContructionPhase1Service;
             _sourceFunding = sourceFunding;
             _settings = settings;
             _selectionProcess = selectionProcess;
@@ -60,9 +62,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
-
+         
         [HttpGet("NoApprovedLegalFiduciaryPolicy4d")]
         public async Task NoApprovedLegalFiduciaryPolicy4d()
         {
@@ -77,8 +77,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-        
-
+         
         /// <summary>
         /// JMartinez
         // Aprobar Actas de
@@ -98,6 +97,27 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        /// <summary>
+        /// JMartinez
+            //Enviar notificacion a interventor , 
+            //tecnica y suipervisor si la poliza 
+            //tiene 4 dias habiles y aun no tiene gestion
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetContratosConPolizaVencida")]
+        public async Task GetContratosConPolizaVencida()
+        {
+            try
+            { 
+                await _RegisterPreContructionPhase1Service.EnviarNotificacion(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+          
     }
 
 

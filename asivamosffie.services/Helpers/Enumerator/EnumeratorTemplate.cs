@@ -30,7 +30,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         DRPNotificacion = 33,
         DDPCancelado = 34,
         DRPCancelado = 35,
-        AprobarInicio316 = 36
+        AprobarInicio316 = 36,
+        AprobarPoliza4diasNoGestion = 37
 
     }
 }

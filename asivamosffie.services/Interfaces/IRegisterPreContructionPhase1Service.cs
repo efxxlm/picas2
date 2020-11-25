@@ -15,6 +15,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterPreContructionPhase1Service
     {
+        Task EnviarNotificacion(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+
         Task<List<VRegistrarFase1>> GetListContratacion2();
 
         Task<dynamic> GetListContratacion();
