@@ -32,6 +32,7 @@ export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
   constructor(
     private followUpDailyService: FollowUpDailyService,
     private router: Router,
+    public dialog: MatDialog,
   ) 
   { }
 
@@ -73,6 +74,33 @@ export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
 
   VerDetalle( proyecto ){
     this.router.navigate( [ '/registroSeguimientoDiario/verDetalle', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result===true) {
+        this.EliminarRegistro(e);
+      }
+    });
+  }
+
+  EliminarRegistro( id ){
+    this.followUpDailyService.deleteDailyFollowUp( id )
+      .subscribe(respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        this.ngAfterViewInit();
+      });
   }
 
 }

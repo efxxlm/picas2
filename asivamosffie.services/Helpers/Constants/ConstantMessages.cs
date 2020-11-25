@@ -711,6 +711,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
         
 
         #endregion Mensajes Exitoso

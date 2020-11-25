@@ -133,12 +133,14 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
         this.causaBajaDisponibilidadProductividad = respuesta[5];
         this.diasPermitidos = respuesta[6];
 
+        if (this.seguimientoId > 0)
+        this.editMode()
+
       });
 
 
 
-      if (this.seguimientoId > 0)
-        this.editMode()
+      
     });
   }
 

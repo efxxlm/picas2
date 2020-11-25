@@ -56,7 +56,14 @@
       <td mat-cell *matCellDef="let element">
 
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          (click)="RegistrarNuevo( element )" >
+          (click)="Enviar( element.seguimientoDiarioId )" 
+          *ngIf="element.registroCompleto && element.estadoCodigo === undefined" >
+          Enviar seguimiento diario
+        </a>
+
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          (click)="RegistrarNuevo( element )" 
+          *ngIf="element.estadoCodigo !== undefined || element.fechaUltimoSeguimientoDiario === undefined" >
           Registrar seguimiento diario
         </a>
 
@@ -67,10 +74,16 @@
         </a>
 
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          (click)="Editar( element )" 
+          (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>',element.seguimientoDiarioId)"
           *ngIf="element.seguimientoDiarioId > 0">
-          Ver detalle/Editar
+          Eliminar registro
         </a>
+
+          <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+            (click)="Editar( element )" 
+            *ngIf="element.seguimientoDiarioId > 0 && element.estadoCodigo === undefined ">
+            Ver detalle/Editar
+          </a>
 
       </td>
     </ng-container>

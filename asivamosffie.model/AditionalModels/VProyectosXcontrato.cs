@@ -17,6 +17,12 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public int SeguimientoDiarioId { get; set; }
 
+        [NotMapped]
+        public bool RegistroCompleto { get; set; }
+
+        [NotMapped]
+        public string EstadoCodigo { get; set; }
+
         
     }
 }

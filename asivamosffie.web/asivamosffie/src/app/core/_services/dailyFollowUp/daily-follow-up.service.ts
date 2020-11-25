@@ -32,7 +32,11 @@ export class FollowUpDailyService {
   
   getDatesAvailableByContratacioProyectoId( id ){
     return this.http.get<string[]>( `${ this.url }/getDatesAvailableByContratacioProyectoId?pId=${ id }`);
-    
   } 
+
+  deleteDailyFollowUp( id ){
+    return this.http.delete<Respuesta>( `${ this.url }/deleteDailyFollowUp?pId=${ id }`);
+  }
+  
 
 }

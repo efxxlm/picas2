@@ -36,16 +36,66 @@ namespace asivamosffie.services
             
             listaInfoProyectos.ForEach( p => {
                 SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario
-                                                                .Where( s => s.ContratacionProyectoId == p.ContratacionProyectoId )
+                                                                .Where( s => s.ContratacionProyectoId == p.ContratacionProyectoId && 
+                                                                        s.Eliminado != true )
                                                                 .OrderByDescending( r => r.FechaSeguimiento ).FirstOrDefault();
 
                 if ( seguimientoDiario != null ){
                     p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
                     p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
+                    p.RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue?seguimientoDiario.RegistroCompleto.Value:false;
+                    p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
                 }
             });
 
             return listaInfoProyectos;                                   
+        }
+
+        private bool VerificarRegistroCompleto( SeguimientoDiario pSeguimientoDiario ){
+            bool completo = true;
+
+            List<string> listaBajaDisponibilidadMaterial = new List<string> {{ "2" }, {"3" }};
+            List<string> listaBajaDisponibilidadEquipo = new List<string> {{ "2" }, {"3" }};
+
+            if ( 
+                    pSeguimientoDiario.FechaSeguimiento == null ||
+                    
+                    pSeguimientoDiario.DisponibilidadPersonal == null ||
+                    string.IsNullOrEmpty( pSeguimientoDiario.DisponibilidadPersonalObservaciones ) ||
+                    ( pSeguimientoDiario.DisponibilidadPersonal == false && pSeguimientoDiario.CantidadPersonalProgramado == null ) ||
+                    ( pSeguimientoDiario.DisponibilidadPersonal == false && pSeguimientoDiario.CantidadPersonalTrabajando == null ) ||
+                    ( pSeguimientoDiario.DisponibilidadPersonal == false && pSeguimientoDiario.SeGeneroRetrasoPersonal == null ) ||
+                    ( pSeguimientoDiario.SeGeneroRetrasoPersonal == true && pSeguimientoDiario.NumeroHorasRetrasoPersonal == null ) ||
+
+                    string.IsNullOrEmpty( pSeguimientoDiario.DisponibilidadMaterialCodigo ) ||
+                    string.IsNullOrEmpty( pSeguimientoDiario.DisponibilidadMaterialObservaciones ) ||
+                    ( listaBajaDisponibilidadMaterial.Where( r => r == pSeguimientoDiario.DisponibilidadMaterialCodigo ).Count() > 0  && 
+                        pSeguimientoDiario.CausaIndisponibilidadMaterialCodigo == null ) ||
+                    ( listaBajaDisponibilidadMaterial.Where( r => r == pSeguimientoDiario.DisponibilidadMaterialCodigo ).Count() > 0  && 
+                        pSeguimientoDiario.SeGeneroRetrasoMaterial == null ) ||
+                    ( pSeguimientoDiario.SeGeneroRetrasoMaterial == true && pSeguimientoDiario.NumeroHorasRetrasoMaterial == null ) ||
+
+
+                    string.IsNullOrEmpty( pSeguimientoDiario.DisponibilidadEquipoCodigo ) ||
+                    string.IsNullOrEmpty( pSeguimientoDiario.DisponibilidadEquipoObservaciones ) ||
+                    ( listaBajaDisponibilidadEquipo.Where( r => r == pSeguimientoDiario.DisponibilidadEquipoCodigo ).Count() > 0  && 
+                        pSeguimientoDiario.CausaIndisponibilidadEquipoCodigo == null ) ||
+                    ( listaBajaDisponibilidadEquipo.Where( r => r == pSeguimientoDiario.DisponibilidadEquipoCodigo ).Count() > 0  && 
+                        pSeguimientoDiario.SeGeneroRetrasoEquipo == null ) ||
+                    ( pSeguimientoDiario.SeGeneroRetrasoEquipo == true && pSeguimientoDiario.NumeroHorasRetrasoEquipo == null ) ||
+
+                    string.IsNullOrEmpty( pSeguimientoDiario.ProductividadCodigo ) ||
+                    string.IsNullOrEmpty( pSeguimientoDiario.ProductividadObservaciones ) ||
+                    ( pSeguimientoDiario.ProductividadCodigo == "3" && pSeguimientoDiario.CausaIndisponibilidadProductividadCodigo == null ) ||
+                    ( pSeguimientoDiario.ProductividadCodigo == "3" && pSeguimientoDiario.SeGeneroRetrasoProductividad== null ) ||
+                    ( pSeguimientoDiario.SeGeneroRetrasoProductividad == true && pSeguimientoDiario.NumeroHorasRetrasoProductividad == null )
+
+               )
+            {
+                completo = false;
+            }
+
+            return completo;
         }
 
         public async Task<Respuesta> CreateEditDailyFollowUp( SeguimientoDiario pSeguimientoDiario )
@@ -60,6 +110,7 @@ namespace asivamosffie.services
                         pSeguimientoDiario.FechaCreacion = DateTime.Now;
                         pSeguimientoDiario.Eliminado = false;
                         pSeguimientoDiario.SeguimientoSemanalId = _context.SeguimientoSemanal.FirstOrDefault().SeguimientoSemanalId;
+                        pSeguimientoDiario.RegistroCompleto = VerificarRegistroCompleto( pSeguimientoDiario );
 
                         _context.SeguimientoDiario.Add( pSeguimientoDiario );
                     }
@@ -93,6 +144,8 @@ namespace asivamosffie.services
                         seguimientoDiario.CausaIndisponibilidadProductividadCodigo = pSeguimientoDiario.CausaIndisponibilidadProductividadCodigo;
                         seguimientoDiario.SeGeneroRetrasoProductividad = pSeguimientoDiario.SeGeneroRetrasoProductividad;
                         seguimientoDiario.NumeroHorasRetrasoProductividad = pSeguimientoDiario.NumeroHorasRetrasoProductividad;
+
+                        seguimientoDiario.RegistroCompleto = VerificarRegistroCompleto( seguimientoDiario );
 
                     }
 
@@ -153,13 +206,13 @@ namespace asivamosffie.services
             List<string> listaFechas = new List<string>();
             List<DateTime> listaFechasTotal = new List<DateTime>();
             
-            ContratacionProyecto contratacion = _context.ContratacionProyecto
+            ContratacionProyecto contratacion = await _context.ContratacionProyecto
                                                                 .Where( r => r.ContratacionProyectoId == pId )
                                                                 .Include( r => r.Proyecto )
                                                                 .Include( r => r.Contratacion )
                                                                     .ThenInclude( r => r.Contrato )     
                                                                 .Include( r => r.SeguimientoDiario )
-                                                                .FirstOrDefault();
+                                                                .FirstOrDefaultAsync();
 
             DateTime fechaInicial = contratacion.Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.Value;
             DateTime fechaFin = fechaInicial.AddMonths( contratacion.Proyecto.PlazoMesesObra.Value );
@@ -172,13 +225,49 @@ namespace asivamosffie.services
             }
 
             listaFechasTotal.ForEach( f => {
-                if ( contratacion.SeguimientoDiario.Where( s => s.FechaSeguimiento == f ).Count() == 0 ){
+                if ( contratacion.SeguimientoDiario.Where( s => s.FechaSeguimiento == f && s.Eliminado != true ).Count() == 0 ){
                     listaFechas.Add( f.ToShortDateString() );
                 }
             });
 
             return listaFechas;
         } 
+
+        public async Task<Respuesta> DeleteDailyFollowUp( int pId, string pUsuario )
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Seguimiento_Diario, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario.Find( pId );
+
+                seguimientoDiario.UsuarioModificacion = pUsuario;
+                seguimientoDiario.FechaModificacion = DateTime.Now;
+                seguimientoDiario.Eliminado = true;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.EliminacionExitosa, idAccion, pUsuario, "ELIMINAR SEGUIMIENTO DIARIO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                };
+            }
+        }
 
     }
 }
