@@ -20,7 +20,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion(int id = 0);
 
-         Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId);
+         Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId = 0);
 
         Task<ControversiaContractual> GetControversiaContractualById(int pControversiaContractualId);
 
