@@ -14,5 +14,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditDailyFollowUp( SeguimientoDiario pSeguimientoDiario );
         Task<SeguimientoDiario> GetDailyFollowUpById( int pId );
         Task<List<SeguimientoDiario>> GetDailyFollowUpByContratacionProyectoId( int pId );
+        Task<List<string>> GetDatesAvailableByContratacioProyectoId( int pId );
     }
 }

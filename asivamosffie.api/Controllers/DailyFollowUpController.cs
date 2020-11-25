@@ -61,6 +61,14 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetDatesAvailableByContratacioProyectoId")]
+        public async Task<List<string>> GetDatesAvailableByContratacioProyectoId([FromQuery] int pId )
+        {
+            var result = await _dailyFollowUp.GetDatesAvailableByContratacioProyectoId( pId );
+            return result;
+        }
+
+        [HttpGet]
         [Route("GetDailyFollowUpByContratacionProyectoId")]
         public async Task<List<SeguimientoDiario>> GetDailyFollowUpByContratacionProyectoId([FromQuery] int pId)
         {

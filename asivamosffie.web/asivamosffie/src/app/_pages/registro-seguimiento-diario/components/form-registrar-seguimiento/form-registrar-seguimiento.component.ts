@@ -122,6 +122,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
         this.commonServcie.listaCausaBajaDisponibilidadMaterial(),
         this.commonServcie.listaCausaBajaDisponibilidadEquipo(),
         this.commonServcie.listaCausaBajaDisponibilidadProductividad(), 
+        this.dailyFollowUpService.getDatesAvailableByContratacioProyectoId( this.proyecto.contratacionProyectoId )
 
       ).subscribe( respuesta => {
         this.materialArray = respuesta[0];
@@ -130,6 +131,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
         this.causaBajaDisponibilidadMaterial = respuesta[3];
         this.causaBajaDisponibilidadEquipo = respuesta[4];
         this.causaBajaDisponibilidadProductividad = respuesta[5];
+        this.diasPermitidos = respuesta[6];
 
       });
 
@@ -178,16 +180,13 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
       });
   }
 
-  diasPermitidos = {
-    "2020-12-12T08:00:00": true,
-    "2020-12-11T08:00:00": true
-  }
+  diasPermitidos = [];
 
   filtroCalendario = (d: Date | null): boolean => {
     const day = (d || new Date()).getDay();
     // Bloquea sabado y domingos
-    console.log( d.toISOString() , this.addressForm.value.fechaSeguimiento)
-    return day !== 0 && day !== 6;
+    //console.log( d.toLocaleString(), d.toLocaleDateString())
+    return ( this.diasPermitidos.includes( d.toLocaleDateString()) && day !== 0 && day !== 6 ); // day !== 0 && day !== 6;
   }
 
   validateNumberKeypress(event: KeyboardEvent) {

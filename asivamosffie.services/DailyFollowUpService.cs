@@ -146,6 +146,38 @@ namespace asivamosffie.services
             });
 
             return listaSeguimientos;
+        }
+
+        public async Task<List<string>> GetDatesAvailableByContratacioProyectoId( int pId )
+        {
+            List<string> listaFechas = new List<string>();
+            List<DateTime> listaFechasTotal = new List<DateTime>();
+            
+            ContratacionProyecto contratacion = _context.ContratacionProyecto
+                                                                .Where( r => r.ContratacionProyectoId == pId )
+                                                                .Include( r => r.Proyecto )
+                                                                .Include( r => r.Contratacion )
+                                                                    .ThenInclude( r => r.Contrato )     
+                                                                .Include( r => r.SeguimientoDiario )
+                                                                .FirstOrDefault();
+
+            DateTime fechaInicial = contratacion.Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.Value;
+            DateTime fechaFin = fechaInicial.AddMonths( contratacion.Proyecto.PlazoMesesObra.Value );
+            fechaFin = fechaFin.AddDays( contratacion.Proyecto.PlazoDiasObra.Value );
+
+            while( fechaFin >= fechaInicial ){
+                listaFechasTotal.Add( fechaInicial );
+                fechaInicial = fechaInicial.AddDays(1);
+                
+            }
+
+            listaFechasTotal.ForEach( f => {
+                if ( contratacion.SeguimientoDiario.Where( s => s.FechaSeguimiento == f ).Count() == 0 ){
+                    listaFechas.Add( f.ToShortDateString() );
+                }
+            });
+
+            return listaFechas;
         } 
 
     }

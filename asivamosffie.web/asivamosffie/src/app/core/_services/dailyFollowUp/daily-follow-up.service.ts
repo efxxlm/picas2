@@ -30,5 +30,9 @@ export class FollowUpDailyService {
     return this.http.get<SeguimientoDiario[]>( `${ this.url }/getDailyFollowUpByContratacionProyectoId?pId=${ id }`);
   };
   
+  getDatesAvailableByContratacioProyectoId( id ){
+    return this.http.get<string[]>( `${ this.url }/getDatesAvailableByContratacioProyectoId?pId=${ id }`);
+    
+  } 
 
 }
