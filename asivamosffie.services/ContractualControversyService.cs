@@ -1080,6 +1080,90 @@ namespace asivamosffie.services
         }
 
 
+        public async Task<Respuesta> InsertEditControversiaMotivo(ControversiaMotivo controversiaMotivo)
+        {
+            Respuesta _response = new Respuesta();
+
+            int idAccionCrearControversiaMotivo = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Controversia_Motivo, (int)EnumeratorTipoDominio.Acciones);
+
+            //GUARDAR
+            //PolizaObservacion - FechaRevision
+            //    EstadoRevisionCodigo - PolizaObservacion
+            string strCrearEditar, strUsuario;
+            try
+            {
+                if (controversiaMotivo != null)
+                {
+                    if (controversiaMotivo.ControversiaMotivoId == 0)
+                    {
+                        //Auditoria
+                        strCrearEditar = "REGISTRAR CONTROVERSIA MOTIVO";
+                        controversiaMotivo.FechaCreacion = DateTime.Now;
+                        strUsuario = controversiaMotivo.UsuarioCreacion;
+                        _context.ControversiaMotivo.Add(controversiaMotivo);
+                        //await _context.SaveChangesAsync();
+                        _context.SaveChanges();
+
+                    }
+                    else
+                    {
+                        strCrearEditar = "EDIT CONTROVERSIA MOTIVO";
+                        ControversiaMotivo controversiaMotivoBD = null;
+                        controversiaMotivoBD = await _context.ControversiaMotivo.Where(d => d.ControversiaMotivoId == controversiaMotivo.ControversiaMotivoId).FirstOrDefaultAsync();
+                        
+                        controversiaMotivoBD.FechaModificacion = DateTime.Now;
+                        strUsuario = controversiaMotivo.UsuarioModificacion;
+
+                        controversiaMotivoBD.MotivoSolicitudCodigo = controversiaMotivo.MotivoSolicitudCodigo;
+                        
+                        _context.ControversiaMotivo.Update(controversiaMotivoBD);
+
+                        //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
+                    }
+                    //contratoPoliza.FechaCreacion = DateTime.Now;
+                    //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
+
+
+                    //_context.Add(contratoPoliza);
+
+                    //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+
+
+                    return
+                        new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                            Message =
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales,
+                            ConstantMessagesContractualControversy.OperacionExitosa,
+                            //contratoPoliza
+                            idAccionCrearControversiaMotivo
+                            ,
+                            strUsuario, strCrearEditar
+                            //contratoPoliza.UsuarioCreacion, "REGISTRAR POLIZA GARANTIA"
+                            )
+                        };
+
+                    //return _response = new Respuesta { IsSuccessful = true,
+                    //    IsValidation = false, Data = cuentaBancaria,
+                    //    Code = ConstantMessagesBankAccount.OperacionExitosa };
+                }
+                else
+                {
+                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContractualControversy.RecursoNoEncontrado };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesContractualControversy.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
+            }
+
+        }
+
         public async Task<List<GrillaActuacionSeguimiento>> ListGrillaActuacionSeguimiento()
         {
             //await AprobarContratoByIdContrato(1);

@@ -147,7 +147,8 @@
         public const string Cambiar_estado_Controversia_Actuacion = "136";
         public const string  Cambiar_estado_Controversia_Contractual = "137";
         public const string  Notificacion_Controversia_Contractual= "140";
-        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";        	
+        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";
+        public const string  Crear_Editar_Controversia_Motivo= "153";        	
 
         //4.2.2 Gestionar procesos de Defensa Judicial
         public const string  Crear_Editar_Ficha_Estudio= "145";
