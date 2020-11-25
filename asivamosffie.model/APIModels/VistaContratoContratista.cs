@@ -12,8 +12,9 @@ namespace asivamosffie.model.APIModels
         public string PlazoFormat { get; set; }
         public string FechaInicioContrato { get; set; }
         public string FechaFinContrato { get; set; }
-
-   
-
+        public string TipoDocumentoContratista { get; set; }
+        public string TipoIntervencion { get; set; }
+        public string TipoIntervencionCodigo { get; set; }
+        public string NumeroIdentificacion { get; set; }
     }
 }

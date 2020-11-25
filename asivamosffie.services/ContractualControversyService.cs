@@ -715,7 +715,7 @@ namespace asivamosffie.services
         }        
 
 
-            public async Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId)
+            public async Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId=0)
         {
             VistaContratoContratista vistaContratoContratista = new VistaContratoContratista();
 
@@ -728,59 +728,121 @@ namespace asivamosffie.services
 
             try
             {
-                Contrato contrato = null;
-                contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+                //Contrato contrato = null;
+                List<Contrato> ListContratos = new List<Contrato>();
 
-                Contratacion contratacion  = null;
-                if (contrato != null)
+                if (pContratoId == 0)
                 {
-                    contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+                    ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado == false).Distinct()
+                .ToListAsync();
 
-                    FechaFinContratoTmp = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
-                    FechaInicioContratoTmp = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
-
-                    NumeroContratoTmp = contrato.NumeroContrato;
-                    PlazoFormatTmp = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses).ToString("00") + " meses / " + Convert.ToInt32(contrato.PlazoFase2ConstruccionDias).ToString("00") + " dias ";
-
+                }
+                else
+                {
+                    ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado == false && r.ContratoId == pContratoId).Distinct()
+              .ToListAsync();
 
                 }
 
-                Contratista contratista  = null;
-                if(contratacion != null)
-                {
-                    contratista = _context.Contratista.Where(r => r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
-
-                    if (contratista != null)
+                    foreach (var contrato in ListContratos)
                     {
-                        IdContratistaTmp = contratista.ContratistaId;
-                        NombreContratistaTmp = contratista.Nombre;
+
+                        //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+                        Contratacion contratacion = null;
+
+                        ContratacionProyecto contratacionProyecto = null;
+                        if (contrato != null)
+                        {
+                            contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+                            FechaFinContratoTmp = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
+                            FechaInicioContratoTmp = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
+
+                            NumeroContratoTmp = contrato.NumeroContrato;
+                            PlazoFormatTmp = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses).ToString("00") + " meses / " + Convert.ToInt32(contrato.PlazoFase2ConstruccionDias).ToString("00") + " dias ";
+
+
+
+                        }
+
+                        Dominio TipoDocumentoCodigoContratista;
+                        string TipoDocumentoContratistaTmp = string.Empty;
+                        string NumeroIdentificacionContratistaTmp = string.Empty;
+
+                        string TipoIntervencionCodigoTmp = string.Empty;
+                        string TipoIntervencionNombreTmp = string.Empty;
+
+                        Proyecto proyecto = null;
+
+                        Contratista contratista = null;
+                        if (contratacion != null)
+                        {
+                            contratista = _context.Contratista.Where(r => r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
+                            contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+
+                            if (contratista != null)
+                            {
+                                IdContratistaTmp = contratista.ContratistaId;
+                                NombreContratistaTmp = contratista.Nombre;
+
+                                TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Documento);
+
+                                if (TipoDocumentoCodigoContratista != null)
+                                    TipoDocumentoContratistaTmp = TipoDocumentoCodigoContratista.Nombre;
+
+                                NumeroIdentificacionContratistaTmp = contratista.NumeroIdentificacion;
+
+                            }
+
+                        }
+
+                        if (contratacionProyecto != null)
+                        {
+                            proyecto = _context.Proyecto.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).FirstOrDefault();
+                            if (proyecto != null)
+                            {
+                                TipoIntervencionCodigoTmp = proyecto.tipoIntervencionString;
+                                TipoIntervencionNombreTmp = _context.Dominio.Where(x => x.Codigo == proyecto.TipoIntervencionCodigo
+                                      && x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre;
+                            }
+
+                        }
+
+                        vistaContratoContratista.IdContratista = IdContratistaTmp;
+                        vistaContratoContratista.FechaFinContrato = FechaFinContratoTmp;
+                        vistaContratoContratista.FechaInicioContrato = FechaInicioContratoTmp;
+                        vistaContratoContratista.IdContratista = IdContratistaTmp;
+                        vistaContratoContratista.NombreContratista = NombreContratistaTmp;
+                        vistaContratoContratista.NumeroContrato = NumeroContratoTmp;
+                        vistaContratoContratista.PlazoFormat = PlazoFormatTmp;
+
+                        vistaContratoContratista.TipoDocumentoContratista = TipoDocumentoContratistaTmp;
+                        vistaContratoContratista.NumeroIdentificacion = NumeroIdentificacionContratistaTmp;
+                        vistaContratoContratista.TipoIntervencion = TipoIntervencionNombreTmp;
+                        vistaContratoContratista.TipoIntervencionCodigo = TipoIntervencionCodigoTmp;
+
                     }
-
-                }              
-              
-                vistaContratoContratista.IdContratista = IdContratistaTmp;
-                vistaContratoContratista.FechaFinContrato = FechaFinContratoTmp;
-                vistaContratoContratista.FechaInicioContrato = FechaInicioContratoTmp;
-                vistaContratoContratista.IdContratista = IdContratistaTmp;
-                vistaContratoContratista.NombreContratista = NombreContratistaTmp;
-                vistaContratoContratista.NumeroContrato = NumeroContratoTmp;
-                vistaContratoContratista.PlazoFormat = PlazoFormatTmp;
-
-            }
-            catch (Exception e)
-            {
-                 vistaContratoContratista = new VistaContratoContratista
+                }
+                catch (Exception e)
                 {
-                     IdContratista = 0,
-                     FechaFinContrato = e.InnerException.ToString(),
-                     FechaInicioContrato = e.ToString(), 
-                     NombreContratista = "ERROR",
-                     NumeroContrato = "ERROR",
-                     PlazoFormat= "ERROR",                
-                };
+                     vistaContratoContratista = new VistaContratoContratista
+                    {
+                         IdContratista = 0,
+                         FechaFinContrato = e.InnerException.ToString(),
+                         FechaInicioContrato = e.ToString(), 
+                         NombreContratista = "ERROR",
+                         NumeroContrato = "ERROR",
+                         PlazoFormat= "ERROR",
+
+                         TipoDocumentoContratista = "ERROR",
+                         NumeroIdentificacion = "ERROR",
+                         TipoIntervencion = "ERROR",
+                         TipoIntervencionCodigo = "ERROR",
+            };
                 
-            }
-            return vistaContratoContratista;
+                }
+                return vistaContratoContratista;
         }
 
         public async Task<Respuesta> EnviarCorreoTecnicaJuridicaContratacion(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, int pContratoId,  int pIdTemplate)
