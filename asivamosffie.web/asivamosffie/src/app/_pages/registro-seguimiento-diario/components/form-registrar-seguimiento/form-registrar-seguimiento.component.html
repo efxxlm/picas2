@@ -9,6 +9,7 @@
       Registrar seguimiento diario {{ proyecto.llaveMen }}
     </h1>
     <p class="colorMainColor mt-05em">
+      <span class="mx-1em">{{ proyecto.fechaRegistroProyecto | date: 'dd/MM/yyyy' }}</span>      
       <span class="mx-1em">{{ proyecto.tipoIntervencion }}</span>
       <span class="mx-1em">{{ proyecto.departamento }}</span>
       <span class="mx-1em">{{ proyecto.municipio }}</span>

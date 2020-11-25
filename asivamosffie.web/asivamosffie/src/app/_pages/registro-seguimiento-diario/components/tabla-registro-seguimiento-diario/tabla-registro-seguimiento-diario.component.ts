@@ -17,6 +17,7 @@ import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily
 export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
   displayedColumns: string[] = [
     'llaveMen',
+    'numeroContrato',
     'tipoIntervencion',
     'institucionEducativa',
     'sede',
