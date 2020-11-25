@@ -48,6 +48,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  numeroSolicitud: any;
+  userCreation: any;
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
   ngOnInit(): void {
     if (this.isEditable == true) {
@@ -60,6 +62,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.addressForm.get('conclusionComitePretecnico').setValue(resp.conclusionComitePreTecnico);
         this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
         this.addressForm.get('requeridoComite').setValue(false);
+        this.numeroSolicitud = resp.numeroSolicitudFormat;
+        this.userCreation = resp.usuarioCreacion;
       })
     }
   }
@@ -97,7 +101,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
           "FechaSolicitud": this.addressForm.value.fechaSolicitud,
-          "NumeroSolicitud": "XXXww",
+          "NumeroSolicitud": this.numeroSolicitud,
           "EstadoCodigo": "1",
           "EsCompleto": false,
           "numeroSolicitudFormat": this.addressForm.value.motivosSolicitud.value,
@@ -115,13 +119,13 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
           "FechaSolicitud": this.addressForm.value.fechaSolicitud,
-          "NumeroSolicitud": "XXXww",
+          "NumeroSolicitud": this.numeroSolicitud,
           "EstadoCodigo": "1",
           "EsCompleto": false,
           "numeroSolicitudFormat": this.addressForm.value.motivosSolicitud.value,
           "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
-          "UsuarioCreacion": "us cre",
+          "UsuarioCreacion": this.userCreation,
           "UsuarioModificacion": "us mod",
           "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
           "EsProcede": this.addressForm.value.procedeSolicitud,

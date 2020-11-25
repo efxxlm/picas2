@@ -18,6 +18,7 @@ export class VerDetalleditarCntrvContrcComponent implements OnInit {
   plazoContrato: any;
   fechaInicioContrato: any;
   fechaFinalizacionContrato: any;
+  numeroSolicitud: any;
 
   constructor(private activatedRoute: ActivatedRoute,
     private services: ContractualControversyService) { }
@@ -30,7 +31,8 @@ export class VerDetalleditarCntrvContrcComponent implements OnInit {
   }
 
   loadData(id) {
-    this.services.GetControversiaContractualById(id).subscribe(resp=>{
+    this.services.GetControversiaContractualById(id).subscribe((resp:any)=>{
+      this.numeroSolicitud = resp.numeroSolicitudFormat;
       this.services.GetVistaContratoContratista(resp.contratoId).subscribe(resp_1=>{
         this.numContrato = resp_1.numeroContrato;
         this.nombreContratista = resp_1.nombreContratista;
