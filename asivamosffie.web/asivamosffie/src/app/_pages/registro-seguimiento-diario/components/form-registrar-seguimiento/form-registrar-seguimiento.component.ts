@@ -145,7 +145,6 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   editMode(){
     this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
       .subscribe( seguimiento => {
-        console.log(seguimiento.fechaSeguimiento);
         
         this.addressForm.setValue(
           {
@@ -177,6 +176,9 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
             ProductividadObservaciones:           seguimiento.productividadObservaciones !== undefined ? seguimiento.productividadObservaciones : null,
           }
         )
+        //console.log(typeof new Date( this.addressForm.value.fechaSeguimiento ), );
+        this.diasPermitidos.push( new Date( this.addressForm.value.fechaSeguimiento ).toLocaleDateString() )
+
       });
   }
 
