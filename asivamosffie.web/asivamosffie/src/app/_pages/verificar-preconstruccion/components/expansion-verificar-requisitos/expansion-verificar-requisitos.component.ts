@@ -74,6 +74,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
             for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
 
               let sinDiligenciar = 0;
+              let enProceso = 0;
               let completo = 0;
 
               for ( const perfil of contratacionProyecto.proyecto.contratoPerfil ) {
@@ -114,6 +115,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                     perfil[ 'tieneObservaciones' ] = true;
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo2[ observacionTipo2.length - 1 ].contratoPerfilObservacionId;
+                    enProceso++;
                   }
                   // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionApoyo' ] === true
@@ -128,6 +130,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                   }
                 }
               }
+              console.log( sinDiligenciar, completo, enProceso );
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {
                 // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'sin-diligenciar';
@@ -136,7 +139,8 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
                 // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'completo';
               }
-              if (  ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length )
+              if (  enProceso > 0
+                    || ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length )
                     || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
                 // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'en-proceso';
