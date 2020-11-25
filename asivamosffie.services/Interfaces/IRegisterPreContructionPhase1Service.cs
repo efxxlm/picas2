@@ -17,6 +17,10 @@ namespace asivamosffie.services.Interfaces
     {
         Task EnviarNotificacion(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
 
+        Task EnviarNotificacion317Diashabiles2(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+
+        Task EnviarNotificacionInteventoria(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+
         Task<List<VRegistrarFase1>> GetListContratacion2();
 
         Task<dynamic> GetListContratacion();

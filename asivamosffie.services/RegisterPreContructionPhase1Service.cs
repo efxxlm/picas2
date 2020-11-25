@@ -458,12 +458,17 @@ namespace asivamosffie.services
 
                 //Enviar Correo Botón aprobar inicio
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                {
                     await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
+                }
 
                 //Enviar Correo Botón “Enviar al supervisor”
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                {
                     await EnviarCorreoSupervisor(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-
+                    contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
+                }
 
                 _context.SaveChanges();
 
@@ -575,6 +580,8 @@ namespace asivamosffie.services
         /// <summary>
         /// Notificar Cuando pasen 4 dias despues de la aprobacion de la poliza 
         /// </summary>
+        /// 
+        //3.1.6
         public async Task EnviarNotificacion(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(4, DateTime.Now);
@@ -590,7 +597,7 @@ namespace asivamosffie.services
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarPoliza4diasNoGestion);
             foreach (var contrato in contratos)
             {
-                if (contrato.ContratoPoliza.Count() > 0 && contrato?.ContratoPoliza?.FirstOrDefault().FechaAprobacion > RangoFechaConDiasHabiles)
+                if (contrato.ContratoPoliza.Count() > 0 && contrato?.ContratoPoliza?.FirstOrDefault().FechaAprobacion > RangoFechaConDiasHabiles && contrato.Contratacion.TipoContratacionCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
                     if (!string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.LastOrDefault().NumeroDrp))
                     {
@@ -610,38 +617,73 @@ namespace asivamosffie.services
         }
 
 
-        //public async Task EnviarNotificacion317Diashabiles2(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        //{
-        //    DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
+        //3.1.7 (28)
+        public async Task GetContratosIntrerventoriaSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
 
-        //    List<Contrato> contratos = _context.Contrato
-        //        .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
-        //         .Include(r => r.ContratoPoliza)
-        //         .Include(r => r.Contratacion)
-        //           .ThenInclude(r => r.DisponibilidadPresupuestal)
-        //       .ToList();
+            List<Contrato> contratos = _context.Contrato
+                .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
+                 .Include(r => r.ContratoPoliza)
+                 .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.DisponibilidadPresupuestal)
+               .ToList();
 
-        //    var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
-        //    Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AlertaSupervisor317_2dias);
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AlertaSupervisor317_2dias);
 
-        //    foreach (var contrato in contratos)
-        //    { 
-        //        if (contrato.ContratoPoliza.Count() > 0 && contrato.FechaModificacion > RangoFechaConDiasHabiles)
-        //        {
-        //            string template = TemplateRecoveryPassword.Contenido
-        //                        .Replace("_LinkF_", pDominioFront)
-        //                        .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-        //                        .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
-        //                        .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+            foreach (var contrato in contratos)
+            {
+                if (contrato.ContratoPoliza.Count() > 0 && contrato.FechaAprobacionRequisitosInterventor > RangoFechaConDiasHabiles)
+                {
+                    string template = TemplateRecoveryPassword.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
+                                .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
-        //            foreach (var item in usuarios)
-        //            {
-        //                Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
-        //            }
+                    foreach (var item in usuarios)
+                    {
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
+                    }
 
-        //        }
-        //    } 
-        //}
+                }
+            }
+        }
+        //3.1.7 (30)
+        public async Task EnviarNotificacionInteventoria(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(4, DateTime.Now);
+
+            List<Contrato> contratos = _context.Contrato
+                .Where(r => !string.IsNullOrEmpty(r.EstadoVerificacionCodigo))
+                 .Include(r => r.ContratoPoliza)
+                 .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.DisponibilidadPresupuestal)
+               .ToList();
+
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AlertaPolizas317_4dias);
+            foreach (var contrato in contratos)
+            {
+                if (contrato.ContratoPoliza.Count() > 0 && contrato?.ContratoPoliza?.FirstOrDefault().FechaAprobacion > RangoFechaConDiasHabiles && contrato.Contratacion.TipoContratacionCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                {
+                    if (!string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.LastOrDefault().NumeroDrp))
+                    {
+                        string template = TemplateRecoveryPassword.Contenido
+                                    .Replace("_LinkF_", pDominioFront)
+                                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                    .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
+                                    .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+
+                        foreach (var item in usuarios)
+                        {
+                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+            }
+        }
 
 
     }

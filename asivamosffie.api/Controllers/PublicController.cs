@@ -117,7 +117,35 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-          
+
+        [HttpGet("GetContratosConPolizaVencidaInterventoria")]
+        public async Task GetContratosConPolizaVencidaInterventoria()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.EnviarNotificacionInteventoria(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        [HttpGet("GetContratosIntrerventoriaSinGestionar")]
+        public async Task GetContratosIntrerventoriaSinGestionar()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.GetContratosIntrerventoriaSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
     }
 
 

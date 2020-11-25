@@ -33,7 +33,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         AprobarInicio316 = 36,
         AprobarPoliza4diasNoGestion = 37,
         EnviarSupervisor317 = 38, 
-        AlertaSupervisor317_2dias = 39
+        AlertaSupervisor317_2dias = 39, 
+        AlertaPolizas317_4dias = 40
 
     }
 }
