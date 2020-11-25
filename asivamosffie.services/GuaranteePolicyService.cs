@@ -1291,13 +1291,18 @@ namespace asivamosffie.services
             }
             int cntSi=0;
 
+            
+            //jflorez, las polizas pueden estar en no, lo importante es que tenga almenos una
+            if(lstPolizaGarantia.Count()>0)
+            {
+                return true;
+            }
+            
             //tienen el mismo numero de seguros parametrizados a los disponibles
-            if(lstPolizaGarantia.Count() == TipoGarantiaSeguroContratoPoliza.Count())
+            /*if (lstPolizaGarantia.Count() == TipoGarantiaSeguroContratoPoliza.Count())
             {
                 //validar por elemento que todos esten en si
-                //jflorez, las polizas pueden estar en no, no importante es que este diligenciado todo
-                return true;
-                /*foreach(PolizaGarantia garantiaSeguro in lstPolizaGarantia)
+                foreach(PolizaGarantia garantiaSeguro in lstPolizaGarantia)
                 {
                     if (garantiaSeguro.EsIncluidaPoliza == true)
                         cntSi += 1;
@@ -1310,15 +1315,17 @@ namespace asivamosffie.services
                 else
                 {
                     return false;
-                }*/
-            }
+                }
+            }*/
             return false;
         }
 
         public static bool ValidarRegistroCompletoContratoPoliza(ContratoPoliza contratoPoliza, bool EsContratoDevuelto)
         {
             //si es devuelta no validar: FechaAprobacion, ResponsableAprobacion
-            if (!EsContratoDevuelto)
+            //jflorez, cambio la condición porque no entiendo que tiene que ver el contrato devuelto con el contrato poliza devuelto
+            //if (!EsContratoDevuelto)
+            if (contratoPoliza.EstadoPolizaCodigo== ConstanCodigoEstadoRevision.aprobada)
             {
                 if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
                 {
