@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormRegistrarControvrsAccordComponent implements OnInit {
   @Input() isEditable;
   @Input() contratoId;
+  @Input() idControversia;
 
   addressForm = this.fb.group({
     tipoControversia: [null, Validators.required],
@@ -50,13 +51,16 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
   ngOnInit(): void {
     if (this.isEditable == true) {
-      this.addressForm.get('tipoControversia').setValue('1');
-      this.addressForm.get('fechaSolicitud').setValue('20/08/2020');
-      this.addressForm.get('motivosSolicitud').setValue('1');
-      this.addressForm.get('fechaComitePretecnico').setValue('10/10/2020');
-      this.addressForm.get('conclusionComitePretecnico').setValue('No funciona la obra');
-      this.addressForm.get('procedeSolicitud').setValue(true);
-      this.addressForm.get('requeridoComite').setValue(false);
+      this.services.GetControversiaContractualById(this.idControversia).subscribe((resp:any)=>{
+        const controversiaSelected = this.tipoControversiaArray.find( t => t.value === resp.tipoControversiaCodigo);
+        this.addressForm.get('tipoControversia').setValue(controversiaSelected);
+        this.addressForm.get('fechaSolicitud').setValue(resp.fechaSolicitud);
+        this.addressForm.get('motivosSolicitud').setValue('1');
+        this.addressForm.get('fechaComitePretecnico').setValue(resp.fechaComitePreTecnico);
+        this.addressForm.get('conclusionComitePretecnico').setValue(resp.conclusionComitePreTecnico);
+        this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
+        this.addressForm.get('requeridoComite').setValue(false);
+      })
     }
   }
   // evalua tecla a tecla
@@ -88,21 +92,42 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     console.log(this.addressForm.value);
     alert(this.addressForm.value.tipoControversia.value);
     if (this.addressForm.value.tipoControversia.value == '1') {
-      let formArrayTai = {
-        "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
-        "FechaSolicitud": this.addressForm.value.fechaSolicitud,
-        "NumeroSolicitud": "XXXww",
-        "EstadoCodigo": "1",
-        "EsCompleto": false,
-        "SolicitudId": this.addressForm.value.motivosSolicitud.value,
-        "ContratoId": this.contratoId,
-        "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
-        "UsuarioCreacion": "us cre",
-        "UsuarioModificacion": "us mod",
-        "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
-        "EsProcede": this.addressForm.value.procedeSolicitud,
-        "EsRequiereComite": this.addressForm.value.requeridoComite
-      };
+      let formArrayTai
+      if(this.isEditable == true){
+        formArrayTai = {
+          "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
+          "NumeroSolicitud": "XXXww",
+          "EstadoCodigo": "1",
+          "EsCompleto": false,
+          "numeroSolicitudFormat": this.addressForm.value.motivosSolicitud.value,
+          "ContratoId": this.contratoId,
+          "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
+          "UsuarioCreacion": "us cre",
+          "UsuarioModificacion": "us mod",
+          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
+          "EsProcede": this.addressForm.value.procedeSolicitud,
+          "EsRequiereComite": this.addressForm.value.requeridoComite,
+          "ControversiaContractualId":this.idControversia
+        };
+      }
+      else{
+        formArrayTai = {
+          "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
+          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
+          "NumeroSolicitud": "XXXww",
+          "EstadoCodigo": "1",
+          "EsCompleto": false,
+          "numeroSolicitudFormat": this.addressForm.value.motivosSolicitud.value,
+          "ContratoId": this.contratoId,
+          "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
+          "UsuarioCreacion": "us cre",
+          "UsuarioModificacion": "us mod",
+          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
+          "EsProcede": this.addressForm.value.procedeSolicitud,
+          "EsRequiereComite": this.addressForm.value.requeridoComite
+        };
+      }
       this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0 => {
         if(resp_0.isSuccessful==true){
           this.openDialog('', 'La información ha sido guardada exitosamente.');
