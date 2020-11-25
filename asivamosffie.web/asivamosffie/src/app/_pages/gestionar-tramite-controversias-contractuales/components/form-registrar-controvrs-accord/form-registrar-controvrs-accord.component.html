@@ -97,10 +97,10 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
-                                <mat-select formControlName="motivosSolicitud" required multiple>
+                                <mat-select formControlName="motivosSolicitud" required multiple (selectionChange)="getvalues($event.value)">
                                     <mat-option *ngFor="let motivosSolicitud of motivosSolicitudArray"
                                         [value]="motivosSolicitud">
-                                        {{ motivosSolicitud.name }}
+                                        {{ motivosSolicitud.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

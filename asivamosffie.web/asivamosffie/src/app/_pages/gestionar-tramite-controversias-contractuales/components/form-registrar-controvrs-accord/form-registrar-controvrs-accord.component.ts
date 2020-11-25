@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 @Component({
   selector: 'app-form-registrar-controvrs-accord',
   templateUrl: './form-registrar-controvrs-accord.component.html',
@@ -29,14 +29,14 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   });
   tipoControversiaArray = [
     { name: 'Terminación anticipada por incumplimiento (TAI)', value: '1' },
-    { name: 'Terminación anticipada por imposibilidad de ejecución (TAIE)', value: '2' },
-    { name: 'Arreglo Directo (AD)', value: '3' },
-    { name: 'Otras controversias contractuales (OCC)', value: '4' },
+    { name: 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratista', value: '2' },
+    { name: 'Arreglo Directo (AD) a solicitud del contratista', value: '3' },
+    { name: 'Otras controversias contractuales (OCC) a solicitud del contratista', value: '4' },
+    { name: 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratante', value: '5' },
+    { name: 'Arreglo Directo (AD) a solicitud del contratante', value: '6' },
+    { name: 'Otras controversias contractuales (OCC) a solicitud del contratante', value: '7' },
   ];
-  motivosSolicitudArray = [
-    { name: 'Incuplimiento de contratista de obra', value: '1' },
-    { name: 'Incuplimiento', value: '2' }
-  ];
+  motivosSolicitudArray: Dominio[] = [];
   editorStyle = {
     height: '50px'
   };
@@ -50,8 +50,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   };
   numeroSolicitud: any;
   userCreation: any;
-  constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
+  constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
   ngOnInit(): void {
+    this.loadMotivosList();
     if (this.isEditable == true) {
       this.services.GetControversiaContractualById(this.idControversia).subscribe((resp:any)=>{
         const controversiaSelected = this.tipoControversiaArray.find( t => t.value === resp.tipoControversiaCodigo);
@@ -67,7 +68,12 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       })
     }
   }
-  getvalues(values:any[]) {
+  loadMotivosList(){
+    this.common.listaMotivosSolicitudControversiaContractual().subscribe(data=>{
+      this.motivosSolicitudArray = data;
+    });
+  }
+  getvalues(values:Dominio[]) {
     const buenManejo = values.find(value => value.codigo == "1");
     const garantiaObra = values.find(value => value.codigo == "2");
     const pCumplimiento = values.find(value => value.codigo == "3");
