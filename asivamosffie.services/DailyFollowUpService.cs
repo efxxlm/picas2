@@ -59,6 +59,7 @@ namespace asivamosffie.services
                         CreateEdit = "CREAR SEGUIMIENTO DIARIO";
                         pSeguimientoDiario.FechaCreacion = DateTime.Now;
                         pSeguimientoDiario.Eliminado = false;
+                        pSeguimientoDiario.SeguimientoSemanalId = _context.SeguimientoSemanal.FirstOrDefault().SeguimientoSemanalId;
 
                         _context.SeguimientoDiario.Add( pSeguimientoDiario );
                     }
