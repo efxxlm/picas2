@@ -43,7 +43,7 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule),
 
       },
-      //verificar ruta duplicada
+      // verificar ruta duplicada
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
@@ -177,6 +177,11 @@ const routes: Routes = [
         path: 'verificarSeguimientoDiario',
         loadChildren: () => import('./_pages/verificar-seguimiento-diario/verificar-seguimiento-diario.module')
         .then(m => m.VerificarSeguimientoDiarioModule),
+      },
+      {
+        path: 'aprobarSeguimientoDiario',
+        loadChildren: () => import('./_pages/aprobar-seguimiento-diario/aprobar-seguimiento-diario.module')
+        .then(m => m.AprobarSeguimientoDiarioModule),
       }
     ]
 
@@ -196,7 +201,7 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es'},
-    AuthGuard,CanDeactivateGuard
+    AuthGuard, CanDeactivateGuard
   ]
 })
 export class AppRoutingModule { }
