@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
@@ -13,7 +13,7 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   @Input() isEditable;
   @Input() idControversia;
-
+  @Output() estadoSemaforo1 = new EventEmitter<string>();
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
@@ -22,6 +22,16 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
   ngOnInit(): void {
     if(this.isEditable==true){
       this.addressForm.get('urlSoporte').setValue('http://www.prueba1444.com');
+    }
+    this.loadSemaforo();
+  }
+
+  loadSemaforo(){
+    if(this.addressForm.get('urlSoporte')!=null){
+      this.estadoSemaforo1.emit('completo');
+    }
+    else{
+      this.estadoSemaforo1.emit('sin-diligenciar');
     }
   }
 

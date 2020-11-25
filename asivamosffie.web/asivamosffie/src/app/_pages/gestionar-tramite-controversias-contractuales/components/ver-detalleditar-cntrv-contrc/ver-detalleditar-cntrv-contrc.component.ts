@@ -19,6 +19,8 @@ export class VerDetalleditarCntrvContrcComponent implements OnInit {
   fechaInicioContrato: any;
   fechaFinalizacionContrato: any;
   numeroSolicitud: any;
+  estadoAcordeon: string;
+  estadoAcordeon1: string;  
 
   constructor(private activatedRoute: ActivatedRoute,
     private services: ContractualControversyService) { }
