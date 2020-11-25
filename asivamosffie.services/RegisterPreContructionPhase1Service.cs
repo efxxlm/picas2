@@ -459,7 +459,7 @@ namespace asivamosffie.services
 
                 //Enviar Correo aprobar inicio
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados)
-                    EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
 
                 _context.SaveChanges();
