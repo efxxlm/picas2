@@ -67,6 +67,14 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       })
     }
   }
+  getvalues(values:any[]) {
+    const buenManejo = values.find(value => value.codigo == "1");
+    const garantiaObra = values.find(value => value.codigo == "2");
+    const pCumplimiento = values.find(value => value.codigo == "3");
+    const polizasYSeguros = values.find(value => value.codigo == "4");
+
+
+  }
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

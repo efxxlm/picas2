@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -11,11 +12,12 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   @Input() isEditable;
+  @Input() idControversia;
 
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
     if(this.isEditable==true){
@@ -32,6 +34,14 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    this.services.ActualizarRutaSoporteControversiaContractual(this.idControversia,this.addressForm.value.urlSoporte).subscribe(resp=>{
+      if(resp.isSuccessful==true){
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
+  
+      }
+      else{
+        this.openDialog('', resp.message);
+      }
+    });
   }
 }
