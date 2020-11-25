@@ -973,6 +973,7 @@ namespace asivamosffie.services
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     string strEstadoCodigoControversia = "sin definir";
+                    string strEstadoControversia = "sin definir";
                     string strTipoControversiaCodigo = "sin definir";
                     string strTipoControversia = "sin definir";
 
@@ -989,7 +990,14 @@ namespace asivamosffie.services
                             strTipoControversia = TipoControversiaCodigo.Codigo;
 
                         }
-                            
+
+                        EstadoCodigoControversia = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoCodigo, (int)EnumeratorTipoDominio.Estado_controversia);
+                        if (EstadoCodigoControversia != null)
+                        {
+                            strEstadoControversia = EstadoCodigoControversia.Nombre;
+                            strEstadoCodigoControversia = EstadoCodigoControversia.Codigo;
+
+                        }
 
                         //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         //if (EstadoSolicitudCodigoContratoPoliza != null)
@@ -1011,7 +1019,8 @@ namespace asivamosffie.services
                          TipoControversiaCodigo= strTipoControversiaCodigo,
                          ContratoId = contrato.ContratoId,
                         NumeroContrato = contrato.NumeroContrato,
-                        EstadoControversia = "PENDIENTE",                        
+                        EstadoControversia =strEstadoControversia,
+                        EstadoControversiaCodigo = strEstadoCodigoControversia,
                         RegistroCompletoNombre = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
 
                     };
@@ -1034,7 +1043,8 @@ namespace asivamosffie.services
                         TipoControversiaCodigo = "ERROR",
                         NumeroContrato = "ERROR",
                         EstadoControversia = "ERROR",
-                        RegistroCompletoNombre = "ERROR",
+                        RegistroCompletoNombre = "ERROR",                        
+                        EstadoControversiaCodigo = "ERROR",
                         ContratoId = 0,                                                                      
 
                     };

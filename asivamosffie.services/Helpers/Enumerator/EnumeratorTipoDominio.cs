@@ -140,6 +140,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_controversia_contractual_TAI = 90,
 
+        Estado_controversia= 89,
+
         Estado_avance_reclamacion = 91,
  
           
