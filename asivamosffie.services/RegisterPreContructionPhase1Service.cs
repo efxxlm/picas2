@@ -457,13 +457,15 @@ namespace asivamosffie.services
                     contratoMod.EstaDevuelto = true;
 
 
-                //Enviar Correo aprobar inicio
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
+
+                
+                //Enviar Correo Botón aprobar inicio
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                     await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
 
-                //Enviar Correo aprobar inicio
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados)
+                //Enviar Correo Botón “Enviar al supervisor”
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                     await EnviarCorreoSupervisor(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
 
