@@ -92,7 +92,7 @@ export interface GetListGrillaControversiaActuacion{
 }
 
 export interface GetControversiaContractualById{
-
+  contratoId: number;
 }
 
 export interface GetControversiaActuacionById{

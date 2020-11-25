@@ -58,7 +58,7 @@
                     </button>
                     -->
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='En proceso de registro'"
-                    (click)=this.verDetalleEditarTramiteButton(element.id);>
+                    (click)=this.verDetalleEditarTramiteButton(element.controversiaContractualId);>
                         Ver detalle/Editar 
                     </button>
                     <!-- Cuando empiezo a integrar la tabla correspondiente
@@ -72,11 +72,11 @@
                     </button>
                     -->
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='Aprobada por comité técnico'||element.estadoControversia=='6'"
-                    (click)=this.actualizarTramiteButton(element.id);>
+                    (click)=this.actualizarTramiteButton(element.controversiaContractualId);>
                         Actualizar trámite
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoControversia=='Enviada a comité técnico' || element.estadoControversia=='Aprobada por comité técnico'"
-                    (click)="this.verDetalleButton(element.id)">
+                    (click)="this.verDetalleButton(element.controversiaContractualId)">
                         Ver detalle
                     </button>
                 </td>
