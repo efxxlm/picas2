@@ -25,8 +25,8 @@ namespace asivamosffie.services
             _context = context;
         }
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
-        { 
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync(); 
+        {
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -559,7 +559,8 @@ namespace asivamosffie.services
                 .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.Sin_aprobacion_de_requisitos_tecnicos || r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos || !string.IsNullOrEmpty(r.EstadoVerificacionCodigo))
                  .Include(r => r.ContratoPoliza)
                  .Include(r => r.Contratacion)
-                .ToList();
+                   .ThenInclude(r => r.DisponibilidadPresupuestal)
+               .ToList();
 
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.AprobarPoliza4diasNoGestion);
@@ -567,16 +568,19 @@ namespace asivamosffie.services
             {
                 if (contrato.ContratoPoliza.Count() > 0 && contrato?.ContratoPoliza?.FirstOrDefault().FechaAprobacion > RangoFechaConDiasHabiles)
                 {
-                    string template = TemplateRecoveryPassword.Contenido
-                          .Replace("_LinkF_", pDominioFront)
-                          .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                          .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMMM-yy"))
-                          .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-
-                    foreach (var item in usuarios)
+                    if (!string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.LastOrDefault().NumeroDrp))
                     {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
-                    }
+                        string template = TemplateRecoveryPassword.Contenido
+                                    .Replace("_LinkF_", pDominioFront)
+                                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                    .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
+                                    .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+
+                        foreach (var item in usuarios)
+                        {
+                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }  
                 }
             }
         }
