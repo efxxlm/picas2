@@ -184,6 +184,7 @@ export interface GetContratoPolizaByIdContratoId {
   responsableAprobacion: any;
   tipoModificacionCodigo:  any;
   tipoSolicitudCodigo: any;
+  usuarioCreacion: any;
   valorAmparo: number;
   vigencia:  any;
   vigenciaAmparo:  any;

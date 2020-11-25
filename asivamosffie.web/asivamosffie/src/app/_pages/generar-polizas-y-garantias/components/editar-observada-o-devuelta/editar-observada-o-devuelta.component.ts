@@ -94,6 +94,13 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
   ultimoEstadoRevision: any;
   ultimaFechaRevision: any;
   realizoPeticion: boolean = false;
+
+  idGarantia1: any;
+  idGarantia2: any;
+  idGarantia3: any;
+  idGarantia4: any;
+  nombreUser: any;
+
   constructor(
     private router: Router,
     private polizaService: PolizaGarantiaService,
@@ -193,6 +200,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       this.addressForm.get('vigenciaPoliza').setValue(data.vigencia);
       this.addressForm.get('vigenciaAmparo').setValue(data.vigenciaAmparo);
       this.addressForm.get('valorAmparo').setValue(data.valorAmparo);
+      this.nombreUser = data.usuarioCreacion;
       for (let i=0; i<this.listaUsuarios.length; i++){
         const responAprob = this.listaUsuarios.find(p => p.usuarioId === parseInt(data.responsableAprobacion));
         this.addressForm.get('responsableAprob').setValue(responAprob);
@@ -239,18 +247,22 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
           switch (polizasListRead[j]) {
             case '1':
               this.obj1 = true;
+              this.idGarantia1 = this.arrayGarantias[j].polizaGarantiaId;
               this.addressForm.get('buenManejoCorrectaInversionAnticipo').setValue(this.arrayGarantias[j].esIncluidaPoliza);
               break;
             case '2':
               this.obj2 = true;
+              this.idGarantia2 = this.arrayGarantias[j].polizaGarantiaId;
               this.addressForm.get('estabilidadYCalidad').setValue(this.arrayGarantias[j].esIncluidaPoliza);
               break;
             case '3':
               this.obj3 = true;
+              this.idGarantia3 = this.arrayGarantias[j].polizaGarantiaId;
               this.addressForm.get('polizaYCoumplimiento').setValue(this.arrayGarantias[j].esIncluidaPoliza);
               break;
             case '4':
               this.obj4 = true;
+              this.idGarantia4 = this.arrayGarantias[j].polizaGarantiaId;
               this.addressForm.get('polizasYSegurosCompleto').setValue(this.arrayGarantias[j].esIncluidaPoliza);
               break;
           }
@@ -367,8 +379,8 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion': nombreAprobado,
       'EstadoPolizaCodigo': statePoliza,
-      'UsuarioCreacion': "usr1",
-      'UsuarioModificacion': "usr1",
+      'UsuarioCreacion': this.nombreUser,
+      'UsuarioModificacion': this.nombreUser,
       'FechaExpedicion': this.addressForm.value.fecha,
       'Vigencia': this.addressForm.value.vigenciaPoliza,
       'VigenciaAmparo': this.addressForm.value.vigenciaAmparo,
@@ -397,6 +409,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       switch (polizasList[i]) {
         case '1':
           garantiaArray = {
+            'polizaGarantiaId':this.idGarantia1,
             'contratoPolizaId': this.idPoliza,
             'TipoGarantiaCodigo': '1',
             'EsIncluidaPoliza': this.addressForm.value.buenManejoCorrectaInversionAnticipo
@@ -406,6 +419,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
           break;
         case '2':
           garantiaArray = {
+            'polizaGarantiaId':this.idGarantia2,
             'contratoPolizaId': this.idPoliza,
             'TipoGarantiaCodigo': '2',
             'EsIncluidaPoliza': this.addressForm.value.estabilidadYCalidad
@@ -415,6 +429,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
           break;
         case '3':
           garantiaArray = {
+            'polizaGarantiaId':this.idGarantia3,
             'contratoPolizaId': this.idPoliza,
             'TipoGarantiaCodigo': '3',
             'EsIncluidaPoliza': this.addressForm.value.polizaYCoumplimiento
@@ -424,6 +439,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
           break;
         case '4':
           garantiaArray = {
+            'polizaGarantiaId':this.idGarantia4,
             'contratoPolizaId': this.idPoliza,
             'TipoGarantiaCodigo': '4',
             'EsIncluidaPoliza': this.addressForm.value.polizasYSegurosCompleto
