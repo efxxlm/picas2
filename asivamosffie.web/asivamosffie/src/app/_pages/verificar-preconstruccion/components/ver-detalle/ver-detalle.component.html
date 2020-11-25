@@ -8,7 +8,7 @@
       <h1 class="title-menu--h1">
           Ver detalle requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
       </h1>
-      <p class="text-primary">
+      <p class="text-primary" style="margin-top: 1em;">
           <span class="mx-2em">
               Fecha de aprobacion de póliza:
               <b>
@@ -24,7 +24,7 @@
       </p>
   </div>
 
-  <mat-accordion *ngFor="let contratoProyecto of contrato.contratacion.contratacionProyecto">
+  <mat-accordion *ngFor="let contratoProyecto of contrato.contratacion.contratacionProyecto" style="margin-top: 2em;">
       <mat-expansion-panel class="expansion-style">
           <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">

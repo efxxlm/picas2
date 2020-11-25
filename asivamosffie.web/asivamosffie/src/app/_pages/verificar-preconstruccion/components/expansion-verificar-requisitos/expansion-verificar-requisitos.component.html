@@ -8,21 +8,15 @@
     <h1 class="title-menu--h1">
       Verificar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
     </h1>
-    <p class="text-primary">
+    <p class="colorMainColor" style="margin-top: 1em;">
       <span class="mx-2em">
-        Fecha de aprobacion de póliza:
-        <b>
-          {{ fechaPoliza | date: 'dd/MM/yyyy' }}
-        </b>
+        <b>Fecha de aprobacion de póliza:</b> {{ fechaPoliza | date: 'dd/MM/yyyy' }}
       </span>
-      <span class="mx-2em">
-        Proyectos asociados:
-        <b>
-          {{ contrato.contratacion.contratacionProyecto.length }}
-        </b>
+      <span style="margin-left: 2em;">
+        <b> Proyectos asociados: </b> {{ contrato.contratacion.contratacionProyecto.length }}
       </span>
     </p>
-    <p class="info-container">
+    <p class="info-container" style="margin-top: 2em;">
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
       <span class="info-text en-proceso">En proceso</span>
       <span class="info-text completo">Completo</span>
@@ -126,7 +120,7 @@
           </div>
           <div class="d-flex align-items-center" *ngIf="perfil['tieneObservaciones'] === true">
             <div class="text-area-quill">
-              <label for="alcanceParticular" class="text-area-quill--label">
+              <label for="alcanceParticular" class="text-area-quill--label size-label colorMainColor">
                 Observaciones a las hojas de vida del contratista de obra
               </label>
               <quill-editor class="quill-editor-style miles" [styles]="editorStyle" [modules]="config"

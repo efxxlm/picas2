@@ -44,10 +44,10 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
     private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) {
     this.declararEstado();
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
-    // if (this.routes.getCurrentNavigation().extras.replaceUrl) {
-    //   this.routes.navigateByUrl('/verificarPreconstruccion');
-    //   return;
-    // }
+    if (this.routes.getCurrentNavigation().extras.replaceUrl) {
+      this.routes.navigateByUrl('/verificarPreconstruccion');
+      return;
+    }
     if (this.routes.getCurrentNavigation().extras.state) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
       this.estadoInterventoria = this.routes.getCurrentNavigation().extras.state.estado;
