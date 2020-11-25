@@ -292,7 +292,7 @@ namespace asivamosffie.services
             }
 
         }
-        public async Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion)
+        public async Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion, AppSettingsService appSettingsService)
         {
             Respuesta _response = new Respuesta();
 
@@ -308,7 +308,7 @@ namespace asivamosffie.services
                 //polizaObservacion.Observacion = Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion);
                 if (polizaObservacion != null)
                 {
-
+                    int id = 0;
                     if (polizaObservacion.PolizaObservacionId == 0)
                     {
                         //Auditoria
@@ -318,7 +318,7 @@ namespace asivamosffie.services
 
                         _context.PolizaObservacion.Add(polizaObservacion);
                         await _context.SaveChangesAsync();
-
+                        id=polizaObservacion.ContratoPolizaId;
                     }
                     else
                     {
@@ -336,16 +336,56 @@ namespace asivamosffie.services
                             _context.PolizaObservacion.Update(polizaObservacionBD);
 
                         }
-
+                        id = polizaObservacionBD.ContratoPolizaId;
                         //_context.CuentaBancaria.Update(cuentaBancariaAntigua);
                     }
-                    //contratoPoliza.FechaCreacion = DateTime.Now;
-                    //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
 
-                    //_context.Add(contratoPoliza);
+                    //    dependiendo del estado debo enviar coprreo
+                    Template TemplateRecoveryPassword = new Template();
+                    if (polizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevision.aprobada)
+                    {
+                        TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjFiduciariaJuridicaGestionPoliza);
+                    }
+                    else
+                    {
+                        TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
+                    }
+                                        
+                    string template = TemplateRecoveryPassword.Contenido;
 
-                    //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+                    //string urlDestino = pDominio;
+                    //asent/img/logo  
+                    var contratopoliza = _context.ContratoPoliza.Where( x=>x.ContratoPolizaId==id).
+                        Include(x=>x.Contrato).FirstOrDefault();
+                    var ListVista = ListVistaContratoGarantiaPoliza(contratopoliza.Contrato.ContratoId).Result.FirstOrDefault();
+                    var fechaFirmaContrato = contratopoliza.Contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contratopoliza.Contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : "";
 
+                    //datos basicos generales, aplican para los 4 mensajes
+                    template = template.Replace("_Tipo_Contrato_", ListVista.TipoContrato);
+                    template = template.Replace("_Numero_Contrato_", ListVista.NumeroContrato);
+                    template = template.Replace("_Fecha_Firma_Contrato_", ListVista.FechaFirmaContrato); 
+                    template = template.Replace("_Nombre_Contratista_", ListVista.NombreContratista);
+                    template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", ListVista.ValorContrato.ToString()));  //fomato miles .
+                    template = template.Replace("_Plazo_", ListVista.PlazoContrato);
+                    template = template.Replace("_LinkF_", appSettingsService.DominioFront);
+
+                    template = template.Replace("_Fecha_Revision_", polizaObservacion.FechaRevision.ToString("dd/MM/yyyy"));
+                    template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == polizaObservacion.EstadoRevisionCodigo).Select(x => x.Nombre).FirstOrDefault());
+                    template = template.Replace("_Observaciones_", Helpers.Helpers.CleanStringInput(polizaObservacion.Observacion));
+                    template = template.Replace("_Nombre_Aseguradora_", contratopoliza.NombreAseguradora);
+                    template = template.Replace("_Numero_Poliza_", contratopoliza.NumeroPoliza);
+
+                    if (polizaObservacion.EstadoRevisionCodigo == ConstanCodigoEstadoRevision.aprobada)
+                    {
+                       //no envio correo porque existe otro evento para ello                    
+                    }
+                    else
+                    {
+                        string destinatario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor && (bool)x.Activo && (bool)x.Usuario.Activo)
+                            .Select(x => x.Usuario.Email).FirstOrDefault();//esto va a cambiar en fase 2
+                        var blEnvioCorreo = Helpers.Helpers.EnviarCorreo(destinatario, "Gestión Poliza", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
+                    }
+                    
 
                     return
                         new Respuesta
@@ -689,7 +729,7 @@ namespace asivamosffie.services
                                 template = template.Replace("_Nombre_Aseguradora_", msjNotificacion.NombreAseguradora);
                                 template = template.Replace("_Numero_Poliza_", msjNotificacion.NumeroPoliza);
                                 template = template.Replace("_Fecha_Revision_", msjNotificacion.FechaRevision);
-                                template = template.Replace("_Estado_Revision_", msjNotificacion.EstadoRevision);
+                                template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == msjNotificacion.EstadoRevision).Select(x => x.Nombre).FirstOrDefault());
                                 template = template.Replace("_Observaciones_", msjNotificacion.Observaciones);
 
                                 template = template.Replace("_Fecha_Aprobacion_Poliza", msjNotificacion.FechaAprobacion);
@@ -960,7 +1000,7 @@ namespace asivamosffie.services
                     template = template.Replace("_Nombre_Aseguradora_", msjNotificacion.NombreAseguradora);
                     template = template.Replace("_Numero_Poliza_", msjNotificacion.NumeroPoliza);
                     template = template.Replace("_Fecha_Revision_", msjNotificacion.FechaRevision);
-                    template = template.Replace("_Estado_Revision_", msjNotificacion.EstadoRevision);
+                    template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == msjNotificacion.EstadoRevision).Select(x => x.Nombre).FirstOrDefault());
                     template = template.Replace("_Observaciones_", msjNotificacion.Observaciones);
 
                     template = template.Replace("_Fecha_Aprobacion_Poliza", msjNotificacion.FechaAprobacion);
@@ -1528,7 +1568,7 @@ namespace asivamosffie.services
                             template = template.Replace("_Nombre_Aseguradora_", msjNotificacion.NombreAseguradora);
                             template = template.Replace("_Numero_Poliza_", msjNotificacion.NumeroPoliza);
                             template = template.Replace("_Fecha_Revision_", msjNotificacion.FechaRevision);
-                            template = template.Replace("_Estado_Revision_", msjNotificacion.EstadoRevision);
+                            template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == msjNotificacion.EstadoRevision).Select(x => x.Nombre).FirstOrDefault()); 
                             template = template.Replace("_Observaciones_", msjNotificacion.Observaciones);
 
                             template = template.Replace("_Fecha_Aprobacion_Poliza", msjNotificacion.FechaAprobacion);
@@ -1745,7 +1785,7 @@ namespace asivamosffie.services
                     template = template.Replace("_Nombre_Aseguradora_", objNotificacionAseguradora.NombreAseguradora);
                     template = template.Replace("_Numero_Poliza_", objNotificacionAseguradora.NumeroPoliza);
                     template = template.Replace("_Fecha_Revision_", objNotificacionAseguradora.FechaRevision);
-                    template = template.Replace("_Estado_Revision_", objNotificacionAseguradora.EstadoRevision);
+                    template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == objNotificacionAseguradora.EstadoRevision).Select(x => x.Nombre).FirstOrDefault());
                     template = template.Replace("_Observaciones_", objNotificacionAseguradora.Observaciones);
 
                     template = template.Replace("_Fecha_Aprobacion_Poliza", objNotificacionAseguradora.FechaAprobacion);

@@ -48,14 +48,10 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
   });
 
   polizasYSegurosArray: Dominio[] = [];
-  estadoArray = [
+  estadoArray = []/*[
     { name: 'Devuelta', value: '1' },
     { name: 'Aprobada', value: '2' }
-  ];
-  aprobadosArray = [
-    { name: 'Andres Montealegre', value: '1' },
-    { name: 'David Benitez', value: '2' }
-  ];
+  ];*/
   minDate: Date;
 
   editorStyle = {
@@ -175,6 +171,9 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     this.common.getUsuariosByPerfil(10).subscribe(resp => {
       this.listaUsuarios = resp;
     });
+    this.common.listaEstadoRevision().subscribe(resp=>{
+      this.estadoArray=resp;
+    })
   }
   addObservacion(){
     this.verFormularioEstadoRevision = true;
@@ -306,7 +305,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       }
     }
     var statePoliza=null;
-    //jflorez/ esto puede o no venir
+    //jflorez/ esto puede o no venir, aagrego if
     if(this.addressForm.value.estadoRevision)
     {
       if (this.addressForm.value.estadoRevision.value == "1") {
@@ -323,8 +322,26 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
     }
     else {
       completo = false;
-      //jflorez, el registro completo no se puede deterimar por la validez del formulario, porque hay campos que dicen 
+      //jflorez, el registro completo no se puede determinar por la validez del formulario, porque hay campos que dicen 
       //ser obligatorios y no lo son
+      console.log("validando completitud");
+      console.log(this.addressForm.value);
+      console.log(this.addressForm.value.nombre);
+      console.log(this.addressForm.value.numeroPoliza);
+      console.log(this.addressForm.value.numeroCertificado);
+      console.log(this.addressForm.value.numeroCertificado);
+      console.log(this.addressForm.value.fecha &&this.addressForm.value.vigenciaPoliza);
+      console.log(this.addressForm.value.vigenciaAmparo);
+      console.log(this.addressForm.value.valorAmparo);
+      console.log(polizasList.length>0 );
+      console.log(this.addressForm.value.cumpleAsegurado);
+      console.log(this.addressForm.value.cumpleBeneficiario);
+      console.log(this.addressForm.value.cumpleAfianzado);
+      console.log(this.addressForm.value.reciboDePago);
+      console.log(this.addressForm.value.condicionesGenerales);
+      console.log(this.addressForm.value.fechaRevision);
+      console.log(this.addressForm.value.estadoRevision);
+
       if(this.addressForm.value.nombre && this.addressForm.value.numeroPoliza && this.addressForm.value.numeroCertificado
         && this.addressForm.value.numeroCertificado && this.addressForm.value.fecha &&this.addressForm.value.vigenciaPoliza 
         && this.addressForm.value.vigenciaAmparo && this.addressForm.value.valorAmparo && polizasList.length>0 
@@ -373,7 +390,7 @@ export class EditarObservadaODevueltaComponent implements OnInit, OnDestroy {
       "contratoPolizaId": this.idPoliza,
       "Observacion": this.addressForm.value.observacionesGenerales,
       "FechaRevision": this.addressForm.value.fechaRevision,
-      "EstadoRevisionCodigo": this.addressForm.value.estadoRevision?this.addressForm.value.estadoRevision.value:null
+      "EstadoRevisionCodigo": this.addressForm.value.estadoRevision?this.addressForm.value.estadoRevision.codigo:null
     }
     let garantiaArray;
     for (let i = 0; i < polizasList.length; i++) {

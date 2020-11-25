@@ -1439,8 +1439,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateDRP(int pId, string pUsuarioModificacion, string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Include(x => x.Contratacion).
-                ThenInclude(x => x.ContratacionProyecto).ThenInclude(x => x.ContratacionProyectoAportante).ThenInclude(x => x.CofinanciacionAportante).
-                ThenInclude(x => x.FuenteFinanciacion).FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
+                ThenInclude(x => x.Contrato).FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDrp != null).Count();
             try
@@ -1469,7 +1468,11 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido;
 
                 template = template.Replace("_LinkF_", urlDestino);
-                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud);
+                template = template.Replace("[NUMEROCONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().NumeroContrato);
+                template = template.Replace("[FECHACONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato!=null?Convert.ToDateTime(DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato).ToString("dd/MM/yyyy"):"");
+                template = template.Replace("[TIPOSOLICITUD]", ConstanStringTipoSolicitudContratacion.contratacion);//esto va a cambiar
+                template = template.Replace("[NUMERODRP]", DisponibilidadCancelar.NumeroDrp);
+                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroDdp);
                 /*busco usuario Juridico*/
                 var usuarioJuridico = _context.UsuarioPerfil.Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica ||
                 x.PerfilId == (int)EnumeratorPerfil.Financiera || x.PerfilId == (int)EnumeratorPerfil.Tecnica)

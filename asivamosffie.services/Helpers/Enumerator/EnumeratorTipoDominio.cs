@@ -116,6 +116,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Del_Acta_Contrato = 60,
 
+        Estado_Revision_Poliza = 61,
+
         Estado_Proyecto = 63,
 
         PlaceHolderDDP = 66,
