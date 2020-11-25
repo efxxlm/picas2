@@ -30,15 +30,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     resumenJustificacionSolicitud: [null, Validators.required]
   });
   tipoControversiaArrayDom: Dominio[] = [];
-  tipoControversiaArray = [
-    { name: 'Terminación anticipada por incumplimiento (TAI)', value: '1' },
-    { name: 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratista', value: '2' },
-    { name: 'Arreglo Directo (AD) a solicitud del contratista', value: '3' },
-    { name: 'Otras controversias contractuales (OCC) a solicitud del contratista', value: '4' },
-    { name: 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratante', value: '5' },
-    { name: 'Arreglo Directo (AD) a solicitud del contratante', value: '6' },
-    { name: 'Otras controversias contractuales (OCC) a solicitud del contratante', value: '7' },
-  ];
   motivosSolicitudArray: Dominio[] = [];
   editorStyle = {
     height: '50px'
@@ -59,7 +50,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     this.loadMotivosList();
     if (this.isEditable == true) {
       this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
-        const controversiaSelected = this.tipoControversiaArray.find(t => t.value === resp.tipoControversiaCodigo);
+        const controversiaSelected = this.tipoControversiaArrayDom.find(t => t.codigo === resp.tipoControversiaCodigo);
         this.addressForm.get('tipoControversia').setValue(controversiaSelected);
         this.addressForm.get('fechaSolicitud').setValue(resp.fechaSolicitud);
         //this.addressForm.get('motivosSolicitud').setValue('1');
@@ -84,18 +75,22 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     });
   }
   loadSemaforos() {
+    this.estadoSemaforo.emit('sin-diligenciar');
+    /*
+    PEDIR AYUDA A CARLOS ESTE CASO
     if (this.addressForm.get('tipoControversia') == null && this.addressForm.get('fechaSolicitud') == null && this.addressForm.get('motivosSolicitud') == null
       && this.addressForm.get('fechaComitePretecnico') == null && this.addressForm.get('conclusionComitePretecnico') == null && this.addressForm.get('procedeSolicitud') == null) {
       this.estadoSemaforo.emit('sin-diligenciar');
     }
-    if (this.addressForm.get('tipoControversia') == null || this.addressForm.get('fechaSolicitud') == null || this.addressForm.get('motivosSolicitud') == null
-      || this.addressForm.get('fechaComitePretecnico') == null || this.addressForm.get('conclusionComitePretecnico') == null || this.addressForm.get('procedeSolicitud') == null) {
+    if (this.addressForm.get('tipoControversia') || this.addressForm.get('fechaSolicitud') || this.addressForm.get('motivosSolicitud')
+      || this.addressForm.get('fechaComitePretecnico') || this.addressForm.get('conclusionComitePretecnico') || this.addressForm.get('procedeSolicitud')) {
       this.estadoSemaforo.emit('en-proceso');
     }
     if (this.addressForm.get('tipoControversia') != null && this.addressForm.get('fechaSolicitud') != null && this.addressForm.get('motivosSolicitud') != null
       && this.addressForm.get('fechaComitePretecnico') != null && this.addressForm.get('conclusionComitePretecnico') != null && this.addressForm.get('procedeSolicitud') != null) {
       this.estadoSemaforo.emit('completo');
     }
+    */
   }
   getvalues(values: Dominio[]) {
     const buenManejo = values.find(value => value.codigo == "1");

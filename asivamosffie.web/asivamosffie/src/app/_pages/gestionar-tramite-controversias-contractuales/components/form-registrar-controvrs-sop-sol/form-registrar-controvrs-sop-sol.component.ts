@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -17,7 +18,7 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
-  constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
+  constructor( private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
     if(this.isEditable==true){
@@ -47,7 +48,16 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
     this.services.ActualizarRutaSoporteControversiaContractual(this.idControversia,this.addressForm.value.urlSoporte).subscribe(resp=>{
       if(resp.isSuccessful==true){
         this.openDialog('', 'La información ha sido guardada exitosamente.');
-  
+        if (this.isEditable == true) {
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia])
+          );
+        }
+        else {
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarControversiaContractual'])
+          );
+        }
       }
       else{
         this.openDialog('', resp.message);
