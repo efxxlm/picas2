@@ -267,7 +267,9 @@ export class CommonService {
   listaGarantiasPolizas(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
-
+  listaMotivosSolicitudControversiaContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=99`);
+  }
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];
