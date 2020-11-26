@@ -98,7 +98,7 @@
                 {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }}
               </p>
               <section *ngFor="let obs of perfil.contratoPerfilObservacion">
-                <div *ngIf="obs.tipoObservacionCodigo === '2'">
+                <div *ngIf="obs.tipoObservacionCodigo === '1'">
                   <b style="margin-bottom: .5em;">Oservaciones:</b> <div [innerHTML]="innerObservacion( obs.observacion )"></div>
                 </div>
               </section>
@@ -113,20 +113,18 @@
             </mat-card-content>
           </mat-card>
 
-          <section *ngFor="let obs of perfil.contratoPerfilObservacion">
-            <mat-card class="shipping-card var-main-gris" *ngIf="obs.tipoObservacionCodigo === '2' && perfil['tieneObservacionApoyo'] === true">
+          <section *ngIf="perfil[ 'observacionApoyo' ] !== undefined && perfil['tieneObservacionApoyo'] === true">
+            <mat-card class="shipping-card var-main-gris">
               <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
                   Verificación del apoyo a la supervisión
                 </mat-card-title>
               </mat-card-header>
               <mat-card-content>
-                <b>
-                  {{ obs.fechaCreacion | date: 'dd/MM/yyyy' }}
+                <b style="margin-left: 2em;">
+                  {{ perfil[ 'observacionApoyo' ].fechaCreacion | date: 'dd/MM/yyyy' }}
                 </b>
-                <p>
-                  {{ textoLimpioObservacion( obs.observacion ) }}
-                </p>
+                <div [innerHTML]="perfil[ 'observacionApoyo' ].observacion" style="margin-left: 2em;"></div>
               </mat-card-content>
             </mat-card>
           </section>
