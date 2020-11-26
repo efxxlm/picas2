@@ -210,8 +210,11 @@ export class FormPerfilComponent implements OnInit {
           this.perfilesCompletos++;
           semaforo = 'completo';
         }
-        if (  !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0
-              || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
+        if (  !perfil.registroCompleto
+              && (  perfil.contratoPerfilId !== undefined
+                    || perfil.cantidadHvRequeridas > 0
+                    || perfil.cantidadHvRecibidas > 0
+                    || perfil.cantidadHvAprobadas > 0) ) {
           semaforo = 'en-proceso';
           this.perfilesEnProceso++;
         }
