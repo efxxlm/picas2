@@ -988,7 +988,7 @@ namespace asivamosffie.services
             //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo      
                         
             //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
-            List<ControversiaContractual> ListControversiaContractual = await _context.ControversiaContractual.Distinct().ToListAsync();
+            List<ControversiaContractual> ListControversiaContractual = await _context.ControversiaContractual.Where(r=>r.Eliminado==false).Distinct().ToListAsync();
 
             foreach (var controversia in ListControversiaContractual)
             {
