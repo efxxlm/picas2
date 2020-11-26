@@ -51,7 +51,36 @@ namespace asivamosffie.services
             return listaInfoProyectos;                                   
         }
 
-        private bool VerificarRegistroCompleto( SeguimientoDiario pSeguimientoDiario ){
+        public async Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp()
+        {
+            List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
+                                                                        .Where( r => r.FechaActaInicioFase2 <= DateTime.Now  )
+                                                                        .ToListAsync();
+            
+            listaInfoProyectos.ForEach( p => {
+                SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario
+                                                                .Where( s => s.ContratacionProyectoId == p.ContratacionProyectoId && 
+                                                                        s.Eliminado != true &&
+                                                                        s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.SeguimientoDiarioEnviado )
+                                                                .OrderByDescending( r => r.FechaSeguimiento ).FirstOrDefault();
+
+                if ( seguimientoDiario != null ){
+                    p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
+                    p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
+                    p.RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue?seguimientoDiario.RegistroCompleto.Value:false;
+                    p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
+                }
+            });
+
+            // filtro los que tiene registros
+            listaInfoProyectos = listaInfoProyectos.Where( p => p.SeguimientoDiarioId > 0 ).ToList();
+
+            return listaInfoProyectos;                                   
+        }
+
+
+        private bool VerificarRegistroCompleto( SeguimientoDiario pSeguimientoDiario )
+        {
             bool completo = true;
 
             List<string> listaBajaDisponibilidadMaterial = new List<string> {{ "2" }, {"3" }};
@@ -104,6 +133,8 @@ namespace asivamosffie.services
             string CreateEdit = "";
             try
             {
+                    pSeguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro;
+
                     if (pSeguimientoDiario.SeguimientoDiarioId == 0)
                     {
                         CreateEdit = "CREAR SEGUIMIENTO DIARIO";
@@ -173,7 +204,173 @@ namespace asivamosffie.services
                       Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.Error, idAccion, pSeguimientoDiario.UsuarioCreacion, ex.InnerException.ToString())
                   };
             }
+        }
 
+        private async Task<Respuesta> CreateEditObservacionSeguimientoDiario(SeguimientoDiarioObservaciones pObservacion, string pUsuarioCreacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Create_Edit_Observacion_Seguimiento_Diario, (int)EnumeratorTipoDominio.Acciones);
+
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string strCrearEditar = "";
+                if (pObservacion.SeguimientoDiarioObservacionesId > 0)
+                {
+                    strCrearEditar = "EDITAR OBSERVACION SEGUIMIENTO DIARIO";
+                    SeguimientoDiarioObservaciones seguimientoDiarioObservaciones= _context.SeguimientoDiarioObservaciones.Find(pObservacion.SeguimientoDiarioObservacionesId);
+
+                    seguimientoDiarioObservaciones.FechaModificacion = DateTime.Now;
+                    seguimientoDiarioObservaciones.UsuarioModificacion = pUsuarioCreacion;
+
+                    seguimientoDiarioObservaciones.Observaciones = pObservacion.Observaciones;
+
+                }
+                else
+                {
+                    strCrearEditar = "CREAR OBSERVACION SEGUIMIENTO DIARIO";
+
+                    SeguimientoDiarioObservaciones seguimientoDiarioObservaciones = new SeguimientoDiarioObservaciones
+                    {
+                        FechaCreacion = DateTime.Now,
+                        UsuarioCreacion = pUsuarioCreacion,
+
+                        SeguimientoDiarioId = pObservacion.SeguimientoDiarioId,
+                        Observaciones = pObservacion.Observaciones,
+                        EsSupervision = pObservacion.EsSupervision,
+                    };
+
+                    _context.SeguimientoDiarioObservaciones.Add( seguimientoDiarioObservaciones );
+                }
+
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.Error, idAccion, pObservacion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        private SeguimientoDiarioObservaciones getObservacion(SeguimientoDiario pSeguimientoDiario, bool pEsSupervicion)
+        {
+            SeguimientoDiarioObservaciones seguimientoDiarioObservaciones = pSeguimientoDiario.SeguimientoDiarioObservaciones.ToList()
+                        .Where(r => r.EsSupervision == pEsSupervicion &&
+                                    r.Archivado != true
+                              )
+                        .FirstOrDefault();
+
+            return seguimientoDiarioObservaciones;
+        }
+
+        private async Task<bool> ValidarRegistroCompletoVerificacion(int id, bool pEsSupervicion)
+        {
+            bool esCompleto = true;
+
+            SeguimientoDiario sd = await _context.SeguimientoDiario.Where(cc => cc.SeguimientoDiarioId == id)
+                                                                .FirstOrDefaultAsync();
+
+
+            sd.ObservacionApoyo = getObservacion(sd,  pEsSupervicion);
+
+            if (sd.TieneObservacionApoyo == null ||
+                 (sd.TieneObservacionApoyo == true && string.IsNullOrEmpty(sd.ObservacionApoyo != null ? sd.ObservacionApoyo.Observaciones : null))
+               )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
+        }
+
+        public async Task<Respuesta> CreateEditObservacionApoyo( SeguimientoDiario pSeguimientoDiario, bool esSupervisor )
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Create_Edit_Observacion_Seguimiento_Diario, (int)EnumeratorTipoDominio.Acciones);
+            string CreateEdit = "";
+            
+            try
+            {
+                CreateEdit = "EDIT OBSERVACION SEGUIMIENTO DIARIO";
+                int idObservacion = 0;
+
+                if (pSeguimientoDiario.SeguimientoDiarioObservaciones.Count() > 0)
+                    idObservacion = pSeguimientoDiario.SeguimientoDiarioObservaciones.FirstOrDefault().SeguimientoDiarioObservacionesId;
+
+                SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario.Find(pSeguimientoDiario.SeguimientoDiarioId);
+
+                seguimientoDiario.UsuarioModificacion = pSeguimientoDiario.UsuarioCreacion;
+                seguimientoDiario.FechaModificacion = DateTime.Now;
+
+                if (esSupervisor)
+                {
+
+                    seguimientoDiario.TieneObservacionSupervisor = pSeguimientoDiario.TieneObservacionSupervisor;
+
+                    if (seguimientoDiario.TieneObservacionSupervisor.Value)
+                    {
+
+                        await CreateEditObservacionSeguimientoDiario(pSeguimientoDiario.SeguimientoDiarioObservaciones.FirstOrDefault(), pSeguimientoDiario.UsuarioCreacion);
+                    }
+                    else
+                    {
+                        SeguimientoDiarioObservaciones observacionDelete = _context.SeguimientoDiarioObservaciones.Find(idObservacion);
+
+                        if (observacionDelete != null)
+                            observacionDelete.Eliminado = true;
+                    }
+
+                }
+                else
+                {
+                    seguimientoDiario.TieneObservacionApoyo = pSeguimientoDiario.TieneObservacionApoyo;
+
+                    if (seguimientoDiario.TieneObservacionApoyo.Value)
+                    {
+                        await CreateEditObservacionSeguimientoDiario(pSeguimientoDiario.SeguimientoDiarioObservaciones.FirstOrDefault(), pSeguimientoDiario.UsuarioCreacion);
+                    }
+                    else
+                    {
+                        SeguimientoDiarioObservaciones observacionDelete = _context.SeguimientoDiarioObservaciones.Find(idObservacion);
+
+                        if (observacionDelete != null)
+                            observacionDelete.Eliminado = true;
+                    }
+                }
+
+                seguimientoDiario.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(seguimientoDiario.SeguimientoDiarioId, esSupervisor);
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.OperacionExitosa, idAccion, pSeguimientoDiario.UsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Verificar_seguimiento_diario, GeneralCodes.Error, idAccion, pSeguimientoDiario.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
         }
 
         public async Task<SeguimientoDiario> GetDailyFollowUpById( int pId )
@@ -301,7 +498,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = GeneralCodes.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.EliminacionExitosa, idAccion, pUsuario, "ELIMINAR SEGUIMIENTO DIARIO")
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "ELIMINAR SEGUIMIENTO DIARIO")
                 };
             }
             catch (Exception ex)

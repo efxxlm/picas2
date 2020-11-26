@@ -38,4 +38,8 @@ export class VerDetalleRegistroComponent implements OnInit {
     });
   }
 
+  volver(){
+    this.router.navigate(['/registroSeguimientoDiario/verBitacora', this.seguimiento.contratacionProyectoId]);
+  }
+
 }

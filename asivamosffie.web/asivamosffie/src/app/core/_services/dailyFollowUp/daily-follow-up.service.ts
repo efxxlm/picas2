@@ -41,6 +41,9 @@ export class FollowUpDailyService {
   sendToSupervisionSupport( id ){
     return this.http.put<Respuesta>( `${ this.url }/sendToSupervisionSupport?pId=${ id }`, null);
   }
-  
+
+  gridVerifyDailyFollowUp(){
+    return this.http.get<any[]>( `${ this.url }/gridVerifyDailyFollowUp`);
+  };
 
 }

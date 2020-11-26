@@ -4,6 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 
 export interface VerificacionDiaria {
   id: string;
@@ -37,31 +38,41 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
 export class TablaVerificarSeguimientoDiarioComponent implements AfterViewInit {
 
   displayedColumns: string[] = [
-    'fechaReporte',
-    'llaveMEN',
-    'tipoInterventor',
+    'fechaUltimoSeguimientoDiario',
+    'llaveMen',
+    'tipoIntervencion',
     'institucionEducativa',
     'sede',
     'alertas',
-    'estadoVerificacion',
-    'id'
+    'estadoCodigo',
+    'seguimientoDiarioId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+    private followUpDailyService: FollowUpDailyService
+  ) 
+  { }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+
+    this.followUpDailyService.gridVerifyDailyFollowUp()
+      .subscribe( respuesta => {
+        this.dataSource = new MatTableDataSource(respuesta);
+
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          return (page + 1).toString() + ' de ' + length.toString();
+        };
+        this.paginator._intl.previousPageLabel = 'Anterior';
+      });
+    
   }
 
   applyFilter(event: Event) {

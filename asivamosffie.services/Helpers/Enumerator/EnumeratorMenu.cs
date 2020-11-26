@@ -35,6 +35,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Registrar_contratos_modificaciones_contractuales = 46,
 
         Registrar_seguimiento_diario = 53,
+        Verificar_seguimiento_diario = 54,
 
     }
 

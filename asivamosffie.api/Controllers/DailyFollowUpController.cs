@@ -34,6 +34,14 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("gridVerifyDailyFollowUp")]
+        public async Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp()
+        {
+            var result = await _dailyFollowUp.gridVerifyDailyFollowUp();
+            return result;
+        }
+
         [HttpPost]
         [Route("CreateEditDailyFollowUp")]
         public async Task<IActionResult> CreateEditDailyFollowUp([FromBody] SeguimientoDiario pSeguimientoDiario)
