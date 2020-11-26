@@ -22,7 +22,9 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.isEditable==true){
-      this.addressForm.get('urlSoporte').setValue('http://www.prueba1444.com');
+      this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
+        this.addressForm.get('urlSoporte').setValue(resp.rutaSoporte);
+      });
     }
     this.loadSemaforo();
   }
