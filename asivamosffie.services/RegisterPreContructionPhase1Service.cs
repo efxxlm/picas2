@@ -472,10 +472,11 @@ namespace asivamosffie.services
 
 
                 //Enviar Correo Botón aprobar inicio 3.1.8
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
                 { 
                     contratoMod.FechaAprobacionRequsitosSupervisor = DateTime.Now;
                 }
+
 
 
                 //Enviar Correo Botón “Enviar al supervisor”
