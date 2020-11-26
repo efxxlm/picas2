@@ -15,10 +15,10 @@ namespace asivamosffie.model.Models
         public int SeguimientoSemanalId { get; set; }
         public bool? SeEjecutoGestionAmbiental { get; set; }
         public bool? RegistroCompletoGestionAmbiental { get; set; }
-        public bool? Eliminado { get; set; }
-        public string UsuarioCreacion { get; set; }
-        public DateTime? FechaCreacion { get; set; }
-        public string UsuarioModificacion { get; set; }
+        public bool? SeProtegieronMaterialesConstruccion { get; set; }
+        public bool? TieneObservacionMateriales { get; set; }
+        public string ObservacionMateriales { get; set; }
+        public string UrlFoto { get; set; }
         public DateTime? FechaModificacion { get; set; }
 
         public virtual SeguimientoSemanal SeguimientoSemanal { get; set; }

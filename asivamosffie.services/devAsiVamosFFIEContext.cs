@@ -138,6 +138,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3643,17 +3644,11 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalGestionObra>(entity =>
             {
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                entity.Property(e => e.ObservacionMateriales).HasMaxLength(500);
 
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                entity.Property(e => e.UrlFoto).HasMaxLength(255);
 
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalGestionObra)
@@ -4756,6 +4751,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.CantidadProyectosRequisitosAprobados).HasColumnName("cantidadProyectosRequisitosAprobados");
 
                 entity.Property(e => e.EstadoCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoNombre)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
