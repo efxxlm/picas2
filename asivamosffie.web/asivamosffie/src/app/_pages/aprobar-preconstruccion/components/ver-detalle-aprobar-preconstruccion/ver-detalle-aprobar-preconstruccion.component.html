@@ -87,7 +87,7 @@
                           </p>
                           <section *ngFor="let obs of perfil.contratoPerfilObservacion">
                             <div *ngIf="obs.tipoObservacionCodigo === '1'">
-                              <b style="margin-bottom: .5em;">Oservaciones:</b> <div [innerHTML]="innerObservacion( obs.observacion )"></div>
+                              <b style="margin-bottom: .5em;">Observaciones:</b> <div [innerHTML]="innerObservacion( obs.observacion )"></div>
                             </div>
                           </section>
                           <p *ngFor="let radicadoFfie of perfil.contratoPerfilNumeroRadicado; index as j">
