@@ -32,7 +32,7 @@ namespace asivamosffie.services
         public async Task<dynamic> GetListContratacion()
         {
             List<dynamic> listaContrats = new List<dynamic>();
-
+            List<Dominio> Parametricas = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).ToList();
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
@@ -89,7 +89,8 @@ namespace asivamosffie.services
                         CantidadProyectosConPerfilesPendientes,
                         EstadoCodigo = c.EstadoVerificacionCodigo,
                         EstaDevuelto,
-                        RegistroCompleto
+                        RegistroCompleto,
+                        EstadoNombre = Parametricas.Where(r=> r.Codigo == c.EstadoVerificacionCodigo).FirstOrDefault().Nombre
                     });
                 }
             }

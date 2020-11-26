@@ -504,11 +504,7 @@ namespace asivamosffie.services
                     };
             }
         }
-
-
-
-
-
+         
         public async Task<Respuesta> AprobarInicio(int pContratoId, string UsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Inicio_Contrato, (int)EnumeratorTipoDominio.Acciones);
@@ -587,8 +583,7 @@ namespace asivamosffie.services
             }
             return blEnvioCorreo;
         }
-
-
+         
         /// <summary>
         /// Notificar Cuando pasen 4 dias despues de la aprobacion de la poliza 
         /// </summary>
@@ -627,8 +622,7 @@ namespace asivamosffie.services
                 }
             }
         }
-
-
+         
         //3.1.7 (28)
         public async Task GetContratosIntrerventoriaSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
