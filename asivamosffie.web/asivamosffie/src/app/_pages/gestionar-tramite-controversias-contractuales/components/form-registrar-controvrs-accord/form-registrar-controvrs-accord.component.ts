@@ -49,6 +49,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   idMotivo2: number;
   idMotivo3: number;
   arrayMotivosLoaded: any[] = [];
+  estaCompleto:boolean;
 
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
   ngOnInit(): void {
@@ -117,9 +118,11 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
         && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
         this.estadoSemaforo.emit('completo');
+        this.estaCompleto=true;
       }
       else {
         this.estadoSemaforo.emit('en-proceso');
+        this.estaCompleto=false;
       }
     }
   }
@@ -170,11 +173,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       }
       let formArrayTai;
       let motivosArrayCollected;
+      let estadoControversia;
       if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
           "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": this.numeroSolicitud,
+          "SolicitudId": 0,
+          "NumeroRadicadoSac": 0,
+          "RutaSoporte": "",
           "EstadoCodigo": "1",
           "EsCompleto": false,
           "ContratoId": this.contratoId,
