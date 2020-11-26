@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
+import { Router } from '@angular/router';
 
 export interface VerificacionDiaria {
   id: string;
@@ -53,7 +54,8 @@ export class TablaVerificarSeguimientoDiarioComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private followUpDailyService: FollowUpDailyService
+    private followUpDailyService: FollowUpDailyService,
+    private router: Router,
   ) 
   { }
 
@@ -79,9 +81,13 @@ export class TablaVerificarSeguimientoDiarioComponent implements AfterViewInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
+    if (this.dataSource.paginator) { 
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  Verificar( proyecto ){
+    this.router.navigate( [ '/verificarSeguimientoDiario/verificarSeguimiento', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
   }
 
 }

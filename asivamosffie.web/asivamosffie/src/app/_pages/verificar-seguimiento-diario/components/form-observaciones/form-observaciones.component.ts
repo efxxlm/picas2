@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -28,10 +30,16 @@ export class FormObservacionesComponent {
     ]
   };
 
+  proyecto: any;
+
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    
+  ) 
+  { 
+    
+  }
 
   textoLimpio(texto: string) {
     if (texto) {
