@@ -57,7 +57,7 @@
                         Cerrar trámite
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoControversiaCodigo=='4'">
+                        *ngIf="element.estadoControversiaCodigo=='4'" (click)="this.sendTramiteToComite(element.controversiaContractualId)">
                         Enviar trámite a comité técnico
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
