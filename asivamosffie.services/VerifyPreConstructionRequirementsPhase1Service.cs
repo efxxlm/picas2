@@ -130,7 +130,7 @@ namespace asivamosffie.services
                         bool EstaDevuelto = false;
                         if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
                             EstaDevuelto = true;
-                        foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto)
+                        foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto )
                         {
                             if (ContratacionProyecto.Proyecto.ContratoPerfil.Count() == 0)
                                 CantidadProyectosConPerfilesPendientes++;
