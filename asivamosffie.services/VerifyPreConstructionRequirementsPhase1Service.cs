@@ -37,11 +37,7 @@ namespace asivamosffie.services
                       "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                       "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
                       "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-                      "AND ctr.TipoSolicitudCodigo = 1" +     //Solo contratos Tipo Interventoria
-                      "OR  c.EstadoVerificacionCodigo = 3" +  //Sin aprobación de requisitos técnicos
-                      "OR  c.EstadoVerificacionCodigo = 4" +  //En proceso de verificación de requisitos técnicos
-                      "OR  c.EstadoVerificacionCodigo = 5" +  //Con requisitos técnicos verificados
-                      "OR  c.EstadoVerificacionCodigo = 6")   //Enviado al supervisor
+                      "AND ctr.TipoSolicitudCodigo = 1")
                       .Include(r => r.ContratoPoliza)
                       .Include(r => r.Contratacion)
                          .ThenInclude(r => r.ContratacionProyecto)
@@ -57,25 +53,22 @@ namespace asivamosffie.services
                     bool RegistroCompleto = false;
                     bool EstaDevuelto = false;
                     if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
-                        EstaDevuelto = true;
+                        EstaDevuelto = false;
                     foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                     {
                         bool RegistroCompletoObservaciones = true;
-                        foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado))
-                        {
-                            if (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).Count() == 0)
-                                RegistroCompletoObservaciones = false;
-                            else if ((ContratoPerfil.TieneObservacionApoyo == null)
-                                || (ContratoPerfil.TieneObservacionApoyo.HasValue
-                                && (bool)ContratoPerfil.TieneObservacionApoyo
-                                && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
-                                && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
-                                RegistroCompletoObservaciones = false;
+                        foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
+                        {  
+                            if (ContratoPerfil.TieneObservacionApoyo.HasValue && !(bool)ContratoPerfil.TieneObservacionApoyo ||
+                                (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor))
+                                RegistroCompletoObservaciones = false; 
                         }
-                        if (RegistroCompletoObservaciones)
+
+                        if (!RegistroCompletoObservaciones)
                             CantidadProyectosConPerfilesAprobados++;
                         else
                             CantidadProyectosConPerfilesPendientes++;
+
                     }
 
                     if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
@@ -117,12 +110,7 @@ namespace asivamosffie.services
                      "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                      "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
                      "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-                     "AND ctr.TipoSolicitudCodigo = 2" +     //Solo contratos Tipo Interventoria
-                     "OR  c.EstadoVerificacionCodigo = 1" +  //Sin aprobación de requisitos técnicos
-                     "OR  c.EstadoVerificacionCodigo = 4" +  //En proceso de verificación de requisitos técnicos
-                     "OR  c.EstadoVerificacionCodigo = 5" +  //Con requisitos técnicos verificados
-                     "OR  c.EstadoVerificacionCodigo = 6" +  //Enviado al supervisor
-                     "OR  c.EstadoVerificacionCodigo = 11")  //Enviado al apoyo
+                     "AND ctr.TipoSolicitudCodigo = 2" )  //Enviado al apoyo
                      .Include(r => r.ContratoPoliza)
                      .Include(r => r.Contratacion)
                         .ThenInclude(r => r.ContratacionProyecto)
@@ -473,10 +461,7 @@ namespace asivamosffie.services
                 {
                     if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor) == 0)
                         RegistroCompleto = false;
-                    else if ((ContratoPerfil.TieneObservacionApoyo == null)
-                        || (ContratoPerfil.TieneObservacionApoyo.HasValue
-                        && (bool)ContratoPerfil.TieneObservacionApoyo
-                        && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
+                    else if ((ContratoPerfil.TieneObservacionApoyo == null)|| (ContratoPerfil.TieneObservacionApoyo.HasValue  && (bool)ContratoPerfil.TieneObservacionApoyo && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
                         && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
                         RegistroCompleto = false;
                 }
