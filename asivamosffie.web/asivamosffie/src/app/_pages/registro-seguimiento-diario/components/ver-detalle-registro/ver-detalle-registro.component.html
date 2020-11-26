@@ -4,20 +4,21 @@
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
     </a>
   </div>
-  <h1 class="title-menu--h1">
-    Ver detalle registro de seguimiento diario LJ776554
+  <h1 class="title-menu--h1" *ngIf="proyecto">
+    Ver detalle registro de seguimiento diario {{ proyecto.llaveMen }}
   </h1>
   <p class="colorMainColor mt-05em">
-    <span class="mx-1em">05/07/2020</span>
-    <span class="mx-1em">Remodelación</span>
-    <span class="mx-1em">Atlántico</span>
-    <span class="mx-1em">Malambo</span>
-    <span class="mx-1em">I.E. María Villa Campo</span>
-    <span class="mx-1em">Única sede</span>
+    <span class="mx-1em" *ngIf="seguimiento" >{{ seguimiento.fechaSeguimiento | date: 'dd/MM/yyyy' }}</span>
+    <span class="mx-1em">{{ proyecto.tipoIntervencion }}</span>
+    <span class="mx-1em">{{ proyecto.departamento }}</span>
+    <span class="mx-1em">{{ proyecto.municipio }}</span>
+    <span class="mx-1em">{{ proyecto.institucionEducativa }}</span>
+    <!-- <span class="mx-1em">Inmaculada</span> -->
+    <span class="mx-1em">{{ proyecto.sede }}</span>
   </p>
 
 </section>
-<section class="container">
+<section class="container" *ngIf="seguimiento">
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
       <mat-card-title class="header-card--text sub-text mt-0">
@@ -27,12 +28,12 @@
         <strong>
           Disponibilidad de personal:
         </strong>
-        Suficiente
+        {{ seguimiento.disponibilidadPersonal }}
       </p>
       <p>
         <strong>Observaciones:</strong>
         <span class="d-block">
-          La cantidad de personal es suficiente para ejecutar esta fase del proyecto
+          {{ seguimiento.disponibilidadPersonalObservaciones }}
         </span>
       </p>
 
@@ -43,12 +44,12 @@
         <strong>
           Disponibilidad de material:
         </strong>
-        Óptimo
+        {{ seguimiento.disponibilidadMaterialCodigo }}
       </p>
       <p>
         <strong>Observaciones:</strong>
         <span class="d-block">
-          La cantidad y estado del material es óptimo.
+          {{ seguimiento.disponibilidadMaterialObservaciones }}
         </span>
       </p>
 
@@ -59,12 +60,12 @@
         <strong>
           Disponibilidad de equipo:
         </strong>
-        Total
+        {{ seguimiento.disponibilidadEquipoCodigo }}
       </p>
       <p>
         <strong>Observaciones:</strong>
         <span class="d-block">
-          El equipo está completo.
+          {{ seguimiento.disponibilidadEquipoObservaciones }}
         </span>
       </p>
 
@@ -75,12 +76,12 @@
         <strong>
           Productividad:
         </strong>
-        Alta
+        {{ seguimiento.productividadCodigo }}
       </p>
       <p>
         <strong>Observaciones:</strong>
         <span class="d-block">
-          La productividad es alta.
+          {{ seguimiento.productividadObservaciones }}
         </span>
       </p>
 

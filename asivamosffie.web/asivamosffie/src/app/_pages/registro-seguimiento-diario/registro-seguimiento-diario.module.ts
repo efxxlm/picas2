@@ -11,6 +11,7 @@ import { TablaRegistroSeguimientoDiarioComponent } from './components/tabla-regi
 import { HomeComponent } from './components/home/home.component';
 import { FormRegistrarSeguimientoComponent } from './components/form-registrar-seguimiento/form-registrar-seguimiento.component';
 import { VerDetalleRegistroComponent } from './components/ver-detalle-registro/ver-detalle-registro.component';
+import { VerBitacoraComponent } from './components/ver-bitacora/ver-bitacora.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { VerDetalleRegistroComponent } from './components/ver-detalle-registro/v
     TablaRegistroSeguimientoDiarioComponent,
     FormRegistrarSeguimientoComponent,
     VerDetalleRegistroComponent,
+    VerBitacoraComponent,
   ],
   imports: [
     CommonModule,

@@ -143,6 +143,7 @@ namespace asivamosffie.api
             services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IDailyFollowUpService, DailyFollowUpService>();
 
         }
 
