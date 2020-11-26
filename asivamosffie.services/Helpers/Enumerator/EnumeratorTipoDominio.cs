@@ -136,7 +136,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Programacion_Inicial = 88,
         
-        Tipo_de_controversia=80,
+        //Tipo_de_controversia=80,
+        Tipo_de_controversia = 100,
 
         Estado_controversia_contractual_TAI = 90,
 
