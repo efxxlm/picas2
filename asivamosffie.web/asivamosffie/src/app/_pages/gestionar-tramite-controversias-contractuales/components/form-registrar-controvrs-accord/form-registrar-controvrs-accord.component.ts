@@ -43,12 +43,20 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  idContrato: any;
   numeroSolicitud: any;
   userCreation: any;
   idMotivo1: number;
   idMotivo2: number;
   idMotivo3: number;
   arrayMotivosLoaded: any[] = [];
+  estaCompleto:boolean;
+
+  fechaSesionString: string;
+  fechaSesion: Date;
+
+  fechaSesionString2: string;
+  fechaSesion2: Date;
 
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
   ngOnInit(): void {
@@ -64,6 +72,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
         this.addressForm.get('requeridoComite').setValue(false);
         this.numeroSolicitud = resp.numeroSolicitudFormat;
+        this.idContrato = resp.contratoId;
         this.userCreation = resp.usuarioCreacion;
         this.services.GetMotivosSolicitudByControversiaId(this.idControversia).subscribe((data: any) => {
           const motivoSolicitudCod = [];
@@ -113,15 +122,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   }
   loadSemaforos() {
     this.estadoSemaforo.emit('sin-diligenciar');
-    if (this.isEditable == true) {
       if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
         && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
         this.estadoSemaforo.emit('completo');
+        this.estaCompleto=true;
       }
       else {
         this.estadoSemaforo.emit('en-proceso');
+        this.estaCompleto=false;
       }
-    }
   }
 
 
@@ -160,7 +169,20 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    let fecha1 = Date.parse(this.addressForm.get( 'fechaSolicitud' ).value);
+    this.fechaSesion = new Date(fecha1);
+    this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
+    let fecha2 = Date.parse(this.addressForm.get( 'fechaComitePretecnico' ).value);
+    this.fechaSesion2 = new Date(fecha2);
+    this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
     if (this.addressForm.value.tipoControversia.codigo == '1') {
+      if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+      && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null){
+        this.estaCompleto=true;
+      }
+      else{
+        this.estaCompleto=false;
+      }
       let motivosList;
       if (this.addressForm.value.motivosSolicitud != undefined) {
         motivosList = [this.addressForm.value.motivosSolicitud[0].codigo];
@@ -170,42 +192,60 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       }
       let formArrayTai;
       let motivosArrayCollected;
+      let estadoControversia;
+      if(this.estaCompleto==true&&this.addressForm.value.procedeSolicitud==false){
+        estadoControversia = "2";
+      }
+      else if (this.estaCompleto==false&&this.addressForm.value.procedeSolicitud==true&&this.addressForm.value.requeridoComite==null){
+        estadoControversia = "3";
+      }
+      else if (this.estaCompleto==true&&this.addressForm.value.procedeSolicitud==true&&this.addressForm.value.requeridoComite==true){
+        estadoControversia = "4";
+      }
+      else if(this.estaCompleto==false){
+        estadoControversia = "1";
+      }
       if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
+          "FechaSolicitud": this.fechaSesionString,
           "NumeroSolicitud": this.numeroSolicitud,
-          "EstadoCodigo": "1",
-          "EsCompleto": false,
-          "ContratoId": this.contratoId,
+          "SolicitudId": 0,
+          "NumeroRadicadoSac": 0,
+          "RutaSoporte": "",
+          "EstadoCodigo": estadoControversia,
+          "EsCompleto": this.estaCompleto,
+          "ContratoId": this.idContrato,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           "UsuarioCreacion": "us cre",
           "UsuarioModificacion": "us mod",
-          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
+          "FechaComitePreTecnico": this.fechaSesionString2,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
-          "ControversiaContractualId": parseInt(this.idControversia)
+          "ControversiaContractualId": parseInt(this.idControversia),
+          "FechaCreacion":"2020-11-01"
         };
       }
       else {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
+          "FechaSolicitud": this.fechaSesionString,
           "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
           "RutaSoporte": "",
           "UsuarioCreacion": "",
-          "EstadoCodigo": "1",
-          "EsCompleto": false,
+          "EstadoCodigo": estadoControversia,
+          "EsCompleto": this.estaCompleto,
           "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           "UsuarioModificacion": "us mod",
-          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
+          "FechaComitePreTecnico": this.fechaSesionString2,
           "EsProcede": this.addressForm.value.procedeSolicitud,
-          "EsRequiereComite": this.addressForm.value.requeridoComite
+          "EsRequiereComite": this.addressForm.value.requeridoComite,
+          "FechaCreacion":"2020-11-01"
         };
       }
       this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0 => {

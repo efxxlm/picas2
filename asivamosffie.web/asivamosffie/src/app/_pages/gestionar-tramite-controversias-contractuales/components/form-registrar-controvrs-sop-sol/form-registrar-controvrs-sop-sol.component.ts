@@ -51,14 +51,10 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
       if(resp.isSuccessful==true){
         this.openDialog('', 'La información ha sido guardada exitosamente.');
         if (this.isEditable == true) {
-          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia])
-          );
+          this.router.navigate(['/gestionarTramiteControversiasContractuales']);
         }
         else {
-          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
-            () => this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarControversiaContractual'])
-          );
+          this.router.navigate(['/gestionarTramiteControversiasContractuales']);
         }
       }
       else{

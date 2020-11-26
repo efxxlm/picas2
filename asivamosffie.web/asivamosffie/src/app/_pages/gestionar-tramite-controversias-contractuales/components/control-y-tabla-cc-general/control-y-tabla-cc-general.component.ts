@@ -24,9 +24,9 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   ];
   public dataTable;
   constructor(private router: Router, private services: ContractualControversyService) {
-   }
-   ngOnInit(): void {
-    this.services.GetListGrillaTipoSolicitudControversiaContractual().subscribe(data=>{
+  }
+  ngOnInit(): void {
+    this.services.GetListGrillaTipoSolicitudControversiaContractual().subscribe(data => {
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
@@ -47,17 +47,24 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  verDetalleEditarTramiteButton(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia',id]);
+  verDetalleEditarTramiteButton(id) {
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', id]);
   }
 
-  actualizarTramiteButton(id){
-    localStorage.setItem("controversiaID",id);
+  deleteControversia(id) {
+    this.services.EliminarControversiaContractual(id).subscribe((dataEliminado: any) => {
+      if (dataEliminado.isSuccessful == true) {
+        this.ngOnInit();
+      }
+    });
+  }
+  actualizarTramiteButton(id) {
+    localStorage.setItem("controversiaID", id);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
   }
 
-  verDetalleButton(id){
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleControversia',id]);
+  verDetalleButton(id) {
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleControversia', id]);
   }
 
 }

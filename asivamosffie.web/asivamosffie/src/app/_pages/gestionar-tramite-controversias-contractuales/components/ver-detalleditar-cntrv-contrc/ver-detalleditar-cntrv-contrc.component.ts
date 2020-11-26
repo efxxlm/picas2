@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 
 @Component({
   selector: 'app-ver-detalleditar-cntrv-contrc',
@@ -9,6 +10,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
 })
 export class VerDetalleditarCntrvContrcComponent implements OnInit {
   idControversia: any;
+  idContrato: any;
   numContrato: any;
   nombreContratista: any;
   tipoIdentificacion: string;
@@ -23,7 +25,8 @@ export class VerDetalleditarCntrvContrcComponent implements OnInit {
   estadoAcordeon1: string;  
 
   constructor(private activatedRoute: ActivatedRoute,
-    private services: ContractualControversyService) { }
+    private services: ContractualControversyService,
+    private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
@@ -35,13 +38,15 @@ export class VerDetalleditarCntrvContrcComponent implements OnInit {
   loadData(id) {
     this.services.GetControversiaContractualById(id).subscribe((resp:any)=>{
       this.numeroSolicitud = resp.numeroSolicitudFormat;
-      this.services.GetVistaContratoContratista(resp.contratoId).subscribe(resp_1=>{
+      this.polizaService.GetListVistaContratoGarantiaPoliza(resp.contratoId).subscribe(resp_0=>{
+        this.nombreContratista = resp_0[0].nombreContratista;
+        this.tipoIdentificacion = resp_0[0].tipoDocumento;
+        this.numIdentificacion = resp_0[0].numeroIdentificacion;
+        this.valorContrato = resp_0[0].valorContrato;
+      });
+      this.services.GetVistaContratoContratista(resp.contratoId).subscribe((resp_1:any)=>{
         this.numContrato = resp_1.numeroContrato;
-        this.nombreContratista = resp_1.nombreContratista;
-        this.tipoIdentificacion = 'Pendiente de lectura del servicio';
-        this.numIdentificacion = 'Pendiente de lectura del servicio';
-        this.tipoIntervencion = 'Pendiente de lectura del servicio';
-        this.valorContrato = 'Pendiente de lectura del servicio';
+        this.tipoIntervencion = resp_1.tipoIntervencion;
         this.plazoContrato = resp_1.plazoFormat;
         this.fechaInicioContrato = resp_1.fechaInicioContrato;
         this.fechaFinalizacionContrato = resp_1.fechaFinContrato;
