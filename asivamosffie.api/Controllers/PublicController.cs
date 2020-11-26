@@ -132,7 +132,7 @@ namespace asivamosffie.api.Controllers
         }
 
 
-        [HttpGet("GetContratosIntrerventoriaSinGestionar")]
+        [HttpGet("GetContratosSinGestionarVerificacionRequisitos")]
         public async Task GetContratosIntrerventoriaSinGestionar()
         {
             try
