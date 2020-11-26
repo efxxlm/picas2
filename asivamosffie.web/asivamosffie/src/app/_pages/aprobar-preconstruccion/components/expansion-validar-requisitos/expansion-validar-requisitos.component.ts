@@ -127,7 +127,6 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
                   // tslint:disable-next-line: no-string-literal
                   perfil[ 'observacionApoyo' ] = observacionTipo2[ observacionTipo2.length - 1 ];
                 }
-                console.log( observacionTipo2 );
               }
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {
                 // tslint:disable-next-line: no-string-literal
@@ -165,7 +164,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
   textoLimpio(texto: string) {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
     }
   }
 
