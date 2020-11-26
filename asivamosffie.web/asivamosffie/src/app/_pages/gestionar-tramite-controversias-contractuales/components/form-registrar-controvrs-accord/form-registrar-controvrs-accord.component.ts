@@ -196,7 +196,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
           "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": "",
-          "SolicitudId": 0, "NumeroRadicadoSac": 0,
+          "SolicitudId": 0, 
+          "NumeroRadicadoSac": 0,
           "RutaSoporte": "",
           "UsuarioCreacion": "",
           "EstadoCodigo": "1",
@@ -223,7 +224,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                       'MotivoSolicitudCodigo': '1',
                       "UsuarioCreacion": "",
                       "UsuarioModificacion": "",
-                      "ControversiaMotivoId": 2
+                      "ControversiaMotivoId": this.idMotivo1
                     };
                     this.services.CreateEditarControversiaMotivo(motivosArrayCollected).subscribe(r => {
                     });
@@ -234,7 +235,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                       'MotivoSolicitudCodigo': '2',
                       "UsuarioCreacion": "",
                       "UsuarioModificacion": "",
-                      "ControversiaMotivoId": 2
+                      "ControversiaMotivoId": this.idMotivo2
                     };
                     this.services.CreateEditarControversiaMotivo(motivosArrayCollected).subscribe(r1 => {
                     });
@@ -245,7 +246,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
                       'MotivoSolicitudCodigo': '3',
                       "UsuarioCreacion": "",
                       "UsuarioModificacion": "",
-                      "ControversiaMotivoId": 2
+                      "ControversiaMotivoId": this.idMotivo3
                     };
                     this.services.CreateEditarControversiaMotivo(motivosArrayCollected).subscribe(r2 => {
                     });
