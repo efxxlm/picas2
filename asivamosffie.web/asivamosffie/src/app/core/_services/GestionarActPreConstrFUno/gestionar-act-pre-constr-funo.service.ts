@@ -32,6 +32,14 @@ export class GestionarActPreConstrFUnoService {
     formData.append('file', archivoParaSubir, archivoParaSubir.name);
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa?pDirectorioBase=${pDirectorioBase}&pDirectorioActaContrato=${pDirectorioActaContrato}`, formData);
   }
+  /*
+  De respaldo
+  EditCargarActaSuscritaContrato(pContratoId: number, pFechaFirmaContratista: string, pFechaFirmaActaContratistaInterventoria: string, pFile: File, pUsuarioModificacion: string) {
+    const formData = new FormData();
+    formData.append('pFile', pFile, pFile.name);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditCargarActaSuscritaContrato?pContratoId=${pContratoId}&pFechaFirmaContratista=${pFechaFirmaContratista}&pFechaFirmaActaContratistaInterventoria=${pFechaFirmaActaContratistaInterventoria}&pUsuarioModificacion=${pUsuarioModificacion}`, formData);
+  }
+  */
   CambiarEstadoActa(pContratoId:number,pEstadoContrato:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CambiarEstadoActa?pContratoId=${pContratoId}&pEstadoContrato=${pEstadoContrato}`,pContratoId);
   }
