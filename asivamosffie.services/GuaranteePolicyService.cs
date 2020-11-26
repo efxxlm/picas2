@@ -609,9 +609,10 @@ namespace asivamosffie.services
                     }
 
                     contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza,ContratoEsDevuelto);
-
-                    if (contratoPoliza.RegistroCompleto == true)
+                    //jflorez, no puede validar esto, es un servicio asincronico por lo que puede llegar despues
+                    /*if (contratoPoliza.RegistroCompleto == true)
                         contratoPoliza.RegistroCompleto = await ValidarRegistroCompletoSeguros(contratoPoliza);
+                        */
                     //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
 
                     LimpiarEntradasContratoPoliza(ref contratoPoliza);
@@ -628,7 +629,7 @@ namespace asivamosffie.services
                     //_context.ExecuteStoreCommand("SET IDENTITY_INSERT [dbo].[MyUser] ON");
 
                     //guardar por primera vez EstadoPolizaCodigo DOM 51  2   En revisión de pólizas
-                    contratoPoliza.EstadoPolizaCodigo = ((int)EnumeratorEstadoPoliza.En_revision_de_polizas).ToString();
+                    //contratoPoliza.EstadoPolizaCodigo = ((int)EnumeratorEstadoPoliza.En_revision_de_polizas).ToString();
 
                     _context.ContratoPoliza.Add(contratoPoliza);
                     //await _context.SaveChangesAsync();
