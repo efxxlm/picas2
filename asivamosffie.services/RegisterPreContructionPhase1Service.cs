@@ -466,14 +466,14 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
-                    await EnviarCorreoSupervisor(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
                 }
 
                 //Enviar Correo Botón “Enviar al supervisor”
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
-                    await EnviarCorreoSupervisor(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
                 }
 
@@ -504,6 +504,10 @@ namespace asivamosffie.services
                     };
             }
         }
+
+
+
+
 
         public async Task<Respuesta> AprobarInicio(int pContratoId, string UsuarioModificacion)
         {
@@ -562,7 +566,7 @@ namespace asivamosffie.services
             return blEnvioCorreo;
         }
 
-        private async Task<bool> EnviarCorreoSupervisor(Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        private async Task<bool> EnviarCorreoSupervisor(string pTipoContrato, Contrato contratoMod, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario);
 
@@ -570,6 +574,7 @@ namespace asivamosffie.services
 
             string template = TemplateRecoveryPassword.Contenido
                 .Replace("_LinkF_", pDominioFront)
+                .Replace("[TIPO_CONTRATO]", pTipoContrato)
                 .Replace("[NUMERO_CONTRATO]", contratoMod.NumeroContrato)
                 .Replace("[FECHA_VERIFICACION]", ((DateTime.Now)).ToString("dd-MMMM-yy"))
                 .Replace("[CANTIDAD_PROYECTOS]", contratoMod.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
