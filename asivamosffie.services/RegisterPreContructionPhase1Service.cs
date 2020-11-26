@@ -311,7 +311,7 @@ namespace asivamosffie.services
                 {
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
                    // if (RegistroCompletoContrato)
-                    if (pContrato.ContratoPerfil.Count() > 1 && RegistroCompletoContrato)
+                    if (pContrato.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
                     {
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
                     }
@@ -330,7 +330,7 @@ namespace asivamosffie.services
                 contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                 contratoOld.FechaModificacion = DateTime.Now;
 
-
+                _context.Update(contratoOld);
                 _context.SaveChanges();
                 return
                     new Respuesta
