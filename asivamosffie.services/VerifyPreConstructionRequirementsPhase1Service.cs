@@ -26,7 +26,7 @@ namespace asivamosffie.services
 
         public async Task<List<VRegistrarFase1>> GetListContratacionInterventoria2()
         {
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToListAsync();
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).OrderBy(r=>r.EstadoCodigo).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -463,10 +463,8 @@ namespace asivamosffie.services
 
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
-                    if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor) == 0)
-                        RegistroCompleto = false;
-                    else if ((ContratoPerfil.TieneObservacionApoyo == null)|| (ContratoPerfil.TieneObservacionApoyo.HasValue  && (bool)ContratoPerfil.TieneObservacionApoyo && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
-                        && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
+                    if (ContratoPerfil.TieneObservacionApoyo.HasValue && !(bool)ContratoPerfil.TieneObservacionApoyo ||
+                                (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor))
                         RegistroCompleto = false;
                 }
 
