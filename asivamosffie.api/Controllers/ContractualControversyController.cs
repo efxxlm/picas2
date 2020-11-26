@@ -110,6 +110,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [HttpGet]
+        [Route("GetListGrillaActuacionSeguimiento")]
+        public async Task<ActionResult<List<GrillaActuacionSeguimiento>>> GetListGrillaActuacionSeguimiento()
+        {
+            try
+            {
+                return await _contractualControversy.ListGrillaActuacionSeguimiento();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [HttpGet]
         [Route("GetListGrillaTipoSolicitudControversiaContractual")]
         public async Task<ActionResult<List<GrillaTipoSolicitudControversiaContractual>>> GetListGrillaTipoSolicitudControversiaContractual()
