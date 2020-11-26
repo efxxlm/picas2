@@ -67,7 +67,7 @@ namespace asivamosffie.services
                         EstaDevuelto = true;
                     foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                     { 
-                        bool RegistroCompletoObservaciones = false;
+                        bool RegistroCompletoObservaciones = true;
 
                         foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
                         {
@@ -90,7 +90,7 @@ namespace asivamosffie.services
 
                            
                         }
-                        if (RegistroCompletoObservaciones)
+                        if (!RegistroCompletoObservaciones)
                             CantidadProyectosConPerfilesAprobados++;
                         else
                             CantidadProyectosConPerfilesPendientes++;

@@ -470,6 +470,14 @@ namespace asivamosffie.services
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
 
+
+                //Enviar Correo Botón aprobar inicio 3.1.8
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                { 
+                    contratoMod.FechaAprobacionRequsitosSupervisor = DateTime.Now;
+                }
+
+
                 //Enviar Correo Botón “Enviar al supervisor”
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
