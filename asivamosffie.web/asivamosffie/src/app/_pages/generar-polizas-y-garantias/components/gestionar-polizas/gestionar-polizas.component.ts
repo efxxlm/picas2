@@ -251,6 +251,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     else {
       completo = false;
     }
+    let estadopolizacodigo=this.addressForm.value.estadoRevision.value=='1'?'3':'2';
     const contratoArray = {
       'contratoId': this.idContrato,
       'TipoSolicitudCodigo': "",
@@ -262,7 +263,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
       'Observaciones': "",
       'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion': nombreAprobado,
-      'EstadoPolizaCodigo': "2",
+      'EstadoPolizaCodigo': estadopolizacodigo,
       'UsuarioCreacion': "",
       'UsuarioModificacion': "",
       'FechaExpedicion': this.addressForm.value.fecha,
