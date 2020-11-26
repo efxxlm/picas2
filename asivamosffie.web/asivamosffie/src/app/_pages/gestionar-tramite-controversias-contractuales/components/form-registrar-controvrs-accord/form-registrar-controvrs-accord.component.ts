@@ -48,6 +48,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   idMotivo1: number;
   idMotivo2: number;
   idMotivo3: number;
+  arrayMotivosLoaded: any[] = [];
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
   ngOnInit(): void {
     this.loadtipoControversias();
@@ -57,13 +58,13 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         const controversiaSelected = this.tipoControversiaArrayDom.find(t => t.codigo === resp.tipoControversiaCodigo);
         this.addressForm.get('tipoControversia').setValue(controversiaSelected);
         this.addressForm.get('fechaSolicitud').setValue(resp.fechaSolicitud);
-        //this.addressForm.get('motivosSolicitud').setValue('1');
         this.addressForm.get('fechaComitePretecnico').setValue(resp.fechaComitePreTecnico);
         this.addressForm.get('conclusionComitePretecnico').setValue(resp.conclusionComitePreTecnico);
         this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
         this.addressForm.get('requeridoComite').setValue(false);
         this.numeroSolicitud = resp.numeroSolicitudFormat;
         this.userCreation = resp.usuarioCreacion;
+        this.loadMotivosFromService(this.idControversia);
       });
       this.loadSemaforos();
     }
@@ -96,6 +97,37 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     }
     */
   }
+  loadMotivosFromService(controversiaId) {
+    this.services.GetMotivosSolicitudByControversiaId(controversiaId).subscribe((data: any) => {
+      const motivoSolicitudCod = [];
+      this.arrayMotivosLoaded = data;
+      if (this.arrayMotivosLoaded.length > 0) {
+        const motivosListRead = [this.arrayMotivosLoaded[0].motivoSolicitudCodigo];
+        for (let i = 1; i < this.arrayMotivosLoaded.length; i++) {
+          const Motivoaux = motivosListRead.push(this.arrayMotivosLoaded[i].motivoSolicitudCodigo);
+        }
+        for (let i = 0; i < motivosListRead.length; i++) {
+          const motivoSeleccionado = this.motivosSolicitudArray.filter(t => t.codigo === motivosListRead[i]);
+          if (motivoSeleccionado.length > 0) { motivoSolicitudCod.push(motivoSeleccionado[0]) };
+        }
+        this.addressForm.get('motivosSolicitud').setValue(motivoSolicitudCod);
+        for (let j = 0; j < motivosListRead.length; j++) {
+          switch (motivosListRead[j]) {
+            case '1':
+              this.idMotivo1 = this.arrayMotivosLoaded[j].controversiaMotivoId;
+              break;
+            case '2':
+              this.idMotivo2 = this.arrayMotivosLoaded[j].controversiaMotivoId;
+              break;
+            case '3':
+              this.idMotivo3 = this.arrayMotivosLoaded[j].controversiaMotivoId;
+              break;
+          }
+        }
+      }
+    });
+  }
+
   getvalues(values: Dominio[]) {
     const buenManejo = values.find(value => value.codigo == "1");
     const garantiaObra = values.find(value => value.codigo == "2");
