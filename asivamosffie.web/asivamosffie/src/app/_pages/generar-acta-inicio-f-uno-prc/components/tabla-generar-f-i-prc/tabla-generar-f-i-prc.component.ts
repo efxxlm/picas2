@@ -12,7 +12,7 @@ import { CargarActaSuscritaActaIniFIPreconstruccionComponent } from '../cargar-a
   styleUrls: ['./tabla-generar-f-i-prc.component.scss']
 })
 export class TablaGenerarFIPreconstruccionComponent implements OnInit {
-  displayedColumns: string[] = [ 'fechaAprobacionRequisitosSupervisor', 'numeroContrato', 'estadoActaContrato', 'contratoId'];
+  displayedColumns: string[] = [ 'fechaAprobacionRequisitos', 'numeroContratoObra', 'estadoActa', 'contratoId'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -31,7 +31,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     this.cargarTablaDeDatos();
   }
   cargarTablaDeDatos(){
-    this.service.GetListContrato().subscribe(data=>{
+    this.service.GetListGrillaActaInicio(2).subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
@@ -42,52 +42,90 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     })
 
   }
-  generarActaFUno(id){
+  generarActaFDos(id,tipoContrato){
+    if(tipoContrato=='Interventoria'){
+      localStorage.setItem("origin", "interventoria");
+    }
+    else{
+      localStorage.setItem("origin","obra");
+    }
+    localStorage.setItem("editable","false");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActa',id]);
   }
-  verDetalleEditarActaFUno(observaciones,id){
-    if(observaciones == true){
-      localStorage.setItem("conObservaciones","true");
-    }
-    else{
-      localStorage.setItem("conObservaciones","false");
-    }
+  verDetalleEditarActaFDos(id){
+    localStorage.setItem("editable","true");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleEditarActa',id]);
   }
-  enviarParaRevision(idContrato, estadoActaContrato){
-    estadoActaContrato="366";
-    this.service.CambiarEstadoActa(idContrato,estadoActaContrato).subscribe(data=>{
-      if(data.isSuccessful==true){
-        this.showSendForRevisionBtn=false;
-      }
+  enviarParaRevision(idContrato){
+    this.service.CambiarEstadoActa(idContrato,"14").subscribe(data=>{
+      this.ngOnInit();
     });
   }
-  verDetalleActaFUno(observaciones,actaSuscrita,id){
-    if(observaciones == true){
-      localStorage.setItem("conObservaciones","true");
-    }
-    else{
-      localStorage.setItem("conObservaciones","false");
-    }
-    if(actaSuscrita == true){
-      localStorage.setItem("actaSuscrita","true");
-    }
-    else{
-      localStorage.setItem("actaSuscrita","false");
-    }
+  verDetalleActaFDos(id){
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa',id]);
   }
-  enviarActaParaFirma(){
-    alert("llama al servicio donde cambia estado a true");
+  enviarActaParaFirma(id){
+    this.descargarActaDesdeTabla(id);
+    this.service.CambiarEstadoActa(id,"19").subscribe(data=>{
+      this.ngOnInit();
+    });
   }
-  cargarActaSuscrita(id){
+  enviarRevisionAprobacionInt(id){
+    this.service.CambiarEstadoActa(id,"3").subscribe(data=>{
+      this.ngOnInit();
+    });
+  }
+  enviarRevisionAprobacionTecEst2(id){
+    this.service.CambiarEstadoActa(id,"2").subscribe(data=>{
+      this.ngOnInit();
+    });
+  }
+  verDetalleActaCargada(id){
+    localStorage.setItem("actaSuscrita","true");
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa',id]);
+  }
+  cargarActaSuscrita(id,tipoContrato,numContrato){
+    let idRol = 2; 
+    let fecha1Titulo;
+    let fecha2Titulo;
+    if(tipoContrato=='Interventoria'){
+      fecha1Titulo = 'Fecha de la firma del documento por parte del contratista de interventoría';
+      fecha2Titulo = 'Fecha de la firma del documento por parte del supervisor';
+    }
+    else{
+      fecha1Titulo = 'Fecha de la firma del documento por parte del contratista de obra';
+      fecha2Titulo = 'Fecha de la firma del documento por parte del contratista de interventoría';
+    }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
-    dialogConfig.data = {id:id};
+    dialogConfig.data = {id:id, idRol:idRol, numContrato:numContrato, fecha1Titulo:fecha1Titulo, fecha2Titulo:fecha2Titulo};
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(value => {
+      if (value == 'aceptado') {
+        if(tipoContrato=='Obra'){
+          this.service.CambiarEstadoActa(id,"20").subscribe(data=>{
+            this.ngOnInit();
+          });
+        }
+        else{
+          this.service.CambiarEstadoActa(id,"7").subscribe(data0=>{
+            this.ngOnInit();
+          });
+        }
+      }
+    });
   }
-  descargarActaDesdeTabla(){
-    alert("llama al servicio");
+  descargarActaDesdeTabla(id){
+    this.service.GetActaByIdPerfil(2,id).subscribe(resp=>{
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+      blob = new Blob([resp], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
   }
 }

@@ -32,6 +32,13 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     modalTitle: string,
     modalText: string
   };
+  fechaAprobacionRequisitos: any;
+  numDRP: any;
+  fechaDRP: any;
+  objeto: any;
+  valorIni: any;
+  nitContratistaInterventoria: any;
+  nomContratista: any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
@@ -51,6 +58,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   }
   cargarDataParaInsercion(data){
     this.numContrato = data.numeroContrato;
+    this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitos;
     this.fechaFirmaContrato = data.fechaFirmaContrato;
     this.contratacionId = data.contratacionId;
     this.fechaTramite = data.fechaTramite;
@@ -59,6 +67,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     this.fechaEnvioFirma = data.fechaEnvioFirma;
     this.fechaFirmaContratista = data.fechaFirmaContratista;
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
+    this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
+    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
+    this.objeto = data.objeto;
+    this.valorIni = data.valor;
+    this.nitContratistaInterventoria = data.contratista.numeroIdentificacion;
+    this.nomContratista = data.contratista.nombre;
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -142,7 +156,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       plazoFase1PreDias: this.addressForm.value.diasPlazoEjFase1,
       plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
       plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
-      observaciones: "",
+      observaciones: this.addressForm.value.observacionesEspeciales,
       conObervacionesActa: this.observacionesOn,
       registroCompleto: true,
       contratoConstruccion: [],
@@ -151,13 +165,23 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       contratoPoliza: []
     };
     this.service.EditContrato(arrayContrato).subscribe(data => {
-      this.openDialog('', data.message);
       if (data.code == "200") {
-        this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+        if(localStorage.getItem("origin")=="obra"){
+          this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
+            this.openDialog2('La información ha sido guardada exitosamente.', "");
+            this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+          });
+        }
+        else{
+          this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data0=>{
+            this.openDialog2('La información ha sido guardada exitosamente.', "");
+            this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+          });
+        }
       }
     })
     console.log(this.addressForm.value);
-    this.openDialog2('La información ha sido guardada exitosamente.', "");
+    
 
   }
 }

@@ -10,7 +10,12 @@ using System.Threading.Tasks;
 namespace asivamosffie.services.Interfaces
 {
     public interface IManagePreContructionActPhase1Service
-    { 
+    {
+
+        Task<Respuesta> CreateEditObservacionesActa(ContratoObservacion pcontratoObservacion);
+
+        Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId);
+
         Task<dynamic> GetListContrato();
 
         Task<Contrato> GetContratoByContratoId(int pContratoId);

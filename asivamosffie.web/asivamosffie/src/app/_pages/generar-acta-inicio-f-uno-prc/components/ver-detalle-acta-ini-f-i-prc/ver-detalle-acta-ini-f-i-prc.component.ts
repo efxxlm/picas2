@@ -24,7 +24,22 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   public diasFase2;
   public mesesFase2;
   public observaciones;
-
+  fechaAprobacionRequisitos: any;
+  contratacionId: any;
+  fechaTramite: any;
+  tipoContratoCodigo: any;
+  estadoDocumentoCodigo: any;
+  fechaEnvioFirma: any;
+  fechaFirmaContratista: any;
+  fechaFirmaFiduciaria: any;
+  numDRP: any;
+  fechaDRP: any;
+  objeto: any;
+  valorIni: any;
+  nitContratistaInterventoria: any;
+  nomContratista: any;
+  public mesPlazoIni: number = 10;
+  public diasPlazoIni: number = 25;
   constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
@@ -37,6 +52,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   }
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe(data=>{
+      this.cargarDataParaInsercion(data);
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
       this.fechaActaFase1Prc = data.fechaActaInicioFase1;
@@ -53,6 +69,24 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
       }
       this.verObservaciones(data.conObervacionesActa);
     });
+  }
+  cargarDataParaInsercion(data){
+    this.numContrato = data.numeroContrato;
+    this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitos;
+    this.fechaFirmaContrato = data.fechaFirmaContrato;
+    this.contratacionId = data.contratacionId;
+    this.fechaTramite = data.fechaTramite;
+    this.tipoContratoCodigo = data.tipoContratoCodigo;
+    this.estadoDocumentoCodigo = data.estadoDocumentoCodigo;
+    this.fechaEnvioFirma = data.fechaEnvioFirma;
+    this.fechaFirmaContratista = data.fechaFirmaContratista;
+    this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
+    this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
+    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
+    this.objeto = data.objeto;
+    this.valorIni = data.valor;
+    this.nitContratistaInterventoria = data.contratista.numeroIdentificacion;
+    this.nomContratista = data.contratista.nombre;
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;

@@ -113,6 +113,31 @@ namespace asivamosffie.api.Controllers
             return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId), "application/pdf");
         }
 
+        [HttpGet]
+        [Route("GetListContratoObservacionByContratoId")]
+        public async Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId([FromQuery] int pContratoId)
+        {
+            return await _managePreContruction.GetListContratoObservacionByContratoId(pContratoId);
+        }
+
+        [HttpPut]
+        [Route("CreateEditObservacionesActa")] 
+        public async Task<Respuesta> CreateEditObservacionesActa([FromBody] ContratoObservacion pcontratoObservacion)
+        { 
+            try
+            {
+                pcontratoObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                return await _managePreContruction.CreateEditObservacionesActa(pcontratoObservacion); 
+            }
+            catch (Exception ex)
+            {
+                Respuesta respuesta = new Respuesta
+                {
+                    Data = ex.InnerException.ToString()
+                };
+                return respuesta;
+            }
+        }
  
     }
 }

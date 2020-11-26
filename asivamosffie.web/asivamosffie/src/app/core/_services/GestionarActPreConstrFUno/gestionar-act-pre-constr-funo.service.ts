@@ -11,7 +11,10 @@ import { Contratacion, ContratacionProyecto } from 'src/app/_interfaces/project-
 export class GestionarActPreConstrFUnoService {
 
   constructor(private http: HttpClient) { }
-
+  
+  GetListGrillaActaInicio(pPerfilId: number){
+    return this.http.get<Contrato>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetListGrillaActaInicio?pPerfilId=${pPerfilId}`);
+  }
   GetListContrato() {
     return this.http.get<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetListContrato`);
   }
@@ -27,14 +30,19 @@ export class GestionarActPreConstrFUnoService {
     formData.append('fechaFirmaActaContratista', `${pcontrato.fechaFirmaActaContratista}`);
     formData.append('fechaFirmaActaContratistaInterventoria', `${pcontrato.fechaFirmaActaContratistaInterventoria}`);
     formData.append('file', archivoParaSubir, archivoParaSubir.name);
-    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa?pDirectorioBase=${
-      pDirectorioBase }&pDirectorioActaContrato=${ pDirectorioActaContrato }`, formData);
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa?pDirectorioBase=${pDirectorioBase}&pDirectorioActaContrato=${pDirectorioActaContrato}`, formData);
   }
   CambiarEstadoActa(pContratoId:number,pEstadoContrato:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CambiarEstadoActa?pContratoId=${pContratoId}&pEstadoContrato=${pEstadoContrato}`,pContratoId);
   }
   GetActaByIdPerfil(pPerfilId:number, pContratoId:number){
     return this.http.get(`${environment.apiUrl}/ManagePreContructionActPhase1/GetActaByIdPerfil?pPerfilId=${pPerfilId}&pContratoId=${pContratoId}`, { responseType: "blob" } );
+  }
+  GetListContratoObservacionByContratoId(pContratoId:number){
+    return this.http.get<ObservacionesContrato>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetListContratoObservacionByContratoId?pContratoId=${pContratoId}`);
+  }
+  CreateEditObservacionesActa(pcontratoObservacion: any){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CreateEditObservacionesActa`, pcontratoObservacion);
   }
 }
 
@@ -71,7 +79,9 @@ export interface Contrato {
   contratoPerfil: any[];
   contratoPoliza: any[];
 }
+export interface ObservacionesContrato{
 
+}
 export interface EditContrato {
   contratoId: number;
   contratacionId: number;
@@ -98,6 +108,11 @@ export interface EditContrato {
   contratoPerfil: any[];
   contratoPoliza: any[];
 }
+export interface ContratoObservacionElement{
+  ContratoObservacionId: any;
+  observaciones: any;
+}
+
 export interface ContratoParaActa {
   contratoId: number;
   contratacionId: number;

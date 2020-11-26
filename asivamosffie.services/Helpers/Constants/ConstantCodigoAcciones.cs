@@ -149,9 +149,11 @@
         public const string  Notificacion_Controversia_Contractual= "140";
 
         //4.2.2 Gestionar procesos de Defensa Judicial
+        public const string Crear_Edit_Contrato_Observacion = "141";
         public const string  Crear_Editar_Ficha_Estudio= "145";
         public const string  Crear_Editar_Demandado_Convocado= "146";
         public const string  Cambiar_Estado_Proceso= "147";
-        
-    }
+         
+ 
+    } 
 }
