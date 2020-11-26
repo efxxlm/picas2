@@ -131,7 +131,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    if (this.addressForm.value.tipoControversia.value == '1') {
+    if (this.addressForm.value.tipoControversia.codigo == '1') {
       let motivosList;
       if (this.addressForm.value.motivosSolicitud != undefined) {
         motivosList = [this.addressForm.value.motivosSolicitud[0].codigo];
@@ -143,12 +143,11 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       let motivosArrayCollected;
       if (this.isEditable == true) {
         formArrayTai = {
-          "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
+          "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
           "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": this.numeroSolicitud,
           "EstadoCodigo": "1",
           "EsCompleto": false,
-          "numeroSolicitudFormat": this.addressForm.value.motivosSolicitud.value,
           "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
@@ -162,12 +161,11 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       }
       else {
         formArrayTai = {
-          "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
+          "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
           "FechaSolicitud": this.addressForm.value.fechaSolicitud,
           "NumeroSolicitud": this.numeroSolicitud,
           "EstadoCodigo": "1",
           "EsCompleto": false,
-          "numeroSolicitudFormat": this.addressForm.value.motivosSolicitud.value,
           "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
@@ -178,10 +176,38 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "EsRequiereComite": this.addressForm.value.requeridoComite
         };
       }
+      if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+        for (let i = 0; i < motivosList.length; i++) {
+          switch (motivosList[i]) {
+            case '1':
+              motivosArrayCollected = {
+                'MotivoSolicitudCodigo': '1',
+              };
+              this.services.CreateEditarControversiaMotivo(motivosArrayCollected).subscribe(r => {
+              });
+              break;
+            case '2':
+              motivosArrayCollected = {
+                'MotivoSolicitudCodigo': '2'
+              };
+              this.services.CreateEditarControversiaMotivo(motivosArrayCollected).subscribe(r1 => {
+              });
+              break;
+            case '3':
+              motivosArrayCollected = {
+                'MotivoSolicitudCodigo': '3',
+              };
+              this.services.CreateEditarControversiaMotivo(motivosArrayCollected).subscribe(r2 => {
+              });
+              break;
+          }
+        }
+      }
       this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0 => {
         if (resp_0.isSuccessful == true) {
           this.openDialog('', 'La información ha sido guardada exitosamente.');
           if (this.isEditable == true) {
+
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(
               () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia])
             );
