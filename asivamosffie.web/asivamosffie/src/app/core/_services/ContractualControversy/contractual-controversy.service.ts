@@ -44,7 +44,7 @@ export class ContractualControversyService implements OnInit{
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoControversiaContractual?pControversiaContractualId=${pControversiaContractualId}&pNuevoCodigoEstado=${pNuevoCodigoEstado}`, null);  
   }
   EliminarControversiaContractual(pControversiaContractualId:number){
-    return this.http.get<EliminarControversiaContractual>(`${environment.apiUrl}/ContractualControversy/EliminarControversiaContractual?pControversiaContractualId=${pControversiaContractualId}`);
+    return this.http.post<EliminarControversiaContractual>(`${environment.apiUrl}/ContractualControversy/EliminarControversiaContractual?pControversiaContractualId=${pControversiaContractualId}`,null);
   }
   GetControversiaContractualById(pControversiaContractualId: number){
     return this.http.get<GetControversiaContractualById>(`${environment.apiUrl}/ContractualControversy/GetControversiaContractualById?pControversiaContractualId=${pControversiaContractualId}`);

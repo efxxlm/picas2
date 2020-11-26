@@ -176,6 +176,13 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     this.fechaSesion2 = new Date(fecha2);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
     if (this.addressForm.value.tipoControversia.codigo == '1') {
+      if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+      && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null){
+        this.estaCompleto=true;
+      }
+      else{
+        this.estaCompleto=false;
+      }
       let motivosList;
       if (this.addressForm.value.motivosSolicitud != undefined) {
         motivosList = [this.addressForm.value.motivosSolicitud[0].codigo];
@@ -186,11 +193,17 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       let formArrayTai;
       let motivosArrayCollected;
       let estadoControversia;
-      if(this.addressForm.value.procedeSolicitud==true&&this.estaCompleto==true){
+      if(this.estaCompleto==true&&this.addressForm.value.procedeSolicitud==false){
         estadoControversia = "2";
       }
-      else if (this.addressForm.value.procedeSolicitud==false&&this.estaCompleto==true){
-        estadoControversia = "5";
+      else if (this.estaCompleto==false&&this.addressForm.value.procedeSolicitud==true&&this.addressForm.value.requeridoComite==null){
+        estadoControversia = "3";
+      }
+      else if (this.estaCompleto==true&&this.addressForm.value.procedeSolicitud==true&&this.addressForm.value.requeridoComite==true){
+        estadoControversia = "4";
+      }
+      else if(this.estaCompleto==false){
+        estadoControversia = "1";
       }
       if (this.isEditable == true) {
         formArrayTai = {
@@ -200,8 +213,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
           "RutaSoporte": "",
-          "EstadoCodigo": "1",
-          "EsCompleto": false,
+          "EstadoCodigo": estadoControversia,
+          "EsCompleto": this.estaCompleto,
           "ContratoId": this.idContrato,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
@@ -210,7 +223,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "FechaComitePreTecnico": this.fechaSesionString2,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
-          "ControversiaContractualId": parseInt(this.idControversia)
+          "ControversiaContractualId": parseInt(this.idControversia),
+          "FechaCreacion":"2020-11-01"
         };
       }
       else {
@@ -222,15 +236,16 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "NumeroRadicadoSac": 0,
           "RutaSoporte": "",
           "UsuarioCreacion": "",
-          "EstadoCodigo": "1",
-          "EsCompleto": false,
+          "EstadoCodigo": estadoControversia,
+          "EsCompleto": this.estaCompleto,
           "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           "UsuarioModificacion": "us mod",
           "FechaComitePreTecnico": this.fechaSesionString2,
           "EsProcede": this.addressForm.value.procedeSolicitud,
-          "EsRequiereComite": this.addressForm.value.requeridoComite
+          "EsRequiereComite": this.addressForm.value.requeridoComite,
+          "FechaCreacion":"2020-11-01"
         };
       }
       this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0 => {
