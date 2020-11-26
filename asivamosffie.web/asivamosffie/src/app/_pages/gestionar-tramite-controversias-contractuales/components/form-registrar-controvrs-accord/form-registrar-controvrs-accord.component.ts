@@ -43,6 +43,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  idContrato: any;
   numeroSolicitud: any;
   userCreation: any;
   idMotivo1: number;
@@ -50,6 +51,12 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   idMotivo3: number;
   arrayMotivosLoaded: any[] = [];
   estaCompleto:boolean;
+
+  fechaSesionString: string;
+  fechaSesion: Date;
+
+  fechaSesionString2: string;
+  fechaSesion2: Date;
 
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
   ngOnInit(): void {
@@ -65,6 +72,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
         this.addressForm.get('requeridoComite').setValue(false);
         this.numeroSolicitud = resp.numeroSolicitudFormat;
+        this.idContrato = resp.contratoId;
         this.userCreation = resp.usuarioCreacion;
         this.services.GetMotivosSolicitudByControversiaId(this.idControversia).subscribe((data: any) => {
           const motivoSolicitudCod = [];
@@ -114,7 +122,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   }
   loadSemaforos() {
     this.estadoSemaforo.emit('sin-diligenciar');
-    if (this.isEditable == true) {
       if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
         && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
         this.estadoSemaforo.emit('completo');
@@ -124,7 +131,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.estadoSemaforo.emit('en-proceso');
         this.estaCompleto=false;
       }
-    }
   }
 
 
@@ -163,6 +169,12 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
+    let fecha1 = Date.parse(this.addressForm.get( 'fechaSolicitud' ).value);
+    this.fechaSesion = new Date(fecha1);
+    this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
+    let fecha2 = Date.parse(this.addressForm.get( 'fechaComitePretecnico' ).value);
+    this.fechaSesion2 = new Date(fecha2);
+    this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
     if (this.addressForm.value.tipoControversia.codigo == '1') {
       let motivosList;
       if (this.addressForm.value.motivosSolicitud != undefined) {
@@ -174,22 +186,28 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       let formArrayTai;
       let motivosArrayCollected;
       let estadoControversia;
+      if(this.addressForm.value.procedeSolicitud==true&&this.estaCompleto==true){
+        estadoControversia = "2";
+      }
+      else if (this.addressForm.value.procedeSolicitud==false&&this.estaCompleto==true){
+        estadoControversia = "5";
+      }
       if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
+          "FechaSolicitud": this.fechaSesionString,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
           "RutaSoporte": "",
           "EstadoCodigo": "1",
           "EsCompleto": false,
-          "ContratoId": this.contratoId,
+          "ContratoId": this.idContrato,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           "UsuarioCreacion": "us cre",
           "UsuarioModificacion": "us mod",
-          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
+          "FechaComitePreTecnico": this.fechaSesionString2,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite,
           "ControversiaContractualId": parseInt(this.idControversia)
@@ -198,7 +216,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.addressForm.value.fechaSolicitud,
+          "FechaSolicitud": this.fechaSesionString,
           "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
@@ -210,7 +228,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
           "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           "UsuarioModificacion": "us mod",
-          "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
+          "FechaComitePreTecnico": this.fechaSesionString2,
           "EsProcede": this.addressForm.value.procedeSolicitud,
           "EsRequiereComite": this.addressForm.value.requeridoComite
         };

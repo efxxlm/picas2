@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -31,7 +32,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   fechaFinalizacionContrato: any;
   contratoId: number;
 
-  constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
+  constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private polizaService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
     this.loadContractList();
@@ -52,15 +53,17 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   seleccionAutocomplete(id:any){
     this.addressForm.value.contrato = id;
     this.contratoId = id;
-    this.services.GetVistaContratoContratista(id).subscribe(resp=>{
-      this.nombreContratista = resp.nombreContratista;
-      this.tipoIdentificacion = 'Pendiente de lectura del servicio';
-      this.numIdentificacion = 'Pendiente de lectura del servicio';
-      this.tipoIntervencion = 'Pendiente de lectura del servicio';
-      this.valorContrato = 'Pendiente de lectura del servicio';
-      this.plazoContrato = resp.plazoFormat;
-      this.fechaInicioContrato = resp.fechaInicioContrato;
-      this.fechaFinalizacionContrato = resp.fechaFinContrato;
+    this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(resp_0=>{
+      this.nombreContratista = resp_0[0].nombreContratista;
+      this.tipoIdentificacion = resp_0[0].tipoDocumento;
+      this.numIdentificacion = resp_0[0].numeroIdentificacion;
+      this.valorContrato = resp_0[0].valorContrato;
+    });
+    this.services.GetVistaContratoContratista(id).subscribe((resp_1:any)=>{
+      this.tipoIntervencion = resp_1.tipoIntervencion;
+      this.plazoContrato = resp_1.plazoFormat;
+      this.fechaInicioContrato = resp_1.fechaInicioContrato;
+      this.fechaFinalizacionContrato = resp_1.fechaFinContrato;
     });
   }
   maxLength(e: any, n: number) {
