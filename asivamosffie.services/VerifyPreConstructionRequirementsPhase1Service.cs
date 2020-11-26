@@ -300,16 +300,14 @@ namespace asivamosffie.services
                     }
                 }
                 //Cambiar Estado Requisitos 
-                if (pContrato.ContratoPerfil
-                    .Where(r => (bool)r.RegistroCompleto).Count()
-                    == pContrato.ContratoPerfil.Count()
-                    && pContrato.ContratoPerfil.Count() > 1)
+                if (pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count()  == pContrato.ContratoPerfil.Count()  && pContrato.ContratoPerfil.Count() > 0)
                 {
                     Contrato contratoOld = _context.Contrato.Find(pContrato.ContratoId);
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
-                }
+                    _context.Update(contratoOld);
+                } 
                 _context.SaveChanges();
                 return
                     new Respuesta
