@@ -242,6 +242,12 @@ namespace asivamosffie.services
             return await _context.ControversiaActuacion.FindAsync(id);
         }
 
+        public async Task<List<ControversiaMotivo>> GetMotivosSolicitudByControversiaContractualId(int id)
+        {
+
+            return await _context.ControversiaMotivo.Where(r=>r.ControversiaContractualId==id).ToListAsync();
+        }
+
         //public async Task<List<Contrato>> GetListContratos(/*int id*/)
         //{
         //    return await _context.Contrato.Where(r=>r.Eliminado==false).ToList<Contrato>();
