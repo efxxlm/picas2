@@ -106,6 +106,7 @@ namespace asivamosffie.services
                     return
                         new Respuesta
                         {
+                            Data=controversiaActuacion,
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
@@ -601,7 +602,7 @@ namespace asivamosffie.services
 
                     return
                         new Respuesta
-                        {
+                        {   Data=actuacionSeguimiento,
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
@@ -700,6 +701,7 @@ namespace asivamosffie.services
                     return
                         new Respuesta
                         {
+                            Data= controversiaContractual,
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
@@ -713,6 +715,7 @@ namespace asivamosffie.services
                             //"UsuarioCreacion"
                             , "EDITAR CONTROVERSIA CONTRACTUAL"
                             //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
+                            
                             )
                         };
 
