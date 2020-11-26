@@ -106,6 +106,7 @@ namespace asivamosffie.services
                     return
                         new Respuesta
                         {
+                            Data=controversiaActuacion,
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
@@ -601,7 +602,7 @@ namespace asivamosffie.services
 
                     return
                         new Respuesta
-                        {
+                        {   Data=actuacionSeguimiento,
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
@@ -700,6 +701,7 @@ namespace asivamosffie.services
                     return
                         new Respuesta
                         {
+                            Data= controversiaContractual,
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
@@ -713,6 +715,7 @@ namespace asivamosffie.services
                             //"UsuarioCreacion"
                             , "EDITAR CONTROVERSIA CONTRACTUAL"
                             //contratoPoliza.UsuarioCreacion, "REGISTRAR CONTRATO POLIZA"
+                            
                             )
                         };
 
@@ -1204,11 +1207,14 @@ namespace asivamosffie.services
                     //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     GrillaActuacionSeguimiento RegistroActuacionSeguimiento = new GrillaActuacionSeguimiento
                     {
+                        ActuacionSeguimientoId = actuacionSeguimiento.ActuacionSeguimientoId,
                         NumeroActuacion = actuacionSeguimiento.ActuacionAdelantada,
                         EstadoReclamacion=strEstadoReclamacion,
                         FechaActualizacion = actuacionSeguimiento.FechaModificacion != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
                         NumeroReclamacion=actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
-                        Actuacion = "Actuación " +actuacionSeguimiento.ActuacionSeguimientoId.ToString()
+                        Actuacion = "Actuación " +actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
+                        
+                        
                         
                         //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
                         
@@ -1229,7 +1235,8 @@ namespace asivamosffie.services
                         EstadoReclamacion = e.InnerException.ToString(),
                         FechaActualizacion = e.ToString(),
                         NumeroReclamacion = "ERROR",
-                        Actuacion = "ERROR"                       
+                        Actuacion = "ERROR"        ,
+                        ActuacionSeguimientoId=0
 
                     };
                     LstActuacionSeguimientoGrilla.Add(RegistroActuacionSeguimiento);
