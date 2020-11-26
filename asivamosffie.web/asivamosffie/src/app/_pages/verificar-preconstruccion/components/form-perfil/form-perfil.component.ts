@@ -140,7 +140,7 @@ export class FormPerfilComponent implements OnInit {
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
         .subscribe(
           value => {
-            if ( value < this.perfilProyecto.length && value > 0 ) {
+            if ( value < this.perfiles.length && value > 0 ) {
               this.openDialog(
                 '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
               );
