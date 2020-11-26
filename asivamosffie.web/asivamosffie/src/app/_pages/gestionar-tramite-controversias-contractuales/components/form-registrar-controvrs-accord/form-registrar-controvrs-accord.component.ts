@@ -24,6 +24,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     fechaComitePretecnico: [null, Validators.required],
     conclusionComitePretecnico: [null, Validators.required],
     procedeSolicitud: [null, Validators.required],
+    motivosRechazo: [null, Validators.required],
     requeridoComite: [null, Validators.required],
     fechaRadicadoSAC: [null, Validators.required],
     numeroRadicadoSAC: [null, Validators.required],
@@ -44,6 +45,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   };
   numeroSolicitud: any;
   userCreation: any;
+  idMotivo1: number;
+  idMotivo2: number;
+  idMotivo3: number;
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
   ngOnInit(): void {
     this.loadtipoControversias();
@@ -128,7 +132,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   onSubmit() {
     console.log(this.addressForm.value);
     if (this.addressForm.value.tipoControversia.value == '1') {
-      let formArrayTai
+      let motivosList;
+      if (this.addressForm.value.motivosSolicitud != undefined) {
+        motivosList = [this.addressForm.value.motivosSolicitud[0].codigo];
+        for (let i = 1; i < this.addressForm.value.motivosSolicitud.length; i++) {
+          const motivoAux = motivosList.push(this.addressForm.value.motivosSolicitud[i].codigo);
+        }
+      }
+      let formArrayTai;
+      let motivosArrayCollected;
       if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.value,
@@ -139,6 +151,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "numeroSolicitudFormat": this.addressForm.value.motivosSolicitud.value,
           "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
+          "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           "UsuarioCreacion": "us cre",
           "UsuarioModificacion": "us mod",
           "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
@@ -157,6 +170,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "numeroSolicitudFormat": this.addressForm.value.motivosSolicitud.value,
           "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": this.addressForm.value.conclusionComitePretecnico,
+          "MotivoJustificacionRechazo": this.addressForm.value.motivosRechazo,
           "UsuarioCreacion": this.userCreation,
           "UsuarioModificacion": "us mod",
           "FechaComitePreTecnico": this.addressForm.value.fechaComitePretecnico,
@@ -171,6 +185,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(
               () => this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', this.idControversia])
             );
+
           }
           else {
             this.router.navigateByUrl('/', { skipLocationChange: true }).then(
