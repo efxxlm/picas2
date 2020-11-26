@@ -104,7 +104,13 @@ export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
   }
 
   Enviar( id ){
+    this.followUpDailyService.sendToSupervisionSupport( id )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message )
+        if ( respuesta.code == "200" )
+          this.ngAfterViewInit();
 
+      })
   }
 
 }

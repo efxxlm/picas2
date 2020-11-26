@@ -121,6 +121,15 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Causas_De_Accidentes_Laborales = 75,
          
-        Tiempo_Aprobar_Acta = 84
+        Tiempo_Aprobar_Acta = 84,
+
+        Disponibilidad_Material = 92,
+        Disponibilidad_Equipo = 93,
+
+        Productividad = 94,
+        Causa_Baja_Disponibilidad_Material = 95,
+        Causa_Baja_Disponibilidad_Equipo = 96,
+        Causa_Baja_Disponibilidad_Productividad = 97,
+        Estados_Seguimiento_Diario = 98
     }
 }

@@ -117,5 +117,7 @@
         public const string Create_Edit_Seguimiento_Diario = "149";
 
         public const string Eliminar_Seguimiento_Diario = "151";
+
+        public const string Enviar_Seguimiento_Diario_A_Apoyo = "152";
     }
 }

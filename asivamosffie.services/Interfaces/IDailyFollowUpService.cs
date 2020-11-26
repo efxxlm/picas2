@@ -16,5 +16,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<SeguimientoDiario>> GetDailyFollowUpByContratacionProyectoId( int pId );
         Task<List<string>> GetDatesAvailableByContratacioProyectoId( int pId );
         Task<Respuesta> DeleteDailyFollowUp( int pId, string pUsuario );
+        Task<Respuesta> SendToSupervisionSupport( int pId, string pUsuario );
     }
 }

@@ -24,5 +24,7 @@ namespace asivamosffie.model.Models
         public string EstadoCodigo { get; set; }
 
         
+
+        
     }
 }

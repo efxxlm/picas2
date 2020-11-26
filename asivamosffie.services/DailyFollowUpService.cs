@@ -178,17 +178,27 @@ namespace asivamosffie.services
 
         public async Task<SeguimientoDiario> GetDailyFollowUpById( int pId )
         {
+            List<Dominio> listaParametricas = _context.Dominio.Where( d => d.Activo == true ).ToList();
+
             SeguimientoDiario seguimiento = _context.SeguimientoDiario.Find( pId );
+
+            seguimiento.ProductividadNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Productividad && 
+                                                                            r.Codigo == seguimiento.ProductividadCodigo )
+                                                                .FirstOrDefault()?.Nombre;
+
+
+
 
             return seguimiento;
         }
         
         public async Task<List<SeguimientoDiario>> GetDailyFollowUpByContratacionProyectoId( int pId )
         {
+            List<Dominio> listaParametricas = _context.Dominio.Where( d => d.Activo == true ).ToList();
             List<VProyectosXcontrato> listaProyectos = _context.VProyectosXcontrato.ToList();
 
             List<SeguimientoDiario> listaSeguimientos = _context.SeguimientoDiario
-                                                                    .Where( r => r.ContratacionProyectoId == pId )
+                                                                    .Where( r => r.ContratacionProyectoId == pId  )
                                                                     .Include( r => r.ContratacionProyecto )
                                                                     .ToList();
 
@@ -196,6 +206,8 @@ namespace asivamosffie.services
 
                 s.ContratacionProyecto.Proyecto = new Proyecto();
                 s.ContratacionProyecto.Proyecto.InfoProyecto = listaProyectos.Where( r => r.ProyectoId == s.ContratacionProyecto.ProyectoId ).FirstOrDefault();
+                s.ProductividadNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Productividad && r.Codigo == s.ProductividadCodigo ).FirstOrDefault()?.Nombre;
+                s.EstadoNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Estados_Seguimiento_Diario && r.Codigo == s.EstadoCodigo ).FirstOrDefault()?.Nombre;
             });
 
             return listaSeguimientos;
@@ -267,6 +279,42 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
                 };
             }
+        }
+
+        public async Task<Respuesta> SendToSupervisionSupport( int pId, string pUsuario )
+        {
+             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Seguimiento_Diario_A_Apoyo, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario.Find( pId );
+
+                seguimientoDiario.UsuarioModificacion = pUsuario;
+                seguimientoDiario.FechaModificacion = DateTime.Now;
+                seguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.SeguimientoDiarioEnviado;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.EliminacionExitosa, idAccion, pUsuario, "ELIMINAR SEGUIMIENTO DIARIO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                };
+            }           
         }
 
     }

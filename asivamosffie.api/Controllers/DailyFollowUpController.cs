@@ -70,6 +70,24 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPut]
+        [Route("SendToSupervisionSupport")]
+        public async Task<IActionResult> SendToSupervisionSupport([FromQuery] int pId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string usuario = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _dailyFollowUp.SendToSupervisionSupport( pId, usuario );
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpGet]
         [Route("GetDailyFollowUpById")]
         public async Task< SeguimientoDiario > GetDailyFollowUpById([FromQuery] int pId )

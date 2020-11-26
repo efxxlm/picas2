@@ -37,6 +37,10 @@ export class FollowUpDailyService {
   deleteDailyFollowUp( id ){
     return this.http.delete<Respuesta>( `${ this.url }/deleteDailyFollowUp?pId=${ id }`);
   }
+
+  sendToSupervisionSupport( id ){
+    return this.http.put<Respuesta>( `${ this.url }/sendToSupervisionSupport?pId=${ id }`, null);
+  }
   
 
 }
