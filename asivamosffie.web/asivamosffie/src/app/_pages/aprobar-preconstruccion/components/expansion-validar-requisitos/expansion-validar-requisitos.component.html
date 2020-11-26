@@ -124,7 +124,9 @@
                 <b style="margin-left: 2em;">
                   {{ perfil[ 'observacionApoyo' ].fechaCreacion | date: 'dd/MM/yyyy' }}
                 </b>
-                <div [innerHTML]="perfil[ 'observacionApoyo' ].observacion" style="margin-left: 2em;"></div>
+                <p *ngIf="perfil[ 'tieneObservacionApoyo' ] === true" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> Si</p>
+                <p *ngIf="perfil[ 'tieneObservacionApoyo' ] === false" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> No</p>
+                <div *ngIf="perfil[ 'tieneObservacionApoyo' ] === true" [innerHTML]="perfil[ 'observacionApoyo' ].observacion" style="margin-left: 2em;"></div>
               </mat-card-content>
             </mat-card>
           </section>

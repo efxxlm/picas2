@@ -107,28 +107,38 @@
                       </mat-card-content>
                   </mat-card>
 
-                  <div class="row justify-content-center mb-2em" *ngIf="contrato.tipoContratoCodigo === '1'">
-                    <div class="pr-1">
-                      <strong>
-                        ¿Tiene observaciones a las hojas de vida de este perfil?
-                      </strong>
-                    </div>
-                    <div *ngIf="perfil[ 'tieneObservacionApoyo' ] === true"><span>Si</span></div>
-                    <div *ngIf="perfil[ 'tieneObservacionApoyo' ] === false"><span>No</span></div>
-                  </div>
-                    
-                  <section *ngFor="let observaciones of perfil.contratoPerfilObservacion">
-                    <mat-card class="shipping-card var-main-gris" *ngIf="observaciones.tipoObservacionCodigo === '3' && perfil['tieneObservacionApoyo'] === true">
+                  <section *ngIf="perfil['observacionApoyo'] !== undefined && perfil['tieneObservacionApoyo'] === true">
+                    <mat-card class="shipping-card var-main-gris">
                       <mat-card-header class="header-card">
                         <mat-card-title class="header-card--text">
                           Verificación del apoyo a la supervisión
                         </mat-card-title>
                       </mat-card-header>
                       <mat-card-content>
-                        <b style="margin-bottom: .5em;">
-                          {{ observaciones.fechaCreacion | date: 'dd/MM/yyyy' }}
+                        <b style="margin-bottom: .5em;margin-left: 2em;">
+                          {{ perfil['observacionApoyo'].fechaCreacion | date: 'dd/MM/yyyy' }}
                         </b>
-                        <section [innerHTML]="innerObservacion( observaciones.observacion )"></section>
+                        <p *ngIf="perfil[ 'tieneObservacionApoyo' ] === true" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> Si</p>
+                        <p *ngIf="perfil[ 'tieneObservacionApoyo' ] === false" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> No</p>
+                        <section style="margin-left: 2em;" *ngIf="perfil[ 'tieneObservacionApoyo' ] === true" [innerHTML]="innerObservacion( perfil['observacionApoyo'].observacion )"></section>
+                      </mat-card-content>
+                    </mat-card>
+                  </section>
+
+                  <section *ngIf="perfil['observacionSupervisor'] !== undefined && perfil['tieneObservacionSupervisor'] === true">
+                    <mat-card class="shipping-card var-main-gris">
+                      <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text">
+                          Validación de la supervisión
+                        </mat-card-title>
+                      </mat-card-header>
+                      <mat-card-content>
+                        <b style="margin-bottom: .5em;margin-left: 2em;">
+                          {{ perfil['observacionSupervisor'].fechaCreacion | date: 'dd/MM/yyyy' }}
+                        </b>
+                        <p *ngIf="perfil[ 'tieneObservacionSupervisor' ] === true" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de visa?:</b> Si</p>
+                        <p *ngIf="perfil[ 'tieneObservacionSupervisor' ] === false" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de visa?:</b> No</p>
+                        <section style="margin-left: 2em;" *ngIf="perfil[ 'tieneObservacionSupervisor' ] === true" [innerHTML]="innerObservacion( perfil['observacionSupervisor'].observacion )"></section>
                       </mat-card-content>
                     </mat-card>
                   </section>
