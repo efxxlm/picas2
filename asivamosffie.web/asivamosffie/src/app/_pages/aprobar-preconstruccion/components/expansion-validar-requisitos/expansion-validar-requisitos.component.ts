@@ -23,11 +23,11 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
     observacion: [ null, Validators.required ]
   });
   perfilesCv: Dominio[] = [];
+  totalGuardados = 0;
   fechaPoliza: string;
   editorStyle = {
     height: '45px'
   };
-
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -196,15 +196,22 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
       observacionPerfil[ 'contratoPerfilObservacionId' ] = perfil[ 'contratoPerfilObservacionId' ];
     }
     console.log( observacionPerfil );
-    this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
-      .subscribe(
-        response => {
-          this.openDialog( '', response.message );
-          this.contrato = null;
-          this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
-        },
-        err => this.openDialog( '', err.message )
-      );
+    // tslint:disable-next-line: no-string-literal
+    if ( perfil[ 'tieneObservacionApoyo' ] === true && this.totalGuardados === 0 ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+    }
+    if ( this.totalGuardados === 1 ) {
+      this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
+        .subscribe(
+          response => {
+            this.openDialog( '', response.message );
+            this.contrato = null;
+            this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
+          },
+          err => this.openDialog( '', err.message )
+        );
+    }
   }
 
 }
