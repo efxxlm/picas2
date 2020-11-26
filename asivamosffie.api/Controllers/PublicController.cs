@@ -105,6 +105,8 @@ namespace asivamosffie.api.Controllers
             //tiene 4 dias habiles y aun no tiene gestion
         /// </summary>
         /// <returns></returns>
+        /// 
+        //316
         [HttpGet("GetContratosConPolizaVencida")]
         public async Task GetContratosConPolizaVencida()
         {
@@ -117,7 +119,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
+        //317
         [HttpGet("GetContratosConPolizaVencidaInterventoria")]
         public async Task GetContratosConPolizaVencidaInterventoria()
         {
@@ -130,8 +132,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+        //317
         [HttpGet("GetContratosSinGestionarVerificacionRequisitos")]
         public async Task GetContratosIntrerventoriaSinGestionar()
         {
@@ -144,8 +145,32 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+        //318
+        [HttpGet("GetContratosObraSinGestionar")]
+        public async Task GetContratosObraSinGestionar()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.GetContratosObraSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //318
+        [HttpGet("GetContratosInterventoriaSinGestionar")]
+        public async Task GetContratosInterventoriaSinGestionar()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.GetContratosInterventoriaSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
 

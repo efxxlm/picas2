@@ -467,14 +467,14 @@ namespace asivamosffie.services
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                    contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
+                    contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
 
                 //Enviar Correo Botón “Enviar al supervisor”
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
                 {
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                    contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
+                    contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
 
                 _context.SaveChanges();
@@ -504,7 +504,7 @@ namespace asivamosffie.services
                     };
             }
         }
-         
+
         public async Task<Respuesta> AprobarInicio(int pContratoId, string UsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Aprobar_Inicio_Contrato, (int)EnumeratorTipoDominio.Acciones);
@@ -583,7 +583,7 @@ namespace asivamosffie.services
             }
             return blEnvioCorreo;
         }
-         
+
         /// <summary>
         /// Notificar Cuando pasen 4 dias despues de la aprobacion de la poliza 
         /// </summary>
@@ -616,13 +616,13 @@ namespace asivamosffie.services
 
                         foreach (var item in usuarios)
                         {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
+                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
                         }
                     }
                 }
             }
         }
-         
+
         //3.1.7 (28)
         public async Task GetContratosIntrerventoriaSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
@@ -650,7 +650,7 @@ namespace asivamosffie.services
 
                     foreach (var item in usuarios)
                     {
-                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
                     }
 
                 }
@@ -691,6 +691,83 @@ namespace asivamosffie.services
             }
         }
 
+        //3.1.8() OBRA
+        public async Task GetContratosObraSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
+            //" 3 - 4 -5" obra 
+            List<Contrato> contratos = _context.Contrato
+                .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados || r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos || r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados)
+                 .Include(r => r.ContratoPoliza)
+                 .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.DisponibilidadPresupuestal)
+               .ToList();
 
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alertas2DiasObraInterventoria318);
+
+            foreach (var contrato in contratos)
+            {
+
+                if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                {
+                    DateTime fechaValidacion = contrato.FechaAprobacionRequisitosApoyo.HasValue ? ((DateTime)contrato.FechaAprobacionRequisitosApoyo) : ((DateTime)contrato.FechaModificacion);
+
+                    if (contrato.ContratoPoliza.Count() > 0 && fechaValidacion > RangoFechaConDiasHabiles)
+                    {
+                        string template = TemplateRecoveryPassword.Contenido
+                                    .Replace("_LinkF_", pDominioFront)
+                                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                    .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MMMM-yy"))
+                                    .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+
+                        foreach (var item in usuarios)
+                        {
+                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+            }
+        }
+
+        //3.1.8()
+        public async Task GetContratosInterventoriaSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
+            // interventoria sin registro 0 4 5
+            List<Contrato> contratos = _context.Contrato
+                .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos || r.EstadoVerificacionCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados || !string.IsNullOrEmpty(r.EstadoVerificacionCodigo))
+                 .Include(r => r.ContratoPoliza)
+                 .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.DisponibilidadPresupuestal)
+               .ToList();
+
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.Alertas2DiasObraInterventoria318);
+
+            foreach (var contrato in contratos)
+            {
+
+                if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                {
+                    DateTime fechaValidacion = contrato.FechaAprobacionRequisitosApoyo.HasValue ? ((DateTime)contrato.FechaAprobacionRequisitosApoyo) : ((DateTime)contrato.FechaModificacion);
+
+                    if (contrato.ContratoPoliza.Count() > 0 && fechaValidacion > RangoFechaConDiasHabiles)
+                    {
+                        string template = TemplateRecoveryPassword.Contenido
+                                 .Replace("_LinkF_", pDominioFront)
+                                 .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                 .Replace("[FECHA_REQUISITOS]", fechaValidacion.ToString("dd-MMMM-yy"))
+                                 .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+                        foreach (var item in usuarios)
+                        {
+                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendientes", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
