@@ -53,6 +53,8 @@ namespace asivamosffie.services
 
         public async Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp()
         {
+            List<Dominio> listaParametricas = _context.Dominio.Where( d => d.Activo == true ).ToList();
+
             List<VProyectosXcontrato> listaInfoProyectos = await _context.VProyectosXcontrato
                                                                         .Where( r => r.FechaActaInicioFase2 <= DateTime.Now  )
                                                                         .ToListAsync();
@@ -69,6 +71,11 @@ namespace asivamosffie.services
                     p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
                     p.RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue?seguimientoDiario.RegistroCompleto.Value:false;
                     p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
+                    p.EstadoNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Estados_Seguimiento_Diario && 
+                                                              r.Codigo == seguimientoDiario.EstadoCodigo )
+                                                      .FirstOrDefault()?.Nombre;
+
+                    p.TieneAlertas = VerificarAlertas( seguimientoDiario );
                 }
             });
 
@@ -78,6 +85,24 @@ namespace asivamosffie.services
             return listaInfoProyectos;                                   
         }
 
+        private bool VerificarAlertas(SeguimientoDiario pSeguimientoDiario){
+            bool tieneAlertas = false;
+
+            if (
+                    pSeguimientoDiario.DisponibilidadPersonal == false ||
+                    pSeguimientoDiario.DisponibilidadMaterialCodigo == "2" ||
+                    pSeguimientoDiario.DisponibilidadMaterialCodigo == "3" ||
+                    pSeguimientoDiario.DisponibilidadEquipo == "2" ||
+                    pSeguimientoDiario.DisponibilidadEquipo == "3" ||
+                    pSeguimientoDiario.ProductividadCodigo == "3"
+
+               )
+               {
+                   tieneAlertas = true;
+               }
+
+            return tieneAlertas;
+        }
 
         private bool VerificarRegistroCompleto( SeguimientoDiario pSeguimientoDiario )
         {

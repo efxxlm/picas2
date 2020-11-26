@@ -22,6 +22,12 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string EstadoCodigo { get; set; }
+        
+        [NotMapped]
+        public string EstadoNombre { get; set; } 
+
+        [NotMapped]
+        public bool TieneAlertas { get; set; } 
 
         
 
