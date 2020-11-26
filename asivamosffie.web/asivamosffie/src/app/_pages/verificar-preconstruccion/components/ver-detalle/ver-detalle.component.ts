@@ -13,6 +13,7 @@ import { CommonService } from '../../../../core/_services/common/common.service'
 export class VerDetalleComponent implements OnInit {
 
   contrato: Contrato;
+  observacionAPoyo = '2';
   perfilesCv: Dominio[] = [];
 
   constructor(
@@ -34,7 +35,22 @@ export class VerDetalleComponent implements OnInit {
     this.faseUnoPreconstruccionSvc.getContratacionByContratoId( pContratoId )
       .subscribe( contrato => {
         this.contrato = contrato;
+        const observacionesTipo2 = [];
         console.log( this.contrato );
+        for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
+          // tslint:disable-next-line: no-string-literal
+          for ( const perfil of contratacionProyecto.proyecto[ 'contratoPerfil' ] ) {
+            for ( const observacion of perfil.contratoPerfilObservacion ) {
+              if ( observacion.tipoObservacionCodigo === this.observacionAPoyo ) {
+                observacionesTipo2.push( observacion );
+              }
+            }
+            if ( observacionesTipo2.length > 0 ) {
+              // tslint:disable-next-line: no-string-literal
+              perfil[ 'observacionApoyo' ] = observacionesTipo2[ observacionesTipo2.length - 1 ];
+            }
+          }
+        }
       } );
   }
 
