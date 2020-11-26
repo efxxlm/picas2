@@ -78,8 +78,9 @@
                 mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf=" element.estadoCodigo === estadosPreconstruccionObra.enviadoAlInterventor.codigo
-                        || element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo">
+                *ngIf=" element.estadoCodigo !== estadosPreconstruccionObra.enviadoAlSupervisor.codigo
+                        && element.estadoCodigo !== estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.codigo
+                        && element.estadoCodigo !== estadosPreconstruccionObra.conReqTecnicosValidados.codigo">
                 Ver detalle
             </a>
             <a  (click)="enviarInterventor( element.contratoId )"

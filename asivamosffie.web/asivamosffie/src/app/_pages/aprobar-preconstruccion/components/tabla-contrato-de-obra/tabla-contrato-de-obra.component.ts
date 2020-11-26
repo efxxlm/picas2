@@ -17,7 +17,7 @@ import { FaseUnoAprobarPreconstruccionService } from '../../../../core/_services
 export class TablaContratoDeObraComponent implements OnInit {
 
   estadosPreconstruccionObra: estadosPreconstruccion;
-  tipoSolicitudCodigoObra: string = '1';
+  tipoSolicitudCodigoObra = '1';
   dataSource = new MatTableDataSource();
   displayedColumns: string[] = [
     'fechaAprobacion',
@@ -30,17 +30,18 @@ export class TablaContratoDeObraComponent implements OnInit {
   ];
 
   @ViewChild( MatPaginator, {static: true} ) paginator: MatPaginator;
-  @ViewChild( MatSort, { static: true } ) sort        : MatSort;
+  @ViewChild( MatSort, { static: true } ) sort: MatSort;
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  constructor ( private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
-                private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService,
-                private dialog: MatDialog,
-                private routes: Router ) 
+  constructor(
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService,
+    private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService,
+    private dialog: MatDialog,
+    private routes: Router )
   {
     this.faseUnoAprobarPreconstruccionSvc.listaEstadosAprobarContrato( 'obra' )
       .subscribe(
@@ -51,16 +52,14 @@ export class TablaContratoDeObraComponent implements OnInit {
             console.log( this.estadosPreconstruccionObra, listas );
             const dataTable = [];
             listas.forEach( lista => {
-              if (  ( lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo
-                    || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.codigo
-                    || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosValidados.codigo
-                    || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo
-                    || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionObra.enviadoAlInterventor.codigo )
+              // tslint:disable-next-line: no-string-literal
+              if (  Number( lista[ 'estadoCodigo' ] ) >= Number( this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo )
+                    // tslint:disable-next-line: no-string-literal
                     && lista[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoObra )
               {
                 dataTable.push( lista );
-              };
-            } )
+              }
+            } );
             this.dataSource = new MatTableDataSource( dataTable );
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
@@ -83,17 +82,19 @@ export class TablaContratoDeObraComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  };
+  }
 
-  openDialog ( modalTitle: string, modalText: string ) {
-    let dialogRef =this.dialog.open( ModalDialogComponent, {
+  openDialog( modalTitle: string, modalText: string ) {
+    const dialogRef = this.dialog.open( ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
-  aprobarInicio ( contratoId: number ) {
-    this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo )
+  aprobarInicio( contratoId: number ) {
+    this.faseUnoPreconstruccionSvc.changeStateContrato(
+      contratoId, this.estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo
+    )
     .subscribe(
       response => {
         this.openDialog( '', response.message );
@@ -103,9 +104,9 @@ export class TablaContratoDeObraComponent implements OnInit {
       },
       err => this.openDialog( '', err.message )
     );
-  };
+  }
 
-  enviarInterventor ( contratoId: number ) {
+  enviarInterventor( contratoId: number ) {
     this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionObra.enviadoAlInterventor.codigo )
       .subscribe(
         response => {
@@ -116,6 +117,6 @@ export class TablaContratoDeObraComponent implements OnInit {
         },
         err => this.openDialog( '', err.message )
       );
-  };
+  }
 
-};
+}
