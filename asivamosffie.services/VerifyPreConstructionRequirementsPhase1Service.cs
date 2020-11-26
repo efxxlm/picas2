@@ -24,6 +24,11 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<List<VRegistrarFase1>> GetListContratacionInterventoria2()
+        {
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).ToListAsync();
+        }
+
         public async Task<dynamic> GetListContratacion()
         {
             List<dynamic> listaContrats = new List<dynamic>();
