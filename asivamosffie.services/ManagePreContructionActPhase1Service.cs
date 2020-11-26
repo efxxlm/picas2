@@ -107,7 +107,7 @@ namespace asivamosffie.services
                 ContratoOld.ConObervacionesActa = pContrato.ConObervacionesActa;
 
                 if (ContratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
-                    ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Obra;
+                    ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_generada;
                 else
                     ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_preliminar_generada;
 
