@@ -58,6 +58,13 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
       }
     });
   }
+  sendTramiteToComite(id){
+    this.services.CambiarEstadoControversiaContractual(id,"5").subscribe((dataUpdt:any)=>{
+      if(dataUpdt.isSuccessful==true){
+        this.ngOnInit();
+      }
+    });
+  }
   actualizarTramiteButton(id) {
     localStorage.setItem("controversiaID", id);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
