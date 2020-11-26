@@ -167,7 +167,7 @@ namespace asivamosffie.services
         {
             string CreateEdit = string.Empty;
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Perfil, (int)EnumeratorTipoDominio.Acciones);
-
+            bool RegistroCompletoContrato = true;
             try
             {
                 foreach (var ContratacionProyecto in pContrato.Contratacion.ContratacionProyecto)
@@ -198,12 +198,18 @@ namespace asivamosffie.services
 
                             contratoPerfilOld.TieneObservacionApoyo = ContratoPerfil.TieneObservacionApoyo;
                             contratoPerfilOld.RegistroCompleto = ValidarRegistroCompletoContratoPerfil(contratoPerfilOld);
+
                             if (contratoPerfilOld.RegistroCompleto)
                             {
                                 if (contratoPerfilOld.TieneObservacionSupervisor.HasValue)
                                 {
                                     contratoPerfilOld.TieneObservacionSupervisor = false;
                                 }
+                            }
+                            else
+                            {
+
+                                RegistroCompletoContrato = false;
                             }
 
                             foreach (var ContratoPerfilObservacion in ContratoPerfil.ContratoPerfilObservacion)
@@ -293,7 +299,7 @@ namespace asivamosffie.services
                         }
                     }
                 }
-
+       
                 //Cambiar Estado Contrato 
                 Contrato contratoOld = _context.Contrato.
                     Where(r => r.ContratoId == pContrato.ContratoId)
@@ -304,7 +310,8 @@ namespace asivamosffie.services
                 if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-                    if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
+                   // if (RegistroCompletoContrato)
+                    if (pContrato.ContratoPerfil.Count() > 1 && RegistroCompletoContrato)
                     {
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
                     }
@@ -314,7 +321,8 @@ namespace asivamosffie.services
                 {   //Si el interventoria y no esta completo
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
                     //Si el interventoria y esta completo
-                    if (pContrato.ContratoPerfil.Count() > 1 && pContrato.ContratoPerfil.Where(r => (bool)r.RegistroCompleto).Count() == pContrato.ContratoPerfil.Count())
+                   // if (RegistroCompletoContrato)
+                      if (pContrato.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
                     {
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
                     }
@@ -462,6 +470,12 @@ namespace asivamosffie.services
                     await EnviarCorreo(contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosInterventor = DateTime.Now;
                 }
+                //Enviar Correo Botón “Enviar al supervisor”
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                {
+                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
+                }
 
                 //Enviar Correo Botón aprobar inicio 3.1.7
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
@@ -473,18 +487,26 @@ namespace asivamosffie.services
 
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
-                { 
+                {
                     contratoMod.FechaAprobacionRequsitosSupervisor = DateTime.Now;
                 }
-
-
-
-                //Enviar Correo Botón “Enviar al supervisor”
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor && contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())
+                //TODO: crear notificaciones
+                //Enviar Correo Botón aprobar inicio 3.1.8
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor)
                 {
-                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Interventoria, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                    contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
+                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
                 }
+                //TODO: crear notificaciones
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
+                {
+                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+
+                }
+
+
+
+
 
                 _context.SaveChanges();
 
