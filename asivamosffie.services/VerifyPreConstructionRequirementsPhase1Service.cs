@@ -51,7 +51,7 @@ namespace asivamosffie.services
                                      .ThenInclude(r => r.ContratoPerfilObservacion)
                      .ToListAsync();
 
-                foreach (var c in listContratos)
+                foreach (var c in listContratos.OrderBy(r=> r.EstadoVerificacionCodigo))
                 {
                     int CantidadProyectosConPerfilesAprobados = 0;
                     int CantidadProyectosConPerfilesPendientes = 0;
@@ -69,7 +69,7 @@ namespace asivamosffie.services
                                 RegistroCompletoObservaciones = false; 
                         }
 
-                        if (!RegistroCompletoObservaciones)
+                        if (RegistroCompletoObservaciones)
                             CantidadProyectosConPerfilesAprobados++;
                         else
                             CantidadProyectosConPerfilesPendientes++;
