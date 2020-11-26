@@ -65,6 +65,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
             for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
 
               let sinDiligenciar = 0;
+              let enProceso = 0;
               let completo = 0;
 
               for ( const perfil of contratacionProyecto.proyecto.contratoPerfil ) {
@@ -110,6 +111,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
                     perfil[ 'tieneObservaciones' ] = true;
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
+                    enProceso++;
                   }
                   // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
@@ -136,7 +138,8 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
                 // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'completo';
               }
-              if (  ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length )
+              if (  enProceso > 0
+                    || ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length )
                     || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
                 // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'en-proceso';
@@ -197,9 +200,10 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
     }
     console.log( observacionPerfil );
     // tslint:disable-next-line: no-string-literal
-    if ( perfil[ 'tieneObservacionApoyo' ] === true && this.totalGuardados === 0 ) {
+    if ( perfil[ 'tieneObservaciones' ] === false && this.totalGuardados === 0 ) {
       this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
       this.totalGuardados++;
+      return;
     }
     if ( this.totalGuardados === 1 ) {
       this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
