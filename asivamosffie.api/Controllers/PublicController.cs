@@ -68,7 +68,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada2();
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada2(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 //return result;
             }
             catch (Exception ex)

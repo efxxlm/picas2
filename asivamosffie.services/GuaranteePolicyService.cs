@@ -1077,7 +1077,7 @@ namespace asivamosffie.services
 
         //public async Task GetConsignationValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         //paquete 2: estado diferente a Aprobado
-        public async Task EnviarCorreoSupervisor4dPolizaNoAprobada2()
+        public async Task EnviarCorreoSupervisor4dPolizaNoAprobada2(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender)
         {
             Respuesta respuesta = new Respuesta();
             string fechaFirmaContrato = "";
@@ -1176,7 +1176,7 @@ namespace asivamosffie.services
                         {
                             //lstCorreos = lstCorreos += usuario.Email + "";
 
-                            //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, sender, password, mailServer, mailPort);
                         }
                     }
 
