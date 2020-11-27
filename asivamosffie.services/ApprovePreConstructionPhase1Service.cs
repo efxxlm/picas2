@@ -83,6 +83,7 @@ namespace asivamosffie.services
                                  && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
                                  && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor)))
                                 RegistroCompleto = false;
+
                             if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor)
                             {
                                 TieneObservacionSupervisor = true;
