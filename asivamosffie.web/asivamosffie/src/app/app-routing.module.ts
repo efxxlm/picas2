@@ -182,6 +182,11 @@ const routes: Routes = [
         path: 'aprobarSeguimientoDiario',
         loadChildren: () => import('./_pages/aprobar-seguimiento-diario/aprobar-seguimiento-diario.module')
         .then(m => m.AprobarSeguimientoDiarioModule),
+      },
+      {
+        path: 'registrarSolicitudNovedadContractual',
+        loadChildren: () => import('./_pages/registrar-solicitud-novedad-contractual/registrar-solicitud-novedad-contractual.module')
+        .then(m => m.RegistrarSolicitudNovedadContractualModule),
       }
     ]
 
