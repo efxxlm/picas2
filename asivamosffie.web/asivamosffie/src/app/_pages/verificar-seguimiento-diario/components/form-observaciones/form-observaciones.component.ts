@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { SeguimientoDiario, SeguimientoDiarioObservaciones } from 'src/app/_interfaces/DailyFollowUp';
 
 @Component({
   selector: 'app-form-observaciones',
   templateUrl: './form-observaciones.component.html',
   styleUrls: ['./form-observaciones.component.scss']
 })
-export class FormObservacionesComponent {
+export class FormObservacionesComponent implements OnInit, OnChanges {
 
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
@@ -30,15 +31,43 @@ export class FormObservacionesComponent {
     ]
   };
 
-  proyecto: any;
+  seguimientoId?: number;
+  @Input() observacionObjeto: SeguimientoDiarioObservaciones;
+  @Input() tieneObservaciones?: boolean;
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
-    
+    private followUpDailyService: FollowUpDailyService,
+    private route: ActivatedRoute,
+    private router: Router,
+
   ) 
   { 
     
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ( changes.observacionObjeto ){
+      this.addressForm.get('observacion').setValue( this.observacionObjeto ? this.observacionObjeto.observaciones : null );
+    }
+    if ( changes.tieneObservaciones ){
+      this.addressForm.get('tieneObservaciones').setValue( this.tieneObservaciones );
+    }
+    console.log('t',changes)
+
+  }
+
+  ngOnInit(): void {
+    this.route.params.subscribe((params: Params) => {
+      this.seguimientoId = params.id;
+      console.log(this.seguimientoId, this.observacionObjeto, this.tieneObservaciones);
+
+      this.addressForm.get('observacion').setValue( this.observacionObjeto ? this.observacionObjeto.observaciones : null );
+      this.addressForm.get('tieneObservaciones').setValue( this.tieneObservaciones );
+
+      
+    });
   }
 
   textoLimpio(texto: string) {
@@ -63,6 +92,29 @@ export class FormObservacionesComponent {
 
   onSubmit() {
     this.addressForm.markAllAsTouched();
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+
+    let seguimiento: SeguimientoDiario = {
+      seguimientoDiarioId: this.seguimientoId,
+      tieneObservacionApoyo: this.addressForm.value.tieneObservaciones,
+
+      seguimientoDiarioObservaciones: [
+        {
+          seguimientoDiarioObservacionesId: this.observacionObjeto ? this.observacionObjeto.seguimientoDiarioObservacionesId : 0,
+          seguimientoDiarioId: this.seguimientoId,
+          esSupervision: false,
+          observaciones: this.addressForm.value.observacion
+        }
+      ]
+    }
+
+    this.followUpDailyService.createEditObservacion( seguimiento, false )
+      .subscribe( respuesta => {
+        this.openDialog('', respuesta.message);
+        if ( respuesta.code == "200" ){
+          this.router.navigate(['/verificarSeguimientoDiario']);
+        }
+
+
+      });
   }
 }

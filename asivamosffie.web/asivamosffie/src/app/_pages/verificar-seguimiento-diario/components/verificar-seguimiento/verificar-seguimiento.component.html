@@ -18,7 +18,7 @@
   </p>
 
 </section>
-<section class="container">
+<section class="container" *ngIf="seguimiento">
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
       <mat-card-title class="header-card--text sub-text mt-0">
@@ -88,8 +88,16 @@
     </mat-card-content>
   </mat-card>
 </section>
+<section class="container" *ngIf="seguimiento">
+  <app-form-observaciones 
+                          *ngIf="seguimiento.estadoCodigo === '2' || seguimiento.estadoCodigo === '3'"
+                          [observacionObjeto]="seguimiento.observacionApoyo"
+                          [tieneObservaciones]="seguimiento.tieneObservacionApoyo"
+                          >
+  </app-form-observaciones>
 
-<section class="container">
-  <app-form-observaciones *ngIf="seguimiento.estadoCodigo === '2'"></app-form-observaciones>
-  <app-ver-observaciones *ngIf="seguimiento.estadoCodigo != '2'"></app-ver-observaciones>
+  <app-ver-observaciones 
+                        *ngIf="seguimiento.estadoCodigo != '2' && seguimiento.estadoCodigo != '3'">
+  </app-ver-observaciones>
+
 </section>

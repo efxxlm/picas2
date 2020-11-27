@@ -63,7 +63,10 @@ namespace asivamosffie.services
                 SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario
                                                                 .Where( s => s.ContratacionProyectoId == p.ContratacionProyectoId && 
                                                                         s.Eliminado != true &&
-                                                                        s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.SeguimientoDiarioEnviado )
+                                                                            ( s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.SeguimientoDiarioEnviado ||
+                                                                              s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.RevisadoApoyo 
+                                                                            ) 
+                                                                        )
                                                                 .OrderByDescending( r => r.FechaSeguimiento ).FirstOrDefault();
 
                 if ( seguimientoDiario != null ){
@@ -314,7 +317,7 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
-        public async Task<Respuesta> CreateEditObservacionApoyo( SeguimientoDiario pSeguimientoDiario, bool esSupervisor )
+        public async Task<Respuesta> CreateEditObservacion( SeguimientoDiario pSeguimientoDiario, bool esSupervisor )
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Create_Edit_Observacion_Seguimiento_Diario, (int)EnumeratorTipoDominio.Acciones);
             string CreateEdit = "";
@@ -369,13 +372,17 @@ namespace asivamosffie.services
                 }
 
                 seguimientoDiario.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(seguimientoDiario.SeguimientoDiarioId, esSupervisor);
+                if ( seguimientoDiario.RegistroCompletoVerificacion.Value ){
+                    seguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.RevisadoApoyo;
+                }else{
+                    seguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.SeguimientoDiarioEnviado;
+                }
 
                 _context.SaveChanges();
 
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -402,11 +409,15 @@ namespace asivamosffie.services
         {
             List<Dominio> listaParametricas = _context.Dominio.Where( d => d.Activo == true ).ToList();
 
-            SeguimientoDiario seguimiento = _context.SeguimientoDiario.Find( pId );
+            SeguimientoDiario seguimiento = _context.SeguimientoDiario.Where( s => s.SeguimientoDiarioId == pId )
+                                                                      .Include( r => r.SeguimientoDiarioObservaciones )
+                                                                      .FirstOrDefault();
 
             seguimiento.ProductividadNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Productividad && 
                                                                             r.Codigo == seguimiento.ProductividadCodigo )
                                                                 .FirstOrDefault()?.Nombre;
+
+            seguimiento.ObservacionApoyo = getObservacion(seguimiento,  false);
 
 
 

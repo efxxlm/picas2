@@ -119,6 +119,23 @@ namespace asivamosffie.api.Controllers
             var result = await _dailyFollowUp.GetDailyFollowUpByContratacionProyectoId( pId);
             return result;
         }
+
+        [Route("CreateEditObservacion")]
+        [HttpPost]
+        public async Task<Respuesta> CreateEditObservacion([FromBody]SeguimientoDiario pSeguimientoDiario, [FromQuery]bool esSupervisor)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSeguimientoDiario.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _dailyFollowUp.CreateEditObservacion(pSeguimientoDiario, esSupervisor);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
  
     }
 }

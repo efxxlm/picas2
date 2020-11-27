@@ -33,4 +33,20 @@ export interface SeguimientoDiario {
         usuarioCreacion?: string,
         fechaModificacion?: Date,
         usuarioModificacion?: string,
+
+        seguimientoDiarioObservaciones?: SeguimientoDiarioObservaciones[],
+        observacionApoyo?: SeguimientoDiarioObservaciones,
+}
+
+export interface SeguimientoDiarioObservaciones{
+        seguimientoDiarioObservacionesId?: number,
+        seguimientoDiarioId?: number,
+        observaciones?: string,
+        esSupervision?: boolean,
+        fechaCreacion?: Date,
+        usuarioCreacion?: string,
+        fechaModificacion?: Date,
+        usuarioModificacion?: string,
+        eliminado?: boolean,
+        archivado?: boolean,
 }

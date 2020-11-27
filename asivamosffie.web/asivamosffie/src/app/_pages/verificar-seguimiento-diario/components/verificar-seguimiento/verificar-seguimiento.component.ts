@@ -28,6 +28,13 @@ export class VerificarSeguimientoComponent implements OnInit {
     this.route.params.subscribe((params: Params) => {
       this.seguimientoId = params.id;
       console.log(this.seguimientoId);
+      if (this.seguimientoId > 0){
+        this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
+          .subscribe( respuesta => {
+            this.seguimiento = respuesta
+          
+      });
+      }
     });
   }
 
