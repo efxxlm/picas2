@@ -7,22 +7,26 @@ namespace asivamosffie.model.Models
     {
         public SeguimientoSemanalGestionObra()
         {
-            ProveedorGestionObra = new HashSet<ProveedorGestionObra>();
+            SeguimientoSemanalGestionObraAlerta = new HashSet<SeguimientoSemanalGestionObraAlerta>();
+            SeguimientoSemanalGestionObraAmbiental = new HashSet<SeguimientoSemanalGestionObraAmbiental>();
+            SeguimientoSemanalGestionObraSeguridadSalud = new HashSet<SeguimientoSemanalGestionObraSeguridadSalud>();
+            SeguimientoSemanalGestionObraSocial = new HashSet<SeguimientoSemanalGestionObraSocial>();
             TipoActividadGestionObra = new HashSet<TipoActividadGestionObra>();
         }
 
         public int SeguimientoSemanalGestionObraId { get; set; }
         public int SeguimientoSemanalId { get; set; }
-        public bool? SeEjecutoGestionAmbiental { get; set; }
-        public bool? RegistroCompletoGestionAmbiental { get; set; }
-        public bool? SeProtegieronMaterialesConstruccion { get; set; }
-        public bool? TieneObservacionMateriales { get; set; }
-        public string ObservacionMateriales { get; set; }
-        public string UrlFoto { get; set; }
+        public bool? RegistroCompleto { get; set; }
+        public string UsuarioCreacion { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+        public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
+        public bool? Eliminado { get; set; }
 
-        public virtual SeguimientoSemanal SeguimientoSemanal { get; set; }
-        public virtual ICollection<ProveedorGestionObra> ProveedorGestionObra { get; set; }
+        public virtual ICollection<SeguimientoSemanalGestionObraAlerta> SeguimientoSemanalGestionObraAlerta { get; set; }
+        public virtual ICollection<SeguimientoSemanalGestionObraAmbiental> SeguimientoSemanalGestionObraAmbiental { get; set; }
+        public virtual ICollection<SeguimientoSemanalGestionObraSeguridadSalud> SeguimientoSemanalGestionObraSeguridadSalud { get; set; }
+        public virtual ICollection<SeguimientoSemanalGestionObraSocial> SeguimientoSemanalGestionObraSocial { get; set; }
         public virtual ICollection<TipoActividadGestionObra> TipoActividadGestionObra { get; set; }
     }
 }
