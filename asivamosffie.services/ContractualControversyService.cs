@@ -1279,7 +1279,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion(int id=0)
+        public async Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion(int id=0, int pControversiaContractualId=0)
         {
             //await AprobarContratoByIdContrato(1);
 
@@ -1296,6 +1296,13 @@ namespace asivamosffie.services
                 lstControversiaActuacion = lstControversiaActuacion.Where(r => r.ControversiaActuacionId == id).ToList();
 
             }
+
+            if (pControversiaContractualId != 0)
+            {
+                lstControversiaActuacion = lstControversiaActuacion.Where(r => r.ControversiaContractualId == pControversiaContractualId).ToList();
+
+            }
+            
 
             foreach (var controversia in lstControversiaActuacion)
             {
