@@ -39,7 +39,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario);
 
-        Task EnviarCorreoSupervisor4dPolizaNoAprobada();
+        Task EnviarCorreoSupervisor4dPolizaNoAprobada2(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
         //getListPolizaGarantiaByContratoPolizaId    yaaaa y observ yaaaa
 

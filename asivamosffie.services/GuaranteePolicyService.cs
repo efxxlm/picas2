@@ -1076,7 +1076,8 @@ namespace asivamosffie.services
         }
 
         //public async Task GetConsignationValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
-        public async Task EnviarCorreoSupervisor4dPolizaNoAprobada()
+        //paquete 2: estado diferente a Aprobado
+        public async Task EnviarCorreoSupervisor4dPolizaNoAprobada2(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender)
         {
             Respuesta respuesta = new Respuesta();
             string fechaFirmaContrato = "";
@@ -1084,7 +1085,9 @@ namespace asivamosffie.services
             VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
 
             List<ContratoPoliza> lstContratoPoliza;
-            lstContratoPoliza = _context.ContratoPoliza.Where(r => r.TipoSolicitudCodigo == ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas ).ToString() && (bool)r.Eliminado == false).ToList();
+            lstContratoPoliza = _context.ContratoPoliza
+                .Where(r => r.TipoSolicitudCodigo != ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas )
+                .ToString() && (bool)r.Eliminado == false).ToList();
 
             foreach (ContratoPoliza contratoPoliza in lstContratoPoliza)
             {
@@ -1173,7 +1176,7 @@ namespace asivamosffie.services
                         {
                             //lstCorreos = lstCorreos += usuario.Email + "";
 
-                            //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, sender, password, mailServer, mailPort);
                         }
                     }
 
@@ -1217,6 +1220,154 @@ namespace asivamosffie.services
             }
 
         }
+
+        //paquete 1: no tienen registro inicial contrato poliza
+        //public async Task EnviarCorreoSupervisor4dPolizaNoAprobada()
+        //{
+        //    Respuesta respuesta = new Respuesta();
+        //    string fechaFirmaContrato = "";
+        //    string correo = "cdaza@ivolucion.com";
+        //    VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
+
+        //    List<Contrato> lstContrato;
+        //    lstContrato = _context.Contrato
+
+        //    List<ContratoPoliza> lstContratoPoliza;
+        //    lstContratoPoliza = _context.ContratoPoliza
+        //        .Where(r => r.TipoSolicitudCodigo != ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas)
+        //        .ToString() && (bool)r.Eliminado == false).ToList();
+
+        //    foreach (ContratoPoliza contratoPoliza in lstContratoPoliza)
+        //    {
+        //        int perfilId = 0;
+
+        //        perfilId = (int)EnumeratorPerfil.Supervisor; //  Supervisor
+        //        //correo = getCorreos(perfilId);
+
+        //        try
+        //        {
+        //            int idAccionEditarContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
+
+        //            objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
+
+        //            List<VistaContratoGarantiaPoliza> ListVista = new List<VistaContratoGarantiaPoliza>();
+        //            ListVista = await ListVistaContratoGarantiaPoliza();
+
+        //            //int pIdTemplate = (int)enumeratorTemplate.MsjSupervisorJuridicaGestionPoliza;
+        //            int pIdTemplate = (int)enumeratorTemplate.MsjFiduciariaJuridicaGestionPoliza;
+
+        //            NotificacionMensajeGestionPoliza msjNotificacion;
+        //            msjNotificacion = new NotificacionMensajeGestionPoliza();
+
+        //            getDataNotifMsjAseguradora(ref msjNotificacion, contratoPoliza, ref fechaFirmaContrato, ref objVistaContratoGarantiaPoliza, ListVista);
+
+        //            //PolizaObservacion polizaObservacion;           
+        //            correo = "cdaza@ivolucion.com";
+
+        //            //Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, settings.MailServer,
+        //            //settings.MailPort, settings.Password, settings.Sender,
+        //            //objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate, msjNotificacion);
+
+        //            bool blEnvioCorreo = false;
+        //            //Respuesta respuesta = new Respuesta();
+
+        //            Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
+
+        //            string template = TemplateRecoveryPassword.Contenido;
+
+        //            Contrato contrato;
+        //            contrato = _context.Contrato.Where(r => r.ContratoId == objVistaContratoGarantiaPoliza.IdContrato).FirstOrDefault();
+
+        //            fechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
+
+        //            //datos basicos generales, aplican para los 4 mensajes
+        //            template = template.Replace("_Tipo_Contrato_", objVistaContratoGarantiaPoliza.TipoContrato);
+        //            template = template.Replace("_Numero_Contrato_", objVistaContratoGarantiaPoliza.NumeroContrato);
+        //            template = template.Replace("_Fecha_Firma_Contrato_", fechaFirmaContrato); //Formato (dd/MM/aaaa)
+        //            template = template.Replace("_Nombre_Contratista_", objVistaContratoGarantiaPoliza.NombreContratista);
+        //            template = template.Replace("_Valor_Contrato_", string.Format("${0:#,0}", objVistaContratoGarantiaPoliza.ValorContrato.ToString()));  //fomato miles .
+        //            template = template.Replace("_Plazo_", objVistaContratoGarantiaPoliza.PlazoContrato);
+
+        //            if (msjNotificacion != null)
+        //            {
+        //                template = template.Replace("_Nombre_Aseguradora_", msjNotificacion.NombreAseguradora);
+        //                template = template.Replace("_Numero_Poliza_", msjNotificacion.NumeroPoliza);
+
+        //                //template = template.Replace("_Fecha_Revision_", msjNotificacion.FechaRevision);
+        //                //template = template.Replace("_Estado_Revision_", msjNotificacion.EstadoRevision);
+        //                //template = template.Replace("_Observaciones_", msjNotificacion.Observaciones);
+
+        //                //template = template.Replace("_Fecha_Aprobacion_Poliza", msjNotificacion.FechaAprobacion);
+
+        //                if (!string.IsNullOrEmpty(msjNotificacion.NumeroDRP))
+        //                    template = template.Replace("_NumeroDRP_", msjNotificacion.NumeroDRP);
+
+        //            }
+
+        //            //string lstCorreos = "";
+
+        //            //            1   Administrador  - //2   Técnica
+        //            //3   Financiera - //4   Jurídica
+        //            //5   Administrativa - //6   Miembros Comite
+        //            //7   Secretario comité - //8   Supervisor
+        //            List<UsuarioPerfil> lstUsuariosPerfil = new List<UsuarioPerfil>();
+
+        //            lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
+
+        //            List<Usuario> lstUsuarios = new List<Usuario>();
+
+        //            foreach (var item in lstUsuariosPerfil)
+        //            {
+        //                lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+        //                foreach (var usuario in lstUsuarios)
+        //                {
+        //                    //lstCorreos = lstCorreos += usuario.Email + "";
+
+        //                    //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+        //                }
+        //            }
+
+
+
+        //            if (blEnvioCorreo)
+        //                respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+
+        //            else
+        //                respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+
+        //            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, correo, "Gestión Pólizas");
+        //            //return respuesta;
+
+        //            //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
+
+        //            //if (blEnvioCorreo)
+        //            //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+
+        //            //else
+        //            //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+
+        //            //}
+        //            //}
+        //            //else
+        //            //{
+        //            //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
+
+        //            //}
+        //            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, correo, "Gestión Pólizas");
+        //            //return respuesta;
+
+        //        }
+        //        catch (Exception ex)
+        //        {
+
+        //            respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
+        //            respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, respuesta.Code, (int)enumeratorAccion.Notificacion_Gestion_Poliza, correo, "Gestión Pólizas") + ": " + ex.ToString() + ex.InnerException;
+        //            //return respuesta;
+        //        }
+        //    }
+
+        //}
 
         private void getDataNotifMsjAseguradora(ref NotificacionMensajeGestionPoliza msjNotificacion, ContratoPoliza contratoPoliza, ref string fechaFirmaContrato, ref VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza, List<VistaContratoGarantiaPoliza> ListVista)
         {
