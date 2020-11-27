@@ -550,5 +550,41 @@ namespace asivamosffie.services
             }           
         }
 
+        public async Task<Respuesta> SendToSupervision( int pId, string pUsuario )
+        {
+             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Seguimiento_Diario_A_Apoyo, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario.Find( pId );
+
+                seguimientoDiario.UsuarioModificacion = pUsuario;
+                seguimientoDiario.FechaModificacion = DateTime.Now;
+                seguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.EnviadoAsupervisor;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = GeneralCodes.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.OperacionExitosa, idAccion, pUsuario, "ELIMINAR SEGUIMIENTO DIARIO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_seguimiento_diario, GeneralCodes.Error, idAccion, pUsuario, ex.InnerException.ToString())
+                };
+            }           
+        }
+
     }
 }

@@ -50,4 +50,8 @@ export class FollowUpDailyService {
     return this.http.post<Respuesta>( `${ this.url }/createEditObservacion?esSupervisor=${ esSupervisor }`, seguimiento);
   };
 
+  sendToSupervision( id ){
+    return this.http.put<Respuesta>( `${ this.url }/SendToSupervision?pId=${ id }`, null);
+  }
+
 }

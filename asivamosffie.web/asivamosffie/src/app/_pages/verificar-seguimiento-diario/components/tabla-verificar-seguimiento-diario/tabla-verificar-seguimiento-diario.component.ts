@@ -56,6 +56,7 @@ export class TablaVerificarSeguimientoDiarioComponent implements AfterViewInit {
   constructor(
     private followUpDailyService: FollowUpDailyService,
     private router: Router,
+    private dialog: MatDialog,
   ) 
   { }
 
@@ -88,6 +89,22 @@ export class TablaVerificarSeguimientoDiarioComponent implements AfterViewInit {
 
   Verificar( proyecto ){
     this.router.navigate( [ '/verificarSeguimientoDiario/verificarSeguimiento', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  Enviar( proyecto ){
+    this.followUpDailyService.sendToSupervision( proyecto.seguimientoDiarioId )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message)
+        if ( respuesta.code == "200" )
+          this.ngAfterViewInit()
+      })
   }
 
 }
