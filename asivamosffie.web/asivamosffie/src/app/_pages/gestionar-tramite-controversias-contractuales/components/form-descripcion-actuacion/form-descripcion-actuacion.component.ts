@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -47,7 +48,8 @@ export class FormDescripcionActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+
+  constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
     if(this.isEditable==true){
@@ -85,7 +87,41 @@ export class FormDescripcionActuacionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    let actuacionTaiArray;
+    if(this.isEditable==true){
+      actuacionTaiArray={
+        "ActuacionSeguimientoId": 1,
+        "ControversiaActuacionId" :2,
+        "SeguimientoCodigo" :false,
+        "EstadoReclamacionCodigo" :"2",
+       "ActuacionAdelantada":"ActuacionAdelantada 3 UPD",
+        "ProximaActuacion": " ProximaActuacion 3 UPD" ,
+       "Observaciones": "Observaciones 3 UPD",
+       "EstadoDerivadaCodigo" : "2",
+        "RutaSoporte" :"RutaSoporte UPD",
+        "FechaCreacion" : "2020-01-01",
+        "UsuarioCreacion" : "us cre UPPD",
+       "UsuarioModificacion" : "us modif UPD",
+       "EsResultadoDefinitivo ":true,
+       "CantDiasVencimiento": 20
+      }
+    }
+    else{
+      actuacionTaiArray={
+        "ControversiaActuacionId" :2,
+        "SeguimientoCodigo" :false,
+        "EstadoReclamacionCodigo" :"2",
+       "ActuacionAdelantada":"ActuacionAdelantada 3 UPD",
+        "ProximaActuacion": " ProximaActuacion 3 UPD" ,
+       "Observaciones": "Observaciones 3 UPD",
+       "EstadoDerivadaCodigo" : "2",
+        "RutaSoporte" :"RutaSoporte UPD",
+        "FechaCreacion" : "2020-01-01",
+        "UsuarioCreacion" : "us cre UPPD",
+       "UsuarioModificacion" : "us modif UPD",
+       "EsResultadoDefinitivo ":true,
+       "CantDiasVencimiento": 20
+      }
+    }
   }
 }
