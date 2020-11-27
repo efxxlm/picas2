@@ -28,5 +28,20 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+
+        [Route("GetVRegistrarAvanceSemanal")]
+        [HttpGet]
+        public async Task<ActionResult<List<VRegistrarAvanceSemanal>>> GetVRegistrarAvanceSemanal()
+        {
+            try
+            {
+                return await _registerWeeklyProgressService.GetVRegistrarAvanceSemanal();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

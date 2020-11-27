@@ -9,6 +9,6 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterWeeklyProgressService
     {
-        
+        Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal();
     }
 }

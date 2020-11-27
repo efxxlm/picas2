@@ -20,7 +20,19 @@ namespace asivamosffie.services
 {
     public class RegisterWeeklyProgressService : IRegisterWeeklyProgressService
     {
-        
+        private readonly ICommonService _commonService;
+        private readonly devAsiVamosFFIEContext _context;
+
+        public RegisterWeeklyProgressService(devAsiVamosFFIEContext context, ICommonService commonService)
+        {
+            _commonService = commonService;
+            _context = context; 
+        } 
+
+        public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
+        { 
+          return  await _context.VRegistrarAvanceSemanal.ToListAsync();
+        }
 
     }
 }
