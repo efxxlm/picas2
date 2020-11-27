@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./control-y-tabla-reclamacion-cc.component.scss']
 })
 export class ControlYTablaReclamacionCcComponent implements OnInit {
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
