@@ -10,7 +10,7 @@
     </h1>
     <p class="colorMainColor" style="margin-top: 1em;">
       <span class="mx-2em">
-        <b> Fecha de aprobacion de póliza: </b> {{ fechaPoliza | date: 'dd/MM/yyyy' }}
+        <b> Fecha de aprobacion de póliza: </b> {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
       </span>
       <span style="margin-left: 2em;">
         <b> Proyectos asociados: </b> {{ contrato.contratacion.contratacionProyecto.length }}
