@@ -64,7 +64,7 @@ namespace asivamosffie.services
                         bool RegistroCompletoObservaciones = true;
                         foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
                         {  
-                            if (ContratoPerfil.TieneObservacionApoyo.HasValue && !(bool)ContratoPerfil.TieneObservacionApoyo ||
+                            if (!ContratoPerfil.TieneObservacionApoyo.HasValue  ||
                                 (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor))
                                 RegistroCompletoObservaciones = false; 
                         }
@@ -90,8 +90,8 @@ namespace asivamosffie.services
                         EstadoCodigo = c.EstadoVerificacionCodigo,
                         EstaDevuelto,
                         RegistroCompleto,
-                        EstadoNombre = Parametricas.Where(r=> r.Codigo == c.EstadoVerificacionCodigo).FirstOrDefault().Nombre
-                    });
+                        EstadoNombre = c.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados ? Parametricas.Where(r => r.Codigo == c.EstadoVerificacionCodigo).FirstOrDefault().Descripcion : Parametricas.Where(r => r.Codigo == c.EstadoVerificacionCodigo).FirstOrDefault().Nombre
+                    }); 
                 }
             }
             catch (Exception ex)
