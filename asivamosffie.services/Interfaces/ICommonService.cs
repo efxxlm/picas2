@@ -11,6 +11,8 @@ namespace asivamosffie.services.Interfaces
     {
         Task<DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular);
 
+        Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular);        
+
         Task<string> EnumeradorComiteTecnico();
 
         Task<string> EnumeradorComiteFiduciario();
