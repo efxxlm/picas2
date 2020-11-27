@@ -1,0 +1,22 @@
+<section class="table-responsive size-table" style="margin-top: 2em;">
+    <table mat-table [dataSource]="tablaAvanceFinanciero" matSort>
+
+        <ng-container matColumnDef="item">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Semana número </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.item }}</b> </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="valor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Período del reporte </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="porcentaje">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Programación de la semana </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentaje }} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</section>

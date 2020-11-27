@@ -1,0 +1,191 @@
+<form autocomplete="off" [formGroup]="formManejoMaterialInsumo" *ngIf="formManejoMaterialInsumo !== undefined">
+    <section *ngFor="let proveedor of proveedores.controls; index as i" [formGroup]="proveedor">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <h3 class="colorMainColor"> <b> Proveedor {{ i+1 }} </b> </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left">Proveedor</label>
+                    </div>
+                    <div class="col d-flex">
+                        <section style="width: 100%;">
+                            <mat-form-field>
+                                <input matInput type="text" maxlength="50" formControlName="proveedor" required>
+                            </mat-form-field>
+                        </section>
+                        <span class="contador">{{50 - proveedor.get( 'proveedor' ).value.length}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" style="margin-top: 1.5em;">¿Requiere permisos ambientales y/o mineros?</label>
+                </div>
+                <div class="col d-flex">
+                    <section style="width: 100%;">
+                        <mat-form-field appearance="fill">
+                          <mat-select class="padding-left" formControlName="requirePermisosAmbientales" required>
+                            <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
+                              {{requisito.viewValue}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </section>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Campo URL</label>
+                </div>
+                <div class="col d-flex">
+                    <mat-form-field style="width: 98%;">
+                        <input  matInput
+                                type="text"
+                                formControlName="campoUrl">
+                    </mat-form-field>
+                </div>
+                <div class="d-flex justify-content-center size-text-descriptivo">
+                    <p class="color-text-descriptivo">
+                        <i> 
+                            Indique la ruta el permiso ambiental y/o minero correspondiente.
+                        </i>
+                    </p>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col d-flex justify-content-flex-end">
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                class="btn-eliminar"
+                                (click)="deleteProveedor( i )"
+                                *ngIf="proveedores.length > 1 && i > 0">
+                                <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                                Eliminar proveedor
+                        </button>
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                class="btn-eliminar"
+                                (click)="addProveedor()">
+                                <img src="assets/img/icon/mas.svg">
+                                Agregar otro proveedor
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row mt-1em">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" style="margin-top: 1.5em;">¿Los materiales de construcción se encontraron protegidos y demarcados correctamente?</label>
+            </div>
+            <div class="col d-flex">
+                <section style="width: 100%;">
+                    <mat-form-field appearance="fill">
+                      <mat-select class="padding-left" formControlName="seEncontraronProtegidosCorrectamente" required>
+                        <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
+                          {{requisito.viewValue}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </section>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" style="margin-top: 1.5em;">¿Requiere hacer una observación acerca del estado de los materiales de construcción?</label>
+            </div>
+            <div class="col d-flex">
+                <section style="width: 100%;">
+                    <mat-form-field appearance="fill">
+                      <mat-select class="padding-left" formControlName="requireObservacionMateriales" required>
+                        <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
+                          {{requisito.viewValue}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </section>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+          <div>
+            <div class="pr-1">
+              <label class="label-left">Observaciones</label>
+            </div>
+            <div class="col d-flex" style="width: 100%;">
+                <quill-editor   class="quill-editor-style card-80em position-relative"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 400)"
+                                formControlName="observacionManejoMaterial"
+                                required>
+                </quill-editor>
+                <span class="contador miles" *ngIf="formManejoMaterialInsumo.get('observacionManejoMaterial').value !== null" style="margin-top: 3.5em;">
+                    {{400 - (textoLimpio(formManejoMaterialInsumo.get('observacionManejoMaterial').value))}}
+                </span>
+                <span class="contador miles" *ngIf="formManejoMaterialInsumo.get('observacionManejoMaterial').value === null" style="margin-top: 3.5em;">
+                    400
+                </span>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row mt-1em">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">URL con soporte</label>
+            </div>
+            <div class="col d-flex">
+                <mat-form-field style="width: 98%;">
+                    <input  matInput
+                            type="text"
+                            formControlName="urlSoporte">
+                </mat-form-field>
+            </div>
+            <div class="d-flex justify-content-center size-text-descriptivo">
+                <p class="color-text-descriptivo">
+                    <i> 
+                        Indique la ruta de los documentos de soporte de la actividad realizada.
+                    </i>
+                </p>
+            </div>
+          </div>
+        </div>
+    </div>
+</form>

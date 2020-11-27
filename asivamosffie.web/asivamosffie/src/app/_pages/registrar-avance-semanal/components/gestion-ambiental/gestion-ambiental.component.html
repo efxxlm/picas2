@@ -12,7 +12,7 @@
                               <label class="label-left" style="margin-top: 1.5em;">¿Se ejecutó alguna actividad relacionada con la gestión ambiental durante la semana?</label>
                             </div>
                             <div class="col d-flex">
-                                <section style="width: 90%;">
+                                <section style="width: 100%;">
                                     <mat-form-field class="w-50" appearance="fill">
                                       <mat-select class="padding-left" formControlName="actividadRelacionada" required>
                                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
@@ -25,6 +25,51 @@
                           </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                      <div class="col-md-12">
+                        <div class="row">
+                          <div class="pr-1">
+                            <label class="label-left" style="margin-top: 1.5em;">Tipo de actividad</label>
+                          </div>
+                          <div class="col d-flex">
+                              <section style="width: 100%;">
+                                  <mat-form-field class="w-50" appearance="fill">
+                                    <mat-select class="padding-left" formControlName="tipoActividad" required>
+                                      <mat-option *ngFor="let requisito of tipoActividades" [value]="requisito.value">
+                                        {{requisito.viewValue}}
+                                      </mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </section>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+
+                  <!-- Manejo de materiales e insumos -->
+                  <app-manejo-material-insumo [formManejoMaterialInsumo]="formGestionAmbiental.get( 'manejoMaterialInsumo' )"
+                                              *ngIf="formGestionAmbiental.get( 'tipoActividad' ).value === '1'"
+                                              class="mt-1em">
+                  </app-manejo-material-insumo>
+
+                  <!-- Manejo de residuos de construcción y demolición -->
+                  <app-manejo-residuos-construccion [formManejoResiduosConstruccion]="formGestionAmbiental.get( 'manejoResiduosConstruccion' )"
+                                                    *ngIf="formGestionAmbiental.get( 'tipoActividad' ).value === '2'"
+                                                    class="mt-1em">
+                  </app-manejo-residuos-construccion>
+
+                  <!-- Manejo de residuos peligrosos y especiales -->
+                  <app-manejo-residuos-peligrosos [formManejoResiduosPeligrosos]="formGestionAmbiental.get( 'manejoResiduosPeligrosos' )"
+                                                  *ngIf="formGestionAmbiental.get( 'tipoActividad' ).value === '3'"
+                                                  class="mt-1em">
+                  </app-manejo-residuos-peligrosos>
+
+                  <!-- Otros manejos -->
+                  <app-otros-manejos  [formOtrosManejos]="formGestionAmbiental.get( 'otra' )"
+                                      *ngIf="formGestionAmbiental.get( 'tipoActividad' ).value === '4'"
+                                      class="mt-1em">
+                  </app-otros-manejos>
                 </mat-card-content>
             </mat-card>
         </div>
