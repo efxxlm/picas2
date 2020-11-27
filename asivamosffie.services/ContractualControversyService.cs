@@ -1331,7 +1331,7 @@ namespace asivamosffie.services
                     //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
-
+                        ControversiaContractualId=controversia.ControversiaContractualId,
                         FechaActuacion = controversia.FechaModificacion != null ? Convert.ToDateTime(controversia.FechaModificacion).ToString("dd/MM/yyyy") : controversia.FechaModificacion.ToString(),
                         DescripcionActuacion = "Actuación" + controversia.ControversiaActuacionId.ToString(),
                         ActuacionId = controversia.ControversiaActuacionId,
@@ -1364,6 +1364,7 @@ namespace asivamosffie.services
                 {
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
+                        ControversiaContractualId=0,                        
                         FechaActuacion = "ERROR",
                         DescripcionActuacion = e.InnerException.ToString(),
                         ActuacionId = 0,
