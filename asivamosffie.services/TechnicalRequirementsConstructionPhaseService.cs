@@ -1833,7 +1833,7 @@ namespace asivamosffie.services
 
                             // elimina los existentes
                             _context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
-
+                           
                             int i = 1;
                             listaFechas.OrderBy( p => p.fechaInicio ).ToList().ForEach(f =>
                             {
@@ -1847,7 +1847,7 @@ namespace asivamosffie.services
                                     NumeroSemana = i,
                                     FechaInicio = f.fechaInicio,
                                     FechaFin = f.fechaFin,
-
+                                    RegistroCompleto = false, 
                                 };
 
                                 _context.SeguimientoSemanal.Add(seguimientoSemanal);
