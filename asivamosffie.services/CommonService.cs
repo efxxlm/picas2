@@ -351,6 +351,47 @@ namespace asivamosffie.services
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
 
+        public async Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular)
+        {
+            DateTime fechaInicial = pFechaCalcular;
+            DateTime fechadiasHabiles = pFechaCalcular;
+
+            for (int i = 0; i < pDias; i++)
+            {
+                fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+            }
+            List<DateTime> festivos = new List<DateTime>();
+
+            festivos.AddRange(DiasFestivosAnio(fechaInicial.Year));
+
+            festivos.AddRange(DiasFestivosAnio(fechaInicial.Year + 1));
+
+            foreach (var festivo in festivos)
+            {
+                if (festivo >= fechaInicial && festivo <= fechadiasHabiles)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+            }
+            return fechadiasHabiles;
+        }
+
         /// <summary>
         /// Julian Martinez
         /// </summary>

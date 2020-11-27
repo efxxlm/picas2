@@ -66,8 +66,13 @@ namespace asivamosffie.api.Controllers
         [HttpGet("NoApprovedLegalFiduciaryPolicy4d")]
         public async Task NoApprovedLegalFiduciaryPolicy4d()
         {
+            //Task task1;
             try
             {
+                //paquete 1: no tienen registro inicial contrato poliza
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+
+                //paquete 2: estado diferente a Aprobado
                 await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada2(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 //return result;
             }
