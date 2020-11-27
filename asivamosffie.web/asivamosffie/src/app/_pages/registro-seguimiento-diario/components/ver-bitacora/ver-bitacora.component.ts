@@ -58,6 +58,7 @@ export class VerBitacoraComponent implements AfterViewInit {
     this.route.params.subscribe((params: Params) => {
       //this.seguimientoId = params.id;
       this.followUpDailyService.getDailyFollowUpByContratacionProyectoId( params.id )
+      //this.followUpDailyService.getDailyFollowUpById(  )
       .subscribe(respuesta => {
         this.dataSource = new MatTableDataSource(respuesta);
 
