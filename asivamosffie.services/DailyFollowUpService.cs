@@ -69,6 +69,14 @@ namespace asivamosffie.services
                                                                         )
                                                                 .OrderByDescending( r => r.FechaSeguimiento ).FirstOrDefault();
 
+                SeguimientoDiario seguimientoDiarioEnviado = _context.SeguimientoDiario
+                                                                .Where( s => s.ContratacionProyectoId == p.ContratacionProyectoId && 
+                                                                        s.Eliminado != true &&
+                                                                        s.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.EnviadoAsupervisor 
+                                                                        )
+                                                                .OrderByDescending( r => r.FechaSeguimiento ).FirstOrDefault();
+                            
+
                 if ( seguimientoDiario != null ){
                     p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
                     p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
@@ -79,6 +87,16 @@ namespace asivamosffie.services
                                                       .FirstOrDefault()?.Descripcion;
 
                     p.TieneAlertas = VerificarAlertas( seguimientoDiario );
+                }else if ( seguimientoDiarioEnviado != null ){
+                    p.FechaUltimoSeguimientoDiario = seguimientoDiarioEnviado.FechaSeguimiento;
+                    p.SeguimientoDiarioId = seguimientoDiarioEnviado.SeguimientoDiarioId;
+                    p.RegistroCompleto = seguimientoDiarioEnviado.RegistroCompleto.HasValue?seguimientoDiarioEnviado.RegistroCompleto.Value:false;
+                    p.EstadoCodigo = seguimientoDiarioEnviado.EstadoCodigo;
+                    p.EstadoNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Estados_Seguimiento_Diario && 
+                                                              r.Codigo == seguimientoDiarioEnviado.EstadoCodigo )
+                                                      .FirstOrDefault()?.Descripcion;
+
+                    p.TieneAlertas = VerificarAlertas( seguimientoDiarioEnviado );
                 }
             });
 
@@ -413,8 +431,28 @@ namespace asivamosffie.services
                                                                       .Include( r => r.SeguimientoDiarioObservaciones )
                                                                       .FirstOrDefault();
 
+            seguimiento.DisponibilidadMaterialNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Disponibilidad_Material && 
+                                                                            r.Codigo == seguimiento.DisponibilidadMaterialCodigo )
+                                                                .FirstOrDefault()?.Nombre;
+
+            seguimiento.DisponibilidadEquipoNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Disponibilidad_Equipo && 
+                                                                            r.Codigo == seguimiento.DisponibilidadEquipoCodigo )
+                                                                .FirstOrDefault()?.Nombre;
+
             seguimiento.ProductividadNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Productividad && 
                                                                             r.Codigo == seguimiento.ProductividadCodigo )
+                                                                .FirstOrDefault()?.Nombre;
+
+            seguimiento.CausaBajaDisponibilidadMaterialNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material && 
+                                                                            r.Codigo == seguimiento.CausaIndisponibilidadMaterialCodigo )
+                                                                .FirstOrDefault()?.Nombre;
+
+            seguimiento.CausaBajaDisponibilidadEquipoNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Equipo && 
+                                                                            r.Codigo == seguimiento.CausaIndisponibilidadEquipoCodigo )
+                                                                .FirstOrDefault()?.Nombre;
+                                                    
+            seguimiento.CausaBajaDisponibilidadProductividadNombre = listaParametricas.Where( r => r.TipoDominioId == (int) EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Productividad && 
+                                                                            r.Codigo == seguimiento.CausaIndisponibilidadProductividadCodigo )
                                                                 .FirstOrDefault()?.Nombre;
 
             seguimiento.ObservacionApoyo = getObservacion(seguimiento,  false);

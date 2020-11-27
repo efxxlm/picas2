@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { SeguimientoDiarioObservaciones } from 'src/app/_interfaces/DailyFollowUp';
 
 @Component({
   selector: 'app-ver-observaciones',
@@ -7,6 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerObservacionesComponent implements OnInit {
 
+  @Input() observacionObjeto: SeguimientoDiarioObservaciones;
+  @Input() tieneObservaciones?: boolean;
+  
   constructor() { }
 
   ngOnInit(): void {

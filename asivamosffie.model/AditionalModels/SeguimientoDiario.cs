@@ -26,6 +26,21 @@ namespace asivamosffie.model.Models
         public string ProductividadNombre { get; set; }
 
         [NotMapped]
+        public string DisponibilidadMaterialNombre { get; set; }
+
+        [NotMapped]
+        public string DisponibilidadEquipoNombre { get; set; }
+        
+        [NotMapped]
+        public string CausaBajaDisponibilidadMaterialNombre { get; set;}
+        
+        [NotMapped]
+        public string CausaBajaDisponibilidadEquipoNombre { get; set;}
+        
+        [NotMapped]
+        public string CausaBajaDisponibilidadProductividadNombre { get; set;}
+
+        [NotMapped]
         public string EstadoNombre { get; set; } 
 
         [NotMapped]

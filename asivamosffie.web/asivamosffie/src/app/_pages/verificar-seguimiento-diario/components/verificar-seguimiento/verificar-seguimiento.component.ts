@@ -38,4 +38,11 @@ export class VerificarSeguimientoComponent implements OnInit {
     });
   }
 
+  textoLimpio(texto: string) {
+    if (texto) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    }
+  }
+
 }

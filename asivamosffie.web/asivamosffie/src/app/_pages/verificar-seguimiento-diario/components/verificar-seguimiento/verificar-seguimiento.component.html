@@ -28,7 +28,7 @@
         <strong>
           Disponibilidad de personal:
         </strong>
-        {{ seguimiento.disponibilidadPersonal }}
+        {{ seguimiento.disponibilidadPersonal === true ? 'Si' : 'No' }}
       </p>
       <p>
         <strong>Observaciones:</strong>
@@ -44,7 +44,7 @@
         <strong>
           Disponibilidad de material:
         </strong>
-        {{ seguimiento.disponibilidadMaterialCodigo }}
+        {{ seguimiento.disponibilidadMaterialNombre }}
       </p>
       <p>
         <strong>Observaciones:</strong>
@@ -60,7 +60,7 @@
         <strong>
           Disponibilidad de equipo:
         </strong>
-        {{ seguimiento.disponibilidadEquipoCodigo }}
+        {{ seguimiento.disponibilidadEquipoNombre }}
       </p>
       <p>
         <strong>Observaciones:</strong>
@@ -76,7 +76,7 @@
         <strong>
           Productividad:
         </strong>
-        {{ seguimiento.productividadCodigo }}
+        {{ seguimiento.productividadNombre }}
       </p>
       <p>
         <strong>Observaciones:</strong>
@@ -97,7 +97,9 @@
   </app-form-observaciones>
 
   <app-ver-observaciones 
-                        *ngIf="seguimiento.estadoCodigo != '2' && seguimiento.estadoCodigo != '3'">
+                        *ngIf="seguimiento.estadoCodigo != '2' && seguimiento.estadoCodigo != '3'"
+                        [observacionObjeto]="seguimiento.observacionApoyo"
+                        [tieneObservaciones]="seguimiento.tieneObservacionApoyo">
   </app-ver-observaciones>
 
 </section>

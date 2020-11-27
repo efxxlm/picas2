@@ -63,17 +63,26 @@
           >
           Verificar seguimiento
         </a>
+        
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          (click)="Enviar( element )"
+          *ngIf="element.estadoCodigo == '3'"
+          >
+          Enviar al supervisor
+        </a>
+        
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="Verificar( element )"
           *ngIf="element.estadoCodigo == '3'"
           >
           Ver detalle/Editar
         </a>
+        
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          (click)="Enviar( element )"
-          *ngIf="element.estadoCodigo == '3'"
+          (click)="Verificar( element )"
+          *ngIf="element.estadoCodigo == '4'"
           >
-          Enviar al supervisor
+          Ver detalle
         </a>
         <!-- <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           [routerLink]="[ 'verDetalle', element.id ]">
