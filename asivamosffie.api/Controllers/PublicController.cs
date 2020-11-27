@@ -68,7 +68,7 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada();
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada2();
                 //return result;
             }
             catch (Exception ex)
