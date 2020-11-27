@@ -1289,7 +1289,7 @@ namespace asivamosffie.services
             //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo      
 
             //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
-            List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.Distinct().ToListAsync();
+            List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.Where(r=>!(bool)r.Eliminado). Distinct().ToListAsync();
 
             if(id!=0)
             {
@@ -1351,10 +1351,13 @@ namespace asivamosffie.services
                     {
                         ControversiaContractualId=controversia.ControversiaContractualId,
                         FechaActuacion = controversia.FechaModificacion != null ? Convert.ToDateTime(controversia.FechaModificacion).ToString("dd/MM/yyyy") : controversia.FechaModificacion.ToString(),
-                        DescripcionActuacion = "Actuación" + controversia.ControversiaActuacionId.ToString(),
+                        //DescripcionActuacion = "Actuación" + controversia.ControversiaActuacionId.ToString(),
+                        DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
                         ActuacionId = controversia.ControversiaActuacionId,
 
                         EstadoActuacion = strEstadoAvanceTramite,//controversia.EstadoAvanceTramiteCodigo
+                        EstadoActuacionCodigo = strEstadoAvanceTramiteCodigo,//controversia.EstadoAvanceTramiteCodigo
+
                         NumeroActuacion = controversia.ControversiaActuacionId.ToString(),
 
                         RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
