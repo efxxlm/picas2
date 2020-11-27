@@ -1312,8 +1312,21 @@ namespace asivamosffie.services
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio EstadoAvanceCodigo;
-                    
-                   
+
+                    string strProximaActuacionCodigo = "sin definir";
+                    string strProximaActuacionNombre = "sin definir";
+
+                    //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                    Dominio ProximaActuacionCodigo;
+
+                    ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+                    if (ProximaActuacionCodigo != null)
+                    {
+                        strProximaActuacionNombre = ProximaActuacionCodigo.Nombre;
+                        strProximaActuacionCodigo = ProximaActuacionCodigo.Codigo;
+
+                    }
+
                     EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI);
                     if (EstadoAvanceCodigo != null)
                     {
@@ -1325,8 +1338,6 @@ namespace asivamosffie.services
                     //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     //if (EstadoSolicitudCodigoContratoPoliza != null)
                     //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
-
-
 
                     //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
@@ -1340,8 +1351,10 @@ namespace asivamosffie.services
                         NumeroActuacion = controversia.ControversiaActuacionId.ToString(),
 
                         RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
-                        
-                        
+
+                        ProximaActuacionCodigo= strProximaActuacionCodigo,
+                        ProximaActuacionNombre=strProximaActuacionNombre,
+
                         //ControversiaContractualId = controversia.ControversiaContractualId,
                         //NumeroSolicitud = controversia.NumeroSolicitud,
                         ////FechaSolicitud=controversia.FechaSolicitud,
@@ -1372,7 +1385,10 @@ namespace asivamosffie.services
                         EstadoActuacion = e.ToString(),//controversia.EstadoAvanceTramiteCodigo
                         NumeroActuacion = "ERROR",
 
-                        RegistroCompletoActuacion = "ERROR",                        
+                        RegistroCompletoActuacion = "ERROR",
+
+                        ProximaActuacionCodigo = "ERROR",
+                        ProximaActuacionNombre = "ERROR",
 
                     };
                     ListControversiaContractualGrilla.Add(RegistroControversiaContractual);

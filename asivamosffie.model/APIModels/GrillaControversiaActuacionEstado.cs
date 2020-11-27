@@ -13,6 +13,8 @@ namespace asivamosffie.model.APIModels
         public string RegistroCompletoActuacion { get; set; }
         public string EstadoActuacion { get; set; }
         public int ControversiaContractualId { get; set; }
+        public string ProximaActuacionNombre { get; set; }
+        public string ProximaActuacionCodigo { get; set; }
     }
 }
 

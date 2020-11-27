@@ -144,7 +144,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_controversia= 89,
 
         Estado_avance_reclamacion = 91,
- 
-          
+
+        Proxima_actuacion_requerida=103,
+
+
     }
 }
