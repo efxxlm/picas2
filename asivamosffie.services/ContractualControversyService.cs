@@ -661,6 +661,8 @@ namespace asivamosffie.services
             //    return BadRequest(ex.ToString());
             //}
             string strCrearEditar = string.Empty;
+            string prefijo = "";
+            Contrato contrato = null;
             try
             {
                 if (controversiaContractual != null)
@@ -677,14 +679,39 @@ namespace asivamosffie.services
                         controversiaContractual.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
 
                         controversiaContractual.EsCompleto = ValidarRegistroCompletoControversiaContractual(controversiaContractual);
+                                                
+                        contrato = await _context.Contrato.FindAsync(controversiaContractual.ContratoId);
+
+                        if (contrato != null)
+                        {
+                            if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
+                                prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
+                            else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
+                                prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
+                        }
+                        
 
                         //controversiaContractual.Eliminado = false;
                         _context.ControversiaContractual.Add(controversiaContractual);
                         await _context.SaveChangesAsync();
 
+                        controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+
                     }
                     else
                     {
+                        contrato = await _context.Contrato.FindAsync(controversiaContractual.ContratoId);
+
+                        if (contrato != null)
+                        {
+                            if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
+                                prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
+                            else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
+                                prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
+                        }
+
+                        controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+
                         strCrearEditar = "EDITAR CONTROVERSIA CONTRACTUAL";
                         controversiaContractual.MotivoJustificacionRechazo = Helpers.Helpers.CleanStringInput(controversiaContractual.MotivoJustificacionRechazo);
                         controversiaContractual.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
@@ -706,8 +733,8 @@ namespace asivamosffie.services
 
                     return
                         new Respuesta
-                        {
-                            Data= controversiaContractual,
+                        {  
+                            Data = controversiaContractual,
                             IsSuccessful = true,
                             IsException = false,
                             IsValidation = false,
@@ -1313,6 +1340,7 @@ namespace asivamosffie.services
                         NumeroActuacion = controversia.ControversiaActuacionId.ToString(),
 
                         RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
+                        
                         
                         //ControversiaContractualId = controversia.ControversiaContractualId,
                         //NumeroSolicitud = controversia.NumeroSolicitud,
