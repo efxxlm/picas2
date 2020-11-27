@@ -45,7 +45,7 @@
                   <label class="label-left"><b>Perfil</b></label>
                 </div>
                 <div class="col d-flex">
-                  <mat-form-field appearance="fill">
+                  <mat-form-field>
                     <mat-select formControlName="perfilCodigo" class="padding-left" required>
                       <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
                         {{perfilCv.nombre}}
@@ -78,7 +78,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="row">
             <div class="col-md-8">
               <div class="row">
@@ -130,10 +130,10 @@
                   <label class="label-left"><b>Fecha de aprobación de la totalidad de las hojas de vida</b></label>
                 </div>
                 <div class="col d-flex">
-                  <mat-form-field class="mt-min" 
-                                  appearance="fill">
-                  <input  matInput 
-                          [matDatepicker]="fechaAprobacion" 
+                  <mat-form-field class="mt-min"
+                                 >
+                  <input  matInput
+                          [matDatepicker]="fechaAprobacion"
                           formControlName="fechaAprobacion"
                           [min]="minDate"
                           placeholder="DD/MM/AAAA"
@@ -143,13 +143,13 @@
                           [class.invalid]="perfil.get( 'fechaAprobacion' ).value !== null ? perfil.get( 'fechaAprobacion' ).markAsUntouched() : perfil.get( 'fechaAprobacion' ).markAsTouched()">
                   <mat-datepicker #fechaAprobacion></mat-datepicker>
                   </mat-form-field>
-                  <button mat-button 
-                          color="primary" 
-                          type="button" 
-                          (click)="fechaAprobacion.open()" 
+                  <button mat-button
+                          color="primary"
+                          type="button"
+                          (click)="fechaAprobacion.open()"
                           class="btn-calendario">
                   <img  class="mr-bottom-1"
-                        src="assets/img/icon/calendarioCirculo.svg" 
+                        src="assets/img/icon/calendarioCirculo.svg"
                         alt="Abrir Calendario">
                   </button>
                 </div>
@@ -164,10 +164,10 @@
                   <label class="label-left"><b>Observaciones</b></label>
                 </div>
                 <div class="col d-flex">
-                  <quill-editor class="quill-editor-style w-65 card position-relative" 
+                  <quill-editor class="quill-editor-style w-65 card position-relative"
                                 [styles]="editorStyle"
                                 [modules]="config"
-                                (onContentChanged)="maxLength($event, 1000)" 
+                                (onContentChanged)="maxLength($event, 1000)"
                                 formControlName="observacion"
                                 required></quill-editor>
                   <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
@@ -259,12 +259,13 @@
                     <input  matInput
                             type="text"
                             formControlName="rutaSoporte"
+                            required
                             [class.invalid]="perfil.get( 'rutaSoporte' ).value.length > 0 ? perfil.get( 'rutaSoporte' ).markAsUntouched() : perfil.get( 'rutaSoporte' ).markAsTouched()">
                   </mat-form-field>
                 </div>
                 <div class="d-flex justify-content-center size-text-descriptivo">
                   <p class="color-text-descriptivo">
-                      <i> 
+                      <i>
                           Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación del personal.
                       </i>
                   </p>
@@ -296,9 +297,9 @@
       </div>
 
       <div class="text-center">
-        <button mat-button 
-                color="warn" 
-                class="btn-guardar" 
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
                 type="button"
                 (click)="guardar()"
                 [disabled]="formContratista.dirty === false">
