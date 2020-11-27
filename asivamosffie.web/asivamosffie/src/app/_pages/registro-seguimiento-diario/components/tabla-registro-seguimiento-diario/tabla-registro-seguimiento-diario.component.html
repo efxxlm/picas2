@@ -58,13 +58,13 @@
 
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="Enviar( element.seguimientoDiarioId )" 
-          *ngIf="element.registroCompleto && element.estadoCodigo === undefined" >
+          *ngIf="element.registroCompleto && element.estadoCodigo === '1'" >
           Enviar seguimiento diario
         </a>
 
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="RegistrarNuevo( element )" 
-          *ngIf="element.estadoCodigo !== undefined || element.fechaUltimoSeguimientoDiario === undefined" >
+          *ngIf="element.estadoCodigo !== '1'" >
           Registrar seguimiento diario
         </a>
 
@@ -76,13 +76,13 @@
 
         <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
           (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>',element.seguimientoDiarioId)"
-          *ngIf="element.seguimientoDiarioId > 0">
+          *ngIf="element.seguimientoDiarioId > 0 && element.estadoCodigo === '1'" >
           Eliminar registro
         </a>
 
           <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
             (click)="Editar( element )" 
-            *ngIf="element.seguimientoDiarioId > 0 && element.estadoCodigo === undefined ">
+            *ngIf="element.seguimientoDiarioId > 0 && element.estadoCodigo === '1' ">
             Ver detalle/Editar
           </a>
 

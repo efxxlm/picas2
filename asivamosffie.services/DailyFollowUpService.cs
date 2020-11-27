@@ -469,7 +469,7 @@ namespace asivamosffie.services
             List<VProyectosXcontrato> listaProyectos = _context.VProyectosXcontrato.ToList();
 
             List<SeguimientoDiario> listaSeguimientos = _context.SeguimientoDiario
-                                                                    .Where( r => r.ContratacionProyectoId == pId  )
+                                                                    .Where( r => r.ContratacionProyectoId == pId && r.Eliminado != true  )
                                                                     .Include( r => r.ContratacionProyecto )
                                                                     .ToList();
 
