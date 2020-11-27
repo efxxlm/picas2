@@ -18,22 +18,22 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
-  constructor( private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
+  constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    if(this.isEditable==true){
+    if (this.isEditable == true) {
       this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
         this.addressForm.get('urlSoporte').setValue(resp.rutaSoporte);
+        this.loadSemaforo();
       });
     }
-    this.loadSemaforo();
   }
 
-  loadSemaforo(){
-    if(this.addressForm.get('urlSoporte')!=null){
+  loadSemaforo() {
+    if (this.addressForm.value.urlSoporte != null) {  
       this.estadoSemaforo1.emit('completo');
     }
-    else{
+    else {
       this.estadoSemaforo1.emit('sin-diligenciar');
     }
   }
@@ -47,8 +47,8 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.services.ActualizarRutaSoporteControversiaContractual(this.idControversia,this.addressForm.value.urlSoporte).subscribe(resp=>{
-      if(resp.isSuccessful==true){
+    this.services.ActualizarRutaSoporteControversiaContractual(this.idControversia, this.addressForm.value.urlSoporte).subscribe(resp => {
+      if (resp.isSuccessful == true) {
         this.openDialog('', 'La información ha sido guardada exitosamente.');
         if (this.isEditable == true) {
           this.router.navigate(['/gestionarTramiteControversiasContractuales']);
@@ -57,7 +57,7 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
           this.router.navigate(['/gestionarTramiteControversiasContractuales']);
         }
       }
-      else{
+      else {
         this.openDialog('', resp.message);
       }
     });

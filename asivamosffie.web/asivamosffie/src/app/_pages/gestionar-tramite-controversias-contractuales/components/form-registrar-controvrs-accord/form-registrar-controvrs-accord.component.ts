@@ -70,7 +70,10 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.addressForm.get('fechaComitePretecnico').setValue(resp.fechaComitePreTecnico);
         this.addressForm.get('conclusionComitePretecnico').setValue(resp.conclusionComitePreTecnico);
         this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
-        this.addressForm.get('requeridoComite').setValue(false);
+        this.addressForm.get('requeridoComite').setValue(resp.esRequiereComite);
+        if(resp.esProcede==false){
+          this.addressForm.get('motivosRechazo').setValue(resp.motivoJustificacionRechazo);
+        }
         this.numeroSolicitud = resp.numeroSolicitudFormat;
         this.idContrato = resp.contratoId;
         this.userCreation = resp.usuarioCreacion;
