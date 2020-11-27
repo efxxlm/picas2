@@ -1583,7 +1583,7 @@ namespace asivamosffie.services
                         IdContrato = contrato.ContratoId,
                         TipoContrato = strTipoContratoCodigoContratoNombre,
                         NumeroContrato = contrato.NumeroContrato,
-                        ObjetoContrato = contrato.Objeto,
+                        ObjetoContrato = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto,
                         NombreContratista = strContratistaNombre,
                         TipoDocumento= strTipoDocumentoContratista,
 

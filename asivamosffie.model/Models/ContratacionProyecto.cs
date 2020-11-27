@@ -10,6 +10,7 @@ namespace asivamosffie.model.Models
             ContratacionObservacion = new HashSet<ContratacionObservacion>();
             ContratacionProyectoAportante = new HashSet<ContratacionProyectoAportante>();
             DefensaJudicialContratacionProyecto = new HashSet<DefensaJudicialContratacionProyecto>();
+            SeguimientoDiario = new HashSet<SeguimientoDiario>();
             SeguimientoSemanal = new HashSet<SeguimientoSemanal>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
         }
@@ -37,10 +38,10 @@ namespace asivamosffie.model.Models
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
-        public virtual SeguimientoDiario SeguimientoDiario { get; set; }
         public virtual ICollection<ContratacionObservacion> ContratacionObservacion { get; set; }
         public virtual ICollection<ContratacionProyectoAportante> ContratacionProyectoAportante { get; set; }
         public virtual ICollection<DefensaJudicialContratacionProyecto> DefensaJudicialContratacionProyecto { get; set; }
+        public virtual ICollection<SeguimientoDiario> SeguimientoDiario { get; set; }
         public virtual ICollection<SeguimientoSemanal> SeguimientoSemanal { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
     }
