@@ -1425,15 +1425,15 @@ namespace asivamosffie.services
                     {
                         ControversiaContractualId=controversia.ControversiaContractualId,
                         FechaActualizacion = controversia.FechaModificacion != null ? Convert.ToDateTime(controversia.FechaModificacion).ToString("dd/MM/yyyy") : controversia.FechaModificacion.ToString(),
-                        //DescripcionActuacion = "Actuación" + controversia.ControversiaActuacionId.ToString(),
-                        DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
+                        DescripcionActuacion = "Actuación " + controversia.ControversiaActuacionId.ToString(),
+                        //DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
                         ActuacionId = controversia.ControversiaActuacionId,
 
                         EstadoActuacion = strEstadoAvanceTramite,//controversia.EstadoAvanceTramiteCodigo
                         EstadoActuacionCodigo = strEstadoAvanceTramiteCodigo,//controversia.EstadoAvanceTramiteCodigo
 
-                        NumeroActuacion = controversia.ControversiaActuacionId.ToString(),
-
+                        NumeroActuacion = "ACT controversia "+controversia.ControversiaActuacionId.ToString("000"),
+                        
                         RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
 
                         ProximaActuacionCodigo= strProximaActuacionCodigo,
