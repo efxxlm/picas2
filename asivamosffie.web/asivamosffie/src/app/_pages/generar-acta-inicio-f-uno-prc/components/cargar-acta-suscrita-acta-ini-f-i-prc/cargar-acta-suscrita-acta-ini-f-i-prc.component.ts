@@ -142,7 +142,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
       contratoPerfil: [],
       contratoPoliza: []
     };
-    this.service.LoadActa(arraycontrato,inputNode.files[0],this.rutaDocumento,this.rutaDocumento).subscribe(data=>{
+    this.service.LoadActa(arraycontrato,inputNode.files[0],this.rutaDocumento,this.rutaDocumento).subscribe((data:any)=>{
       if(data.isSuccessful==true){
         this.openDialog('La información ha sido guardada exitosamente.', "");
         this.close();

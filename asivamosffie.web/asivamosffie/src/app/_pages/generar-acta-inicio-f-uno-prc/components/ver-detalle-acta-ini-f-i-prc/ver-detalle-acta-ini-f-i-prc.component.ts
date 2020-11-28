@@ -51,7 +51,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     });
   }
   loadData(id){
-    this.service.GetContratoByContratoId(id).subscribe(data=>{
+    this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
       this.cargarDataParaInsercion(data);
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
@@ -116,7 +116,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     }
   }
   generarActaSuscrita(){
-    this.service.GetActaByIdPerfil(this.rolAsignado,this.contratoId).subscribe(resp=>{
+    this.service.GetActaByIdPerfil(this.rolAsignado,this.contratoId).subscribe((resp:any)=>{
       const documento = `Prueba.pdf`; // Valor de prueba
       const text = documento,
       blob = new Blob([resp], { type: 'application/pdf' }),

@@ -164,7 +164,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       contratoPerfil: [],
       contratoPoliza: []
     };
-    this.service.EditContrato(arrayContrato).subscribe(data => {
+    this.service.EditContrato(arrayContrato).subscribe((data:any) => {
       if (data.code == "200") {
         if(localStorage.getItem("origin")=="obra"){
           this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
