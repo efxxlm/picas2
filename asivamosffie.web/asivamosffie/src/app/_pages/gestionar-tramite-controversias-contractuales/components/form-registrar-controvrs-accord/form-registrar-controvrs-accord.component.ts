@@ -125,7 +125,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   }
   loadSemaforos() {
     this.estadoSemaforo.emit('sin-diligenciar');
-      if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+    switch(this.addressForm.value.tipoControversia.codigo){
+      case '1':
+        if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
         && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
         this.estadoSemaforo.emit('completo');
         this.estaCompleto=true;
@@ -134,6 +136,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.estadoSemaforo.emit('en-proceso');
         this.estaCompleto=false;
       }
+      break;
+    }
   }
 
 
@@ -343,7 +347,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       });
     }
     else {
-      console.log('servicio que no va el TAI');
+      
     }
   }
 }

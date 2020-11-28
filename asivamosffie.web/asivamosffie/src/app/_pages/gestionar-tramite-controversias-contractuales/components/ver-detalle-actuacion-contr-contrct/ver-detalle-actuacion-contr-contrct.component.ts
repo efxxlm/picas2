@@ -39,7 +39,7 @@ export class VerDetalleActuacionContrContrctComponent implements OnInit {
   loadData(id){
     this.services.GetControversiaActuacionById(id).subscribe((data:any)=>{
       this.services.GetControversiaContractualById(data.controversiaContractualId).subscribe((data0:any)=>{
-        switch(data.tipoControversiaCodigo){
+        switch(data0.tipoControversiaCodigo){
           case '1':
             this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';
           break;
