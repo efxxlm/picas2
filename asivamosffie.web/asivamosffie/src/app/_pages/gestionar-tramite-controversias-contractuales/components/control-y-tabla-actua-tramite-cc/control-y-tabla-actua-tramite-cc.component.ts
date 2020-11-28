@@ -41,7 +41,11 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   enviarComiteTecnicoTramAct(id){
-
+    this.services.CambiarEstadoControversiaActuacion(id,"2").subscribe((data:any)=>{
+      if(data.isSuccessful==true){
+        this.ngOnInit();
+      }
+    });
   }
   verDetalleEditarActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarTramite',id]);
