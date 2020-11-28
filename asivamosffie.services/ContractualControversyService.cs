@@ -343,6 +343,43 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Respuesta> CambiarEstadoControversiaActuacion3(int pControversiaActuacionId, string pNuevoCodigoActuacionAdelantada, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ControversiaActuacion controversiaActuacionOld;
+                controversiaActuacionOld = _context.ControversiaActuacion.Find(pControversiaActuacionId);
+                controversiaActuacionOld.UsuarioModificacion = pUsuarioModifica;
+                controversiaActuacionOld.FechaModificacion = DateTime.Now;
+                controversiaActuacionOld.ActuacionAdelantadaCodigo = pNuevoCodigoActuacionAdelantada;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO CONTROVERSIA ACTUACION ADELANTADA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
         public async Task<Respuesta> CambiarEstadoActuacionSeguimiento(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
@@ -1387,7 +1424,7 @@ namespace asivamosffie.services
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
                         ControversiaContractualId=controversia.ControversiaContractualId,
-                        FechaActuacion = controversia.FechaModificacion != null ? Convert.ToDateTime(controversia.FechaModificacion).ToString("dd/MM/yyyy") : controversia.FechaModificacion.ToString(),
+                        FechaActualizacion = controversia.FechaModificacion != null ? Convert.ToDateTime(controversia.FechaModificacion).ToString("dd/MM/yyyy") : controversia.FechaModificacion.ToString(),
                         //DescripcionActuacion = "Actuación" + controversia.ControversiaActuacionId.ToString(),
                         DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
                         ActuacionId = controversia.ControversiaActuacionId,
@@ -1425,7 +1462,7 @@ namespace asivamosffie.services
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
                         ControversiaContractualId=0,                        
-                        FechaActuacion = "ERROR",
+                        FechaActualizacion = "ERROR",
                         DescripcionActuacion = e.InnerException.ToString(),
                         ActuacionId = 0,
 

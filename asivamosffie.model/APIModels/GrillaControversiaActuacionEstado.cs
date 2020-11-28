@@ -8,7 +8,7 @@ namespace asivamosffie.model.APIModels
     {
         public int ActuacionId { get; set; }
         public string DescripcionActuacion { get; set; }
-        public string FechaActuacion { get; set; }
+        public string FechaActualizacion { get; set; }
         public string NumeroActuacion { get; set; }
         public string RegistroCompletoActuacion { get; set; }
         public string EstadoActuacion { get; set; }
