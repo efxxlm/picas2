@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -12,7 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormDescripcionActuacionComponent implements OnInit {
   @Input() isEditable;
-
+  @Input() idActuacionFromEdit;
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -46,17 +47,29 @@ export class FormDescripcionActuacionComponent implements OnInit {
     ]
   };
 
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService,private router: Router) { }
 
   ngOnInit(): void {
     if (this.isEditable == true) {
-      this.addressForm.get('estadoAvanceTramite').setValue('1');
-      this.addressForm.get('fechaActuacionAdelantada').setValue('10/10/2020');
-      this.addressForm.get('actuacionAdelantada').setValue('1');
-      this.addressForm.get('proximaActuacionRequerida').setValue('1');
-      this.addressForm.get('cualOtro').setValue('Alguna observacion');
-      this.addressForm.get('diasVencimientoTerminos').setValue('3');
-      this.addressForm.get('participacionContratista').setValue(true);
+      this.services.GetControversiaActuacionById(this.idActuacionFromEdit).subscribe((data:any)=>{
+        const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
+        this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacion);
+        const actuacionAdelantadaSelected = this.actuacionAdelantadaArrayDom.find(t => t.codigo === data.actuacionAdelantadaCodigo);
+        this.addressForm.get('actuacionAdelantada').setValue(actuacionAdelantadaSelected);
+        const actuacionRequeridaSelected = this.proximaActuacionRequeridaArrayDom.find(t => t.codigo === data.proximaActuacionCodigo);
+        this.addressForm.get('proximaActuacionRequerida').setValue(actuacionRequeridaSelected);
+        this.addressForm.get('cualOtro').setValue(data.actuacionAdelantadaOtro);
+        this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento);
+        this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
+        this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
+        this.addressForm.get('participacionInterventorContrato').setValue(data.esRequiereInterventor);
+        this.addressForm.get('participacionSupervisorContrato').setValue(data.esRequiereSupervisor);
+        this.addressForm.get('participacionFiduciaria').setValue(data.esRequiereFiduciaria);
+        this.addressForm.get('requiereComiteTecnico').setValue(data.esRequiereComite);
+        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+      });
     }
     this.common.listaEstadosAvanceTramite().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
@@ -68,6 +81,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
       this.proximaActuacionRequeridaArrayDom = rep2;
     });
   }
+
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -158,7 +172,13 @@ export class FormDescripcionActuacionComponent implements OnInit {
       }
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
-      
+      if(data.isSuccessful==true){
+        this.openDialog("",data.message);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+      }
+      else{
+        this.openDialog("",data.message);
+      }
     });
   }
 }

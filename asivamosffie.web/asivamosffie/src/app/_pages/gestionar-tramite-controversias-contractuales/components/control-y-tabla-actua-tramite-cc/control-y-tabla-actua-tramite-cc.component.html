@@ -18,7 +18,7 @@
     
             <ng-container matColumnDef="actuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.actuacion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.descripcionActuacion }} </td>
             </ng-container>
     
             <ng-container matColumnDef="numeroActuacion">
@@ -37,26 +37,27 @@
             <ng-container matColumnDef="estadoActuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la actuación </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                    {{element.estadoActuacion}}
+                   <div *ngIf="element.estadoActuacionCodigo=='1'">En proceso de registro</div>
+                   <div *ngIf="element.estadoActuacionCodigo=='2'">Finalizada</div>
                     </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacion=='1'"
-                    (click)="this.enviarComiteTecnicoTramAct(element.id)">
-                        Enviar trámite a comité técnico
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1'"
+                    (click)="this.enviarComiteTecnicoTramAct(element.actuacionId)">
+                        Finalizar actuación
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacion=='1'"
-                    (click)="this.verDetalleEditarActuacion(element.id)">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1'"
+                    (click)="this.verDetalleEditarActuacion(element.actuacionId)">
                         Ver detalle/Editar
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacion=='1'"
-                    (click)="this.eliminarActuacion(element.id)">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1'"
+                    (click)="this.eliminarActuacion(element.actuacionId)">
                         Eliminar
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacion=='2'"
-                    (click)="this.verDetalleActuacion(element.id)">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='2'"
+                    (click)="this.verDetalleActuacion(element.actuacionId)">
                         Ver detalle
                     </button>
                 </td>
