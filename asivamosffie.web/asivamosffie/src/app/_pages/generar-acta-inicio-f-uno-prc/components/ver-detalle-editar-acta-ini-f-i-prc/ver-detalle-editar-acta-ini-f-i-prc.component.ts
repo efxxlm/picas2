@@ -17,9 +17,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
   public idContrato;
   public numContrato;
   public fechaFirmaContrato;
-  public fechaContrato = "20/06/2020";//valor quemado
-  public mesPlazoIni: number = 10;
-  public diasPlazoIni: number = 25;
   public conObservaciones:boolean;
 
   public rolAsignado;
@@ -48,6 +45,20 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
   public observacionesOn: boolean;
   indexContratacionID: any;
   indexObservacionFinal: any;
+  fechaAprobacionRequisitos: any;
+  numDRP: any;
+  fechaDRP: any;
+  objeto: any;
+  valorIni: any;
+  fechaAprobGarantiaPoliza: any;
+  nitContratistaInterventoria: any;
+  vigenciaContrato: any;
+  valorFUno: any;
+  valorFDos: any;
+  nomEntidadContratistaIntervn: any;
+  numIdContratistaObra: any;
+  diasPlazoIni: any;
+  mesPlazoIni: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -90,6 +101,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
   }
   cargarDataParaInsercion(data){
     this.numContrato = data.numeroContrato;
+    this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitosSupervisor;
     this.fechaFirmaContrato = data.fechaFirmaContrato;
     this.contratacionId = data.contratacionId;
     this.fechaTramite = data.fechaTramite;
@@ -98,6 +110,19 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     this.fechaEnvioFirma = data.fechaEnvioFirma;
     this.fechaFirmaContratista = data.fechaFirmaContratista;
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
+    this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
+    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
+    this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
+    this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+    this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
+    this.fechaAprobGarantiaPoliza = data.contratoPoliza[0].fechaAprobacion;
+    this.vigenciaContrato = data.fechaTramite;
+    this.valorFUno = data.valorFase1;
+    this.valorFDos = data.valorFase2;
+    this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
+    this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
+    this.mesPlazoIni= data.plazoFase1PreMeses + data.plazoFase2ConstruccionMeses;
+    this.diasPlazoIni= data.plazoFase1PreDias + data.plazoFase2ConstruccionDias;
     for(let i=0; i<data.contratoObservacion.length;i++){
       this.indexContratacionID=data.contratoObservacion[i].contratoObservacionId;
     }

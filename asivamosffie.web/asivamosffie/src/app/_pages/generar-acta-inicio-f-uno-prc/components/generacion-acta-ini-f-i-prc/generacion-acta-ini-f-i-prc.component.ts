@@ -24,8 +24,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   public estadoDocumentoCodigo;
   public fechaFirmaContratista;
   public fechaFirmaFiduciaria;
-  public mesPlazoIni: number = 10;
-  public diasPlazoIni: number = 25;
+  public mesPlazoIni: number;
+  public diasPlazoIni: number;
   public observacionesOn : boolean;
   addressForm = this.fb.group({});
   dataDialog: {
@@ -39,6 +39,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   valorIni: any;
   nitContratistaInterventoria: any;
   nomContratista: any;
+  fechaAprobGarantiaPoliza: any;
+  vigenciaContrato: any;
+  valorFUno: any;
+  nomEntidadContratistaIntervn: any;
+  valorFDos: any;
+  numIdContratistaObra: any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
@@ -58,7 +64,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   }
   cargarDataParaInsercion(data){
     this.numContrato = data.numeroContrato;
-    this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitos;
+    this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitosSupervisor;
     this.fechaFirmaContrato = data.fechaFirmaContrato;
     this.contratacionId = data.contratacionId;
     this.fechaTramite = data.fechaTramite;
@@ -69,10 +75,22 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
     this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
     this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
-    this.objeto = data.objeto;
-    this.valorIni = data.valor;
-    this.nitContratistaInterventoria = data.contratista.numeroIdentificacion;
-    this.nomContratista = data.contratista.nombre;
+    this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
+    this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+    this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
+    this.fechaAprobGarantiaPoliza = data.contratoPoliza[0].fechaAprobacion;
+    this.vigenciaContrato = data.fechaTramite;
+    this.valorFUno = data.valorFase1;
+    this.valorFDos = data.valorFase2;
+    this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
+    this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
+    this.mesPlazoIni= data.plazoFase1PreMeses + data.plazoFase2ConstruccionMeses;
+    this.diasPlazoIni= data.plazoFase1PreDias + data.plazoFase2ConstruccionDias;
+  }
+  generarFechaRestante(){
+    let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
+    newdate.setMonth(newdate.getMonth() + this.mesPlazoIni);
+    this.addressForm.get('fechaPrevistaTerminacion').setValue(newdate);
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -168,13 +186,13 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       if (data.code == "200") {
         if(localStorage.getItem("origin")=="obra"){
           this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
-            this.openDialog2('La información ha sido guardada exitosamente.', "");
+            this.openDialog('La información ha sido guardada exitosamente.', "");
             this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
           });
         }
         else{
           this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data0=>{
-            this.openDialog2('La información ha sido guardada exitosamente.', "");
+            this.openDialog('La información ha sido guardada exitosamente.', "");
             this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
           });
         }
