@@ -35,7 +35,7 @@ namespace asivamosffie.services
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
-                       .Where(r=> r.FechaAprobacionRequisitosSupervisor.HasValue).ToListAsync();
+                       .Where(r => r.FechaAprobacionRequisitosSupervisor.HasValue).ToListAsync();
 
                 List<Dominio> listEstadosActa = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato).ToList();
 
@@ -68,16 +68,17 @@ namespace asivamosffie.services
                 Contrato contrato =
                     await _context.Contrato.Where(r => r.ContratoId == pContratoId)
                        .Include(r => r.ContratoObservacion)
-                         .Include(r => r.Contratacion)
-                                .ThenInclude(r => r.ContratacionProyecto)
-                                       .ThenInclude(r => r.ContratacionProyectoAportante)
-                                                     .ThenInclude(r => r.ComponenteAportante)
-                                                       .ThenInclude(r => r.ComponenteUso)
-
-                          .Include(r => r.Contratacion)
-                            .ThenInclude(r => r.Contratista)
-                         .Include(r => r.Contratacion)
-                            .ThenInclude(r => r.DisponibilidadPresupuestal).FirstOrDefaultAsync();
+                       .Include(r => r.Contratacion)
+                          .ThenInclude(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.ContratacionProyectoAportante)
+                                  .ThenInclude(r => r.ComponenteAportante)
+                                      .ThenInclude(r => r.ComponenteUso) 
+                        .Include(r => r.Contratacion)
+                           .ThenInclude(r => r.Contratista)
+                        .Include(r => r.Contratacion)
+                           .ThenInclude(r => r.DisponibilidadPresupuestal)
+                        .Include(r => r.ContratoPoliza)
+                        .FirstOrDefaultAsync();
 
                 return contrato;
             }
@@ -93,9 +94,9 @@ namespace asivamosffie.services
 
             try
             {
-           
+
                 Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
-                    .Include(r=> r.Contratacion)
+                    .Include(r => r.Contratacion)
                     .Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
 
                 ContratoOld.FechaActaInicioFase1 = pContrato.FechaActaInicioFase1;
@@ -337,15 +338,13 @@ namespace asivamosffie.services
             return await _context.ContratoObservacion.Where(r => r.ContratoId == ContratoId).ToListAsync();
         }
 
-
         //Codigo CDaza Se deja la misma Logica Pedidar por David
         public async Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
-        { 
+        {
             ConstruccionObservacion contratoObservacion = new ConstruccionObservacion();
             List<ConstruccionObservacion> lstContratoObservacion = new List<ConstruccionObservacion>();
 
-            ContratoConstruccion contratoConstruccion = null;
-            contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+            ContratoConstruccion contratoConstruccion = await _context.ContratoConstruccion.Where(r => r.ContratoId == pContratoId).FirstOrDefaultAsync();
 
             if (contratoConstruccion != null)
             {
@@ -354,7 +353,6 @@ namespace asivamosffie.services
                 lstContratoObservacion = _context.ConstruccionObservacion.Where(r => r.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId && r.EsSupervision == pEsSupervisor && r.EsActa == true).ToList();
                 lstContratoObservacion = lstContratoObservacion.OrderByDescending(r => r.ConstruccionObservacionId).ToList();
 
-                //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
                 contratoObservacion = lstContratoObservacion.Where(r => r.ContratoConstruccionId == contratoConstruccion.ContratoConstruccionId).FirstOrDefault();
                 return contratoObservacion;
             }
@@ -367,7 +365,7 @@ namespace asivamosffie.services
             List<Contrato> lstContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado && r.FechaAprobacionRequisitosSupervisor.HasValue)
                 .Include(r => r.Contratacion)
                 .Include(r => r.ContratoObservacion)
-                .OrderByDescending(r=> r.FechaAprobacionRequisitosSupervisor)
+                .OrderByDescending(r => r.FechaAprobacionRequisitosSupervisor)
                 .ToListAsync();
 
             List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_interventoria || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).ToList();
@@ -380,7 +378,7 @@ namespace asivamosffie.services
                 string EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa && (r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_interventoria)).FirstOrDefault().Nombre : " ";
                 if (pPerfilId != (int)EnumeratorPerfil.Tecnica)
                     EstadoActa = !string.IsNullOrEmpty(Contrato.EstadoActa) ? Listdominios.Where(r => r.Codigo == Contrato.EstadoActa && (r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_interventoria)).FirstOrDefault().Descripcion : " ";
-                 
+
                 lstActaInicio.Add(new GrillaActaInicio
                 {
                     ContratoId = Contrato.ContratoId,
