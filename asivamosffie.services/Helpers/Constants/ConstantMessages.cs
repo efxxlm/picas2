@@ -746,6 +746,13 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string ErrorEnviarCorreo = "107";
         public const string ErrorGuardarCambios = "109";
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";               
+        public const string EliminacionExitosa = "201";
+
+        #endregion Mensajes Exitoso
     }
 
     
@@ -771,7 +778,8 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region Mensajes Exitoso
 
-        public const string OperacionExitosa = "200";               
+        public const string OperacionExitosa = "200";         
+        public const string EliminacionExitosa = "201";      
 
         #endregion Mensajes Exitoso
 
@@ -779,6 +787,34 @@ namespace asivamosffie.services.Helpers.Constant
 
         #endregion Mensajes Redireccion
 
+        #endregion
+
+    }
+
+    public class GeneralCodes
+    {
+
+        #region Mensajes Informativos
+
+        public const string NoExitenArchivos = "100";
+        public const string CamposVacios = "101";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+        
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
     }
     
 }

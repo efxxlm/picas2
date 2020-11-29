@@ -73,8 +73,5 @@ export class TableFuentesYUsosComponent implements OnInit {
     };
   };
 
-  definirFuentes ( id: number, municipio: any ) {
-    this.routes.navigate( [ '/solicitarContratacion/definir-fuentes', id ], { state: {municipio: municipio} } )
-  }
 
 }
