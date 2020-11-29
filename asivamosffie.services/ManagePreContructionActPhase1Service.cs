@@ -72,13 +72,29 @@ namespace asivamosffie.services
                           .ThenInclude(r => r.ContratacionProyecto)
                               .ThenInclude(r => r.ContratacionProyectoAportante)
                                   .ThenInclude(r => r.ComponenteAportante)
-                                      .ThenInclude(r => r.ComponenteUso) 
+                                      .ThenInclude(r => r.ComponenteUso)
                         .Include(r => r.Contratacion)
                            .ThenInclude(r => r.Contratista)
                         .Include(r => r.Contratacion)
                            .ThenInclude(r => r.DisponibilidadPresupuestal)
                         .Include(r => r.ContratoPoliza)
                         .FirstOrDefaultAsync();
+
+
+                foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
+                {
+
+                    foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
+                    {
+                        foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
+                        {
+                            if (ComponenteAportante.TipoComponenteCodigo == ConstanCodigoFaseContrato.Preconstruccion.ToString())
+                                contrato.ValorFase1 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
+                            else
+                                contrato.ValorFase2 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
+                        }
+                    }
+                }
 
                 return contrato;
             }
