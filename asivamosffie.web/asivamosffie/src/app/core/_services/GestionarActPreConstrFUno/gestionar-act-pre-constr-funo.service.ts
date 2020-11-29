@@ -24,14 +24,19 @@ export class GestionarActPreConstrFUnoService {
   EditContrato(pcontrato: EditContrato) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/EditContrato`, pcontrato);
   }
-  LoadActa(pcontrato:ContratoParaActa, archivoParaSubir: File,pDirectorioBase:string,pDirectorioActaContrato:string) {
+  /*
+  LoadActa(pcontrato:ContratoParaActa, pfile: File) {
     const formData = new FormData();
     formData.append('idContrato', `${pcontrato.contratoId}`);
     formData.append('fechaFirmaActaContratista', `${pcontrato.fechaFirmaActaContratista}`);
     formData.append('fechaFirmaActaContratistaInterventoria', `${pcontrato.fechaFirmaActaContratistaInterventoria}`);
-    formData.append('file', archivoParaSubir, archivoParaSubir.name);
-    return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa?pDirectorioBase=${pDirectorioBase}&pDirectorioActaContrato=${pDirectorioActaContrato}`, formData);
+    formData.append('pfile', pfile, pfile.name);
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/LoadActa`, formData);
   }
+  */
+  LoadActa ( pContrato: FormData) {
+    return this.http.post<Respuesta>( `${ environment.apiUrl}/ManagePreContructionActPhase1/LoadActa`, pContrato );
+  };
   /*
   De respaldo
   EditCargarActaSuscritaContrato(pContratoId: number, pFechaFirmaContratista: string, pFechaFirmaActaContratistaInterventoria: string, pFile: File, pUsuarioModificacion: string) {

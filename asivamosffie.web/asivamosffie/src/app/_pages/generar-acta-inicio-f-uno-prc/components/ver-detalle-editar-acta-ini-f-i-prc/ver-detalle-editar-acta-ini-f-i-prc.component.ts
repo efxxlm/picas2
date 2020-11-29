@@ -263,6 +263,18 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       this.service.EditContrato(arrayContrato).subscribe(data => {
         if (data.code == "200") {
           this.openDialog('', data.message);
+          if(localStorage.getItem("origin")=="obra"){
+            this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
+              this.openDialog('La información ha sido guardada exitosamente.', "");
+              this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+            });
+          }
+          else{
+            this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data0=>{
+              this.openDialog('La información ha sido guardada exitosamente.', "");
+              this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+            });
+          }
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
         else{
