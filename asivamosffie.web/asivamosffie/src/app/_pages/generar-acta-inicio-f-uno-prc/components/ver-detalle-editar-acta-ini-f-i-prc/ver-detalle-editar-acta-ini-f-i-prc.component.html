@@ -8,7 +8,7 @@
         Ver detalle/Editar contrato {{this.numContrato}} fase 1 - Preconstrucción
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de aprobación de requisitos: <b>{{this.fechaAprobacionRequisitos }}</b></span>
+        <span>Fecha de aprobación de requisitos: <b>{{this.fechaAprobacionRequisitos  | date:'dd/MM/yyyy' }}</b></span>
     </p>
 </section>
 <section class="container">
@@ -50,8 +50,9 @@
                                 </div>
                                 <div class="col d-flex align-items-center">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput [matDatepicker]="picker" required [max]="maxDate" readonly
-                                            (click)="picker.open()" formControlName="fechaActaInicioFUnoPreconstruccion">
+                                        <input matInput [matDatepicker]="picker" required [min]="this.fechaAprobacionRequisitos" readonly
+                                            (click)="picker.open()" formControlName="fechaActaInicioFUnoPreconstruccion"
+                                            (dateInput)="generarFechaRestante()">
                                         <mat-datepicker #picker></mat-datepicker>
                                     </mat-form-field>
                                     <button mat-button color="primary" type="button" (click)="picker.open()"
@@ -63,7 +64,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-7" style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="fechaPrevistaTerminacion">Fecha prevista de
@@ -71,20 +72,15 @@
                                 </div>
                                 <div class="col d-flex align-items-center">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
-                                            (click)="picker2.open()" formControlName="fechaPrevistaTerminacion">
+                                        <input matInput [matDatepicker]="picker2" required readonly formControlName="fechaPrevistaTerminacion">
                                         <mat-datepicker #picker2></mat-datepicker>
                                     </mat-form-field>
-                                    <button mat-button color="primary" type="button" (click)="picker2.open()"
-                                        class="btn-calendario">
-                                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-9"  style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left">Plazo de ejecución fase 1 – Preconstrucción:</label>
@@ -115,7 +111,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-9"  style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left">Plazo de ejecución fase 2 – Construcción:</label>
