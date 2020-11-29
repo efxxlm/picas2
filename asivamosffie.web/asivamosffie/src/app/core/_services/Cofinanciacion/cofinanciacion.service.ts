@@ -61,7 +61,7 @@ export interface Cofinanciacion{
   cofinanciacionId: number,
   vigenciaCofinanciacionId: number,
   cofinanciacionAportante: CofinanciacionAportante[],
-  fechaCreacion?: string,
+  fechaCreacion?: Date,
   valorTotal?: number,
   estadoRegistro?: string,
   registroCompleto?:boolean,//segun bd este es el nombre del campo

@@ -451,6 +451,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
 
         #endregion Mensajes Exitoso
 
@@ -583,13 +584,6 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
-    
-
-    
-
-
-
-
     public class ConstantGestionarProcesosContractuales
     {
 
@@ -675,10 +669,6 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
-
-
-    
-
     public class ConstantMessagesContratoPoliza
     {
 
@@ -714,8 +704,8 @@ namespace asivamosffie.services.Helpers.Constant
     {
 
         #region Mensajes Informativos
-
-
+        public const string CanceladoCorrrectamente = "201";
+        public const string DevueltoCorrrectamente = "202";
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
@@ -733,6 +723,7 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
+    
     public class ConstantMessagesContractualControversy
     {
         #region Mensajes Error
@@ -755,25 +746,9 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string ErrorEnviarCorreo = "107";
         public const string ErrorGuardarCambios = "109";
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-        public const string EliminacionCancelada = "202";
-        public const string EliminacionExitosa = "201";
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-
-
-        #endregion Mensajes Redireccion
-
     }
 
+    
     public class ConstantMessagesJudicialDefense
     {
         #region Mensajes Error
@@ -805,4 +780,5 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Redireccion
 
     }
+    
 }

@@ -139,15 +139,14 @@ namespace asivamosffie.api
             services.AddTransient<ISelectionProcessService, SelectionProcessService>();
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
             services.AddTransient<IGuaranteePolicyService, GuaranteePolicyService>();
-            services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
             services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
-            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
             services.AddTransient<IContractualControversy, ContractualControversyService>();
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
 
         }
 

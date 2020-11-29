@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public IFormFile pFile { get; set; }
 
+       
         [NotMapped]
         public DateTime? FechaEnvioFirmaFormat { get; set; }
 
@@ -24,8 +25,7 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public DateTime? FechaFirmaFiduciariaFormat { get; set; }
-
-
+         
         [NotMapped]
         public DateTime? FechaFirmaContratoFormat { get; set; }
 
@@ -37,6 +37,7 @@ namespace asivamosffie.model.Models
          
         [NotMapped]
         public decimal ValorFase2 { get; set; }
+        public DateTime? FechaPolizaAprobacion { get; set; }
 
     }
 }

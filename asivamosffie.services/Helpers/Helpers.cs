@@ -9,7 +9,6 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
-using System; 
 using System.IO;
 using asivamosffie.model.APIModels;
 using System.Data.Common;
@@ -76,7 +75,7 @@ namespace asivamosffie.services.Helpers
 
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
-            result = sha.ComputeHash(data);
+            result = sha.ComputeHash(data) ;
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)

@@ -23,7 +23,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Gestionar_Procesos_Contractuales = 31,
 
-        Preconstruccion_Fase_1 = 37, 
+        Preconstruccion_Fase_1 = 37,
+
+        Registrar_Requisitos_Tecnicos_Construccion = 41,
  
 
         DisponibilidadPresupuestal = 30,
@@ -42,6 +44,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Gestionar_procesos_Defensa_Judicial = 52,
 
+        Verificar_Requisitos_Tecnicos_Construccion = 45,
+
+        
     }
 
     public enum enumeratorAccion

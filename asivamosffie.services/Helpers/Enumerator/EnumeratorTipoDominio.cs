@@ -57,15 +57,14 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_de_Solicitud = 29,
 
-   
+        Etapa_Proceso_Seleccion = 34,
 
-        Tipo_Documento = 30,
+	Tipo_Documento = 30,
 
         Estado_Solicitud = 31,
 
         Estado_Solicitud_Presupuestal = 33,
 
-        Etapa_Proceso_Seleccion = 34,
 
         Estado_Proceso_Seleccion = 35,
 

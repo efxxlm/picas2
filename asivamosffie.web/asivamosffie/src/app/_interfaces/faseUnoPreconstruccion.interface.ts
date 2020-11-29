@@ -1,11 +1,12 @@
 export interface GrillaFaseUnoPreconstruccion {
-  cantidadProyectosAsociados: number;
-  estadoVerificacionNombre: string;
-  fechaAprobacionPoliza: string;
-  idContrato: number;
+  fechaAprobacion: string;
   numeroContrato: string;
-  proyectosCompletos: number;
-  proyectosNoCompletos: number;
+  cantidadProyectosAsociados: number;
+  cantidadProyectosRequisitosAprobados: number;
+  cantidadProyectosRequisitosPendientes: number;
+  estadoCodigo: string;
+  estadoNombre: string;
+  contratoId: number;
   verBotonAprobarInicio: boolean;
 };
 
@@ -29,10 +30,10 @@ interface estadoCodigos {
 };
 
 export interface ContratoModificado {
-  contratacion: Contratacion,
-  fechaPoliza: string,
-  numeroContrato: string
-};
+  contratacion: Contratacion;
+  fechaPoliza: string;
+  numeroContrato: string;
+}
 
 export interface Contrato {
   contratacionId: number;
@@ -144,6 +145,8 @@ interface Contratacion {
 }
 
 export interface ContratacionProyecto2 {
+  estadoSemaforo: string;
+  estadoSemaforoContratacion: string;
   contratacionProyectoId: number;
   contratacionId: number;
   proyectoId: number;
@@ -264,3 +267,20 @@ interface Contratista {
   usuarioModificacion: string;
   contratacion: any[];
 }
+
+
+interface TipoObservacionConstruccion{
+  Diagnostico: string;
+  PlanesProgramas: string;
+  ManejoAnticipo: string;
+  ProgramacionObra: string;
+  FlujoInversion: string;
+}
+
+export const TiposObservacionConstruccion: TipoObservacionConstruccion = {
+  Diagnostico: '1',
+  PlanesProgramas: '2',
+  ManejoAnticipo: '3',
+  ProgramacionObra: '4',
+  FlujoInversion: '5',
+};
