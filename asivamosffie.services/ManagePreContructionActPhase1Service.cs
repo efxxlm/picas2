@@ -374,9 +374,10 @@ namespace asivamosffie.services
         public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId)
         {
             List<GrillaActaInicio> lstActaInicio = new List<GrillaActaInicio>();
-            List<Contrato> lstContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado)
+            List<Contrato> lstContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado && r.FechaAprobacionRequsitosSupervisor.HasValue)
                 .Include(r => r.Contratacion)
                 .Include(r => r.ContratoObservacion)
+                .OrderByDescending(r=> r.FechaAprobacionRequsitosSupervisor)
                 .ToListAsync();
 
             List<Dominio> Listdominios = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_obra || r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_actas_inicio_interventoria || r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).ToList();
@@ -396,7 +397,7 @@ namespace asivamosffie.services
                     EstadoActa = EstadoActa,
                     EstadoVerificacion = Contrato.EstadoVerificacionCodigo,
                     EstadoActaCodigo = Contrato.EstadoActa,
-                    FechaAprobacionRequisitos = Contrato.FechaAprobacionRequisitos.HasValue ? ((DateTime)Contrato.FechaAprobacionRequisitos).ToString("dd-MMMM-yy") : "",
+                    FechaAprobacionRequisitos = Contrato.FechaAprobacionRequsitosSupervisor,
                     NumeroContratoObra = Contrato.NumeroContrato,
                     TipoContrato = Contrato.Contratacion.TipoSolicitudCodigo,
                     TipoContratoNombre = !string.IsNullOrEmpty(Contrato.Contratacion.TipoSolicitudCodigo) ? Listdominios.Where(r => r.Codigo == Contrato.Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).FirstOrDefault().Nombre : " ",
