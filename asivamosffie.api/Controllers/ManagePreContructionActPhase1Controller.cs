@@ -69,7 +69,7 @@ namespace asivamosffie.api.Controllers
         }
          
         [Route("LoadActa")]
-        [HttpPut]
+        [HttpPost]
         public async Task<Respuesta> LoadActa([FromBody] Contrato pContrato, IFormFile pFile)
         {
             Respuesta respuesta = new Respuesta();
