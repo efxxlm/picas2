@@ -35,7 +35,7 @@ namespace asivamosffie.services
             try
             {
                 List<Contrato> listContratos = await _context.Contrato
-                       .Where(r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados).ToListAsync();
+                       .Where(r=> r.FechaAprobacionRequisitosSupervisor.HasValue).ToListAsync();
 
                 List<Dominio> listEstadosActa = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Del_Acta_Contrato).ToList();
 
@@ -45,7 +45,7 @@ namespace asivamosffie.services
                 {
                     ListContratacionDynamic.Add(new
                     {
-                        fechaAprobacionRequisitosSupervisor = "Fecha-3.1.8",
+                        fechaAprobacionRequisitosSupervisor = contrato.FechaAprobacionRequisitosSupervisor,
                         contrato.NumeroContrato,
                         estadoActaContrato = !string.IsNullOrEmpty(contrato.EstadoActa) ? listEstadosActa.Where(r => r.Codigo == contrato.EstadoActa).FirstOrDefault().Nombre : " ",
                         contrato.ContratoId
@@ -340,17 +340,7 @@ namespace asivamosffie.services
 
         //Codigo CDaza Se deja la misma Logica Pedidar por David
         public async Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
-        {
-
-            //includefilter
-            //ContratoObservacion contratoObservacion = new ContratoObservacion();
-            //List<ContratoObservacion> lstContratoObservacion = new List<ContratoObservacion>();
-            //lstContratoObservacion=_context.ContratoObservacion.Where(r => r.ContratoId == pContratoId && r.EsActaFase2==true).ToList();
-            //lstContratoObservacion = lstContratoObservacion.OrderByDescending(r => r.ContratoObservacionId).ToList();
-
-            ////contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
-            //contratoObservacion = lstContratoObservacion.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-
+        { 
             ConstruccionObservacion contratoObservacion = new ConstruccionObservacion();
             List<ConstruccionObservacion> lstContratoObservacion = new List<ConstruccionObservacion>();
 
@@ -397,7 +387,7 @@ namespace asivamosffie.services
                     EstadoActa = EstadoActa,
                     EstadoVerificacion = Contrato.EstadoVerificacionCodigo,
                     EstadoActaCodigo = Contrato.EstadoActa,
-                    FechaAprobacionRequisitos = Contrato.FechaAprobacionRequisitosSupervisor.ToString(),
+                    FechaAprobacionRequisitosDate = Contrato.FechaAprobacionRequisitosSupervisor,
                     NumeroContratoObra = Contrato.NumeroContrato,
                     TipoContrato = Contrato.Contratacion.TipoSolicitudCodigo,
                     TipoContratoNombre = !string.IsNullOrEmpty(Contrato.Contratacion.TipoSolicitudCodigo) ? Listdominios.Where(r => r.Codigo == Contrato.Contratacion.TipoSolicitudCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Contrato).FirstOrDefault().Nombre : " ",
