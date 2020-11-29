@@ -162,6 +162,11 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       this.conObservaciones=false;
     }
   }
+  generarFechaRestante(){
+    let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
+    newdate.setMonth(newdate.getMonth() + this.mesPlazoIni);
+    this.addressForm.get('fechaPrevistaTerminacion').setValue(newdate);
+  }
   crearFormulario() {
     return this.fb.group({
       fechaActaInicioFUnoPreconstruccion: [Date(), Validators.required],
@@ -256,9 +261,12 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
         contratoPoliza: []
       };
       this.service.EditContrato(arrayContrato).subscribe(data => {
-        this.openDialog('', data.message);
         if (data.code == "200") {
+          this.openDialog('', data.message);
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+        }
+        else{
+          this.openDialog('', data.message);
         }
       })
     }
