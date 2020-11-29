@@ -70,13 +70,13 @@ namespace asivamosffie.api.Controllers
          
         [Route("LoadActa")]
         [HttpPost]
-        public async Task<Respuesta> LoadActa([FromBody] Contrato pContrato, IFormFile pFile)
+        public async Task<Respuesta> LoadActa([FromBody] Contrato pContrato)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managePreContruction.LoadActa( pContrato, pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato);
+                respuesta = await _managePreContruction.LoadActa( pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato);
                 return respuesta;
 
             }
