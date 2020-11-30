@@ -67,6 +67,9 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   dataSupervisor: boolean =false; 
   numIdentifiacionSupervisor: string;
   nomSupervisor: string;
+  conObervacionesActa: any;
+  observacionesActaFase1: any;
+  fechaCreacion: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -77,6 +80,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.cargarRol();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
+      this.loadObservaciones(param.id);
       this.idContrato = param.id;
     });
   }
@@ -116,6 +120,16 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     });
     this.idContrato = id;
   }
+  loadObservaciones(id){
+    this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
+      for(let i = 0; i<data.length;i++){
+        this.conObervacionesActa = data[i].esActa;
+        this.observacionesActaFase1 = data[i].observaciones;
+        this.fechaCreacion = data[i].fechaCreacion;
+      }
+  });
+}
+
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
     if (this.rolAsignado == 2) {

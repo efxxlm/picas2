@@ -50,7 +50,7 @@
                         Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleActaFDos(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con validación del supervisor' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con validacion del supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='3') || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='8')">
+                        *ngIf="element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con validación del supervisor' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con validacion del supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='3') || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='8') ||  (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='17') ">
                         Ver detalle</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleActaCargada(element.contratoId)"
