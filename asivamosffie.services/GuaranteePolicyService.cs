@@ -1093,7 +1093,7 @@ namespace asivamosffie.services
             DateTime RangoFechaConDiasHabiles;
 
             //ejemplo festivo
-            //DateTime fechaFestiva= new DateTime(2020,12,9);
+            //DateTime fechaFestiva = new DateTime(2020, 12, 9);  // -4 debe dar jue 3 dic, da vie 4 dic ERROR
             //DateTime fechaFestiva = new DateTime(2020, 12, 2);  //miercoles 
 
             //DateTime fechaFestiva= new DateTime(2020,12,7);  //fx julian
