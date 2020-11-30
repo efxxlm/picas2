@@ -189,9 +189,9 @@ namespace asivamosffie.services
             {
                 if (pFile.Length > 0)
                 {
-                    ContratoOld.RutaActaSuscrita = Path.Combine(pDirectorioBase, pDirectorioActaContrato, pContrato.ContratoId.ToString());
-                    await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
-
+                    strFilePatch = Path.Combine(pDirectorioBase, pDirectorioActaContrato, pContrato.ContratoId.ToString());
+                    await _documentService.SaveFileContratacion(pFile, ContratoOld.RutaActaSuscrita, pFile.FileName);
+                    ContratoOld.RutaActaSuscrita = Path.Combine(strFilePatch, pFile.FileName);
                 }
                 else
                     return new Respuesta();

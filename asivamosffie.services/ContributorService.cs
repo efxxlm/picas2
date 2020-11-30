@@ -25,18 +25,7 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
-
-
- 
-
-
-
-
-
-        // Grilla de control? { AportanteId }
-     
-
-        //Registrar Aportante
+          
      
         //Registrar Control de recursos
         public async Task<Respuesta> ResourceControl(ControlRecurso controlRecurso)

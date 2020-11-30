@@ -59,7 +59,7 @@ namespace asivamosffie.services
 
                     if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
                         EstaDevuelto = true;
-                    foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
+                    foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).OrderBy(r=> r.EstadoRequisitosVerificacionCodigo))
                     { 
                         bool RegistroCompletoObservaciones = true;
 
@@ -81,9 +81,7 @@ namespace asivamosffie.services
                             if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor)
                             {
                                 TieneObservacionSupervisor = true;
-                            }
-
-                           
+                            } 
                         }
                         if (!RegistroCompletoObservaciones)
                             CantidadProyectosConPerfilesAprobados++;
