@@ -64,6 +64,9 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   numIdRepresentanteLegal: any;
   nomRepresentanteLegal: any;
   tipoProponente: any;
+  dataSupervisor: boolean =false; 
+  numIdentifiacionSupervisor: string;
+  nomSupervisor: string;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -150,6 +153,11 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
     this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
+    if(localStorage.getItem("origin")=="interventoria"){
+      this.dataSupervisor = true;
+      this.numIdentifiacionSupervisor = "";
+      this.nomSupervisor = "";
+    }
     for(let i=0; i<data.contratoObservacion.length;i++){
       this.indexContratacionID=data.contratoObservacion[i].contratoObservacionId;
     }
