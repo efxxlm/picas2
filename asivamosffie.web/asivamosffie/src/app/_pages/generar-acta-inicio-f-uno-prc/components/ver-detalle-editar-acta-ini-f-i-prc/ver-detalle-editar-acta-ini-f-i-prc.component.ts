@@ -117,6 +117,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     }
     else {
       this.opcion = 2;
+
     }
   }
   cargarDataParaInsercion(data){
@@ -147,6 +148,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.indexContratacionID=data.contratoObservacion[i].contratoObservacionId;
     }
   }
+  
   generarActaSuscrita(){
     alert("genera PDf");
   }

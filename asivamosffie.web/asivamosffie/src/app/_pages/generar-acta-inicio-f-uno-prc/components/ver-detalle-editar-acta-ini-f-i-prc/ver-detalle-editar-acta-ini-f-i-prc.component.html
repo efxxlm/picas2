@@ -45,7 +45,8 @@
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="fechaActaInicioFUnoPreconstruccion">Fecha del acta de
+                                    <label class="label-left" for="fechaActaInicioFUnoPreconstruccion"
+                                    [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaActaInicioFUnoPreconstruccion.invalid}">Fecha del acta de
                                         inicio de la fase 1 - Preconstrucción</label>
                                 </div>
                                 <div class="col d-flex align-items-center">
@@ -67,7 +68,7 @@
                         <div class="col-md-7" style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="fechaPrevistaTerminacion">Fecha prevista de
+                                    <label class="label-left" for="fechaPrevistaTerminacion" [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaPrevistaTerminacion.invalid}">Fecha prevista de
                                         terminación</label>
                                 </div>
                                 <div class="col d-flex align-items-center">
@@ -83,10 +84,10 @@
                         <div class="col-md-9"  style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left">Plazo de ejecución fase 1 – Preconstrucción:</label>
+                                    <label class="label-left" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid}">Plazo de ejecución fase 1 – Preconstrucción:</label>
                                 </div>
                                 <div class="col d-flex d-flex-row">
-                                    <label class="label-left sub-label" for="mesPlazoEjFase1">
+                                    <label class="label-left sub-label" for="mesPlazoEjFase1" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid}">
                                         Meses
                                     </label>
                                     <mat-form-field class="w-8em">
@@ -96,7 +97,7 @@
                                     </mat-form-field>
                                     <span
                                         class="contador">{{3 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                    <label class="label-left sub-label">
+                                    <label class="label-left sub-label" [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase1.invalid}">
                                         Días
                                     </label>
                                     <mat-form-field class="w-8em">
@@ -114,10 +115,10 @@
                         <div class="col-md-9"  style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left">Plazo de ejecución fase 2 – Construcción:</label>
+                                    <label class="label-left" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase2.invalid}">Plazo de ejecución fase 2 – Construcción:</label>
                                 </div>
                                 <div class="col d-flex d-flex-row">
-                                    <label class="label-left sub-label" for="mesPlazoEjFase2">
+                                    <label class="label-left sub-label" for="mesPlazoEjFase2" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase2.invalid}">
                                         Meses
                                     </label>
                                     <mat-form-field class="w-8em">
@@ -127,7 +128,7 @@
                                     </mat-form-field>
                                     <span
                                         class="contador">{{3 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                    <label class="label-left sub-label">
+                                    <label class="label-left sub-label" [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase2.invalid}">
                                         Días
                                     </label>
                                     <mat-form-field class="w-8em">
@@ -165,33 +166,5 @@
                 </button>
             </div>
         </form>
-    </div>
-    <mat-card class="shipping-card mainGris" *ngIf="this.opcion==2">
-        <mat-card-content>
-            <p><strong>Fecha del acta de inicio de la fase 1 - Preconstrucción: </strong>09/08/2020</p>
-            <p><strong>Fecha prevista de terminación: </strong>24/10/2020</p>
-            <p><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> 2 <strong>Días:</strong> 15</p>
-            <p><strong>Plazo de ejecución fase 2 – Construcción:</strong> 8 <strong>Días:</strong> 10</p>
-            <p><strong>Observaciones o consideraciones especiales: </strong></p>
-            <p>-----</p>
-        </mat-card-content>
-    </mat-card>
-    <!--
-    <div *ngIf="this.conObservaciones==true">
-        <mat-card class="shipping-card mainGris">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text textoGris">
-                    Observaciones al acta de inicio
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <p><strong>20/07/2020</strong></p>
-                <p>La fecha prevista de terminación no es correcta, verificar la información.</p>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    -->
-    <div *ngIf="this.opcion==2">
-        <app-formulario-tiene-observaciones></app-formulario-tiene-observaciones>
     </div>
 </section>

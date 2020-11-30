@@ -49,7 +49,7 @@
             <p><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> {{this.mesesFase1}} <strong>Días: </strong>{{this.diasFase1}}</p>
             <p><strong>Plazo de ejecución fase 2 – Construcción:</strong> {{this.mesesFase2}} <strong>Días: </strong>{{this.diasFase2}}</p>
             <p><strong>Observaciones o consideraciones especiales: </strong></p>
-            <p>-----</p>
+            <div [innerHtml]="this.observaciones"></div>
         </mat-card-content>
     </mat-card>
     <app-formulario-tiene-observaciones [contratoId]="this.contratoId"></app-formulario-tiene-observaciones>
