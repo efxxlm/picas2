@@ -37,7 +37,10 @@
 
     <ng-container matColumnDef="estadoNombre">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
-        <td mat-cell *matCellDef="let element"> {{ element.estadoNombre }} </td>
+        <td mat-cell *matCellDef="let element">
+            <section *ngIf="element.estadoCodigo !== estadosPreconstruccionObra.conReqTecnicosAprobados.codigo"> {{ element.estadoNombre }} </section>
+            <section *ngIf="element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosAprobados.codigo"> {{ element.estadosPreconstruccionObra.conReqTecnicosAprobados.nombre }} </section>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="gestion">
