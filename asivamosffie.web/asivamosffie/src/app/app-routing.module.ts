@@ -205,7 +205,12 @@ const routes: Routes = [
         path: 'requisitosTecnicosConstruccion',
         loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
           .then( module => module.RequisitosTecnicosConstruccionModule )
-      }
+      },
+      {
+        path: 'preconstruccion',
+        loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
+        .then(m => m.FasePreconstruccionModule)
+      },
     ]
 
   },

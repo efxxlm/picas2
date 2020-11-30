@@ -109,7 +109,7 @@
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="fecha" [matDatepicker]="pickerFecha" [min]="minDate" readonly
+                  <input matInput formControlName="fecha" [matDatepicker]="pickerFecha" readonly
                     (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
                   <mat-datepicker #pickerFecha></mat-datepicker>
                 </mat-form-field>
@@ -130,7 +130,7 @@
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="vigenciaPoliza" [matDatepicker]="pickerPoliza" [min]="minDate"
+                  <input matInput formControlName="vigenciaPoliza" [matDatepicker]="pickerPoliza" 
                     readonly (click)="pickerPoliza.open()" required placeholder="DD/MM/AAAA">
                   <mat-datepicker #pickerPoliza></mat-datepicker>
                 </mat-form-field>
@@ -151,7 +151,7 @@
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="vigenciaAmparo" [matDatepicker]="pickerAmparo" [min]="minDate"
+                  <input matInput formControlName="vigenciaAmparo" [matDatepicker]="pickerAmparo" 
                     readonly (click)="pickerAmparo.open()" required placeholder="DD/MM/AAAA">
                   <mat-datepicker #pickerAmparo></mat-datepicker>
                 </mat-form-field>
