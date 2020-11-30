@@ -11,12 +11,22 @@ namespace asivamosffie.services.Interfaces
     {
         Task<List<FuenteFinanciacion>> GetISourceFunding();
         Task<FuenteFinanciacion> GetISourceFundingById(int id);
-        Task<List<FuenteFinanciacion>> GetSourceFundingByIdAportante(int idAportante);
-        Task<List<SourceFundingGrid>> GetSourceFundingGrid(int fuenteId);
-        Task<Respuesta> Insert(FuenteFinanciacion fuentefinanciacion);
 
-        Task<Respuesta> Update(FuenteFinanciacion fuentefinanciacion);
+        Task<Respuesta> CreateEditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion);
 
-        Task<bool> Delete(int id);
+        Task<Respuesta> EditFuentesFinanciacion(FuenteFinanciacion fuentefinanciacion);
+
+        Task<Respuesta> EliminarFuentesFinanciacion(int id, string UsuarioModifico);
+
+        Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId);
+
+        Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion();
+
+        Task<Respuesta> CreateEditarVigenciaAporte(VigenciaAporte vigenciaAporte);
+        Task GetConsignationValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
+        Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByAportanteId(int aportanteId);
+        Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int idaportante);
+        Task<List<FuenteFinanciacion>> GetListFuentesFinanciacionshort();
+        Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId);
     }
 }

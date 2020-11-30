@@ -17,6 +17,7 @@
     &::before {
         content: '';
         display: inline-block;
+        background-color: #d21e18;
         background-color: var(--secondaryColor);
         height: 1em;
         width: 1em;
@@ -29,10 +30,19 @@
 
 .btn-cambiar-pass {
     margin-top: 2em;
+    margin-bottom: 2em;
 }
 .text-clean{
     margin-left: 15%;
     margin-right: 15%;
     margin-top: 2%;
     margin-bottom: 3%;
+}
+.asterisco::after{
+    content: "*";
+    position: absolute;
+    top: 1em;
+    right: -0.5em;
+    font-weight: 600;
+    color:var(--mainColor);
 }

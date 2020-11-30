@@ -1,0 +1,32 @@
+<mat-card class="shipping-card" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+  <mat-card-content>
+    <div class="row mt-1em">
+      <div class="col-md-8">
+        <div class="row">
+          <div class="pr-1">
+            <label for="selectTipoProceso" class="label-left">Tipo de proceso</label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select [formControl]="selectTipoProceso" required>
+                <mat-option *ngFor="let tipoProceso of ValueTiposProceso" [value]="tipoProceso.value">
+                  {{ tipoProceso.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center">
+      <button mat-raised-button  *ngIf="editar" color="accent" class="btn-cargar-elegibilidad"
+        [disabled]="selectTipoProceso.invalid" (click)="openCargarElegibilidad()">
+        Cargar orden de elegibilidad
+      </button><br>
+      <button mat-button color="warn" class="btn-descargar-plantilla" (click)="descargaPlantilla()">
+          <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar--img">
+          Descargar Excel para realizar cargue de proponentes habilitados
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

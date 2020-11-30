@@ -13,20 +13,9 @@ export interface RegistrosCargados {
   id: number;    
   consecutivo: number;
   estado:string;
+  enviado:boolean;
 }
 
-const ELEMENT_DATA: RegistrosCargados[] = [
-  {
-    id: 1,
-    consecutivo: 1,
-    estado: "Completo"
-  },
-  {
-    id: 2,
-    consecutivo: 2,
-    estado: "Completo"
-  },
-];
 
 @Component({
   selector: 'app-tabla-proyectos-admin',
@@ -35,7 +24,7 @@ const ELEMENT_DATA: RegistrosCargados[] = [
 })
 export class TablaProyectosAdminComponent {
   displayedColumns: string[] = ['consecutivo', 'estado','gestion'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource([]);
 
   columnas = [
     { titulo: 'Consecutivo proyecto administrativo', name: 'consecutivo' },
@@ -57,7 +46,7 @@ export class TablaProyectosAdminComponent {
 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
-      width: '28em',
+      width: '38em',
       data: { modalTitle, modalText }
     });
   }
@@ -69,18 +58,18 @@ export class TablaProyectosAdminComponent {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.projectService.DeleteProyectoAdministrativoByProyectoId(this.proyectoid).subscribe(respuesta => {
           let proyecto = respuesta;
           if(respuesta)
           {
             this.inicializar();
-            this.openDialog('', "Proyecto eliminado correctamente");
+            this.openDialog('', "<b>La información ha sido eliminada correctamente.</b>");
           }
           else
           {
-            this.openDialog('', "Hubo un error al eliminar el proyecto, por favor intenta nuevamente.");
+            this.openDialog('', "<b>El registro tiene información que depende de él, no se puede eliminar.</b>");
           }
         },
           err => {
@@ -105,7 +94,7 @@ export class TablaProyectosAdminComponent {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
       respuesta.forEach(element => {
-        datos.push({id:element.proyectoId,estado:element.estadoRegistro,consecutivo:element.proyectoId});
+        datos.push({id:element.proyectoAdminitracionId,estado:element.estado?"Completo":"Incompleto",consecutivo:element.proyectoAdminitracionId,enviado:element.enviado});
       });
       this.dataSource=new MatTableDataSource<RegistrosCargados>(datos);
       this.dataSource.paginator = this.paginator;
@@ -143,13 +132,21 @@ export class TablaProyectosAdminComponent {
   eliminar(gestion:any)
   {
     this.proyectoid=gestion.id;
-    this.openDialogSiNo('', "¿Está seguro de eliminar este registro?",);   
+    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);   
   }
   
   enviar(gestion:any)
   {
     this.proyectoid=gestion.id;
-    this.openDialog('', "Su solicitud del proyecto "+gestion.id+" Ha sido enviada para que inicie el tramité “Solicitud de documento de disponibilidad presupuestal”.",);
+    this.projectService.EnviarProyectoAdministrativoByProyectoId(this.proyectoid).subscribe(respuesta => {
+      let proyecto = respuesta;
+      {
+        this.inicializar();
+        this.openDialog('Su solicitud del proyecto '+gestion.id, "Ha sido enviada para que inicie el tramite <br><b>“Solicitud de documento de disponibilidad presupuestal”.</b>",);
+        
+      }
+    });
+    
   }
 
 }

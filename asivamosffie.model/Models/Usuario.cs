@@ -5,6 +5,13 @@ namespace asivamosffie.model.Models
 {
     public partial class Usuario
     {
+        public Usuario()
+        {
+            CompromisoSeguimiento = new HashSet<CompromisoSeguimiento>();
+            SesionComentario = new HashSet<SesionComentario>();
+            SesionParticipante = new HashSet<SesionParticipante>();
+        }
+
         public int UsuarioId { get; set; }
         public string Email { get; set; }
         public string Contrasena { get; set; }
@@ -25,5 +32,9 @@ namespace asivamosffie.model.Models
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string NumeroIdentificacion { get; set; }
+
+        public virtual ICollection<CompromisoSeguimiento> CompromisoSeguimiento { get; set; }
+        public virtual ICollection<SesionComentario> SesionComentario { get; set; }
+        public virtual ICollection<SesionParticipante> SesionParticipante { get; set; }
     }
 }

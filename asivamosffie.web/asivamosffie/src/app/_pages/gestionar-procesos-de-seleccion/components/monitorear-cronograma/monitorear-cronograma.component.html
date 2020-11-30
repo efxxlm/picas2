@@ -1,0 +1,49 @@
+<div class="container">
+    <div class="text-right">
+        <a routerLink="/seleccion" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Monitorear cronograma proceso {{procesoSeleccion.numeroProceso}}
+        </h1>
+        <span class="subtittle">Selección privada</span>
+        <button mat-raised-button color="primary" class="btn-ver-objetivo" (click)="verAyuda = !verAyuda">
+            <img src="assets/img/icon/ojo-blanco.svg" alt="Ver objeto">
+            Ver objeto
+        </button>
+
+        <div class="text-info" *ngIf="verAyuda">
+            <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+                <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+            </button>
+
+            Mejorar los ambientes para el desarrollo pedagógico de los estudiantes, hecho que se traduce en aspectos
+            motivacionales que llevan a un mejor aprendizaje, al tiempo que asegura la capacidad del sistema para
+            absorber y retener al mayor número de población estudiantil y a largo plazo favorece los índices de
+            desarrollo social de la población.
+        </div>
+    </div>
+
+    <div class="ajsutar-cronograma--actions">
+        <button mat-raised-button color="accent" class="ajsutar-cronograma--btn"
+            [ngClass]="{'active': ajustarCronograma === true}"
+            (click)="ajustarCronograma = true; registrarSeguimiento = false">
+            Ajustar Cronograma
+        </button>
+        <button mat-raised-button color="accent" class="ajsutar-cronograma--btn"
+            [ngClass]="{'active': registrarSeguimiento === true}"
+            (click)="registrarSeguimiento = true; ajustarCronograma = false">
+            Registrar seguimiento a cronograma
+        </button>
+    </div>
+
+    <app-tabla-cronograma [editMode]="editMode" *ngIf="ajustarCronograma"></app-tabla-cronograma>
+<!--deprecated
+    <app-tabla-detalle-cronograma [editMode]="editMode" *ngIf="ajustarCronograma "></app-tabla-detalle-cronograma>
+-->
+    <app-registrar-seguimiento-cronograma *ngIf="registrarSeguimiento"></app-registrar-seguimiento-cronograma>
+    
+    
+</div>

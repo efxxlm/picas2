@@ -10,13 +10,18 @@ namespace asivamosffie.services.Interfaces
     public interface IResourceControlService
     {
         Task<List<ControlRecurso>> GetResourceControl();
+
         Task<ControlRecurso> GetResourceControlById(int id);
         Task<List<ResourceControlGrid>> GetResourceControlBySourceId(int idFuente);
         Task<List<ControlRecurso>> GetResourceControlGrid();
+
+        Task<List<ControlRecurso>> GetResourceControlGridBySourceFunding(int id);
+
         Task<Respuesta> Insert(ControlRecurso controlRecurso);
 
         Task<Respuesta> Update(ControlRecurso controlRecurso);
 
-        Task<bool> Delete(int id);
+        Task<Respuesta> Delete(int id, string pUsuario);
+
     }
 }

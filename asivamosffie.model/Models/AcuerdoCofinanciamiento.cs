@@ -5,11 +5,6 @@ namespace asivamosffie.model.Models
 {
     public partial class AcuerdoCofinanciamiento
     {
-        public AcuerdoCofinanciamiento()
-        {
-            Aportante = new HashSet<Aportante>();
-        }
-
         public int AcuerdoCofinanciacionId { get; set; }
         public string VigenciaCodigo { get; set; }
         public int CantidadAportantes { get; set; }
@@ -20,7 +15,5 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
-
-        public virtual ICollection<Aportante> Aportante { get; set; }
     }
 }

@@ -16,8 +16,7 @@ namespace asivamosffie.api.Controllers
     public class BankAccountController : ControllerBase
     {
         public readonly IBankAccountService _bankAccount;
-
-
+         
         public BankAccountController(IBankAccountService bankAccount)
         {
             _bankAccount = bankAccount;
@@ -50,40 +49,23 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+         
         [HttpPost]
-        public async Task<IActionResult> post(CuentaBancaria cuentabancaria)
+        [Route("CreateEditarCuentasBancarias")]
+        public async Task<IActionResult> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria)
         {
+            Respuesta respuesta = new Respuesta();
             try
-            {
-                var result = await _bankAccount.Insert(cuentabancaria);
-                return Ok(result);
+            { 
+                cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _bankAccount.CreateEditarCuentasBancarias(cuentaBancaria);
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                throw ex;
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
             }
         }
-
-
-        [HttpPut]
-        public async Task<IActionResult> update(CuentaBancaria cuentabancaria)
-        {
-            Respuesta _response = new Respuesta();
-
-            try
-            {
-                _response = await _bankAccount.Update(cuentabancaria);
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.Data = ex.ToString();
-                return Ok(_response);
-            }
-        }
-
-
     }
 }

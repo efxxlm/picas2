@@ -13,10 +13,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using asivamosffie.services.Filters;
-using FluentValidation.AspNetCore;
 using System;
 using System.Text;
+using DinkToPdf.Contracts;
+using DinkToPdf;
+using System.IO;
+using asivamosffie.api.Helpers;
 
 namespace asivamosffie.api
 {
@@ -26,6 +28,8 @@ namespace asivamosffie.api
         {
             Configuration = configuration;
         }
+
+
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
@@ -69,6 +73,7 @@ namespace asivamosffie.api
                             ValidateIssuerSigningKey = true,
                             ValidIssuer = appSettings.asivamosffieIssuerJwt,
                             ValidAudience = appSettings.asivamosffieAudienceJwt,
+                            ClockSkew = TimeSpan.Zero,
                             IssuerSigningKey = new SymmetricSecurityKey(
                                 Encoding.ASCII.GetBytes("asivamosffie@2020application"))
 
@@ -93,39 +98,58 @@ namespace asivamosffie.api
             })
            .ConfigureApiBehaviorOptions(options =>
            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+               options.SuppressModelStateInvalidFilter = true;
+           });
 
-           
+            #region A gregado pora implementacion de descargas de PDF
+            var context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll"));
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
+            #endregion
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-       
+
 
         private void ConfigureDependencyInjection(IServiceCollection services)
         {
             services.AddDbContext<model.Models.devAsiVamosFFIEContext>(options
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
-          //Agregar Interfaces y clases
-
+            //Agregar Interfaces y clases
+            services.AddTransient<IApprovePreConstructionPhase1Service, ApprovePreConstructionPhase1Service>();
+            services.AddTransient<IRegisterPreContructionPhase1Service, RegisterPreContructionPhase1Service>();
+            services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
+            services.AddTransient<IContributorService, ContributorService>();
+            services.AddTransient<ISourceFundingService, SourceFundingService>();
+            services.AddTransient<ICommitteeSessionFiduciarioService, CommitteeSessionFiduciarioService>();
             services.AddTransient<IDocumentService, DocumentService>();
             services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IContributorService, ContributorService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
-            services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
-            services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<IProjectContractingService, ProjectContractingService>();
+            services.AddTransient<ISelectionProcessService, SelectionProcessService>();
+            services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
+            services.AddTransient<IGuaranteePolicyService, GuaranteePolicyService>();
+            services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
+            services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
+            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
+            services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
+            services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
+            services.AddTransient<IContractualControversy, ContractualControversyService>();
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
 
-            
-            // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
         }
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseCors(MyAllowSpecificOrigins);

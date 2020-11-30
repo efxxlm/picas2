@@ -1,3 +1,4 @@
+﻿ 
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,6 +11,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IProjectService
     {
+       Task<ProyectoGrilla> GetProyectoGrillaByProyectoId(int idProyecto);
+
+        Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto);
+
         Task<Respuesta> CreateOrEditAdministrativeProject(ProyectoAdministrativo pProyectoAdministrativo);
 
         Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProyectos(string pUsuarioConsulto);
@@ -19,17 +24,21 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> UploadMassiveLoadProjects(string pIdDocument, string pUsuarioModifico);
 
         Task<Respuesta> SetValidateCargueMasivo(IFormFile pFile, string pFilePatch, string pUsuarioCreo);
-         
+
         Task<Proyecto> GetProyectoByProyectoId(int idProyecto);
 
-        Task<bool> DeleteProyectoByProyectoId(int pProyectoId);    
-        
-        Task<List<ProyectoGrilla>> ListProyectos(string pUsuarioConsulto);
+        Task<bool> DeleteProyectoByProyectoId(int pProyectoId, string usuario);
 
-        Task<Respuesta> DeleteProyectoAdministrativoByProyectoId(int pProyectoId);
+        Task<List<ProyectoGrilla>> ListProyectos();
 
-        Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId);
+        Task<bool> DeleteProyectoAdministrativoByProyectoId(int pProyectoId, string usuario);
+
+        Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId, string pUsuarioModifico,string pDominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
         Task<List<FuenteFinanciacion>> GetFontsByAportantId(int pAportanteId);
+        Task<bool> deleteFontByID(int pAportanteProyectoId, string pUsuarioModifico);
+        Task<bool> deletePredioByID(int pAportanteProyectoId, string pUsuarioModifico);
+        Task<bool> deleteAportantesByID(int pAportanteProyectoId, string pUsuarioModifico);
+        Task<bool> deleteInfraestructuraByID(int pAportanteProyectoId, string pUsuarioModifico);
     }
 }

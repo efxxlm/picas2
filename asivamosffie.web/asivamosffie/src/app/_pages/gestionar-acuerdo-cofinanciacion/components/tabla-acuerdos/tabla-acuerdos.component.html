@@ -8,43 +8,48 @@
             <img src="assets/img/icon/lupa.svg" alt="Buscar">
         </button>
     </div>
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort>
 
-        <ng-container matColumnDef="fechaCreacion">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
-            <td mat-cell *matCellDef="let element"> {{element.fechaCreacion}} </td>
-        </ng-container>
+            <ng-container matColumnDef="fechaCreacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaCreacion | date:'dd/MM/yyyy'}}</b> </td>
+            </ng-container>
 
-        <ng-container matColumnDef="numeroAcuerdo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del acuerdo </th>
-            <td mat-cell *matCellDef="let element"> {{element.cofinanciacionId}} </td>
-        </ng-container>
+            <ng-container matColumnDef="numeroAcuerdo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del acuerdo </th>
+                <td mat-cell *matCellDef="let element"> {{element.registroCompleto==1?element.cofinanciacionId:""}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="vigenciaAcuerdo">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vigencia del acuerdo de cofinanciación </th>
-            <td mat-cell *matCellDef="let element"> {{element.vigenciaCofinanciacionId}} </td>
-        </ng-container>
+            <ng-container matColumnDef="vigenciaAcuerdo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Vigencia del acuerdo de cofinanciación </th>
+                <td mat-cell *matCellDef="let element"> {{element.vigenciaCofinanciacionId}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="valorTotal">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Total del acuerdo </th>
-            <td mat-cell *matCellDef="let element"> {{element.valorTotal}} </td>
-        </ng-container>
+            <ng-container matColumnDef="valorTotal">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Total del acuerdo </th>
+                <td mat-cell *matCellDef="let element"> <b>{{element.valorTotal| currency:'USD':'symbol':'1.0'}}</b>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="estadoRegistro">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element"> {{element.estadoRegistro}} </td>
-        </ng-container>
+            <ng-container matColumnDef="estadoRegistro">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
+                <td mat-cell *matCellDef="let element"> {{element.registroCompleto==1?"Completo":"Incompleto"}} </td>
+            </ng-container>
 
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-            <td mat-cell *matCellDef="let element">
-                <button mat-raised-button color="accent" class="btn-table" (click)="editarAcuerdo(element.cofinanciacionId)">Ver detalle/<br>Editar</button>
-                <button mat-raised-button color="accent" class="btn-table" (click)="eliminarAcuerdo(element.cofinanciacionId)">Eliminar</button>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="editarAcuerdo(element.cofinanciacionId)">Ver detalle/<br>Editar</button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="eliminarAcuerdo(element.cofinanciacionId)">Eliminar</button>
+                </td>
+            </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>

@@ -1,0 +1,121 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+
+<div class="text-center">
+  <h1 class="title-menu--h1">
+    Votación solicitud {{ data.sesionComiteSolicitud.numeroSolicitud }}
+  </h1>
+
+  <p>
+    <span class="mx-1em">{{ data.sesionComiteSolicitud.fechaSolicitud | date: 'dd/MM/yyyy' }}</span>
+    <span class="mx-1em">{{ data.sesionComiteSolicitud.tipoSolicitud }}</span>
+  </p>
+  <mat-dialog-content>
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+      <div>
+        <table class="mat-table cdk-table mat-sort mat-table-style">
+          <thead>
+            <tr class="mat-header-row cdk-header-row ng-star-inserted">
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                Miembro participante
+              </th>
+              <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                ¿Aprobó?
+              </th>
+              <!-- <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                No aprobó
+              </th> -->
+            </tr>
+          </thead>
+          <tbody formGroupName="aprobaciones">
+            <tr *ngFor="let temas of aprobaciones.controls; let i = index"  [formGroupName]="i">
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                {{ aprobaciones.controls[i].get('nombreParticipante').value }}
+                <input type="hidden" formControlName="sesionSolicitudVotoId">
+                <input type="hidden" formControlName="sesionParticipanteId">
+                <input type="hidden" formControlName="sesionComiteSolicitudId">
+              </td>
+              <td class="mat-cell cdk-cell ng-star-inserted">
+                <!-- <section class="example-section">
+                  <mat-checkbox formControlName="aprobacion"></mat-checkbox>
+                </section> -->
+                <mat-radio-group class="radioInput" formControlName="aprobacion" required>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
+              </td>
+              <!-- <td class="mat-cell cdk-cell ng-star-inserted">
+                <section class="example-section">
+                  <mat-checkbox></mat-checkbox>
+                </section>
+              </td> -->
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <mat-accordion formGroupName="proyectos" >
+        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of proyectos.controls; let i = index"  [formGroupName]="i" >
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title completo">
+              {{ proyecto.value.llaveMen }} - {{ proyecto.value.nombreInstitucion }} - {{ proyecto.value.nombreSede }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div>
+            <table class="mat-table cdk-table mat-sort mat-table-style">
+              <thead>
+                <tr class="mat-header-row cdk-header-row ng-star-inserted">
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Miembro participante
+                  </th>
+                  <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                    Observaciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody formGroupName="observaciones">
+                <tr *ngFor="let observacion of observaciones(i).controls; let j = index"  [formGroupName]="j">
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    {{ observacion.value.nombreParticipante }}
+                  </td>
+                  <td class="mat-cell cdk-cell ng-star-inserted">
+                    <section class="w-quill">
+                      <div class="d-flex">
+                        <quill-editor
+                            class="quill-editor-style card"
+                            #observaciones
+                            [styles]="editorStyle"
+                            [modules]="config"
+                            (onContentChanged)="maxLength($event, 1000)"
+                            formControlName="observacion">
+                          <input type="hidden" formControlName="sesionSolicitudObservacionProyectoId">
+                          <input type="hidden" formControlName="sesionComiteSolicitudId">
+                          <input type="hidden" formControlName="sesionParticipanteId">
+                          <input type="hidden" formControlName="contratacionProyectoId">
+                        </quill-editor>
+                        <div class="d-flex align-items-center">
+                          <span class="contador miles" *ngIf="observacion.get('observacion').value">
+                            {{1000 - (textoLimpio(observacion.get('observacion').value)>1000?1000:textoLimpio(observacion.get('observacion').value))}}
+                          </span>
+                          <span class="contador miles" *ngIf="!observacion.get('observacion').value">
+                            1000
+                          </span>
+                        </div>
+                      </div>
+                    </section>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="guardar">
+      </button>
+    </form>
+  </mat-dialog-content>
+</div>

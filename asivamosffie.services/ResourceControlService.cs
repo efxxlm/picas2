@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace asivamosffie.services
-{
+{  
     public class ResourceControlService : IResourceControlService
     {
         private readonly devAsiVamosFFIEContext _context;
@@ -25,113 +25,105 @@ namespace asivamosffie.services
 
         public async Task<List<ControlRecurso>> GetResourceControl()
         {
-            return await _context.ControlRecurso.ToListAsync();
+            return await _context.ControlRecurso.Where(r=> !(bool)r.Eliminado).ToListAsync();
         }
 
         public async Task<ControlRecurso> GetResourceControlById(int id)
         {
             return await _context.ControlRecurso.FindAsync(id);
         }
-
-
-        public async Task<List<ResourceControlGrid>> GetResourceControlBySourceId(int idFuente)
+         
+        public async Task<List<ControlRecurso>> GetResourceControlGridBySourceFunding(int id)
         {
-            List<ResourceControlGrid> ListResourceControlGrid = new List<ResourceControlGrid>();
-
-            try// List<Proyecto> ListProyectos = await _context.Proyecto.Where(r => !(bool)r.Eliminado).Include(r => r.InstitucionEducativa).Include(r => r.ProyectoPredio).Distinct().ToListAsync();
-            {
-                List<ControlRecurso> ListControlRecurso = await _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == idFuente).ToListAsync();
-
-                foreach (var Recurso in ListControlRecurso)
-                {
-
-                    Dominio ff = await _commonService.GetDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
-                    Dominio cb = await _commonService.GetDominioByIdTipoDominio((int)EnumeratorTipoDominio.Fuentes_de_financiacion);
-                    // Dominio EstadoJuridicoPredios = await _commonService.GetDominioByNombreDominioAndTipoDominio(proyecto.ProyectoPredio.FirstOrDefault().EstadoJuridicoCodigo, (int)EnumeratorTipoDominio.Estado_Registro);
-
-                    ResourceControlGrid grid = new ResourceControlGrid
-                    {
-                        ControlRecursoId = Recurso.ControlRecursoId,
-                        FuenteFinanciacionId = Recurso.FuenteFinanciacionId,
-                        FuenteFinanciacionText = ff.Nombre,
-                        //CuentaBancariaText = ff.
-                        //RegistroPresupuestalText
-                        //VigenciaAporteText
-                        //FechaConsignacion
-                        //ValorConsignacion
-
-                    };
-
-                    ListResourceControlGrid.Add(grid);
-                }
-
-                return ListResourceControlGrid;
-
-
-            }
-            catch (Exception ex)
-            {
-                return ListResourceControlGrid;
-
-            }
-        }
-
-
-        //public async Task<List<ControlRecurso>> GetResourceControlBySourceId(int idFuente)
-        //{
-        //    return await _context.ControlRecurso.Include(x => x.FuenteFinanciacion).Where(r => r.FuenteFinanciacionId == idFuente).ToListAsync();
-        //}
-
-        public async Task<List<ControlRecurso>> GetResourceControlGrid()
-        {
-            List<ControlRecurso> ControlGrid = new List<ControlRecurso>();
+     
             try
             {
-                ControlGrid = await _context.ControlRecurso
+                
+                var ControlGrid = _context.ControlRecurso
+                .Where( cr => cr.FuenteFinanciacionId == id && !(bool)cr.Eliminado)
                     .Include(RC => RC.FuenteFinanciacion)
+                    .ThenInclude(FF => FF.Aportante)
+                    .ThenInclude(APO => APO.Cofinanciacion)
                     .Include(RC => RC.CuentaBancaria)
                     .Include(RC => RC.RegistroPresupuestal)
-                    .Include(RC => RC.VigenciaAporte).ToListAsync();
+                    //.Include(RC => RC.VigenciaAporte)                   
+                    .ToList();
 
                 return ControlGrid;
 
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return null;
             }
         }
-
-
-
+         
         public async Task<Respuesta> Insert(ControlRecurso controlRecurso)
-        {
-            Respuesta _response = new Respuesta();
+        { 
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
             try
-            {
+            { 
                 if (controlRecurso != null)
                 {
-                    _context.Add(controlRecurso);
-                    await _context.SaveChangesAsync();
-
-                    return _response = new Respuesta { IsSuccessful = true, IsValidation = false, Data = controlRecurso, Code = ConstantMessagesResourceControl.OperacionExitosa };
+                    controlRecurso.Eliminado = false;
+                    if(controlRecurso.ControlRecursoId>0)
+                    {
+                        controlRecurso.FechaModificacion = DateTime.Now;
+                        _context.Add(controlRecurso);
+                        await _context.SaveChangesAsync();
+                        return new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Code = ConstantMessagesResourceControl.OperacionExitosa,
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "CREAR CONTROL RECURSO")
+                        };
+                    }
+                    else                    
+                    {
+                        controlRecurso.FechaCreacion = DateTime.Now;
+                        _context.Add(controlRecurso);
+                        await _context.SaveChangesAsync();
+                        return new Respuesta
+                        {
+                            IsSuccessful = true,
+                            IsException = false,
+                            IsValidation = false,
+                            Code = ConstantMessagesResourceControl.OperacionExitosa,
+                            Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "CREAR CONTROL RECURSO")
+                        };
+                    }                                        
                 }
                 else
-                {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesResourceControl.Error };
+                {                    
+                    return new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = false,
+                        IsValidation = true,
+                        Code = ConstantMessagesResourceControl.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, "ERROR CREAR CONTROL")
+                    };
                 }
 
             }
             catch (Exception ex)
             {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false,  Data = null,  Code = ConstantMessagesResourceControl.Error, Message = ex.Message };
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.OperacionExitosa, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioCreacion, ex.InnerException.ToString().Substring(0,500))
+                };                
             }
         }
 
         public async Task<Respuesta> Update(ControlRecurso controlRecurso)
-        {
-            Respuesta _response = new Respuesta();
-
+        { 
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
             try
             {
                 ControlRecurso updateObj = await _context.ControlRecurso.FindAsync(controlRecurso.ControlRecursoId);
@@ -144,19 +136,66 @@ namespace asivamosffie.services
                 updateObj.ValorConsignacion = controlRecurso.ValorConsignacion;
 
                 _context.Update(updateObj);
-                await _context.SaveChangesAsync();
 
-                return _response = new Respuesta  { IsSuccessful = true, IsValidation = false,  Data = updateObj, Code = ConstantMessagesResourceControl.EditadoCorrrectamente };
+                await _context.SaveChangesAsync();
+                
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.EditadoCorrrectamente,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioModificacion, "EDITAR FUENTES DE FINANCIACIÓN")
+                };
             }
             catch (Exception ex)
-            {
-                return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesResourceControl.Error, Message = ex.Message};
+            {                
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EditadoCorrrectamente, idAccionCrearFuentesFinanciacion, controlRecurso.UsuarioModificacion, ex.Message)
+                };
             }
         }
 
-        public Task<bool> Delete(int id)
-        {
-            throw new NotImplementedException();
+        public async Task<Respuesta> Delete(int id, string pUsuario)
+        {  
+            int idAccionCrearFuentesFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Recursos_Control, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                ControlRecurso updateObj = await _context.ControlRecurso.FindAsync(id);
+
+                updateObj.Eliminado = true;
+                updateObj.UsuarioModificacion = pUsuario;
+                updateObj.FechaModificacion = DateTime.Now;
+
+                _context.Update(updateObj);
+                await _context.SaveChangesAsync();
+                 
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.EliminadoExitosamente, idAccionCrearFuentesFinanciacion, pUsuario, "Eliminado")
+                };
+               
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesResourceControl.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesResourceControl.Error, idAccionCrearFuentesFinanciacion, pUsuario, ex.Message)
+                }; 
+            }
         }
 
     }

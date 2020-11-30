@@ -1,0 +1,15 @@
+<div align="left">
+  <mat-card class="border">
+    <mat-card-title class="text-area-quill--label">Valor total ordenes de giro</mat-card-title>
+    <mat-card-content>
+      <p><b>Facturado</b>: $326.000.000</p>
+      <p><b>ANS aplicado</b>: $23.000.000</p>
+      <p><b>Rete garantía a pagar</b>: $13.500.000</p>
+      <p><b>Otros descuentos</b>: $10.000.000</p>
+      <p><b>A pagar antes de impuestos</b>: $289.000.000</p>
+      <app-tabla-recursos-pagados></app-tabla-recursos-pagados>
+      <h2 class="card-subTitle back-color">Detalle de otros descuentos</h2>
+      <app-tabla-otros-descuentos [displayedColumns]="displayedColumns" [ELEMENT_DATA]="ELEMENT_DATA" [data]="dataTable"></app-tabla-otros-descuentos>
+    </mat-card-content>
+  </mat-card>
+</div>

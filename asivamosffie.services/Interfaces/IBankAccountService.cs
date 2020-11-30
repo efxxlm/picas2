@@ -11,6 +11,7 @@ namespace asivamosffie.services.Interfaces
     public interface IBankAccountService
     {
         Task<ActionResult<List<CuentaBancaria>>> GetBankAccount();
+
         Task<CuentaBancaria> GetBankAccountById(int id);
 
         Task<Respuesta> Insert(CuentaBancaria cuentaBancaria);
@@ -18,5 +19,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> Update(CuentaBancaria cuentaBancaria);
 
         Task<bool> Delete(int id);
+
+        Task<Respuesta> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria);
+       
     }
 }

@@ -13,10 +13,18 @@ export class HeaderComponent implements OnInit {
   }
 
   actualUser: any;
+  roles :string="";
 
   ngOnInit(): void {
     this.authe.actualUser$.subscribe(user => {
-      this.actualUser = user;
+      this.roles="";
+      this.actualUser = user;     
+      if(this.actualUser)
+      {        
+        this.actualUser.rol.forEach(element => {
+          this.roles+=element.perfil.nombre+" ";
+        });
+      }      
     });
   }
 

@@ -1,0 +1,66 @@
+<div class="container text-center">
+    <div class="busqueda">
+        <mat-form-field appearance="outline" class="busqueda--input">
+            <mat-label>Buscador / Filtro</mat-label>
+            <input matInput #filtro (keyup)="applyFilter($event)">
+        </mat-form-field>
+        <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+            <img src="assets/img/icon/lupa.svg" alt="Buscar">
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort>
+
+            <ng-container matColumnDef="fechaCreacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
+                <td mat-cell *matCellDef="let element"> {{element.fechaCreacion | date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombreCuenta">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre de la cuenta </th>
+                <td mat-cell *matCellDef="let element"> {{element.cuentaBancaria.nombreCuentaBanco}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="vigenciaAcuerdo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre de la cuenta </th>
+                <td mat-cell *matCellDef="let element"> {{element.fuenteFinanciacion.aportanteId}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="rp">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> RP </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.registroPresupuestal?element.registroPresupuestal.numeroRp:"No aplica"}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="vigencia">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Vigencia del aporte </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.fuenteFinanciacion.aportante.cofinanciacion.vigenciaCofinanciacionId}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaConsignacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de consignación </th>
+                <td mat-cell *matCellDef="let element"> {{element.fechaConsignacion | date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="valorConsignacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de consignación </th>
+                <td mat-cell *matCellDef="let element"> {{element.valorConsignacion| currency:'':'symbol':'3.0'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="editar(element.controlRecursoId)">Ver detalle/<br>Editar</button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        (click)="eliminar(element.controlRecursoId)">Eliminar</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

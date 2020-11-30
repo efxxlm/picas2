@@ -13,6 +13,7 @@ using asivamosffie.services.Helpers;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
+using Newtonsoft.Json;
 
 namespace asivamosffie.services
 {
@@ -36,8 +37,9 @@ namespace asivamosffie.services
             {
 
                 Task<Usuario> result = this.GetUserByMail(pUsuario.Email);
-
                 Usuario usuario = await result;
+
+               
 
                 // User doesn't exist
                 if (usuario == null)
@@ -59,17 +61,20 @@ namespace asivamosffie.services
                     respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.ContrasenaIncorrecta };
                 }
                 else if (usuario.FechaUltimoIngreso == null || usuario.CambiarContrasena.Value) // first time to log in
-                {                                   
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };                    
+                {
+                    List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesUsuarios.DirecCambioContrasena, Data = new { datausuario=usuario, dataperfiles=perfiles }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };                    
                 }
                 else // successful
                 {
                     this.ResetFailedAttempts(usuario.UsuarioId);
-                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = usuario, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario) };
+                    List<UsuarioPerfil> perfiles = await _context.UsuarioPerfil.Where(y => y.UsuarioId == usuario.UsuarioId).Include(y=>y.Perfil).ToListAsync();
+                    List<Menu> menus = await _context.MenuPerfil.Where(y => perfiles.Select(x=>x.PerfilId).Contains(y.PerfilId)).Select(x=>x.Menu).Distinct().ToListAsync();
+                    respuesta = new Respuesta { IsSuccessful = true, IsValidation = false, Code = ConstantMessagesUsuarios.OperacionExitosa, Data = new { datausuario = usuario, dataperfiles = perfiles,datamenu= menus }, Token = this.GenerateToken(prmSecret, prmIssuer, prmAudience, usuario, perfiles) };
                   
                 }
 
-                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesión");    
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Usuario, respuesta.Code, (int)enumeratorAccion.IniciarSesion, pUsuario.Email, "Inicio de sesiÃ³n");    
 
                 return respuesta;
             }
@@ -79,17 +84,19 @@ namespace asivamosffie.services
             }
         }
 
-        private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser)
+        
+
+        private JwtToken GenerateToken(string prmSecret, string prmIssuer, string prmAudience, Usuario prmUser, List<UsuarioPerfil> prmPerfiles)
         {
             var token = new JwtTokenBuilder()
             .AddSecurityKey(JwtSecurityKey.Create(prmSecret))
             .AddIssuer(prmIssuer)
             .AddAudience(prmAudience)
-            .AddExpiry(1)
+            .AddExpiryinMinute(300)
             //.AddClaim("Name", result.Primernombre+" "+result.Primerapellido)
             .AddClaim("User", prmUser.Email)
             .AddClaim("UserId", prmUser.UsuarioId.ToString())
-            //.AddClaim("Title", result.Cargo)
+            .AddClaim("Rol", JsonConvert.SerializeObject(prmPerfiles))
             //.AddRole(result.IdrolNavigation.Nombre)
             .Build();
             return token;
@@ -99,7 +106,7 @@ namespace asivamosffie.services
             try
             {
                 Usuario usuario = await _context.Usuario.Where(u => u.Email == pMail
-                                                 && u.Eliminado.Value == false).SingleOrDefaultAsync();
+                                                 && u.Eliminado.Value == false).FirstOrDefaultAsync();              
                 return usuario;
 
             }

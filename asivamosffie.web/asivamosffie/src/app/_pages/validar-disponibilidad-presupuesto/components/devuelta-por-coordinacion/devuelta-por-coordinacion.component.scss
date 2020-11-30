@@ -1,0 +1,14 @@
+// .shipping-card {
+//     padding-top: 2.5em !important;
+// }
+
+.botones {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 3em;
+
+    button {
+        line-height: 1.2;
+        min-height: 33px;
+    }
+}

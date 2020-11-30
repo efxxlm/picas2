@@ -1,0 +1,171 @@
+.full-width {
+  width: 100%;
+}
+
+.shipping-card {
+  min-width: 120px;
+  margin: 20px auto;
+}
+
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.col:last-child {
+  margin-right: 0;
+}
+
+.minutos {
+  color: var(--mainColor);
+  font-style: italic;
+  margin-left: 1em;
+}
+
+.d-block {
+  display: block;
+}
+
+.btn-guardar {
+  margin-bottom: 1em;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+h4 {
+  width: 36%;
+  font-size: 95%;
+}
+
+.img {
+  width: 1.5%;
+  padding: 0.2em;
+  margin-top: -1em;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+};
+
+.container {
+  padding: 2em;
+};
+
+.padding-1 {
+  padding: 1em;
+  margin-top: 0.8em;
+};
+
+.display-block {
+  display: block;
+}
+
+.text-center {
+  text-align: center;
+  justify-content: center;
+}
+
+.seleccionados {
+  // margin-top: -1em;
+  display: flex;
+  background-color: #fbbe24;
+  width: 2em;
+  height: 2em;
+  min-width: 2em;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+
+}
+
+.div-temas {
+  margin-top: 2em;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.w-30 {
+  width: 30%;
+}
+
+.width-20 {
+  width: 25%;
+};
+
+.width-40 {
+  width: 40%;
+};
+
+.width-80 {
+  width: 80%;
+}
+
+.w-100-4em {
+  width: calc(100% - 4em);
+}
+
+.w-100-15em {
+  width: calc(100% - 15em);
+}
+
+.w-100-20em {
+  width: calc(100% - 20em);
+}
+
+.w-100-11em {
+  width: calc(100% - 11em);
+}
+
+.mt-1 {
+  margin-top: 2em;
+}
+
+.ml-3 {
+  margin-left: 3.5em;
+}
+
+.ml-5 {
+  margin-left: 5em;
+};
+
+.mr-bottom {
+  margin-bottom: 0.8em !important;
+}
+
+.btn-right {
+  display: flex;
+  width: 85%;
+  justify-content: flex-end;
+}
+
+.btn-right-delete {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.w-tema {
+  margin-top: 2em;
+  width: 98%;
+}
+
+.mr-1em {
+  margin-right: 1em;
+}

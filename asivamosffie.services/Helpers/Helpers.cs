@@ -9,7 +9,14 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
-
+using System.IO;
+using asivamosffie.model.APIModels;
+using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Reflection;
+using System.Threading.Tasks;
+ 
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
@@ -19,6 +26,43 @@ namespace asivamosffie.services.Helpers
         public Helpers(devAsiVamosFFIEContext context)
         {
             _context = context;
+        }
+
+
+        public static string HtmlConvertirTextoPlano(string origen)
+        {
+            DocumentoHtml documento = new DocumentoHtml();
+            origen = documento.ConvertirATextoPlano(origen);
+            return origen.Replace("<", "").Replace(">", "").Replace("/", "").Replace("\\", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "");
+        }
+
+        public static string HtmlStringLimpio(string valor)
+        {
+            valor = Regex.Replace(valor, @"\t|\n|\r", "");
+            return HtmlConvertirTextoPlano(valor);
+        }
+
+        public static string HtmlEntities(string valor)
+        {
+            valor = valor.Replace("á", "&aacute;")
+                .Replace("é", "&eacute;")
+                .Replace("í", "&iacute;")
+                .Replace("ó", "&oacute;")
+                .Replace("ú", "&uacute;")
+                .Replace("ñ", "&ntilde;")
+                .Replace("Á", "&Aacute;")
+                .Replace("É", "&Eacute;")
+                .Replace("Í", "&Iacute;")
+                .Replace("Ó", "&Oacute;")
+                .Replace("Ó", "&Uacute;")
+                .Replace("Ñ", "&Ntilde;")
+                ;
+            return valor;
+        }
+
+        public double CentimetrosAMedidaPDF(double centimetros)
+        {
+            return (double)(centimetros * 0.393701 * 72);
         }
 
         public static string encryptSha1(string password)
@@ -31,8 +75,8 @@ namespace asivamosffie.services.Helpers
 
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
-            result = sha.ComputeHash(data);
-             
+            result = sha.ComputeHash(data) ;
+
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
             {
@@ -45,15 +89,15 @@ namespace asivamosffie.services.Helpers
                     sb.Append("0");
                 }
                 sb.Append(result[i].ToString("x"));
-            }  
+            }
             return sb.ToString().ToUpper();
         }
 
         public static string CleanStringInput(string text)//ÁÉÍÓÚ //
         {
 
-            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y',' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
-            char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
+            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ',/* ' ',*/ ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+            char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', /*'/',*/ '.', ',', '@', '_', '(', ')', ':', ';' };
 
             if (text != null)
             {
@@ -64,6 +108,95 @@ namespace asivamosffie.services.Helpers
             }
 
             return text;
+        }
+
+        public static string Consecutive(string input, int countMax)
+        {
+            //("D4") indica la cantidad de ceros a la izquierda (0001) ver mas => https://docs.microsoft.com/en-us/dotnet/standard/base-types/standard-numeric-format-strings
+            var number = Convert.ToInt32(countMax);
+
+            //Seleccion privada SP
+            if (input == "1")
+            {
+                return $"{"SP"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
+
+            if (input == "DE")
+            {
+                return $"{"DE_"}{(++number).ToString("D4")}";
+            }
+
+            //Comite Fiduciario
+            if (input == "CF")
+            {
+                return $"{"CF_"}{(++number).ToString("D5")}";
+            }
+            if (input == "PA")
+            {
+                return $"{"PA_"}{(++number).ToString("D4")}";
+            }
+
+            //Invitacion Cerrada SC
+            else if (input == "2")
+            {
+                return $"{"SC"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
+
+            //Concecutivo Proyecto Administrativo
+            if (input == "D4")
+            {
+                return $"{(number).ToString("D4")}";
+            }
+
+            //Concecutivo actualizacion de conograma proceso de seleccion 3.1.3
+            if (input == "ACTCRONO")
+            {
+                return $"{"ACTCRONO"}{(number).ToString("D4")}";
+            }
+
+
+            //Invitacion Abierta SA
+            else
+            {
+                return $"{"SA"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
+        }
+
+        //TODO: Implementacion para cosultas complejas
+        public static List<T> ExecuteQuery<T>(string query) where T : class, new()
+        {
+            devAsiVamosFFIEContext _context = new devAsiVamosFFIEContext();
+            using (var command = _context.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = query;
+                command.CommandType = CommandType.Text;
+
+                _context.Database.OpenConnection();
+
+                using (var reader = command.ExecuteReader())
+                {
+                    var lst = new List<T>();
+                    var lstColumns = new T().GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).ToList();
+                    while (reader.Read())
+                    {
+                        var newObject = new T();
+                        for (var i = 0; i < reader.FieldCount; i++)
+                        {
+                            var name = reader.GetName(i);
+                            PropertyInfo prop = lstColumns.FirstOrDefault(a => a.Name.ToLower().Equals(name.ToLower()));
+                            if (prop == null)
+                            {
+                                continue;
+                            }
+                            var val = reader.IsDBNull(i) ? null : reader[i];
+                            prop.SetValue(newObject, val, null);
+                        }
+                        lst.Add(newObject);
+                    }
+
+                    return lst;
+                }
+            }
         }
 
         public static object ConvertToUpercase(object dataObject)
@@ -99,10 +232,11 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort)
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort, bool pMailHighPriority = false)
+
         {
             try
-            { 
+            {
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient(pStrSmtpServerV);
 
@@ -110,7 +244,9 @@ namespace asivamosffie.services.Helpers
                 mail.To.Add(pDestinatario);
                 mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
-        
+
+                if (pMailHighPriority)
+                    mail.Priority = MailPriority.High;
                 mail.Body = pMensajeHtml;
                 SmtpServer.Port = pSmtpPort;
                 SmtpServer.Credentials = new NetworkCredential(pCorreoLocal, pPassword);
@@ -124,7 +260,7 @@ namespace asivamosffie.services.Helpers
 
             return true;
         }
-         
+
         public static string GeneratePassword(bool includeLowercase, bool includeUppercase, bool includeNumeric, bool includeSpecial, bool includeSpaces, int lengthOfPassword)
         {
             const int MAXIMUM_IDENTICAL_CONSECUTIVE_CHARS = 2;
@@ -180,6 +316,6 @@ namespace asivamosffie.services.Helpers
             string def = "Az-" + randomw.Next(5).ToString();
             return string.Join(null, password) + def;
         }
- 
+         
     }
 }

@@ -1,10 +1,13 @@
-﻿using asivamosffie.model.APIModels;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using asivamosffie.api.Responses;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using asivamosffie.model.APIModels;
 
 namespace asivamosffie.api.Controllers
 {
@@ -12,23 +15,45 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class ResourceControlController : ControllerBase
     {
-        public readonly IResourceControlService _resourceControlService;
+        public readonly IResourceControlService _resource;
 
 
-        public ResourceControlController(IResourceControlService resourceControlService)
+        public ResourceControlController(IResourceControlService resource)
         {
-            _resourceControlService = resourceControlService;
+            _resource = resource;
         }
 
         [HttpGet]
         public async Task<List<ControlRecurso>> Get()
         {
-            var result = await _resourceControlService.GetResourceControl();
-            return result;
+            try
+            {
+                var result = await _resource.GetResourceControl();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
+        [HttpGet]
+        [Route("GetResourceFundingBySourceFunding/{id}")]
+        public async Task<List<ControlRecurso>> GetSourceFundingBySourceFunding(int id)
+        {
+            try
+            {
+                var result = await _resource.GetResourceControlGridBySourceFunding(id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [HttpGet]
+<<<<<<< HEAD
         [Route("GetResourceControlBySourceId")]
         public async Task<List<ResourceControlGrid>> GetResourceControlBySourceId(int idFuente)
         {
@@ -39,46 +64,82 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         [Route("GetResourceControlGrid")]
         public async Task<List<ControlRecurso>> GetResourceControlGrid()
+=======
+        [Route("GetResourceControlById")]
+        public async Task<ControlRecurso> GetById(int pId)
+>>>>>>> 7fe76fd84bc2af36366dbe8c34d617c2224f501b
         {
-            var result = await _resourceControlService.GetResourceControlGrid();
-            return result;
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var result = await _resourceControlService.GetResourceControlById(id);
-            return Ok(result);
-        }
-
-
-        // Agregar control recurso
-        [HttpPost]
-        public async Task<IActionResult> post(ControlRecurso controlRecurso)
-        {
-           
-            var result = await _resourceControlService.Insert(controlRecurso);
-            return Ok(result);
-          
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> update(ControlRecurso controlRecurso)
-        {
-            Respuesta _response = new Respuesta();
-
             try
             {
-                _response = await _resourceControlService.Update(controlRecurso);
-                return Ok(_response);
+                var result = await _resource.GetResourceControlById(pId);
+                return result;
             }
             catch (Exception ex)
             {
-                _response.Data = ex.ToString();
-                return Ok(_response);
+                throw ex;
             }
         }
 
+<<<<<<< HEAD
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+=======
+
+        [HttpPost]
+        [Route("CreateControlRecurso")]
+        public async Task<Respuesta> CreateControlRecurso(ControlRecurso controlRecurso)
+>>>>>>> 7fe76fd84bc2af36366dbe8c34d617c2224f501b
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                controlRecurso.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _resource.Insert(controlRecurso);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
+
+        [HttpPost]
+        [Route("updateControlRecurso")]
+        public async Task<Respuesta> UpdateControlRecurso(ControlRecurso controlRecurso)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                controlRecurso.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _resource.Update(controlRecurso);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
+
+        [HttpPut]
+        [Route("DeleteResourceFundingBySourceFunding")]
+        public async Task<Respuesta> DeleteResourceFundingBySourceFunding(int id)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _resource.Delete(id, HttpContext.User.FindFirst("User").Value);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return respuesta;
+            }
+        }
 
     }
+
+
 }

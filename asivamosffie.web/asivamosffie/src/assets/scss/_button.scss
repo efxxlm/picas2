@@ -1,26 +1,36 @@
 .mat-button.mat-primary, .mat-icon-button.mat-primary, .mat-stroked-button.mat-primary{
-    color: var(--mainColor);
+    color: $mainColor;
 }
 
 .mat-flat-button.mat-primary, .mat-raised-button.mat-primary, .mat-fab.mat-primary, .mat-mini-fab.mat-primary {
-    background-color: var(--mainColor);
+    background-color: $mainColor;
 }
 
 .mat-flat-button.mat-warn, .mat-raised-button.mat-warn, .mat-fab.mat-warn, .mat-mini-fab.mat-warn {
-    background-color: var(--secondaryColor);
+    background-color: $secondaryColor;
 }
 
 .mat-flat-button.mat-accent, .mat-raised-button.mat-accent, .mat-fab.mat-accent, .mat-mini-fab.mat-accent,
 .mat-raised-button.mat-accent[disabled],
 .mat-raised-button[disabled][disabled] {
-    background-color: var(--tertiaryColor);
-    color: var(--tertiaryColorFont);
+    background-color: $tertiaryColor;
+    color: $tertiaryColorFont;
+
+    &:not([disabled]):hover {
+        background-color: $grayColor;
+        color: $mainColor;
+    }
 }
 
+.mat-button.mat-primary[disabled],
 .mat-raised-button[disabled][disabled],
 .mat-raised-button.mat-accent[disabled],
 .mat-button:hover .mat-button-focus-overlay {
     opacity: .8;
+}
+
+.mat-button.mat-primary[disabled] {
+  color: $mainColor;
 }
 
 button.mat-raised-button {
@@ -28,21 +38,36 @@ button.mat-raised-button {
     padding: 0 1.5em;
 }
 
-.btn-eliminar {
-    img {
-        height: 2em;
-        margin-top: -.2em;
-        margin-right: .3em;
+.btn-descargar {
+    margin-top: 2em;
+    margin-bottom: 2em;
+
+    &--img {
+        height: 1.5em;
+        margin-right: .2em;
     }
 }
 
-.btn-calendario {
-    padding: 0;
-    min-width: 2.2em;
-    margin-left: .65em;
+.input-file {
+    margin-top: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1em;
+    color: $mainColor;
 
-    img {
-        height: 2.2em;
+    &--text {
+        border: solid .5px;
+        padding: .5em;
+        border-radius: .7em;
+        height: 20px;
+        width: 40em;
+        max-width: calc(100% - 9em);
+        margin-right: 0.5em;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -52,8 +77,12 @@ button.mat-raised-button {
     }
 }
 
-
+.btn-descargar-plantilla,
 .btn-eliminar {
+    font-style: italic;
+    margin-top: 1em;
+    margin-bottom: .8em;
+
     img {
         height: 2em;
         margin-top: -.2em;
@@ -61,6 +90,11 @@ button.mat-raised-button {
     }
 }
 
+.btn-buscar {
+    img {
+        height: 2.2em;
+    }
+}
 
 button.btn-calendario {
     padding: 0;
@@ -70,4 +104,27 @@ button.btn-calendario {
     img {
         height: 2.2em;
     }
+
+    &:hover::before {
+        @extend %tooltip;
+        content: 'Haga clic en el calendario';
+        bottom: 2.5em;
+    }
+}
+
+.mat-dialog-actions {
+    justify-content: center;
+}
+
+.mat-dialog-actions button {
+    background-color: $mainColor;
+    color: white;
+}
+
+
+.mat-button.btn-sino,
+.mat-button.btn-sino+.mat-button {
+    line-height: 1.8;
+    padding: 0 2em;
+    // margin-bottom: 2em;
 }

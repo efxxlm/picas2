@@ -1,0 +1,103 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/solicitarDisponibilidadPresupuestal" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Ver detalle información adicional solicitud {{numeroSolicitud}}
+    </h1>
+    <div class="d-flex justify-content-center">
+        <p class="solicitud" *ngIf="this.tipoSolicitudColdigo === '1'">
+            <strong>Tipo de solicitud: </strong>
+            Contratación
+        </p>
+        <p class="solicitud" *ngIf="this.tipoSolicitudColdigo === '3'">
+            <strong>Tipo de solicitud: </strong>
+            Modificación Contractual
+        </p>
+        <p class="solicitud">
+            <strong>Fecha de comité técnico:</strong>
+            {{fechaComite| date:'dd/MM/yyyy'}}
+        </p>
+    </div>
+    <mat-card class="shipping-card mainGris"  *ngIf="this.tipoSolicitudColdigo === '3'">
+        <mat-card-content align="left">
+            <p>
+                <b>DDP:</b>
+                DDP_PI_007
+            </p>
+            <p>
+                <b>Valor DDP:</b>
+                $60.000.000
+            </p>
+            <p>
+                <b>Detalle de la modificación:</b>
+                Se realiza adición de recursos para obras complementarias
+            </p>
+        </mat-card-content>
+    </mat-card>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style" *ngFor="let proyecto of proyectos">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    {{ proyecto.llaveMen }} - {{ proyecto.nameColegio }} - {{ proyecto.sede }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <section style="width: 80%;margin: auto;">
+                <p class="text-center color-mainColor departamento">
+                   {{proyecto.departamento}} / {{proyecto.municipio}}</p>
+                <mat-card class="shipping-card var-main-gris sub-card" style="margin-top: 2em;">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text">
+                            Aportantes
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="row">
+                            <div class="col-md-6 mb-1em" *ngFor="let aportante of proyecto.aportantesList; index as i" style="margin-top: .5em; text-align: left;">
+                                <p class="mb1-em" style="font-size: 1.2em;"><b>Aportante {{ i+1 }} </b></p>
+    
+                                <p style="margin-top: .5em;">
+                                    <b>Tipo de aportante:</b>
+                                    {{aportante.tipoAportanteNombre}}
+                                </p>
+                                <p >
+                                    <b>Aportante:</b>
+                                    {{aportante.nombreAportante}}
+                                </p>
+                                <p>
+                                    <b>Valor del aportante:</b>
+                                    {{ aportante.valorTotalAportante | currency }}
+    
+                                </p>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </section>
+
+        </mat-expansion-panel>
+
+    </mat-accordion>
+    <div class="d-flex justify-content-center">
+        <p>
+            <strong>Plazo meses: </strong>
+            {{this.plazoMeses}} 
+        </p>
+        <p>
+            <strong>&nbsp;&nbsp;Plazo días:</strong>
+            {{this.plazoDias}}
+        </p>
+    </div>
+    <mat-card class="shipping-card mainGris">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text textoGris">
+                Objeto
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <div [innerHtml]="this.objeto"></div>
+        </mat-card-content>
+    </mat-card>
+</div>

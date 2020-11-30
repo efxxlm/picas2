@@ -18,20 +18,23 @@
         FFIE.
     </div>
 
-    <form [formGroup]="regitrarAporteForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="regitrarAporteForm" novalidate (ngSubmit)="onSubmit()">
         <div class="row justify-content-center">
-            <div class="pr-1">
-                <label class="label-left">Tipo de aportante</label>
-            </div>
-            <div class="col">
-                <mat-form-field class="select-width">
-                    <mat-select formControlName="tipoAportante" required>
-                        <mat-option></mat-option>
-                        <mat-option *ngFor="let tipoAportante of tiposAportante" [value]="tipoAportante.value">
-                            {{ tipoAportante.name }}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left">Tipo de aportante</label>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="select-width">
+                            <mat-select formControlName="tipoAportante" required>
+                                <mat-option *ngFor="let tipoAportante of tiposAportante" [value]="tipoAportante">
+                                    {{ tipoAportante.nombre }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
             </div>
         </div>
 

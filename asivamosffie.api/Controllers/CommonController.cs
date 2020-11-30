@@ -8,11 +8,13 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.model.Models;
 using asivamosffie.model.APIModels;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CommonController : ControllerBase
     {
         public readonly ICommonService common;
@@ -21,7 +23,30 @@ namespace asivamosffie.api.Controllers
         {
             common = prmCommon;
             _settings = settings;
+        }  
+        [HttpGet]
+        [Route("CalculardiasLaborales")]
+        public Task<DateTime> CalculardiasLaborales([FromQuery]int pDias, DateTime pFechaCalcular)
+        {
+            return common.CalculardiasLaborales(pDias, pFechaCalcular);
         }
+         
+        [HttpGet]
+        [Route("GetUsuarioByPerfil")]
+        public Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
+        {  
+            return  common.GetUsuarioByPerfil(idPerfil);
+         }
+
+        [HttpGet]
+        [Route("GetMenuByRol")]
+        public async Task<ActionResult<List<MenuPerfil>>> GetMenuByRol()
+        { 
+            int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+            var result = await common.GetMenuByRol(pUserId);
+            return result;
+        }
+
         [HttpGet]
         [Route("perfiles")]
         public async Task<ActionResult<List<Perfil>>> GetProfile()
@@ -32,8 +57,8 @@ namespace asivamosffie.api.Controllers
         }
         [HttpGet]
         public async Task<ActionResult<string>> GetTest()
-        {             
-            return "ok "+_settings.Value.MailServer;
+        {
+            return "ok " + _settings.Value.MailServer;
         }
 
         [HttpGet]
@@ -44,6 +69,13 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
+        [HttpGet]
+        [Route("dominioByIdDominioNotCode")]
+        public async Task<ActionResult<List<Dominio>>> GetDominioByIdDominioNotCode(int pIdDominio, string pMinCode)
+        {
+            var result = await common.GetListDominioByIdTipoDominio(pIdDominio);
+            return result.Where(x=>x.Codigo!=pMinCode).ToList();
+        }
 
         [HttpGet]
         [Route("ListDepartamento")]
@@ -53,14 +85,14 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
         [HttpGet]
         [Route("ListMunicipiosByIdDepartamento")]
-        public async Task<ActionResult<List<Localicacion>>> GetListMunicipio(string idDepartamento)
+        public async Task<ActionResult<List<Localicacion>>> GetListDepartamento(string idDepartamento)
         {
             var result = await common.GetListMunicipioByIdDepartamento(idDepartamento);
             return result;
         }
+
 
         [HttpGet]
         [Route("ListMunicipiosByIdMunicipio")]
@@ -69,6 +101,7 @@ namespace asivamosffie.api.Controllers
             var result = await common.GetListMunicipioByIdMunicipio(idMunicipio);
             return result;
         }
+
         [HttpGet]
         [Route("ListDepartamentoByIdMunicipio")]
         public async Task<ActionResult<List<Localicacion>>> GetListDepartamentoByMunicipio(string idMunicipio)
@@ -85,8 +118,8 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
         [HttpGet]
+
         [Route("ListRegion")]
         public async Task<ActionResult<List<Localicacion>>> ListRegion(string idDepartamento)
         {
@@ -94,14 +127,12 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
-
-
         [HttpGet]
         [Route("ListVigenciaAporte")]
         public async Task<ActionResult<List<int>>> GetListVigenciaAportes()
         {
-            var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente , _settings.Value.YearSiguienteEsVigente);
+
+            var result = await common.GetListVigenciaAportes(_settings.Value.YearVigente, _settings.Value.YearSiguienteEsVigente);
             return result;
         }
 
@@ -118,6 +149,21 @@ namespace asivamosffie.api.Controllers
         public async Task<ActionResult<List<InstitucionEducativaSede>>> ListSedeByInstitucionEducativaId(int idInstitucionEducativaId)
         {
             var result = await common.ListSedeByInstitucionEducativaId(idInstitucionEducativaId);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetInstitucionEducativaById")]
+        public async Task<InstitucionEducativaSede> GetInstitucionEducativaById(int idInstitucionEducativaId)
+        {
+            var result = await common.GetInstitucionEducativaById(idInstitucionEducativaId);
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetUsuariosByPerfil")]
+        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil ){
+            var result = await common.GetUsuariosByPerfil(pIdPerfil);
             return result;
         }
     }

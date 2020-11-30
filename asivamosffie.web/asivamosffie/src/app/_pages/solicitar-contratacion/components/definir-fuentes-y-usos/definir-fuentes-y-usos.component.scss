@@ -1,0 +1,47 @@
+.full-width {
+    width: 100%;
+}
+
+.shipping-card {
+    min-width: 120px;
+    margin: 20px auto;
+}
+
+.mat-radio-button {
+    display: block;
+    margin: 5px 0;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.col {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.col:last-child {
+    margin-right: 0;
+}
+
+.container-valor {
+    border: solid 1px var(--mainColor);
+    border-radius: .8em;
+    padding: 1em 2em;
+    display: flex;
+    justify-content: space-between;
+
+    p {
+        margin-bottom: 0;
+        b {
+            color: var(--mainColor);
+        }
+    }
+}
+
+.valor-input {
+    color: var(--mainColor);
+    margin-top: 0.5em;
+}

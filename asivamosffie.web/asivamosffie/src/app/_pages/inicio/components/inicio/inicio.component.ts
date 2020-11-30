@@ -47,7 +47,7 @@ export class InicioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.autenticacionService.logout();
+    this.autenticacionService.logout(true);
     this.buildForm();
 
     
@@ -86,6 +86,7 @@ export class InicioComponent implements OnInit {
 
   private verificarRespuesta( respuesta: Respuesta )
   {
+    
     if (respuesta.isSuccessful) // Response witout errors
     {
       if (respuesta.isValidation) // have validations
@@ -97,7 +98,7 @@ export class InicioComponent implements OnInit {
           this.router.navigate(['/cambiarContrasena']);
         }else
         {
-          this.openDialog('', respuesta.message);
+          this.openDialog('', `<b>${respuesta.message}</b>`);
         }
       }else // Expected response 
       {

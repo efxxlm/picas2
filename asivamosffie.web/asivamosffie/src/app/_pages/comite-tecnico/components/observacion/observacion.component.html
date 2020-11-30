@@ -1,0 +1,58 @@
+<section class="scroll">
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Observaciones para la devolución o rechazo del proyecto
+    </h1>
+    <b class="sub-text">
+      Ampliación
+      Atlántico/Manatí
+      I.E Antonio Nariño
+      Única sede
+      Devuelto por el comité
+    </b>
+  </div>
+
+  <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
+    <thead>
+      <tr class="mat-header-row cdk-header-row ng-star-inserted">
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+          Miembro participante
+        </th>
+        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+          Observación
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let observacion of listaObservaciones">
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          {{ observacion.sesionParticipante.usuario.nombres }}
+        </td>
+        <td class="mat-cell cdk-cell ng-star-inserted">
+          <div class="p-table" [innerHTML]="observacion.observacion"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="d-flex align-items-center">
+    <div class="text-area-quill">
+      <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
+      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+        (onContentChanged)="maxLength($event, 3000)" [(ngModel)]="observacion"></quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="observacion">
+      {{3000 - textoLimpio(observacion)}}
+    </span>
+    <span class="contador miles" *ngIf="!observacion">
+      3000
+    </span>
+  </div>
+
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" (click)="enviarObservacion()">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+
+</section>

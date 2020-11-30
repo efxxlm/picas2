@@ -36,18 +36,22 @@ namespace asivamosffie.services
             _context = context;
         }
          
-        public async Task<ArchivoCargue> getSaveFile(IFormFile pFile, string pFilePatch , int OrigenId)
+        public async Task<ArchivoCargue> getSaveFile(IFormFile pFile, string pFilePatch , int OrigenId, int idrelacion=0)
         {
             try
             {
-                ArchivoCargue archivoCargue = new ArchivoCargue();
                 Guid g = Guid.NewGuid();
-                archivoCargue.OrigenId = OrigenId;  
-                archivoCargue.Activo = true;
-                archivoCargue.FechaCreacion = DateTime.Now;
-                archivoCargue.Ruta = pFilePatch;
-                archivoCargue.Nombre = g.ToString();
-                archivoCargue.Tamano = pFile.Length.ToString();
+
+                ArchivoCargue archivoCargue = new ArchivoCargue
+                {
+                    OrigenId = OrigenId,
+                    Activo = true,
+                    FechaCreacion = DateTime.Now,
+                    Ruta = pFilePatch,
+                    Nombre = g.ToString(),
+                    Tamano = pFile.Length.ToString(),
+                    ReferenciaId=idrelacion
+                };
                 if (!Directory.Exists(pFilePatch))
                 {
                     Directory.CreateDirectory(pFilePatch);
@@ -61,19 +65,49 @@ namespace asivamosffie.services
                     return archivoCargue;
                 }
             }
-            catch (Exception e)
-            {
-                ArchivoCargue archivoCargue = new ArchivoCargue();
-                return archivoCargue;
+            catch (Exception )
+            { 
+                return new ArchivoCargue();
             }
 
         }
 
-        public async  Task <List<ArchivoCargue>> GetListloadedDocuments () {
 
-            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals(OrigenArchivoCargue.Proyecto) && (bool)r.Activo).ToListAsync();
-        
-        
+        public async Task<bool> SaveFileContratacion(IFormFile pFile, string pFilePatch ,string pNameFile)
+        {
+            try
+            {
+                if (!Directory.Exists(pFilePatch))
+                {
+                    Directory.CreateDirectory(pFilePatch);
+                }
+                if (!string.IsNullOrEmpty(pNameFile)) {
+                    var streamFile = new FileStream(pFilePatch + "/" + pNameFile, FileMode.Create);
+                    using (streamFile)
+                    {
+                        await pFile.CopyToAsync(streamFile);
+
+                        return true;
+                    }
+                }
+                else{
+                    var streamFile = new FileStream(pFilePatch, FileMode.Create);
+                    using (streamFile)
+                    {
+                        await pFile.CopyToAsync(streamFile); 
+                        return true;
+                    }
+                } 
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async  Task <List<ArchivoCargue>> GetListloadedDocuments(string pOrigenId = "1")
+        {
+            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals( pOrigenId ) && (bool)r.Activo).OrderByDescending(r=> r.ArchivoCargueId).OrderByDescending(r=> r.ArchivoCargueId).ToListAsync();
         }
 
         public async Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser) {
@@ -120,6 +154,68 @@ namespace asivamosffie.services
                 };
                 return archivoCargue;
             }
-        } 
+        }
+
+        public async Task<List<ArchivoCargue>> GetListloadedDocumentsByRelacionId(string pOrigenId, int pRelacionId)
+        {
+            return await _context.ArchivoCargue.Where(r => r.OrigenId.ToString().Equals(pOrigenId) && r.ReferenciaId==pRelacionId && (bool)r.Activo).OrderByDescending(r => r.ArchivoCargueId).OrderByDescending(r => r.ArchivoCargueId).ToListAsync();
+        }
+
+        public async Task<string> DownloadOrdenElegibilidadFilesByName(string pNameFiles, string pFilePatch, string pUser)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            var streams = new MemoryStream();
+            using (var packages = new ExcelPackage(streams))
+            {
+                var workSheet = packages.Workbook.Worksheets.Add("Sheet1");
+                var collection = _context.TempOrdenLegibilidad.Where(x => x.ArchivoCargue.Nombre == pNameFiles).Select(
+                    x=> new { Es_valido= x.EstaValidado,
+                        Tipo_de_proponente = x.TipoProponenteId,
+                        Nombre_del_proponente = x.NombreProponente,
+                        Numero_de_identificacion_del_proponente = x.NumeroIddentificacionProponente,
+                        Departamento_del_domicilio_del_proponente = x.Departamento,
+                        Municipio_del_domicilio_del_proponente = x.Minicipio,
+                        Direccion_del_proponente = x.Direccion,
+                        Telefono_del_proponente = x.Telefono,
+                        Correo_electronico_del_proponente = x.Correo,
+                        Nombre_de_la_Entidad = x.NombreEntidad,
+                        Numero_de_identificacion_Tributaria = x.IdentificacionTributaria,
+                        Nombre_del_Representante_legal = x.RepresentanteLegal,
+                        Cedula_del_representante = x.CedulaRepresentanteLegal,
+                        Departamento_del_domicilio_del_representante_legal = x.DepartamentoRl,
+                        Municipio_del_domicilio_del_representante_legal = x.MunucipioRl,
+                        Direccion_del_representante_legal = x.DireccionRl,
+                        Telefono_del_representante_legal = x.TelefonoRl,
+                        Correo_electronico_del_representante_legal = x.CorreoRl,
+                        Nombre_de_la_UT_o_consorcio = x.NombreOtoConsorcio,
+                        Cuantas_entidades_integran_la_Union_Temporal_o_consorcio = x.EntiddaesQueIntegranLaUnionTemporal,
+                        Nombre_Integrante_1 = x.NombreIntegrante,
+                        Porcentaje_de_Participacion_integrante_1 = x.PorcentajeParticipacion,
+                        Nombre_Integrante_2 ="",
+                        Porcentaje_de_Participacion_integrante_2 ="",
+                        Nombre_Integrante_3 ="",
+                        Porcentaje_de_Participacion_integrante_3 ="",
+                        Nombre_del_Representante_legal_de_la_UT_o_Consorcio = x.NombreRlutoConsorcio,
+                        Cedula_del_representante_de_la_UT_o_Consorcio = x.CcrlutoConsorcio,
+                        Departamento_del_domicilio_del_representante_legal_de_la_UT_o_Consorcio = x.DepartamentoRlutoConsorcio,
+                        Municipio_del_domicilio_del_representante_legal_de_la_UT_o_Consorcio = x.MinicipioRlutoConsorcio,
+                        Direccion_del_representante_legal_de_la_UT_o_Consorcio = x.DireccionRlutoConsorcio,
+                        Telefono_del_representante_legal_de_la_UT_o_Consorcio = x.TelefonoRlutoConsorcio,
+                        Correo_electronico_del_representante_legal_de_la_UT_o_Consorcio = x.CorreoRlutoConsorcio,
+                    }).ToList();
+                workSheet.Cells.LoadFromCollection(collection, true);
+                packages.Save();
+                //convert the excel package to a byte array
+                byte[] bin = packages.GetAsByteArray();
+                Stream stream = new MemoryStream(bin);                
+                //the path of the file
+                string filePath = pFilePatch + "/" + pNameFiles + "_rev.xlsx";
+
+                //write the file to the disk
+                File.WriteAllBytes(filePath, bin);
+                return filePath;
+            }
+            return "";
+        }
     }
 }

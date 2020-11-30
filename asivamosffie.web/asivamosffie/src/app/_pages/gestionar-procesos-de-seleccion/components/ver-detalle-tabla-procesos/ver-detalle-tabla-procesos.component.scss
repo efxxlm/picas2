@@ -1,0 +1,40 @@
+.dialog-btn {
+    margin-top: 2em;
+    margin-bottom: 3em;
+    width: 38em;
+    margin-right: auto;/*jflorez, pa que se centre*/
+    margin-left: auto;
+    align-items: center;/*jflorez, pa que se centre*/
+    text-align: center;
+    &--button {
+        width: 17em;
+        margin-bottom: 1em;
+        &:nth-child(odd) {
+            margin-right: 1em;
+        }
+    }
+}
+
+.ml9
+{
+    margin-left: 31%;
+}
+
+.mr-2em
+{
+    margin-right: 2em;
+}
+
+.solbloq
+{
+    color: var(--fontColor);
+    margin-top: 1em;
+  }
+  .solbloq b{
+    font-style: italic;
+  }
+
+.ml8
+{
+    margin-left: 8em;
+}

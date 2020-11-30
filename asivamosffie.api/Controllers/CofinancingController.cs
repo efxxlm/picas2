@@ -31,8 +31,8 @@ namespace asivamosffie.api.Controllers
             try
             { 
                 HttpContext.Connection.RemoteIpAddress.ToString();
-               // pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                Task<object> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
+                pCofinanciacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                Task<Respuesta> result = _Cofinancing.CreateorUpdateCofinancing(pCofinanciacion);
                 object respuesta = await result;
                 return Ok(respuesta);
             }
@@ -49,8 +49,7 @@ namespace asivamosffie.api.Controllers
             var result = await _Cofinancing.GetListCofinancing();
             return result;
         }
- 
- 
+
 
         [Route("GetDocument")]
         [HttpGet]
@@ -67,7 +66,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-         
+        [Route("GetListAportanteByTipoAportanteId")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        {
+            try
+            {
+                return await _Cofinancing.GetListAportanteByTipoAportanteId(pTipoAportanteID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         [Route("GetCofinancingByIdCofinancing")]
         [HttpGet]
         public async Task<Cofinanciacion> GetCofinancing(int IdCofinancing)
@@ -76,19 +88,39 @@ namespace asivamosffie.api.Controllers
             return result;
         }
 
-
-
-        [Route("GetListAportanteByTipoAportanteId")]
-        [HttpGet]
-        public async Task<ActionResult<List<CofinanicacionAportanteGrilla>>> GetListAportanteByTipoAportanteId(int pTipoAportanteID)
+        [Route("EliminarCofinanciacionByCofinanciacionId")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarCofinanciacionByCofinanciacionId(int pCofinancicacionId)
         {
             try
             {
-                return await _Cofinancing.GetListAportanteByTipoAportanteId(pTipoAportanteID); 
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
+
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
-                throw ex;
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("EliminarCofinanciacionAportanteByCofinanciacionAportanteId")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarCofinanciacionAportanteByCofinanciacionAportanteId(int pCofinancicacionId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _Cofinancing.EliminarCofinanciacionAportanteByCofinanciacionAportanteId(pCofinancicacionId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
             }
         }
 
@@ -106,6 +138,21 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+        
 
+        [Route("GetAportantesByTipoAportante")]
+        [HttpGet]
+        public async Task<ActionResult<List<CofinanciacionAportante>>> GetListTipoAportante(int pTipoAportanteID)
+        {
+            try
+            {
+                return await _Cofinancing.GetListTipoAportante(pTipoAportanteID);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

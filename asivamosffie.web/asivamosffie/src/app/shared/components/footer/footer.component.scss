@@ -1,5 +1,6 @@
 .footer {
     text-align: center;
+    background-color: #d21e18;
     background-color: var(--secondaryColor);
     color: #fff;
     padding: 1em;
@@ -13,6 +14,10 @@
             position: absolute;
             right: 1em;
             top: 1em;
+
+            @media screen and (min-width: 0\0) {
+                right: 6em;
+            }
         }
     }
 
@@ -20,6 +25,9 @@
         display: inline-block;
         &__img {
             height: 1em;
+            @media screen and (min-width: 0\0) {
+                height: 1.2em;
+            }
         }
     }
 }

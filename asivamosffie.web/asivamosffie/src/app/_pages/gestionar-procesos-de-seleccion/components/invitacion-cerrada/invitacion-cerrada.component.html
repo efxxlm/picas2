@@ -1,0 +1,103 @@
+<div class="container">
+    <div class="text-right">
+        <a routerLink="/seleccion" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Invitación Cerrada
+        </h1>
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':descripcion_class===0,'en-proceso':descripcion_class===1,'completo':descripcion_class===2}">
+                    Descripción de la invitación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()"
+                id="botonDescripcion"></button>
+            <app-form-descripcion-del-proceso-de-seleccion
+                #descripcion
+                [procesoSeleccion]="procesoSeleccion"
+                [editar]="bitPuedoEditar"
+                (guardar)="onSubmit()"
+                [style.pointer-events]="getStyleProponentesCreado()">
+            </app-form-descripcion-del-proceso-de-seleccion>
+        </mat-expansion-panel>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':estudio_class===0,'en-proceso':estudio_class===1,'completo':estudio_class===2}">
+                    Estudio de mercado
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="estudio.cargarRegistro()" id="botonEstudio"></button>
+            <app-form-estudio-de-mercado
+                #estudio
+                [procesoSeleccion]="procesoSeleccion"
+                [editar]="bitPuedoEditar"
+                (guardar)="onSubmit()"
+                [style.pointer-events]="getStyleProponentesCreado()">
+            </app-form-estudio-de-mercado>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':datos_class===0,'en-proceso':datos_class===1,'completo':datos_class===2}">
+                    Selección de proponentes a invitar
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="proponenteCerrada.cargarRegistro()"
+                id="botonProponente"></button>
+            <app-form-datos-proponentes-seleccionados-invitacion-cerrada
+                #proponenteCerrada
+                [procesoSeleccion]="procesoSeleccion"
+                [editar]="bitPuedoEditar"
+                (guardar)="onSubmit()"
+                [style.pointer-events]="getStyleProponentesCreado()">
+            </app-form-datos-proponentes-seleccionados-invitacion-cerrada>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style" >
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title " [ngClass]="{'sin-diligenciar':evaluacion_class===0,'en-proceso':evaluacion_class===1,'completo':evaluacion_class===2, 'en-alerta':evaluacion_class===3}">
+                    Evaluación
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="evaluacion.cargarRegistro()"
+                id="botonevaluacion"></button>
+            <app-form-evaluacion #evaluacion 
+                [procesoSeleccion]="procesoSeleccion"
+                [editar]="bitPuedoEditar"
+                (guardar)="onSubmit()" [style.pointer-events]="getStyleEvaluacion()">
+            </app-form-evaluacion>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="{'sin-diligenciar':proponentes_class===0,'en-proceso':proponentes_class===1,'completo':proponentes_class===2, 'en-alerta':proponentes_class===3}">
+                    Datos de proponentes seleccionados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="proponenteInvitar.cargarRegistro()"
+                id="botonProponenteInvitar"></button>
+            <app-form-seleccion-proponente-a-invitar #proponenteInvitar
+                [editar]="bitPuedoEditar"    
+                [procesoSeleccion]="procesoSeleccion"               
+                (guardar)="onSubmit()">
+            </app-form-seleccion-proponente-a-invitar>
+
+        </mat-expansion-panel>
+
+    </mat-accordion>
+     <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo!=estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+    Cuando la solicitud se encuentra en estado <b>“Aprobada apertura de comité fiduciario”</b> el sistema habilitará las opciones para continuar el proceso.
+    </div>
+</div>

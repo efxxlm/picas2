@@ -1,0 +1,33 @@
+:host {
+  animation-duration: 0.6s;
+  animation-name: animatedDown;
+}
+
+.m-1em {
+  margin: 1em;
+}
+
+.mb-1em {
+  margin-bottom: 1em;
+}
+
+.btn-eliminar {
+  margin-top: 0.5em;
+}
+
+.mx-gestion {
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
+.toptd {
+  position: absolute;
+  top: 0.8em;
+  left: 50%;
+  transform: translateX(-50%);
+  display: block;
+
+  button.btn-calendario {
+    margin-left: 0;
+  }
+}

@@ -16,6 +16,8 @@ import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -37,6 +39,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatCheckboxModule,
+    MatTooltipModule
   ],
   exports: [
     MatButtonModule,
@@ -55,6 +59,8 @@ import { MatSortModule } from '@angular/material/sort';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    MatCheckboxModule,
+    MatTooltipModule
   ]
 })
 export class MaterialModule { }

@@ -1,0 +1,33 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="contratacion">
+  <div class="d-flex justify-content-center">
+    <div class="pr-1">
+      <label class="label-left" for="reasignacion">¿Este contrato tendrá alguna obligación especial?</label>
+    </div>
+    <mat-radio-group class="radioInput" formControlName="reasignacion">
+      <mat-radio-button [value]="true">Sí</mat-radio-button>
+      <mat-radio-button [value]="false">No</mat-radio-button>
+    </mat-radio-group>
+    <span class="required-form-group">*</span>
+  </div>
+
+  <div class="d-flex align-items-center animatedDown" *ngIf="addressForm.controls.reasignacion.value === true">
+    <div class="text-area-quill">
+      <label for="alcanceParticular" class="text-area-quill--label">Descripción</label>
+      <quill-editor class="quill-editor-style" [modules]="config"
+        (onContentChanged)="maxLength($event, 2000)" formControlName="descripcion" required>
+      </quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="addressForm.get('descripcion').value !== null">
+      {{2000 - (textoLimpio(addressForm.get('descripcion').value)>2000?2000:textoLimpio(addressForm.get('descripcion').value))}}
+    </span>
+    <span class="contador miles" *ngIf="addressForm.get('descripcion').value === null">
+      2000
+    </span>
+  </div>
+
+  <div class="text-center animatedDown" *ngIf="addressForm.controls.reasignacion.value !== ''">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="guardar">
+    </button>
+  </div>
+</form>
