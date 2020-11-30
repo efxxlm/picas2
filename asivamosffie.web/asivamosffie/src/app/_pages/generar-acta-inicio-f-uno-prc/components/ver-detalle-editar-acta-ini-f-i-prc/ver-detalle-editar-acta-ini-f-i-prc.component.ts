@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,7 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './ver-detalle-editar-acta-ini-f-i-prc.component.html',
   styleUrls: ['./ver-detalle-editar-acta-ini-f-i-prc.component.scss']
 })
-export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit {
+export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit, OnDestroy {
   maxDate: Date;
   maxDate2: Date;
   public idContrato;
@@ -59,6 +59,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
   numIdContratistaObra: any;
   diasPlazoIni: any;
   mesPlazoIni: any;
+
+  realizoPeticion: boolean = false;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -72,6 +74,24 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       this.idContrato = param.id;
     });
   }
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe(data=>{
       for(let i=0; i<data.contratoObservacion.length;i++){
@@ -265,12 +285,14 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
           this.openDialog('', data.message);
           if(localStorage.getItem("origin")=="obra"){
             this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
+              this.realizoPeticion = true;
               this.openDialog('La información ha sido guardada exitosamente.', "");
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
           }
           else{
-            this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data0=>{
+            this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data1=>{
+              this.realizoPeticion = true;
               this.openDialog('La información ha sido guardada exitosamente.', "");
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });

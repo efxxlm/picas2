@@ -489,7 +489,7 @@ namespace asivamosffie.services
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
                 {
 
-                    contratoMod.FechaAprobacionRequsitosSuperviso = DateTime.Now;
+                    contratoMod.FechaAprobacionRequisitosSupervisor = DateTime.Now;
 
                 }
                 //TODO: crear notificaciones

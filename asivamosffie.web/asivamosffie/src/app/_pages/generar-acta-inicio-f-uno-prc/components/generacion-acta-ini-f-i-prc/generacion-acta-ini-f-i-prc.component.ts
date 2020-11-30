@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -10,7 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './generacion-acta-ini-f-i-prc.component.html',
   styleUrls: ['./generacion-acta-ini-f-i-prc.component.scss']
 })
-export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
+export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDestroy {
   maxDate: Date;
   maxDate2: Date;
   public idContrato;
@@ -45,10 +45,15 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
   nomEntidadContratistaIntervn: any;
   valorFDos: any;
   numIdContratistaObra: any;
-
+  realizoPeticion: boolean = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
+  }
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    }
   }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -56,6 +61,19 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
       this.loadData(param.id);
     });
   }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
   loadData(id) {
     this.service.GetContratoByContratoId(id).subscribe(data => {
       this.cargarDataParaInsercion(data);
@@ -188,12 +206,14 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit {
         if (data.code == "200") {
           if(localStorage.getItem("origin")=="obra"){
             this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
+              this.realizoPeticion = true;
               this.openDialog('La información ha sido guardada exitosamente.', "");
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
           }
           else{
             this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data0=>{
+              this.realizoPeticion = true;
               this.openDialog('La información ha sido guardada exitosamente.', "");
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
