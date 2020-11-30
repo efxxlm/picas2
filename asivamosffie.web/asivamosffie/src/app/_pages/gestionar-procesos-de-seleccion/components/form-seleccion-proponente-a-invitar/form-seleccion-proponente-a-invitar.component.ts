@@ -37,7 +37,22 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   ) {
 
   }
-
+  
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   ngOnInit() {
     return new Promise(resolve => {
