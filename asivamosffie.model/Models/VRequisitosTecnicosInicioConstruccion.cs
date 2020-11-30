@@ -19,5 +19,9 @@ namespace asivamosffie.model.Models
         public string EstadoNombre { get; set; }
         public bool? ExisteRegistro { get; set; }
         public bool? EstaDevuelto { get; set; }
+        public string RutaActaFase1 { get; set; }
+        public DateTime? FechaActaInicioFase1 { get; set; }
+        public int? TieneFasePreconstruccion { get; set; }
+        public int? TieneFaseConstruccion { get; set; }
     }
 }

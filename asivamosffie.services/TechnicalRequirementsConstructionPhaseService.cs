@@ -49,216 +49,9 @@ namespace asivamosffie.services
             _budgetAvailabilityService = budgetAvailabilityService;
         }
 
-        public async Task<Respuesta> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(int ContratoId, string pEstado, string pUsuarioMod)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                Contrato contratoCambiarEstado = await _context.Contrato
-                    .Where(r => r.ContratoId == ContratoId)
-                    .Include(r => r.ContratoConstruccion)
-                          .ThenInclude(r => r.ConstruccionObservacion)
-                    .FirstOrDefaultAsync();
-
-                contratoCambiarEstado.UsuarioModificacion = pUsuarioMod;
-                contratoCambiarEstado.FechaModificacion = DateTime.Now;
-
-                contratoCambiarEstado.EstadoVerificacionConstruccionCodigo = pEstado;
-
-                if (pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_interventor.ToString() || pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_apoyo.ToString())
-                {
-
-                    foreach (var ContratoConstruccion in contratoCambiarEstado.ContratoConstruccion)
-                    {
-                        //Observaciones Diagnostico
-
-                        if ((bool)ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor)
-                        {
-                            //Observacion Supervisor
-                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
-                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico.ToString()
-                                        && (bool)r.EsSupervision
-                                        && !(bool)r.Eliminado
-                                        && !(bool)r.Archivada
-                                    )
-                                .FirstOrDefault();
-
-                            construccionObservacionSupervisor.Archivada = true;
-
-                            //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
-
-                            construccionObservacionApoyo.Archivada = true;
-
-                            //Contrato Construccion
-                            ContratoConstruccion.ObservacionDiagnosticoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
-                            ContratoConstruccion.TieneObservacionesDiagnosticoApoyo = null;
-                            ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor = null;
-                            ContratoConstruccion.RegistroCompletoDiagnostico = false;
-                        }
-
-                        //Observaciones Planes Y Programas
-
-                        if ((bool)ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor)
-                        {
-                            //Observacion Supervisor
-                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
-                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas.ToString()
-                                    && (bool)r.EsSupervision
-                                    && !(bool)r.Eliminado
-                                    && !(bool)r.Archivada)
-                                .FirstOrDefault();
-
-                            construccionObservacionSupervisor.Archivada = true;
-
-                            //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
-
-                            construccionObservacionApoyo.Archivada = true;
-
-                            //Contrato Construccion
-                            ContratoConstruccion.ObservacionPlanesProgramasSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
-                            ContratoConstruccion.TieneObservacionesPlanesProgramasApoyo = null;
-                            ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor = null;
-                            ContratoConstruccion.RegistroCompletoPlanesProgramas = false;
-                        }
-
-                        //Observaciones Manejo de Anticipo
-
-                        if ((bool)ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor)
-                        {
-                            //Observacion Supervisor
-                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
-                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo.ToString()
-                                    && (bool)r.EsSupervision
-                                    && !(bool)r.Eliminado
-                                    && !(bool)r.Archivada)
-                                .FirstOrDefault();
-
-                            construccionObservacionSupervisor.Archivada = true;
-
-                            //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
-
-                            construccionObservacionApoyo.Archivada = true;
-
-                            //Contrato Construccion
-                            ContratoConstruccion.ObservacionManejoAnticipoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
-                            ContratoConstruccion.TieneObservacionesManejoAnticipoApoyo = null;
-                            ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor = null;
-                            ContratoConstruccion.RegistroCompletoManejoAnticipo = false;
-                        }
-
-                        //Observaciones Programacion Obra  
-
-                        if ((bool)ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor)
-                        {
-                            //Observacion Supervisor
-                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
-                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
-                                    && (bool)r.EsSupervision
-                                    && !(bool)r.Eliminado
-                                    && !(bool)r.Archivada)
-                                .FirstOrDefault();
-
-                            construccionObservacionSupervisor.Archivada = true;
-
-                            //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
-
-                            construccionObservacionApoyo.Archivada = true;
-
-                            //Contrato Construccion
-                            ContratoConstruccion.ObservacionProgramacionObraSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
-                            ContratoConstruccion.TieneObservacionesProgramacionObraApoyo = null;
-                            ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor = null;
-                            ContratoConstruccion.RegistroCompletoProgramacionObra = false;
-                        }
-
-                        //Observaciones Flujo Inversion 
-
-                        if ((bool)ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor)
-                        {
-                            //Observacion Supervisor
-                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
-                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
-                                    && (bool)r.EsSupervision
-                                    && !(bool)r.Eliminado
-                                    && !(bool)r.Archivada)
-                                .FirstOrDefault();
-
-                            construccionObservacionSupervisor.Archivada = true;
-
-                            //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
-
-                            construccionObservacionApoyo.Archivada = true;
-
-                            //Contrato Construccion
-                            ContratoConstruccion.ObservacionFlujoInversionSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
-                            ContratoConstruccion.TieneObservacionesFlujoInversionApoyo = null;
-                            ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor = null;
-                            ContratoConstruccion.RegistroCompletoFlujoInversion = false;
-                        }
-
-                    }
-                }
-                _context.SaveChanges();
-
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioMod, "CAMBIAR ESTADO CONTRATO CONSTRUCCION")
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioMod, ex.InnerException.ToString())
-                    };
-            }
 
 
-
-        }
-
+        #region gets
 
         public async Task<List<dynamic>> GetContractsGrid(int pUsuarioId)
         {
@@ -269,19 +62,41 @@ namespace asivamosffie.services
             lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
                 .ForEach(c =>
             {
-                listaContrats.Add(new
-                {
-                    ContratoId = c.ContratoId,
-                    FechaAprobacion = c.FechaAprobacion,
-                    NumeroContrato = c.NumeroContrato,
-                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoCodigo = c.EstadoCodigo,
-                    EstadoNombre = c.EstadoNombre,
-                    Existeregistro = c.ExisteRegistro,
-                    c.EstaDevuelto,
-                });
+                if ( c.TieneFaseConstruccion > 0 ){ // fase construccion
+                    if (c.TieneFasePreconstruccion > 0 ){
+                        if (!string.IsNullOrEmpty( c.RutaActaFase1 ) && c.FechaActaInicioFase1 != null ){ 
+                            listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
+
+                            });
+                        }
+                    }else{ // sin preconstruccion
+                        listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
+
+                            });
+                    }
+                }
             });
             return listaContrats;
         }
@@ -324,20 +139,42 @@ namespace asivamosffie.services
             lista.Where(c => c.TipoContratoCodigo == "2").ToList() // tipo contrato interventoria
                 .ForEach(c =>
             {
-                listaContrats.Add(new
-                {
-                    ContratoId = c.ContratoId,
-                    FechaAprobacion = c.FechaAprobacion,
-                    NumeroContrato = c.NumeroContrato,
-                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoCodigo = c.EstadoCodigo,
-                    EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
-                    Existeregistro = c.ExisteRegistro,
-                    c.EstaDevuelto,
+                if ( c.TieneFaseConstruccion > 0 ){ // fase construccion
+                    if (c.TieneFasePreconstruccion > 0 ){
+                        if (!string.IsNullOrEmpty( c.RutaActaFase1 ) && c.FechaActaInicioFase1 != null ){ 
+                            listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
 
-                });
+                            });
+                        }
+                    }else{ // sin preconstruccion
+                        listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
+
+                            });
+                    }
+                }                     
+                        
             });
 
             return listaContrats;
@@ -353,17 +190,6 @@ namespace asivamosffie.services
 
             return contratoConstruccion;
 
-        }
-
-        private bool VerificarEsSupervisor(string pUsuarioCreacion)
-        {
-            List<UsuarioPerfil> usuarioPerfil = _context.UsuarioPerfil.Where(r => r.PerfilId == 8)
-            .Include(r => r.Usuario).ToList();
-
-            if (usuarioPerfil.Where(r => r.Usuario.Email == pUsuarioCreacion).ToList().Count > 0)
-                return true;
-            else
-                return false;
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId, string pUsuarioCreacion)
@@ -468,28 +294,52 @@ namespace asivamosffie.services
             }
         }
 
-        private bool VerificarRegistroCompletoDiagnostico(ContratoConstruccion pConstruccion)
+        public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
         {
-            bool completo = true;
+            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
 
-            if (
-                pConstruccion.EsInformeDiagnostico == null ||
-                string.IsNullOrEmpty(pConstruccion.RutaInforme) ||
-                pConstruccion.CostoDirecto == null ||
-                pConstruccion.Administracion == null ||
-                pConstruccion.Imprevistos == null ||
-                pConstruccion.Utilidad == null ||
-                pConstruccion.ValorTotalFaseConstruccion == null ||
-                pConstruccion.RequiereModificacionContractual == null ||
-                (pConstruccion.RequiereModificacionContractual == true && pConstruccion.NumeroSolicitudModificacion == null)
-            )
-            {
-                completo = false;
-            }
+            List<TempProgramacion> lista = _context.TempProgramacion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
 
-            return completo;
+            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
+          {
+              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => c.Key == a.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
+              if (archivo != null)
+              {
+                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+
+                  listaCargas.Add(archivo);
+              }
+          });
+
+            return listaCargas;
 
         }
+
+        public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
+        {
+            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
+
+            List<TempFlujoInversion> lista = _context.TempFlujoInversion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
+
+            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
+          {
+              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.Key && a.Eliminado != true).FirstOrDefault();
+              if (archivo != null)
+              {
+                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+
+                  listaCargas.Add(archivo);
+              }
+          });
+
+            return listaCargas;
+
+        }
+
+
+        #endregion gets
+
+        #region createEdit
 
         public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
         {
@@ -575,64 +425,6 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
-        }
-
-        private async Task<bool> ValidarRegistroCompletoVerificacion(int id, bool pEsSupervicion)
-        {
-            bool esCompleto = true;
-
-            ContratoConstruccion cc = await _context.ContratoConstruccion.Where(cc => cc.ContratoConstruccionId == id)
-                                                                .Include(r => r.ConstruccionPerfil)
-                                                                .FirstOrDefaultAsync();
-
-            cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, pEsSupervicion);
-            cc.ObservacionPlanesProgramasApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, pEsSupervicion);
-            cc.ObservacionManejoAnticipoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, pEsSupervicion);
-            cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, pEsSupervicion);
-            cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, pEsSupervicion);
-
-            if (cc.TieneObservacionesDiagnosticoApoyo == null ||
-                 (cc.TieneObservacionesDiagnosticoApoyo == true && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
-                 cc.TieneObservacionesFlujoInversionApoyo == null ||
-                 (cc.TieneObservacionesFlujoInversionApoyo == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
-                 cc.TieneObservacionesManejoAnticipoApoyo == null ||
-                 (cc.TieneObservacionesManejoAnticipoApoyo == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo != null ? cc.ObservacionManejoAnticipoApoyo.Observaciones : null)) ||
-                 cc.TieneObservacionesPlanesProgramasApoyo == null ||
-                 (cc.TieneObservacionesPlanesProgramasApoyo == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo != null ? cc.ObservacionPlanesProgramasApoyo.Observaciones : null)) ||
-                 cc.TieneObservacionesProgramacionObraApoyo == null ||
-                 (cc.TieneObservacionesProgramacionObraApoyo == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo != null ? cc.ObservacionProgramacionObraApoyo.Observaciones : null))
-                 )
-            {
-                esCompleto = false;
-            }
-
-            return esCompleto;
-        }
-
-        private bool VerificarRegistroCompletoPlanesProgramas(ContratoConstruccion pConstruccion)
-        {
-            bool completo = true;
-
-            if (
-                    pConstruccion.PlanLicenciaVigente == null ||
-                    pConstruccion.PlanCambioConstructorLicencia == null ||
-                    pConstruccion.PlanActaApropiacion == null ||
-                    pConstruccion.PlanResiduosDemolicion == null ||
-                    pConstruccion.PlanManejoTransito == null ||
-                    pConstruccion.PlanManejoAmbiental == null ||
-                    pConstruccion.PlanAseguramientoCalidad == null ||
-                    pConstruccion.PlanProgramaSeguridad == null ||
-                    pConstruccion.PlanProgramaSalud == null ||
-                    pConstruccion.PlanInventarioArboreo == null ||
-                    pConstruccion.PlanAprovechamientoForestal == null ||
-                    pConstruccion.PlanManejoAguasLluvias == null ||
-                    string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
-            )
-            {
-                completo = false;
-            }
-
-            return completo;
         }
 
         public async Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion)
@@ -824,23 +616,6 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
                     };
             }
-        }
-
-        private bool VerificarRegistroCompletoManejoAnticipo(ContratoConstruccion pConstruccion)
-        {
-            bool completo = true;
-
-            if (
-                    pConstruccion.ManejoAnticipoRequiere == null ||
-                    pConstruccion.ManejoAnticipoPlanInversion == null ||
-                    pConstruccion.ManejoAnticipoCronogramaAmortizacion == null ||
-                    string.IsNullOrEmpty(pConstruccion.ManejoAnticipoRutaSoporte)
-            )
-            {
-                completo = false;
-            }
-
-            return completo;
         }
 
         public async Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion)
@@ -1109,6 +884,417 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Archivo, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                CreateEdit = "EDITAR OBSERVACION ARCHIVO";
+
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivoCargueId);
+
+                if (archivoCargue != null)
+                {
+                    archivoCargue.Observaciones = pObservacion;
+                }
+
+
+                _context.SaveChanges();
+                return
+                    new Respuesta
+                    {
+                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+
+        #endregion createEdit
+
+        #region private 
+
+        private bool VerificarEsSupervisor(string pUsuarioCreacion)
+        {
+            List<UsuarioPerfil> usuarioPerfil = _context.UsuarioPerfil.Where(r => r.PerfilId == 8)
+            .Include(r => r.Usuario).ToList();
+
+            if (usuarioPerfil.Where(r => r.Usuario.Email == pUsuarioCreacion).ToList().Count > 0)
+                return true;
+            else
+                return false;
+        }
+        
+        private bool VerificarRegistroCompletoDiagnostico(ContratoConstruccion pConstruccion)
+        {
+            bool completo = true;
+
+            if (
+                pConstruccion.EsInformeDiagnostico == null ||
+                string.IsNullOrEmpty(pConstruccion.RutaInforme) ||
+                pConstruccion.CostoDirecto == null ||
+                pConstruccion.Administracion == null ||
+                pConstruccion.Imprevistos == null ||
+                pConstruccion.Utilidad == null ||
+                pConstruccion.ValorTotalFaseConstruccion == null ||
+                pConstruccion.RequiereModificacionContractual == null ||
+                (pConstruccion.RequiereModificacionContractual == true && pConstruccion.NumeroSolicitudModificacion == null)
+            )
+            {
+                completo = false;
+            }
+
+            return completo;
+
+        }
+        
+        private async Task<bool> ValidarRegistroCompletoVerificacion(int id, bool pEsSupervicion)
+        {
+            bool esCompleto = true;
+
+            ContratoConstruccion cc = await _context.ContratoConstruccion.Where(cc => cc.ContratoConstruccionId == id)
+                                                                .Include(r => r.ConstruccionPerfil)
+                                                                .FirstOrDefaultAsync();
+
+            cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, pEsSupervicion);
+            cc.ObservacionPlanesProgramasApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, pEsSupervicion);
+            cc.ObservacionManejoAnticipoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, pEsSupervicion);
+            cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, pEsSupervicion);
+            cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, pEsSupervicion);
+
+            if (cc.TieneObservacionesDiagnosticoApoyo == null ||
+                 (cc.TieneObservacionesDiagnosticoApoyo == true && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
+                 cc.TieneObservacionesFlujoInversionApoyo == null ||
+                 (cc.TieneObservacionesFlujoInversionApoyo == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
+                 cc.TieneObservacionesManejoAnticipoApoyo == null ||
+                 (cc.TieneObservacionesManejoAnticipoApoyo == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo != null ? cc.ObservacionManejoAnticipoApoyo.Observaciones : null)) ||
+                 cc.TieneObservacionesPlanesProgramasApoyo == null ||
+                 (cc.TieneObservacionesPlanesProgramasApoyo == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo != null ? cc.ObservacionPlanesProgramasApoyo.Observaciones : null)) ||
+                 cc.TieneObservacionesProgramacionObraApoyo == null ||
+                 (cc.TieneObservacionesProgramacionObraApoyo == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo != null ? cc.ObservacionProgramacionObraApoyo.Observaciones : null))
+                 )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
+        }
+
+        private bool VerificarRegistroCompletoPlanesProgramas(ContratoConstruccion pConstruccion)
+        {
+            bool completo = true;
+
+            if (
+                    pConstruccion.PlanLicenciaVigente == null ||
+                    pConstruccion.PlanCambioConstructorLicencia == null ||
+                    pConstruccion.PlanActaApropiacion == null ||
+                    pConstruccion.PlanResiduosDemolicion == null ||
+                    pConstruccion.PlanManejoTransito == null ||
+                    pConstruccion.PlanManejoAmbiental == null ||
+                    pConstruccion.PlanAseguramientoCalidad == null ||
+                    pConstruccion.PlanProgramaSeguridad == null ||
+                    pConstruccion.PlanProgramaSalud == null ||
+                    pConstruccion.PlanInventarioArboreo == null ||
+                    pConstruccion.PlanAprovechamientoForestal == null ||
+                    pConstruccion.PlanManejoAguasLluvias == null ||
+                    string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
+            )
+            {
+                completo = false;
+            }
+
+            return completo;
+        }
+
+        private bool VerificarRegistroCompletoManejoAnticipo(ContratoConstruccion pConstruccion)
+        {
+            bool completo = true;
+
+            if (
+                    pConstruccion.ManejoAnticipoRequiere == null ||
+                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == null ) ||
+                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == null ) ||
+                    ( pConstruccion.ManejoAnticipoRequiere == true && string.IsNullOrEmpty(pConstruccion.ManejoAnticipoRutaSoporte) )
+            )
+            {
+                completo = false;
+            }
+
+            return completo;
+        }
+
+        private bool ValidarRegistroCompletoConstruccionPerfil(ConstruccionPerfil pPerfil)
+        {
+            if (
+                    string.IsNullOrEmpty(pPerfil.PerfilCodigo)
+                 || string.IsNullOrEmpty(pPerfil.CantidadHvRequeridas.ToString())
+                 || string.IsNullOrEmpty(pPerfil.CantidadHvRecibidas.ToString())
+                 || string.IsNullOrEmpty(pPerfil.CantidadHvAprobadas.ToString())
+                 || string.IsNullOrEmpty(pPerfil.FechaAprobacion.ToString())
+                 || string.IsNullOrEmpty(pPerfil.RutaSoporte)
+
+                //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
+                )
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private bool EsCompletoDiagnostico(ContratoConstruccion pContratoConstruccion)
+        {
+            bool esCompleto = true;
+
+            if (pContratoConstruccion.EsInformeDiagnostico == null ||
+                    (pContratoConstruccion.EsInformeDiagnostico == true && string.IsNullOrEmpty(pContratoConstruccion.RutaInforme)) ||
+                    pContratoConstruccion.CostoDirecto == null ||
+                    pContratoConstruccion.Administracion == null ||
+                    pContratoConstruccion.Imprevistos == null ||
+                    pContratoConstruccion.Utilidad == null ||
+                    pContratoConstruccion.ValorTotalFaseConstruccion == null ||
+                    pContratoConstruccion.RequiereModificacionContractual == null ||
+                    (pContratoConstruccion.RequiereModificacionContractual == true && string.IsNullOrEmpty(pContratoConstruccion.NumeroSolicitudModificacion))
+               )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
+        }
+
+        #endregion private
+
+        #region business
+
+        public async Task<Respuesta> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(int ContratoId, string pEstado, string pUsuarioMod)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                Contrato contratoCambiarEstado = await _context.Contrato
+                    .Where(r => r.ContratoId == ContratoId)
+                    .Include(r => r.ContratoConstruccion)
+                          .ThenInclude(r => r.ConstruccionObservacion)
+                    .FirstOrDefaultAsync();
+
+                contratoCambiarEstado.UsuarioModificacion = pUsuarioMod;
+                contratoCambiarEstado.FechaModificacion = DateTime.Now;
+
+                contratoCambiarEstado.EstadoVerificacionConstruccionCodigo = pEstado;
+
+                if (pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_interventor.ToString() || pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_apoyo.ToString())
+                {
+
+                    foreach (var ContratoConstruccion in contratoCambiarEstado.ContratoConstruccion)
+                    {
+                        //Observaciones Diagnostico
+
+                        if ((bool)ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor)
+                        {
+                            //Observacion Supervisor
+                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico.ToString()
+                                        && (bool)r.EsSupervision
+                                        && !(bool)r.Eliminado
+                                        && !(bool)r.Archivada
+                                    )
+                                .FirstOrDefault();
+
+                            construccionObservacionSupervisor.Archivada = true;
+
+                            //Observacion Apoyo
+                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico.ToString()
+                                   && !(bool)r.EsSupervision
+                                   && !(bool)r.Eliminado
+                                   && !(bool)r.Archivada)
+                               .FirstOrDefault();
+
+                            construccionObservacionApoyo.Archivada = true;
+
+                            //Contrato Construccion
+                            ContratoConstruccion.ObservacionDiagnosticoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesDiagnosticoApoyo = null;
+                            ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoDiagnostico = false;
+                        }
+
+                        //Observaciones Planes Y Programas
+
+                        if ((bool)ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor)
+                        {
+                            //Observacion Supervisor
+                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas.ToString()
+                                    && (bool)r.EsSupervision
+                                    && !(bool)r.Eliminado
+                                    && !(bool)r.Archivada)
+                                .FirstOrDefault();
+
+                            construccionObservacionSupervisor.Archivada = true;
+
+                            //Observacion Apoyo
+                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas.ToString()
+                                   && !(bool)r.EsSupervision
+                                   && !(bool)r.Eliminado
+                                   && !(bool)r.Archivada)
+                               .FirstOrDefault();
+
+                            construccionObservacionApoyo.Archivada = true;
+
+                            //Contrato Construccion
+                            ContratoConstruccion.ObservacionPlanesProgramasSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesPlanesProgramasApoyo = null;
+                            ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoPlanesProgramas = false;
+                        }
+
+                        //Observaciones Manejo de Anticipo
+
+                        if ((bool)ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor)
+                        {
+                            //Observacion Supervisor
+                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo.ToString()
+                                    && (bool)r.EsSupervision
+                                    && !(bool)r.Eliminado
+                                    && !(bool)r.Archivada)
+                                .FirstOrDefault();
+
+                            construccionObservacionSupervisor.Archivada = true;
+
+                            //Observacion Apoyo
+                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo.ToString()
+                                   && !(bool)r.EsSupervision
+                                   && !(bool)r.Eliminado
+                                   && !(bool)r.Archivada)
+                               .FirstOrDefault();
+
+                            construccionObservacionApoyo.Archivada = true;
+
+                            //Contrato Construccion
+                            ContratoConstruccion.ObservacionManejoAnticipoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesManejoAnticipoApoyo = null;
+                            ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoManejoAnticipo = false;
+                        }
+
+                        //Observaciones Programacion Obra  
+
+                        if ((bool)ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor)
+                        {
+                            //Observacion Supervisor
+                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
+                                    && (bool)r.EsSupervision
+                                    && !(bool)r.Eliminado
+                                    && !(bool)r.Archivada)
+                                .FirstOrDefault();
+
+                            construccionObservacionSupervisor.Archivada = true;
+
+                            //Observacion Apoyo
+                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
+                                   && !(bool)r.EsSupervision
+                                   && !(bool)r.Eliminado
+                                   && !(bool)r.Archivada)
+                               .FirstOrDefault();
+
+                            construccionObservacionApoyo.Archivada = true;
+
+                            //Contrato Construccion
+                            ContratoConstruccion.ObservacionProgramacionObraSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesProgramacionObraApoyo = null;
+                            ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoProgramacionObra = false;
+                        }
+
+                        //Observaciones Flujo Inversion 
+
+                        if ((bool)ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor)
+                        {
+                            //Observacion Supervisor
+                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
+                                    && (bool)r.EsSupervision
+                                    && !(bool)r.Eliminado
+                                    && !(bool)r.Archivada)
+                                .FirstOrDefault();
+
+                            construccionObservacionSupervisor.Archivada = true;
+
+                            //Observacion Apoyo
+                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
+                                   && !(bool)r.EsSupervision
+                                   && !(bool)r.Eliminado
+                                   && !(bool)r.Archivada)
+                               .FirstOrDefault();
+
+                            construccionObservacionApoyo.Archivada = true;
+
+                            //Contrato Construccion
+                            ContratoConstruccion.ObservacionFlujoInversionSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                            ContratoConstruccion.TieneObservacionesFlujoInversionApoyo = null;
+                            ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor = null;
+                            ContratoConstruccion.RegistroCompletoFlujoInversion = false;
+                        }
+
+                    }
+                }
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioMod, "CAMBIAR ESTADO CONTRATO CONSTRUCCION")
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioMod, ex.InnerException.ToString())
+                    };
+            }
+
+
+
+        }
+        
         public async Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion)
         {
             string CreateEdit = string.Empty;
@@ -1190,6 +1376,31 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<byte[]> GetPDFDRP(int pContratoId, string usuarioModificacion)
+        {
+            if (pContratoId == 0)
+            {
+                throw new Exception("Debe enviar el id del contrato");
+            }
+
+            Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId)
+                                                    .Include(r => r.Contratacion)
+                                                        .ThenInclude(r => r.DisponibilidadPresupuestal)
+                                                    .FirstOrDefault();
+
+            if (contrato?.Contratacion?.DisponibilidadPresupuestal != null)
+                return await _budgetAvailabilityService.GetPDFDRP(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion);
+            else
+            {
+                throw new Exception("El contrato no tiene DRP");
+            }
+
+        }
+
+        #endregion business
+
+        #region deletes
+
         public async Task<Respuesta> DeleteConstruccionPerfil(int pConstruccionPerfilId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Construccion_Perfil, (int)EnumeratorTipoDominio.Acciones);
@@ -1265,6 +1476,55 @@ namespace asivamosffie.services
                     };
             }
         }
+
+        public async Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, int pContratoConstruccionId, bool pEsFlujoInvserion, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivocargue);
+
+                archivoCargue.UsuarioModificacion = pUsuarioModificacion;
+                archivoCargue.FechaModificacion = DateTime.Now;
+                archivoCargue.Eliminado = true;
+
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
+
+                if (pEsFlujoInvserion)
+                    contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
+                else
+                    contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ARCHIVO CARGUE ELIMINADO")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
+
+        #endregion deletes
+
+        #region loads
 
         public async Task<Respuesta> UploadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId)
         {
@@ -1556,28 +1816,7 @@ namespace asivamosffie.services
             }
 
         }
-
-        public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
-        {
-            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
-
-            List<TempProgramacion> lista = _context.TempProgramacion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
-
-            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
-          {
-              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => c.Key == a.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
-              if (archivo != null)
-              {
-                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
-
-                  listaCargas.Add(archivo);
-              }
-          });
-
-            return listaCargas;
-
-        }
-
+        
         public async Task<Respuesta> UploadFileToValidateInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
@@ -1900,176 +2139,8 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
-        {
-            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
-
-            List<TempFlujoInversion> lista = _context.TempFlujoInversion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
-
-            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
-          {
-              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.Key && a.Eliminado != true).FirstOrDefault();
-              if (archivo != null)
-              {
-                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
-
-                  listaCargas.Add(archivo);
-              }
-          });
-
-            return listaCargas;
-
-        }
-
-        public async Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Archivo, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                CreateEdit = "EDITAR OBSERVACION ARCHIVO";
-
-                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivoCargueId);
-
-                if (archivoCargue != null)
-                {
-                    archivoCargue.Observaciones = pObservacion;
-                }
-
-
-                _context.SaveChanges();
-                return
-                    new Respuesta
-                    {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        public async Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, int pContratoConstruccionId, bool pEsFlujoInvserion, string pUsuarioModificacion)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivocargue);
-
-                archivoCargue.UsuarioModificacion = pUsuarioModificacion;
-                archivoCargue.FechaModificacion = DateTime.Now;
-                archivoCargue.Eliminado = true;
-
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
-
-                if (pEsFlujoInvserion)
-                    contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
-                else
-                    contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
-
-                _context.SaveChanges();
-
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ARCHIVO CARGUE ELIMINADO")
-                    };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().ToUpper())
-                    };
-            }
-        }
-
-        private bool ValidarRegistroCompletoConstruccionPerfil(ConstruccionPerfil pPerfil)
-        {
-            if (
-                    string.IsNullOrEmpty(pPerfil.PerfilCodigo)
-                 || string.IsNullOrEmpty(pPerfil.CantidadHvRequeridas.ToString())
-                 || string.IsNullOrEmpty(pPerfil.CantidadHvRecibidas.ToString())
-                 || string.IsNullOrEmpty(pPerfil.CantidadHvAprobadas.ToString())
-                 || string.IsNullOrEmpty(pPerfil.FechaAprobacion.ToString())
-                 || string.IsNullOrEmpty(pPerfil.RutaSoporte)
-
-                //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
-                )
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private bool EsCompletoDiagnostico(ContratoConstruccion pContratoConstruccion)
-        {
-            bool esCompleto = true;
-
-            if (pContratoConstruccion.EsInformeDiagnostico == null ||
-                    (pContratoConstruccion.EsInformeDiagnostico == true && string.IsNullOrEmpty(pContratoConstruccion.RutaInforme)) ||
-                    pContratoConstruccion.CostoDirecto == null ||
-                    pContratoConstruccion.Administracion == null ||
-                    pContratoConstruccion.Imprevistos == null ||
-                    pContratoConstruccion.Utilidad == null ||
-                    pContratoConstruccion.ValorTotalFaseConstruccion == null ||
-                    pContratoConstruccion.RequiereModificacionContractual == null ||
-                    (pContratoConstruccion.RequiereModificacionContractual == true && string.IsNullOrEmpty(pContratoConstruccion.NumeroSolicitudModificacion))
-               )
-            {
-                esCompleto = false;
-            }
-
-            return esCompleto;
-        }
-
-        public async Task<byte[]> GetPDFDRP(int pContratoId, string usuarioModificacion)
-        {
-            if (pContratoId == 0)
-            {
-                throw new Exception("Debe enviar el id del contrato");
-            }
-
-            Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId)
-                                                    .Include(r => r.Contratacion)
-                                                        .ThenInclude(r => r.DisponibilidadPresupuestal)
-                                                    .FirstOrDefault();
-
-            if (contrato?.Contratacion?.DisponibilidadPresupuestal != null)
-                return await _budgetAvailabilityService.GetPDFDRP(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion);
-            else
-            {
-                throw new Exception("El contrato no tiene DRP");
-            }
-
-        }
-
+        #endregion        
+        
         #region Observaciones 
 
         private ConstruccionObservacion getObservacion(ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
