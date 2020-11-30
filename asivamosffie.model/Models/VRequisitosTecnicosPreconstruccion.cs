@@ -14,5 +14,6 @@ namespace asivamosffie.model.Models
         public int? CantidadProyectosConPerfilesPendientes { get; set; }
         public string EstadoCodigo { get; set; }
         public string EstadoNombre { get; set; }
+        
     }
 }
