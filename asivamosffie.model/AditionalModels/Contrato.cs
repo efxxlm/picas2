@@ -38,8 +38,10 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public decimal ValorFase2 { get; set; }
         
-            [NotMapped]
+        [NotMapped]
         public DateTime? FechaPolizaAprobacion { get; set; }
 
+        [NotMapped]
+        public Usuario UsuarioInterventoria { get; set; }
     }
 }
