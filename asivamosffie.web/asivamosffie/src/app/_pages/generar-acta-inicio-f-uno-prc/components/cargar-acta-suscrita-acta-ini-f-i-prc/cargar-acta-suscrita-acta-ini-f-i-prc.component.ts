@@ -95,7 +95,11 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
     this.fechaSesion2 = new Date(this.fechaFirmaContratistaInterventoria);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
-    pContrato.append('pFile',this.archivo);
+    pContrato.append('ContratoId',this.idContrato);
+    pContrato.append('FechaActaInicioFase1',this.fechaSesionString);
+    pContrato.append('FechaTerminacion',this.fechaSesionString2);
+    pContrato.append('pFile',inputNode.files[0]);
+    console.log(pContrato.get('pFile'));
     this.service.LoadActa(pContrato).subscribe((data: any) => {
       if (data.isSuccessful == true) {
         this.openDialog('La información ha sido guardada exitosamente.', "");
