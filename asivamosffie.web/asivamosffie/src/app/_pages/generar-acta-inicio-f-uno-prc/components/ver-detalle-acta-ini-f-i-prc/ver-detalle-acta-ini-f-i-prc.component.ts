@@ -46,6 +46,14 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   valorFDos: any;
   nomEntidadContratistaIntervn: any;
   numIdContratistaObra: any;
+  tieneObservacionesBool: any;
+  observacionesUltimas: any;
+  dataElements: any;
+  contratoObservacionId: any;
+  fechaCreacionObs: any;
+  numIdRepresentanteLegal: any;
+  nomRepresentanteLegal: any;
+  tipoProponente: any;
   constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
@@ -53,6 +61,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.actasuscritaHabilitada();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
+      this.loadService(param.id);
       this.contratoId = param.id;
     });
   }
@@ -76,6 +85,18 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
       this.verObservaciones(data.conObervacionesActa);
     });
   }
+  loadService(id){
+    this.service.GetListContratoObservacionByContratoId(id).subscribe(data=>{
+      this.dataElements = data;
+      for(let i=0; i<this.dataElements.length;i++){ 
+
+        this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
+        this.observacionesUltimas = this.dataElements[i].observaciones;
+        this.contratoObservacionId = this.dataElements[i].contratoObservacionId;
+        this.fechaCreacionObs = this.dataElements[i].fechaCreacion
+      }
+    });
+  }
   cargarDataParaInsercion(data){
     this.numContrato = data.numeroContrato;
     this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitosSupervisor;
@@ -91,6 +112,8 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
     this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
     this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+    this.numIdRepresentanteLegal = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
+    this.nomRepresentanteLegal = data.contratacion.contratista.representanteLegal;
     this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
     this.fechaAprobGarantiaPoliza = data.contratoPoliza[0].fechaAprobacion;
     this.vigenciaContrato = data.fechaTramite;
@@ -98,8 +121,9 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.valorFDos = data.valorFase2;
     this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
     this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
-    this.mesPlazoIni= data.plazoFase1PreMeses + data.plazoFase2ConstruccionMeses;
-    this.diasPlazoIni= data.plazoFase1PreDias + data.plazoFase2ConstruccionDias;
+    this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+    this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
+    this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
@@ -129,7 +153,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     }
   }
   generarActaSuscrita(){
-    this.service.GetActaByIdPerfil(this.rolAsignado,this.contratoId).subscribe((resp:any)=>{
+    this.service.GetActaByIdPerfil(this.rolAsignado,this.contratoId).subscribe(resp=>{
       const documento = `Prueba.pdf`; // Valor de prueba
       const text = documento,
       blob = new Blob([resp], { type: 'application/pdf' }),
@@ -138,6 +162,6 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
       anchor.href = window.URL.createObjectURL(blob);
       anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
       anchor.click();
-    })
+    });
   }
 }

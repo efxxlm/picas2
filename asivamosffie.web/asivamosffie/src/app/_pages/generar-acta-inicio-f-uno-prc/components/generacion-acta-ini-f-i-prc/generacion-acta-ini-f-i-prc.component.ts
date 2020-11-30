@@ -46,6 +46,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   valorFDos: any;
   numIdContratistaObra: any;
   realizoPeticion: boolean = false;
+  numIdRepresentanteLegal: any;
+  nomRepresentanteLegal: any;
+  tipoProponente: any;
+  dataSupervisor: boolean = false;
+  numIdentifiacionSupervisor: string;
+  nomSupervisor: string;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -95,6 +101,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
     this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
     this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+    this.numIdRepresentanteLegal = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
+    this.nomRepresentanteLegal = data.contratacion.contratista.representanteLegal;
     this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
     this.fechaAprobGarantiaPoliza = data.contratoPoliza[0].fechaAprobacion;
     this.vigenciaContrato = data.fechaTramite;
@@ -102,8 +110,14 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.valorFDos = data.valorFase2;
     this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
     this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
-    this.mesPlazoIni= data.plazoFase1PreMeses + data.plazoFase2ConstruccionMeses;
-    this.diasPlazoIni= data.plazoFase1PreDias + data.plazoFase2ConstruccionDias;
+    this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+    this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
+    this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
+    if(localStorage.getItem("origin")=="interventoria"){
+      this.dataSupervisor = true;
+      this.numIdentifiacionSupervisor = "";
+      this.nomSupervisor = "";
+    }
   }
   generarFechaRestante(){
     let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
@@ -138,10 +152,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     return this.fb.group({
       fechaActaInicioFUnoPreconstruccion: [null, Validators.required],
       fechaPrevistaTerminacion: [null, Validators.required],
-      mesPlazoEjFase1: ["", Validators.required],
-      diasPlazoEjFase1: ["", Validators.required],
-      mesPlazoEjFase2: ["", Validators.required],
-      diasPlazoEjFase2: ["", Validators.required],
+      mesPlazoEjFase1: [null, Validators.required],
+      diasPlazoEjFase1: [null, Validators.required],
+      mesPlazoEjFase2: [null, Validators.required],
+      diasPlazoEjFase2: [null, Validators.required],
       observacionesEspeciales: [null]
     })
   }
@@ -177,8 +191,14 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       var sumaDias;
       sumaMeses = parseInt(this.addressForm.value.mesPlazoEjFase1) + parseInt(this.addressForm.value.mesPlazoEjFase2);
       sumaDias = parseInt(this.addressForm.value.diasPlazoEjFase1) + parseInt(this.addressForm.value.diasPlazoEjFase2);
-      if (sumaMeses > this.mesPlazoIni || sumaDias > this.diasPlazoIni) {
-        this.openDialog('Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato', "");
+      if (sumaMeses > this.mesPlazoIni) {
+        this.openDialog('','Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstrucción Meses, dado que no coincide con la informacion inicial registrada para el contrato');
+      }
+      else if(sumaDias > this.diasPlazoIni){
+        this.openDialog('','Debe verificar la información ingresada en el campo Plazo de ejecución - fase 2 - Construcción Días, dado que no coincide con la informacion inicial registrada para el contrato');
+      }
+      else if((this.valorFUno + this.valorFDos)!=this.valorIni){
+        this.openDialog('','Debe verificar la información ingresada en el campo Valor inicial del contrato, dado que no coincide con la información inicial registrada para el contrato');
       }
       else{
         const arrayContrato: EditContrato = {
