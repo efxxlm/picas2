@@ -59,7 +59,10 @@
 
         <ng-container matColumnDef="estadoNombre">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de requisitos </th>
-            <td mat-cell *matCellDef="let element"> {{ element.estadoNombre }} </td>
+            <td mat-cell *matCellDef="let element">
+                <section *ngIf="element.estadoCodigo !== estadosPreconstruccion.enviadoAlInterventor.codigo"> {{ element.estadoNombre }} </section>
+                <section *ngIf="element.estadoCodigo === estadosPreconstruccion.enviadoAlInterventor.codigo"> {{ estadosPreconstruccion.enviadoAlInterventor.nombre }} </section>
+            </td>
         </ng-container>
 
         <ng-container matColumnDef="gestion">

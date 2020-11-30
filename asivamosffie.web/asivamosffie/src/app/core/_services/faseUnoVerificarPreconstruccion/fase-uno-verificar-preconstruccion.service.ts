@@ -53,10 +53,10 @@ export class FaseUnoVerificarPreconstruccionService {
             if ( tipoContrato === 'obra' ) {
              estados.forEach( value => {
                if ( value.codigo === '3' ) {
-                 estadoPreconstruccion.conReqTecnicosAprobados = {
-                   codigo: value.codigo,
-                   // tslint:disable-next-line: no-string-literal
-                   nombre: value[ 'descripcion' ]
+                  estadoPreconstruccion.conReqTecnicosAprobados = {
+                    codigo: value.codigo,
+                    // tslint:disable-next-line: no-string-literal
+                    nombre: value[ 'descripcion' ]
                  };
                }
                if ( value.codigo === '4' ) {
