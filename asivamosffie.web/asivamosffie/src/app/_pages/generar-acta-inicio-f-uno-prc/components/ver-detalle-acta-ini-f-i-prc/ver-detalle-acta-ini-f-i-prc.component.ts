@@ -54,6 +54,9 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   numIdRepresentanteLegal: any;
   nomRepresentanteLegal: any;
   tipoProponente: any;
+  dataSupervisor: boolean =false; 
+  nomSupervisor: string;
+  numIdentifiacionSupervisor: string;
   constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
@@ -124,6 +127,11 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
     this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
+    if(localStorage.getItem("origin")=="interventoria"){
+      this.dataSupervisor = true;
+      this.numIdentifiacionSupervisor = "";
+      this.nomSupervisor = "";
+    }
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
