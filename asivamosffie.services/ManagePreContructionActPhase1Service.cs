@@ -93,8 +93,7 @@ namespace asivamosffie.services
                                 contrato.ValorFase2 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
                         }
                     }
-                }
-
+                } 
                 //Modificar Usuario 
                 //ya que falta hacer caso de uso gestion usuarios
                 contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
