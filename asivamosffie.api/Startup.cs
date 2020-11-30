@@ -127,22 +127,22 @@ namespace asivamosffie.api
             services.AddTransient<IAutenticacionService, AutenticacionService>();
             services.AddTransient<ICofinancingService, CofinancingService>();
             services.AddTransient<IContributorService, ContributorService>();
-            services.AddTransient<ISourceFundingService, SourceFundingService>();
-            services.AddTransient<ICommitteeSessionFiduciarioService, CommitteeSessionFiduciarioService>();
+            //services.AddTransient<ISourceFundingService, SourceFundingService>();
+            //services.AddTransient<ICommitteeSessionFiduciarioService, CommitteeSessionFiduciarioService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
-            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
+            //services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<ISelectionProcessService, SelectionProcessService>();
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
             services.AddTransient<IGuaranteePolicyService, GuaranteePolicyService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
-            services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
-            services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
-            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
+            //services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
+            //services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
+            //services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
             services.AddTransient<IDocumentService, DocumentService>();
-            services.AddTransient<IProjectService, ProjectService>();
+            //services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IActBeginService, ActBeginService>();
 
 
