@@ -80,11 +80,9 @@ namespace asivamosffie.services
                            .ThenInclude(r => r.DisponibilidadPresupuestal)
                         .Include(r => r.ContratoPoliza)
                         .FirstOrDefaultAsync();
-
-
+                 
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
-                {
-
+                { 
                     foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                     {
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
@@ -97,6 +95,9 @@ namespace asivamosffie.services
                     }
                 }
 
+                //Modificar Usuario 
+                //ya que falta hacer caso de uso gestion usuarios
+                contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
                 return contrato;
             }
             catch (Exception)
