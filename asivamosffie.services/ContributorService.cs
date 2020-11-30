@@ -76,5 +76,49 @@ namespace asivamosffie.services
             throw new NotImplementedException();
         }
 
+        public Task<ActionResult<List<CofinanciacionAportante>>> GetContributor()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<CofinanciacionAportante> GetContributorById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ActionResult<List<CofinanciacionAportante>>> GetControlGrid(int ContributorId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Respuesta> Insert(CofinanciacionAportante CofnaAportante)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Respuesta> Update(CofinanciacionAportante CofnaAportante)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ActionResult<List<RegistroPresupuestal>>> GetRegisterBudget()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<RegistroPresupuestal> GetRegisterBudgetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Respuesta> UpdateBudgetRegister(RegistroPresupuestal registroPresupuestal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Respuesta> CreateEditBudgetRecords(RegistroPresupuestal registroPresupuestal)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
