@@ -5297,10 +5297,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaActaInicioFase1).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RutaActaFase1)
+                    .HasMaxLength(500)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoContratoCodigo)

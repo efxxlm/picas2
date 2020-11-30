@@ -26,7 +26,7 @@ namespace asivamosffie.services
 
         public async Task<List<VRegistrarFase1>> GetListContratacionInterventoria2()
         {
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString()).OrderBy(r => r.EstadoCodigo).ToListAsync();
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderBy(r => r.EstadoCodigo).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -126,6 +126,7 @@ namespace asivamosffie.services
                      "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                      "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
                      "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
+                     "AND c.EstadoVerificacionCodigo is not null " +  
                      "AND ctr.TipoSolicitudCodigo = 2")  //Enviado al apoyo
                      .Include(r => r.ContratoPoliza)
                      .Include(r => r.Contratacion)
