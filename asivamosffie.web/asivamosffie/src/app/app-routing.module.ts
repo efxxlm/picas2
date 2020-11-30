@@ -175,6 +175,11 @@ const routes: Routes = [
         .then(m => m.AprobarPreconstruccionModule)
       },
       {
+        path: 'generarActaInicioFaseIPreconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
+        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
+      },
+      {
         path: 'generarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
         .then(m => m.GenerarDisponibilidadPresupuestalModule),
