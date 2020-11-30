@@ -23,8 +23,9 @@ namespace asivamosffie.services
         private readonly IDocumentService _documentService;
         private readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
 
-        public ManagePreContructionActPhase1Service(devAsiVamosFFIEContext context, ICommonService commonService, IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
+        public ManagePreContructionActPhase1Service(IDocumentService documentService , devAsiVamosFFIEContext context, ICommonService commonService, IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
         {
+            _documentService = documentService;
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
             _context = context;
             _commonService = commonService;
@@ -190,7 +191,7 @@ namespace asivamosffie.services
                 if (pFile.Length > 0)
                 {
                     strFilePatch = Path.Combine(pDirectorioBase, pDirectorioActaContrato, pContrato.ContratoId.ToString());
-                    await _documentService.SaveFileContratacion(pFile, ContratoOld.RutaActaSuscrita, pFile.FileName);
+                    await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
                     ContratoOld.RutaActaSuscrita = Path.Combine(strFilePatch, pFile.FileName);
                 }
                 else
