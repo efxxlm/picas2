@@ -488,7 +488,9 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
                 {
+
                     contratoMod.FechaAprobacionRequsitosSuperviso = DateTime.Now;
+
                 }
                 //TODO: crear notificaciones
                 //Enviar Correo Botón aprobar inicio 3.1.8

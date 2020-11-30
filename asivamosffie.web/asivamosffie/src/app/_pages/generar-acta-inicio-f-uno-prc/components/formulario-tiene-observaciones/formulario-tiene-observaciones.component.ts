@@ -70,7 +70,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
     });
   }
   generarActaSuscrita(){
-    this.service.GetActaByIdPerfil(8,this.contratoId).subscribe(resp=>{
+    this.service.GetActaByIdPerfil(8,this.contratoId).subscribe((resp:any)=>{
       const documento = `Prueba.pdf`; // Valor de prueba
       const text = documento,
       blob = new Blob([resp], { type: 'application/pdf' }),
@@ -89,7 +89,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
         'EsActa':true,
         'EsActaFase1':this.addressForm.value.tieneObservaciones
       };
-      this.service.CreateEditObservacionesActa(contratoObservacion).subscribe(data=>{
+      this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data:any)=>{
         if(data.code=="200"){
           if(this.addressForm.value.tieneObservaciones==true){
             if(localStorage.getItem("origin")=="interventoria"){
@@ -131,7 +131,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
         'EsActa':true,
         'EsActaFase1':this.addressForm.value.tieneObservaciones
       };
-      this.service.CreateEditObservacionesActa(contratoObservacion).subscribe(data2=>{
+      this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data2:any)=>{
         if(data2.code=="200"){
           if(this.addressForm.value.tieneObservaciones==true){
             if(localStorage.getItem("origin")=="interventoria"){

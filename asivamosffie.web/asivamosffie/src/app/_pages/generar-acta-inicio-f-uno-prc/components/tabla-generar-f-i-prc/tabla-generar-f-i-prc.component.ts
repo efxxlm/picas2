@@ -52,7 +52,13 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     localStorage.setItem("editable","false");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActa',id]);
   }
-  verDetalleEditarActaFDos(id){
+  verDetalleEditarActaFDos(id,tipoContrato){
+    if(tipoContrato=='Interventoria'){
+      localStorage.setItem("origin", "interventoria");
+    }
+    else{
+      localStorage.setItem("origin","obra");
+    }
     localStorage.setItem("editable","true");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleEditarActa',id]);
   }

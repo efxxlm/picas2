@@ -51,7 +51,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     });
   }
   loadData(id){
-    this.service.GetContratoByContratoId(id).subscribe(data=>{
+    this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
       this.cargarDataParaInsercion(data);
       this.numContrato = data.numeroContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;

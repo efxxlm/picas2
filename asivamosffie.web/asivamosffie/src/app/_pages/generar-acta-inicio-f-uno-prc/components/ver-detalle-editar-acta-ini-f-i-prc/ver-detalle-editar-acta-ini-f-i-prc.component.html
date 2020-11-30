@@ -8,33 +8,30 @@
         Ver detalle/Editar contrato {{this.numContrato}} fase 1 - Preconstrucción
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de aprobación de requisitos: <b>{{this.fechaContrato}}</b></span>
+        <span>Fecha de aprobación de requisitos: <b>{{this.fechaAprobacionRequisitos  | date:'dd/MM/yyyy' }}</b></span>
     </p>
 </section>
 <section class="container">
     <mat-card class="shipping-card mainGris">
         <mat-card-content>
-            <p><strong>Vigencia del contrato: </strong>2020</p>
-            <p><strong>Fecha de firma del contrato: </strong>18/06/2020</p>
-            <p><strong>Número del DRP. </strong>DRP_015</p>
-            <p><strong>Fecha de generación de DRP. </strong>28/06/2020</p>
-            <p><strong>Fecha de aprobación de la garantía / póliza: </strong>02/07/2020</p>
+            <p><strong>Vigencia del contrato: </strong>{{this.vigenciaContrato | date:'dd/MM/yyyy' }} </p>
+            <p><strong>Fecha de firma del contrato: </strong>{{ this.fechaFirmaContrato | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Número del DRP. </strong>{{this.numDRP}}</p>
+            <p><strong>Fecha de generación de DRP. </strong>{{this.fechaDRP | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{this.fechaAprobGarantiaPoliza | date:'dd/MM/yyyy' }}</p>
             <p><strong>Objeto:</strong></p>
-            <p>Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
-                estudios y diseños y ejecución
-                de las obras necesarias para la adecuación y mejoramiento de las instituciones rurales.</p>
-            <p><strong>Valor inicial del contrato: </strong>$88.000.000</p>
-            <p><strong>Valor fase 1 - Preconstrucción: Estudios y diseños: </strong>$20.000.000</p>
-            <p><strong>Valor fase 2 - Construcción: Obra: </strong>$68.000.000</p>
+            <div [innerHtml]="this.objeto"></div> 
+            <p><strong>Valor inicial del contrato: </strong>{{this.valorIni | currency}}</p>
+            <p><strong>Valor fase 1 - Preconstrucción: Estudios y diseños: </strong>{{this.valorFUno | currency}}</p>
+            <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
             <p><strong>Número de identificación del representante legal del contratista de inteventoría:
-                </strong>86.786.546</p>
-            <p><strong>Nombre del representante legal del contratista de interventoría: </strong>Juan Pablo Aparicio
-                Gómez</p>
-            <p><strong>Número de identificación del contratista de interventoría: </strong>870.876.977-4</p>
-            <p><strong>Nombre de la entidad contratista de interventoría: </strong>C & M Constructora Ltda.</p>
+                </strong>{{this.nitContratistaInterventoria}}</p>
+            <p><strong>Nombre del representante legal del contratista de interventoría: </strong>{{this.nomEntidadContratistaIntervn}}</p>
+            <p><strong>Número de identificación del contratista de interventoría: </strong>{{this.nitContratistaInterventoria}}</p>
+            <p><strong>Nombre de la entidad contratista de interventoría: </strong>{{this.nomEntidadContratistaIntervn}}</p>
             <p><strong>Número de identificación del representante legal del contratista de obra: </strong>93.876.987</p>
             <p><strong>Nombre del representante legal del contratista de obra: </strong>María Mercedez Aristizabal</p>
-            <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
+            <p><strong>Número de identificación de la entidad contratista de obra: </strong>{{this.numIdContratistaObra}}</p>
             <p><strong>Nombre entidad contratista de obra: </strong>Constructora Colpatria</p>
             <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
                 {{this.diasPlazoIni}}</p>
@@ -53,8 +50,9 @@
                                 </div>
                                 <div class="col d-flex align-items-center">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput [matDatepicker]="picker" required [max]="maxDate" readonly
-                                            (click)="picker.open()" formControlName="fechaActaInicioFUnoPreconstruccion">
+                                        <input matInput [matDatepicker]="picker" required [min]="this.fechaAprobacionRequisitos" readonly
+                                            (click)="picker.open()" formControlName="fechaActaInicioFUnoPreconstruccion"
+                                            (dateInput)="generarFechaRestante()">
                                         <mat-datepicker #picker></mat-datepicker>
                                     </mat-form-field>
                                     <button mat-button color="primary" type="button" (click)="picker.open()"
@@ -66,7 +64,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-7" style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="fechaPrevistaTerminacion">Fecha prevista de
@@ -74,20 +72,15 @@
                                 </div>
                                 <div class="col d-flex align-items-center">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
-                                            (click)="picker2.open()" formControlName="fechaPrevistaTerminacion">
+                                        <input matInput [matDatepicker]="picker2" required readonly formControlName="fechaPrevistaTerminacion">
                                         <mat-datepicker #picker2></mat-datepicker>
                                     </mat-form-field>
-                                    <button mat-button color="primary" type="button" (click)="picker2.open()"
-                                        class="btn-calendario">
-                                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-9"  style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left">Plazo de ejecución fase 1 – Preconstrucción:</label>
@@ -118,7 +111,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-9"  style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left">Plazo de ejecución fase 2 – Construcción:</label>

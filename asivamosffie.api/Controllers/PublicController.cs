@@ -32,7 +32,19 @@ namespace asivamosffie.api.Controllers
             _managementCommitteeReportService = managementCommitteeReportService;
             _guaranteePolicy = guaranteePolicy;
         }
-
+         
+        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService
+            {
+                MailPort = appSettings.Value.MailPort,
+                MailServer = appSettings.Value.MailServer,
+                Password = appSettings.Value.Password,
+                Sender = appSettings.Value.Sender
+            }; 
+            return appSettingsService; 
+        }
+         
         [HttpGet("GetConsignationValue")]
         public async Task GetConsignationValue()
         {
@@ -105,7 +117,7 @@ namespace asivamosffie.api.Controllers
 
         /// <summary>
         /// JMartinez
-            //Enviar notificacion a interventor , 
+            //Enviar notificacion a interventor, 
             //tecnica y suipervisor si la poliza 
             //tiene 4 dias habiles y aun no tiene gestion
         /// </summary>
