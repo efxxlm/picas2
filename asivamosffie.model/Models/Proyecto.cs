@@ -12,6 +12,7 @@ namespace asivamosffie.model.Models
             ContratoPerfil = new HashSet<ContratoPerfil>();
             DisponibilidadPresupuestalProyecto = new HashSet<DisponibilidadPresupuestalProyecto>();
             InfraestructuraIntervenirProyecto = new HashSet<InfraestructuraIntervenirProyecto>();
+            ProgramacionPersonalContrato = new HashSet<ProgramacionPersonalContrato>();
             ProyectoAportante = new HashSet<ProyectoAportante>();
             ProyectoMonitoreoWeb = new HashSet<ProyectoMonitoreoWeb>();
             ProyectoPredio = new HashSet<ProyectoPredio>();
@@ -45,6 +46,12 @@ namespace asivamosffie.model.Models
         public bool? TieneEstadoFase1EyD { get; set; }
         public bool? TieneEstadoFase1Diagnostico { get; set; }
         public string UrlMonitoreo { get; set; }
+        public string EstadoProgramacionCodigo { get; set; }
+        public int? PlazoMesesObra { get; set; }
+        public int? PlazoDiasObra { get; set; }
+        public int? PlazoMesesInterventoria { get; set; }
+        public int? PlazoDiasInterventoria { get; set; }
+        public string CoordinacionResponsableCodigo { get; set; }
 
         public virtual InstitucionEducativaSede InstitucionEducativa { get; set; }
         public virtual Localizacion LocalizacionIdMunicipioNavigation { get; set; }
@@ -55,6 +62,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ContratoPerfil> ContratoPerfil { get; set; }
         public virtual ICollection<DisponibilidadPresupuestalProyecto> DisponibilidadPresupuestalProyecto { get; set; }
         public virtual ICollection<InfraestructuraIntervenirProyecto> InfraestructuraIntervenirProyecto { get; set; }
+        public virtual ICollection<ProgramacionPersonalContrato> ProgramacionPersonalContrato { get; set; }
         public virtual ICollection<ProyectoAportante> ProyectoAportante { get; set; }
         public virtual ICollection<ProyectoMonitoreoWeb> ProyectoMonitoreoWeb { get; set; }
         public virtual ICollection<ProyectoPredio> ProyectoPredio { get; set; }
