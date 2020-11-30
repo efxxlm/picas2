@@ -14,8 +14,7 @@
             <ng-container matColumnDef="fechaAprobacionRequisitos">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de requisitos por el
                     supervisor </th>
-                <!-- Caso mapeado <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma | date:'dd/MM/yyyy'}}</b></td>-->
-                <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacionRequisitos}}</b></td>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacionRequisitosDate | date:'dd/MM/yyyy'}}</b></td>
             </ng-container>
 
             <ng-container matColumnDef="numeroContratoObra">
@@ -46,7 +45,7 @@
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.generarActaFDos(element.contratoId,element.tipoContratoNombre)"
                     *ngIf="element.estadoActa=='Sin acta generada'">Generar acta</button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        (click)="this.verDetalleEditarActaFDos(element.contratoId)"
+                        (click)="this.verDetalleEditarActaFDos(element.contratoId,element.tipoContratoNombre)"
                         *ngIf="(element.estadoActa=='Con acta preliminar generada'&& element.tipoContratoNombre=='Obra') || element.estadoActa=='Enviada por el supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2')"> Ver detalle /
                         Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"

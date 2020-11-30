@@ -21,6 +21,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
   cantidadPerfiles: FormControl;
   perfilesCv: Dominio[] = [];
   fechaPoliza: string;
+  totalGuardados = 0;
   addressForm = this.fb.group({
     tieneObservacion: [null, Validators.required],
     observacion: [null, Validators.required]
@@ -98,6 +99,11 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
 
                 if ( observacionTipo3.length > 0 ) {
                   // tslint:disable-next-line: no-string-literal
+                  if ( perfil[ 'tieneObservacionSupervisor' ] === false ) {
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
+                  }
+                  // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
                         && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
                           // tslint:disable-next-line: no-string-literal
@@ -114,6 +120,8 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
                     perfil[ 'estadoSemaforo' ] = 'completo';
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length - 1 ].observacion;
                     completo++;
@@ -187,7 +195,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       // tslint:disable-next-line: no-string-literal
-      observacion: perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
+      observacion: perfil[ 'verificarObservacion' ] === null ? null : perfil[ 'verificarObservacion' ],
       // tslint:disable-next-line: no-string-literal
       tieneObservacionSupervisor: perfil[ 'tieneObservaciones' ]
     };
@@ -197,15 +205,23 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
       observacionPerfil[ 'contratoPerfilObservacionId' ] = perfil[ 'contratoPerfilObservacionId' ];
     }
     console.log( observacionPerfil );
-    this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
-      .subscribe(
-        response => {
-          this.openDialog( '', response.message );
-          this.contrato = null;
-          this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
-        },
-        err => this.openDialog( '', err.message )
-      );
+    // tslint:disable-next-line: no-string-literal
+    if ( perfil[ 'tieneObservaciones' ] === false && this.totalGuardados === 0 ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      return;
+    }
+    if ( this.totalGuardados === 1 || observacionPerfil.tieneObservacionSupervisor === true ) {
+      this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
+        .subscribe(
+          response => {
+            this.openDialog( '', response.message );
+            this.contrato = null;
+            this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
+          },
+          err => this.openDialog( '', err.message )
+        );
+    }
   }
 
 }

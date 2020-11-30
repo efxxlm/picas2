@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -10,7 +10,7 @@ import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/Gestion
   templateUrl: './formulario-tiene-observaciones.component.html',
   styleUrls: ['./formulario-tiene-observaciones.component.scss']
 })
-export class FormularioTieneObservacionesComponent implements OnInit {
+export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy {
   addressForm = this.fb.group({});
 
   @Input() contratoId;
@@ -18,11 +18,17 @@ export class FormularioTieneObservacionesComponent implements OnInit {
   tieneObservacionesBool: boolean;
   observacionesUltimas: any;
   contratoObservacionId: any;
+  realizoPeticion: boolean = false;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
     this.loadService(this.contratoId);
+  }
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    }
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -43,7 +49,19 @@ export class FormularioTieneObservacionesComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
 
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
   crearFormulario() {
     return this.fb.group({
       tieneObservaciones: ['', Validators.required],
@@ -70,7 +88,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
     });
   }
   generarActaSuscrita(){
-    this.service.GetActaByIdPerfil(8,this.contratoId).subscribe(resp=>{
+    this.service.GetActaByIdPerfil(8,this.contratoId).subscribe((resp:any)=>{
       const documento = `Prueba.pdf`; // Valor de prueba
       const text = documento,
       blob = new Blob([resp], { type: 'application/pdf' }),
@@ -89,7 +107,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
         'EsActa':true,
         'EsActaFase1':this.addressForm.value.tieneObservaciones
       };
-      this.service.CreateEditObservacionesActa(contratoObservacion).subscribe(data=>{
+      this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data:any)=>{
         if(data.code=="200"){
           if(this.addressForm.value.tieneObservaciones==true){
             if(localStorage.getItem("origin")=="interventoria"){
@@ -115,6 +133,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
               });
             }
           }
+          this.realizoPeticion = true;
           this.openDialog('La información ha sido guardada exitosamente.', "");
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
@@ -131,7 +150,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
         'EsActa':true,
         'EsActaFase1':this.addressForm.value.tieneObservaciones
       };
-      this.service.CreateEditObservacionesActa(contratoObservacion).subscribe(data2=>{
+      this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data2:any)=>{
         if(data2.code=="200"){
           if(this.addressForm.value.tieneObservaciones==true){
             if(localStorage.getItem("origin")=="interventoria"){
@@ -157,6 +176,7 @@ export class FormularioTieneObservacionesComponent implements OnInit {
               });
             }
           }
+          this.realizoPeticion = true;
           this.openDialog('La información ha sido guardada exitosamente.', "");
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }

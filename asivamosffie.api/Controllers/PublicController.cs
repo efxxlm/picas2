@@ -32,7 +32,19 @@ namespace asivamosffie.api.Controllers
             _managementCommitteeReportService = managementCommitteeReportService;
             _guaranteePolicy = guaranteePolicy;
         }
-
+         
+        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService
+            {
+                MailPort = appSettings.Value.MailPort,
+                MailServer = appSettings.Value.MailServer,
+                Password = appSettings.Value.Password,
+                Sender = appSettings.Value.Sender
+            }; 
+            return appSettingsService; 
+        }
+         
         [HttpGet("GetConsignationValue")]
         public async Task GetConsignationValue()
         {
@@ -66,9 +78,14 @@ namespace asivamosffie.api.Controllers
         [HttpGet("NoApprovedLegalFiduciaryPolicy4d")]
         public async Task NoApprovedLegalFiduciaryPolicy4d()
         {
+            //Task task1;
             try
             {
-                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada();
+                //paquete 1: no tienen registro inicial contrato poliza
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+
+                //paquete 2: estado diferente a Aprobado
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada2(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 //return result;
             }
             catch (Exception ex)
@@ -100,7 +117,7 @@ namespace asivamosffie.api.Controllers
 
         /// <summary>
         /// JMartinez
-            //Enviar notificacion a interventor , 
+            //Enviar notificacion a interventor, 
             //tecnica y suipervisor si la poliza 
             //tiene 4 dias habiles y aun no tiene gestion
         /// </summary>

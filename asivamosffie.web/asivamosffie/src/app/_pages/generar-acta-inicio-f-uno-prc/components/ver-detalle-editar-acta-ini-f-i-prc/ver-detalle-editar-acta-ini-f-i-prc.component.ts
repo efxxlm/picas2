@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,15 +11,12 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './ver-detalle-editar-acta-ini-f-i-prc.component.html',
   styleUrls: ['./ver-detalle-editar-acta-ini-f-i-prc.component.scss']
 })
-export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit {
+export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit, OnDestroy {
   maxDate: Date;
   maxDate2: Date;
   public idContrato;
   public numContrato;
   public fechaFirmaContrato;
-  public fechaContrato = "20/06/2020";//valor quemado
-  public mesPlazoIni: number = 10;
-  public diasPlazoIni: number = 25;
   public conObservaciones:boolean;
 
   public rolAsignado;
@@ -48,6 +45,22 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
   public observacionesOn: boolean;
   indexContratacionID: any;
   indexObservacionFinal: any;
+  fechaAprobacionRequisitos: any;
+  numDRP: any;
+  fechaDRP: any;
+  objeto: any;
+  valorIni: any;
+  fechaAprobGarantiaPoliza: any;
+  nitContratistaInterventoria: any;
+  vigenciaContrato: any;
+  valorFUno: any;
+  valorFDos: any;
+  nomEntidadContratistaIntervn: any;
+  numIdContratistaObra: any;
+  diasPlazoIni: any;
+  mesPlazoIni: any;
+
+  realizoPeticion: boolean = false;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -61,6 +74,24 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
       this.idContrato = param.id;
     });
   }
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    }
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe(data=>{
       for(let i=0; i<data.contratoObservacion.length;i++){
@@ -86,10 +117,12 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     }
     else {
       this.opcion = 2;
+
     }
   }
   cargarDataParaInsercion(data){
     this.numContrato = data.numeroContrato;
+    this.fechaAprobacionRequisitos = data.fechaAprobacionRequisitosSupervisor;
     this.fechaFirmaContrato = data.fechaFirmaContrato;
     this.contratacionId = data.contratacionId;
     this.fechaTramite = data.fechaTramite;
@@ -98,10 +131,24 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     this.fechaEnvioFirma = data.fechaEnvioFirma;
     this.fechaFirmaContratista = data.fechaFirmaContratista;
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
+    this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
+    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
+    this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
+    this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+    this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
+    this.fechaAprobGarantiaPoliza = data.contratoPoliza[0].fechaAprobacion;
+    this.vigenciaContrato = data.fechaTramite;
+    this.valorFUno = data.valorFase1;
+    this.valorFDos = data.valorFase2;
+    this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
+    this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
+    this.mesPlazoIni= data.plazoFase1PreMeses + data.plazoFase2ConstruccionMeses;
+    this.diasPlazoIni= data.plazoFase1PreDias + data.plazoFase2ConstruccionDias;
     for(let i=0; i<data.contratoObservacion.length;i++){
       this.indexContratacionID=data.contratoObservacion[i].contratoObservacionId;
     }
   }
+  
   generarActaSuscrita(){
     alert("genera PDf");
   }
@@ -136,6 +183,11 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
     else{
       this.conObservaciones=false;
     }
+  }
+  generarFechaRestante(){
+    let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
+    newdate.setMonth(newdate.getMonth() + this.mesPlazoIni);
+    this.addressForm.get('fechaPrevistaTerminacion').setValue(newdate);
   }
   crearFormulario() {
     return this.fb.group({
@@ -231,9 +283,26 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit 
         contratoPoliza: []
       };
       this.service.EditContrato(arrayContrato).subscribe(data => {
-        this.openDialog('', data.message);
         if (data.code == "200") {
+          this.openDialog('', data.message);
+          if(localStorage.getItem("origin")=="obra"){
+            this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
+              this.realizoPeticion = true;
+              this.openDialog('La información ha sido guardada exitosamente.', "");
+              this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+            });
+          }
+          else{
+            this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data1=>{
+              this.realizoPeticion = true;
+              this.openDialog('La información ha sido guardada exitosamente.', "");
+              this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+            });
+          }
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+        }
+        else{
+          this.openDialog('', data.message);
         }
       })
     }

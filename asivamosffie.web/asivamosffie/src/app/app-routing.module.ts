@@ -43,6 +43,7 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/cambiar-contrasena/cambiar-contrasena.module').then(m => m.CambiarContrasenaModule),
 
       },
+      //verificar ruta duplicada
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
@@ -84,7 +85,8 @@ const routes: Routes = [
       {
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
-        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module').then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
+          .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
       },
       {
         path: 'gestionarFuentes',
@@ -97,11 +99,6 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/generar-registro-presupuestal/generar-registro-presupuestal.module')
         .then(m => m.GenerarRegistroPresupuestalModule),
 
-      },
-      {
-        path: 'generarActaInicioFaseIPreconstruccion',
-        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
-        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
       },
       {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
@@ -149,7 +146,7 @@ const routes: Routes = [
 
       },
       {
-
+ 
         path: 'procesosContractuales',
         loadChildren: () => import( './_pages/gestionar-procesos-contractuales/gestionar-procesos-contractuales.module' )
           .then( module => module.GestionarProcesosContractualesModule ),
@@ -163,9 +160,9 @@ const routes: Routes = [
 
       },
       {
-        path: 'preconstruccion',
-        loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
-        .then(m => m.FasePreconstruccionModule)
+        path: 'generarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
+        .then(m => m.GenerarDisponibilidadPresupuestalModule)
       },
       {
         path: 'verificarPreconstruccion',
@@ -178,6 +175,11 @@ const routes: Routes = [
         .then(m => m.AprobarPreconstruccionModule)
       },
       {
+        path: 'generarActaInicioFaseIPreconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
+        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
+      },
+      {
         path: 'generarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
         .then(m => m.GenerarDisponibilidadPresupuestalModule),
@@ -186,9 +188,23 @@ const routes: Routes = [
       {
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
-          .then( module => module.CompromisosActasComiteModule ),
-
-
+          .then( module => module.CompromisosActasComiteModule )
+      },
+      {
+        path: 'aprobarRequisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/aprobar-requisitos-construccion/aprobar-requisitos-construccion.module' )
+          .then( module => module.AprobarRequisitosConstruccionModule )
+ 
+      },
+      { 
+        path: 'verificarRequisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/verificar-requisitos-construccion/verificar-requisitos-construccion.module' )
+          .then( module => module.VerificarRequisitosConstruccionModule )
+      },
+      {
+        path: 'requisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
+          .then( module => module.RequisitosTecnicosConstruccionModule )
       }
     ]
 

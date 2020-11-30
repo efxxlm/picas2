@@ -103,6 +103,11 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
 
                 if ( observacionTipo3.length > 0 ) {
                   // tslint:disable-next-line: no-string-literal
+                  if ( perfil[ 'tieneObservacionSupervisor' ] === false ) {
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
+                  }
+                  // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
                         && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
                     // tslint:disable-next-line: no-string-literal
@@ -120,6 +125,8 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
                     perfil[ 'estadoSemaforo' ] = 'completo';
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
                     // tslint:disable-next-line: no-string-literal
                     perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length - 1 ].observacion;
                     completo++;
@@ -189,7 +196,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       // tslint:disable-next-line: no-string-literal
-      observacion: perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
+      observacion: perfil[ 'verificarObservacion' ] === null ? null : perfil[ 'verificarObservacion' ],
       // tslint:disable-next-line: no-string-literal
       tieneObservacionSupervisor: perfil[ 'tieneObservaciones' ]
     };
@@ -205,7 +212,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
       this.totalGuardados++;
       return;
     }
-    if ( this.totalGuardados === 1 ) {
+    if ( this.totalGuardados === 1 || observacionPerfil.tieneObservacionSupervisor === true ) {
       this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
         .subscribe(
           response => {

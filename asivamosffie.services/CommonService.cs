@@ -351,6 +351,47 @@ namespace asivamosffie.services
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
 
+        public async Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular)
+        {
+            DateTime fechaInicial = pFechaCalcular;
+            DateTime fechadiasHabiles = pFechaCalcular;
+
+            for (int i = 0; i < pDias; i++)
+            {
+                fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+            }
+            List<DateTime> festivos = new List<DateTime>();
+
+            festivos.AddRange(DiasFestivosAnioRetroceso(fechaInicial.Year));
+
+            festivos.AddRange(DiasFestivosAnioRetroceso(fechaInicial.Year + 1));
+
+            foreach (var festivo in festivos)
+            {
+                if (festivo <= fechaInicial && festivo >= fechadiasHabiles)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+            }
+            return fechadiasHabiles;
+        }
+
         /// <summary>
         /// Julian Martinez
         /// </summary>
@@ -446,6 +487,54 @@ namespace asivamosffie.services
             return fechas.ToArray();
         }
 
+        public static DateTime[] DiasFestivosAnioRetroceso(int anio)
+        {
+            List<DateTime> fechas = new List<DateTime>
+            {
+                ////Fechas fijas
+                //año nuevo
+                new DateTime(anio, 1, 1),
+                //trabajo
+                new DateTime(anio, 5, 1),
+                //grito independencia
+                new DateTime(anio, 7, 20),
+                //Batalla boyacá
+                new DateTime(anio, 8, 7),
+                //Inmaculada concepcion
+                new DateTime(anio, 12, 8),
+                //Navidad
+                new DateTime(anio, 12, 25),
+                ////Fechas calculadas
+                ////Epifanía Primer lunes de enero
+                PrimerDiaMes(anio, 1, DayOfWeek.Monday, 6),
+                ////San José Primer lunes de marzo 
+                PrimerDiaMes(anio, 3, DayOfWeek.Monday, 19),
+                //san Pedro y San Pablo Primer Lunes de julio
+                PrimerDiaMes(anio, 6, DayOfWeek.Monday, 29),
+                //Asunción de la virgen agosto Primer Lunes
+                PrimerDiaMes(anio, 8, DayOfWeek.Monday, 15),
+                //Dia de La Raza primer lunes de octubre
+                PrimerDiaMes(anio, 10, DayOfWeek.Monday, 12),
+                //Todos los Santos primer lunes a partir del 1 de noviembre
+                PrimerDiaMes(anio, 11, DayOfWeek.Monday, 1),
+                //Independencia de Cartagena primer lunes a partir del 11 de noviembre
+                PrimerDiaMes(anio, 11, DayOfWeek.Monday, 11)
+            };
+            ////Fechas con domingo de pascua
+            DateTime domingopascua = DomingoPascua(anio);
+            //Jueves santo anterior al domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Thursday, domingopascua.Day, 1, true));
+            //viernes santo anterior al domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Friday, domingopascua.Day, 1, true));
+            //Ascension de Jesus 7 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 7));
+            //Ascension de Jesus 10 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 10));
+            //Sagrado Corazon de Jesus 11 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 11));
+            return fechas.ToArray();
+        }
+
         public static DateTime PrimerDiaMes(int anio, int mes, DayOfWeek dia, int diaBase)
         {
             DateTime fechaRetorno = new DateTime(anio, mes, diaBase);
@@ -475,6 +564,8 @@ namespace asivamosffie.services
             }
             return fechaRetorno;
         }
+
+       
 
         public static DateTime DomingoPascua(int anyo)
         {

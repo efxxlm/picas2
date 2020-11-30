@@ -116,6 +116,7 @@
                 <mat-radio-button [value]="true" [checked]="perfil['tieneObservaciones'] === true">Sí</mat-radio-button>
                 <mat-radio-button [value]="false" [checked]="perfil['tieneObservaciones'] === false">No</mat-radio-button>
               </mat-radio-group>
+              <span class="required-form-group m-0">*</span>
             </div>
           </div>
           <div class="d-flex align-items-center" *ngIf="perfil['tieneObservaciones'] === true">
@@ -127,10 +128,10 @@
                 (onContentChanged)="maxLength($event, 1000)" [(ngModel)]="perfil['verificarObservacion']" required>
               </quill-editor>
             </div>
-            <span class="contador" *ngIf="perfil['verificarObservacion'] !== null && perfil['verificarObservacion'].length > 0">
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] !== null && perfil['verificarObservacion'].length > 0">
               {{1000 - textoLimpio(perfil['verificarObservacion'])}}
             </span>
-            <span class="contador" *ngIf="perfil['verificarObservacion'] === null || perfil['verificarObservacion'].length === 0">
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] === null || perfil['verificarObservacion'].length === 0">
               1000
             </span>
           </div>

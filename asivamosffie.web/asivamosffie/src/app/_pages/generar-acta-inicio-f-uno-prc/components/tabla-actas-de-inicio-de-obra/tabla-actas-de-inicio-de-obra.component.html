@@ -12,10 +12,8 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
             <ng-container matColumnDef="fechaAprobacionRequisitos">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de requisitos por el
-                    supervisor </th>
-                <!-- Caso mapeado <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma | date:'dd/MM/yyyy'}}</b></td>-->
-                <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacionRequisitos}}</b></td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de requisitos</th>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacionRequisitosDate | date:'dd/MM/yyyy'}}</b></td>
             </ng-container>
 
             <ng-container matColumnDef="numeroContratoObra">

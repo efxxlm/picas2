@@ -311,7 +311,7 @@ namespace asivamosffie.services
                 {
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
                    // if (RegistroCompletoContrato)
-                    if (pContrato.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
+                    if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
                     {
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
                     }
@@ -322,7 +322,7 @@ namespace asivamosffie.services
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
                     //Si el interventoria y esta completo
                    // if (RegistroCompletoContrato)
-                      if (pContrato.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
+                      if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
                     {
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
                     }
@@ -488,7 +488,9 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
                 {
-                    contratoMod.FechaAprobacionRequsitosSupervisor = DateTime.Now;
+
+                    contratoMod.FechaAprobacionRequisitosSupervisor = DateTime.Now;
+
                 }
                 //TODO: crear notificaciones
                 //Enviar Correo Botón aprobar inicio 3.1.8
