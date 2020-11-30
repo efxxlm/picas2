@@ -49,17 +49,22 @@ export class TablaContratoDeObraComponent implements OnInit {
           this.estadosPreconstruccionObra = response;
           this.faseUnoAprobarPreconstruccionSvc.getListContratacion()
           .subscribe( listas => {
-            console.log( this.estadosPreconstruccionObra, listas );
             const dataTable = [];
             listas.forEach( lista => {
-              // tslint:disable-next-line: no-string-literal
               if (  Number( lista[ 'estadoCodigo' ] ) >= Number( this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo )
-                    // tslint:disable-next-line: no-string-literal
+                    && lista[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoObra )
+              {
+                dataTable.push( lista );
+              }
+              if ( (  lista[ 'estaDevuelto' ] === true
+                      && Number( lista[ 'estadoCodigo' ] ) < Number( this.estadosPreconstruccionObra.enviadoAlSupervisor.codigo ) )
                     && lista[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoObra )
               {
                 dataTable.push( lista );
               }
             } );
+
+            console.log( dataTable );
             this.dataSource = new MatTableDataSource( dataTable );
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
