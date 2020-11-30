@@ -971,40 +971,75 @@ namespace asivamosffie.services
             //  })
             // .ToListAsync();
 
+            ContratoPoliza contratoPoliza ;
+            Contratacion contratacion ;
+            DisponibilidadPresupuestal disponibilidadPresupuestal;
+            Contratista contratista;
+
+            //int plazoDias=0, plazoMeses=0;
+
             foreach (var contrato in ListContratos)
             {
                 try
                 {
-                    ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    Contratacion contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
+                     contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                     contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratoId);
+                     disponibilidadPresupuestal = null;
+                     contratista = null;
 
-                    Contratista contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+                    if (contratacion != null)
+                    {
+                        contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+                        
+                        disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
 
+                    }                                  
+                                        
                     //TipoContrato = contrato.TipoContratoCodigo   ??? Obra  ????
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    Int32 plazoDias, plazoMeses;
+                    Int32 plazoDias=0, plazoMeses=0;
+                    string strObjetoDisponibilidadPresupuestal = "";
+
+                    if(disponibilidadPresupuestal != null)
+                    {
+                        strObjetoDisponibilidadPresupuestal = disponibilidadPresupuestal.Objeto;
+
+                        plazoDias = Convert.ToInt32(disponibilidadPresupuestal.PlazoDias);
+
+                        plazoMeses = Convert.ToInt32(disponibilidadPresupuestal.PlazoMeses);
+                    }
+
                     //25meses / 04 días
 
-                    if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionDias.ToString()))
+                    //if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionDias.ToString()))
 
-                        plazoDias = Convert.ToInt32( contrato.PlazoFase1PreDias);
+                    //    plazoDias = Convert.ToInt32( contrato.PlazoFase1PreDias);
 
-                    else
-                        plazoDias = Convert.ToInt32( contrato.PlazoFase2ConstruccionDias);
+                    //else
+                    //    plazoDias = Convert.ToInt32( contrato.PlazoFase2ConstruccionDias);
+                    
 
-                    if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionMeses.ToString()))
+                    //if (!string.IsNullOrEmpty(contrato.PlazoFase2ConstruccionMeses.ToString()))
 
-                        plazoMeses = Convert.ToInt32(contrato.PlazoFase1PreMeses);
+                    //    plazoMeses = Convert.ToInt32(contrato.PlazoFase1PreMeses);
 
-                    else
-                        plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
+                    //else
+                    //    plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
 
                     string PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contrato.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
 
+                    string contratistaNombre="", contratistaNumeroIdentificacion="";
+
+                    if ( contratista != null)
+                    {
+                        contratistaNombre = contratista.Nombre;
+                        contratistaNumeroIdentificacion = contratista.NumeroIdentificacion.ToString(); 
+
+                    }                        
 
                     //Dominio TipoModificacionCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoModificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
                     VistaContratoGarantiaPoliza proyectoGrilla = new VistaContratoGarantiaPoliza
@@ -1012,25 +1047,22 @@ namespace asivamosffie.services
                         IdContrato= contrato.ContratoId,
                         TipoContrato = TipoContratoCodigoContrato.Nombre,
                         NumeroContrato = contrato.NumeroContrato,
-                        ObjetoContrato = contrato.Objeto,
-                        NombreContratista = contratista.Nombre,
+                        //ObjetoContrato = contrato.Objeto,
+                        ObjetoContrato = strObjetoDisponibilidadPresupuestal,                        
+                        NombreContratista = contratistaNombre,
 
                         //Nit  
-                        NumeroIdentificacion = contratista.NumeroIdentificacion.ToString(),
+                        NumeroIdentificacion = contratistaNumeroIdentificacion,        
 
-        
-
-         ValorContrato = contrato.Valor.ToString(),
+                        ValorContrato = contrato.Valor.ToString(),
 
                         PlazoContrato = PlazoContratoFormat,
 
-         //EstadoRegistro 
+                        //EstadoRegistro 
 
-                        //public bool? RegistroCompleto { get; set; } 
+                        //public bool? RegistroCompleto { get; set; }                         
 
-                        
-
-         DescripcionModificacion ="resumen", // resumen   TEMPORAL REV
+                        DescripcionModificacion ="resumen", // resumen   TEMPORAL REV
 
                         //TipoModificacion = TipoModificacionCodigoContratoPoliza.Nombre
                         TipoModificacion = "Tipo modificacion"
@@ -1064,18 +1096,15 @@ namespace asivamosffie.services
                         //Nit  
                         NumeroIdentificacion = "ERROR",
                         ValorContrato = "ERROR",
-
                         PlazoContrato = "ERROR",
 
-         //EstadoRegistro 
+                         //EstadoRegistro 
 
                         //public bool? RegistroCompleto { get; set; } 
-
                         //TipoSolicitud = contratoPoliza.EstadoPolizaCodigo
 
-                    DescripcionModificacion = "ERROR",
-
-                    TipoModificacion = "ERROR"
+                        DescripcionModificacion = "ERROR",
+                        TipoModificacion = "ERROR"
                        
                     };
                     ListContratoGrilla.Add(proyectoGrilla);
