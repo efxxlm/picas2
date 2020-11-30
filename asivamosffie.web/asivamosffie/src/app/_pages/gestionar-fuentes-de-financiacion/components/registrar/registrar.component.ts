@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
 import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
 import { CofinanciacionService, CofinanciacionAportante, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
@@ -58,6 +58,21 @@ export class RegistrarComponent implements OnInit {
     this.maxDate = new Date();
   }
 
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   openDialog(modalTitle: string, modalText: string,redirect?:boolean) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {

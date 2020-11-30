@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -114,6 +114,22 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       data: { modalTitle, modalText }
     });
   }
+
+  ngOnDestroy(): void {
+    if ( this.formulario.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.enviarObjeto();          
+        }           
+      });
+    }
+  };
 
   enviarObjeto() {
 

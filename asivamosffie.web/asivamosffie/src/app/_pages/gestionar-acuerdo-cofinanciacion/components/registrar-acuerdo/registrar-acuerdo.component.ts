@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl, FormsModule, ControlContainer } from '@angular/forms';
 import { CofinanciacionService, CofinanciacionAportante, Cofinanciacion, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
 import { Dominio, CommonService, Respuesta, Localizacion } from 'src/app/core/_services/common/common.service';
@@ -56,6 +56,22 @@ export class RegistrarAcuerdoComponent implements OnInit {
     numAportes: ['', [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
     aportantes: this.fb.array([])
   });
+
+  ngOnDestroy(): void {
+    if ( this.datosAportantes.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSave(false);          
+        }           
+      });
+    }
+  };
 
   // tabla de los documentos de aportantes
   documentoApropiacion: CofinanciacionDocumento[] = [];

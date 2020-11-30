@@ -988,6 +988,7 @@ namespace asivamosffie.services
                     contratista.Activo = true;
                     contratista.FechaCreacion = DateTime.Now;
                     contratista.UsuarioCreacion = pUsuarioCreo.ToUpper();
+                    contratista.ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId;
 
                     _context.Contratista.Add(contratista);
 
