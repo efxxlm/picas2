@@ -129,8 +129,8 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     if(localStorage.getItem("origin")=="interventoria"){
       this.dataSupervisor = true;
-      this.numIdentifiacionSupervisor = "";
-      this.nomSupervisor = "";
+      this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
+      this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
     }
   }
   cargarRol() {
