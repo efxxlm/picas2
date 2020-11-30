@@ -101,12 +101,12 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
     pContrato.append('pFile',inputNode.files[0]);
     console.log(pContrato.get('pFile'));
     this.service.LoadActa(pContrato).subscribe((data: any) => {
-      if (data.isSuccessful == true) {
-        this.openDialog('La información ha sido guardada exitosamente.', "");
+      if (data.code == "200") {
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
         this.close();
       }
       else {
-        this.openDialog(data.message, "");
+        this.openDialog("",data.message);
       }
     });
   }
