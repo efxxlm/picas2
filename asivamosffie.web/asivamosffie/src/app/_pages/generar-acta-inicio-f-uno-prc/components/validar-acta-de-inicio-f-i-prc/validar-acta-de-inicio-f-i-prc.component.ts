@@ -48,6 +48,9 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   valorFDos: any;
   nomEntidadContratistaIntervn: any;
   numIdContratistaObra: any;
+  numIdRepresentanteLegal: any;
+  nomRepresentanteLegal: any;
+  tipoProponente: any;
   constructor(private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService, private router: Router,public dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -89,6 +92,8 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
     this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
     this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+    this.numIdRepresentanteLegal = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
+    this.nomRepresentanteLegal = data.contratacion.contratista.representanteLegal;
     this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
     this.fechaAprobGarantiaPoliza = data.contratoPoliza[0].fechaAprobacion;
     this.vigenciaContrato = data.fechaTramite;
@@ -96,7 +101,8 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     this.valorFDos = data.valorFase2;
     this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
     this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
-    this.mesPlazoIni= data.plazoFase1PreMeses + data.plazoFase2ConstruccionMeses;
-    this.diasPlazoIni= data.plazoFase1PreDias + data.plazoFase2ConstruccionDias;
+    this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+    this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
+    this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
   }
 }

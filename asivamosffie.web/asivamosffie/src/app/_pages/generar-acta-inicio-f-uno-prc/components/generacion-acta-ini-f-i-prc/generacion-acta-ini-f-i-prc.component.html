@@ -25,21 +25,43 @@
             <p><strong>Valor inicial del contrato: </strong>{{this.valorIni | currency}}</p>
             <p><strong>Valor fase 1 - Preconstrucción: Estudios y diseños: </strong>{{this.valorFUno | currency}}</p>
             <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
-            <p><strong>Número de identificación del representante legal del contratista de inteventoría:
-                </strong>{{this.nitContratistaInterventoria}}</p>
+            <div *ngIf="this.dataSupervisor==true">
+                <p><strong>Número de identificación del Supervisor:
+                </strong>{{this.numIdentifiacionSupervisor }}</p>
+            <p><strong>Nombre del Supervisor:
+                </strong>{{this.nomSupervisor}}</p>
+                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                </strong>{{this.numIdRepresentanteLegal }}</p>
             <p><strong>Nombre del representante legal del contratista de interventoría:
-                </strong>{{this.nomEntidadContratistaIntervn}}</p>
+                </strong>{{this.nomRepresentanteLegal}}</p>
             <p><strong>Número de identificación del contratista de interventoría:
                 </strong>{{this.nitContratistaInterventoria}}</p>
             <p><strong>Nombre de la entidad contratista de interventoría: </strong>{{this.nomEntidadContratistaIntervn}}
             </p>
-            <p><strong>Número de identificación del representante legal del contratista de obra: </strong>93.876.987</p>
-            <p><strong>Nombre del representante legal del contratista de obra: </strong>María Mercedez Aristizabal</p>
-            <p><strong>Número de identificación de la entidad contratista de obra:
-                </strong>{{this.numIdContratistaObra}}</p>
-            <p><strong>Nombre entidad contratista de obra: </strong>Constructora Colpatria</p>
             <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
                 {{this.diasPlazoIni}}</p>
+            </div>
+            <div *ngIf="this.dataSupervisor==false">
+                <div *ngIf="this.tipoProponente=='1'">
+                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                    </strong>{{this.numIdRepresentanteLegal }}</p>
+                <p><strong>Nombre del representante legal del contratista de interventoría:
+                    </strong>{{this.nomRepresentanteLegal}}</p>
+                <p><strong>Número de identificación del contratista de interventoría:
+                    </strong>{{this.nitContratistaInterventoria}}</p>
+                <p><strong>Nombre de la entidad contratista de interventoría: </strong>{{this.nomEntidadContratistaIntervn}}
+                </p>
+                </div>
+                <p><strong>Número de identificación del representante legal del contratista de obra: </strong>{{this.numIdRepresentanteLegal }}</p>
+                <p><strong>Nombre del representante legal del contratista de obra: </strong>{{this.nomRepresentanteLegal}}</p>
+                <p><strong>Número de identificación de la entidad contratista de obra:
+                    </strong>{{this.nitContratistaInterventoria}}</p>
+                <p><strong>Nombre entidad contratista de obra: </strong>{{this.nomEntidadContratistaIntervn}}</p>
+            <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
+                {{this.diasPlazoIni}}</p>
+            </div>
+
+
         </mat-card-content>
     </mat-card>
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">

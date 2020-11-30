@@ -65,7 +65,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   crearFormulario() {
     return this.fb.group({
       tieneObservaciones: ['', Validators.required],
-      observaciones:[null, Validators.required],
+      observaciones:['', Validators.required],
     })
   }
   maxLength(e: any, n: number) {

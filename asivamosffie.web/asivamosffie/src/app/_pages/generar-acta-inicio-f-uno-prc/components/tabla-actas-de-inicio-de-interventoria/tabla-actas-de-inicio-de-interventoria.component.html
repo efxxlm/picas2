@@ -51,9 +51,9 @@
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Enviada al interventor' || element.estadoActa=='Con acta suscrita y cargada' || element.estadoActa=='Enviada por el supervisor'||element.estadoActa=='Enviada al interventor con comentarios'||element.estadoActa=='Con validacion del supervisor'|| element.estadoActa=='Con acta en proceso de firma'"
                         (click)="this.verDetalle(element.contratoId)">Ver detalle</button>
-                    <!--<button mat-raised-button color="accent" class="btn-table"
+                    <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Sin acta generada'"
-                        (click)="this.validarActaParaInicio(element.contratoId)">Generar acta</button>-->
+                        (click)="this.validarActaParaInicio(element.contratoId)">Generar acta</button>
 
                 </td>
             </ng-container>

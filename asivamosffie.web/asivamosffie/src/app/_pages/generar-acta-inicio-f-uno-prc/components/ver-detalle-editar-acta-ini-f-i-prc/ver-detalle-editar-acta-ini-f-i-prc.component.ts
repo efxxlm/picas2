@@ -61,6 +61,9 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   mesPlazoIni: any;
 
   realizoPeticion: boolean = false;
+  numIdRepresentanteLegal: any;
+  nomRepresentanteLegal: any;
+  tipoProponente: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -135,6 +138,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
     this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
     this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
+    this.numIdRepresentanteLegal = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
+    this.nomRepresentanteLegal = data.contratacion.contratista.representanteLegal;
     this.nitContratistaInterventoria = data.contratacion.contratista.numeroIdentificacion;
     this.fechaAprobGarantiaPoliza = data.contratoPoliza[0].fechaAprobacion;
     this.vigenciaContrato = data.fechaTramite;
@@ -142,8 +147,9 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.valorFDos = data.valorFase2;
     this.nomEntidadContratistaIntervn = data.contratacion.contratista.nombre;
     this.numIdContratistaObra = data.contratacion.contratista.representanteLegalNumeroIdentificacion
-    this.mesPlazoIni= data.plazoFase1PreMeses + data.plazoFase2ConstruccionMeses;
-    this.diasPlazoIni= data.plazoFase1PreDias + data.plazoFase2ConstruccionDias;
+    this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+    this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
+    this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     for(let i=0; i<data.contratoObservacion.length;i++){
       this.indexContratacionID=data.contratoObservacion[i].contratoObservacionId;
     }
@@ -284,19 +290,16 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       };
       this.service.EditContrato(arrayContrato).subscribe(data => {
         if (data.code == "200") {
-          this.openDialog('', data.message);
           if(localStorage.getItem("origin")=="obra"){
             this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
-              this.realizoPeticion = true;
-              this.openDialog('La información ha sido guardada exitosamente.', "");
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+              this.openDialog('', data.message);
             });
           }
           else{
             this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data1=>{
-              this.realizoPeticion = true;
-              this.openDialog('La información ha sido guardada exitosamente.', "");
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
+              this.openDialog('', data.message);
             });
           }
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
@@ -304,7 +307,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         else{
           this.openDialog('', data.message);
         }
-      })
+      });
+      this.realizoPeticion = true;
     }
     console.log(this.addressForm.value);
   }
