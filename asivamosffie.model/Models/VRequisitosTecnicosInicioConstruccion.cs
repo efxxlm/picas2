@@ -20,5 +20,6 @@ namespace asivamosffie.model.Models
         public string EstadoNombre { get; set; }
         public bool? ExisteRegistro { get; set; }
         public bool? EstaDevuelto { get; set; }
+        public DateTime? FechaAprobacionRequisitosConstruccionInterventor { get; set; }
     }
 }

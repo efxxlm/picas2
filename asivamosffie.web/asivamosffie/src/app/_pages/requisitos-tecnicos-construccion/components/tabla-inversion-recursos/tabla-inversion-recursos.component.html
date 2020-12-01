@@ -8,7 +8,7 @@
     </button>
   </div>
   
-  <div class="w-90 table-responsive">
+  <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
       <ng-container matColumnDef="fechaCreacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de cargue </th>
@@ -55,7 +55,7 @@
                   color="accent" 
                   class="btn-table expansion-style--title btn-color h-2em"
                   [ngClass]="getSemaforo( element.observaciones ? element.observaciones : null )"
-                  (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.observaciones ? element.observaciones : null )">
+                  (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.fechaCreacion, element.observaciones ? element.observaciones : null )">
                   Observaciones
           </button>
   

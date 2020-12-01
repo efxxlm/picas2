@@ -448,8 +448,12 @@ namespace asivamosffie.services
                     case ConstanCodigoVariablesPlaceHolders.NUMERO_CONTRATO:
                         try
                         {
+                            string NumeroContrato = string.Empty;
+                            if (pContratacion?.Contrato.Count() > 0)
+                                NumeroContrato = pContratacion?.Contrato?.FirstOrDefault().NumeroContrato;
+
                             pPlantilla = pPlantilla
-                                          .Replace(placeholderDominio.Nombre, pContratacion.Contrato.FirstOrDefault().NumeroContrato);
+                                          .Replace(placeholderDominio.Nombre, NumeroContrato);
 
                         }
                         catch (Exception)

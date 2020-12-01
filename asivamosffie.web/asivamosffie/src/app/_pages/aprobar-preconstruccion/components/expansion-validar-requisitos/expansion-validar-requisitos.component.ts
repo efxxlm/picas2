@@ -103,11 +103,6 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
 
                 if ( observacionTipo3.length > 0 ) {
                   // tslint:disable-next-line: no-string-literal
-                  if ( perfil[ 'tieneObservacionSupervisor' ] === false ) {
-                    // tslint:disable-next-line: no-string-literal
-                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
-                  }
-                  // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
                         && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
                     // tslint:disable-next-line: no-string-literal
@@ -196,7 +191,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       // tslint:disable-next-line: no-string-literal
-      observacion: perfil[ 'verificarObservacion' ] === null ? null : perfil[ 'verificarObservacion' ],
+      observacion: perfil[ 'verificarObservacion' ] === null || perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
       // tslint:disable-next-line: no-string-literal
       tieneObservacionSupervisor: perfil[ 'tieneObservaciones' ]
     };

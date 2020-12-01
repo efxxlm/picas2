@@ -8,7 +8,7 @@
   </button>
 </div>
 
-<div class="w-90 table-responsive">
+<div class="table-responsive">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <ng-container matColumnDef="fechaCreacion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de cargue </th>
@@ -53,15 +53,15 @@
         </button>
 
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table expansion-style--title btn-color h-2em"
                 [ngClass]="getSemaforo( element.observaciones ? element.observaciones : null )"
-                (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.observaciones ? element.observaciones : null )">
+                (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.fechaCreacion, element.observaciones ? element.observaciones : null  )">
                 Observaciones
         </button>
 
         <button mat-raised-button
-                color="accent" 
+                color="accent"
                 class="btn-table"
                 *ngIf="element.estadoCargue=='Validos'"
                 (click)="deleteArchivoCargue( element.archivoCargueId )">
@@ -70,11 +70,11 @@
 
       </td>
     </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-  
+
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>
 <div align="center" *ngIf="observacionDevolucionProgramacionObra">

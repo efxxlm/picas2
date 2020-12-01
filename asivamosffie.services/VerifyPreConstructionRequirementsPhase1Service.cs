@@ -26,7 +26,7 @@ namespace asivamosffie.services
 
         public async Task<List<VRegistrarFase1>> GetListContratacionInterventoria2()
         {
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderBy(r => r.EstadoCodigo).ToListAsync();
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -53,19 +53,21 @@ namespace asivamosffie.services
 
                 foreach (var c in listContratos.OrderBy(r => r.EstadoVerificacionCodigo))
                 {
-                    
+                    string asd;
+                    if (c.NumeroContrato == "CC-PI_210")
+                        asd = "";
+
                     int CantidadProyectosConPerfilesAprobados = 0;
                     int CantidadProyectosConPerfilesPendientes = 0;
                     bool RegistroCompleto = true;
                     bool EstaDevuelto = false;
-               
+
                     foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                     {
                         bool RegistroCompletoObservaciones = true;
                         foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
                         {
-                            if (ContratoPerfil.TieneObservacionApoyo.HasValue && !(bool)ContratoPerfil.TieneObservacionApoyo ||
-                                        (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor))
+                            if (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && (bool)ContratoPerfil.TieneObservacionApoyo && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.Where(r=> r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).LastOrDefault().Observacion))
                                 RegistroCompletoObservaciones = false;
 
                             if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor) == 0)
@@ -76,7 +78,7 @@ namespace asivamosffie.services
                                  && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
                                  && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
                                 RegistroCompleto = false;
-                             
+
                         }
 
                         if (RegistroCompletoObservaciones)
@@ -109,7 +111,7 @@ namespace asivamosffie.services
                 throw;
             }
 
-            return listaContrats;
+            return listaContrats.OrderByDescending(r => r.FechaAprobacion).ToList();
 
         }
 
@@ -126,7 +128,7 @@ namespace asivamosffie.services
                      "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                      "WHERE dp.NumeroDRP IS NOT NULL " +     //Documento Registro Presupuestal
                      "AND cp.FechaAprobacion is not null " + //Fecha Aprobacion Poliza
-                     "AND c.EstadoVerificacionCodigo is not null " +  
+                     "AND c.EstadoVerificacionCodigo is not null " +
                      "AND ctr.TipoSolicitudCodigo = 2")  //Enviado al apoyo
                      .Include(r => r.ContratoPoliza)
                      .Include(r => r.Contratacion)
@@ -182,7 +184,7 @@ namespace asivamosffie.services
                 throw;
             }
 
-            return listaContrats;
+            return listaContrats.OrderByDescending(r => r.FechaAprobacion).ToList();
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -476,13 +478,13 @@ namespace asivamosffie.services
                 {
                     if (ContratoPerfil.TieneObservacionApoyo.HasValue && !(bool)ContratoPerfil.TieneObservacionApoyo ||
                                 (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)) ;
-                       // RegistroCompleto = false;
+                    // RegistroCompleto = false;
                 }
 
                 if (RegistroCompleto)
                 {
                     contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
-                   // contrato.EstaDevuelto = false;
+                    // contrato.EstaDevuelto = false;
                 }
                 else
                     contrato.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;

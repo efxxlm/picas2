@@ -8,7 +8,7 @@
     </button>
   </div>
 
-  <div class="w-90">
+  <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
       <ng-container matColumnDef="fechaAprobacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de requisitos </th>
@@ -85,7 +85,7 @@
           -->
 
           <button mat-raised-button
-                  color="accent" 
+                  color="accent"
                   class="btn-table"
                   (click)="getForm( element.contratoId )"
                   *ngIf=" element.estadoCodigo === estadosConstruccionObra.conReqTecnicosValidados.codigo
@@ -94,21 +94,21 @@
           </button>
 
           <button mat-raised-button
-                  color="accent" 
+                  color="accent"
                   class="btn-table"
                   (click)="verDetalle(element.id)"
                   *ngIf=" element.estadoCodigo === estadosConstruccionObra.enviadoAlInterventor.codigo
                           || element.estadoCodigo === estadosConstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo">
                   Ver detalle
           </button>
-    
+
         </td>
       </ng-container>
-    
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    
+
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </div>
 

@@ -86,10 +86,21 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
           if ( contratacionProyecto[ 'registroCompleto' ] === true ) {
             cantProyectosCompletos++;
           }
-          /*if ( contratacionProyecto[ 'registroCompleto' ] === false){// && contratacionProyecto[ 'tieneMonitoreoWeb' ] === undefined ) {
+          //podria tener algun otro campo lleno, no solo tiene monitoreo, por lo que toca 
+          let caracteristicasconalgo=true;
+          if(contratacionProyecto[ 'tieneMonitoreoWeb' ] === undefined && 
+            contratacionProyecto[ 'esReasignacion' ] === undefined &&
+            contratacionProyecto[ 'esAvanceobra' ] === undefined &&
+            contratacionProyecto[ 'requiereLicencia' ] === undefined &&
+            contratacionProyecto[ 'licenciaVigente' ] === undefined)
+            {
+              caracteristicasconalgo=false;
+            }
+
+          if ( contratacionProyecto[ 'registroCompleto' ] === false && caracteristicasconalgo===false) {
             cantidadProyectosSinDiligenciar++;
-          }*/
-          if ( contratacionProyecto[ 'registroCompleto' ] === false){// && contratacionProyecto[ 'tieneMonitoreoWeb' ] !== undefined ) {
+          }
+          if ( contratacionProyecto[ 'registroCompleto' ] === false && caracteristicasconalgo===true ) {
             cantProyectosEnProceso++;
           }
         }
