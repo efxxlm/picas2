@@ -402,6 +402,7 @@ namespace asivamosffie.services
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
+                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
                 return
                     new Respuesta
                     {
@@ -593,6 +594,9 @@ namespace asivamosffie.services
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
+                
+                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+
                 return
                     new Respuesta
                     {
@@ -670,10 +674,10 @@ namespace asivamosffie.services
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
+                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -738,31 +742,6 @@ namespace asivamosffie.services
                         construccionPerfil.Observaciones = perfil.Observaciones;
 
                         construccionPerfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(construccionPerfil);
-
-                        // foreach (var observacion in perfil.ConstruccionPerfilObservacion)
-                        // {
-                        //     if (observacion.ConstruccionPerfilObservacionId > 0)
-                        //     {
-                        //         ConstruccionPerfilObservacion construccionPerfilObservacion = _context.ConstruccionPerfilObservacion.Find(observacion.ConstruccionPerfilObservacionId);
-
-                        //         construccionPerfilObservacion.UsuarioModificacion = pConstruccion.UsuarioCreacion;
-                        //         construccionPerfilObservacion.FechaModificacion = DateTime.Now;
-
-                        //         construccionPerfilObservacion.Observacion = observacion.Observacion;
-                        //         //construccionPerfilObservacion.TipoObservacionCodigo = observacion.TipoObservacionCodigo;
-
-                        //     }
-                        //     else
-                        //     {
-                        //         observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                        //         observacion.FechaCreacion = DateTime.Now;
-
-                        //         observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
-                        //         observacion.Eliminado = false;
-
-                        //         construccionPerfil.ConstruccionPerfilObservacion.Add(observacion);
-                        //     }
-                        // }
 
                         foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
                         {
@@ -858,8 +837,9 @@ namespace asivamosffie.services
                     });
                 }
 
-
                 _context.SaveChanges();
+                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+
                 return
                     new Respuesta
                     {
@@ -902,10 +882,10 @@ namespace asivamosffie.services
 
 
                 _context.SaveChanges();
+
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -932,6 +912,40 @@ namespace asivamosffie.services
         #endregion createEdit
 
         #region private 
+
+        private void VerificarRegistroCompletoContrato( int pIdContrato ){
+            bool esCompleto = true;
+
+            Contrato contrato = _context.Contrato
+                                            .Where(c => c.ContratoId == pIdContrato )
+                                            .Include( r => r.ContratoConstruccion )
+                                                .ThenInclude( r => r.ConstruccionPerfil )
+                                            .FirstOrDefault();
+
+            contrato.ContratoConstruccion.ToList().ForEach( cc => {
+                if ( 
+                        cc.RegistroCompletoDiagnostico != true ||
+                        cc.RegistroCompletoPlanesProgramas != true ||
+                        cc.RegistroCompletoManejoAnticipo != true ||
+                        cc.RegistroCompletoProgramacionObra != true ||
+                        cc.RegistroCompletoFlujoInversion != true
+                    )
+                    {
+                        esCompleto = false;
+
+                    }else {
+                        cc.ConstruccionPerfil.ToList().ForEach( cp => {
+                            if ( cp.RegistroCompleto != true )
+                                esCompleto = false;
+                        });
+                    }
+
+            });
+
+            contrato.RegistroCompletoConstruccion = esCompleto;
+
+            _context.SaveChanges();
+        }
 
         private bool VerificarEsSupervisor(string pUsuarioCreacion)
         {
@@ -1777,9 +1791,11 @@ namespace asivamosffie.services
                     {
                         contratoConstruccion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoProgramacionObra = true;
+
+                        VerificarRegistroCompletoContrato( contratoConstruccion.ContratoId );
                     }
 
-
+                    
 
                     return respuesta =
                     new Respuesta
@@ -2050,6 +2066,8 @@ namespace asivamosffie.services
                         contratoConstruccion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoFlujoInversion = true;
 
+                        VerificarRegistroCompletoContrato( contratoConstruccion.ContratoId );
+
                         DateTime? fechaInicio = contratoConstruccion.Contrato.FechaActaInicioFase2;
 
                         DateTime fechaFin = fechaInicio.Value.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
@@ -2289,7 +2307,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2445,7 +2462,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2539,7 +2555,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2629,7 +2644,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2719,7 +2733,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2809,7 +2822,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2903,7 +2915,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
