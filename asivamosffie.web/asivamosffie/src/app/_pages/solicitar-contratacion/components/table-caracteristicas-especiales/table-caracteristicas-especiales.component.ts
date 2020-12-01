@@ -49,12 +49,12 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
     if ( elemento === true ) {
       return 'completo';
     };
-    if ( elemento === false && tieneMonitoreoWeb !== undefined ) {
+    if ( elemento === false){// && tieneMonitoreoWeb !== undefined ) {
       return 'en-proceso';
     }
-    if ( elemento === false && tieneMonitoreoWeb === undefined ) {
+    /*if ( elemento === false && tieneMonitoreoWeb === undefined ) {
       return 'sin-diligenciar';
-    };
+    };*/
   };
 
 }
