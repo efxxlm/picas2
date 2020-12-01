@@ -3,7 +3,7 @@
     <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el proyecto?</b></label>
     <div class="col d-flex">
       <mat-form-field class="w-38">
-        <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles required>          
+        <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles required>
       </mat-form-field>
       <span class="contador">{{3 - formContratista.get( 'numeroPerfiles' ).value.length}}</span>
     </div>
@@ -19,24 +19,29 @@
 
       <mat-card>
         <mat-card-content>
-          <section class="d-flex mt-1em">
-            <label class="mr-label mr-min label-left" style="margin-top: 1.7em;"><b>Perfil</b></label>
-            <mat-form-field class="w-50" appearance="fill">
-              <mat-select formControlName="perfilCodigo" class="padding-left" required>
-                <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
-                  {{perfilCv.nombre}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </section>
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="perfilCodigo">Perfil</label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select required formControlName="perfilCodigo">
+                  <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
+                    {{perfilCv.nombre}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
 
           <section class="d-flex mt-1em">
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida requeridas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field style="width: 28%;">
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas" required>
+                <input matInput type="number" maxlength="3" formControlName="cantidadHvRequeridas" required #cantidadHvRequeridas
+                (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.length}}</span>
+              <span class="contador">{{3 - cantidadHvRequeridas.value.length}}</span>
             </div>
           </section>
 
@@ -44,29 +49,30 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida recibidas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field style="width: 29%;">
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas" required>
+                <input matInput type="number" maxlength="3" formControlName="cantidadHvRecibidas" required #cantidadHvRecibidas
+                (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.length}}</span>
+              <span class="contador">{{3 - cantidadHvRecibidas.value.length}}</span>
             </div>
           </section>
 
           <section class="d-flex mt-1em">
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
             <div class="col d-flex">
-              <mat-form-field style="width: 28%;">
-                <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas" required>
+              <mat-form-field style="width: 28.5%;">
+                <input matInput type="number" maxlength="3" formControlName="cantidadHvAprobadas" required #cantidadHvAprobadas
+                (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.length}}</span>
+              <span class="contador">{{3 - cantidadHvAprobadas.value.length}}</span>
             </div>
           </section>
 
           <section class="d-flex mt-1em w-60">
             <label class="mr-label mr-min mt-1em"><b>Fecha de aprobación de la totalidad de las hojas de vida</b></label>
             <div class="d-flex">
-              <mat-form-field class="mt-min" 
-                              appearance="fill">
-              <input  matInput 
-                      [matDatepicker]="fechaAprobacion" 
+              <mat-form-field class="mt-min">
+              <input  matInput
+                      [matDatepicker]="fechaAprobacion"
                       formControlName="fechaAprobacion"
                       [min]="minDate"
                       placeholder="DD/MM/AAAA"
@@ -74,13 +80,13 @@
                       [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
               <mat-datepicker #fechaAprobacion></mat-datepicker>
               </mat-form-field>
-              <button mat-button 
-                      color="primary" 
-                      type="button" 
-                      (click)="fechaAprobacion.open()" 
+              <button mat-button
+                      color="primary"
+                      type="button"
+                      (click)="fechaAprobacion.open()"
                       class="btn-calendario">
-              <img  class="mr-bottom-1" 
-                    src="assets/img/icon/calendarioCirculo.svg" 
+              <img  class="mr-bottom-1"
+                    src="assets/img/icon/calendarioCirculo.svg"
                     alt="Abrir Calendario">
               </button>
             </div>
@@ -88,11 +94,11 @@
 
           <section class="d-flex mt-1em" align="left">
             <label class="mr-label mr-min mt-1em"><b>Observaciones</b></label>
-            <quill-editor class="quill-editor-style w-65 ml-1em card" 
+            <quill-editor class="quill-editor-style position-relative ml-1em card"
                           [styles]="editorStyle"
                           [modules]="config"
-                          (onContentChanged)="maxLength($event, 1000)" 
-                          formControlName="observacion"></quill-editor>
+                          (onContentChanged)="maxLength($event, 1000)"
+                          formControlName="observacion" required></quill-editor>
             <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
               <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
                 {{1000 - textoLimpio(perfil.get('observacion').value)}}
@@ -159,10 +165,17 @@
             <label class="mr-label mr-min mt-1em"><b>URL con soporte</b></label>
             <div class="col d-flex" style="width: 85%;">
               <mat-form-field class="w-38">
-                <input matInput type="text" formControlName="rutaSoporte" required>          
+                <input matInput type="text" formControlName="rutaSoporte" required>
               </mat-form-field>
             </div>
           </section>
+          <div class="d-flex justify-content-center size-text-descriptivo">
+            <p class="color-text-descriptivo">
+                <i>
+                  Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal
+                </i>
+            </p>
+          </div>
         </mat-card-content>
       </mat-card>
       <div class="text-right" *ngIf="perfiles.controls.length > 1">
@@ -187,9 +200,9 @@
       </div>
 
       <div class="text-center">
-        <button mat-button 
-                color="warn" 
-                class="btn-guardar" 
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
                 type="button"
                 (click)="guardar()">
                 <img  src="assets/img/icon/guardar.svg">
@@ -226,7 +239,7 @@
         </mat-card>
       </div>
     </mat-expansion-panel>
-    
+
   </mat-accordion>
 
 </form>
