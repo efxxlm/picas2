@@ -36,9 +36,9 @@ export class FormEvaluacionComponent {
   };
 
   constructor(private fb: FormBuilder,public dialog: MatDialog) {}
-
+  noGuardado=true;
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty) {
+    if ( this.noGuardado===true && this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -72,6 +72,7 @@ export class FormEvaluacionComponent {
     this.procesoSeleccion.urlSoporteEvaluacion = this.addressForm.get('url').value,
     
     //console.log(procesoS);
+    this.noGuardado=false;
     this.guardar.emit(null);
   }
 

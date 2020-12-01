@@ -55,9 +55,9 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
               public dialog: MatDialog,
               private procesoSeleccionService: ProcesoSeleccionService,    
   ) { }
-
+  noGuardado=true;
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty) {
+    if ( this.noGuardado===true && this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -379,6 +379,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     });
 
     console.log(this.procesoSeleccion);
+    this.noGuardado=false;
     this.guardar.emit(null);
   }
 

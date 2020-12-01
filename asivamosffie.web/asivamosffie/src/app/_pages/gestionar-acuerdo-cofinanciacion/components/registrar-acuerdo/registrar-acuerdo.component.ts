@@ -56,9 +56,9 @@ export class RegistrarAcuerdoComponent implements OnInit {
     numAportes: ['', [Validators.required, Validators.maxLength(3), Validators.min(1), Validators.max(999)]],
     aportantes: this.fb.array([])
   });
-
+  noGuardado=true;
   ngOnDestroy(): void {
-    if ( this.datosAportantes.dirty) {
+    if ( this.noGuardado===true && this.datosAportantes.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -371,6 +371,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
 
     this.cofinanciacionService.CrearOModificarAcuerdoCofinanciacion(cofinanciacion).subscribe(
       respuesta => {
+        this.noGuardado=false;
         this.verificarRespuesta(respuesta, parcial);
       },
       err => {

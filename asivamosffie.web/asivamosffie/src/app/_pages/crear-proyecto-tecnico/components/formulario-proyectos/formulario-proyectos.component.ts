@@ -45,10 +45,12 @@ export class FormularioProyectosComponent implements OnInit {
     this.maxDate = new Date();
   }
 
+  noGuardado=true;
+  
   ngOnDestroy(): void {
     console.log("destroy"+this.proyecto.llaveMen);
 
-    if ( this.proyecto.fechaSesionJunta!=null ||  
+    if (this.noGuardado==true && (this.proyecto.fechaSesionJunta!=null ||  
       this.proyecto.numeroActaJunta!=null ||  
       this.proyecto.tipoIntervencionCodigo!=null ||  
       this.proyecto.llaveMen!=''||
@@ -73,7 +75,7 @@ export class FormularioProyectosComponent implements OnInit {
       this.proyecto.plazoMesesInterventoria!=null ||  
       this.proyecto.plazoMesesObra!=null ||  
       this.proyecto.plazoDiasObra!=null ||  
-      this.proyecto.coordinacionResponsableCodigo!=null
+      this.proyecto.coordinacionResponsableCodigo!=null)
       ) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
@@ -163,6 +165,7 @@ export class FormularioProyectosComponent implements OnInit {
       if(respuesta.code=="200")
       {
         this.openDialog('', `<b>${respuesta.message}</b>`);
+        this.noGuardado=false;
         this.router.navigate(['/crearProyecto']); 
       }
       else

@@ -114,9 +114,9 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       data: { modalTitle, modalText }
     });
   }
-
+  noGuardado=true;
   ngOnDestroy(): void {
-    if ( this.formulario.dirty) {
+    if ( this.noGuardado===true && this.formulario.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -162,7 +162,11 @@ export class CrearDisponibilidadPresupuestalAdministrativoComponent implements O
       .subscribe( respuesta => {
         this.openDialog( '', `<b>${respuesta.message}</b>` )
         if ( respuesta.code == "200" )
+        {
           this.router.navigate(['/solicitarDisponibilidadPresupuestal'])
+          this.noGuardado=false;
+        }
+          
       })
 
      console.log( disponibilidad, this.formulario.get('consecutivo').value.proyectoId );
