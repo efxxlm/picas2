@@ -58,8 +58,9 @@ export class RegistrarComponent implements OnInit {
     this.maxDate = new Date();
   }
 
+  noGuardado=true;
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty) {
+    if ( this.addressForm.dirty && this.noGuardado==true) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -829,6 +830,7 @@ export class RegistrarComponent implements OnInit {
             const res = respuesta[0][0] as Respuesta;
             if (res.code === '200') {
               this.openDialog('', `<b>${res.message}</b>`,true);
+              this.noGuardado=false;
             }
             console.log(respuesta);
           });      

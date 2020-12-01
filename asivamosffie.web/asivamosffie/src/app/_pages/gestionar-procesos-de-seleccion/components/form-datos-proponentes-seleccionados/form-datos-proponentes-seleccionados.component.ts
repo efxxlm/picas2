@@ -136,9 +136,9 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   ) {
     this.declararSelect();
   }
-
+  noGuardado=true;
   ngOnDestroy(): void {
-    if ( this.personaNaturalForm.dirty) {
+    if ( this.noGuardado===true && this.personaNaturalForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -447,7 +447,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     }
 
     this.procesoSeleccion.procesoSeleccionProponente.push(proponente);
-
+    this.noGuardado=false;
     this.guardar.emit(null);
     //console.log(this.personaNaturalForm.value);
   }

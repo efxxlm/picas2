@@ -35,9 +35,9 @@ export class FormEstudioDeMercadoComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-
+  noGuardado=true;
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty) {
+    if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -188,7 +188,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
     });
 
     this.procesoSeleccion.cantidadCotizaciones = listaCotizaciones.length;
-
+    this.noGuardado=false;
     this.guardar.emit(null);
   }
 

@@ -37,9 +37,9 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   ) {
 
   }
-  
+  noGuardado=true;
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty) {
+    if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
@@ -141,7 +141,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
 
   onSubmit() {
-
+    this.noGuardado=false;
   }
 
   changeSeleccion(check, elemento) {
