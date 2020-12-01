@@ -112,23 +112,54 @@ namespace asivamosffie.services
 
             List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
 
-            lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
+            lista.Where(
+                        c => c.TipoContratoCodigo == "1" && 
+                        c.FechaAprobacionRequisitosConstruccionInterventor != null && 
+                        ( c.EstadoCodigo != null ? int.Parse(c.EstadoCodigo) : 0 ) >= 3   
+                       )
+                .ToList() // tipo contrato obra
                 .ForEach(c =>
             {
-                listaContrats.Add(new
-                {
-                    ContratoId = c.ContratoId,
-                    FechaAprobacion = c.FechaAprobacion,
-                    NumeroContrato = c.NumeroContrato,
-                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoCodigo = c.EstadoCodigo,
-                    EstadoNombre = c.EstadoNombre,
-                    Existeregistro = c.ExisteRegistro,
-                    c.EstaDevuelto,
+                if (c.TieneFaseConstruccion > 0)
+                { // fase construccion
+                    if (c.TieneFasePreconstruccion > 0)
+                    {
+                        if (!string.IsNullOrEmpty(c.RutaActaFase1) && c.FechaActaInicioFase1 != null)
+                        {
+                            listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
 
-                });
+                            });
+                        }
+                    }
+                    else
+                    { // sin preconstruccion
+                        listaContrats.Add(new
+                        {
+                            ContratoId = c.ContratoId,
+                            FechaAprobacion = c.FechaAprobacion,
+                            NumeroContrato = c.NumeroContrato,
+                            CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                            CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                            CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                            EstadoCodigo = c.EstadoCodigo,
+                            EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                            Existeregistro = c.ExisteRegistro,
+                            c.EstaDevuelto,
+
+                        });
+                    }
+                }
             });
 
             return listaContrats;
@@ -958,6 +989,11 @@ namespace asivamosffie.services
             });
 
             contrato.RegistroCompletoConstruccion = esCompleto;
+            if ( contrato.RegistroCompletoConstruccion == true ){
+                contrato.FechaAprobacionRequisitosConstruccionInterventor = DateTime.Now;
+            }else{
+                contrato.FechaAprobacionRequisitosConstruccionInterventor = null;
+            }
 
             _context.SaveChanges();
         }
