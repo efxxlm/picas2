@@ -122,7 +122,11 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   generarFechaRestante(){
     let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
     newdate.setMonth(newdate.getMonth() + this.mesPlazoIni);
-    this.addressForm.get('fechaPrevistaTerminacion').setValue(newdate);
+    let newDateFinal = new Date(newdate);
+    newDateFinal.setDate(newDateFinal.getDate() + this.diasPlazoIni)
+    console.log(newDateFinal);
+    this.addressForm.get('fechaPrevistaTerminacion').setValue(newDateFinal);
+
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
