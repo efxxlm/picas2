@@ -1391,7 +1391,7 @@ namespace asivamosffie.services
             //pContrato.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContrato.Sin_aprobacion_de_requisitos_tecnicos;
             //lstContratos = await _context.Contrato.Where(r => r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados.ToString() && !(bool)r.Eliminado).ToListAsync();
             lstContratos = await _context.Contrato.Where(
-                r => r.EstadoVerificacionCodigo == ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados.ToString() 
+                r => r.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoVerificacionContrato.Con_requisitos_tecnicos_aprobados.ToString() 
                 && !(bool)r.Eliminado).ToListAsync();
             Contratacion contratacion;
 
