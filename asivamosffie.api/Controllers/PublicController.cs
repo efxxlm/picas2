@@ -22,6 +22,7 @@ namespace asivamosffie.api.Controllers
         public readonly IGuaranteePolicyService _guaranteePolicy;
         public readonly IManagementCommitteeReportService _managementCommitteeReportService;
         public readonly IOptions<AppSettings> _settings;
+        public readonly IManagePreContructionActPhase1Service _managePreContructionActPhase1Service;
 
         public PublicController(IRegisterPreContructionPhase1Service  registerPreContructionPhase1Service,IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy)
         { 
@@ -187,7 +188,8 @@ namespace asivamosffie.api.Controllers
             {
                 throw ex;
             }
-        }
+        } 
+        //3.1.9
     }
 
 

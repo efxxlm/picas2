@@ -715,7 +715,7 @@ namespace asivamosffie.services
 
                         foreach (var item in usuarios)
                         {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
+                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendiente", template, pSender, pPassword, pMailServer, pMailPort);
                         }
                     }
                 }

@@ -23,7 +23,7 @@ namespace asivamosffie.services
         private readonly IDocumentService _documentService;
         private readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
 
-        public ManagePreContructionActPhase1Service(IDocumentService documentService , devAsiVamosFFIEContext context, ICommonService commonService, IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
+        public ManagePreContructionActPhase1Service(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService, IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
         {
             _documentService = documentService;
             _registerSessionTechnicalCommitteeService = registerSessionTechnicalCommitteeService;
@@ -80,9 +80,9 @@ namespace asivamosffie.services
                            .ThenInclude(r => r.DisponibilidadPresupuestal)
                         .Include(r => r.ContratoPoliza)
                         .FirstOrDefaultAsync();
-                 
+
                 foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
-                { 
+                {
                     foreach (var ContratacionProyectoAportante in ContratacionProyecto.ContratacionProyectoAportante)
                     {
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
@@ -93,7 +93,7 @@ namespace asivamosffie.services
                                 contrato.ValorFase2 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
                         }
                     }
-                } 
+                }
                 //Modificar Usuario 
                 //ya que falta hacer caso de uso gestion usuarios
                 contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
@@ -188,20 +188,17 @@ namespace asivamosffie.services
             string strFilePatch = string.Empty;
             try
             {
-                if (pFile.Length > 0)
+                if (pFile != null && pFile.Length > 0)
                 {
                     strFilePatch = Path.Combine(pDirectorioBase, pDirectorioActaContrato, pContrato.ContratoId.ToString());
                     await _documentService.SaveFileContratacion(pFile, strFilePatch, pFile.FileName);
-                    ContratoOld.RutaActaSuscrita = Path.Combine(strFilePatch, pFile.FileName);
+                    ContratoOld.RutaActaFase1 = Path.Combine(strFilePatch, pFile.FileName);
                 }
                 else
                     return new Respuesta();
 
-
-                ContratoOld.FechaFirmaActaContratista = pContrato.FechaActaInicioFase1;
-                ContratoOld.FechaTerminacion = pContrato.FechaTerminacion;
-
-
+                ContratoOld.FechaActaInicioFase1 = pContrato.FechaActaInicioFase1;
+                ContratoOld.FechaTerminacion = pContrato.FechaTerminacion; 
                 ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada;
 
 
@@ -414,6 +411,43 @@ namespace asivamosffie.services
 
         }
 
+        public async Task GetListContratoConActaSinDomumento(AppSettingsService appSettingsService)
+        {
+
+            DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
+
+            List<Contrato> contratos = _context.Contrato
+                .Where(r => r.FechaActaInicioFase1.HasValue && string.IsNullOrEmpty(r.RutaActaFase1))
+                 .Include(r => r.ContratoPoliza)
+                 .Include(r => r.Contratacion)
+                   .ThenInclude(r => r.DisponibilidadPresupuestal)
+               .ToList();
+
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ConActaSinDocumento319);
+            foreach (var contrato in contratos)
+            {
+                int Dias = 0, Meses = 0;
+                Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
+                Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
+                Dias += Meses * 30;
+                string template = TemplateRecoveryPassword.Contenido
+                            .Replace("_LinkF_", appSettingsService.DominioFront)
+                            .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
+                            .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                            .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias)).ToString("dd-MMM-yy"))
+                            .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy"))
+                            .Replace("[FECHA_ACTA_INICIO]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MMM-yy") : " ")
+                            .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
+
+                foreach (var item in usuarios)
+                {
+                    Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendiente", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
+                }
+
+            }
+
+        }
     }
 
 }
