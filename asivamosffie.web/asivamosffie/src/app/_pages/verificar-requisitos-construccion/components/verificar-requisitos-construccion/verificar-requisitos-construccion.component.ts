@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class VerificarRequisitosConstruccionComponent implements OnInit {
   verAyuda = false;
   public selTab;
+  contratoObra = false;
+  contratoInterventoria = false;
   constructor() { }
 
   ngOnInit(): void {
