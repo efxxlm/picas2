@@ -22,7 +22,8 @@ export class ExpansionGestionarInterventoriaComponent implements OnInit {
   estadosInterventoria = {
     sinAprobacionReqTecnicos: '1',
     enProcesoVerificacionReqTecnicos: '4',
-    conReqTecnicosVerificados: '5'
+    conReqTecnicosVerificados: '5',
+    enviadoAlSupervisor: '11'
   };
 
   estadoProyectoArray = [

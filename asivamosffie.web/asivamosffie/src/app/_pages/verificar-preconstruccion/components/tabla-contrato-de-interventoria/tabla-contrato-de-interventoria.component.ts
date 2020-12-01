@@ -47,11 +47,9 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
       .subscribe(
         estados => {
           this.estadosPreconstruccionInterventoria = estados;
-          console.log( this.estadosPreconstruccionInterventoria );
           faseUnoVerificarPreConstruccionSvc.getListContratacionInterventoria()
             .subscribe( listas => {
               const dataTable = [];
-              console.log( listas );
               listas.forEach( lista => {
                 if (  Number( lista[ 'estadoCodigo' ] )
                       >= Number( this.estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo ) )
@@ -59,6 +57,7 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
                 dataTable.push( lista );
               }
               } );
+              console.log( dataTable );
               this.dataSource = new MatTableDataSource( dataTable );
               this.dataSource.sort = this.sort;
               this.dataSource.paginator = this.paginator;

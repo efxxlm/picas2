@@ -8,7 +8,9 @@
     <h1 class="title-menu--h1" *ngIf="estadoInterventoria === estadosInterventoria.sinAprobacionReqTecnicos">
       Gestionar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
     </h1>
-    <h1 class="title-menu--h1" *ngIf="estadoInterventoria === estadosInterventoria.enProcesoVerificacionReqTecnicos || estadoInterventoria === estadosInterventoria.conReqTecnicosVerificados">
+    <h1 class="title-menu--h1" *ngIf="estadoInterventoria === estadosInterventoria.enProcesoVerificacionReqTecnicos 
+                                      || estadoInterventoria === estadosInterventoria.conReqTecnicosVerificados
+                                      || estadoInterventoria === estadosInterventoria.enviadoAlSupervisor">
 			Ver detalle/Editar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
 		</h1>
     <p class="colorMainColor" style="margin-top: 1em;">
