@@ -53,7 +53,7 @@ namespace asivamosffie.api.Controllers
                     polizaObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 else
                     polizaObservacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
+                asivamosffie.model.APIModels.AppSettingsService _appSettingsService ;
                 _appSettingsService = toAppSettingsService(_settings);
                 respuesta = await _guaranteePolicy.InsertEditPolizaObservacion(polizaObservacion, _appSettingsService);
                 return Ok(respuesta);

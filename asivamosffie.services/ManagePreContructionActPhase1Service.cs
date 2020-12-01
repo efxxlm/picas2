@@ -411,13 +411,12 @@ namespace asivamosffie.services
 
         }
 
-        public async Task GetListContratoConActaSinDomumento(AppSettingsService appSettingsService)
-        {
-
+        public async Task GetListContratoConActaSinDocumento(AppSettingsService appSettingsService)
+        { 
             DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
 
             List<Contrato> contratos = _context.Contrato
-                .Where(r => r.FechaActaInicioFase1.HasValue && string.IsNullOrEmpty(r.RutaActaFase1))
+                .Where(r => (r.EstadoActa == "8" || r.EstadoActa == "20") && string.IsNullOrEmpty(r.RutaActaFase1))
                  .Include(r => r.ContratoPoliza)
                  .Include(r => r.Contratacion)
                    .ThenInclude(r => r.DisponibilidadPresupuestal)
