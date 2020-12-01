@@ -1319,15 +1319,13 @@ namespace asivamosffie.services
                     {
                         ActuacionSeguimientoId = actuacionSeguimiento.ActuacionSeguimientoId,
                         NumeroActuacion = actuacionSeguimiento.ActuacionAdelantada,
-                        EstadoReclamacion=strEstadoReclamacion,
+                        NumeroActuacionFormat = "ACT controversia " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
+                        EstadoReclamacion =strEstadoReclamacion,
                         FechaActualizacion = actuacionSeguimiento.FechaModificacion != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
                         NumeroReclamacion=actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
-                        Actuacion = "Actuación " +actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
+                        Actuacion = "Actuación " +actuacionSeguimiento.ActuacionSeguimientoId.ToString(),                                              
                         
-                        
-                        
-                        //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
-                        
+                        //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",                        
 
                     };
 
