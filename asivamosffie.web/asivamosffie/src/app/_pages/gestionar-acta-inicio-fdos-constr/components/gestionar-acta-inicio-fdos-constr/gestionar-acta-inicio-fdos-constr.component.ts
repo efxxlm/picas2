@@ -43,10 +43,10 @@ export class GestionarActaInicioFdosConstrComponent implements OnInit {
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
     if (this.rolAsignado == 2) {
-      this.ocpion = 1;
+      this.ocpion = 2;
     }
     else if (this.rolAsignado == 8){
-      this.ocpion = 2;
+      this.ocpion = 1;
     }
   }
   cambiarTab(opc) {
