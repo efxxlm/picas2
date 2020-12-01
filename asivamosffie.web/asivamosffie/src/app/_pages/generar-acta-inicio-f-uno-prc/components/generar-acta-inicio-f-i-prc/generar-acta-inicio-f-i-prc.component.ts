@@ -10,6 +10,8 @@ export class GenerarActaInicioFaseunoPreconstruccionComponent implements OnInit 
   public rolAsignado;
   public ocpion;
   public selTab;
+  contratoObra = false;
+  contratoInterventoria = false;
   constructor() { }
 
   ngOnInit(): void {
