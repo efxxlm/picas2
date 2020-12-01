@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -23,26 +24,20 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
       'estadoObra',
       'gestion'
     ];
-    dataTable: any[] = [
-        {
-            llaveMen: 'LU990088',
-            numeroContrato: 'CC223456789',
-            tipoIntervencion: 'Remodelación',
-            institucionEducativa: 'María Inmaculada',
-            sede: 'Sede 2',
-            fechaUltimoReporte: 'Sin registro',
-            estadoObra: 'Sin registro de avance semanal',
-            id: 1
-        }
-    ];
 
-    constructor() { }
+    constructor( private avanceSemanalSvc: RegistrarAvanceSemanalService ) {
+      this.avanceSemanalSvc.getVRegistrarAvanceSemanal()
+        .subscribe(
+          listas => {
+            this.tablaRegistro = new MatTableDataSource( listas );
+            this.tablaRegistro.sort = this.sort;
+            this.tablaRegistro.paginator = this.paginator;
+            this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+          }
+          );
+    }
 
     ngOnInit(): void {
-        this.tablaRegistro = new MatTableDataSource( this.dataTable );
-        this.tablaRegistro.sort = this.sort;
-        this.tablaRegistro.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
     }
 
     applyFilter( event: Event ) {
