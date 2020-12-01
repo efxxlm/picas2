@@ -26,7 +26,7 @@ namespace asivamosffie.services
         }
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderBy(r => r.EstadoCodigo).ToListAsync();
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()

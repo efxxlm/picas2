@@ -26,7 +26,7 @@ namespace asivamosffie.services
 
         public async Task<List<VRegistrarFase1>> GetListContratacionInterventoria2()
         {
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderBy(r => r.EstadoCodigo).ToListAsync();
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderByDescending(r => r.FechaAprobacion).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -109,7 +109,7 @@ namespace asivamosffie.services
                 throw;
             }
 
-            return listaContrats;
+            return listaContrats.OrderByDescending(r=> r.FechaAprobacion).ToList();
 
         }
 
@@ -182,7 +182,7 @@ namespace asivamosffie.services
                 throw;
             }
 
-            return listaContrats;
+            return listaContrats.OrderByDescending(r => r.FechaAprobacion).ToList();
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
