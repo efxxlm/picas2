@@ -53,7 +53,11 @@
             <a  [routerLink]="['obraVerDetalle', element.contratoId]"
                 mat-raised-button color="accent"
                 class="btn-table"
-                *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo">
+                *ngIf=" estadosPreconstruccionInterventoria !== undefined 
+                        &&  element.estadoCodigo !== estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo
+                        &&  element.estadoCodigo !== estadosPreconstruccionInterventoria.enProcesoVerificacionReqTecnicos.codigo
+                        &&  element.estadoCodigo !== estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo
+                        &&  element.estadoCodigo !== estadosPreconstruccionInterventoria.enviadoAlApoyo.codigo">
                 Ver detalle
             </a>
             <a  (click)="getForm( element.contratoId, element.fechaAprobacion, element.estadoCodigo )"
@@ -76,7 +80,7 @@
                 mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo && element.registroCompleto === true">
+                *ngIf="estadosPreconstruccionInterventoria !== undefined && element.estadoCodigo === estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo">
                 Enviar al supervisor
             </a>
         </td>

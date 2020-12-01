@@ -104,7 +104,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
       const contratoObservacion={
         'ContratoId':this.contratoId,
         'Observaciones':this.addressForm.value.observaciones,
-        'EsActa':true,
+        'EsActa':false,
         'EsActaFase1':this.addressForm.value.tieneObservaciones
       };
       this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data:any)=>{

@@ -103,9 +103,11 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       } );
   };
   loadData(id){
-    this.service.GetContratoByContratoId(id).subscribe(data=>{
+    this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
       for(let i=0; i<data.contratoObservacion.length;i++){
-        this.indexObservacionFinal=data.contratoObservacion[i].observaciones;
+        if(data.contratoObservacion[i].esActa==false && data.contratoObservacion[i].esActaFase1==true){
+          this.indexObservacionFinal=data.contratoObservacion[i].observaciones;
+        }
       }
       this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
@@ -122,10 +124,12 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   }
   loadObservaciones(id){
     this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
-      for(let i = 0; i<data.length;i++){
-        this.conObervacionesActa = data[i].esActa;
-        this.observacionesActaFase1 = data[i].observaciones;
-        this.fechaCreacion = data[i].fechaCreacion;
+      for(let i=0; i<data.length;i++){
+        if(data[i].esActa==true && data[i].esActaFase1==true){
+          this.conObervacionesActa = data[i].esActaFase1;
+          this.observacionesActaFase1 = data[i].observaciones;
+          this.fechaCreacion = data[i].fechaCreacion;
+        }
       }
   });
 }

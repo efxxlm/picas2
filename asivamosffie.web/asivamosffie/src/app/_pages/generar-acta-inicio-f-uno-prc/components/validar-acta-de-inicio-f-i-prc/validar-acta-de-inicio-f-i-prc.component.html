@@ -24,7 +24,9 @@
             <div [innerHtml]="this.objeto"></div>
             <p><strong>Valor inicial del contrato: </strong>{{this.valorIni | currency}}</p>
             <p><strong>Valor fase 1 - Preconstrucción: Estudios y diseños: </strong>{{this.valorFUno | currency}}</p>
-            <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
+            <div *ngIf="this.valorFDos!=0">
+                <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
+            </div>
             <div *ngIf="this.tipoProponente=='1'">
                 <p><strong>Número de identificación del representante legal del contratista de inteventoría:
                 </strong>{{this.numIdRepresentanteLegal }}</p>
@@ -49,7 +51,9 @@
             <p><strong>Fecha del acta de inicio de la fase 1 - Preconstrucción: </strong>{{ this.fechaActaFase1Prc | date:'dd/MM/yyyy' }}</p>
             <p><strong>Fecha prevista de terminación: </strong>{{this.fechaTermPrevista | date:'dd/MM/yyyy' }}</p>
             <p><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> {{this.mesesFase1}} <strong>Días: </strong>{{this.diasFase1}}</p>
-            <p><strong>Plazo de ejecución fase 2 – Construcción:</strong> {{this.mesesFase2}} <strong>Días: </strong>{{this.diasFase2}}</p>
+            <div *ngIf="this.valorFDos!=0">
+                <p><strong>Plazo de ejecución fase 2 – Construcción:</strong> {{this.mesesFase2}} <strong>Días: </strong>{{this.diasFase2}}</p>
+            </div>
             <p><strong>Observaciones o consideraciones especiales: </strong></p>
             <div [innerHtml]="this.observaciones"></div>
         </mat-card-content>

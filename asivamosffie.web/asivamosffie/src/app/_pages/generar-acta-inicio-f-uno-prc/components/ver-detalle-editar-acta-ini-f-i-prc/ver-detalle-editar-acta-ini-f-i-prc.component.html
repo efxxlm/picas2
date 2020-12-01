@@ -24,7 +24,9 @@
             <div [innerHtml]="this.objeto"></div>
             <p><strong>Valor inicial del contrato: </strong>{{this.valorIni | currency}}</p>
             <p><strong>Valor fase 1 - Preconstrucción: Estudios y diseños: </strong>{{this.valorFUno | currency}}</p>
-            <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
+            <div *ngIf="this.valorFDos!=0">
+                <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
+            </div>
             <div *ngIf="this.dataSupervisor==true">
                 <p><strong>Número de identificación del Supervisor:
                 </strong>{{this.numIdentifiacionSupervisor }}</p>
@@ -138,7 +140,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" *ngIf="this.valorFDos!=0">
                         <div class="col-md-9"  style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
@@ -194,7 +196,7 @@
             </div>
         </form>
     </div>
-    <div *ngIf="this.observacionesActaFase1!=undefined || this.observacionesActaFase1!=null ">
+    <div >
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">

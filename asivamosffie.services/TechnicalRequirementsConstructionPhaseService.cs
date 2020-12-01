@@ -80,6 +80,7 @@ namespace asivamosffie.services
                                 EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                 Existeregistro = c.ExisteRegistro,
                                 c.EstaDevuelto,
+                                c.RegistroCompletoConstruccion,
 
                             });
                         }
@@ -98,6 +99,7 @@ namespace asivamosffie.services
                             EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                             Existeregistro = c.ExisteRegistro,
                             c.EstaDevuelto,
+                            c.RegistroCompletoConstruccion,
 
                         });
                     }
@@ -113,9 +115,9 @@ namespace asivamosffie.services
             List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
 
             lista.Where(
-                        c => c.TipoContratoCodigo == "1" && 
-                        c.FechaAprobacionRequisitosConstruccionInterventor != null && 
-                        ( c.EstadoCodigo != null ? int.Parse(c.EstadoCodigo) : 0 ) >= 3   
+                        c => c.TipoContratoCodigo == "1" &&
+                        c.FechaAprobacionRequisitosConstruccionInterventor != null &&
+                        (c.EstadoCodigo != null ? int.Parse(c.EstadoCodigo) : 0) >= 3
                        )
                 .ToList() // tipo contrato obra
                 .ForEach(c =>
@@ -138,6 +140,7 @@ namespace asivamosffie.services
                                 EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                 Existeregistro = c.ExisteRegistro,
                                 c.EstaDevuelto,
+                                c.RegistroCompletoConstruccion,
 
                             });
                         }
@@ -156,6 +159,7 @@ namespace asivamosffie.services
                             EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                             Existeregistro = c.ExisteRegistro,
                             c.EstaDevuelto,
+                            c.RegistroCompletoConstruccion,
 
                         });
                     }
@@ -989,9 +993,12 @@ namespace asivamosffie.services
             });
 
             contrato.RegistroCompletoConstruccion = esCompleto;
-            if ( contrato.RegistroCompletoConstruccion == true ){
+            if (contrato.RegistroCompletoConstruccion == true)
+            {
                 contrato.FechaAprobacionRequisitosConstruccionInterventor = DateTime.Now;
-            }else{
+            }
+            else
+            {
                 contrato.FechaAprobacionRequisitosConstruccionInterventor = null;
             }
 
@@ -1558,11 +1565,13 @@ namespace asivamosffie.services
 
                 ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
 
-                if (pEsFlujoInvserion){
+                if (pEsFlujoInvserion)
+                {
                     contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
                     contratoConstruccion.RegistroCompletoFlujoInversion = false;
                 }
-                else{
+                else
+                {
                     contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
                     contratoConstruccion.RegistroCompletoProgramacionObra = false;
                 }
@@ -2200,56 +2209,57 @@ namespace asivamosffie.services
                         VerificarRegistroCompletoContrato(contratoConstruccion.ContratoId);
 
                         DateTime? fechaInicio = contratoConstruccion.Contrato.FechaActaInicioFase2;
-
-                        DateTime fechaFin = fechaInicio.Value.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
-                        fechaFin = fechaFin.AddDays(contratoConstruccion.Proyecto.PlazoDiasObra.Value);
-
-                        DateTime fechaTemp = fechaInicio.Value;
-
-                        while (fechaFin >= fechaTemp)
+                        if (fechaInicio != null)
                         {
-                            listaFechas.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
-                            fechaTemp = fechaTemp.AddDays(7);
-                        }
+
+                            DateTime fechaFin = fechaInicio.Value.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
+                            fechaFin = fechaFin.AddDays(contratoConstruccion.Proyecto.PlazoDiasObra.Value);
+
+                            DateTime fechaTemp = fechaInicio.Value;
+
+                            while (fechaFin >= fechaTemp)
+                            {
+                                listaFechas.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
+                                fechaTemp = fechaTemp.AddDays(7);
+                            }
 
 
-                        ContratacionProyecto contratacionProyecto = contratoConstruccion.Contrato.Contratacion.ContratacionProyecto.Where(p => p.ProyectoId == contratoConstruccion.ProyectoId).FirstOrDefault();
-                        if (contratacionProyecto != null)
-                        {
-                            int idContratacionproyecto = contratacionProyecto.ContratacionProyectoId;
+                            ContratacionProyecto contratacionProyecto = contratoConstruccion.Contrato.Contratacion.ContratacionProyecto.Where(p => p.ProyectoId == contratoConstruccion.ProyectoId).FirstOrDefault();
+                            if (contratacionProyecto != null)
+                            {
+                                int idContratacionproyecto = contratacionProyecto.ContratacionProyectoId;
 
-                            List<SeguimientoSemanal> listaSeguimientos = _context.SeguimientoSemanal
-                                                                        .Where(p => p.ContratacionProyectoId == idContratacionproyecto).ToList();
+                                List<SeguimientoSemanal> listaSeguimientos = _context.SeguimientoSemanal
+                                                                            .Where(p => p.ContratacionProyectoId == idContratacionproyecto).ToList();
 
-                            // elimina los existentes
-                            _context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
+                                // elimina los existentes
+                                _context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
 
-                            int i = 1;
-                            listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
-                          {
-
-                              SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
+                                int i = 1;
+                                listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
                               {
-                                  ContratacionProyectoId = idContratacionproyecto,
-                                  Eliminado = false,
-                                  UsuarioCreacion = pUsuarioModifico,
-                                  FechaCreacion = DateTime.Now,
-                                  NumeroSemana = i,
-                                  FechaInicio = f.fechaInicio,
-                                  FechaFin = f.fechaFin,
-                                  RegistroCompleto = false,
-                              };
 
-                              _context.SeguimientoSemanal.Add(seguimientoSemanal);
-                              _context.SaveChanges();
+                                  SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
+                                  {
+                                      ContratacionProyectoId = idContratacionproyecto,
+                                      Eliminado = false,
+                                      UsuarioCreacion = pUsuarioModifico,
+                                      FechaCreacion = DateTime.Now,
+                                      NumeroSemana = i,
+                                      FechaInicio = f.fechaInicio,
+                                      FechaFin = f.fechaFin,
+                                      RegistroCompleto = false,
+                                  };
 
-                              i++;
+                                  _context.SeguimientoSemanal.Add(seguimientoSemanal);
+                                  _context.SaveChanges();
 
-                          });
+                                  i++;
 
+                              });
+
+                            }
                         }
-
-
                     }
 
                     return respuesta =

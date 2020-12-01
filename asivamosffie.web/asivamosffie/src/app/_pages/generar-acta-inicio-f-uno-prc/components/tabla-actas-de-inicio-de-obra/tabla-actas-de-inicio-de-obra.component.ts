@@ -35,27 +35,32 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  public dataTable;
+  dataTable: any[] = [];
   constructor(private router: Router, public dialog: MatDialog, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.cargarTablaDeDatos();
   }
   cargarTablaDeDatos(){
-    this.service.GetListGrillaActaInicio(8).subscribe(data=>{
-      this.dataTable = data;
+    this.service.GetListGrillaActaInicio(8).subscribe((data:any)=>{
+      for (let contrObras of data) {
+        if (contrObras.tipoContratoNombre === 'Obra' && contrObras.estadoActaCodigo!='13') {
+          this.dataTable.push(contrObras);
+        };
+      };
+      console.log(this.dataTable);
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-      this.applyFilter("Obra");
     });
   }
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue;
-  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  };
   validarActaParaInicio(id){
     localStorage.setItem("origin","obra");
     localStorage.setItem("editable","false");
@@ -75,12 +80,16 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
   enviarRevision(id,estadoObs){
     if(estadoObs=="Con revisión sin observaciones"){
       this.service.CambiarEstadoActa(id,"18").subscribe(data=>{
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+        );
       });
     }
     else{
       this.service.CambiarEstadoActa(id,"17").subscribe(data=>{
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+        );
       });
     }
     /*this.service.EnviarCorreoSupervisorContratista(id,2).subscribe(resp=>{
@@ -90,12 +99,16 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
   enviarInterventor(id){
     if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){
       this.service.CambiarEstadoActa(id,"18").subscribe(data=>{
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+        );
       });
     }
     else{
       this.service.CambiarEstadoActa(id,"17").subscribe(data=>{
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+        );
       });
     }
   }
