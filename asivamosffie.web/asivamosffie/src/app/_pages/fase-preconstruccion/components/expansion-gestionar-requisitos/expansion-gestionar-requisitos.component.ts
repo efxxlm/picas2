@@ -52,7 +52,6 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
     this.faseUnoPreconstruccionSvc.getContratacionByContratoId( pContratoId )
       .subscribe( contrato => {
         this.contrato = contrato;
-        console.log( this.contrato );
       } );
   }
 

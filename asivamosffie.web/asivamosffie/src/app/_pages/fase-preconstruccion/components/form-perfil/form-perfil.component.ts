@@ -241,7 +241,6 @@ export class FormPerfilComponent implements OnInit {
           )
         );
       }
-      console.log( this.perfilesCompletos, this.perfilesEnProceso );
       if ( this.perfilesCompletos > 0 && this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );
       }
@@ -441,7 +440,6 @@ export class FormPerfilComponent implements OnInit {
       } );
     }
 
-    console.log( perfiles );
     this.enviarPerfilesContrato.emit( perfiles );
   }
 
