@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { DialogObservacionesProgramacionComponent } from '../dialog-observaciones-programacion/dialog-observaciones-programacion.component';
 import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-tabla-programacion-obra',
@@ -31,7 +32,9 @@ export class TablaProgramacionObraComponent implements OnInit {
     'gestion'
   ];
   constructor ( private dialog: MatDialog,
-                private faseUnoConstruccionSvc: FaseUnoConstruccionService )
+                private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+                private commonService: CommonService, 
+              )
   {
   }
 
@@ -102,5 +105,19 @@ export class TablaProgramacionObraComponent implements OnInit {
         err => this.openDialog( '', err.message )
       )
   };
+
+  descargar( pArchivoCargueId: number ) {
+    this.commonService.getFileById( pArchivoCargueId )
+      .subscribe(respuesta => {
+        let documento = "ProgramacionObra.xlsx";
+        var text = documento,
+          blob = new Blob([respuesta], { type: 'application/octet-stream' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
+  }
 
 };
