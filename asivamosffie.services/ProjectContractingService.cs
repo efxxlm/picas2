@@ -897,15 +897,19 @@ namespace asivamosffie.services
             {
                 return true;
             }
-            /*if (
+            if (
                 pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
                  && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
                 && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
               )
             {
-                return true;
+                if(pContratacionProyectoAntiguo.RequiereLicencia==false)
+                {
+                    return true;
+                }
+                
             }
-            */
+            
 
             if (
                   pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
