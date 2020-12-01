@@ -447,7 +447,7 @@ namespace asivamosffie.services
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
-                VerificarRegistroCompletoContrato(pConstruccion.ContratoId);
+                VerificarRegistroCompletoContratoObra(pConstruccion.ContratoId);
                 return
                     new Respuesta
                     {
@@ -640,7 +640,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                VerificarRegistroCompletoContrato(pConstruccion.ContratoId);
+                VerificarRegistroCompletoContratoObra(pConstruccion.ContratoId);
 
                 return
                     new Respuesta
@@ -719,7 +719,7 @@ namespace asivamosffie.services
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
-                VerificarRegistroCompletoContrato(pConstruccion.ContratoId);
+                VerificarRegistroCompletoContratoObra(pConstruccion.ContratoId);
                 return
                     new Respuesta
                     {
@@ -847,13 +847,19 @@ namespace asivamosffie.services
                     }
                 }
 
-                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+                Contrato contrato = _context.Contrato
+                                                .Where( c => c.ContratoId == pConstruccion.ContratoId)
+                                                .Include( r => r.Contratacion )
+                                                .FirstOrDefault();
 
-                if (contrato.TipoContratoCodigo == "1") // contrato de obra
+                if (contrato.Contratacion.TipoSolicitudCodigo == "1") {// contrato de obra
                     if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
                         contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
-                if (contrato.TipoContratoCodigo == "2")
+                    VerificarRegistroCompletoContratoObra(pConstruccion.ContratoId);
+                }
+
+                if (contrato.Contratacion.TipoSolicitudCodigo == "2")
                 { // contrato de interventoria
                     if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_aprobados)
                         contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
@@ -880,10 +886,11 @@ namespace asivamosffie.services
                         });
 
                     });
+
+                    VerificarRegistroCompletoContratoInterventoria(pConstruccion.ContratoId);
                 }
 
                 _context.SaveChanges();
-                VerificarRegistroCompletoContrato(pConstruccion.ContratoId);
 
                 return
                     new Respuesta
@@ -958,7 +965,7 @@ namespace asivamosffie.services
 
         #region private 
 
-        private void VerificarRegistroCompletoContrato(int pIdContrato)
+        private void VerificarRegistroCompletoContratoObra(int pIdContrato)
         {
             bool esCompleto = true;
 
@@ -986,7 +993,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    cc.ConstruccionPerfil.ToList().ForEach(cp =>
+                    cc.ConstruccionPerfil.Where( cp => cp.Eliminado != true ).ToList().ForEach(cp =>
                     {
                         if (cp.RegistroCompleto != true){
                             esCompleto = false;
@@ -1008,6 +1015,49 @@ namespace asivamosffie.services
             else
             {
                 contrato.FechaAprobacionRequisitosConstruccionInterventor = null;
+            }
+
+            _context.SaveChanges();
+        }
+
+        private void VerificarRegistroCompletoContratoInterventoria(int pIdContrato)
+        {
+            bool esCompleto = true;
+
+            Contrato contrato = _context.Contrato
+                                            .Where(c => c.ContratoId == pIdContrato)
+                                            .Include(r => r.ContratoConstruccion)
+                                                .ThenInclude(r => r.ConstruccionPerfil)
+                                            .FirstOrDefault();
+
+            contrato.ContratoConstruccion.ToList().ForEach(cc =>
+            {
+                ContratoConstruccion construccionTemp = _context.ContratoConstruccion.Find( cc.ContratoConstruccionId );
+                bool completoConstruccion = true;
+
+                cc.ConstruccionPerfil.Where( cp => cp.Eliminado != true ).ToList().ForEach(cp =>
+                {
+                    if (cp.RegistroCompleto != true){
+                        esCompleto = false;
+                        completoConstruccion = false;
+                    }
+                });
+
+                construccionTemp.RegistroCompleto = completoConstruccion;
+                _context.SaveChanges();
+
+            });
+
+            contrato.RegistroCompletoConstruccion = esCompleto;
+            if (contrato.RegistroCompletoConstruccion == true)
+            {
+                contrato.FechaAprobacionRequisitosConstruccionApoyo = DateTime.Now;
+                contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_verificados;
+            }
+            else
+            {
+                contrato.FechaAprobacionRequisitosConstruccionApoyo = null;
+                contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
             }
 
             _context.SaveChanges();
@@ -1936,7 +1986,7 @@ namespace asivamosffie.services
                         contratoConstruccion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoProgramacionObra = true;
 
-                        VerificarRegistroCompletoContrato(contratoConstruccion.ContratoId);
+                        VerificarRegistroCompletoContratoObra(contratoConstruccion.ContratoId);
                     }
 
 
@@ -2214,7 +2264,7 @@ namespace asivamosffie.services
                         contratoConstruccion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoFlujoInversion = true;
 
-                        VerificarRegistroCompletoContrato(contratoConstruccion.ContratoId);
+                        VerificarRegistroCompletoContratoObra(contratoConstruccion.ContratoId);
 
                         DateTime? fechaInicio = contratoConstruccion.Contrato.FechaActaInicioFase2;
                         if (fechaInicio != null)
