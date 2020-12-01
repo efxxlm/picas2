@@ -55,6 +55,8 @@ namespace asivamosffie.model.APIModels
 
         public Int32? CantidadProyectosAsociados { get; set; }
 
+        public Int32? ContratacionId { get; set; }
+
 
     }
 }

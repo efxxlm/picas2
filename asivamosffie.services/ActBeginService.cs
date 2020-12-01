@@ -802,11 +802,23 @@ namespace asivamosffie.services
             string Vlrfase2ConstruccionObra="", VlrFase1Preconstruccion="";            
             VlrFase1Preconstruccion = actaInicio.ValorFase1Preconstruccion;
 
+            if(actaInicio.ContratacionId!=null)
+            {
+                VlrFase1Preconstruccion = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId)).ToString();
+                
+            }            
+
             pTipoContrato = ConstanCodigoTipoContratacion.Obra;
             if (actaInicio.NumeroDRP1 == "ERROR")
             {
                 actaInicio = await getDataActaInicioAsync(pContratoId, pTipoContrato);
                 Vlrfase2ConstruccionObra = actaInicio.Valorfase2ConstruccionObra;
+
+                if (actaInicio.ContratacionId != null)
+                {
+                    Vlrfase2ConstruccionObra = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId)).ToString();
+
+                }
 
             }                
 
@@ -1362,7 +1374,12 @@ namespace asivamosffie.services
         //Task<ActionResult<VistaGenerarActaInicioContrato>> GetListVistaGenerarActaInicio(int pContratoId);
         //GetListVistaGenerarActaInicio
 
+        private decimal getSumVlrContratoComponente(int contratacionId)
+        {
+            var sum = _context.ComponenteUso.Where(x => x.ComponenteAportante.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == contratacionId).Sum(x => x.ValorUso);
+            return sum;
 
+        }
         public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId)
         {
             //            Número del contrato de obra DisponibilidadPresupuestal? contrato - numeroContrato
@@ -1686,6 +1703,7 @@ namespace asivamosffie.services
                 DateTime FechaPrevistaTerminacionDateTime=new DateTime();                
 
                 string strContratoObservacion = "";
+                int ContratacionId = 0;
 
                 Contratacion contratacion = null;
 
@@ -1699,7 +1717,7 @@ namespace asivamosffie.services
                     //contratacion = _context.Contratacion.Where(r => !(bool)r.Estado && r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
                     contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
                     //strFechaActaInicio = contrato.FechaActaInicioFase2.ToString("dd/MM/yyyy");
-
+                    ContratacionId= contrato.ContratacionId;
                     strFechaActaInicio = contrato.FechaActaInicioFase2 != null ? Convert.ToDateTime(contrato.FechaActaInicioFase2).ToString("dd/MM/yyyy") : contrato.FechaActaInicioFase2.ToString();
                     
                     FechaActaInicioFase1DateTime = Convert.ToDateTime(contrato.FechaActaInicioFase1);
@@ -1796,6 +1814,8 @@ namespace asivamosffie.services
                 string strFechaGeneracionDRP = "sin definir";
                 string strObjetoDisponibilidadPresupuestal="";
 
+                string strFecSolicitudDisponibPresup = "";
+
                 if (disponibilidadPresupuestal != null)
                 {
                     strNumeroDRP1 = disponibilidadPresupuestal.NumeroDrp;
@@ -1803,6 +1823,8 @@ namespace asivamosffie.services
                     strFechaGeneracionDRP = disponibilidadPresupuestal.FechaDdp != null ? Convert.ToDateTime(disponibilidadPresupuestal.FechaDdp).ToString("dd/MM/yyyy") : disponibilidadPresupuestal.FechaDdp.ToString();
 
                     strObjetoDisponibilidadPresupuestal = disponibilidadPresupuestal.Objeto;
+
+                    strFecSolicitudDisponibPresup = disponibilidadPresupuestal.FechaSolicitud.ToString("yyyy");
                 }
                 //disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
                 //                [DisponibilidadPresupuestalProyecto] - [ProyectoId]
@@ -1884,7 +1906,8 @@ namespace asivamosffie.services
                         //PlazoInicialContratoSupervisor = contrato.Plazo.ToString(),
 
                         //PlazoInicialContratoSupervisor = contrato.Plazo != null ? Convert.ToDateTime(contrato.Plazo).ToString("dd/MM/yyyy") : contrato.Plazo.ToString(),
-                        PlazoInicialContratoSupervisor = "0",
+                        PlazoInicialContratoSupervisor = contrato.FechaAprobacionRequisitosSupervisor != null ? Convert.ToDateTime(contrato.Plazo).ToString("dd/MM/yyyy") : contrato.Plazo.ToString(),
+                        PlazoInicialContratoSupervisor = strFecSolicitudDisponibPresup,
 
                         PlazoFase1PreMeses = contrato.PlazoFase1PreMeses,
                         PlazoFase2ConstruccionDias = contrato.PlazoFase2ConstruccionDias,
