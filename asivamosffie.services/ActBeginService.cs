@@ -1410,7 +1410,7 @@ namespace asivamosffie.services
             {
                 actaInicio = new GrillaActaInicio();
                 
-                TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(item.TipoContratoCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
+                
 
                 if (item.EstadoActaFase2 != null) { 
                     if (item.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
@@ -1436,8 +1436,7 @@ namespace asivamosffie.services
                         strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Nombre;
                 }                
 
-                if (TipoContratoCodigoContrato != null)
-                    strTipoContratoCodigo = TipoContratoCodigoContrato.Nombre;
+            
 
                 if (EstadoVerificacion != null)
                     strEstadoVerificacion = EstadoVerificacion.Nombre;
@@ -1462,6 +1461,11 @@ namespace asivamosffie.services
                 actaInicio.TieneObservacionesSupervisor = bTieneObservacionesSupervisor;
 
                 contratacion = _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
+
+                TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
+                if (TipoContratoCodigoContrato != null)
+                    strTipoContratoCodigo = TipoContratoCodigoContrato.Nombre;
+
                 //actaInicio.FechaAprobacionRequisitos = contratacion.FechaAprobacion.ToString("dd/MM/yyyy");
                 //actaInicio.FechaAprobacionRequisitos = contratacion.FechaAprobacion != null ? Convert.ToDateTime(contratacion.FechaAprobacion).ToString("dd/MM/yyyy") : contratacion.FechaAprobacion.ToString();
                 actaInicio.FechaAprobacionRequisitos = item.FechaAprobacionRequisitos != null ? Convert.ToDateTime(item.FechaAprobacionRequisitos).ToString("dd/MM/yyyy") : item.FechaAprobacionRequisitos.ToString();
