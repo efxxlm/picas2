@@ -20,6 +20,7 @@ export class FormPerfilComponent implements OnInit {
   @Input() tieneEstadoFase1EyD: boolean;
   @Input() tieneEstadoFase1Diagnostico: boolean;
   @Input() perfilProyecto: any[] = [];
+  @Output() perfilEliminado = new EventEmitter();
   @Output() enviarPerfilesContrato = new EventEmitter();
   @Output() perfilesCompletados = new EventEmitter();
   perfilesCompletos = 0;
@@ -255,6 +256,9 @@ export class FormPerfilComponent implements OnInit {
             || ( this.perfilesEnProceso === 0 && this.perfilesCompletos > 0 && this.perfilesCompletos < this.perfilProyecto.length ) ) {
         this.perfilesCompletados.emit( 'en-proceso' );
       }
+      if ( this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0 ) {
+        this.perfilesCompletados.emit( 'sin-diligenciar' );
+      }
     }
   }
 
@@ -345,6 +349,7 @@ export class FormPerfilComponent implements OnInit {
               () => {
                 this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 this.perfiles.removeAt( numeroPerfil );
+                this.perfilEliminado.emit( true );
                 this.formContratista.patchValue({
                   numeroPerfiles: `${ this.perfiles.length }`
                 });
