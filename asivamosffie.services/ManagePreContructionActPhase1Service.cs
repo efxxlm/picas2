@@ -283,6 +283,22 @@ namespace asivamosffie.services
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)
                 .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
 
+            Usuario Supervisor = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
+
+            plantilla.Contenido = plantilla.Contenido
+                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                    .Replace("[FECHA_ACTA_INICIO]", ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MMM-yy"))
+                    .Replace("[NOMBRE_SUPERVISOR]", Supervisor.Nombres + " " + Supervisor.Apellidos)
+                    .Replace("[CEDULA_SUPERVISOR]", Supervisor.NumeroIdentificacion)
+                    .Replace("[CARGO_SUPERVISOR]", Supervisor.NombreMaquina)
+                    .Replace("[NOMBRE_REPRESENTANTE_LEGAL]"," - ")
+
+                ;
+
+
+
+
+
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
 
