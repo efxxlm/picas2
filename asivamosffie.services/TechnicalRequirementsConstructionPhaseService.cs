@@ -970,6 +970,9 @@ namespace asivamosffie.services
 
             contrato.ContratoConstruccion.ToList().ForEach(cc =>
             {
+                ContratoConstruccion construccionTemp = _context.ContratoConstruccion.Find( cc.ContratoConstruccionId );
+                bool completoConstruccion = true;
+
                 if (
                         cc.RegistroCompletoDiagnostico != true ||
                         cc.RegistroCompletoPlanesProgramas != true ||
@@ -979,16 +982,21 @@ namespace asivamosffie.services
                     )
                 {
                     esCompleto = false;
-
+                    completoConstruccion = false;
                 }
                 else
                 {
                     cc.ConstruccionPerfil.ToList().ForEach(cp =>
                     {
-                        if (cp.RegistroCompleto != true)
+                        if (cp.RegistroCompleto != true){
                             esCompleto = false;
+                            completoConstruccion = false;
+                        }
                     });
                 }
+
+                construccionTemp.RegistroCompleto = completoConstruccion;
+                _context.SaveChanges();
 
             });
 
