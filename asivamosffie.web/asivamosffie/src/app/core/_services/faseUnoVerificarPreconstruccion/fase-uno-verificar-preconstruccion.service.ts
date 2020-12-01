@@ -55,7 +55,6 @@ export class FaseUnoVerificarPreconstruccionService {
                if ( value.codigo === '3' ) {
                   estadoPreconstruccion.conReqTecnicosAprobados = {
                     codigo: value.codigo,
-                    // tslint:disable-next-line: no-string-literal
                     nombre: value[ 'descripcion' ]
                  };
                }
@@ -104,6 +103,12 @@ export class FaseUnoVerificarPreconstruccionService {
                   estadoPreconstruccion.enviadoAlSupervisor = {
                     codigo: value.codigo,
                     nombre: value.nombre
+                  };
+                }
+                if ( value.codigo === '11' ) {
+                  estadoPreconstruccion.enviadoAlApoyo = {
+                    codigo: value.codigo,
+                    nombre: value[ 'descripcion' ]
                   };
                 }
               } );

@@ -99,11 +99,6 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
 
                 if ( observacionTipo3.length > 0 ) {
                   // tslint:disable-next-line: no-string-literal
-                  if ( perfil[ 'tieneObservacionSupervisor' ] === false ) {
-                    // tslint:disable-next-line: no-string-literal
-                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
-                  }
-                  // tslint:disable-next-line: no-string-literal
                   if (  perfil[ 'tieneObservacionSupervisor' ] === true
                         && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
                           // tslint:disable-next-line: no-string-literal
@@ -194,34 +189,22 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
   onSubmit( perfil: ContratoPerfil ) {
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
-      // tslint:disable-next-line: no-string-literal
-      observacion: perfil[ 'verificarObservacion' ] === null ? null : perfil[ 'verificarObservacion' ],
-      // tslint:disable-next-line: no-string-literal
+      observacion: perfil[ 'verificarObservacion' ] === null || perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
       tieneObservacionSupervisor: perfil[ 'tieneObservaciones' ]
     };
-    // tslint:disable-next-line: no-string-literal
     if ( perfil[ 'contratoPerfilObservacionId' ] !== null ) {
-      // tslint:disable-next-line: no-string-literal
       observacionPerfil[ 'contratoPerfilObservacionId' ] = perfil[ 'contratoPerfilObservacionId' ];
     }
     console.log( observacionPerfil );
-    // tslint:disable-next-line: no-string-literal
-    if ( perfil[ 'tieneObservaciones' ] === false && this.totalGuardados === 0 ) {
-      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
-      this.totalGuardados++;
-      return;
-    }
-    if ( this.totalGuardados === 1 || observacionPerfil.tieneObservacionSupervisor === true ) {
-      this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
-        .subscribe(
-          response => {
-            this.openDialog( '', response.message );
-            this.contrato = null;
-            this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
-          },
-          err => this.openDialog( '', err.message )
-        );
-    }
+    this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
+      .subscribe(
+        response => {
+          this.openDialog( '', response.message );
+          this.contrato = null;
+          this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
+        },
+        err => this.openDialog( '', err.message )
+      );
   }
 
 }
