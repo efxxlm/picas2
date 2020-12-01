@@ -115,8 +115,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     if(localStorage.getItem("origin")=="interventoria"){
       this.dataSupervisor = true;
-      this.numIdentifiacionSupervisor = "";
-      this.nomSupervisor = "";
+      this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
+      this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
     }
   }
   generarFechaRestante(){
@@ -183,7 +183,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   onSubmit() {
     if(this.addressForm.value.fechaActaInicioFUnoPreconstruccion==null || this.addressForm.value.fechaPrevistaTerminacion==null || this.addressForm.value.mesPlazoEjFase1==null
-      ||this.addressForm.value.diasPlazoEjFase1==null  ||this.addressForm.value.mesPlazoEjFase2==null  ||this.addressForm.value.diasPlazoEjFase2==null){
+      ||this.addressForm.value.diasPlazoEjFase1==null  ||this.addressForm.value.mesPlazoEjFase2==null  ||this.addressForm.value.diasPlazoEjFase2==null ||this.addressForm.value.observacionesEspeciales==null){
         this.openDialog('Falta registrar información','');
     }
     else{

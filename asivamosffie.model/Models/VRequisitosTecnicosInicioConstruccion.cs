@@ -6,7 +6,8 @@ namespace asivamosffie.model.Models
     public partial class VRequisitosTecnicosInicioConstruccion
     {
         public int ContratoId { get; set; }
-        public int ContratacionId { get; set; }
+        public string RutaActaFase1 { get; set; }
+        public DateTime? FechaActaInicioFase1 { get; set; }
         public DateTime? FechaAprobacion { get; set; }
         public string NumeroContrato { get; set; }
         public string TipoContratoCodigo { get; set; }

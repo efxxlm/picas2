@@ -55,7 +55,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.estadoCodigo === '2' || element.estadoCodigo === '10'"
+                *ngIf="(element.estadoCodigo === '2' || element.estadoCodigo === '10') && element.registroCompletoConstruccion"
                 (click)="aprobarInicio( element.contratoId )">
                 Aprobar inicio
         </button>

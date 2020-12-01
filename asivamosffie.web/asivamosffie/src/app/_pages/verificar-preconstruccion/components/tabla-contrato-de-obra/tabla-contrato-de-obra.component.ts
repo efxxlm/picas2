@@ -50,13 +50,15 @@ export class TablaContratoDeObraComponent implements OnInit {
           this.faseUnoVerificarPreconstruccionSvc.getListContratacion()
           .subscribe( listas => {
             const dataTable = [];
-            listas.forEach( value => {
-              // tslint:disable-next-line: no-string-literal
-              if (  ( Number( value[ 'estadoCodigo' ] ) >= Number( this.estadosPreconstruccionObra.conReqTecnicosAprobados.codigo ) )
-                      // tslint:disable-next-line: no-string-literal
-                    && value[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoObra )
+            listas.forEach( lista => {
+              if (  ( Number( lista[ 'estadoCodigo' ] ) >= Number( this.estadosPreconstruccionObra.conReqTecnicosAprobados.codigo ) )
+                    && lista[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoObra )
               {
-                dataTable.push( value );
+                dataTable.push( lista );
+              }
+              if (  lista[ 'estaDevuelto' ] === true
+                    && ( Number( lista[ 'estadoCodigo' ] ) < Number( this.estadosPreconstruccionObra.conReqTecnicosAprobados.codigo ) ) ) {
+
               }
             } );
             this.dataSource = new MatTableDataSource( dataTable );

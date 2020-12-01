@@ -49,6 +49,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
   public fecha1Titulo;
   public fecha2Titulo;
 
+  prueba: any;
 
   constructor(private router: Router, public dialog: MatDialog, public matDialogRef: MatDialogRef<CargarActaSuscritaActaIniFIPreconstruccionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private service: GestionarActPreConstrFUnoService) {
     this.declararInputFile();
@@ -73,7 +74,6 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
 
   ngOnInit(): void {
   }
-
   private declararInputFile() {
     this.fileListaProyectos = new FormControl('', [Validators.required]);
   }
@@ -95,10 +95,10 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
     this.fechaSesion2 = new Date(this.fechaFirmaContratistaInterventoria);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
-    pContrato.append('ContratoId',this.idContrato);
-    pContrato.append('FechaActaInicioFase1',this.fechaSesionString);
-    pContrato.append('FechaTerminacion',this.fechaSesionString2);
-    pContrato.append('pFile',inputNode.files[0]);
+    pContrato.append('ContratoId', this.idContrato);
+    pContrato.append('FechaActaInicioFase1', this.fechaSesionString);
+    pContrato.append('FechaTerminacion', this.fechaSesionString2);
+    pContrato.append('pFile', inputNode.files[0]);
     console.log(pContrato.get('pFile'));
     this.service.LoadActa(pContrato).subscribe((data: any) => {
       if (data.code == "200") {
@@ -106,7 +106,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
         this.close();
       }
       else {
-        this.openDialog("",data.message);
+        this.openDialog("", data.message);
       }
     });
   }

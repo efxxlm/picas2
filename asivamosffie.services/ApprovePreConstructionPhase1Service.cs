@@ -37,6 +37,7 @@ namespace asivamosffie.services
                 "INNER JOIN dbo.DisponibilidadPresupuestal AS dp ON ctr.ContratacionId = dp.ContratacionId " +
                 "INNER JOIN dbo.ContratoPoliza AS cp ON c.ContratoId = cp.ContratoId " +
                 "WHERE dp.NumeroDRP IS NOT NULL " + //Documento Registro Presupuestal
+                "AND c.EstadoVerificacionCodigo is not null " +
                 "AND cp.FechaAprobacion IS NOT NULL ") //Enviado al apoyo
 
                 .Include(r => r.ContratoPoliza)

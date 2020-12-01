@@ -49,6 +49,1058 @@ namespace asivamosffie.services
             _budgetAvailabilityService = budgetAvailabilityService;
         }
 
+
+
+        #region gets
+
+        public async Task<List<dynamic>> GetContractsGrid(int pUsuarioId)
+        {
+            List<dynamic> listaContrats = new List<dynamic>();
+
+            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
+
+            lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
+                .ForEach(c =>
+            {
+                if ( c.TieneFaseConstruccion > 0 ){ // fase construccion
+                    if (c.TieneFasePreconstruccion > 0 ){
+                        if (!string.IsNullOrEmpty( c.RutaActaFase1 ) && c.FechaActaInicioFase1 != null ){ 
+                            listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
+
+                            });
+                        }
+                    }else{ // sin preconstruccion
+                        listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
+
+                            });
+                    }
+                }
+            });
+            return listaContrats;
+        }
+
+        public async Task<List<dynamic>> GetContractsGridApoyoObra()
+        {
+            List<dynamic> listaContrats = new List<dynamic>();
+
+            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
+
+            lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
+                .ForEach(c =>
+            {
+                listaContrats.Add(new
+                {
+                    ContratoId = c.ContratoId,
+                    FechaAprobacion = c.FechaAprobacion,
+                    NumeroContrato = c.NumeroContrato,
+                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                    EstadoCodigo = c.EstadoCodigo,
+                    EstadoNombre = c.EstadoNombre,
+                    Existeregistro = c.ExisteRegistro,
+                    c.EstaDevuelto,
+
+                });
+            });
+
+            return listaContrats;
+
+        }
+
+        public async Task<List<dynamic>> GetContractsGridApoyoInterventoria()
+        {
+            List<dynamic> listaContrats = new List<dynamic>();
+
+            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
+
+            lista.Where(c => c.TipoContratoCodigo == "2").ToList() // tipo contrato interventoria
+                .ForEach(c =>
+            {
+                if ( c.TieneFaseConstruccion > 0 ){ // fase construccion
+                    if (c.TieneFasePreconstruccion > 0 ){
+                        if (!string.IsNullOrEmpty( c.RutaActaFase1 ) && c.FechaActaInicioFase1 != null ){ 
+                            listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
+
+                            });
+                        }
+                    }else{ // sin preconstruccion
+                        listaContrats.Add(new
+                            {
+                                ContratoId = c.ContratoId,
+                                FechaAprobacion = c.FechaAprobacion,
+                                NumeroContrato = c.NumeroContrato,
+                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                EstadoCodigo = c.EstadoCodigo,
+                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                                Existeregistro = c.ExisteRegistro,
+                                c.EstaDevuelto,
+
+                            });
+                    }
+                }                     
+                        
+            });
+
+            return listaContrats;
+
+        }
+
+        public async Task<ContratoConstruccion> GetContratoConstruccionById(int pIdContratoConstruccion)
+        {
+            ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
+
+            contratoConstruccion = _context.ContratoConstruccion.Find(pIdContratoConstruccion);
+            contratoConstruccion.EsCompletoDiagnostico = this.EsCompletoDiagnostico(contratoConstruccion);
+
+            return contratoConstruccion;
+
+        }
+
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId, string pUsuarioCreacion)
+        {
+            try
+            {
+                List<Dominio> ListParametricas = _context.Dominio.ToList();
+                List<Localizacion> Listlocalizacion = _context.Localizacion.ToList();
+                List<Dominio> ListPerfilesDominio = _context.Dominio.Where(d => d.TipoDominioId == 11).ToList();
+
+
+                Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                     .Include(r => r.ContratoPoliza)
+                     .Include(r => r.Contratacion)
+                        .ThenInclude(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                 .ThenInclude(r => r.InstitucionEducativa)
+                    .Include(r => r.Contratacion)
+                        .ThenInclude(r => r.ContratacionProyecto)
+                              .ThenInclude(r => r.Proyecto)
+                                  .ThenInclude(r => r.Sede)
+                     .Include(r => r.Contratacion)
+                         .ThenInclude(r => r.Contratista)
+                    .FirstOrDefaultAsync();
+
+                contrato.ContratoConstruccion = _context.ContratoConstruccion.Where(cc => cc.ContratoId == pContratoId)
+                                                                                .Include(r => r.ConstruccionPerfil)
+                                                                                    .ThenInclude(r => r.ConstruccionPerfilObservacion)
+                                                                                .Include(r => r.ConstruccionPerfil)
+                                                                                    .ThenInclude(r => r.ConstruccionPerfilNumeroRadicado)
+                                                                                .Include(r => r.ConstruccionObservacion)
+                                                                                .ToList();
+
+                //contrato.ContratoConstruccion.ToList().RemoveAll( r => r.eliminado == true )
+                contrato.FechaPolizaAprobacion = contrato.ContratoPoliza.LastOrDefault().FechaAprobacion.HasValue ? contrato.ContratoPoliza.LastOrDefault().FechaAprobacion : DateTime.Now;
+
+                contrato.ContratoConstruccion.ToList().ForEach(cc =>
+                {
+                    cc.ConstruccionPerfil = cc.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList();
+                    cc.ConstruccionObservacion = cc.ConstruccionObservacion.Where(co => co.Eliminado != true).ToList();
+
+                    cc.ConstruccionPerfil.ToList().ForEach(cp =>
+                    {
+                        cp.ConstruccionPerfilObservacion = cp.ConstruccionPerfilObservacion
+                                                                            .Where(cpo => cpo.Eliminado != true)
+                                                                            .OrderByDescending(cpo => cpo.FechaCreacion)
+                                                                            .ToList();
+
+                        cp.ConstruccionPerfilNumeroRadicado = cp.ConstruccionPerfilNumeroRadicado.Where(cpr => cpr.Eliminado != true).ToList();
+
+                        Dominio nombrePerfil = ListPerfilesDominio.Find(p => p.Codigo == cp.PerfilCodigo);
+
+                        cp.NombrePerfil = nombrePerfil != null ? nombrePerfil.Nombre : "";
+
+                        cp.ObservacionApoyo = getObservacionPerfil(cp, false);
+                        cp.ObservacionSupervisor = getObservacionPerfil(cp, true);
+
+                        cp.ObservacionDevolucion = _context.ConstruccionPerfilObservacion.Find(cp.ObservacionSupervisorId);
+
+                    });
+
+                    cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, false);
+                    cc.ObservacionDiagnosticoSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, true);
+
+                    cc.ObservacionPlanesProgramasApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, false);
+                    cc.ObservacionPlanesProgramasSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, true);
+
+                    cc.ObservacionManejoAnticipoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, false);
+                    cc.ObservacionManejoAnticipoSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, true);
+
+                    cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, false);
+                    cc.ObservacionProgramacionObraSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, true);
+
+                    cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, false);
+                    cc.ObservacionFlujoInversionSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, true);
+
+                    // Observaciones devoluciones
+
+                    cc.ObservacionDevolucionDiagnostico = _context.ConstruccionObservacion.Find(cc.ObservacionDiagnosticoSupervisorId);
+                    cc.ObservacionDevolucionPlanesProgramas = _context.ConstruccionObservacion.Find(cc.ObservacionPlanesProgramasSupervisorId);
+                    cc.ObservacionDevolucionManejoAnticipo = _context.ConstruccionObservacion.Find(cc.ObservacionManejoAnticipoSupervisorId);
+                    cc.ObservacionDevolucionProgramacionObra = _context.ConstruccionObservacion.Find(cc.ObservacionProgramacionObraSupervisorId);
+                    cc.ObservacionDevolucionFlujoInversion = _context.ConstruccionObservacion.Find(cc.ObservacionFlujoInversionSupervisorId);
+
+                });
+
+
+
+                foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
+                {
+                    Localizacion Municipio = Listlocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                    ContratacionProyecto.Proyecto.Departamento = Listlocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault().Descripcion;
+                    ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
+                    ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                }
+
+                return contrato;
+            }
+            catch (Exception ex)
+            {
+                return new Contrato();
+            }
+        }
+
+        public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
+        {
+            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
+
+            List<TempProgramacion> lista = _context.TempProgramacion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
+
+            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
+          {
+              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => c.Key == a.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
+              if (archivo != null)
+              {
+                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+
+                  listaCargas.Add(archivo);
+              }
+          });
+
+            return listaCargas;
+
+        }
+
+        public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
+        {
+            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
+
+            List<TempFlujoInversion> lista = _context.TempFlujoInversion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
+
+            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
+          {
+              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.Key && a.Eliminado != true).FirstOrDefault();
+              if (archivo != null)
+              {
+                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+
+                  listaCargas.Add(archivo);
+              }
+          });
+
+            return listaCargas;
+
+        }
+
+
+        #endregion gets
+
+        #region createEdit
+
+        public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (pConstruccion.ContratoConstruccionId > 0)
+                {
+                    CreateEdit = "EDITAR CONTRATO CONSTRUCCION";
+
+                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pConstruccion.ContratoConstruccionId);
+
+                    contratoConstruccion.FechaModificacion = DateTime.Now;
+                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+
+                    contratoConstruccion.EsInformeDiagnostico = pConstruccion.EsInformeDiagnostico;
+                    contratoConstruccion.RutaInforme = pConstruccion.RutaInforme;
+                    contratoConstruccion.CostoDirecto = pConstruccion.CostoDirecto;
+                    contratoConstruccion.Administracion = pConstruccion.Administracion;
+                    contratoConstruccion.Imprevistos = pConstruccion.Imprevistos;
+                    contratoConstruccion.Utilidad = pConstruccion.Utilidad;
+                    contratoConstruccion.ValorTotalFaseConstruccion = pConstruccion.ValorTotalFaseConstruccion;
+                    contratoConstruccion.RequiereModificacionContractual = pConstruccion.RequiereModificacionContractual;
+                    contratoConstruccion.NumeroSolicitudModificacion = pConstruccion.NumeroSolicitudModificacion;
+
+                    contratoConstruccion.RegistroCompletoDiagnostico = VerificarRegistroCompletoDiagnostico(contratoConstruccion);
+
+                }
+                else
+                {
+                    CreateEdit = "CREAR CONTRATO CONSTRUCCION";
+
+                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
+
+                    contratoConstruccion.FechaCreacion = DateTime.Now;
+                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                    contratoConstruccion.RegistroCompletoDiagnostico = false;
+
+                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
+                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
+                    contratoConstruccion.EsInformeDiagnostico = pConstruccion.EsInformeDiagnostico;
+                    contratoConstruccion.RutaInforme = pConstruccion.RutaInforme;
+                    contratoConstruccion.CostoDirecto = pConstruccion.CostoDirecto;
+                    contratoConstruccion.Administracion = pConstruccion.Administracion;
+                    contratoConstruccion.Imprevistos = pConstruccion.Imprevistos;
+                    contratoConstruccion.Utilidad = pConstruccion.Utilidad;
+                    contratoConstruccion.ValorTotalFaseConstruccion = pConstruccion.ValorTotalFaseConstruccion;
+                    contratoConstruccion.RequiereModificacionContractual = pConstruccion.RequiereModificacionContractual;
+                    contratoConstruccion.NumeroSolicitudModificacion = pConstruccion.NumeroSolicitudModificacion;
+
+                    contratoConstruccion.RegistroCompletoDiagnostico = VerificarRegistroCompletoDiagnostico(contratoConstruccion);
+
+                    _context.ContratoConstruccion.Add(contratoConstruccion);
+                }
+
+                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+
+                _context.SaveChanges();
+                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (pConstruccion.ContratoConstruccionId > 0)
+                {
+                    CreateEdit = "EDITAR CONTRATO CONSTRUCCION";
+
+                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pConstruccion.ContratoConstruccionId);
+
+                    contratoConstruccion.FechaModificacion = DateTime.Now;
+                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+
+                    contratoConstruccion.PlanLicenciaVigente = pConstruccion.PlanLicenciaVigente;
+                    contratoConstruccion.LicenciaFechaRadicado = pConstruccion.LicenciaFechaRadicado;
+                    contratoConstruccion.LicenciaFechaAprobacion = pConstruccion.LicenciaFechaAprobacion;
+                    contratoConstruccion.LicenciaConObservaciones = pConstruccion.LicenciaConObservaciones;
+                    contratoConstruccion.PlanCambioConstructorLicencia = pConstruccion.PlanCambioConstructorLicencia;
+                    contratoConstruccion.CambioFechaRadicado = pConstruccion.CambioFechaRadicado;
+                    contratoConstruccion.CambioFechaAprobacion = pConstruccion.CambioFechaAprobacion;
+                    contratoConstruccion.CambioConObservaciones = pConstruccion.CambioConObservaciones;
+                    contratoConstruccion.PlanActaApropiacion = pConstruccion.PlanActaApropiacion;
+                    contratoConstruccion.ActaApropiacionFechaRadicado = pConstruccion.ActaApropiacionFechaRadicado;
+                    contratoConstruccion.ActaApropiacionFechaAprobacion = pConstruccion.ActaApropiacionFechaAprobacion;
+                    contratoConstruccion.ActaApropiacionConObservaciones = pConstruccion.ActaApropiacionConObservaciones;
+                    contratoConstruccion.PlanResiduosDemolicion = pConstruccion.PlanResiduosDemolicion;
+                    contratoConstruccion.ResiduosDemolicionFechaRadicado = pConstruccion.ResiduosDemolicionFechaRadicado;
+                    contratoConstruccion.ResiduosDemolicionFechaAprobacion = pConstruccion.ResiduosDemolicionFechaAprobacion;
+                    contratoConstruccion.ResiduosDemolicionConObservaciones = pConstruccion.ResiduosDemolicionConObservaciones;
+                    contratoConstruccion.PlanManejoTransito = pConstruccion.PlanManejoTransito;
+                    contratoConstruccion.ManejoTransitoFechaRadicado = pConstruccion.ManejoTransitoFechaRadicado;
+                    contratoConstruccion.ManejoTransitoFechaAprobacion = pConstruccion.ManejoTransitoFechaAprobacion;
+                    contratoConstruccion.ManejoTransitoConObservaciones1 = pConstruccion.ManejoTransitoConObservaciones1;
+                    contratoConstruccion.PlanManejoAmbiental = pConstruccion.PlanManejoAmbiental;
+                    contratoConstruccion.ManejoAmbientalFechaRadicado = pConstruccion.ManejoAmbientalFechaRadicado;
+                    contratoConstruccion.ManejoAmbientalFechaAprobacion = pConstruccion.ManejoAmbientalFechaAprobacion;
+                    contratoConstruccion.ManejoAmbientalConObservaciones = pConstruccion.ManejoAmbientalConObservaciones;
+                    contratoConstruccion.PlanAseguramientoCalidad = pConstruccion.PlanAseguramientoCalidad;
+                    contratoConstruccion.AseguramientoCalidadFechaRadicado = pConstruccion.AseguramientoCalidadFechaRadicado;
+                    contratoConstruccion.AseguramientoCalidadFechaAprobacion = pConstruccion.AseguramientoCalidadFechaAprobacion;
+                    contratoConstruccion.AseguramientoCalidadConObservaciones = pConstruccion.AseguramientoCalidadConObservaciones;
+                    contratoConstruccion.PlanProgramaSeguridad = pConstruccion.PlanProgramaSeguridad;
+                    contratoConstruccion.ProgramaSeguridadFechaRadicado = pConstruccion.ProgramaSeguridadFechaRadicado;
+                    contratoConstruccion.ProgramaSeguridadFechaAprobacion = pConstruccion.ProgramaSeguridadFechaAprobacion;
+                    contratoConstruccion.ProgramaSeguridadConObservaciones = pConstruccion.ProgramaSeguridadConObservaciones;
+                    contratoConstruccion.PlanProgramaSalud = pConstruccion.PlanProgramaSalud;
+                    contratoConstruccion.ProgramaSaludFechaRadicado = pConstruccion.ProgramaSaludFechaRadicado;
+                    contratoConstruccion.ProgramaSaludFechaAprobacion = pConstruccion.ProgramaSaludFechaAprobacion;
+                    contratoConstruccion.ProgramaSaludConObservaciones = pConstruccion.ProgramaSaludConObservaciones;
+                    contratoConstruccion.PlanInventarioArboreo = pConstruccion.PlanInventarioArboreo;
+                    contratoConstruccion.InventarioArboreoFechaRadicado = pConstruccion.InventarioArboreoFechaRadicado;
+                    contratoConstruccion.InventarioArboreoFechaAprobacion = pConstruccion.InventarioArboreoFechaAprobacion;
+                    contratoConstruccion.InventarioArboreoConObservaciones = pConstruccion.InventarioArboreoConObservaciones;
+                    contratoConstruccion.PlanAprovechamientoForestal = pConstruccion.PlanAprovechamientoForestal;
+                    contratoConstruccion.AprovechamientoForestalApropiacionFechaRadicado = pConstruccion.AprovechamientoForestalApropiacionFechaRadicado;
+                    contratoConstruccion.AprovechamientoForestalFechaAprobacion = pConstruccion.AprovechamientoForestalFechaAprobacion;
+                    contratoConstruccion.AprovechamientoForestalConObservaciones = pConstruccion.AprovechamientoForestalConObservaciones;
+                    contratoConstruccion.PlanManejoAguasLluvias = pConstruccion.PlanManejoAguasLluvias;
+                    contratoConstruccion.ManejoAguasLluviasFechaRadicado = pConstruccion.ManejoAguasLluviasFechaRadicado;
+                    contratoConstruccion.ManejoAguasLluviasFechaAprobacion = pConstruccion.ManejoAguasLluviasFechaAprobacion;
+                    contratoConstruccion.ManejoAguasLluviasConObservaciones = pConstruccion.ManejoAguasLluviasConObservaciones;
+                    contratoConstruccion.PlanRutaSoporte = pConstruccion.PlanRutaSoporte;
+                    contratoConstruccion.LicenciaObservaciones = pConstruccion.LicenciaObservaciones;
+                    contratoConstruccion.CambioObservaciones = pConstruccion.CambioObservaciones;
+                    contratoConstruccion.ActaApropiacionObservaciones = pConstruccion.ActaApropiacionObservaciones;
+                    contratoConstruccion.ResiduosDemolicionObservaciones = pConstruccion.ResiduosDemolicionObservaciones;
+                    contratoConstruccion.ManejoTransitoObservaciones = pConstruccion.ManejoTransitoObservaciones;
+                    contratoConstruccion.ManejoAmbientalObservaciones = pConstruccion.ManejoAmbientalObservaciones;
+                    contratoConstruccion.AseguramientoCalidadObservaciones = pConstruccion.AseguramientoCalidadObservaciones;
+                    contratoConstruccion.ProgramaSeguridadObservaciones = pConstruccion.ProgramaSeguridadObservaciones;
+                    contratoConstruccion.ProgramaSaludObservaciones = pConstruccion.ProgramaSaludObservaciones;
+                    contratoConstruccion.InventarioArboreoObservaciones = pConstruccion.InventarioArboreoObservaciones;
+                    contratoConstruccion.AprovechamientoForestalObservaciones = pConstruccion.AprovechamientoForestalObservaciones;
+                    contratoConstruccion.ManejoAguasLluviasObservaciones = pConstruccion.ManejoAguasLluviasObservaciones;
+
+                    contratoConstruccion.RegistroCompletoPlanesProgramas = VerificarRegistroCompletoPlanesProgramas(contratoConstruccion);
+
+                }
+                else
+                {
+                    CreateEdit = "CREAR CONTRATO CONSTRUCCION";
+
+                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
+
+                    contratoConstruccion.FechaCreacion = DateTime.Now;
+                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                    contratoConstruccion.RegistroCompletoPlanesProgramas = false;
+
+                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
+                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
+
+                    contratoConstruccion.PlanLicenciaVigente = pConstruccion.PlanLicenciaVigente;
+                    contratoConstruccion.LicenciaFechaRadicado = pConstruccion.LicenciaFechaRadicado;
+                    contratoConstruccion.LicenciaFechaAprobacion = pConstruccion.LicenciaFechaAprobacion;
+                    contratoConstruccion.LicenciaConObservaciones = pConstruccion.LicenciaConObservaciones;
+                    contratoConstruccion.PlanCambioConstructorLicencia = pConstruccion.PlanCambioConstructorLicencia;
+                    contratoConstruccion.CambioFechaRadicado = pConstruccion.CambioFechaRadicado;
+                    contratoConstruccion.CambioFechaAprobacion = pConstruccion.CambioFechaAprobacion;
+                    contratoConstruccion.CambioConObservaciones = pConstruccion.CambioConObservaciones;
+                    contratoConstruccion.PlanActaApropiacion = pConstruccion.PlanActaApropiacion;
+                    contratoConstruccion.ActaApropiacionFechaRadicado = pConstruccion.ActaApropiacionFechaRadicado;
+                    contratoConstruccion.ActaApropiacionFechaAprobacion = pConstruccion.ActaApropiacionFechaAprobacion;
+                    contratoConstruccion.ActaApropiacionConObservaciones = pConstruccion.ActaApropiacionConObservaciones;
+                    contratoConstruccion.PlanResiduosDemolicion = pConstruccion.PlanResiduosDemolicion;
+                    contratoConstruccion.ResiduosDemolicionFechaRadicado = pConstruccion.ResiduosDemolicionFechaRadicado;
+                    contratoConstruccion.ResiduosDemolicionFechaAprobacion = pConstruccion.ResiduosDemolicionFechaAprobacion;
+                    contratoConstruccion.ResiduosDemolicionConObservaciones = pConstruccion.ResiduosDemolicionConObservaciones;
+                    contratoConstruccion.PlanManejoTransito = pConstruccion.PlanManejoTransito;
+                    contratoConstruccion.ManejoTransitoFechaRadicado = pConstruccion.ManejoTransitoFechaRadicado;
+                    contratoConstruccion.ManejoTransitoFechaAprobacion = pConstruccion.ManejoTransitoFechaAprobacion;
+                    contratoConstruccion.ManejoTransitoConObservaciones1 = pConstruccion.ManejoTransitoConObservaciones1;
+                    contratoConstruccion.PlanManejoAmbiental = pConstruccion.PlanManejoAmbiental;
+                    contratoConstruccion.ManejoAmbientalFechaRadicado = pConstruccion.ManejoAmbientalFechaRadicado;
+                    contratoConstruccion.ManejoAmbientalFechaAprobacion = pConstruccion.ManejoAmbientalFechaAprobacion;
+                    contratoConstruccion.ManejoAmbientalConObservaciones = pConstruccion.ManejoAmbientalConObservaciones;
+                    contratoConstruccion.PlanAseguramientoCalidad = pConstruccion.PlanAseguramientoCalidad;
+                    contratoConstruccion.AseguramientoCalidadFechaRadicado = pConstruccion.AseguramientoCalidadFechaRadicado;
+                    contratoConstruccion.AseguramientoCalidadFechaAprobacion = pConstruccion.AseguramientoCalidadFechaAprobacion;
+                    contratoConstruccion.AseguramientoCalidadConObservaciones = pConstruccion.AseguramientoCalidadConObservaciones;
+                    contratoConstruccion.PlanProgramaSeguridad = pConstruccion.PlanProgramaSeguridad;
+                    contratoConstruccion.ProgramaSeguridadFechaRadicado = pConstruccion.ProgramaSeguridadFechaRadicado;
+                    contratoConstruccion.ProgramaSeguridadFechaAprobacion = pConstruccion.ProgramaSeguridadFechaAprobacion;
+                    contratoConstruccion.ProgramaSeguridadConObservaciones = pConstruccion.ProgramaSeguridadConObservaciones;
+                    contratoConstruccion.PlanProgramaSalud = pConstruccion.PlanProgramaSalud;
+                    contratoConstruccion.ProgramaSaludFechaRadicado = pConstruccion.ProgramaSaludFechaRadicado;
+                    contratoConstruccion.ProgramaSaludFechaAprobacion = pConstruccion.ProgramaSaludFechaAprobacion;
+                    contratoConstruccion.ProgramaSaludConObservaciones = pConstruccion.ProgramaSaludConObservaciones;
+                    contratoConstruccion.PlanInventarioArboreo = pConstruccion.PlanInventarioArboreo;
+                    contratoConstruccion.InventarioArboreoFechaRadicado = pConstruccion.InventarioArboreoFechaRadicado;
+                    contratoConstruccion.InventarioArboreoFechaAprobacion = pConstruccion.InventarioArboreoFechaAprobacion;
+                    contratoConstruccion.InventarioArboreoConObservaciones = pConstruccion.InventarioArboreoConObservaciones;
+                    contratoConstruccion.PlanAprovechamientoForestal = pConstruccion.PlanAprovechamientoForestal;
+                    contratoConstruccion.AprovechamientoForestalApropiacionFechaRadicado = pConstruccion.AprovechamientoForestalApropiacionFechaRadicado;
+                    contratoConstruccion.AprovechamientoForestalFechaAprobacion = pConstruccion.AprovechamientoForestalFechaAprobacion;
+                    contratoConstruccion.AprovechamientoForestalConObservaciones = pConstruccion.AprovechamientoForestalConObservaciones;
+                    contratoConstruccion.PlanManejoAguasLluvias = pConstruccion.PlanManejoAguasLluvias;
+                    contratoConstruccion.ManejoAguasLluviasFechaRadicado = pConstruccion.ManejoAguasLluviasFechaRadicado;
+                    contratoConstruccion.ManejoAguasLluviasFechaAprobacion = pConstruccion.ManejoAguasLluviasFechaAprobacion;
+                    contratoConstruccion.ManejoAguasLluviasConObservaciones = pConstruccion.ManejoAguasLluviasConObservaciones;
+                    contratoConstruccion.PlanRutaSoporte = pConstruccion.PlanRutaSoporte;
+                    contratoConstruccion.LicenciaObservaciones = pConstruccion.LicenciaObservaciones;
+                    contratoConstruccion.CambioObservaciones = pConstruccion.CambioObservaciones;
+                    contratoConstruccion.ActaApropiacionObservaciones = pConstruccion.ActaApropiacionObservaciones;
+                    contratoConstruccion.ResiduosDemolicionObservaciones = pConstruccion.ResiduosDemolicionObservaciones;
+                    contratoConstruccion.ManejoTransitoObservaciones = pConstruccion.ManejoTransitoObservaciones;
+                    contratoConstruccion.ManejoAmbientalObservaciones = pConstruccion.ManejoAmbientalObservaciones;
+                    contratoConstruccion.AseguramientoCalidadObservaciones = pConstruccion.AseguramientoCalidadObservaciones;
+                    contratoConstruccion.ProgramaSeguridadObservaciones = pConstruccion.ProgramaSeguridadObservaciones;
+                    contratoConstruccion.ProgramaSaludObservaciones = pConstruccion.ProgramaSaludObservaciones;
+                    contratoConstruccion.InventarioArboreoObservaciones = pConstruccion.InventarioArboreoObservaciones;
+                    contratoConstruccion.AprovechamientoForestalObservaciones = pConstruccion.AprovechamientoForestalObservaciones;
+                    contratoConstruccion.ManejoAguasLluviasObservaciones = pConstruccion.ManejoAguasLluviasObservaciones;
+
+                    contratoConstruccion.RegistroCompletoPlanesProgramas = VerificarRegistroCompletoPlanesProgramas(contratoConstruccion);
+
+                    _context.ContratoConstruccion.Add(contratoConstruccion);
+                }
+
+                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+
+                _context.SaveChanges();
+                
+                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (pConstruccion.ContratoConstruccionId > 0)
+                {
+                    CreateEdit = "EDITAR CONTRATO CONSTRUCCION";
+
+                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pConstruccion.ContratoConstruccionId);
+
+                    contratoConstruccion.FechaModificacion = DateTime.Now;
+                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+
+                    contratoConstruccion.ManejoAnticipoRequiere = pConstruccion.ManejoAnticipoRequiere;
+                    contratoConstruccion.ManejoAnticipoPlanInversion = pConstruccion.ManejoAnticipoPlanInversion;
+                    contratoConstruccion.ManejoAnticipoCronogramaAmortizacion = pConstruccion.ManejoAnticipoCronogramaAmortizacion;
+                    contratoConstruccion.ManejoAnticipoRutaSoporte = pConstruccion.ManejoAnticipoRutaSoporte;
+
+                    contratoConstruccion.RegistroCompletoManejoAnticipo = VerificarRegistroCompletoManejoAnticipo(contratoConstruccion);
+
+                }
+                else
+                {
+                    CreateEdit = "CREAR CONTRATO CONSTRUCCION";
+
+                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
+
+                    contratoConstruccion.FechaCreacion = DateTime.Now;
+                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                    contratoConstruccion.RegistroCompletoManejoAnticipo = false;
+
+                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
+                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
+
+                    contratoConstruccion.ManejoAnticipoRequiere = pConstruccion.ManejoAnticipoRequiere;
+                    contratoConstruccion.ManejoAnticipoPlanInversion = pConstruccion.ManejoAnticipoPlanInversion;
+                    contratoConstruccion.ManejoAnticipoCronogramaAmortizacion = pConstruccion.ManejoAnticipoCronogramaAmortizacion;
+                    contratoConstruccion.ManejoAnticipoRutaSoporte = pConstruccion.ManejoAnticipoRutaSoporte;
+
+                    contratoConstruccion.RegistroCompletoManejoAnticipo = VerificarRegistroCompletoManejoAnticipo(contratoConstruccion);
+
+                    _context.ContratoConstruccion.Add(contratoConstruccion);
+                }
+
+                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+
+                _context.SaveChanges();
+                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Construccion_Perfil, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (pConstruccion.ContratoConstruccionId == 0)
+                {
+                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
+
+                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                    contratoConstruccion.FechaCreacion = DateTime.Now;
+                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
+                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
+
+                    _context.ContratoConstruccion.Add(contratoConstruccion);
+                    _context.SaveChanges();
+
+                    pConstruccion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
+                }
+
+                foreach (var perfil in pConstruccion.ConstruccionPerfil)
+                {
+                    if (perfil.ConstruccionPerfilId > 0)
+                    {
+                        CreateEdit = "EDITAR CONSTRUCCION PERFIL";
+                        ConstruccionPerfil construccionPerfil = _context.ConstruccionPerfil.Find(perfil.ConstruccionPerfilId);
+
+                        construccionPerfil.UsuarioModificacion = pConstruccion.UsuarioModificacion;
+                        construccionPerfil.FechaModificacion = DateTime.Now;
+
+                        construccionPerfil.PerfilCodigo = perfil.PerfilCodigo;
+                        construccionPerfil.CantidadHvRequeridas = perfil.CantidadHvRequeridas;
+                        construccionPerfil.CantidadHvRecibidas = perfil.CantidadHvRecibidas;
+                        construccionPerfil.CantidadHvAprobadas = perfil.CantidadHvAprobadas;
+                        construccionPerfil.FechaAprobacion = perfil.FechaAprobacion;
+                        construccionPerfil.RutaSoporte = perfil.RutaSoporte;
+                        construccionPerfil.ConObervacionesSupervision = perfil.ConObervacionesSupervision;
+                        construccionPerfil.Observaciones = perfil.Observaciones;
+
+                        construccionPerfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(construccionPerfil);
+
+                        foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
+                        {
+                            if (radicado.ConstruccionPerfilNumeroRadicadoId == 0)
+                            {
+                                radicado.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                                radicado.FechaCreacion = DateTime.Now;
+
+                                radicado.Eliminado = false;
+
+                                construccionPerfil.ConstruccionPerfilNumeroRadicado.Add(radicado);
+                            }
+                            else
+                            {
+                                ConstruccionPerfilNumeroRadicado construccionPerfilNumeroRadicado = _context.ConstruccionPerfilNumeroRadicado.Find(radicado.ConstruccionPerfilNumeroRadicadoId);
+                                construccionPerfilNumeroRadicado.UsuarioModificacion = pConstruccion.UsuarioCreacion;
+                                construccionPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
+
+                                construccionPerfilNumeroRadicado.NumeroRadicado = radicado.NumeroRadicado;
+
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        CreateEdit = "CREAR CONSTRUCCION PERFIL";
+                        perfil.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                        perfil.FechaCreacion = DateTime.Now;
+
+                        perfil.Eliminado = false;
+                        perfil.ContratoConstruccionId = pConstruccion.ContratoConstruccionId;
+                        perfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(perfil);
+
+
+
+                        foreach (var observacion in perfil.ConstruccionPerfilObservacion)
+                        {
+
+                            observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                            observacion.FechaCreacion = DateTime.Now;
+                            observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
+
+                            //perfil.ConstruccionPerfilObservacion.Add(observacion);
+                        }
+
+                        foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
+                        {
+                            radicado.UsuarioCreacion = pConstruccion.UsuarioCreacion;
+                            radicado.FechaCreacion = DateTime.Now;
+
+                            radicado.Eliminado = false;
+
+                            //_context.ConstruccionPerfilNumeroRadicado.Add(radicado);
+                        }
+
+                        _context.ConstruccionPerfil.Add(perfil);
+                    }
+                }
+
+                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
+
+                if (contrato.TipoContratoCodigo == "1") // contrato de obra
+                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+
+                if (contrato.TipoContratoCodigo == "2")
+                { // contrato de interventoria
+                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_aprobados)
+                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
+
+                    List<ContratoConstruccion> listaConstruccion = _context.ContratoConstruccion
+                                                                        .Where(cp => cp.ContratoId == pConstruccion.ContratoId)
+                                                                        .Include(r => r.ConstruccionPerfil)
+                                                                        .ToList();
+
+                    string estadoTempContrato = contrato.EstadoVerificacionConstruccionCodigo;
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_verificados;
+
+                    listaConstruccion.ForEach(c =>
+                    {
+
+                        c.RegistroCompleto = true;
+                        c.ConstruccionPerfil.ToList().ForEach(cp =>
+                        {
+                            if (cp.RegistroCompleto != true)
+                            {
+                                c.RegistroCompleto = false;
+                                contrato.EstadoVerificacionConstruccionCodigo = estadoTempContrato;
+                            }
+                        });
+
+                    });
+                }
+
+                _context.SaveChanges();
+                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        public async Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion)
+        {
+            string CreateEdit = string.Empty;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Archivo, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                CreateEdit = "EDITAR OBSERVACION ARCHIVO";
+
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivoCargueId);
+
+                if (archivoCargue != null)
+                {
+                    archivoCargue.Observaciones = pObservacion;
+                }
+
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+
+        #endregion createEdit
+
+        #region private 
+
+        private void VerificarRegistroCompletoContrato( int pIdContrato ){
+            bool esCompleto = true;
+
+            Contrato contrato = _context.Contrato
+                                            .Where(c => c.ContratoId == pIdContrato )
+                                            .Include( r => r.ContratoConstruccion )
+                                                .ThenInclude( r => r.ConstruccionPerfil )
+                                            .FirstOrDefault();
+
+            contrato.ContratoConstruccion.ToList().ForEach( cc => {
+                if ( 
+                        cc.RegistroCompletoDiagnostico != true ||
+                        cc.RegistroCompletoPlanesProgramas != true ||
+                        cc.RegistroCompletoManejoAnticipo != true ||
+                        cc.RegistroCompletoProgramacionObra != true ||
+                        cc.RegistroCompletoFlujoInversion != true
+                    )
+                    {
+                        esCompleto = false;
+
+                    }else {
+                        cc.ConstruccionPerfil.ToList().ForEach( cp => {
+                            if ( cp.RegistroCompleto != true )
+                                esCompleto = false;
+                        });
+                    }
+
+            });
+
+            contrato.RegistroCompletoConstruccion = esCompleto;
+
+            _context.SaveChanges();
+        }
+
+        private bool VerificarEsSupervisor(string pUsuarioCreacion)
+        {
+            List<UsuarioPerfil> usuarioPerfil = _context.UsuarioPerfil.Where(r => r.PerfilId == 8)
+            .Include(r => r.Usuario).ToList();
+
+            if (usuarioPerfil.Where(r => r.Usuario.Email == pUsuarioCreacion).ToList().Count > 0)
+                return true;
+            else
+                return false;
+        }
+        
+        private bool VerificarRegistroCompletoDiagnostico(ContratoConstruccion pConstruccion)
+        {
+            bool completo = true;
+
+            if (
+                pConstruccion.EsInformeDiagnostico == null ||
+                string.IsNullOrEmpty(pConstruccion.RutaInforme) ||
+                pConstruccion.CostoDirecto == null ||
+                pConstruccion.Administracion == null ||
+                pConstruccion.Imprevistos == null ||
+                pConstruccion.Utilidad == null ||
+                pConstruccion.ValorTotalFaseConstruccion == null ||
+                pConstruccion.RequiereModificacionContractual == null ||
+                (pConstruccion.RequiereModificacionContractual == true && pConstruccion.NumeroSolicitudModificacion == null)
+            )
+            {
+                completo = false;
+            }
+
+            return completo;
+
+        }
+        
+        private async Task<bool> ValidarRegistroCompletoVerificacion(int id, bool pEsSupervicion)
+        {
+            bool esCompleto = true;
+
+            ContratoConstruccion cc = await _context.ContratoConstruccion.Where(cc => cc.ContratoConstruccionId == id)
+                                                                .Include(r => r.ConstruccionPerfil)
+                                                                .FirstOrDefaultAsync();
+
+            cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, pEsSupervicion);
+            cc.ObservacionPlanesProgramasApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, pEsSupervicion);
+            cc.ObservacionManejoAnticipoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, pEsSupervicion);
+            cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, pEsSupervicion);
+            cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, pEsSupervicion);
+
+            if (cc.TieneObservacionesDiagnosticoApoyo == null ||
+                 (cc.TieneObservacionesDiagnosticoApoyo == true && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
+                 cc.TieneObservacionesFlujoInversionApoyo == null ||
+                 (cc.TieneObservacionesFlujoInversionApoyo == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
+                 cc.TieneObservacionesManejoAnticipoApoyo == null ||
+                 (cc.TieneObservacionesManejoAnticipoApoyo == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo != null ? cc.ObservacionManejoAnticipoApoyo.Observaciones : null)) ||
+                 cc.TieneObservacionesPlanesProgramasApoyo == null ||
+                 (cc.TieneObservacionesPlanesProgramasApoyo == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo != null ? cc.ObservacionPlanesProgramasApoyo.Observaciones : null)) ||
+                 cc.TieneObservacionesProgramacionObraApoyo == null ||
+                 (cc.TieneObservacionesProgramacionObraApoyo == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo != null ? cc.ObservacionProgramacionObraApoyo.Observaciones : null))
+                 )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
+        }
+
+        private bool VerificarRegistroCompletoPlanesProgramas(ContratoConstruccion pConstruccion)
+        {
+            bool completo = true;
+
+            if (
+                    pConstruccion.PlanLicenciaVigente == null ||
+                    pConstruccion.PlanCambioConstructorLicencia == null ||
+                    pConstruccion.PlanActaApropiacion == null ||
+                    pConstruccion.PlanResiduosDemolicion == null ||
+                    pConstruccion.PlanManejoTransito == null ||
+                    pConstruccion.PlanManejoAmbiental == null ||
+                    pConstruccion.PlanAseguramientoCalidad == null ||
+                    pConstruccion.PlanProgramaSeguridad == null ||
+                    pConstruccion.PlanProgramaSalud == null ||
+                    pConstruccion.PlanInventarioArboreo == null ||
+                    pConstruccion.PlanAprovechamientoForestal == null ||
+                    pConstruccion.PlanManejoAguasLluvias == null ||
+                    string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
+            )
+            {
+                completo = false;
+            }
+
+            return completo;
+        }
+
+        private bool VerificarRegistroCompletoManejoAnticipo(ContratoConstruccion pConstruccion)
+        {
+            bool completo = true;
+
+            if (
+                    pConstruccion.ManejoAnticipoRequiere == null ||
+                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == null ) ||
+                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == false ) ||
+                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == null ) ||
+                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == false ) 
+                    //( pConstruccion.ManejoAnticipoRequiere == true && string.IsNullOrEmpty(pConstruccion.ManejoAnticipoRutaSoporte) )
+                )
+            {
+                completo = false;
+            }
+
+            return completo;
+        }
+
+        private bool ValidarRegistroCompletoConstruccionPerfil(ConstruccionPerfil pPerfil)
+        {
+            if (
+                    string.IsNullOrEmpty(pPerfil.PerfilCodigo)
+                 || string.IsNullOrEmpty(pPerfil.CantidadHvRequeridas.ToString())
+                 || string.IsNullOrEmpty(pPerfil.CantidadHvRecibidas.ToString())
+                 || string.IsNullOrEmpty(pPerfil.CantidadHvAprobadas.ToString())
+                 || string.IsNullOrEmpty(pPerfil.FechaAprobacion.ToString())
+                 || string.IsNullOrEmpty(pPerfil.RutaSoporte)
+
+                //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
+                )
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private bool EsCompletoDiagnostico(ContratoConstruccion pContratoConstruccion)
+        {
+            bool esCompleto = true;
+
+            if (pContratoConstruccion.EsInformeDiagnostico == null ||
+                    (pContratoConstruccion.EsInformeDiagnostico == true && string.IsNullOrEmpty(pContratoConstruccion.RutaInforme)) ||
+                    pContratoConstruccion.CostoDirecto == null ||
+                    pContratoConstruccion.Administracion == null ||
+                    pContratoConstruccion.Imprevistos == null ||
+                    pContratoConstruccion.Utilidad == null ||
+                    pContratoConstruccion.ValorTotalFaseConstruccion == null ||
+                    pContratoConstruccion.RequiereModificacionContractual == null ||
+                    (pContratoConstruccion.RequiereModificacionContractual == true && string.IsNullOrEmpty(pContratoConstruccion.NumeroSolicitudModificacion))
+               )
+            {
+                esCompleto = false;
+            }
+
+            return esCompleto;
+        }
+
+        #endregion private
+
+        #region business
+
         public async Task<Respuesta> CambiarEstadoContratoEstadoVerificacionConstruccionCodigo(int ContratoId, string pEstado, string pUsuarioMod)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
@@ -258,857 +1310,7 @@ namespace asivamosffie.services
 
 
         }
-
-
-        public async Task<List<dynamic>> GetContractsGrid(int pUsuarioId)
-        {
-            List<dynamic> listaContrats = new List<dynamic>();
-
-            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
-
-            lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
-                .ForEach(c =>
-            {
-                listaContrats.Add(new
-                {
-                    ContratoId = c.ContratoId,
-                    FechaAprobacion = c.FechaAprobacion,
-                    NumeroContrato = c.NumeroContrato,
-                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoCodigo = c.EstadoCodigo,
-                    EstadoNombre = c.EstadoNombre,
-                    Existeregistro = c.ExisteRegistro,
-                    c.EstaDevuelto,
-                });
-            });
-            return listaContrats;
-        }
-
-        public async Task<List<dynamic>> GetContractsGridApoyoObra()
-        {
-            List<dynamic> listaContrats = new List<dynamic>();
-
-            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
-
-            lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
-                .ForEach(c =>
-            {
-                listaContrats.Add(new
-                {
-                    ContratoId = c.ContratoId,
-                    FechaAprobacion = c.FechaAprobacion,
-                    NumeroContrato = c.NumeroContrato,
-                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoCodigo = c.EstadoCodigo,
-                    EstadoNombre = c.EstadoNombre,
-                    Existeregistro = c.ExisteRegistro,
-                    c.EstaDevuelto,
-
-                });
-            });
-
-            return listaContrats;
-
-        }
-
-        public async Task<List<dynamic>> GetContractsGridApoyoInterventoria()
-        {
-            List<dynamic> listaContrats = new List<dynamic>();
-
-            List<VRequisitosTecnicosInicioConstruccion> lista = _context.VRequisitosTecnicosInicioConstruccion.ToList();
-
-            lista.Where(c => c.TipoContratoCodigo == "2").ToList() // tipo contrato interventoria
-                .ForEach(c =>
-            {
-                listaContrats.Add(new
-                {
-                    ContratoId = c.ContratoId,
-                    FechaAprobacion = c.FechaAprobacion,
-                    NumeroContrato = c.NumeroContrato,
-                    CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                    CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                    CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                    EstadoCodigo = c.EstadoCodigo,
-                    EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
-                    Existeregistro = c.ExisteRegistro,
-                    c.EstaDevuelto,
-
-                });
-            });
-
-            return listaContrats;
-
-        }
-
-        public async Task<ContratoConstruccion> GetContratoConstruccionById(int pIdContratoConstruccion)
-        {
-            ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
-
-            contratoConstruccion = _context.ContratoConstruccion.Find(pIdContratoConstruccion);
-            contratoConstruccion.EsCompletoDiagnostico = this.EsCompletoDiagnostico(contratoConstruccion);
-
-            return contratoConstruccion;
-
-        }
-
-        private bool VerificarEsSupervisor(string pUsuarioCreacion)
-        {
-            List<UsuarioPerfil> usuarioPerfil = _context.UsuarioPerfil.Where(r => r.PerfilId == 8)
-            .Include(r => r.Usuario).ToList();
-
-            if (usuarioPerfil.Where(r => r.Usuario.Email == pUsuarioCreacion).ToList().Count > 0)
-                return true;
-            else
-                return false;
-        }
-
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId, string pUsuarioCreacion)
-        {
-            try
-            {
-                List<Dominio> ListParametricas = _context.Dominio.ToList();
-                List<Localizacion> Listlocalizacion = _context.Localizacion.ToList();
-                List<Dominio> ListPerfilesDominio = _context.Dominio.Where(d => d.TipoDominioId == 11).ToList();
-
-
-                Contrato contrato = await _context.Contrato.Where(r => r.ContratoId == pContratoId)
-                     .Include(r => r.ContratoPoliza)
-                     .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.ContratacionProyecto)
-                              .ThenInclude(r => r.Proyecto)
-                                 .ThenInclude(r => r.InstitucionEducativa)
-                    .Include(r => r.Contratacion)
-                        .ThenInclude(r => r.ContratacionProyecto)
-                              .ThenInclude(r => r.Proyecto)
-                                  .ThenInclude(r => r.Sede)
-                     .Include(r => r.Contratacion)
-                         .ThenInclude(r => r.Contratista)
-                    .FirstOrDefaultAsync();
-
-                contrato.ContratoConstruccion = _context.ContratoConstruccion.Where(cc => cc.ContratoId == pContratoId)
-                                                                                .Include(r => r.ConstruccionPerfil)
-                                                                                    .ThenInclude(r => r.ConstruccionPerfilObservacion)
-                                                                                .Include(r => r.ConstruccionPerfil)
-                                                                                    .ThenInclude(r => r.ConstruccionPerfilNumeroRadicado)
-                                                                                .Include(r => r.ConstruccionObservacion)
-                                                                                .ToList();
-
-                //contrato.ContratoConstruccion.ToList().RemoveAll( r => r.eliminado == true )
-                contrato.FechaPolizaAprobacion = contrato.ContratoPoliza.LastOrDefault().FechaAprobacion.HasValue ? contrato.ContratoPoliza.LastOrDefault().FechaAprobacion : DateTime.Now;
-
-                contrato.ContratoConstruccion.ToList().ForEach(cc =>
-                {
-                    cc.ConstruccionPerfil = cc.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList();
-                    cc.ConstruccionObservacion = cc.ConstruccionObservacion.Where(co => co.Eliminado != true).ToList();
-
-                    cc.ConstruccionPerfil.ToList().ForEach(cp =>
-                    {
-                        cp.ConstruccionPerfilObservacion = cp.ConstruccionPerfilObservacion
-                                                                            .Where(cpo => cpo.Eliminado != true)
-                                                                            .OrderByDescending(cpo => cpo.FechaCreacion)
-                                                                            .ToList();
-
-                        cp.ConstruccionPerfilNumeroRadicado = cp.ConstruccionPerfilNumeroRadicado.Where(cpr => cpr.Eliminado != true).ToList();
-
-                        Dominio nombrePerfil = ListPerfilesDominio.Find(p => p.Codigo == cp.PerfilCodigo);
-
-                        cp.NombrePerfil = nombrePerfil != null ? nombrePerfil.Nombre : "";
-
-                        cp.ObservacionApoyo = getObservacionPerfil(cp, false);
-                        cp.ObservacionSupervisor = getObservacionPerfil(cp, true);
-
-                        cp.ObservacionDevolucion = _context.ConstruccionPerfilObservacion.Find(cp.ObservacionSupervisorId);
-
-                    });
-
-                    cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, false);
-                    cc.ObservacionDiagnosticoSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, true);
-
-                    cc.ObservacionPlanesProgramasApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, false);
-                    cc.ObservacionPlanesProgramasSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, true);
-
-                    cc.ObservacionManejoAnticipoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, false);
-                    cc.ObservacionManejoAnticipoSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, true);
-
-                    cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, false);
-                    cc.ObservacionProgramacionObraSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, true);
-
-                    cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, false);
-                    cc.ObservacionFlujoInversionSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, true);
-
-                    // Observaciones devoluciones
-
-                    cc.ObservacionDevolucionDiagnostico = _context.ConstruccionObservacion.Find(cc.ObservacionDiagnosticoSupervisorId);
-                    cc.ObservacionDevolucionPlanesProgramas = _context.ConstruccionObservacion.Find(cc.ObservacionPlanesProgramasSupervisorId);
-                    cc.ObservacionDevolucionManejoAnticipo = _context.ConstruccionObservacion.Find(cc.ObservacionManejoAnticipoSupervisorId);
-                    cc.ObservacionDevolucionProgramacionObra = _context.ConstruccionObservacion.Find(cc.ObservacionProgramacionObraSupervisorId);
-                    cc.ObservacionDevolucionFlujoInversion = _context.ConstruccionObservacion.Find(cc.ObservacionFlujoInversionSupervisorId);
-
-                });
-
-
-
-                foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
-                {
-                    Localizacion Municipio = Listlocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                    ContratacionProyecto.Proyecto.Departamento = Listlocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault().Descripcion;
-                    ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
-                    ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
-                }
-
-                return contrato;
-            }
-            catch (Exception ex)
-            {
-                return new Contrato();
-            }
-        }
-
-        private bool VerificarRegistroCompletoDiagnostico(ContratoConstruccion pConstruccion)
-        {
-            bool completo = true;
-
-            if (
-                pConstruccion.EsInformeDiagnostico == null ||
-                string.IsNullOrEmpty(pConstruccion.RutaInforme) ||
-                pConstruccion.CostoDirecto == null ||
-                pConstruccion.Administracion == null ||
-                pConstruccion.Imprevistos == null ||
-                pConstruccion.Utilidad == null ||
-                pConstruccion.ValorTotalFaseConstruccion == null ||
-                pConstruccion.RequiereModificacionContractual == null ||
-                (pConstruccion.RequiereModificacionContractual == true && pConstruccion.NumeroSolicitudModificacion == null)
-            )
-            {
-                completo = false;
-            }
-
-            return completo;
-
-        }
-
-        public async Task<Respuesta> CreateEditDiagnostico(ContratoConstruccion pConstruccion)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                if (pConstruccion.ContratoConstruccionId > 0)
-                {
-                    CreateEdit = "EDITAR CONTRATO CONSTRUCCION";
-
-                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pConstruccion.ContratoConstruccionId);
-
-                    contratoConstruccion.FechaModificacion = DateTime.Now;
-                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-
-                    contratoConstruccion.EsInformeDiagnostico = pConstruccion.EsInformeDiagnostico;
-                    contratoConstruccion.RutaInforme = pConstruccion.RutaInforme;
-                    contratoConstruccion.CostoDirecto = pConstruccion.CostoDirecto;
-                    contratoConstruccion.Administracion = pConstruccion.Administracion;
-                    contratoConstruccion.Imprevistos = pConstruccion.Imprevistos;
-                    contratoConstruccion.Utilidad = pConstruccion.Utilidad;
-                    contratoConstruccion.ValorTotalFaseConstruccion = pConstruccion.ValorTotalFaseConstruccion;
-                    contratoConstruccion.RequiereModificacionContractual = pConstruccion.RequiereModificacionContractual;
-                    contratoConstruccion.NumeroSolicitudModificacion = pConstruccion.NumeroSolicitudModificacion;
-
-                    contratoConstruccion.RegistroCompletoDiagnostico = VerificarRegistroCompletoDiagnostico(contratoConstruccion);
-
-                }
-                else
-                {
-                    CreateEdit = "CREAR CONTRATO CONSTRUCCION";
-
-                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
-
-                    contratoConstruccion.FechaCreacion = DateTime.Now;
-                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                    contratoConstruccion.RegistroCompletoDiagnostico = false;
-
-                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
-                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
-                    contratoConstruccion.EsInformeDiagnostico = pConstruccion.EsInformeDiagnostico;
-                    contratoConstruccion.RutaInforme = pConstruccion.RutaInforme;
-                    contratoConstruccion.CostoDirecto = pConstruccion.CostoDirecto;
-                    contratoConstruccion.Administracion = pConstruccion.Administracion;
-                    contratoConstruccion.Imprevistos = pConstruccion.Imprevistos;
-                    contratoConstruccion.Utilidad = pConstruccion.Utilidad;
-                    contratoConstruccion.ValorTotalFaseConstruccion = pConstruccion.ValorTotalFaseConstruccion;
-                    contratoConstruccion.RequiereModificacionContractual = pConstruccion.RequiereModificacionContractual;
-                    contratoConstruccion.NumeroSolicitudModificacion = pConstruccion.NumeroSolicitudModificacion;
-
-                    contratoConstruccion.RegistroCompletoDiagnostico = VerificarRegistroCompletoDiagnostico(contratoConstruccion);
-
-                    _context.ContratoConstruccion.Add(contratoConstruccion);
-                }
-
-                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
-                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
-                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-
-                _context.SaveChanges();
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        private async Task<bool> ValidarRegistroCompletoVerificacion(int id, bool pEsSupervicion)
-        {
-            bool esCompleto = true;
-
-            ContratoConstruccion cc = await _context.ContratoConstruccion.Where(cc => cc.ContratoConstruccionId == id)
-                                                                .Include(r => r.ConstruccionPerfil)
-                                                                .FirstOrDefaultAsync();
-
-            cc.ObservacionDiagnosticoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, pEsSupervicion);
-            cc.ObservacionPlanesProgramasApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.PlanesProgramas, pEsSupervicion);
-            cc.ObservacionManejoAnticipoApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo, pEsSupervicion);
-            cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, pEsSupervicion);
-            cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, pEsSupervicion);
-
-            if (cc.TieneObservacionesDiagnosticoApoyo == null ||
-                 (cc.TieneObservacionesDiagnosticoApoyo == true && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
-                 cc.TieneObservacionesFlujoInversionApoyo == null ||
-                 (cc.TieneObservacionesFlujoInversionApoyo == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
-                 cc.TieneObservacionesManejoAnticipoApoyo == null ||
-                 (cc.TieneObservacionesManejoAnticipoApoyo == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo != null ? cc.ObservacionManejoAnticipoApoyo.Observaciones : null)) ||
-                 cc.TieneObservacionesPlanesProgramasApoyo == null ||
-                 (cc.TieneObservacionesPlanesProgramasApoyo == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo != null ? cc.ObservacionPlanesProgramasApoyo.Observaciones : null)) ||
-                 cc.TieneObservacionesProgramacionObraApoyo == null ||
-                 (cc.TieneObservacionesProgramacionObraApoyo == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo != null ? cc.ObservacionProgramacionObraApoyo.Observaciones : null))
-                 )
-            {
-                esCompleto = false;
-            }
-
-            return esCompleto;
-        }
-
-        private bool VerificarRegistroCompletoPlanesProgramas(ContratoConstruccion pConstruccion)
-        {
-            bool completo = true;
-
-            if (
-                    pConstruccion.PlanLicenciaVigente == null ||
-                    pConstruccion.PlanCambioConstructorLicencia == null ||
-                    pConstruccion.PlanActaApropiacion == null ||
-                    pConstruccion.PlanResiduosDemolicion == null ||
-                    pConstruccion.PlanManejoTransito == null ||
-                    pConstruccion.PlanManejoAmbiental == null ||
-                    pConstruccion.PlanAseguramientoCalidad == null ||
-                    pConstruccion.PlanProgramaSeguridad == null ||
-                    pConstruccion.PlanProgramaSalud == null ||
-                    pConstruccion.PlanInventarioArboreo == null ||
-                    pConstruccion.PlanAprovechamientoForestal == null ||
-                    pConstruccion.PlanManejoAguasLluvias == null ||
-                    string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
-            )
-            {
-                completo = false;
-            }
-
-            return completo;
-        }
-
-        public async Task<Respuesta> CreateEditPlanesProgramas(ContratoConstruccion pConstruccion)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                if (pConstruccion.ContratoConstruccionId > 0)
-                {
-                    CreateEdit = "EDITAR CONTRATO CONSTRUCCION";
-
-                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pConstruccion.ContratoConstruccionId);
-
-                    contratoConstruccion.FechaModificacion = DateTime.Now;
-                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-
-                    contratoConstruccion.PlanLicenciaVigente = pConstruccion.PlanLicenciaVigente;
-                    contratoConstruccion.LicenciaFechaRadicado = pConstruccion.LicenciaFechaRadicado;
-                    contratoConstruccion.LicenciaFechaAprobacion = pConstruccion.LicenciaFechaAprobacion;
-                    contratoConstruccion.LicenciaConObservaciones = pConstruccion.LicenciaConObservaciones;
-                    contratoConstruccion.PlanCambioConstructorLicencia = pConstruccion.PlanCambioConstructorLicencia;
-                    contratoConstruccion.CambioFechaRadicado = pConstruccion.CambioFechaRadicado;
-                    contratoConstruccion.CambioFechaAprobacion = pConstruccion.CambioFechaAprobacion;
-                    contratoConstruccion.CambioConObservaciones = pConstruccion.CambioConObservaciones;
-                    contratoConstruccion.PlanActaApropiacion = pConstruccion.PlanActaApropiacion;
-                    contratoConstruccion.ActaApropiacionFechaRadicado = pConstruccion.ActaApropiacionFechaRadicado;
-                    contratoConstruccion.ActaApropiacionFechaAprobacion = pConstruccion.ActaApropiacionFechaAprobacion;
-                    contratoConstruccion.ActaApropiacionConObservaciones = pConstruccion.ActaApropiacionConObservaciones;
-                    contratoConstruccion.PlanResiduosDemolicion = pConstruccion.PlanResiduosDemolicion;
-                    contratoConstruccion.ResiduosDemolicionFechaRadicado = pConstruccion.ResiduosDemolicionFechaRadicado;
-                    contratoConstruccion.ResiduosDemolicionFechaAprobacion = pConstruccion.ResiduosDemolicionFechaAprobacion;
-                    contratoConstruccion.ResiduosDemolicionConObservaciones = pConstruccion.ResiduosDemolicionConObservaciones;
-                    contratoConstruccion.PlanManejoTransito = pConstruccion.PlanManejoTransito;
-                    contratoConstruccion.ManejoTransitoFechaRadicado = pConstruccion.ManejoTransitoFechaRadicado;
-                    contratoConstruccion.ManejoTransitoFechaAprobacion = pConstruccion.ManejoTransitoFechaAprobacion;
-                    contratoConstruccion.ManejoTransitoConObservaciones1 = pConstruccion.ManejoTransitoConObservaciones1;
-                    contratoConstruccion.PlanManejoAmbiental = pConstruccion.PlanManejoAmbiental;
-                    contratoConstruccion.ManejoAmbientalFechaRadicado = pConstruccion.ManejoAmbientalFechaRadicado;
-                    contratoConstruccion.ManejoAmbientalFechaAprobacion = pConstruccion.ManejoAmbientalFechaAprobacion;
-                    contratoConstruccion.ManejoAmbientalConObservaciones = pConstruccion.ManejoAmbientalConObservaciones;
-                    contratoConstruccion.PlanAseguramientoCalidad = pConstruccion.PlanAseguramientoCalidad;
-                    contratoConstruccion.AseguramientoCalidadFechaRadicado = pConstruccion.AseguramientoCalidadFechaRadicado;
-                    contratoConstruccion.AseguramientoCalidadFechaAprobacion = pConstruccion.AseguramientoCalidadFechaAprobacion;
-                    contratoConstruccion.AseguramientoCalidadConObservaciones = pConstruccion.AseguramientoCalidadConObservaciones;
-                    contratoConstruccion.PlanProgramaSeguridad = pConstruccion.PlanProgramaSeguridad;
-                    contratoConstruccion.ProgramaSeguridadFechaRadicado = pConstruccion.ProgramaSeguridadFechaRadicado;
-                    contratoConstruccion.ProgramaSeguridadFechaAprobacion = pConstruccion.ProgramaSeguridadFechaAprobacion;
-                    contratoConstruccion.ProgramaSeguridadConObservaciones = pConstruccion.ProgramaSeguridadConObservaciones;
-                    contratoConstruccion.PlanProgramaSalud = pConstruccion.PlanProgramaSalud;
-                    contratoConstruccion.ProgramaSaludFechaRadicado = pConstruccion.ProgramaSaludFechaRadicado;
-                    contratoConstruccion.ProgramaSaludFechaAprobacion = pConstruccion.ProgramaSaludFechaAprobacion;
-                    contratoConstruccion.ProgramaSaludConObservaciones = pConstruccion.ProgramaSaludConObservaciones;
-                    contratoConstruccion.PlanInventarioArboreo = pConstruccion.PlanInventarioArboreo;
-                    contratoConstruccion.InventarioArboreoFechaRadicado = pConstruccion.InventarioArboreoFechaRadicado;
-                    contratoConstruccion.InventarioArboreoFechaAprobacion = pConstruccion.InventarioArboreoFechaAprobacion;
-                    contratoConstruccion.InventarioArboreoConObservaciones = pConstruccion.InventarioArboreoConObservaciones;
-                    contratoConstruccion.PlanAprovechamientoForestal = pConstruccion.PlanAprovechamientoForestal;
-                    contratoConstruccion.AprovechamientoForestalApropiacionFechaRadicado = pConstruccion.AprovechamientoForestalApropiacionFechaRadicado;
-                    contratoConstruccion.AprovechamientoForestalFechaAprobacion = pConstruccion.AprovechamientoForestalFechaAprobacion;
-                    contratoConstruccion.AprovechamientoForestalConObservaciones = pConstruccion.AprovechamientoForestalConObservaciones;
-                    contratoConstruccion.PlanManejoAguasLluvias = pConstruccion.PlanManejoAguasLluvias;
-                    contratoConstruccion.ManejoAguasLluviasFechaRadicado = pConstruccion.ManejoAguasLluviasFechaRadicado;
-                    contratoConstruccion.ManejoAguasLluviasFechaAprobacion = pConstruccion.ManejoAguasLluviasFechaAprobacion;
-                    contratoConstruccion.ManejoAguasLluviasConObservaciones = pConstruccion.ManejoAguasLluviasConObservaciones;
-                    contratoConstruccion.PlanRutaSoporte = pConstruccion.PlanRutaSoporte;
-                    contratoConstruccion.LicenciaObservaciones = pConstruccion.LicenciaObservaciones;
-                    contratoConstruccion.CambioObservaciones = pConstruccion.CambioObservaciones;
-                    contratoConstruccion.ActaApropiacionObservaciones = pConstruccion.ActaApropiacionObservaciones;
-                    contratoConstruccion.ResiduosDemolicionObservaciones = pConstruccion.ResiduosDemolicionObservaciones;
-                    contratoConstruccion.ManejoTransitoObservaciones = pConstruccion.ManejoTransitoObservaciones;
-                    contratoConstruccion.ManejoAmbientalObservaciones = pConstruccion.ManejoAmbientalObservaciones;
-                    contratoConstruccion.AseguramientoCalidadObservaciones = pConstruccion.AseguramientoCalidadObservaciones;
-                    contratoConstruccion.ProgramaSeguridadObservaciones = pConstruccion.ProgramaSeguridadObservaciones;
-                    contratoConstruccion.ProgramaSaludObservaciones = pConstruccion.ProgramaSaludObservaciones;
-                    contratoConstruccion.InventarioArboreoObservaciones = pConstruccion.InventarioArboreoObservaciones;
-                    contratoConstruccion.AprovechamientoForestalObservaciones = pConstruccion.AprovechamientoForestalObservaciones;
-                    contratoConstruccion.ManejoAguasLluviasObservaciones = pConstruccion.ManejoAguasLluviasObservaciones;
-
-                    contratoConstruccion.RegistroCompletoPlanesProgramas = VerificarRegistroCompletoPlanesProgramas(contratoConstruccion);
-
-                }
-                else
-                {
-                    CreateEdit = "CREAR CONTRATO CONSTRUCCION";
-
-                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
-
-                    contratoConstruccion.FechaCreacion = DateTime.Now;
-                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                    contratoConstruccion.RegistroCompletoPlanesProgramas = false;
-
-                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
-                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
-
-                    contratoConstruccion.PlanLicenciaVigente = pConstruccion.PlanLicenciaVigente;
-                    contratoConstruccion.LicenciaFechaRadicado = pConstruccion.LicenciaFechaRadicado;
-                    contratoConstruccion.LicenciaFechaAprobacion = pConstruccion.LicenciaFechaAprobacion;
-                    contratoConstruccion.LicenciaConObservaciones = pConstruccion.LicenciaConObservaciones;
-                    contratoConstruccion.PlanCambioConstructorLicencia = pConstruccion.PlanCambioConstructorLicencia;
-                    contratoConstruccion.CambioFechaRadicado = pConstruccion.CambioFechaRadicado;
-                    contratoConstruccion.CambioFechaAprobacion = pConstruccion.CambioFechaAprobacion;
-                    contratoConstruccion.CambioConObservaciones = pConstruccion.CambioConObservaciones;
-                    contratoConstruccion.PlanActaApropiacion = pConstruccion.PlanActaApropiacion;
-                    contratoConstruccion.ActaApropiacionFechaRadicado = pConstruccion.ActaApropiacionFechaRadicado;
-                    contratoConstruccion.ActaApropiacionFechaAprobacion = pConstruccion.ActaApropiacionFechaAprobacion;
-                    contratoConstruccion.ActaApropiacionConObservaciones = pConstruccion.ActaApropiacionConObservaciones;
-                    contratoConstruccion.PlanResiduosDemolicion = pConstruccion.PlanResiduosDemolicion;
-                    contratoConstruccion.ResiduosDemolicionFechaRadicado = pConstruccion.ResiduosDemolicionFechaRadicado;
-                    contratoConstruccion.ResiduosDemolicionFechaAprobacion = pConstruccion.ResiduosDemolicionFechaAprobacion;
-                    contratoConstruccion.ResiduosDemolicionConObservaciones = pConstruccion.ResiduosDemolicionConObservaciones;
-                    contratoConstruccion.PlanManejoTransito = pConstruccion.PlanManejoTransito;
-                    contratoConstruccion.ManejoTransitoFechaRadicado = pConstruccion.ManejoTransitoFechaRadicado;
-                    contratoConstruccion.ManejoTransitoFechaAprobacion = pConstruccion.ManejoTransitoFechaAprobacion;
-                    contratoConstruccion.ManejoTransitoConObservaciones1 = pConstruccion.ManejoTransitoConObservaciones1;
-                    contratoConstruccion.PlanManejoAmbiental = pConstruccion.PlanManejoAmbiental;
-                    contratoConstruccion.ManejoAmbientalFechaRadicado = pConstruccion.ManejoAmbientalFechaRadicado;
-                    contratoConstruccion.ManejoAmbientalFechaAprobacion = pConstruccion.ManejoAmbientalFechaAprobacion;
-                    contratoConstruccion.ManejoAmbientalConObservaciones = pConstruccion.ManejoAmbientalConObservaciones;
-                    contratoConstruccion.PlanAseguramientoCalidad = pConstruccion.PlanAseguramientoCalidad;
-                    contratoConstruccion.AseguramientoCalidadFechaRadicado = pConstruccion.AseguramientoCalidadFechaRadicado;
-                    contratoConstruccion.AseguramientoCalidadFechaAprobacion = pConstruccion.AseguramientoCalidadFechaAprobacion;
-                    contratoConstruccion.AseguramientoCalidadConObservaciones = pConstruccion.AseguramientoCalidadConObservaciones;
-                    contratoConstruccion.PlanProgramaSeguridad = pConstruccion.PlanProgramaSeguridad;
-                    contratoConstruccion.ProgramaSeguridadFechaRadicado = pConstruccion.ProgramaSeguridadFechaRadicado;
-                    contratoConstruccion.ProgramaSeguridadFechaAprobacion = pConstruccion.ProgramaSeguridadFechaAprobacion;
-                    contratoConstruccion.ProgramaSeguridadConObservaciones = pConstruccion.ProgramaSeguridadConObservaciones;
-                    contratoConstruccion.PlanProgramaSalud = pConstruccion.PlanProgramaSalud;
-                    contratoConstruccion.ProgramaSaludFechaRadicado = pConstruccion.ProgramaSaludFechaRadicado;
-                    contratoConstruccion.ProgramaSaludFechaAprobacion = pConstruccion.ProgramaSaludFechaAprobacion;
-                    contratoConstruccion.ProgramaSaludConObservaciones = pConstruccion.ProgramaSaludConObservaciones;
-                    contratoConstruccion.PlanInventarioArboreo = pConstruccion.PlanInventarioArboreo;
-                    contratoConstruccion.InventarioArboreoFechaRadicado = pConstruccion.InventarioArboreoFechaRadicado;
-                    contratoConstruccion.InventarioArboreoFechaAprobacion = pConstruccion.InventarioArboreoFechaAprobacion;
-                    contratoConstruccion.InventarioArboreoConObservaciones = pConstruccion.InventarioArboreoConObservaciones;
-                    contratoConstruccion.PlanAprovechamientoForestal = pConstruccion.PlanAprovechamientoForestal;
-                    contratoConstruccion.AprovechamientoForestalApropiacionFechaRadicado = pConstruccion.AprovechamientoForestalApropiacionFechaRadicado;
-                    contratoConstruccion.AprovechamientoForestalFechaAprobacion = pConstruccion.AprovechamientoForestalFechaAprobacion;
-                    contratoConstruccion.AprovechamientoForestalConObservaciones = pConstruccion.AprovechamientoForestalConObservaciones;
-                    contratoConstruccion.PlanManejoAguasLluvias = pConstruccion.PlanManejoAguasLluvias;
-                    contratoConstruccion.ManejoAguasLluviasFechaRadicado = pConstruccion.ManejoAguasLluviasFechaRadicado;
-                    contratoConstruccion.ManejoAguasLluviasFechaAprobacion = pConstruccion.ManejoAguasLluviasFechaAprobacion;
-                    contratoConstruccion.ManejoAguasLluviasConObservaciones = pConstruccion.ManejoAguasLluviasConObservaciones;
-                    contratoConstruccion.PlanRutaSoporte = pConstruccion.PlanRutaSoporte;
-                    contratoConstruccion.LicenciaObservaciones = pConstruccion.LicenciaObservaciones;
-                    contratoConstruccion.CambioObservaciones = pConstruccion.CambioObservaciones;
-                    contratoConstruccion.ActaApropiacionObservaciones = pConstruccion.ActaApropiacionObservaciones;
-                    contratoConstruccion.ResiduosDemolicionObservaciones = pConstruccion.ResiduosDemolicionObservaciones;
-                    contratoConstruccion.ManejoTransitoObservaciones = pConstruccion.ManejoTransitoObservaciones;
-                    contratoConstruccion.ManejoAmbientalObservaciones = pConstruccion.ManejoAmbientalObservaciones;
-                    contratoConstruccion.AseguramientoCalidadObservaciones = pConstruccion.AseguramientoCalidadObservaciones;
-                    contratoConstruccion.ProgramaSeguridadObservaciones = pConstruccion.ProgramaSeguridadObservaciones;
-                    contratoConstruccion.ProgramaSaludObservaciones = pConstruccion.ProgramaSaludObservaciones;
-                    contratoConstruccion.InventarioArboreoObservaciones = pConstruccion.InventarioArboreoObservaciones;
-                    contratoConstruccion.AprovechamientoForestalObservaciones = pConstruccion.AprovechamientoForestalObservaciones;
-                    contratoConstruccion.ManejoAguasLluviasObservaciones = pConstruccion.ManejoAguasLluviasObservaciones;
-
-                    contratoConstruccion.RegistroCompletoPlanesProgramas = VerificarRegistroCompletoPlanesProgramas(contratoConstruccion);
-
-                    _context.ContratoConstruccion.Add(contratoConstruccion);
-                }
-
-                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
-                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
-                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-
-                _context.SaveChanges();
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        private bool VerificarRegistroCompletoManejoAnticipo(ContratoConstruccion pConstruccion)
-        {
-            bool completo = true;
-
-            if (
-                    pConstruccion.ManejoAnticipoRequiere == null ||
-                    pConstruccion.ManejoAnticipoPlanInversion == null ||
-                    pConstruccion.ManejoAnticipoCronogramaAmortizacion == null ||
-                    string.IsNullOrEmpty(pConstruccion.ManejoAnticipoRutaSoporte)
-            )
-            {
-                completo = false;
-            }
-
-            return completo;
-        }
-
-        public async Task<Respuesta> CreateEditManejoAnticipo(ContratoConstruccion pConstruccion)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Contrato_Construccion, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                if (pConstruccion.ContratoConstruccionId > 0)
-                {
-                    CreateEdit = "EDITAR CONTRATO CONSTRUCCION";
-
-                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pConstruccion.ContratoConstruccionId);
-
-                    contratoConstruccion.FechaModificacion = DateTime.Now;
-                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-
-                    contratoConstruccion.ManejoAnticipoRequiere = pConstruccion.ManejoAnticipoRequiere;
-                    contratoConstruccion.ManejoAnticipoPlanInversion = pConstruccion.ManejoAnticipoPlanInversion;
-                    contratoConstruccion.ManejoAnticipoCronogramaAmortizacion = pConstruccion.ManejoAnticipoCronogramaAmortizacion;
-                    contratoConstruccion.ManejoAnticipoRutaSoporte = pConstruccion.ManejoAnticipoRutaSoporte;
-
-                    contratoConstruccion.RegistroCompletoManejoAnticipo = VerificarRegistroCompletoManejoAnticipo(contratoConstruccion);
-
-                }
-                else
-                {
-                    CreateEdit = "CREAR CONTRATO CONSTRUCCION";
-
-                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
-
-                    contratoConstruccion.FechaCreacion = DateTime.Now;
-                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                    contratoConstruccion.RegistroCompletoManejoAnticipo = false;
-
-                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
-                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
-
-                    contratoConstruccion.ManejoAnticipoRequiere = pConstruccion.ManejoAnticipoRequiere;
-                    contratoConstruccion.ManejoAnticipoPlanInversion = pConstruccion.ManejoAnticipoPlanInversion;
-                    contratoConstruccion.ManejoAnticipoCronogramaAmortizacion = pConstruccion.ManejoAnticipoCronogramaAmortizacion;
-                    contratoConstruccion.ManejoAnticipoRutaSoporte = pConstruccion.ManejoAnticipoRutaSoporte;
-
-                    contratoConstruccion.RegistroCompletoManejoAnticipo = VerificarRegistroCompletoManejoAnticipo(contratoConstruccion);
-
-                    _context.ContratoConstruccion.Add(contratoConstruccion);
-                }
-
-                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
-                if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
-                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-
-                _context.SaveChanges();
-                return
-                    new Respuesta
-                    {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        public async Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Construccion_Perfil, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                if (pConstruccion.ContratoConstruccionId == 0)
-                {
-                    ContratoConstruccion contratoConstruccion = new ContratoConstruccion();
-
-                    contratoConstruccion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                    contratoConstruccion.FechaCreacion = DateTime.Now;
-                    contratoConstruccion.ContratoId = pConstruccion.ContratoId;
-                    contratoConstruccion.ProyectoId = pConstruccion.ProyectoId;
-
-                    _context.ContratoConstruccion.Add(contratoConstruccion);
-                    _context.SaveChanges();
-
-                    pConstruccion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
-                }
-
-                foreach (var perfil in pConstruccion.ConstruccionPerfil)
-                {
-                    if (perfil.ConstruccionPerfilId > 0)
-                    {
-                        CreateEdit = "EDITAR CONSTRUCCION PERFIL";
-                        ConstruccionPerfil construccionPerfil = _context.ConstruccionPerfil.Find(perfil.ConstruccionPerfilId);
-
-                        construccionPerfil.UsuarioModificacion = pConstruccion.UsuarioModificacion;
-                        construccionPerfil.FechaModificacion = DateTime.Now;
-
-                        construccionPerfil.PerfilCodigo = perfil.PerfilCodigo;
-                        construccionPerfil.CantidadHvRequeridas = perfil.CantidadHvRequeridas;
-                        construccionPerfil.CantidadHvRecibidas = perfil.CantidadHvRecibidas;
-                        construccionPerfil.CantidadHvAprobadas = perfil.CantidadHvAprobadas;
-                        construccionPerfil.FechaAprobacion = perfil.FechaAprobacion;
-                        construccionPerfil.RutaSoporte = perfil.RutaSoporte;
-                        construccionPerfil.ConObervacionesSupervision = perfil.ConObervacionesSupervision;
-                        construccionPerfil.Observaciones = perfil.Observaciones;
-
-                        construccionPerfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(construccionPerfil);
-
-                        // foreach (var observacion in perfil.ConstruccionPerfilObservacion)
-                        // {
-                        //     if (observacion.ConstruccionPerfilObservacionId > 0)
-                        //     {
-                        //         ConstruccionPerfilObservacion construccionPerfilObservacion = _context.ConstruccionPerfilObservacion.Find(observacion.ConstruccionPerfilObservacionId);
-
-                        //         construccionPerfilObservacion.UsuarioModificacion = pConstruccion.UsuarioCreacion;
-                        //         construccionPerfilObservacion.FechaModificacion = DateTime.Now;
-
-                        //         construccionPerfilObservacion.Observacion = observacion.Observacion;
-                        //         //construccionPerfilObservacion.TipoObservacionCodigo = observacion.TipoObservacionCodigo;
-
-                        //     }
-                        //     else
-                        //     {
-                        //         observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                        //         observacion.FechaCreacion = DateTime.Now;
-
-                        //         observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
-                        //         observacion.Eliminado = false;
-
-                        //         construccionPerfil.ConstruccionPerfilObservacion.Add(observacion);
-                        //     }
-                        // }
-
-                        foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
-                        {
-                            if (radicado.ConstruccionPerfilNumeroRadicadoId == 0)
-                            {
-                                radicado.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                                radicado.FechaCreacion = DateTime.Now;
-
-                                radicado.Eliminado = false;
-
-                                construccionPerfil.ConstruccionPerfilNumeroRadicado.Add(radicado);
-                            }
-                            else
-                            {
-                                ConstruccionPerfilNumeroRadicado construccionPerfilNumeroRadicado = _context.ConstruccionPerfilNumeroRadicado.Find(radicado.ConstruccionPerfilNumeroRadicadoId);
-                                construccionPerfilNumeroRadicado.UsuarioModificacion = pConstruccion.UsuarioCreacion;
-                                construccionPerfilNumeroRadicado.FechaModificacion = DateTime.Now;
-
-                                construccionPerfilNumeroRadicado.NumeroRadicado = radicado.NumeroRadicado;
-
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        CreateEdit = "CREAR CONSTRUCCION PERFIL";
-                        perfil.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                        perfil.FechaCreacion = DateTime.Now;
-
-                        perfil.Eliminado = false;
-                        perfil.ContratoConstruccionId = pConstruccion.ContratoConstruccionId;
-                        perfil.RegistroCompleto = ValidarRegistroCompletoConstruccionPerfil(perfil);
-
-
-
-                        foreach (var observacion in perfil.ConstruccionPerfilObservacion)
-                        {
-
-                            observacion.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                            observacion.FechaCreacion = DateTime.Now;
-                            observacion.TipoObservacionCodigo = ConstanCodigoTipoObservacion.Interventoria;
-
-                            //perfil.ConstruccionPerfilObservacion.Add(observacion);
-                        }
-
-                        foreach (var radicado in perfil.ConstruccionPerfilNumeroRadicado)
-                        {
-                            radicado.UsuarioCreacion = pConstruccion.UsuarioCreacion;
-                            radicado.FechaCreacion = DateTime.Now;
-
-                            radicado.Eliminado = false;
-
-                            //_context.ConstruccionPerfilNumeroRadicado.Add(radicado);
-                        }
-
-                        _context.ConstruccionPerfil.Add(perfil);
-                    }
-                }
-
-                Contrato contrato = _context.Contrato.Find(pConstruccion.ContratoId);
-
-                if (contrato.TipoContratoCodigo == "1") // contrato de obra
-                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
-                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-
-                if (contrato.TipoContratoCodigo == "2")
-                { // contrato de interventoria
-                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_aprobados)
-                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
-
-                    List<ContratoConstruccion> listaConstruccion = _context.ContratoConstruccion
-                                                                        .Where(cp => cp.ContratoId == pConstruccion.ContratoId)
-                                                                        .Include(r => r.ConstruccionPerfil)
-                                                                        .ToList();
-
-                    string estadoTempContrato = contrato.EstadoVerificacionConstruccionCodigo;
-                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_verificados;
-
-                    listaConstruccion.ForEach(c =>
-                    {
-
-                        c.RegistroCompleto = true;
-                        c.ConstruccionPerfil.ToList().ForEach(cp =>
-                        {
-                            if (cp.RegistroCompleto != true)
-                            {
-                                c.RegistroCompleto = false;
-                                contrato.EstadoVerificacionConstruccionCodigo = estadoTempContrato;
-                            }
-                        });
-
-                    });
-                }
-
-
-                _context.SaveChanges();
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pConstruccion.UsuarioCreacion, CreateEdit)
-                    };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pConstruccion.UsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
+        
         public async Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion)
         {
             string CreateEdit = string.Empty;
@@ -1190,6 +1392,31 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<byte[]> GetPDFDRP(int pContratoId, string usuarioModificacion)
+        {
+            if (pContratoId == 0)
+            {
+                throw new Exception("Debe enviar el id del contrato");
+            }
+
+            Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId)
+                                                    .Include(r => r.Contratacion)
+                                                        .ThenInclude(r => r.DisponibilidadPresupuestal)
+                                                    .FirstOrDefault();
+
+            if (contrato?.Contratacion?.DisponibilidadPresupuestal != null)
+                return await _budgetAvailabilityService.GetPDFDRP(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion);
+            else
+            {
+                throw new Exception("El contrato no tiene DRP");
+            }
+
+        }
+
+        #endregion business
+
+        #region deletes
+
         public async Task<Respuesta> DeleteConstruccionPerfil(int pConstruccionPerfilId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Construccion_Perfil, (int)EnumeratorTipoDominio.Acciones);
@@ -1265,6 +1492,55 @@ namespace asivamosffie.services
                     };
             }
         }
+
+        public async Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, int pContratoConstruccionId, bool pEsFlujoInvserion, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivocargue);
+
+                archivoCargue.UsuarioModificacion = pUsuarioModificacion;
+                archivoCargue.FechaModificacion = DateTime.Now;
+                archivoCargue.Eliminado = true;
+
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
+
+                if (pEsFlujoInvserion)
+                    contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
+                else
+                    contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
+
+                _context.SaveChanges();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = GeneralCodes.OperacionExitosa,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ARCHIVO CARGUE ELIMINADO")
+                    };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().ToUpper())
+                    };
+            }
+        }
+
+        #endregion deletes
+
+        #region loads
 
         public async Task<Respuesta> UploadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId)
         {
@@ -1515,9 +1791,11 @@ namespace asivamosffie.services
                     {
                         contratoConstruccion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoProgramacionObra = true;
+
+                        VerificarRegistroCompletoContrato( contratoConstruccion.ContratoId );
                     }
 
-
+                    
 
                     return respuesta =
                     new Respuesta
@@ -1556,28 +1834,7 @@ namespace asivamosffie.services
             }
 
         }
-
-        public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
-        {
-            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
-
-            List<TempProgramacion> lista = _context.TempProgramacion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
-
-            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
-          {
-              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => c.Key == a.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
-              if (archivo != null)
-              {
-                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
-
-                  listaCargas.Add(archivo);
-              }
-          });
-
-            return listaCargas;
-
-        }
-
+        
         public async Task<Respuesta> UploadFileToValidateInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
@@ -1809,6 +2066,8 @@ namespace asivamosffie.services
                         contratoConstruccion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoFlujoInversion = true;
 
+                        VerificarRegistroCompletoContrato( contratoConstruccion.ContratoId );
+
                         DateTime? fechaInicio = contratoConstruccion.Contrato.FechaActaInicioFase2;
 
                         DateTime fechaFin = fechaInicio.Value.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
@@ -1900,176 +2159,8 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
-        {
-            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
-
-            List<TempFlujoInversion> lista = _context.TempFlujoInversion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
-
-            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
-          {
-              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.Key && a.Eliminado != true).FirstOrDefault();
-              if (archivo != null)
-              {
-                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
-
-                  listaCargas.Add(archivo);
-              }
-          });
-
-            return listaCargas;
-
-        }
-
-        public async Task<Respuesta> CreateEditObservacionesCarga(int pArchivoCargueId, string pObservacion, string pUsuarioCreacion)
-        {
-            string CreateEdit = string.Empty;
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Archivo, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                CreateEdit = "EDITAR OBSERVACION ARCHIVO";
-
-                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivoCargueId);
-
-                if (archivoCargue != null)
-                {
-                    archivoCargue.Observaciones = pObservacion;
-                }
-
-
-                _context.SaveChanges();
-                return
-                    new Respuesta
-                    {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreacion, CreateEdit)
-                    };
-
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        public async Task<Respuesta> DeleteArchivoCargue(int pArchivocargue, int pContratoConstruccionId, bool pEsFlujoInvserion, string pUsuarioModificacion)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Archivo_Cargue, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                ArchivoCargue archivoCargue = _context.ArchivoCargue.Find(pArchivocargue);
-
-                archivoCargue.UsuarioModificacion = pUsuarioModificacion;
-                archivoCargue.FechaModificacion = DateTime.Now;
-                archivoCargue.Eliminado = true;
-
-                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
-
-                if (pEsFlujoInvserion)
-                    contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
-                else
-                    contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
-
-                _context.SaveChanges();
-
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = true,
-                        IsException = false,
-                        IsValidation = false,
-                        Code = GeneralCodes.OperacionExitosa,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ARCHIVO CARGUE ELIMINADO")
-                    };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString().ToUpper())
-                    };
-            }
-        }
-
-        private bool ValidarRegistroCompletoConstruccionPerfil(ConstruccionPerfil pPerfil)
-        {
-            if (
-                    string.IsNullOrEmpty(pPerfil.PerfilCodigo)
-                 || string.IsNullOrEmpty(pPerfil.CantidadHvRequeridas.ToString())
-                 || string.IsNullOrEmpty(pPerfil.CantidadHvRecibidas.ToString())
-                 || string.IsNullOrEmpty(pPerfil.CantidadHvAprobadas.ToString())
-                 || string.IsNullOrEmpty(pPerfil.FechaAprobacion.ToString())
-                 || string.IsNullOrEmpty(pPerfil.RutaSoporte)
-
-                //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
-                )
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private bool EsCompletoDiagnostico(ContratoConstruccion pContratoConstruccion)
-        {
-            bool esCompleto = true;
-
-            if (pContratoConstruccion.EsInformeDiagnostico == null ||
-                    (pContratoConstruccion.EsInformeDiagnostico == true && string.IsNullOrEmpty(pContratoConstruccion.RutaInforme)) ||
-                    pContratoConstruccion.CostoDirecto == null ||
-                    pContratoConstruccion.Administracion == null ||
-                    pContratoConstruccion.Imprevistos == null ||
-                    pContratoConstruccion.Utilidad == null ||
-                    pContratoConstruccion.ValorTotalFaseConstruccion == null ||
-                    pContratoConstruccion.RequiereModificacionContractual == null ||
-                    (pContratoConstruccion.RequiereModificacionContractual == true && string.IsNullOrEmpty(pContratoConstruccion.NumeroSolicitudModificacion))
-               )
-            {
-                esCompleto = false;
-            }
-
-            return esCompleto;
-        }
-
-        public async Task<byte[]> GetPDFDRP(int pContratoId, string usuarioModificacion)
-        {
-            if (pContratoId == 0)
-            {
-                throw new Exception("Debe enviar el id del contrato");
-            }
-
-            Contrato contrato = _context.Contrato.Where(c => c.ContratoId == pContratoId)
-                                                    .Include(r => r.Contratacion)
-                                                        .ThenInclude(r => r.DisponibilidadPresupuestal)
-                                                    .FirstOrDefault();
-
-            if (contrato?.Contratacion?.DisponibilidadPresupuestal != null)
-                return await _budgetAvailabilityService.GetPDFDRP(contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().DisponibilidadPresupuestalId, usuarioModificacion);
-            else
-            {
-                throw new Exception("El contrato no tiene DRP");
-            }
-
-        }
-
+        #endregion        
+        
         #region Observaciones 
 
         private ConstruccionObservacion getObservacion(ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
@@ -2216,7 +2307,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2372,7 +2462,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2466,7 +2555,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2556,7 +2644,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2646,7 +2733,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2736,7 +2822,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,
@@ -2830,7 +2915,6 @@ namespace asivamosffie.services
                 return
                     new Respuesta
                     {
-                        //Data = this.GetContratoByContratoId( pConstruccion.ContratoId ),
                         IsSuccessful = true,
                         IsException = false,
                         IsValidation = false,

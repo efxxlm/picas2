@@ -26,7 +26,7 @@ namespace asivamosffie.services
         }
         public async Task<List<VRegistrarFase1>> GetListContratacion2()
         {
-            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()).OrderBy(r=> r.EstadoCodigo).ToListAsync();
+            return await _context.VRegistrarFase1.Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFasePreconstruccion.Value > 0).OrderBy(r => r.EstadoCodigo).ToListAsync();
         }
 
         public async Task<dynamic> GetListContratacion()
@@ -208,7 +208,6 @@ namespace asivamosffie.services
                             }
                             else
                             {
-
                                 RegistroCompletoContrato = false;
                             }
 
@@ -253,7 +252,6 @@ namespace asivamosffie.services
                                     contratoPerfilNumeroRadicadoOld.FechaModificacion = DateTime.Now;
                                 }
                             }
-
                         }
                         else
                         {
@@ -299,30 +297,29 @@ namespace asivamosffie.services
                         }
                     }
                 }
-       
+
                 //Cambiar Estado Contrato 
                 Contrato contratoOld = _context.Contrato.
                     Where(r => r.ContratoId == pContrato.ContratoId)
                     .Include(r => r.Contratacion)
                     .Include(r => r.ContratoPerfil)
                     .FirstOrDefault();
-                //Si  obra  
+
                 if (contratoOld.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 {
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_aprobacion_de_requisitos_tecnicos;
-                   // if (RegistroCompletoContrato)
-                    if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
-                    {
-                        contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
-                    }
-                }
+
+                    //if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
+                    //{
+                    //    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
+                    //}
+                } 
 
                 else
-                {   //Si el interventoria y no esta completo
+                {
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.En_proceso_de_verificacion_de_requisitos_tecnicos;
-                    //Si el interventoria y esta completo
-                   // if (RegistroCompletoContrato)
-                      if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
+
+                    if (contratoOld.ContratoPerfil.Count() > 0 && RegistroCompletoContrato)
                     {
                         contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
                     }
@@ -332,6 +329,7 @@ namespace asivamosffie.services
 
                 _context.Update(contratoOld);
                 _context.SaveChanges();
+
                 return
                     new Respuesta
                     {
@@ -717,13 +715,12 @@ namespace asivamosffie.services
 
                         foreach (var item in usuarios)
                         {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos prendiente", template, pSender, pPassword, pMailServer, pMailPort);
+                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Verificación y Aprobación de requisitos pendiente", template, pSender, pPassword, pMailServer, pMailPort);
                         }
                     }
                 }
             }
-        }
-
+        } 
         //3.1.8() OBRA
         public async Task GetContratosObraSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
@@ -762,8 +759,7 @@ namespace asivamosffie.services
                     }
                 }
             }
-        }
-
+        } 
         //3.1.8()
         public async Task GetContratosInterventoriaSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
