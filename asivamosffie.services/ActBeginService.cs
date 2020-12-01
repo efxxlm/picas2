@@ -1906,7 +1906,7 @@ namespace asivamosffie.services
                         //PlazoInicialContratoSupervisor = contrato.Plazo.ToString(),
 
                         //PlazoInicialContratoSupervisor = contrato.Plazo != null ? Convert.ToDateTime(contrato.Plazo).ToString("dd/MM/yyyy") : contrato.Plazo.ToString(),
-                        PlazoInicialContratoSupervisor = contrato.FechaAprobacionRequisitosSupervisor != null ? Convert.ToDateTime(contrato.Plazo).ToString("dd/MM/yyyy") : contrato.Plazo.ToString(),
+                        //PlazoInicialContratoSupervisor = contrato.FechaAprobacionRequisitosSupervisor != null ? Convert.ToDateTime(contrato.FechaAprobacionRequisitosSupervisor).ToString("dd/MM/yyyy") : contrato.FechaAprobacionRequisitosSupervisor.ToString(),
                         PlazoInicialContratoSupervisor = strFecSolicitudDisponibPresup,
 
                         PlazoFase1PreMeses = contrato.PlazoFase1PreMeses,
