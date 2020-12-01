@@ -13,7 +13,7 @@ using asivamosffie.services.Helpers.Constant;
 
 namespace asivamosffie.services
 {
-    public class JudicialDefenseService /*: IGuaranteePolicyService*/
+    public class JudicialDefenseService : IJudicialDefense
     {
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
@@ -327,8 +327,10 @@ namespace asivamosffie.services
                                 Municipio = proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
                                 //InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
                                 //Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
-                                InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
+                                InstitucionEducativa = proyecto.InstitucionEducativa.CodigoDane,
+                                CodigoDane = proyecto.InstitucionEducativa.Nombre,
                                 Sede = proyecto.Sede.Nombre,
+                                SedeCodigo = proyecto.Sede.CodigoDane,
                                 ProyectoId = proyecto.ProyectoId,
 
 
@@ -349,8 +351,16 @@ namespace asivamosffie.services
 
                                 //item.Contratacion= item.Contratacion.wh(r => r.ContratacionId == item.ContratacionId ).FirstOrDefault();
 
+                                Contratista contratista = null;
+
                                 if (item.Contratacion != null)
                                 {
+                                     contratista = _context.Contratista.Where(r=>r.ContratistaId== item.Contratacion.ContratistaId).FirstOrDefault();
+
+                                    if (contratista != null)
+                                        proyectoGrilla.NombreContratista = contratista.Nombre;
+                                    else
+                                        proyectoGrilla.NombreContratista = "";
 
                                     if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
                                     {
