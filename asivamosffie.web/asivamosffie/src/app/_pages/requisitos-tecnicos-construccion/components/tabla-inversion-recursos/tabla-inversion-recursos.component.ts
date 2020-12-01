@@ -8,6 +8,7 @@ import { DialogObservacionesFlujoRecursosComponent } from '../dialog-observacion
 import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { DialogObservacionesProgramacionComponent } from '../dialog-observaciones-programacion/dialog-observaciones-programacion.component';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-tabla-inversion-recursos',
@@ -32,7 +33,9 @@ export class TablaInversionRecursosComponent implements OnInit {
   ];
 
   constructor ( private dialog: MatDialog,
-                private faseUnoConstruccionSvc: FaseUnoConstruccionService )
+                private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+                private commonService: CommonService 
+              )
   {
   }
 
@@ -102,4 +105,18 @@ export class TablaInversionRecursosComponent implements OnInit {
         err => this.openDialog( '', err.message )
       )
   };
+
+  descargar( pArchivoCargueId: number ) {
+    this.commonService.getFileById( pArchivoCargueId )
+      .subscribe(respuesta => {
+        let documento = "FlujoInversion.xlsx";
+        var text = documento,
+          blob = new Blob([respuesta], { type: 'application/octet-stream' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/octet-stream', anchor.download, anchor.href].join(':');
+        anchor.click();
+      });
+  }
 }
