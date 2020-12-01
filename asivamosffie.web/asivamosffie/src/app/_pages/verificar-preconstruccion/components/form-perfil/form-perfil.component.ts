@@ -270,7 +270,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
-    if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
+    if ( Number( cantidadHvAprobadas ) >= Number( cantidadHvRequeridas ) ) {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
     } else {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();

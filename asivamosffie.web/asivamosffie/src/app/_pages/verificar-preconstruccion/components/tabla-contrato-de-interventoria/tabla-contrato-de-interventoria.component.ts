@@ -51,17 +51,10 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
           faseUnoVerificarPreConstruccionSvc.getListContratacionInterventoria()
             .subscribe( listas => {
               const dataTable = [];
+              console.log( listas );
               listas.forEach( lista => {
-                // tslint:disable-next-line: no-string-literal
-                if (  (  lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo
-                      // tslint:disable-next-line: no-string-literal
-                      || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.enProcesoVerificacionReqTecnicos.codigo
-                      // tslint:disable-next-line: no-string-literal
-                      || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.conReqTecnicosVerificados.codigo
-                      // tslint:disable-next-line: no-string-literal
-                      || lista[ 'estadoCodigo' ] === this.estadosPreconstruccionInterventoria.enviadoAlSupervisor.codigo )
-                      // tslint:disable-next-line: no-string-literal
-                      && lista[ 'tipoSolicitudCodigo' ] === this.tipoSolicitudCodigoInterventoria )
+                if (  Number( lista[ 'estadoCodigo' ] )
+                      >= Number( this.estadosPreconstruccionInterventoria.sinAprobacionReqTecnicos.codigo ) )
               {
                 dataTable.push( lista );
               }
