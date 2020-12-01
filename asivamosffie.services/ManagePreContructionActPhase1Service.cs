@@ -87,7 +87,7 @@ namespace asivamosffie.services
                     {
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                         {
-                            if (ComponenteAportante.TipoComponenteCodigo == ConstanCodigoFaseContrato.Preconstruccion.ToString())
+                            if (ComponenteAportante.FaseCodigo == ConstanCodigoFaseContrato.Preconstruccion.ToString())
                                 contrato.ValorFase1 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
                             else
                                 contrato.ValorFase2 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
