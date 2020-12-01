@@ -186,6 +186,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     return patron.test(te);
   }
   onSubmit() {
+    if(this.valorFDos==0){
+      this.addressForm.get('mesPlazoEjFase2').setValue(0);
+      this.addressForm.get('diasPlazoEjFase2').setValue(0);
+    }
     if(this.addressForm.value.fechaActaInicioFUnoPreconstruccion==null || this.addressForm.value.fechaPrevistaTerminacion==null || this.addressForm.value.mesPlazoEjFase1==null
       ||this.addressForm.value.diasPlazoEjFase1==null  ||this.addressForm.value.mesPlazoEjFase2==null  ||this.addressForm.value.diasPlazoEjFase2==null ||this.addressForm.value.observacionesEspeciales==null){
         this.openDialog('Falta registrar información','');
