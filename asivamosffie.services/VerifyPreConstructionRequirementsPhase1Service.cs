@@ -54,7 +54,7 @@ namespace asivamosffie.services
                 foreach (var c in listContratos.OrderBy(r => r.EstadoVerificacionCodigo))
                 {
                     string asd;
-                    if (c.NumeroContrato == "CC-PI_210")
+                    if (c.NumeroContrato == "CC PI_228")
                         asd = "";
 
                     int CantidadProyectosConPerfilesAprobados = 0;
@@ -68,6 +68,9 @@ namespace asivamosffie.services
                         foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
                         {
                             if (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && (bool)ContratoPerfil.TieneObservacionApoyo && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.Where(r=> r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).LastOrDefault().Observacion))
+                                RegistroCompletoObservaciones = false;
+
+                            if(!ContratoPerfil.TieneObservacionApoyo.HasValue)
                                 RegistroCompletoObservaciones = false;
 
                             if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor) == 0)
