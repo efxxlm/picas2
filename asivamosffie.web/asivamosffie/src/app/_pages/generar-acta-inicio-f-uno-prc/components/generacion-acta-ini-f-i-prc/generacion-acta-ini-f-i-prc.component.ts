@@ -183,7 +183,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   onSubmit() {
     if(this.addressForm.value.fechaActaInicioFUnoPreconstruccion==null || this.addressForm.value.fechaPrevistaTerminacion==null || this.addressForm.value.mesPlazoEjFase1==null
-      ||this.addressForm.value.diasPlazoEjFase1==null  ||this.addressForm.value.mesPlazoEjFase2==null  ||this.addressForm.value.diasPlazoEjFase2==null){
+      ||this.addressForm.value.diasPlazoEjFase1==null  ||this.addressForm.value.mesPlazoEjFase2==null  ||this.addressForm.value.diasPlazoEjFase2==null ||this.addressForm.value.observacionesEspeciales==null){
         this.openDialog('Falta registrar información','');
     }
     else{
