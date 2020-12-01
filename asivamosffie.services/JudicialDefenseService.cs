@@ -91,7 +91,7 @@ namespace asivamosffie.services
                     demandadoConvocadoBD.UsuarioModificacion = demandadoConvocado.UsuarioModificacion;
                     demandadoConvocadoBD.Email = demandadoConvocado.Email;
                     
-                    _context.DemandadoConvocado.Update(demandadoConvocado);
+                    _context.DemandadoConvocado.Update(demandadoConvocadoBD);
 
                 }
 
