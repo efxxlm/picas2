@@ -23,6 +23,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public string RepresentanteLegalNumeroIdentificacion { get; set; }
         public string TipoProponenteCodigo { get; set; }
+        public int? ProcesoSeleccionProponenteId { get; set; }
 
         public virtual ICollection<Contratacion> Contratacion { get; set; }
     }

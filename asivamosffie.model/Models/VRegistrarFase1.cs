@@ -14,6 +14,8 @@ namespace asivamosffie.model.Models
         public int CantidadProyectosRequisitosAprobados { get; set; }
         public int? CantidadProyectosConPerfilesPendientes { get; set; }
         public string EstadoCodigo { get; set; }
+        public int? TieneFasePreconstruccion { get; set; }
+        public int? TieneFaseConstruccion { get; set; }
         public int? EstaDevuelto { get; set; }
         public bool? RegistroCompleto { get; set; }
         public string EstadoNombre { get; set; }

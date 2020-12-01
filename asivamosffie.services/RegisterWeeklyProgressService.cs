@@ -26,13 +26,40 @@ namespace asivamosffie.services
         public RegisterWeeklyProgressService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _commonService = commonService;
-            _context = context; 
-        } 
-
-        public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
-        { 
-          return  await _context.VRegistrarAvanceSemanal.ToListAsync();
+            _context = context;
         }
 
+        public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
+        {
+            return await _context.VRegistrarAvanceSemanal.ToListAsync();
+        }
+
+
+
+        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
+        {
+
+            return await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
+
+                .Include(r=> r.SeguimientoDiario)
+
+                .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                  
+                .Include(r => r.SeguimientoSemanalAvanceFisico)
+                 
+              
+
+
+                .Include(r => r.SeguimientoSemanalPersonalObra)
+        
+                .Include(r => r.SeguimientoSemanalReporteActividad)
+
+                .Include(r => r.SeguimientoSemanalRegistroFotografico)
+
+                .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
+
+                .FirstOrDefaultAsync();
+             
+        }
     }
 }
