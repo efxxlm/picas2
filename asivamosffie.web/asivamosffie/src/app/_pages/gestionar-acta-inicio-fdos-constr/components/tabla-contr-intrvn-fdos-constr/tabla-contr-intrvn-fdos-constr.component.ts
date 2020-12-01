@@ -69,30 +69,36 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  public dataTable;
+  dataTable:any = [];
   loadDataItems: Subscription;
   constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
 
   ngOnInit(): void {
+    /*
     this.loadDataItems = this.services.loadDataItems.subscribe((loadDataItems: any) => {
       if (loadDataItems != '') {
         this.dataTable = loadDataItems;
       }
     });
-    this.services.GetListGrillaActaInicio(8).subscribe(data => {
-      this.dataTable = data;
+    */
+    this.services.GetListGrillaActaInicio(8).subscribe((data:any) => {
+      for(let contratos of data){
+        if(contratos.tipoContrato == 'Interventoria'){
+          this.dataTable.push(contratos);
+        }
+      }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-      this.applyFilter("Interventoria");
     });
   }
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue;
-  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  };
   validarActaParaInicio(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "false");

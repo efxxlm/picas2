@@ -27,6 +27,8 @@ export class GestionarActaInicioFdosConstrComponent implements OnInit {
   public rolAsignado;
   public ocpion;
   public selTab;
+  contratoObra = false;
+  contratoInterventoria = false;
   loadDataItems: Subscription;
   dataTable: any;
   constructor(private services: ActBeginService) { }

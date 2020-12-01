@@ -94,25 +94,30 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 
-  public dataTable;
+  dataTable: any[] = [];
   public noValidate = "Sin Validar";
   constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
 
   ngOnInit(): void {
-    this.services.GetListGrillaActaInicio(8).subscribe(data=>{
-      this.dataTable = data;
+    this.services.GetListGrillaActaInicio(8).subscribe((data:any)=>{
+      for(let actas of data){
+        if(actas.tipoContrato == 'Obra' && actas.estadoActaCodigo!='13'){
+          this.dataTable.push(actas);
+        }
+      }
+      console.log(this.dataTable);
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-      this.applyFilter("Obra e Interventoria");
     });
   }
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue;
-  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  };
   validarActaParaInicio(id){
     localStorage.setItem("origin","obra");
     localStorage.setItem("editable","false");

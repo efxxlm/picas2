@@ -40,18 +40,17 @@
         construcción, y que serán ejecutados en
         el marco de la gestión del FFIE.
     </div>
-    <div class="botones">
-        <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1">Actas de inicio de
-            obra</button>
-        <div *ngIf="this.selTab==1" class="button-activated">Actas de inicio de obra</div>
-        <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2">Actas de inicio de
-            interventoría</button>
-        <div *ngIf="this.selTab==2" class="button-activated">Actas de inicio de interventoría</div>
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': contratoObra === true}"
+            (click)="contratoObra = true; contratoInterventoria = false;">
+            Actas de inicio de obra
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn"
+            [ngClass]="{'active': contratoInterventoria === true}"
+            (click)="contratoInterventoria = true; contratoObra = false;">
+            Actas de inicio de interventoría
+        </button>
     </div>
-    <div *ngIf="this.selTab==1">
-        <app-tabla-contr-obra-fdos-constr></app-tabla-contr-obra-fdos-constr>
-    </div>
-    <div *ngIf="this.selTab==2">
-        <app-tabla-contr-intrvn-fdos-constr></app-tabla-contr-intrvn-fdos-constr>
-    </div>
+    <app-tabla-contr-obra-fdos-constr *ngIf="contratoObra"></app-tabla-contr-obra-fdos-constr>
+    <app-tabla-contr-intrvn-fdos-constr *ngIf="contratoInterventoria"></app-tabla-contr-intrvn-fdos-constr>
 </div>
