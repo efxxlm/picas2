@@ -4,11 +4,11 @@
     </button>
 
     <h1 class="title-menu--h1" style="margin-top: 0px;">
-      Observaciones programación
+        Observaciones Programación
     </h1>
 
     <section class="flex-center">
-        <span><strong>10/08/2020</strong></span>
+        <span><strong>{{ data.fechaCreacion | date: 'dd/MM/yyyy' }}</strong></span>
         <span class="info-text sin-diligenciar" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Fallido'">Fallido</span>
         <span class="info-text completo" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Validos'">Valido</span>
     </section>

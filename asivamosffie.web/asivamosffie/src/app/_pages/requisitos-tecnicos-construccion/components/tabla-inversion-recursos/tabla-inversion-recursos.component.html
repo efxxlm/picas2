@@ -55,7 +55,7 @@
                   color="accent" 
                   class="btn-table expansion-style--title btn-color h-2em"
                   [ngClass]="getSemaforo( element.observaciones ? element.observaciones : null )"
-                  (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.observaciones ? element.observaciones : null )">
+                  (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.fechaCreacion, element.observaciones ? element.observaciones : null )">
                   Observaciones
           </button>
   

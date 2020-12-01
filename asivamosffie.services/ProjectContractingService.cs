@@ -897,7 +897,7 @@ namespace asivamosffie.services
             {
                 return true;
             }
-            if (
+            /*if (
                 pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
                  && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
                 && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
@@ -905,7 +905,7 @@ namespace asivamosffie.services
             {
                 return true;
             }
-
+            */
 
             if (
                   pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
@@ -914,8 +914,18 @@ namespace asivamosffie.services
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue   //Pregunta 5
             )
             {
-                return true;
-            }
+                if (pContratacionProyectoAntiguo.LicenciaVigente==true)   //Pregunta 5
+                {
+                    if (pContratacionProyectoAntiguo.NumeroLicencia != null && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }            
             return false;
         }
 

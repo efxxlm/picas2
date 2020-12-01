@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         }
 
         public int ContratistaId { get; set; }
-        public string TipoIdentificacionCodigo { get; set; }
+        public string TipoIdentificacionCodigo { get; set; } 
         public string NumeroIdentificacion { get; set; }
         public string Nombre { get; set; }
         public string RepresentanteLegal { get; set; }

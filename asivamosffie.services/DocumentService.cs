@@ -217,5 +217,28 @@ namespace asivamosffie.services
             }
             return "";
         }
+
+        public async Task<ArchivoCargue> GetArchivoCargueById(int pArchivoCargueId , string pUser) {
+
+            Respuesta respuesta = new Respuesta();
+            ArchivoCargue archivoCargue = new ArchivoCargue();
+            try
+            { 
+                archivoCargue = _context.ArchivoCargue.Find( pArchivoCargueId );
+
+                if (archivoCargue != null)
+                {
+                    return archivoCargue;
+                }
+                else {
+                    throw new Exception( "No se encontro el archivo" );
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

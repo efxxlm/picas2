@@ -23,5 +23,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<ArchivoCargue>> GetListloadedDocumentsByRelacionId(string pOrigenId, int pRelacionId);
 
         Task<string> DownloadOrdenElegibilidadFilesByName(string pNameFiles,string ruta, string pUser);
+
+        Task<ArchivoCargue> GetArchivoCargueById(int pArchivoCargueId , string pUser);
     }
 }

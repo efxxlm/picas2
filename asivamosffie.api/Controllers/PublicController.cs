@@ -24,8 +24,9 @@ namespace asivamosffie.api.Controllers
         public readonly IOptions<AppSettings> _settings;
         public readonly IManagePreContructionActPhase1Service _managePreContructionActPhase1Service;
 
-        public PublicController(IRegisterPreContructionPhase1Service  registerPreContructionPhase1Service,IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy)
-        { 
+        public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy)
+        {
+            _managePreContructionActPhase1Service = managePreContructionActPhase1Service;
             _RegisterPreContructionPhase1Service = registerPreContructionPhase1Service;
             _sourceFunding = sourceFunding;
             _settings = settings;
@@ -33,7 +34,7 @@ namespace asivamosffie.api.Controllers
             _managementCommitteeReportService = managementCommitteeReportService;
             _guaranteePolicy = guaranteePolicy;
         }
-         
+
         public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
         {
             AppSettingsService appSettingsService = new AppSettingsService
@@ -42,10 +43,10 @@ namespace asivamosffie.api.Controllers
                 MailServer = appSettings.Value.MailServer,
                 Password = appSettings.Value.Password,
                 Sender = appSettings.Value.Sender
-            }; 
-            return appSettingsService; 
+            };
+            return appSettingsService;
         }
-         
+
         [HttpGet("GetConsignationValue")]
         public async Task GetConsignationValue()
         {
@@ -75,7 +76,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [HttpGet("NoApprovedLegalFiduciaryPolicy4d")]
         public async Task NoApprovedLegalFiduciaryPolicy4d()
         {
@@ -95,7 +96,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         /// <summary>
         /// JMartinez
         // Aprobar Actas de
@@ -111,16 +112,16 @@ namespace asivamosffie.api.Controllers
                 await _managementCommitteeReportService.GetApproveExpiredMinutes(_settings.Value.Sender);
             }
             catch (Exception ex)
-            { 
+            {
                 throw ex;
             }
         }
 
         /// <summary>
         /// JMartinez
-            //Enviar notificacion a interventor, 
-            //tecnica y suipervisor si la poliza 
-            //tiene 4 dias habiles y aun no tiene gestion
+        //Enviar notificacion a interventor, 
+        //tecnica y suipervisor si la poliza 
+        //tiene 4 dias habiles y aun no tiene gestion
         /// </summary>
         /// <returns></returns>
         /// 
@@ -129,7 +130,7 @@ namespace asivamosffie.api.Controllers
         public async Task GetContratosConPolizaVencida()
         {
             try
-            { 
+            {
                 await _RegisterPreContructionPhase1Service.EnviarNotificacion(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
             }
             catch (Exception ex)
@@ -188,8 +189,21 @@ namespace asivamosffie.api.Controllers
             {
                 throw ex;
             }
-        } 
+        }
         //3.1.9
+        [HttpGet("GetListContratoConActaSinDocumento")]
+        public async Task GetListContratoConActaSinDocumento()
+        {
+            try
+            {
+                AppSettingsService appSettingsService = ToAppSettingsService(_settings);
+                await _managePreContructionActPhase1Service.GetListContratoConActaSinDocumento(appSettingsService);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 
 

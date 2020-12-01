@@ -62,9 +62,12 @@ namespace asivamosffie.services
             lista.Where(c => c.TipoContratoCodigo == "1").ToList() // tipo contrato obra
                 .ForEach(c =>
             {
-                if ( c.TieneFaseConstruccion > 0 ){ // fase construccion
-                    if (c.TieneFasePreconstruccion > 0 ){
-                        if (!string.IsNullOrEmpty( c.RutaActaFase1 ) && c.FechaActaInicioFase1 != null ){ 
+                if (c.TieneFaseConstruccion > 0)
+                { // fase construccion
+                    if (c.TieneFasePreconstruccion > 0)
+                    {
+                        if (!string.IsNullOrEmpty(c.RutaActaFase1) && c.FechaActaInicioFase1 != null)
+                        {
                             listaContrats.Add(new
                             {
                                 ContratoId = c.ContratoId,
@@ -80,21 +83,23 @@ namespace asivamosffie.services
 
                             });
                         }
-                    }else{ // sin preconstruccion
+                    }
+                    else
+                    { // sin preconstruccion
                         listaContrats.Add(new
-                            {
-                                ContratoId = c.ContratoId,
-                                FechaAprobacion = c.FechaAprobacion,
-                                NumeroContrato = c.NumeroContrato,
-                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                                EstadoCodigo = c.EstadoCodigo,
-                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
-                                Existeregistro = c.ExisteRegistro,
-                                c.EstaDevuelto,
+                        {
+                            ContratoId = c.ContratoId,
+                            FechaAprobacion = c.FechaAprobacion,
+                            NumeroContrato = c.NumeroContrato,
+                            CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                            CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                            CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                            EstadoCodigo = c.EstadoCodigo,
+                            EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                            Existeregistro = c.ExisteRegistro,
+                            c.EstaDevuelto,
 
-                            });
+                        });
                     }
                 }
             });
@@ -139,9 +144,12 @@ namespace asivamosffie.services
             lista.Where(c => c.TipoContratoCodigo == "2").ToList() // tipo contrato interventoria
                 .ForEach(c =>
             {
-                if ( c.TieneFaseConstruccion > 0 ){ // fase construccion
-                    if (c.TieneFasePreconstruccion > 0 ){
-                        if (!string.IsNullOrEmpty( c.RutaActaFase1 ) && c.FechaActaInicioFase1 != null ){ 
+                if (c.TieneFaseConstruccion > 0)
+                { // fase construccion
+                    if (c.TieneFasePreconstruccion > 0)
+                    {
+                        if (!string.IsNullOrEmpty(c.RutaActaFase1) && c.FechaActaInicioFase1 != null)
+                        {
                             listaContrats.Add(new
                             {
                                 ContratoId = c.ContratoId,
@@ -157,24 +165,26 @@ namespace asivamosffie.services
 
                             });
                         }
-                    }else{ // sin preconstruccion
-                        listaContrats.Add(new
-                            {
-                                ContratoId = c.ContratoId,
-                                FechaAprobacion = c.FechaAprobacion,
-                                NumeroContrato = c.NumeroContrato,
-                                CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                                EstadoCodigo = c.EstadoCodigo,
-                                EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
-                                Existeregistro = c.ExisteRegistro,
-                                c.EstaDevuelto,
-
-                            });
                     }
-                }                     
-                        
+                    else
+                    { // sin preconstruccion
+                        listaContrats.Add(new
+                        {
+                            ContratoId = c.ContratoId,
+                            FechaAprobacion = c.FechaAprobacion,
+                            NumeroContrato = c.NumeroContrato,
+                            CantidadProyectosAsociados = c.CantidadProyectosAsociados,
+                            CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
+                            CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                            EstadoCodigo = c.EstadoCodigo,
+                            EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
+                            Existeregistro = c.ExisteRegistro,
+                            c.EstaDevuelto,
+
+                        });
+                    }
+                }
+
             });
 
             return listaContrats;
@@ -402,7 +412,7 @@ namespace asivamosffie.services
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
-                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+                VerificarRegistroCompletoContrato(pConstruccion.ContratoId);
                 return
                     new Respuesta
                     {
@@ -594,8 +604,8 @@ namespace asivamosffie.services
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
-                
-                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+
+                VerificarRegistroCompletoContrato(pConstruccion.ContratoId);
 
                 return
                     new Respuesta
@@ -674,7 +684,7 @@ namespace asivamosffie.services
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
 
                 _context.SaveChanges();
-                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+                VerificarRegistroCompletoContrato(pConstruccion.ContratoId);
                 return
                     new Respuesta
                     {
@@ -838,7 +848,7 @@ namespace asivamosffie.services
                 }
 
                 _context.SaveChanges();
-                VerificarRegistroCompletoContrato( pConstruccion.ContratoId );
+                VerificarRegistroCompletoContrato(pConstruccion.ContratoId);
 
                 return
                     new Respuesta
@@ -913,32 +923,37 @@ namespace asivamosffie.services
 
         #region private 
 
-        private void VerificarRegistroCompletoContrato( int pIdContrato ){
+        private void VerificarRegistroCompletoContrato(int pIdContrato)
+        {
             bool esCompleto = true;
 
             Contrato contrato = _context.Contrato
-                                            .Where(c => c.ContratoId == pIdContrato )
-                                            .Include( r => r.ContratoConstruccion )
-                                                .ThenInclude( r => r.ConstruccionPerfil )
+                                            .Where(c => c.ContratoId == pIdContrato)
+                                            .Include(r => r.ContratoConstruccion)
+                                                .ThenInclude(r => r.ConstruccionPerfil)
                                             .FirstOrDefault();
 
-            contrato.ContratoConstruccion.ToList().ForEach( cc => {
-                if ( 
+            contrato.ContratoConstruccion.ToList().ForEach(cc =>
+            {
+                if (
                         cc.RegistroCompletoDiagnostico != true ||
                         cc.RegistroCompletoPlanesProgramas != true ||
                         cc.RegistroCompletoManejoAnticipo != true ||
                         cc.RegistroCompletoProgramacionObra != true ||
                         cc.RegistroCompletoFlujoInversion != true
                     )
-                    {
-                        esCompleto = false;
+                {
+                    esCompleto = false;
 
-                    }else {
-                        cc.ConstruccionPerfil.ToList().ForEach( cp => {
-                            if ( cp.RegistroCompleto != true )
-                                esCompleto = false;
-                        });
-                    }
+                }
+                else
+                {
+                    cc.ConstruccionPerfil.ToList().ForEach(cp =>
+                    {
+                        if (cp.RegistroCompleto != true)
+                            esCompleto = false;
+                    });
+                }
 
             });
 
@@ -957,7 +972,7 @@ namespace asivamosffie.services
             else
                 return false;
         }
-        
+
         private bool VerificarRegistroCompletoDiagnostico(ContratoConstruccion pConstruccion)
         {
             bool completo = true;
@@ -980,7 +995,7 @@ namespace asivamosffie.services
             return completo;
 
         }
-        
+
         private async Task<bool> ValidarRegistroCompletoVerificacion(int id, bool pEsSupervicion)
         {
             bool esCompleto = true;
@@ -1045,11 +1060,11 @@ namespace asivamosffie.services
 
             if (
                     pConstruccion.ManejoAnticipoRequiere == null ||
-                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == null ) ||
-                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == false ) ||
-                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == null ) ||
-                    ( pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == false ) 
-                    //( pConstruccion.ManejoAnticipoRequiere == true && string.IsNullOrEmpty(pConstruccion.ManejoAnticipoRutaSoporte) )
+                    (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == null) ||
+                    (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoPlanInversion == false) ||
+                    (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == null) ||
+                    (pConstruccion.ManejoAnticipoRequiere == true && pConstruccion.ManejoAnticipoCronogramaAmortizacion == false)
+                //( pConstruccion.ManejoAnticipoRequiere == true && string.IsNullOrEmpty(pConstruccion.ManejoAnticipoRutaSoporte) )
                 )
             {
                 completo = false;
@@ -1310,7 +1325,7 @@ namespace asivamosffie.services
 
 
         }
-        
+
         public async Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion)
         {
             string CreateEdit = string.Empty;
@@ -1507,10 +1522,14 @@ namespace asivamosffie.services
 
                 ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
 
-                if (pEsFlujoInvserion)
+                if (pEsFlujoInvserion){
                     contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
-                else
+                    contratoConstruccion.RegistroCompletoFlujoInversion = false;
+                }
+                else{
                     contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
+                    contratoConstruccion.RegistroCompletoProgramacionObra = false;
+                }
 
                 _context.SaveChanges();
 
@@ -1546,6 +1565,16 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
 
+            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                        .Where(cc => cc.ContratoConstruccionId == pContratoConstruccionId)
+                                                                        .Include(r => r.Contrato)
+                                                                        .Include(r => r.Proyecto)
+                                                                        .FirstOrDefault();
+
+            // DateTime fechaInicioContrato = contratoConstruccion.Contrato.FechaActaInicioFase2.Value;
+            // DateTime fechaFinalContrato = fechaInicioContrato.AddMonths( contratoConstruccion.Proyecto.PlazoMesesObra.Value );
+            // fechaFinalContrato = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value );
+
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
@@ -1571,101 +1600,153 @@ namespace asivamosffie.services
                     //No comienza desde 0 por lo tanto el = no es necesario
                     for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                     {
+                        bool tieneErrores = false;
                         try
                         {
-                            /* Columnas Obligatorias de excel
-                             2	3	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
-                            Campos Obligatorios Validos   */
-                            if (
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) &&
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) &&
-                                    //!string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) &&
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) &&
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 5].Text) &&
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 6].Text)
 
+                            TempProgramacion temp = new TempProgramacion();
+                            //Auditoria
+                            temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                            temp.EstaValidado = false;
+                            temp.FechaCreacion = DateTime.Now;
+                            temp.UsuarioCreacion = pUsuarioCreo;
+                            temp.ContratoConstruccionId = pContratoConstruccionId;
 
-                                )
+                            // #1
+                            //Tipo Actividad
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
                             {
-
-                                TempProgramacion temp = new TempProgramacion();
-                                //Auditoria
-                                temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
-                                temp.EstaValidado = false;
-                                temp.FechaCreacion = DateTime.Now;
-                                temp.UsuarioCreacion = pUsuarioCreo;
-                                temp.ContratoConstruccionId = pContratoConstruccionId;
-
-                                // #1
-                                //Tipo Actividad
-                                temp.TipoActividadCodigo = worksheet.Cells[i, 1].Text;
-
-                                //#2
-                                //Nombre proponente
-                                if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
-                                {
-                                    temp.Actividad = worksheet.Cells[i, 2].Text;
-                                }
-
-                                //#3
-                                //Marca de ruta critica
-                                if (string.IsNullOrEmpty(worksheet.Cells[i, 3].Text))
-                                {
-                                    temp.EsRutaCritica = false;
-                                }
-                                else
-                                {
-                                    temp.EsRutaCritica = worksheet.Cells[i, 3].Text == "1" ? true : false;
-                                }
-
-
-                                //#4
-                                //Fecha Inicio
-                                DateTime fechaTemp;
-                                temp.FechaInicio = DateTime.TryParse(worksheet.Cells[i, 4].Text, out fechaTemp) ? fechaTemp : DateTime.MinValue;
-
-                                //#5
-                                //Fecha final
-                                temp.FechaFin = DateTime.TryParse(worksheet.Cells[i, 5].Text, out fechaTemp) ? fechaTemp : DateTime.MinValue;
-
-                                //#6
-                                //Duracion
-                                temp.Duracion = Int32.Parse(worksheet.Cells[i, 6].Text);
-
-
-                                //Guarda Cambios en una tabla temporal
-
-                                _context.TempProgramacion.Add(temp);
-                                _context.SaveChanges();
-
-                                if (temp.TempProgramacionId > 0)
-                                {
-                                    CantidadResgistrosValidos++;
-                                }
-                                else
-                                {
-                                    CantidadRegistrosInvalidos++;
-                                }
-
+                                worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
                             }
                             else
                             {
-                                //Aqui entra cuando alguno de los campos obligatorios no viene diligenciado
-                                string strValidateCampNullsOrEmpty = "";
-                                //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
+                                temp.TipoActividadCodigo = worksheet.Cells[i, 1].Text;
+                            }
 
-                                for (int j = 1; j < 7; j++)
+
+                            //#2
+                            //Actividad
+                            if (!string.IsNullOrEmpty(worksheet.Cells[i, 2].Text))
+                            {
+                                temp.Actividad = worksheet.Cells[i, 2].Text;
+                            }
+                            else
+                            {
+                                worksheet.Cells[i, 2].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 2].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 2].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+
+                            //#3
+                            //Marca de ruta critica
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 3].Text))
+                            {
+                                temp.EsRutaCritica = false;
+                            }
+                            else
+                            {
+                                if (temp.TipoActividadCodigo == "I" && worksheet.Cells[i, 3].Text == "1")
                                 {
-                                    strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text);
+                                    temp.EsRutaCritica = true;
                                 }
-                                if (string.IsNullOrEmpty(strValidateCampNullsOrEmpty))
+                                else if (temp.TipoActividadCodigo != "I" && worksheet.Cells[i, 3].Text == "1")
                                 {
-                                    CantidadRegistrosVacios++;
+                                    worksheet.Cells[i, 3].AddComment("No se puede asignar ruta critica a este tipo de actividad", "Admin");
+                                    worksheet.Cells[i, 3].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 3].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                    tieneErrores = true;
                                 }
-                                else
-                                {
-                                    CantidadRegistrosInvalidos++;
-                                }
+
+                            }
+
+
+                            //#4
+                            //Fecha Inicio
+                            DateTime fechaTemp;
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 4].Text))
+                            {
+                                worksheet.Cells[i, 4].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else
+                            {
+                                temp.FechaInicio = DateTime.TryParse(worksheet.Cells[i, 4].Text, out fechaTemp) ? fechaTemp : DateTime.MinValue;
+                            }
+
+                            //#5
+                            //Fecha final
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 5].Text))
+                            {
+                                worksheet.Cells[i, 5].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else
+                            {
+                                temp.FechaFin = DateTime.TryParse(worksheet.Cells[i, 5].Text, out fechaTemp) ? fechaTemp : DateTime.MinValue;
+                            }
+
+                            // validacion fechas
+                            if (temp.FechaInicio > temp.FechaFin)
+                            {
+                                worksheet.Cells[i, 5].AddComment("La fecha no puede ser inferior a la fecha inicial", "Admin");
+                                worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+
+                            }
+
+                            // // fechas contrato
+                            // if ( temp.FechaInicio < fechaInicioContrato ){
+                            //     worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del contrato", "Admin");
+                            //     worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            //     worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                            //     tieneErrores = true;
+                            // }
+
+                            // if ( temp.FechaFin > fechaFinalContrato ){
+                            //     worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del contrato", "Admin");
+                            //     worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                            //     worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                            //     tieneErrores = true;
+                            // }
+
+                            //#6
+                            //Duracion
+                            if (string.IsNullOrEmpty(worksheet.Cells[i, 6].Text))
+                            {
+                                worksheet.Cells[i, 6].AddComment("Dato Obligatorio", "Admin");
+                                worksheet.Cells[i, 6].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 6].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
+                            else
+                            {
+                                temp.Duracion = Int32.Parse(worksheet.Cells[i, 6].Text);
+                            }
+
+
+                            //Guarda Cambios en una tabla temporal
+
+                            if (!tieneErrores)
+                            {
+                                _context.TempProgramacion.Add(temp);
+                                _context.SaveChanges();
+                            }
+
+                            if (temp.TempProgramacionId > 0)
+                            {
+                                CantidadResgistrosValidos++;
+                            }
+                            else
+                            {
+                                CantidadRegistrosInvalidos++;
                             }
 
                         }
@@ -1691,6 +1772,12 @@ namespace asivamosffie.services
                         LlaveConsulta = archivoCarge.Nombre
 
                     };
+
+                    byte[] bin = package.GetAsByteArray();
+                    string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
+                    File.WriteAllBytes(pathFile, bin);
+
+
                     return new Respuesta
                     {
                         Data = archivoCargueRespuesta,
@@ -1701,6 +1788,10 @@ namespace asivamosffie.services
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.OperacionExitosa, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
                     };
                 }
+
+
+
+
             }
             else
             {
@@ -1792,10 +1883,10 @@ namespace asivamosffie.services
                         contratoConstruccion.ArchivoCargueIdProgramacionObra = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoProgramacionObra = true;
 
-                        VerificarRegistroCompletoContrato( contratoConstruccion.ContratoId );
+                        VerificarRegistroCompletoContrato(contratoConstruccion.ContratoId);
                     }
 
-                    
+
 
                     return respuesta =
                     new Respuesta
@@ -1834,7 +1925,7 @@ namespace asivamosffie.services
             }
 
         }
-        
+
         public async Task<Respuesta> UploadFileToValidateInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
@@ -1867,74 +1958,73 @@ namespace asivamosffie.services
                         try
                         {
 
-                            /* Columnas Obligatorias de excel
-                             2	3	5	6	7	8	10	11	12	13	14 28 29 30 31 32		
-                            Campos Obligatorios Validos   */
-                            if (
-                                    !string.IsNullOrEmpty(worksheet.Cells[i, 1].Text)
-                               )
+
+                            for (int k = 2; k < worksheet.Dimension.Columns; k++)
                             {
-                                for (int k = 2; k < worksheet.Dimension.Columns; k++)
+                                bool tieneErrores = false;
+
+
+                                TempFlujoInversion temp = new TempFlujoInversion();
+                                //Auditoria
+                                temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
+                                temp.EstaValidado = false;
+                                temp.FechaCreacion = DateTime.Now;
+                                temp.UsuarioCreacion = pUsuarioCreo;
+                                temp.ContratoConstruccionId = pContratoConstruccionId;
+
+
+                                //Valores
+
+                                if (string.IsNullOrEmpty(worksheet.Cells[1, k].Text))
                                 {
-
-
-                                    TempFlujoInversion temp = new TempFlujoInversion();
-                                    //Auditoria
-                                    temp.ArchivoCargueId = archivoCarge.ArchivoCargueId;
-                                    temp.EstaValidado = false;
-                                    temp.FechaCreacion = DateTime.Now;
-                                    temp.UsuarioCreacion = pUsuarioCreo;
-                                    temp.ContratoConstruccionId = pContratoConstruccionId;
-
-
-                                    //Valores
-                                    temp.Mes = worksheet.Cells[1, k].Text;
-                                    temp.Capitulo = worksheet.Cells[i, 1].Text;
-                                    temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(worksheet.Cells[i, k].Text);
-
-
-                                    //Guarda Cambios en una tabla temporal
-
-                                    _context.TempFlujoInversion.Add(temp);
-                                    _context.SaveChanges();
-
-                                    if (temp.TempFlujoInversionId > 0)
-                                    {
-                                        CantidadResgistrosValidos++;
-                                    }
-                                    else
-                                    {
-                                        CantidadRegistrosInvalidos++;
-                                    }
+                                    worksheet.Cells[1, k].AddComment("Dato Obligatorio", "Admin");
+                                    worksheet.Cells[1, k].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[1, k].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                    tieneErrores = true;
 
                                 }
-                            }
-                            else
-                            {
-                                //Aqui entra cuando alguno de los campos obligatorios no viene diligenciado
-                                //string strValidateCampNullsOrEmpty = "";
-                                //Valida que todos los campos esten vacios porque las validaciones del excel hacen que lea todos los rows como ingresado información 
+                                else
+                                {
+                                    temp.Mes = worksheet.Cells[1, k].Text;
+                                }
 
-                                for (int j = 2; j < worksheet.Dimension.Columns; j++)
+                                if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
+                                {
+                                    worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
+                                    worksheet.Cells[i, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                    worksheet.Cells[i, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                    tieneErrores = true;
+                                }
+                                else
+                                {
+                                    temp.Capitulo = worksheet.Cells[i, 1].Text;
+                                }
+
+                                temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(worksheet.Cells[i, k].Text);
+
+
+                                //Guarda Cambios en una tabla temporal
+
+
+                                if (!tieneErrores)
+                                {
+                                    _context.TempFlujoInversion.Add(temp);
+                                    _context.SaveChanges();
+                                }
+
+
+
+                                if (temp.TempFlujoInversionId > 0)
+                                {
+                                    CantidadResgistrosValidos++;
+                                }
+                                else
                                 {
                                     CantidadRegistrosInvalidos++;
                                 }
 
-
-                                // for (int j = 1; j < 7; j++)
-                                // {
-                                //     strValidateCampNullsOrEmpty += (worksheet.Cells[i, j].Text);
-                                // }
-                                // if (string.IsNullOrEmpty(strValidateCampNullsOrEmpty))
-                                // {
-                                //     CantidadRegistrosVacios++;
-                                // }
-                                // else
-                                // {
-                                //     CantidadRegistrosInvalidos++;
-
-                                // }
                             }
+
 
                         }
                         catch (Exception ex)
@@ -1960,6 +2050,11 @@ namespace asivamosffie.services
                         LlaveConsulta = archivoCarge.Nombre
 
                     };
+
+                    byte[] bin = package.GetAsByteArray();
+                    string pathFile = archivoCarge.Ruta + "/" + archivoCarge.Nombre + ".xlsx";
+                    File.WriteAllBytes(pathFile, bin);
+
                     return new Respuesta
                     {
                         Data = archivoCargueRespuesta,
@@ -2066,7 +2161,7 @@ namespace asivamosffie.services
                         contratoConstruccion.ArchivoCargueIdFlujoInversion = archivoCargue.ArchivoCargueId;
                         contratoConstruccion.RegistroCompletoFlujoInversion = true;
 
-                        VerificarRegistroCompletoContrato( contratoConstruccion.ContratoId );
+                        VerificarRegistroCompletoContrato(contratoConstruccion.ContratoId);
 
                         DateTime? fechaInicio = contratoConstruccion.Contrato.FechaActaInicioFase2;
 
@@ -2092,29 +2187,29 @@ namespace asivamosffie.services
 
                             // elimina los existentes
                             _context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
-                           
+
                             int i = 1;
-                            listaFechas.OrderBy( p => p.fechaInicio ).ToList().ForEach(f =>
-                            {
-                                
-                                SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
-                                {
-                                    ContratacionProyectoId = idContratacionproyecto,
-                                    Eliminado = false,
-                                    UsuarioCreacion = pUsuarioModifico,
-                                    FechaCreacion = DateTime.Now,
-                                    NumeroSemana = i,
-                                    FechaInicio = f.fechaInicio,
-                                    FechaFin = f.fechaFin,
-                                    RegistroCompleto = false, 
-                                };
+                            listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
+                          {
 
-                                _context.SeguimientoSemanal.Add(seguimientoSemanal);
-                                _context.SaveChanges();
+                              SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
+                              {
+                                  ContratacionProyectoId = idContratacionproyecto,
+                                  Eliminado = false,
+                                  UsuarioCreacion = pUsuarioModifico,
+                                  FechaCreacion = DateTime.Now,
+                                  NumeroSemana = i,
+                                  FechaInicio = f.fechaInicio,
+                                  FechaFin = f.fechaFin,
+                                  RegistroCompleto = false,
+                              };
 
-                                i++;
+                              _context.SeguimientoSemanal.Add(seguimientoSemanal);
+                              _context.SaveChanges();
 
-                            });
+                              i++;
+
+                          });
 
                         }
 
@@ -2159,8 +2254,8 @@ namespace asivamosffie.services
 
         }
 
-        #endregion        
-        
+        #endregion
+
         #region Observaciones 
 
         private ConstruccionObservacion getObservacion(ContratoConstruccion pContratoConstruccion, string pTipoObservacion, bool pEsSupervicion)
