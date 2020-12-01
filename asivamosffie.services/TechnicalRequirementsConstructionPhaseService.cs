@@ -1522,10 +1522,14 @@ namespace asivamosffie.services
 
                 ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
 
-                if (pEsFlujoInvserion)
+                if (pEsFlujoInvserion){
                     contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
-                else
+                    contratoConstruccion.RegistroCompletoFlujoInversion = false;
+                }
+                else{
                     contratoConstruccion.ArchivoCargueIdProgramacionObra = null;
+                    contratoConstruccion.RegistroCompletoProgramacionObra = false;
+                }
 
                 _context.SaveChanges();
 

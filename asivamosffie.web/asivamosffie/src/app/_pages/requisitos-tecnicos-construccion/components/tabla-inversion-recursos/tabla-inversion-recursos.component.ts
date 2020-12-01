@@ -77,10 +77,10 @@ export class TablaInversionRecursosComponent implements OnInit {
     }
   }
   
-  addObservaciones( pArchivoCargueId: number, estadoCargue: string, observaciones?: string ){
+  addObservaciones( pArchivoCargueId: number, estadoCargue: string, fechaCreacion, observaciones?: string ){
     const dialogCargarProgramacion = this.dialog.open( DialogObservacionesProgramacionComponent, {
       width: '75em',
-      data: { pArchivoCargueId, observaciones, estadoCargue }
+      data: { pArchivoCargueId, observaciones, estadoCargue, fechaCreacion }
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe( response => {

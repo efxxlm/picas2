@@ -7,7 +7,9 @@
 </h1>
 
 <p class="p mt-1em">
-    <span><strong>10/08/2020</strong></span> <span class="sin-diligenciar">  Válidos</span>
+    <span><strong>{{ data.fechaCreacion | date: 'dd/MM/yyyy' }}</strong></span> 
+    <span class="info-text sin-diligenciar" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Fallido'">Fallido</span>
+    <span class="info-text completo" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Validos'">Valido</span>
 </p>
 
 <form autocomplete="off" [formGroup]="formObservacion">
