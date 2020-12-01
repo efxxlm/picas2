@@ -66,6 +66,7 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
                 dataTable.push( lista );
               }
             } );
+            console.log( dataTable );
             this.dataSource = new MatTableDataSource( dataTable );
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;

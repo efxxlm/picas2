@@ -217,7 +217,8 @@ export class FormPerfilComponent implements OnInit {
           this.perfilesCompletos++;
           semaforo = 'completo';
         }
-        if (  !perfil.registroCompleto
+        if (  perfil.registroCompleto === false
+              && perfil.perfilCodigo !== undefined
               && (  perfil.contratoPerfilId !== undefined
                     || perfil.cantidadHvRequeridas > 0
                     || perfil.cantidadHvRecibidas > 0
@@ -250,8 +251,8 @@ export class FormPerfilComponent implements OnInit {
       if ( this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );
       }
-      if ( (  this.perfilesEnProceso < this.perfilProyecto.length || this.perfilesEnProceso === this.perfilProyecto.length )
-              && this.perfilesCompletos !== this.perfilProyecto.length ) {
+      if (  this.perfilesEnProceso > 0
+            || ( this.perfilesEnProceso === 0 && this.perfilesCompletos > 0 && this.perfilesCompletos < this.perfilProyecto.length ) ) {
         this.perfilesCompletados.emit( 'en-proceso' );
       }
     }
@@ -338,7 +339,6 @@ export class FormPerfilComponent implements OnInit {
     this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe( value => {
         if ( value === true ) {
-          console.log( contratoPerfilId );
           if ( contratoPerfilId !== 0 ) {
             this.faseUnoPreconstruccionSvc.deleteContratoPerfil( contratoPerfilId )
             .subscribe(
