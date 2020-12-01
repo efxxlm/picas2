@@ -134,8 +134,8 @@ namespace asivamosffie.services
                                 FechaAprobacion = c.FechaAprobacion,
                                 NumeroContrato = c.NumeroContrato,
                                 CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                                CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                                CantidadProyectosRequisitosVerificados = c.CantidadProyectosRequisitosVerificados,
+                                CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosVerificados,
                                 EstadoCodigo = c.EstadoCodigo,
                                 EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                 Existeregistro = c.ExisteRegistro,
@@ -153,8 +153,8 @@ namespace asivamosffie.services
                             FechaAprobacion = c.FechaAprobacion,
                             NumeroContrato = c.NumeroContrato,
                             CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                            CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                            CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
+                            CantidadProyectosRequisitosVerificados = c.CantidadProyectosRequisitosVerificados,
+                            CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosVerificados,
                             EstadoCodigo = c.EstadoCodigo,
                             EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                             Existeregistro = c.ExisteRegistro,
@@ -2649,11 +2649,13 @@ namespace asivamosffie.services
 
                 contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
 
+                Contrato contrato = _context.Contrato.Find(contratoConstruccion.ContratoId);
+                
                 if (contratoConstruccion.RegistroCompletoVerificacion.Value)
                 {
-                    Contrato contrato = _context.Contrato.Find(contratoConstruccion.ContratoId);
-
                     contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_verificados;
+                }else{
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
                 }
 
                 _context.SaveChanges();
