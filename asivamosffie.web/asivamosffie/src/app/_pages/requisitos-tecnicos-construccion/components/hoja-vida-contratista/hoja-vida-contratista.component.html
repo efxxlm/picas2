@@ -60,10 +60,9 @@
             <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
             <div class="col d-flex">
               <mat-form-field style="width: 28.5%;">
-                <input matInput type="number" maxlength="3" formControlName="cantidadHvAprobadas" required #cantidadHvAprobadas
-                (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                <input matInput type="number" maxlength="3" formControlName="cantidadHvAprobadas" required >
               </mat-form-field>
-              <span class="contador">{{3 - cantidadHvAprobadas.value.length}}</span>
+              <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.length}}</span>
             </div>
           </section>
 
