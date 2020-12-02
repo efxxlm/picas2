@@ -93,8 +93,8 @@
                             (onContentChanged)="maxLength($event, 1000)"
                             formControlName="observacion"></quill-editor>
               <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
-                <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                  {{1000 - textoLimpio(perfil.get('observacion').value)}}
+                <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">                  
+                  {{1000 - (textoLimpio(perfil.get('observacion').value)>1000?1000:textoLimpio(perfil.get('observacion').value))}}
                 </span>
                 <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
                   1000
