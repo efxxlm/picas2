@@ -863,16 +863,22 @@ namespace asivamosffie.services
             Contrato contrato=null;
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
+            Contratacion contratacion = null;
+            if(contrato!=null)
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
             Plantilla plantilla=null;
 
-            if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-            {
+            if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                //if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                {
                 pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
                 plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_interventoria_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
             }
 
-           else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+            //else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+            else if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
             {
                 pTipoContrato = ConstanCodigoTipoContratacion.Obra;
                 plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_obra_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
