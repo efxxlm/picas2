@@ -342,7 +342,11 @@ namespace asivamosffie.services
 
         public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
         {
-            List<ArchivoCargue> listaCargas = _context.ArchivoCargue.Where(a => a.ReferenciaId == pContratoConstruccionId && a.Eliminado != true).ToList();
+            List<ArchivoCargue> listaCargas = _context.ArchivoCargue
+                                                            .Where(a => a.ReferenciaId == pContratoConstruccionId && 
+                                                                        a.Eliminado != true && 
+                                                                        a.OrigenId ==int.Parse( OrigenArchivoCargue.ProgramacionObra ) )
+                                                            .ToList();
 
 
             listaCargas.ForEach(archivo =>
@@ -357,22 +361,21 @@ namespace asivamosffie.services
 
         public async Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId)
         {
-            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
+            List<ArchivoCargue> listaCargas = _context.ArchivoCargue
+                                                            .Where( a => a.ReferenciaId == pContratoConstruccionId && 
+                                                                    a.Eliminado != true && 
+                                                                    a.OrigenId ==int.Parse( OrigenArchivoCargue.FlujoInversion ))
+                                                            .ToList();
 
-            List<TempFlujoInversion> lista = _context.TempFlujoInversion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
 
-            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
-          {
-              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => a.ArchivoCargueId == c.Key && a.Eliminado != true).FirstOrDefault();
-              if (archivo != null)
-              {
-                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+            listaCargas.ForEach(archivo =>
+            {
+                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
 
-                  listaCargas.Add(archivo);
-              }
-          });
+            });
 
             return listaCargas;
+
 
         }
 
@@ -2061,6 +2064,21 @@ namespace asivamosffie.services
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
 
+            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                        .Where( cc => cc.ContratoConstruccionId == pContratoConstruccionId )
+                                                                        .Include( r => r.Contrato )
+                                                                            .ThenInclude( r => r.Contratacion )
+                                                                                .ThenInclude( r => r.DisponibilidadPresupuestal )
+                                                                        .Include( r => r.Contrato )
+                                                                            .ThenInclude( r => r.ContratoPoliza )
+                                                                        .Include( r => r.Proyecto )
+                                                                        .FirstOrDefault();
+
+
+            DateTime? fechaInicioContrato = contratoConstruccion?.Contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp.Value;
+            DateTime fechaFinalContrato = fechaInicioContrato.Value.AddMonths( contratoConstruccion.Proyecto.PlazoMesesObra.Value );
+            fechaFinalContrato = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value );
+
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
@@ -2074,22 +2092,22 @@ namespace asivamosffie.services
                 using (var stream = new MemoryStream())
                 {
                     await pFile.CopyToAsync(stream);
-
+                    
                     using var package = new ExcelPackage(stream);
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
                     //Controlar Registros
                     //Filas <=
                     //No comienza desde 0 por lo tanto el = no es necesario
+
+                    decimal sumaTotal = 0;
+
                     for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                     {
                         try
                         {
-
-
                             for (int k = 2; k < worksheet.Dimension.Columns; k++)
                             {
                                 bool tieneErrores = false;
-
 
                                 TempFlujoInversion temp = new TempFlujoInversion();
                                 //Auditoria
@@ -2099,9 +2117,8 @@ namespace asivamosffie.services
                                 temp.UsuarioCreacion = pUsuarioCreo;
                                 temp.ContratoConstruccionId = pContratoConstruccionId;
 
-
                                 //Valores
-
+                                // Mes
                                 if (string.IsNullOrEmpty(worksheet.Cells[1, k].Text))
                                 {
                                     worksheet.Cells[1, k].AddComment("Dato Obligatorio", "Admin");
@@ -2115,6 +2132,7 @@ namespace asivamosffie.services
                                     temp.Mes = worksheet.Cells[1, k].Text;
                                 }
 
+                                //Capitulo
                                 if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
                                 {
                                     worksheet.Cells[i, 1].AddComment("Dato Obligatorio", "Admin");
@@ -2127,11 +2145,11 @@ namespace asivamosffie.services
                                     temp.Capitulo = worksheet.Cells[i, 1].Text;
                                 }
 
+                                //Valor
                                 temp.Valor = string.IsNullOrEmpty(worksheet.Cells[i, k].Text) ? 0 : decimal.Parse(worksheet.Cells[i, k].Text);
-
+                                sumaTotal += temp.Valor.Value;
 
                                 //Guarda Cambios en una tabla temporal
-
 
                                 if (!tieneErrores)
                                 {
@@ -2159,6 +2177,14 @@ namespace asivamosffie.services
                             CantidadRegistrosInvalidos++;
                         }
 
+                    }
+
+                    if ( contratoConstruccion.Proyecto.ValorObra != sumaTotal ){
+                        worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor total de obra del proyecto", "Admin");
+                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        CantidadRegistrosInvalidos++;
+                        CantidadResgistrosValidos--;
                     }
 
                     //Actualizo el archivoCarge con la cantidad de registros validos , invalidos , y el total;
