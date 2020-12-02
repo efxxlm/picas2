@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace asivamosffie.model.Models
+namespace asivamosffie.api.Models
 {
     public partial class FlujoInversion
     {
