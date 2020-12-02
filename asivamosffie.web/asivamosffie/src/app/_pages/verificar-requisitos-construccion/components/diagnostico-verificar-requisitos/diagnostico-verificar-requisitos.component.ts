@@ -57,7 +57,9 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
       
       this.addressForm.get('tieneObservaciones').setValue(this.construccion.tieneObservacionesDiagnosticoApoyo)
       this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnosticoApoyo ? this.construccion.observacionDiagnosticoApoyo.observaciones : null)
-      this.addressForm.get('construccionObservacionId').setValue(0);
+      //en edición el setvalue 0 genera la creacion de registros
+      //this.addressForm.get('construccionObservacionId').setValue(0);
+      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoApoyo.construccionObservacionId);
 
       //this.validarSemaforo();
     }
@@ -104,7 +106,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
       construccionObservacion: [
         {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
-          contratoConstruccionId: this.contratoConstruccionId,
+          contratoConstruccionId: this.contratoConstruccionId,          
           tipoObservacionConstruccion: TiposObservacionConstruccion.Diagnostico,
           esSupervision: false,
           esActa: false,

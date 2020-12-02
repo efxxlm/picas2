@@ -161,6 +161,7 @@ export interface ContratacionProyecto2 {
 }
 
 interface Proyecto2 {
+  
   departamento: string;
   municipio: string;
   proyectoId: number;
@@ -193,6 +194,7 @@ interface Proyecto2 {
   proyectoAportante: any[];
   proyectoPredio: any[];
   proyectoRequisitoTecnico: any[];
+  semaforoGeneral?: string;//just for class colors
 }
 
 interface LocalizacionIdMunicipioNavigation {
