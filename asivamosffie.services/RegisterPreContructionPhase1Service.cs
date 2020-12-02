@@ -482,47 +482,19 @@ namespace asivamosffie.services
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
-
-
+                 
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
                     contratoMod.FechaAprobacionRequisitosSupervisor = DateTime.Now;
 
 
                 //Enviar Correo Botón aprobar inicio 3.1.8
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor) {
-
-                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
-                    foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
-                    {
-                        ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
-
-                        contratoPerfilOld.TieneObservacionSupervisor = null;
-                        contratoPerfilOld.TieneObservacionApoyo = null;
-                        contratoPerfilOld.FechaModificacion = DateTime.Now;
-                        contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
-                    }
-                }
-                   
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
-                {
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor)  
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
-                    foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
-                    {
-                        ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
-
-                        contratoPerfilOld.TieneObservacionSupervisor = null;
-                        contratoPerfilOld.TieneObservacionApoyo = null;
-                        contratoPerfilOld.FechaModificacion = DateTime.Now;
-                        contratoPerfilOld.UsuarioModificacion = UsuarioModificacion; 
-                    } 
-                }
-
-
-         
-
-
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo) 
+                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender); 
+  
                 _context.SaveChanges();
 
                 string NombreEstadoMod = _context.Dominio.Where(r => r.Codigo == pEstadoVerificacionContratoCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Verificacion_Contrato).FirstOrDefault().Nombre;

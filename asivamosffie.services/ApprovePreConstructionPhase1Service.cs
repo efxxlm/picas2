@@ -66,10 +66,12 @@ namespace asivamosffie.services
 
                         foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
                         {
-                            if (ContratoPerfil.TieneObservacionSupervisor.HasValue && !(bool)ContratoPerfil.TieneObservacionSupervisor ||
-                                    (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor))
+                            if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).LastOrDefault().Observacion))
                                 RegistroCompletoObservaciones = false;
-                             
+
+                            if (!ContratoPerfil.TieneObservacionSupervisor.HasValue)
+                                RegistroCompletoObservaciones = false;
+
                             if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
                                 RegistroCompleto = false;
                             else if ((ContratoPerfil.TieneObservacionSupervisor == null)
