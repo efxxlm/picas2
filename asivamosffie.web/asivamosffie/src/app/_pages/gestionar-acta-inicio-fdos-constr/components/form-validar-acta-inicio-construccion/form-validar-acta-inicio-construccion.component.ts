@@ -76,10 +76,10 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     }
   }
   loadData(id) {
-    this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
+    this.services.GetVistaGenerarActaInicio(id).subscribe((data:any) => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
-      this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
+      this.fechaAprobacionSupervisor = data.fechaAprobacionRequisitosSupervisor;
       /*Cuadro 1*/
       this.vigenciaContrato = data.vigenciaContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;

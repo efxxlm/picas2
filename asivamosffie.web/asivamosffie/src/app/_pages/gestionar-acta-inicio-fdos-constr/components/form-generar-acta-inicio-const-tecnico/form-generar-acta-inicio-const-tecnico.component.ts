@@ -75,6 +75,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   conObervacionesActa: boolean;
   objeto: any;
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
+  valorProponente: any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService) {
     this.maxDate = new Date();
@@ -108,7 +109,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     this.services.GetVistaGenerarActaInicio(id).subscribe((data:any) => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
-      this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
+      this.fechaAprobacionSupervisor = data.fechaAprobacionRequisitosSupervisor;
       /*Cuadro 1*/
       this.vigenciaContrato = data.vigenciaContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
@@ -126,9 +127,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
       this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
       this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
+      this.valorProponente = data.proponenteCodigo;
       /*Campo de texto no editable*/
-      this.plazoActualContratoMeses = 12;
-      this.plazoActualContratoDias = 26;
+      this.plazoActualContratoMeses = data.plazoActualContratoMeses;
+      this.plazoActualContratoDias = data.plazoActualContratoDias;
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       /*Campo de texto editable*/
@@ -152,7 +154,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   }
   generarFechaRestante(){
     let newdate = new Date(this.addressForm.value.fechaActaInicioFDosConstruccion);
-    newdate.setDate(newdate.getDate() + (this.plazoActualContratoMeses*30));
+    newdate.setDate(newdate.getDate() + (this.plazoActualContratoMeses*30.43));
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.plazoActualContratoDias)
     console.log(newDateFinal);
@@ -191,8 +193,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length > 500 ? 500 : textolimpio.length;
+    }
   }
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
@@ -253,6 +257,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
         });
         if(localStorage.getItem("origin")=="interventoria"){
           this.services.CambiarEstadoActa(this.idContrato,"2","usr2").subscribe(resp=>{
+          });
+        }
+        else{
+          this.services.CambiarEstadoActa(this.idContrato,"14","usr2").subscribe(resp=>{
           });
         }
       }

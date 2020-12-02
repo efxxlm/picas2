@@ -27,15 +27,20 @@
             <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato}}</p>
             <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion}}</p>
             <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra}}</p>
-            <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+            <div *ngIf="this.valorProponente=='1'">
+                <p><strong>Número de identificación del representante legal del contratista de obra: </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria}}</p>
+                <p><strong>Nombre del representante legal del contratista de obra: </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
+                <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
+                <p><strong>Nombre entidad contratista de obra: </strong>{{this.nombreEntidadContratistaObra}}</p>
+            </div>
+            <div *ngIf="this.valorProponente=='2'">
+                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
                 </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria}}</p>
             <p><strong>Nombre del representante legal del contratista de interventoría: </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
             <p><strong>Número de identificación del contratista de interventoría: </strong>870.876.977-4</p>
-            <p><strong>Nombre de la entidad contratista de interventoría: </strong>C & M Constructora Ltda.</p>
-            <p><strong>Número de identificación del representante legal del contratista de obra: </strong>93.876.987</p>
-            <p><strong>Nombre del representante legal del contratista de obra: </strong>María Mercedez Aristizabal</p>
-            <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
-            <p><strong>Nombre entidad contratista de obra: </strong>{{this.nombreEntidadContratistaObra}}</p>
+            <p><strong>Nombre de la entidad contratista de interventoría: </strong>{{this.nombreEntidadContratistaObra}}</p>
+            </div>
+
         </mat-card-content>
     </mat-card>
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
@@ -49,8 +54,9 @@
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput [matDatepicker]="picker" required [max]="maxDate" readonly
-                                        (click)="picker.open()" formControlName="fechaActaInicioFDosConstruccion"  placeholder="DD/MM/AAAA">
+                                    <input matInput [matDatepicker]="picker" required [min]="this.fechaAprobacionSupervisor" readonly
+                                        (click)="picker.open()" formControlName="fechaActaInicioFDosConstruccion"  placeholder="DD/MM/AAAA"
+                                        (dateInput)="generarFechaRestante()">
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
                                 <button mat-button color="primary" type="button" (click)="picker.open()"
@@ -71,13 +77,9 @@
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
                                     <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
-                                        (click)="picker2.open()" formControlName="fechaPrevistaTerminacion"  placeholder="DD/MM/AAAA">
+                                        formControlName="fechaPrevistaTerminacion"  placeholder="DD/MM/AAAA">
                                     <mat-datepicker #picker2></mat-datepicker>
                                 </mat-form-field>
-                                <button mat-button color="primary" type="button" (click)="picker2.open()"
-                                    class="btn-calendario">
-                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                                </button>
                             </div>
                         </div>
                     </div>
