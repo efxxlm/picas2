@@ -1477,7 +1477,8 @@ namespace asivamosffie.services
 
                 //actaInicio.FechaAprobacionRequisitos = contratacion.FechaAprobacion.ToString("dd/MM/yyyy");
                 //actaInicio.FechaAprobacionRequisitos = contratacion.FechaAprobacion != null ? Convert.ToDateTime(contratacion.FechaAprobacion).ToString("dd/MM/yyyy") : contratacion.FechaAprobacion.ToString();
-                actaInicio.FechaAprobacionRequisitos = item.FechaAprobacionRequisitos != null ? Convert.ToDateTime(item.FechaAprobacionRequisitos).ToString("dd/MM/yyyy") : item.FechaAprobacionRequisitos.ToString();
+                //actaInicio.FechaAprobacionRequisitos = item.FechaAprobacionRequisitos != null ? Convert.ToDateTime(item.FechaAprobacionRequisitos).ToString("dd/MM/yyyy") : item.FechaAprobacionRequisitos.ToString();
+                actaInicio.FechaAprobacionRequisitos = item.FechaAprobacionRequisitosConstruccionSupervisor != null ? Convert.ToDateTime(item.FechaAprobacionRequisitosConstruccionSupervisor).ToString("dd/MM/yyyy") : item.FechaAprobacionRequisitosConstruccionSupervisor.ToString();
                 lstActaInicio.Add(actaInicio);
             }
 
