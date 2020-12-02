@@ -68,6 +68,15 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
       this.contratoId = param.id;
     });
   }
+  cargarRol() {
+    this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
+    if (this.rolAsignado == 2) {
+      this.opcion = 1;
+    }
+    else {
+      this.opcion = 2;
+    }
+  }
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
       this.cargarDataParaInsercion(data);
@@ -127,21 +136,15 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
     this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
-    if(localStorage.getItem("origin")=="interventoria"){
+    this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
+    this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+    if(this.opcion == 1){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
       this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
     }
   }
-  cargarRol() {
-    this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
-    if (this.rolAsignado == 2) {
-      this.opcion = 1;
-    }
-    else {
-      this.opcion = 2;
-    }
-  }
+
 
   verObservaciones(observaciones){
     if(observaciones==true){

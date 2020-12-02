@@ -44,7 +44,7 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
   cargarTablaDeDatos(){
     this.service.GetListGrillaActaInicio(8).subscribe((data:any)=>{
       for (let contrObras of data) {
-        if (contrObras.tipoContratoNombre === 'Obra' && contrObras.estadoActaCodigo!='13') {
+        if (contrObras.tipoContratoNombre === 'Obra' && (contrObras.estadoActaCodigo!='13' && contrObras.estadoActaCodigo!='14')) {
           this.dataTable.push(contrObras);
         };
       };

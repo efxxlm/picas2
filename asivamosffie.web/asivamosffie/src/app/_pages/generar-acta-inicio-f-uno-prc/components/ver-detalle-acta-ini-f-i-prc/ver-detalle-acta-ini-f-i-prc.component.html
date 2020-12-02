@@ -12,6 +12,7 @@
     </p>
 </section>
 <section class="container">
+    <mat-card class="shipping-card mainGris">
     <mat-card-content>
         <p><strong>Vigencia del contrato: </strong>{{this.vigenciaContrato | date:'dd/MM/yyyy' }} </p>
         <p><strong>Fecha de firma del contrato: </strong>{{ this.fechaFirmaContrato | date:'dd/MM/yyyy' }}</p>
@@ -47,12 +48,14 @@
                 {{this.diasPlazoIni}}</p>
         </div>
         <div *ngIf="this.opcion == 1">
+            <!--
             <div *ngIf="this.dataSupervisor==true">
                 <p><strong>Número de identificación del Supervisor:
                     </strong>{{this.numIdentifiacionSupervisor }}</p>
                 <p><strong>Nombre del Supervisor:
                     </strong>{{this.nomSupervisor}}</p>
             </div>
+            -->
             <p><strong>Número de identificación del representante legal del contratista de inteventoría:
                 </strong>{{this.numIdRepresentanteLegal }}</p>
             <p><strong>Nombre del representante legal del contratista de interventoría:

@@ -125,7 +125,9 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
     this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
-    if(localStorage.getItem("origin")=="interventoria"){
+    this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
+    this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+    if(this.ocpion == 1){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
       this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;

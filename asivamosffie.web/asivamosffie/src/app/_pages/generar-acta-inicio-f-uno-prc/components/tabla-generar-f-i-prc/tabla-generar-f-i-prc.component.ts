@@ -68,7 +68,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleEditarActa', id]);
   }
   enviarParaRevision(idContrato) {
-    this.service.CambiarEstadoActa(idContrato, "14").subscribe(data => {
+    this.service.CambiarEstadoActa(idContrato, "21").subscribe(data => {
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(
         () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
       );
