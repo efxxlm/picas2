@@ -100,8 +100,6 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
     pContrato.append('FechaActaInicioFase1', this.fechaSesionString);
     pContrato.append('FechaTerminacion', this.fechaSesionString2);
     pContrato.append('pFile', inputNode.files[0]);  
-    alert(this.fechaFirmaContratistaObra);
-    alert(this.fechaFirmaContratistaInterventoria);
     if(this.fechaSesionString=='NaN-NaN-NaN' || this.fechaSesionString2=='NaN-NaN-NaN' || this.archivo==undefined){
       this.openDialog('', '<b>Falta registrar información.</b>');
       this.esRojo = true;

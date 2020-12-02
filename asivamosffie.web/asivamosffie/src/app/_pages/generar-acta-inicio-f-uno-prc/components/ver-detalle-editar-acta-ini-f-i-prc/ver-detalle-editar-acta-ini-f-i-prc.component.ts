@@ -108,7 +108,9 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       for(let i=0; i<data.contratoObservacion.length;i++){
         if(data.contratoObservacion[i].esActa==false && data.contratoObservacion[i].esActaFase1==true){
           this.indexObservacionFinal=data.contratoObservacion[i].observaciones;
+          this.observacionesActaFase1 = data.contratoObservacion[i].observaciones;
         }
+        
       }
       this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
@@ -119,7 +121,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.addressForm.get('diasPlazoEjFase1').setValue(data.plazoFase1PreDias);
       this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
       this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
-      this.addressForm.get('observacionesEspeciales').setValue(this.indexObservacionFinal);
     });
     this.idContrato = id;
   }
@@ -133,6 +134,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
           this.fechaCreacion = data[i].fechaCreacion;
         }
       }
+      this.addressForm.get('observacionesEspeciales').setValue(this.observacionesActaFase1);
   });
 }
 
@@ -331,17 +333,16 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         if (data.code == "200") {
           if(localStorage.getItem("origin")=="obra"){
             this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
-              this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
               this.openDialog('', data.message);
+              this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
           }
           else{
             this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data1=>{
-              this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
               this.openDialog('', data.message);
+              this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
           }
-          this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
         else{
           this.openDialog('', data.message);
