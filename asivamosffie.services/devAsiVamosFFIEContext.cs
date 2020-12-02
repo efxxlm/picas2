@@ -80,6 +80,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<MensajesValidaciones> MensajesValidaciones { get; set; }
         public virtual DbSet<Menu> Menu { get; set; }
         public virtual DbSet<MenuPerfil> MenuPerfil { get; set; }
+        public virtual DbSet<MesEjecucion> MesEjecucion { get; set; }
         public virtual DbSet<NovedadContractual> NovedadContractual { get; set; }
         public virtual DbSet<Perfil> Perfil { get; set; }
         public virtual DbSet<Plantilla> Plantilla { get; set; }
@@ -153,15 +154,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -2300,6 +2292,16 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ContratoConstruccionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FlujoInversion_ContratoConstruccion");
+
+                entity.HasOne(d => d.MesEjecucion)
+                    .WithMany(p => p.FlujoInversion)
+                    .HasForeignKey(d => d.MesEjecucionId)
+                    .HasConstraintName("FK_FlujoInversion_MesEjecucion");
+
+                entity.HasOne(d => d.Programacion)
+                    .WithMany(p => p.FlujoInversion)
+                    .HasForeignKey(d => d.ProgramacionId)
+                    .HasConstraintName("FK_FlujoInversion_Programacion");
             });
 
             modelBuilder.Entity<FuenteFinanciacion>(entity =>
@@ -2782,6 +2784,19 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.PerfilId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_MenuPerfil_Perfil");
+            });
+
+            modelBuilder.Entity<MesEjecucion>(entity =>
+            {
+                entity.Property(e => e.FechaFin).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaInicio).HasColumnType("datetime");
+
+                entity.HasOne(d => d.ContratoConstruccion)
+                    .WithMany(p => p.MesEjecucion)
+                    .HasForeignKey(d => d.ContratoConstruccionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_MesEjecucion_ContratoConstruccion");
             });
 
             modelBuilder.Entity<NovedadContractual>(entity =>

@@ -41,30 +41,14 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
   { }
 
   ngOnInit(): void {
-    if ( this.observacionesPerfil !== undefined ) {
-      const observacionTipo3 = [];
-      for ( const observacion of this.observacionesPerfil ) {
-        if ( observacion.tipoObservacionCodigo === this.observacionSupervisor ) {
-          observacionTipo3.push( observacion );
-        }
-      }
-      if ( observacionTipo3.length > 0 ) {
-        this.addressForm.get( 'tieneObservaciones' )
-          .setValue(  observacionTipo3[ observacionTipo3.length - 1 ].esSupervision !== undefined ?
-                      observacionTipo3[ observacionTipo3.length - 1 ].esSupervision : null );
-        if (  this.addressForm.get( 'tieneObservaciones' ).value === true
-              && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
-          this.addressForm.get( 'construccionPerfilObservacionId' )
-            .setValue( observacionTipo3[ observacionTipo3.length - 1 ].construccionPerfilObservacionId );
-        }
-        if (  this.addressForm.get( 'tieneObservaciones' ).value === true
-              && observacionTipo3[ observacionTipo3.length - 1 ].observacion !== undefined ) {
-          this.addressForm.get( 'construccionPerfilObservacionId' )
-            .setValue( observacionTipo3[ observacionTipo3.length - 1 ].construccionPerfilObservacionId );
-          this.addressForm.get( 'observaciones' ).setValue( observacionTipo3[ observacionTipo3.length - 1 ].observacion );
-        }
-      }
-    }
+    this.addressForm.get('tieneObservaciones')
+      .setValue( this.tieneObservacion !== undefined ? this.tieneObservacion : null );
+    this.addressForm.get('observaciones')
+      .setValue(  this.observacionesPerfil !== undefined
+                  && this.observacionesPerfil.observacion !== undefined ? this.observacionesPerfil.observacion : null );
+    this.addressForm.get('construccionPerfilObservacionId')
+      .setValue( this.observacionesPerfil !== undefined
+        ? this.observacionesPerfil.construccionPerfilObservacionId : null );
   }
 
   maxLength(e: any, n: number) {
@@ -75,7 +59,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
 
   textoLimpio(texto: string) {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    return textolimpio.length > 1000 ? 1000 : textolimpio.length;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -86,20 +70,26 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
   }
 
   onSubmit(){
-    const observacionPerfil: any = {
+
+    const ConstruccionPerfil = {
       construccionPerfilId: this.construccionPerfilId,
-      observacion: this.addressForm.get( 'observaciones' ).value !== null ? this.addressForm.get( 'observaciones' ).value : null,
-      esSupervision:  this.addressForm.get( 'tieneObservaciones' ).value !== null ?
-                      this.addressForm.get( 'tieneObservaciones' ).value : null,
-      tipoObservacionCodigo: this.observacionSupervisor
+      tieneObservacionesSupervisor: this.addressForm.get( 'tieneObservaciones' ).value !== null ?
+                                    this.addressForm.get( 'tieneObservaciones' ).value : null,
+      construccionPerfilObservacion: [
+        {
+          ConstruccionPerfilObservacionId: this.addressForm.value.construccionPerfilObservacionId,
+          construccionPerfilId: this.construccionPerfilId,
+          esSupervision: true,
+          esActa: false,
+          observacion:  this.addressForm.get( 'observaciones' ).value !== null
+                        && this.addressForm.get( 'tieneObservaciones' ).value === true ?
+                        this.addressForm.get( 'observaciones' ).value : null
+        }
+      ]
     };
-    if ( this.addressForm.get( 'construccionPerfilObservacionId' ).value !== null ) {
-      observacionPerfil.construccionPerfilObservacionId = this.addressForm.get( 'construccionPerfilObservacionId' ).value;
-    }
 
-    console.log( observacionPerfil );
-
-    this.faseDosAprobarConstruccionSvc.createEditObservacionConstruccionPerfil( observacionPerfil )
+    console.log( ConstruccionPerfil );
+    this.faseDosAprobarConstruccionSvc.createEditObservacionPerfilSupervisor( ConstruccionPerfil )
       .subscribe(
         response => {
           this.openDialog( '', `<b>${ response.message }</b>` );

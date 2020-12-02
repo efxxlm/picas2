@@ -8,13 +8,12 @@ import { Component, OnInit } from '@angular/core';
 export class AprobarRequisitosConstruccionComponent implements OnInit {
 
   verAyuda = false;
-  public selTab;
+  contratoObra = false;
+  contratoInterventoria = false;
+
   constructor() { }
 
   ngOnInit(): void {
-  }
-  cambiarTab(opc) {
-    this.selTab = opc;
   }
 
 }

@@ -44,7 +44,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
         this.contrato = response;
         console.log(this.contrato);
         for ( let contratacion of this.contrato.contratacion.contratacionProyecto ) {
-
+          let semaforoGeneralconteo=0;
           //Semaforo Diagnostico
           contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = "sin-diligenciar";
           if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo !== undefined 
@@ -52,6 +52,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
                       || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo === false ) 
               ) 
           {
+            semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'completo';
             if ( contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
@@ -64,6 +65,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
                       || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasApoyo === false ) 
           ) 
           {
+            semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'completo';
             if ( contratacion.proyecto.contratoConstruccion[0].observacionPlanesProgramasApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'en-proceso';
@@ -76,10 +78,13 @@ export class FormVerificacionRequisitosComponent implements OnInit {
                       || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === false ) 
           ) 
           {
+            semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'completo';
             if ( contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'en-proceso';
           };
+
+          
           //Semaforo perfiles CV
           let perfilSinDiligenciar = 0;
           let perfilCompleto = 0;
@@ -105,6 +110,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
             contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles = "sin-diligenciar";
           };
           if ( perfilCompleto > 0 && ( perfilCompleto === contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length ) ) {
+            semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoPerfiles = "completo";
           };
           if (  perfilSinDiligenciar === perfilCompleto
@@ -120,6 +126,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
                       || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === false ) 
           )
           {
+            semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'completo';
             if ( contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObraApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'en-proceso';
@@ -132,11 +139,14 @@ export class FormVerificacionRequisitosComponent implements OnInit {
                       || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === false ) 
           )
           {
+            semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'completo';
             if ( contratacion.proyecto.contratoConstruccion[0].observacionFlujoInversionApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'en-proceso';
           };
 
+          let maxvar=contratacion.fasePreConstruccionNotMapped?6:5;
+          contratacion.proyecto.semaforoGeneral=semaforoGeneralconteo>=maxvar?"completo":semaforoGeneralconteo==0?"sin-diligenciar":"en-proceso";
         };
       });
   };

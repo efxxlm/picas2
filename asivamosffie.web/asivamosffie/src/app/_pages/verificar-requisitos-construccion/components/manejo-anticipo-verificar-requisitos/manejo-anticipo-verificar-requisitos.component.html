@@ -41,8 +41,8 @@
 
                 </mat-card-content>
             </mat-card>
-            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">
-                {{1000 - textoLimpio(addressForm.get('observaciones').value)}}
+            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">                
+                {{1000 - (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
             </span>
             <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones === null">
                 1000

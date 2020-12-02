@@ -18,18 +18,21 @@
         dos fases (preconstrucción y construcción) pero tienen suscrita y cargada el acta de inicio de la fase de pre construcción y que serán ejecutados
         en el marco de la gestión del FFIE.
     </div>
-    <div class="botones">
-        <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1">Contratos de
-            obra</button>
-        <div *ngIf="this.selTab==1" class="button-activated">Contratos de obra</div>
-        <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2" style="margin-left: 1em;">Contratos de
-            interventoría</button>
-        <div *ngIf="this.selTab==2" class="button-activated" style="margin-left: 1em;">Contratos de interventoría</div>
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': contratoObra === true}"
+            (click)="contratoObra = true; contratoInterventoria = false;">
+            Contratos de obra
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn"
+            [ngClass]="{'active': contratoInterventoria === true}"
+            (click)="contratoInterventoria = true; contratoObra = false;">
+            Contratos de interventoría
+        </button>
     </div>
-    <div *ngIf="this.selTab==1">
+    <div *ngIf="contratoObra">
         <app-tabla-contrato-obra-artc></app-tabla-contrato-obra-artc>
     </div>
-    <div *ngIf="this.selTab==2">
+    <div *ngIf="contratoInterventoria">
         <app-tabla-contrato-interventoria-artc></app-tabla-contrato-interventoria-artc>
     </div>
 </div>
