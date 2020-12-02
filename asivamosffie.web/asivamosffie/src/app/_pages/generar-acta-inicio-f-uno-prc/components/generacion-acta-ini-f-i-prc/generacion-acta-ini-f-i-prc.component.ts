@@ -65,6 +65,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     }
   }
   ngOnInit(): void {
+    this.cargarRol();
     this.addressForm = this.crearFormulario();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
@@ -127,7 +128,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
-    if(this.ocpion == 1){
+    if(this.ocpion == 2){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
       this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
