@@ -47,11 +47,11 @@
                     *ngIf="element.estadoActa=='Sin acta generada'">Generar acta</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleEditarActaFDos(element.contratoId,element.tipoContrato)"
-                        *ngIf="(element.estadoActa=='Con acta preliminar generada'&& element.tipoContrato=='Obra') || element.estadoActa=='Enviada por el supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2')"> Ver detalle /
+                        *ngIf="(element.estadoActa=='Con acta preliminar generada'&& element.tipoContrato=='Obra'  && (element.estadoActaCodigo=='14' || element.estadoActaCodigo=='15' || element.estadoActaCodigo=='16'  || element.estadoActaCodigo=='17')) || element.estadoActa=='Enviada por el supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2')"> Ver detalle /
                         Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleActaFDos(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con validación del supervisor' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con validacion del supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='3') || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='8') ||  (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='17')">
+                        *ngIf="element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con validación del supervisor' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con validacion del supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='3') || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='8')">
                         Ver detalle</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleActaCargada(element.contratoId)"

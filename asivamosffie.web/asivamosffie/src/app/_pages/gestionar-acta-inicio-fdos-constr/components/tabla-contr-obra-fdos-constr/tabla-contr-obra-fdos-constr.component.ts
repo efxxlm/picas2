@@ -137,12 +137,16 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   enviarRevision(id,estadoObs){
     if(estadoObs=="Con revisión sin observaciones"){
       this.services.CambiarEstadoActa(id,"18","usr2").subscribe(data=>{
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioConstruccion'])
+        );
       });
     }
     else{
       this.services.CambiarEstadoActa(id,"17","usr2").subscribe(data=>{
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioConstruccion'])
+        );
       });
     }
     this.services.EnviarCorreoSupervisorContratista(id,2).subscribe(resp=>{
@@ -152,12 +156,16 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   enviarInterventor(id){
     if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){
       this.services.CambiarEstadoActa(id,"18","usr2").subscribe(data=>{
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioConstruccion'])
+        );
       });
     }
     else{
       this.services.CambiarEstadoActa(id,"17","usr2").subscribe(data=>{
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioConstruccion'])
+        );
       });
     }
   }
