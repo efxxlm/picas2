@@ -1252,7 +1252,7 @@ namespace asivamosffie.services
             }
 
             DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra.AddMonths( contratoConstruccion.Proyecto.PlazoMesesObra.Value );
-            fechaFinalContrato = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value ); 
+            proyecto.FechaFinEtapaObra = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value ); 
 
             return proyecto;
         }
@@ -2057,19 +2057,26 @@ namespace asivamosffie.services
                     Proyecto proyecto = CalcularFechaInicioContrato( contratoConstruccionId );
 
                     int numeroMes = 1;
+                    int idMes = 0;
                     for ( DateTime fecha = proyecto.FechaInicioEtapaObra; fecha <= proyecto.FechaFinEtapaObra; fecha = fecha.AddMonths(1)){
                         
                         MesEjecucion mes = new MesEjecucion() {
                             ContratoConstruccionId = contratoConstruccionId,
                             Numero = numeroMes,
                             FechaInicio = fecha,
-                            FechaFin = fecha.AddMonths(1),
+                            FechaFin = fecha.AddMonths(1).AddDays(-1),
 
                         };
 
                         _context.MesEjecucion.Add( mes );
                         numeroMes++;
                     } 
+                    _context.SaveChanges();
+
+                    MesEjecucion ultimoMes = _context.MesEjecucion.Where( m => m.ContratoConstruccionId == contratoConstruccionId ).OrderByDescending( m => m.MesEjecucionId ).FirstOrDefault();
+                    ultimoMes.FechaFin = proyecto.FechaFinEtapaObra;
+
+                    _context.SaveChanges();
 
                     if (contratoConstruccion != null)
                     {
