@@ -1439,6 +1439,7 @@ namespace asivamosffie.services
                 actaInicio.NumeroContratoObra = item.NumeroContrato;
                 actaInicio.TipoContrato = strTipoContratoCodigo;
                 actaInicio.TieneObservacionesSupervisor = bTieneObservacionesSupervisor;
+                //actaInicio.FechaAprobacionRequisitos= item.FechaAprobacionRequisitos.ToString("dd/MM/yyyy");
 
                 contratacion = _context.Contratacion.Where(r => r.ContratacionId == item.ContratacionId).FirstOrDefault();
 
