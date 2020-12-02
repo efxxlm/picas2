@@ -136,7 +136,7 @@ export class HojaVidaContratistaComponent implements OnInit {
               this.openDialog(
                 '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
               );
-              this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
+              this.cantidadPerfiles.nativeElement.value =  this.perfiles.length;
               return;
             }
             const nuevosPerfiles = Number( value ) - this.perfiles.length;
