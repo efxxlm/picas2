@@ -15,6 +15,7 @@ namespace asivamosffie.model.APIModels
         public string EstadoVerificacion { get; set; }
         public string TipoContrato { get; set; }
         public bool TieneObservacionesSupervisor { get; set; }
+        public string ProponenteCodigo { get; set; }
     }
 }
 
