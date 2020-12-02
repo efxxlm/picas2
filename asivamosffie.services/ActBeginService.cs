@@ -610,7 +610,88 @@ namespace asivamosffie.services
               };
             }
         }
-        
+
+
+        public async Task<Respuesta> EditarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria,
+            string pUsuarioModificacion
+            //, AppSettingsService _appSettingsService
+           )
+        {
+            //            Fecha de la firma del documento por parte del contratista de obra -FechaFirmaContratista - contrato
+            //Fecha de la firma del documento por parte del contratista de interventoría -FechaFirmaActaContratistaInterventoria - contrato
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Cargar_Acta_Suscrita_Contrato_Fase_2, (int)EnumeratorTipoDominio.Acciones);
+
+            Contrato contrato;
+
+            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+            try
+            {
+                contrato.FechaFirmaContratista = pFechaFirmaContratista;
+                contrato.FechaFirmaActaContratistaInterventoriaFase2 = pFechaFirmaActaContratistaInterventoria;
+                contrato.UsuarioModificacion = pUsuarioModificacion;
+                contrato.FechaModificacion = DateTime.Now;               
+
+                //Auditoria
+                //contratacionOld.FechaModificacion = DateTime.Now;
+                //contratacionOld.UsuarioModificacion = pContratacion.UsuarioCreacion;
+                //Registros
+                //contratacionOld.RutaMinuta = strFilePatch;
+                //contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
+                //contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
+
+                //contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_suscrita_y_cargada).ToString();
+                
+                //contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
+                _context.Contrato.Update(contrato);
+                _context.SaveChanges();
+
+                //                notificación de alerta al interventor, al apoyo a la
+                //supervisión y al supervisor
+
+                //notificación al interventor y al apoyo a la supervisión.
+
+                
+                //}
+           
+
+                //}
+                //catch (Exception ex)
+                //{
+
+                //    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesActaInicio.ErrorEnviarCorreo };
+                //    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), lstMails, "Gestión Acta Inicio Fase II") + ": " + ex.ToString() + ex.InnerException;
+                //    return respuesta;
+                //}
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantGestionarActaInicioFase2.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, ConstantGestionarActaInicioFase2.OperacionExitosa, idAccion, contrato.UsuarioModificacion, " EDITAR CARGAR ACTA SUSCRITA CONTRATO")
+                 };
+
+            }
+
+            catch (Exception ex)
+            {
+                return
+              new Respuesta
+              {
+                  IsSuccessful = false,
+                  IsException = true,
+                  IsValidation = false,
+                  Code = ConstantGestionarProcesosContractuales.Error,
+                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, ConstantGestionarActaInicioFase2.Error, idAccion, contrato.UsuarioModificacion, ex.InnerException.ToString())
+              };
+            }
+        }
+
 
         public async Task<Respuesta> EnviarCorreoSupervisorContratista(int pContratoId, AppSettingsService settings, int pPerfilId)
         {
@@ -624,10 +705,14 @@ namespace asivamosffie.services
             int pIdTemplate = (int)enumeratorTemplate.ActaInicioFase2ObraInterventoria;
             Contrato contrato=null;
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-            
+
+            Contratacion contratacion = null;
+            contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();                     
+
             VistaGenerarActaInicioContrato actaInicio=new VistaGenerarActaInicioContrato();
             if(contrato!=null)
-                actaInicio = await getDataActaInicioAsync(pContratoId,Convert.ToInt32( contrato.TipoContratoCodigo));
+                //actaInicio = await getDataActaInicioAsync(pContratoId,Convert.ToInt32( contrato.TipoContratoCodigo));
+                actaInicio = await getDataActaInicioAsync(pContratoId, Convert.ToInt32(contratacion.TipoSolicitudCodigo));
 
             //perfilId = 8; //  Supervisor
             //perfilId = (int)EnumeratorPerfil.Supervisor; //  Supervisor
@@ -665,18 +750,20 @@ namespace asivamosffie.services
                 int tipoContrato = 0;
 
                 //Contrato contrato = null;
-                contrato = _context.Contrato.Where(r => r.NumeroContrato == actaInicio.NumeroContrato).FirstOrDefault();
+                //contrato = _context.Contrato.Where(r => r.NumeroContrato == actaInicio.NumeroContrato).FirstOrDefault();
 
                 //tipoContrato = 2;
                 tipoContrato = ConstanCodigoTipoContratacion.Interventoria;
 
                 template = template.Replace("_Numero_Contrato_", actaInicio.NumeroContrato);
-                template = template.Replace("_Fecha_Aprobacion_Poliza_", actaInicio.FechaAprobacionGarantiaPoliza);
+                template = template.Replace("_Fecha_Aprobacion_Poliza_", actaInicio.FechaAprobacionGarantiaPoliza);                              
 
-                if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Interventoria)
+                //if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Interventoria)
+                if (Convert.ToInt32(contratacion.TipoSolicitudCodigo) == ConstanCodigoTipoContratacion.Interventoria)
                     template = template.Replace("_Obra_O_Interventoria_", "interventoría");
-                else if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Obra)
-                    template = template.Replace("_Obra_O_Interventoria_", "obra");
+                //else if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Obra)
+                 else if (Convert.ToInt32(contratacion.TipoSolicitudCodigo) == ConstanCodigoTipoContratacion.Obra)
+                            template = template.Replace("_Obra_O_Interventoria_", "obra");
 
                 template = template.Replace("_Cantidad_Proyectos_Asociados_", actaInicio.CantidadProyectosAsociados.ToString());
 
@@ -689,7 +776,30 @@ namespace asivamosffie.services
                 //_settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
                 //actaInicio, pIdTemplate
                 //correo = "cdaza@ivolucion.com";
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(correo, "Gestión Acta Inicio Fase II", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+
+                string lstCorreos = "";
+
+                //            1   Administrador  - //2   Técnica
+                //3   Financiera - //4   Jurídica
+                //5   Administrativa - //6   Miembros Comite
+                //7   Secretario comité - //8   Supervisor
+                List<UsuarioPerfil> lstUsuariosPerfil = new List<UsuarioPerfil>();
+
+                lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
+
+                List<Usuario> lstUsuarios = new List<Usuario>();
+
+                foreach (var item in lstUsuariosPerfil)
+                {
+                    lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                    foreach (var usuario in lstUsuarios)
+                    {
+                        //lstCorreos = lstCorreos += usuario.Email + ";";
+                        //lstCorreos = lstCorreos += usuario.Email;
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Acta Inicio Fase II", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                    }
+                }                           
 
                 if (blEnvioCorreo)
                     respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.CorreoEnviado };
@@ -834,16 +944,22 @@ namespace asivamosffie.services
             Contrato contrato=null;
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
+            Contratacion contratacion = null;
+            if(contrato!=null)
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
             Plantilla plantilla=null;
 
-            if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-            {
+            if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                //if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                {
                 pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
                 plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_interventoria_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
 
             }
 
-           else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+            //else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+            else if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
             {
                 pTipoContrato = ConstanCodigoTipoContratacion.Obra;
                 plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_obra_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();

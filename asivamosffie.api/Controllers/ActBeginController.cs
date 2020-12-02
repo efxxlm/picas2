@@ -207,8 +207,10 @@ namespace asivamosffie.api.Controllers
 
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.GuardarCargarActaSuscritaContrato( pContratoId,  pFechaFirmaContratista,  pFechaFirmaActaContratistaInterventoria                     
-             ,  pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryBaseActaInicio,  pUsuarioModificacion, _appSettingsService);
+                respuesta = await _ActBegin.EditarCargarActaSuscritaContrato( pContratoId,  pFechaFirmaContratista,  pFechaFirmaActaContratistaInterventoria                     
+             ,  pUsuarioModificacion
+             //, _appSettingsService
+             );
                 return Ok(respuesta);
             }
             catch (Exception ex)
