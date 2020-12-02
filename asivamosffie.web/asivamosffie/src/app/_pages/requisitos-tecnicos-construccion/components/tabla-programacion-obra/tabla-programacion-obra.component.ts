@@ -43,6 +43,7 @@ export class TablaProgramacionObraComponent implements OnInit {
   };
 
   getData () {
+    console.log( this.contratoConstruccionId )
     if ( this.contratoConstruccionId !== 0 ) {
       this.faseUnoConstruccionSvc.getLoadProgrammingGrid( this.contratoConstruccionId )
       .subscribe( ( response: any[] ) => {

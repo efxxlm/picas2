@@ -342,20 +342,14 @@ namespace asivamosffie.services
 
         public async Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId)
         {
-            List<ArchivoCargue> listaCargas = new List<ArchivoCargue>();
+            List<ArchivoCargue> listaCargas = _context.ArchivoCargue.Where(a => a.ReferenciaId == pContratoConstruccionId && a.Eliminado != true).ToList();
 
-            List<TempProgramacion> lista = _context.TempProgramacion.Where(tp => tp.ContratoConstruccionId == pContratoConstruccionId).ToList();
 
-            lista.GroupBy(r => r.ArchivoCargueId).ToList().ForEach(c =>
-          {
-              ArchivoCargue archivo = _context.ArchivoCargue.Where(a => c.Key == a.ArchivoCargueId && a.Eliminado != true).FirstOrDefault();
-              if (archivo != null)
-              {
-                  archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+            listaCargas.ForEach(archivo =>
+            {
+                    archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
 
-                  listaCargas.Add(archivo);
-              }
-          });
+            });
 
             return listaCargas;
 
@@ -1695,14 +1689,18 @@ namespace asivamosffie.services
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
 
             ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                        .Where(cc => cc.ContratoConstruccionId == pContratoConstruccionId)
-                                                                        .Include(r => r.Contrato)
-                                                                        .Include(r => r.Proyecto)
+                                                                        .Where( cc => cc.ContratoConstruccionId == pContratoConstruccionId )
+                                                                        .Include( r => r.Contrato )
+                                                                            .ThenInclude( r => r.Contratacion )
+                                                                                .ThenInclude( r => r.DisponibilidadPresupuestal )
+                                                                        .Include( r => r.Contrato )
+                                                                            .ThenInclude( r => r.ContratoPoliza )
+                                                                        .Include( r => r.Proyecto )
                                                                         .FirstOrDefault();
 
-            // DateTime fechaInicioContrato = contratoConstruccion.Contrato.FechaActaInicioFase2.Value;
-            // DateTime fechaFinalContrato = fechaInicioContrato.AddMonths( contratoConstruccion.Proyecto.PlazoMesesObra.Value );
-            // fechaFinalContrato = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value );
+            DateTime? fechaInicioContrato = contratoConstruccion?.Contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp.Value;
+            DateTime fechaFinalContrato = fechaInicioContrato.Value.AddMonths( contratoConstruccion.Proyecto.PlazoMesesObra.Value );
+            fechaFinalContrato = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value );
 
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -1713,7 +1711,7 @@ namespace asivamosffie.services
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
             DocumentService _documentService = new DocumentService(_context, _commonService);
 
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.ProgramacionObra));
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.ProgramacionObra), pContratoConstruccionId);
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)
@@ -1831,20 +1829,20 @@ namespace asivamosffie.services
 
                             }
 
-                            // // fechas contrato
-                            // if ( temp.FechaInicio < fechaInicioContrato ){
-                            //     worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del contrato", "Admin");
-                            //     worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                            //     worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                            //     tieneErrores = true;
-                            // }
+                            // fechas contrato
+                            if ( temp.FechaInicio < fechaInicioContrato ){
+                                worksheet.Cells[i, 4].AddComment("La fecha Inicial de la actividad no puede ser inferior a la fecha inicial del contrato", "Admin");
+                                worksheet.Cells[i, 4].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 4].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
 
-                            // if ( temp.FechaFin > fechaFinalContrato ){
-                            //     worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del contrato", "Admin");
-                            //     worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                            //     worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
-                            //     tieneErrores = true;
-                            // }
+                            if ( temp.FechaFin > fechaFinalContrato ){
+                                worksheet.Cells[i, 5].AddComment("La fecha final de la actividad no puede ser mayor a la fecha final del contrato", "Admin");
+                                 worksheet.Cells[i, 5].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[i, 5].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                            }
 
                             //#6
                             //Duracion
@@ -2068,7 +2066,7 @@ namespace asivamosffie.services
             //int OrigenId = await _commonService.GetDominioIdByCodigoAndTipoDominio(OrigenArchivoCargue.Proyecto, (int)EnumeratorTipoDominio.Origen_Documento_Cargue);
             DocumentService _documentService = new DocumentService(_context, _commonService);
 
-            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.FlujoInversion));
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.FlujoInversion), pContratoConstruccionId);
 
             // if (!string.IsNullOrEmpty(archivoCarge.ArchivoCargueId.ToString()))
             if (archivoCarge != null)
