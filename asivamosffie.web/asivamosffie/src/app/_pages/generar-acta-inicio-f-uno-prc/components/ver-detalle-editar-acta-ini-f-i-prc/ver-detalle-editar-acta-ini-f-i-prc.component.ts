@@ -218,7 +218,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   }
   generarFechaRestante(){
     let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
-    newdate.setMonth(newdate.getMonth() + this.mesPlazoIni);
+    newdate.setDate(newdate.getDate() + (this.mesPlazoIni*30));
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.diasPlazoIni)
     console.log(newDateFinal);
