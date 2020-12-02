@@ -632,9 +632,7 @@ namespace asivamosffie.services
                 contrato.FechaFirmaContratista = pFechaFirmaContratista;
                 contrato.FechaFirmaActaContratistaInterventoriaFase2 = pFechaFirmaActaContratistaInterventoria;
                 contrato.UsuarioModificacion = pUsuarioModificacion;
-                contrato.FechaModificacion = DateTime.Now;
-
-               
+                contrato.FechaModificacion = DateTime.Now;               
 
                 //Auditoria
                 //contratacionOld.FechaModificacion = DateTime.Now;
