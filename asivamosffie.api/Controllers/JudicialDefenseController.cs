@@ -94,7 +94,7 @@ namespace asivamosffie.api.Controllers
         }        
 
         [HttpGet]
-        [Route("ListGrillaProcesosDefensaJudicial")]
+        [Route("GetListGrillaProcesosDefensaJudicial")]
         public async Task<ActionResult<List<GrillaProcesoDefensaJudicial>>> ListGrillaProcesosDefensaJudicial()
         {
             try
