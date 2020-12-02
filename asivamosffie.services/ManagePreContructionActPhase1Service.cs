@@ -95,7 +95,7 @@ namespace asivamosffie.services
                     }
                 }
                 //Modificar Usuario 
-                //ya que falta hacer caso de uso gestion usuarios
+                //Ya que falta hacer caso de uso gestion usuarios
                 contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
                 return contrato;
             }
@@ -277,21 +277,22 @@ namespace asivamosffie.services
         public async Task<byte[]> ReplacePlantillaSupervisor(int pContratoId)
         {
             Contrato contrato = await GetContratoByContratoId(pContratoId);
-
-
+             
             Plantilla plantilla = await _context.Plantilla
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)
                 .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
 
             Usuario Supervisor = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
+
             string MesesFase1 = string.Empty;
             string DiasFase1 = string.Empty;
             string MesesFase2 = string.Empty;
             string DiasFase2 = string.Empty;
 
-            MesesFase1 = contrato?.PlazoFase1PreMeses == 1 ? "mes" : "meses";
-            DiasFase1 = contrato?.PlazoFase1PreDias == 1 ? "dia" : "dias";
-
+            MesesFase1 = contrato?.PlazoFase1PreMeses + (contrato?.PlazoFase1PreMeses == 1 ? " mes /" : " meses /");
+            DiasFase1 = contrato?.PlazoFase1PreDias + (contrato?.PlazoFase1PreDias == 1 ? " dia " : "dias ");
+            MesesFase2 = contrato?.PlazoFase2ConstruccionMeses + (contrato?.PlazoFase2ConstruccionMeses == 1 ? " mes /" : " meses /");
+            DiasFase2 = contrato?.PlazoFase2ConstruccionDias + (contrato?.PlazoFase2ConstruccionDias == 1 ? " dia " : " dias ");
 
             plantilla.Contenido = plantilla.Contenido
                     .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
@@ -311,7 +312,9 @@ namespace asivamosffie.services
                     .Replace("[VALOR_FASE_2]", contrato.ValorFase2.ToString() ?? " ")
                     .Replace("[VALOR_ACTUAL_CONTRATO]", contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString() ?? " ")
                     .Replace("[PLAZO_INICIAL_CONTRATO]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaSolicitud).ToString("dd-MM-yy") ?? " ")
-                    .Replace("[PLAZO_FASE_1]", contrato?.PlazoFase1PreMeses.ToString());
+                    .Replace("[PLAZO_FASE_1]", MesesFase1 + DiasFase1)
+                    .Replace("[PLAZO_FASE_2]", MesesFase2 + DiasFase2)
+                    .Replace("[FECHA_PREVISTA_TERMINACION]", "---" );
 
 
 
@@ -320,11 +323,47 @@ namespace asivamosffie.services
 
         public async Task<byte[]> ReplacePlantillaTecnica(int pContratoId)
         {
-            Contrato contrato = _context.Contrato.Find(pContratoId);
+            Contrato contrato = await GetContratoByContratoId(pContratoId);
 
             Plantilla plantilla = await _context.Plantilla
-         .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)
-         .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)
+                .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
+
+            Usuario Supervisor = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
+
+            string MesesFase1 = string.Empty;
+            string DiasFase1 = string.Empty;
+            string MesesFase2 = string.Empty;
+            string DiasFase2 = string.Empty;
+
+            MesesFase1 = contrato?.PlazoFase1PreMeses + (contrato?.PlazoFase1PreMeses == 1 ? " mes /" : " meses /");
+            DiasFase1 = contrato?.PlazoFase1PreDias + (contrato?.PlazoFase1PreDias == 1 ? " dia " : "dias ");
+            MesesFase2 = contrato?.PlazoFase2ConstruccionMeses + (contrato?.PlazoFase2ConstruccionMeses == 1 ? " mes /" : " meses /");
+            DiasFase2 = contrato?.PlazoFase2ConstruccionDias + (contrato?.PlazoFase2ConstruccionDias == 1 ? " dia " : " dias ");
+
+            plantilla.Contenido = plantilla.Contenido
+                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                    .Replace("[FECHA_ACTA_INICIO]", ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MMM-yy"))
+                    .Replace("[NOMBRE_SUPERVISOR]", Supervisor?.Nombres + " " + Supervisor.Apellidos)
+                    .Replace("[CEDULA_SUPERVISOR]", Supervisor?.NumeroIdentificacion)
+                    .Replace("[CARGO_SUPERVISOR]", Supervisor?.NombreMaquina)
+                    .Replace("[NOMBRE_REPRESENTANTE_LEGAL]", " - ")
+                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA_INTERVENTORIA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NombreProponente)
+                    .Replace("[NIT_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion)
+                    .Replace("[NUMERO_DRP]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDrp)
+                    .Replace("[FECHA_DRP]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MMM-yy"))
+                    .Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy")))
+                    .Replace("[OBJETO]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto)
+                    .Replace("[VALOR_INICIAL]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().ValorSolicitud.ToString() ?? " ")
+                    .Replace("[VALOR_FASE_1]", contrato.ValorFase1.ToString() ?? " ")
+                    .Replace("[VALOR_FASE_2]", contrato.ValorFase2.ToString() ?? " ")
+                    .Replace("[VALOR_ACTUAL_CONTRATO]", contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString() ?? " ")
+                    .Replace("[PLAZO_INICIAL_CONTRATO]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaSolicitud).ToString("dd-MM-yy") ?? " ")
+                    .Replace("[PLAZO_FASE_1]", MesesFase1 + DiasFase1)
+                    .Replace("[PLAZO_FASE_2]", MesesFase2 + DiasFase2)
+                    .Replace("[FECHA_PREVISTA_TERMINACION]", "---");
+
+
 
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
@@ -450,8 +489,7 @@ namespace asivamosffie.services
             List<Contrato> contratos = _context.Contrato
                 .Where(r => (r.EstadoActa == "8" || r.EstadoActa == "20") && string.IsNullOrEmpty(r.RutaActaFase1))
                  .Include(r => r.ContratoPoliza)
-                 .Include(r => r.Contratacion)
-                   .ThenInclude(r => r.DisponibilidadPresupuestal)
+                 .Include(r => r.Contratacion).ThenInclude(r => r.DisponibilidadPresupuestal)
                .ToList();
 
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
