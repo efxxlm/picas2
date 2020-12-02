@@ -113,8 +113,8 @@ namespace asivamosffie.services
                     contrato.TieneFase2 = false;
                 //Modificar Usuario 
                 //Ya que falta hacer caso de uso gestion usuarios
-                if(pUserId != null)
-                   contrato.UsuarioInterventoria = _context.Usuario.Find(pUserId);
+                if (pUserId != null)
+                    contrato.UsuarioInterventoria = _context.Usuario.Find(pUserId);
                 return contrato;
             }
             catch (Exception)
@@ -284,17 +284,18 @@ namespace asivamosffie.services
 
         public async Task<byte[]> GetActaByIdPerfil(int PIdPerfil, int pContratoId)
         {
-            return PIdPerfil switch
-            {
-                (int)EnumeratorPerfil.Tecnica => await ReplacePlantillaTecnica(pContratoId),
-                (int)EnumeratorPerfil.Supervisor => await ReplacePlantillaSupervisor(pContratoId),
-                _ => Array.Empty<byte>(),
-            };
+            Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include(r => r.Contratacion).FirstOrDefault();
+
+            if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                return await ReplacePlantillaTecnica(pContratoId);
+            else
+                return await ReplacePlantillaSupervisor(pContratoId);
+                      
         }
 
         public async Task<byte[]> ReplacePlantillaSupervisor(int pContratoId)
         {
-            Contrato contrato = await GetContratoByContratoId(pContratoId,null);
+            Contrato contrato = await GetContratoByContratoId(pContratoId, null);
 
             Plantilla plantilla = await _context.Plantilla
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)
@@ -376,7 +377,7 @@ namespace asivamosffie.services
 
         public async Task<byte[]> ReplacePlantillaTecnica(int pContratoId)
         {
-            Contrato contrato = await GetContratoByContratoId(pContratoId,null);
+            Contrato contrato = await GetContratoByContratoId(pContratoId, null);
 
             Plantilla plantilla = await _context.Plantilla
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)
@@ -406,9 +407,9 @@ namespace asivamosffie.services
                 RegistrosProyectos = RegistrosProyectos
                     .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
                     .Replace("[TIPO_INTERVENCION]", ListTipointervencion.Where(r => r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
-                    .Replace("[DEPARTAMENTO]", Departamento==null?"":Departamento.Descripcion)
-                    .Replace("[MUNICIPIO]", Municipio==null?"":Municipio.Descripcion)
-                    .Replace("[INSTITUCION_EDUCATIVA]", InstitucionEducativa==null?"": InstitucionEducativa.Nombre)
+                    .Replace("[DEPARTAMENTO]", Departamento == null ? "" : Departamento.Descripcion)
+                    .Replace("[MUNICIPIO]", Municipio == null ? "" : Municipio.Descripcion)
+                    .Replace("[INSTITUCION_EDUCATIVA]", InstitucionEducativa == null ? "" : InstitucionEducativa.Nombre)
                     .Replace("[SEDE]", Sede.Nombre);
             }
 
