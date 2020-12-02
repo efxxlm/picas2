@@ -1460,9 +1460,9 @@ namespace asivamosffie.services
                 else if (strTipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
                     proponenteCodigo = "Interventoria";
 
-                actaInicio.EstadoActaCodigo = strEstadoActaCodigoFase2Contrato;
+                
                 actaInicio.EstadoVerificacion = strEstadoVerificacion;
-                actaInicio.EstadoActa = strEstadoActaFase2Contrato;
+                
                 actaInicio.ContratoId = item.ContratoId;
                 actaInicio.NumeroContratoObra = item.NumeroContrato;
                 actaInicio.TipoContrato = strTipoContratoCodigo;
@@ -1486,19 +1486,25 @@ namespace asivamosffie.services
                 }
 
                 if (EstadoActaFase2Contrato != null)
-                {
-                    strEstadoActaCodigoFase2Contrato = EstadoActaFase2Contrato.Codigo;                   
-                    
-                    actaInicio.EstadoActa = EstadoActaFase2Contrato.Nombre;
+                {               
+                    actaInicio.EstadoActaCodigo = EstadoActaFase2Contrato.Codigo;                    
 
                     if ((int)EnumeratorPerfil.Supervisor == pPerfilId)
                     {
+                        
                         strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Descripcion;
 
                     }
                     else if ((int)EnumeratorPerfil.Tecnica == pPerfilId)
+                    {
                         strEstadoActaFase2Contrato = EstadoActaFase2Contrato.Nombre;
+
+                    }
+                    actaInicio.EstadoActa = strEstadoActaFase2Contrato;
+
                 }
+
+                
 
                 TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Contrato);
                 if (TipoContratoCodigoContrato != null)
