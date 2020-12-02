@@ -50,6 +50,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
   public fecha2Titulo;
 
   prueba: any;
+  esRojo: boolean = false;
 
   constructor(private router: Router, public dialog: MatDialog, public matDialogRef: MatDialogRef<CargarActaSuscritaActaIniFIPreconstruccionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private service: GestionarActPreConstrFUnoService) {
     this.declararInputFile();
@@ -90,7 +91,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
   cargarActa() {
     const pContrato = new FormData();
     const inputNode: any = document.getElementById('file');
-    this.archivo = inputNode.files[0].name;
+    //this.archivo = inputNode.files[0].name;
     this.fechaSesion = new Date(this.fechaFirmaContratistaObra);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
     this.fechaSesion2 = new Date(this.fechaFirmaContratistaInterventoria);
@@ -98,17 +99,25 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
     pContrato.append('ContratoId', this.idContrato);
     pContrato.append('FechaActaInicioFase1', this.fechaSesionString);
     pContrato.append('FechaTerminacion', this.fechaSesionString2);
-    pContrato.append('pFile', inputNode.files[0]);
-    console.log(pContrato.get('pFile'));
-    this.service.LoadActa(pContrato).subscribe((data: any) => {
-      if (data.code == "200") {
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
-        this.close();
-      }
-      else {
-        this.openDialog("", data.message);
-      }
-    });
+    pContrato.append('pFile', inputNode.files[0]);  
+    alert(this.fechaFirmaContratistaObra);
+    alert(this.fechaFirmaContratistaInterventoria);
+    if(this.fechaSesionString=='NaN-NaN-NaN' || this.fechaSesionString2=='NaN-NaN-NaN' || this.archivo==undefined){
+      this.openDialog('', '<b>Falta registrar información.</b>');
+      this.esRojo = true;
+    }
+    else{
+      this.service.LoadActa(pContrato).subscribe((data: any) => {
+        if (data.code == "200") {
+          this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+          this.close();
+        }
+        else {
+          this.openDialog("", data.message);
+        }
+      });
+    }
+
   }
   close() {
     this.matDialogRef.close('aceptado');
