@@ -47,7 +47,7 @@ export class GestionarActaInicioFdosConstrComponent implements OnInit {
     if (this.rolAsignado == 2) {
       this.ocpion = 2;
     }
-    else if (this.rolAsignado == 8){
+    else {
       this.ocpion = 1;
     }
   }
