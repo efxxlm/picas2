@@ -33,7 +33,8 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<Contrato> GetContratoByContratoId([FromQuery] int pContratoId)
         {
-            return await _managePreContruction.GetContratoByContratoId(pContratoId);
+            int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+            return await _managePreContruction.GetContratoByContratoId(pContratoId , pUserId);
         }
 
         [HttpGet]

@@ -23,6 +23,7 @@ namespace asivamosffie.services
         private readonly IDocumentService _documentService;
         private readonly IRegisterSessionTechnicalCommitteeService _registerSessionTechnicalCommitteeService;
 
+
         public ManagePreContructionActPhase1Service(IDocumentService documentService, devAsiVamosFFIEContext context, ICommonService commonService, IRegisterSessionTechnicalCommitteeService registerSessionTechnicalCommitteeService)
         {
             _documentService = documentService;
@@ -62,7 +63,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId, int? pUserId)
         {
             try
             {
@@ -79,6 +80,7 @@ namespace asivamosffie.services
                                       .ThenInclude(r => r.ComponenteUso)
                         .Include(r => r.Contratacion)
                            .ThenInclude(r => r.Contratista)
+                               .ThenInclude(r => r.ProcesoSeleccionProponente)
                         .Include(r => r.Contratacion)
                            .ThenInclude(r => r.DisponibilidadPresupuestal)
                         .Include(r => r.ContratoPoliza)
@@ -111,7 +113,8 @@ namespace asivamosffie.services
                     contrato.TieneFase2 = false;
                 //Modificar Usuario 
                 //Ya que falta hacer caso de uso gestion usuarios
-                contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
+                if(pUserId != null)
+                   contrato.UsuarioInterventoria = _context.Usuario.Find(pUserId);
                 return contrato;
             }
             catch (Exception)
@@ -291,7 +294,7 @@ namespace asivamosffie.services
 
         public async Task<byte[]> ReplacePlantillaSupervisor(int pContratoId)
         {
-            Contrato contrato = await GetContratoByContratoId(pContratoId);
+            Contrato contrato = await GetContratoByContratoId(pContratoId,null);
 
             Plantilla plantilla = await _context.Plantilla
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)
@@ -308,7 +311,7 @@ namespace asivamosffie.services
             List<Dominio> ListTipointervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
 
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
- 
+
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
 
             foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
@@ -319,7 +322,7 @@ namespace asivamosffie.services
                 InstitucionEducativaSede InstitucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
 
                 RegistrosProyectos += PlantillaRegistrosProyectos;
-                RegistrosProyectos = RegistrosProyectos 
+                RegistrosProyectos = RegistrosProyectos
                     .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
                     .Replace("[TIPO_INTERVENCION]", ListTipointervencion.Where(r => r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
                     .Replace("[DEPARTAMENTO]", Departamento.Descripcion)
@@ -342,7 +345,7 @@ namespace asivamosffie.services
 
 
             plantilla.Contenido = plantilla.Contenido
-                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)  
+                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
                     .Replace("[REGISTROS_PROYECTOS]", RegistrosProyectos)
                     .Replace("[FECHA_ACTA_INICIO]", ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy"))
                     .Replace("[NOMBRE_SUPERVISOR]", Supervisor?.Nombres + " " + Supervisor.Apellidos)
@@ -373,7 +376,7 @@ namespace asivamosffie.services
 
         public async Task<byte[]> ReplacePlantillaTecnica(int pContratoId)
         {
-            Contrato contrato = await GetContratoByContratoId(pContratoId);
+            Contrato contrato = await GetContratoByContratoId(pContratoId,null);
 
             Plantilla plantilla = await _context.Plantilla
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)

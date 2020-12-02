@@ -14,11 +14,11 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditObservacionesActa(ContratoObservacion pcontratoObservacion);
 
-        Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId);
+        Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId );
 
         Task<dynamic> GetListContrato();
 
-        Task<Contrato> GetContratoByContratoId(int pContratoId);
+        Task<Contrato> GetContratoByContratoId(int pContratoId, int? pUserId);
 
         Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId);
 
