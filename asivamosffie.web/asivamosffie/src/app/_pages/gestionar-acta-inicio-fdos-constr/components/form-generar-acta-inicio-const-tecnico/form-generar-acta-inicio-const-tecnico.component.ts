@@ -78,6 +78,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   valorProponente: any;
 
   realizoPeticion: boolean = false;
+  esRojo: boolean = false;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService) {
     this.maxDate = new Date();
@@ -253,56 +254,64 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     this.fechaSesion2 = new Date(fecha2);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}/${this.fechaSesion2.getMonth() + 1}/${this.fechaSesion2.getDate()}`;
     //compara los meses
-    if(localStorage.getItem("editable") == "false"){
-      var sumaMeses;
-      var sumaDias;
-      sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
-      sumaDias = this.plazoEjecucionPreConstruccionDias + parseInt(this.addressForm.value.diasPlazoEjFase2);
-      console.log(sumaDias);
-      if (sumaMeses > this.plazoActualContratoMeses) {
-        this.openDialog('Debe verificar la información ingresada en el campo Meses, dado que no coincide con la información inicial registrada para el contrato', "");
-      }
-      else if (sumaDias > this.plazoActualContratoDias){
-        this.openDialog('Debe verificar la información ingresada en el campo Días, dado que no coincide con la información inicial registrada para el contrato', "");
-      }
-      else{
-        this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(data1 => {
-          if (data1.code == "200") {
-            if(localStorage.getItem("origin")=="interventoria"){
-              this.services.CambiarEstadoActa(this.idContrato,"2","usr2").subscribe(resp=>{
-                this.realizoPeticion = true;
-                this.openDialog("", 'La información ha sido guardada exitosamente.');
-                this.router.navigate(['/generarActaInicioConstruccion']);
-              });
-            }
-            else{
-              this.services.CambiarEstadoActa(this.idContrato,"14","usr2").subscribe(resp=>{
-                this.realizoPeticion = true;
-                this.openDialog("", 'La información ha sido guardada exitosamente.');
-                this.router.navigate(['/generarActaInicioConstruccion']);
-              });
-            }
-            
-          }
-          else {
-            this.openDialog(data1.message, "");
-          }
-        });
-
-      }
+    if(this.addressForm.value.fechaActaInicioFDosConstruccion==null || this.addressForm.value.fechaPrevistaTerminacion==null || this.addressForm.value.mesPlazoEjFase2==null ||
+      this.addressForm.value.diasPlazoEjFase2==null){
+        this.openDialog2('','<b>Falta registrar información</b>');
+        this.esRojo = true;
     }
     else{
-      this.services.EditarContratoObservacion(this.idContrato,this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(resp=>{
-        if (resp.code == "200") {
-          this.realizoPeticion = true;
-          this.openDialog("", 'La información ha sido guardada exitosamente.');
-          this.router.navigate(['/generarActaInicioConstruccion']);
+      if(localStorage.getItem("editable") == "false"){
+        var sumaMeses;
+        var sumaDias;
+        sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
+        sumaDias = this.plazoEjecucionPreConstruccionDias + parseInt(this.addressForm.value.diasPlazoEjFase2);
+        console.log(sumaDias);
+        if (sumaMeses > this.plazoActualContratoMeses) {
+          this.openDialog("", 'Debe verificar la información ingresada en el campo Meses, dado que no coincide con la información inicial registrada para el contrato');
         }
-        else {
-          this.openDialog("", resp.message);
+        else if (sumaDias > this.plazoActualContratoDias){
+          this.openDialog("", 'Debe verificar la información ingresada en el campo Días, dado que no coincide con la información inicial registrada para el contrato');
         }
-      })
+        else{
+          this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(data1 => {
+            if (data1.code == "200") {
+              if(localStorage.getItem("origin")=="interventoria"){
+                this.services.CambiarEstadoActa(this.idContrato,"2","usr2").subscribe(resp=>{
+                  this.realizoPeticion = true;
+                  this.openDialog("", 'La información ha sido guardada exitosamente.');
+                  this.router.navigate(['/generarActaInicioConstruccion']);
+                });
+              }
+              else{
+                this.services.CambiarEstadoActa(this.idContrato,"14","usr2").subscribe(resp=>{
+                  this.realizoPeticion = true;
+                  this.openDialog("", 'La información ha sido guardada exitosamente.');
+                  this.router.navigate(['/generarActaInicioConstruccion']);
+                });
+              }
+              
+            }
+            else {
+              this.openDialog(data1.message, "");
+            }
+          });
+  
+        }
+      }
+      else{
+        this.services.EditarContratoObservacion(this.idContrato,this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(resp=>{
+          if (resp.code == "200") {
+            this.realizoPeticion = true;
+            this.openDialog("", 'La información ha sido guardada exitosamente.');
+            this.router.navigate(['/generarActaInicioConstruccion']);
+          }
+          else {
+            this.openDialog("", resp.message);
+          }
+        })
+      }
     }
+
     if(localStorage.getItem("origin")=="interventoria"){
       if(this.addressForm.value.observacionesEspeciales==null){
         localStorage.setItem("observacionesEspecialesInterventoria","No");
