@@ -115,7 +115,7 @@ export class TablaContratoDeObraComponent implements OnInit {
     this.faseUnoPreconstruccionSvc.changeStateContrato( contratoId, this.estadosPreconstruccionObra.enviadoAlInterventor.codigo )
       .subscribe(
         response => {
-          this.openDialog( '', response.message );
+          this.openDialog( '', `<b>${ response.message }</b>` );
           this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
             () => this.routes.navigate( [ '/aprobarPreconstruccion' ] )
           );

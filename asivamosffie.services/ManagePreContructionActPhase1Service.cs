@@ -88,12 +88,24 @@ namespace asivamosffie.services
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                         {
                             if (ComponenteAportante.FaseCodigo == ConstanCodigoFaseContrato.Preconstruccion.ToString())
+                            {
                                 contrato.ValorFase1 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
+                                contrato.TieneFase1 = true;
+                            }
                             else
+                            {
                                 contrato.ValorFase2 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
+                                contrato.TieneFase2 = true;
+                            }
                         }
                     }
                 }
+
+                if (contrato.TieneFase1 == null)
+                    contrato.TieneFase1 = false;
+
+                if (contrato.TieneFase2 == null)
+                    contrato.TieneFase2 = false;
                 //Modificar Usuario 
                 //Ya que falta hacer caso de uso gestion usuarios
                 contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
@@ -277,7 +289,7 @@ namespace asivamosffie.services
         public async Task<byte[]> ReplacePlantillaSupervisor(int pContratoId)
         {
             Contrato contrato = await GetContratoByContratoId(pContratoId);
-             
+
             Plantilla plantilla = await _context.Plantilla
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)
                 .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
@@ -314,7 +326,7 @@ namespace asivamosffie.services
                     .Replace("[PLAZO_INICIAL_CONTRATO]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaSolicitud).ToString("dd-MM-yy") ?? " ")
                     .Replace("[PLAZO_FASE_1]", MesesFase1 + DiasFase1)
                     .Replace("[PLAZO_FASE_2]", MesesFase2 + DiasFase2)
-                    .Replace("[FECHA_PREVISTA_TERMINACION]", "---" );
+                    .Replace("[FECHA_PREVISTA_TERMINACION]", "---");
 
 
 
