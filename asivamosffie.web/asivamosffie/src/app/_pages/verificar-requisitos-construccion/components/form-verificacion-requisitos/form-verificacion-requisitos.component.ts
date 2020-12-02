@@ -145,7 +145,8 @@ export class FormVerificacionRequisitosComponent implements OnInit {
               contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'en-proceso';
           };
 
-          contratacion.proyecto.semaforoGeneral=semaforoGeneralconteo==6?"completo":semaforoGeneralconteo==0?"sin-diligenciar":"en-proceso";
+          let maxvar=contratacion.fasePreConstruccionNotMapped?6:5;
+          contratacion.proyecto.semaforoGeneral=semaforoGeneralconteo>=maxvar?"completo":semaforoGeneralconteo==0?"sin-diligenciar":"en-proceso";
         };
       });
   };
