@@ -406,9 +406,9 @@ namespace asivamosffie.services
                 RegistrosProyectos = RegistrosProyectos
                     .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
                     .Replace("[TIPO_INTERVENCION]", ListTipointervencion.Where(r => r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
-                    .Replace("[DEPARTAMENTO]", Departamento.Descripcion)
-                    .Replace("[MUNICIPIO]", Municipio.Descripcion)
-                    .Replace("[INSTITUCION_EDUCATIVA]", InstitucionEducativa.Nombre)
+                    .Replace("[DEPARTAMENTO]", Departamento==null?"":Departamento.Descripcion)
+                    .Replace("[MUNICIPIO]", Municipio==null?"":Municipio.Descripcion)
+                    .Replace("[INSTITUCION_EDUCATIVA]", InstitucionEducativa==null?"": InstitucionEducativa.Nombre)
                     .Replace("[SEDE]", Sede.Nombre);
             }
 

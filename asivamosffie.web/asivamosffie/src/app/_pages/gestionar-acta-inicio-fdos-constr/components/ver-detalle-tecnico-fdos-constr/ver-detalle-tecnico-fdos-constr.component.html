@@ -1,0 +1,75 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/generarActaInicioConstruccion" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Ver detalle acta {{this.contratoCode}} fase 2 - Construcción
+    </h1>
+    <p class="info-sub-title">
+        <span>Fecha de aprobación de requesitos por el supervisor: <b>{{this.fechaAprobacionSupervisor}}</b></span>
+    </p>
+</section>
+<section class="container">
+    <mat-card class="shipping-card mainGris">
+        <mat-card-content>
+            <p><strong>Vigencia del contrato: </strong>{{this.vigenciaContrato}}</p>
+            <p><strong>Fecha de firma del contrato: </strong>{{this.fechaFirmaContrato}}</p>
+            <p><strong>Número del DRP 1. </strong>{{this.numeroDRP1}}</p>
+            <p><strong>Fecha de generación de DRP 1. </strong>{{this.fechaGeneracionDRP1}}</p>
+            <p *ngIf="this.numeroDRP2!=undefined"><strong>Número del DRP 2. </strong>{{this.numeroDRP2}}</p>
+            <p *ngIf="this.fechaGeneracionDRP2!=undefined"><strong>Fecha de generación de DRP 2. </strong>{{this.fechaGeneracionDRP2}}</p>
+            <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{this.fechaAprobacionGarantiaPoliza}}</p>
+            <p><strong>Objeto:</strong></p>
+            <p>Prueba</p>
+            <p><strong>Valor inicial del contrato: </strong>{{this.valorInicialContrato}}</p>
+            <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato}}</p>
+            <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion}}</p>
+            <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra}}</p>
+            <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                </strong>86.786.546</p>
+            <p><strong>Nombre del representante legal del contratista de interventoría: </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
+            <p><strong>Número de identificación del contratista de interventoría: </strong>870.876.977-4</p>
+            <p><strong>Nombre de la entidad contratista de interventoría: </strong>C & M Constructora Ltda.</p>
+            <p><strong>Número de identificación del representante legal del contratista de obra: </strong>93.876.987</p>
+            <p><strong>Nombre del representante legal del contratista de obra: </strong>María Mercedez Aristizabal</p>
+            <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
+            <p><strong>Nombre entidad contratista de obra: </strong>{{this.nombreEntidadContratistaObra}}</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card mainGris">
+        <mat-card-content>
+            <p><strong>Fecha del acta de inicio de la fase 2 - Construcción:
+                </strong>{{this.fechaActaInicioConstruccion | date: 'dd/MM/yyyy' }}</p>
+            <p><strong>Fecha prevista de terminación: </strong>{{this.fechaPrevistaTerminacion | date: 'dd/MM/yyyy' }}</p>
+            <p><strong>Plazo actual del contrato: Meses:</strong> 12 <strong>Días:
+            </strong>26</p>
+            <p *ngIf="this.plazoEjecucionPreConstruccionMeses!=undefined && this.plazoEjecucionPreConstruccionDias!=undefined"><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> {{this.plazoEjecucionPreConstruccionMeses}} <strong>Días:
+                </strong>{{this.plazoEjecucionPreConstruccionDias}}</p>
+            <p><strong>Plazo de ejecución fase 2 – Construcción: Meses:</strong> {{this.plazoEjecucionConstrM}} <strong>Días:
+                </strong>{{this.plazoEjecucionConstrD}}</p>
+            <p><strong>Observaciones o consideraciones especiales: </strong></p>
+            <p *ngIf="this.obsConEspeciales=='' || this.obsConEspeciales==null || this.obsConEspeciales==undefined">-----</p>
+            <div *ngIf="this.obsConEspeciales!=='' || this.obsConEspeciales!==null || this.obsConEspeciales!==undefined">
+                <div [innerHtml]="this.obsConEspeciales"></div> 
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div *ngIf="this.conObservacionesSupervisor==true">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones al acta de inicio
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p><strong>{{this.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></p>
+                <div [innerHtml]="this.observacionesSupervisor"></div> 
+            </mat-card-content>
+        </mat-card>
+    </div>
+</section>
+<section class="container text-center" *ngIf="this.botonDescargar==true">
+    <button mat-raised-button color="accent" (click)="this.descargarActaSuscrita()">Descargar acta suscrita</button>
+</section>

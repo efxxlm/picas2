@@ -12,8 +12,11 @@ namespace asivamosffie.services.Helpers.Enumerator
         SolicitarApertura = 10,
         proyectoadministrativocreado = 12,
         MsjCoordinadorFuentes = 14,
+        ActaInicioFase2ObraInterventoria = 13,
         MsjEnviarSolicitudContratacion = 15,
         ActividadesNoMonitoreadasProcesoSeleccion = 16,
+        Dias2ObraOInterventoriaDocNoCargado=17,
+
         ConvocarSesionComite = 19,
         OrdenDia = 20,
         NotificacionActaAprobacion = 21,

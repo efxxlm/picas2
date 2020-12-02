@@ -102,6 +102,17 @@ public const string Inicio_de_sesion = "1";
         public const string Votacion_Solicitud_Participante = "80";
         public const string Registrar_Tramite_Contrato = "78";
 
+        //Acta inicio contrato Fase 2     
+        public const string Editar_Plazo_Ejecucion_Fase_2 = "108";
+        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";        
+        public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
+        public const string Notificación_Acta_Inicio_Fase_II = "111";
+        public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
+        public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
+        public const string Crear_Editar_Contrato_Observacion = "122";
+
+        
+
         public const string Crear_Cronograma_monitoreo = "114";
 
         public const string Eliminar_Compromisos_Solicitud = "125";

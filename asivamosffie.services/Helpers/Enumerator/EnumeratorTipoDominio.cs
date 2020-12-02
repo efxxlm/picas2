@@ -122,12 +122,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         PlaceHolderDDP = 66,
 
         Responsable_Equipo_Tecnico = 71,
-
         Responsable_Equipo_Estructurador = 73,
-
         Tipos_De_Ensayos_De_Laboratorio = 74,
-
         Causas_De_Accidentes_Laborales = 75,
+
 
         Tiempo_Aprobar_Acta = 84,
 
