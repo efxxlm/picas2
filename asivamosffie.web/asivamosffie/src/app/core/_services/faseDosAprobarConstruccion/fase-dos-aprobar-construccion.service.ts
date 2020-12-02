@@ -47,6 +47,12 @@ export class FaseDosAprobarConstruccionService {
     return this.http.post<Respuesta>( `${ environment.apiUrl }/TechnicalRequirementsConstructionPhase/CreateEditObservacionConstruccionPerfil`, pObservacion );
   }
 
+  cambiarEstadoContratoEstadoVerificacionConstruccionCodigo( contratoId: number, pEstado: string ) {
+    return this.http.post<Respuesta>(
+      `${ environment.apiUrl }/TechnicalRequirementsConstructionPhase/CambiarEstadoContratoEstadoVerificacionConstruccionCodigo?contratoId=${ contratoId }&pEstado=${ pEstado }`, ''
+    );
+  }
+
   // Estados AprobarConstruccion
   listaEstadosAprobarConstruccion( tipoContrato: string ) {
     const estadosConstruccion: any = {};

@@ -68,12 +68,11 @@
                   Verificar requisitos de inicio
           </button>
 
-          <!--
           <button mat-raised-button
                   color="accent"
                   class="btn-table"
                   *ngIf="element.estadoRequisito === '2' || element.estadoRequisito === '4'"
-                  (click)="aprobarInicio( element.id )">
+                  (click)="aprobarInicio( element.contratoId, estadosConstruccionInterventoria.conReqTecnicosAprobadosPorSupervisor.codigo )">
                   Aprobar inicio
           </button>
 
@@ -81,10 +80,9 @@
                   color="accent"
                   class="btn-table"
                   *ngIf="element.estadoRequisito === '2' || element.estadoRequisito === '4'"
-                  (click)="aprobarInicio( element.id )">
+                  (click)="aprobarInicio( element.contratoId, estadosConstruccionInterventoria.enviadoAlApoyo.codigo )">
                   Enviar al apoyo de la supervisión
           </button>
-          -->
 
           <button mat-raised-button
                   color="accent"

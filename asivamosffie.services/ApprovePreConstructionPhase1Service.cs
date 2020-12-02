@@ -151,15 +151,10 @@ namespace asivamosffie.services
                     .Include(r => r.ContratoPerfil)
                     .ThenInclude(r => r.ContratoPerfilObservacion).FirstOrDefault();
 
-                bool RegistroCompleto = true;
-                bool TieneObservacionSupervisor = true;
+                bool RegistroCompleto = true; 
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
-                    if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor)
-                    {
-                        TieneObservacionSupervisor = false;
-                    }
-
+                  
                     if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
                         RegistroCompleto = false;
                     else if ((ContratoPerfil.TieneObservacionSupervisor == null)

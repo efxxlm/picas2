@@ -52,12 +52,10 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
     this.faseUnoPreconstruccionSvc.getContratacionByContratoId( pContratoId )
       .subscribe( contrato => {
         this.contrato = contrato;
-        console.log( this.contrato );
       } );
   }
 
   estadoSemaforo( index: number, semaforo: string ) {
-    // tslint:disable-next-line: no-string-literal
     this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
   }
 
@@ -67,6 +65,13 @@ export class ExpansionGestionarRequisitosComponent implements OnInit {
     // tslint:disable-next-line: deprecation
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
+  }
+
+  getContrato( value: boolean = false ) {
+    if ( value === true ) {
+      this.contrato = undefined;
+      this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
+    }
   }
 
   getPerfilesContrato( index: number, perfilContrato: ContratoPerfil[] ) {

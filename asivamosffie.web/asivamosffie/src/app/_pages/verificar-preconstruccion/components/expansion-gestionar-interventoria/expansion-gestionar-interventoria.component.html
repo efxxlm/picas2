@@ -70,6 +70,7 @@
                         [proyectoId]="contratacion.proyectoId"
                         [tieneEstadoFase1EyD]="contratacion.proyecto['tieneEstadoFase1EyD']"
                         [tieneEstadoFase1Diagnostico]="contratacion.proyecto['tieneEstadoFase1Diagnostico']"
+                        (perfilEliminado)="getContrato( $event )"
                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
                         (perfilesCompletados)="estadoSemaforo( i, $event )">
       </app-form-perfil>

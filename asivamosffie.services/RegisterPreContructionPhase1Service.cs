@@ -313,7 +313,7 @@ namespace asivamosffie.services
                     //{
                     //    contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_verificados;
                     //}
-                } 
+                }
 
                 else
                 {
@@ -450,6 +450,7 @@ namespace asivamosffie.services
             try
             {
                 Contrato contratoMod = _context.Contrato.Where(r => r.ContratoId == pContratoId)
+                    .Include(r => r.ContratoPerfil)
                     .Include(r => r.ContratoPoliza)
                     .Include(r => r.Contratacion)
                         .ThenInclude(r => r.ContratacionProyecto)
@@ -482,31 +483,41 @@ namespace asivamosffie.services
                     contratoMod.FechaAprobacionRequisitosApoyo = DateTime.Now;
                 }
 
-
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
-                {
-
                     contratoMod.FechaAprobacionRequisitosSupervisor = DateTime.Now;
 
-                }
-                //TODO: crear notificaciones
+
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor)
-                {
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
-                }
-                //TODO: crear notificaciones
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
-                {
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
 
+                ///Logica para devoluciones
+                ///
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
+                {
+                    foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
+                    {
+                        ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
+                        contratoPerfilOld.FechaModificacion = DateTime.Now;
+                        contratoPerfilOld.TieneObservacionSupervisor = null;
+                        contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
+
+                        _context.Update(contratoPerfilOld);
+                    }
                 }
 
-
-
-
+                //Logica de actas cuando se aprueba
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
+                {
+                    if (contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        contratoMod.EstadoActa = ConstanCodigoEstadoActaContrato.Sin_Revision;
+                    else
+                        contratoMod.EstadoActa = ConstanCodigoEstadoActaContrato.Sin_acta_generada;
+                }
 
                 _context.SaveChanges();
 
@@ -720,7 +731,7 @@ namespace asivamosffie.services
                     }
                 }
             }
-        } 
+        }
         //3.1.8() OBRA
         public async Task GetContratosObraSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
@@ -759,7 +770,7 @@ namespace asivamosffie.services
                     }
                 }
             }
-        } 
+        }
         //3.1.8()
         public async Task GetContratosInterventoriaSinGestionar(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {

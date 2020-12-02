@@ -28,10 +28,6 @@
                 <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
             </div>
             <div *ngIf="this.dataSupervisor==true">
-                <p><strong>Número de identificación del Supervisor:
-                </strong>{{this.numIdentifiacionSupervisor }}</p>
-            <p><strong>Nombre del Supervisor:
-                </strong>{{this.nomSupervisor}}</p>
                 <p><strong>Número de identificación del representante legal del contratista de inteventoría:
                 </strong>{{this.numIdRepresentanteLegal }}</p>
             <p><strong>Nombre del representante legal del contratista de interventoría:
@@ -180,7 +176,7 @@
                         </quill-editor>
                     </div>
                     <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
-                        {{500 - addressForm.get('observacionesEspeciales').value.length}}
+                        {{500 - textoLimpio(addressForm.get('observacionesEspeciales').value)}}
                     </span>
                     <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null">
                         500
@@ -189,13 +185,8 @@
             </mat-card-content>
         </mat-card>
         <div class="text-center">
-            <button mat-button color="warn" [disabled]="true"
-                *ngIf="addressForm.get('fechaActaInicioFUnoPreconstruccion').value === null" class="btn-guardar"
-                type="submit">
-                <img src="assets/img/icon/guardar.svg" alt="Guardar">
-            </button>
             <button mat-button color="warn" class="btn-guardar"
-                *ngIf="addressForm.get('fechaActaInicioFUnoPreconstruccion').value" type="submit">
+                type="submit">
                 <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </div>

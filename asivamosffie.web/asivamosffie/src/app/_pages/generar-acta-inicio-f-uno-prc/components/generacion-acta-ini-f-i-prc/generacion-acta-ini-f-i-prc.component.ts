@@ -121,7 +121,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   generarFechaRestante(){
     let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
-    newdate.setMonth(newdate.getMonth() + this.mesPlazoIni);
+    newdate.setDate(newdate.getDate() + (this.mesPlazoIni*30.43));
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.diasPlazoIni)
     console.log(newDateFinal);
@@ -168,6 +168,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       e.editor.deleteText(n, e.editor.getLength());
     }
   }
+  textoLimpio(texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length > 500 ? 500 : textolimpio.length;
+    }
+  }
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
     if (tecla === 8) { return true; } // Tecla de retroceso (para poder borrar)
@@ -192,21 +198,27 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     }
     if(this.addressForm.value.fechaActaInicioFUnoPreconstruccion==null || this.addressForm.value.fechaPrevistaTerminacion==null || this.addressForm.value.mesPlazoEjFase1==null
       ||this.addressForm.value.diasPlazoEjFase1==null  ||this.addressForm.value.mesPlazoEjFase2==null  ||this.addressForm.value.diasPlazoEjFase2==null ||this.addressForm.value.observacionesEspeciales==null){
-        this.openDialog('Falta registrar información','');
+        this.openDialog('','Falta registrar información');
     }
     else{
       var sumaMeses;
       var sumaDias;
       sumaMeses = parseInt(this.addressForm.value.mesPlazoEjFase1) + parseInt(this.addressForm.value.mesPlazoEjFase2);
       sumaDias = parseInt(this.addressForm.value.diasPlazoEjFase1) + parseInt(this.addressForm.value.diasPlazoEjFase2);
-      if (sumaMeses > this.mesPlazoIni) {
-        this.openDialog('','Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstrucción Meses, dado que no coincide con la informacion inicial registrada para el contrato');
+      if ((sumaMeses > this.mesPlazoIni)&&this.valorFDos!=0 ) {
+        this.openDialog('','Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 1 - Preconstrucción Meses</b>, dado que no coincide con la informacion inicial registrada para el contrato');
       }
-      else if(sumaDias > this.diasPlazoIni){
-        this.openDialog('','Debe verificar la información ingresada en el campo Plazo de ejecución - fase 2 - Construcción Días, dado que no coincide con la informacion inicial registrada para el contrato');
+      else if((sumaDias > this.diasPlazoIni)&&this.valorFDos!=0){
+        this.openDialog('','Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 2 - Construcción Días</b>, dado que no coincide con la informacion inicial registrada para el contrato');
       }
       else if((this.valorFUno + this.valorFDos)!=this.valorIni){
-        this.openDialog('','Debe verificar la información ingresada en el campo Valor inicial del contrato, dado que no coincide con la información inicial registrada para el contrato');
+        this.openDialog('','Debe verificar la información ingresada en el campo <b>Valor inicial del contrato</b>, dado que no coincide con la información inicial registrada para el contrato');
+      }
+      else if (this.addressForm.value.mesPlazoEjFase1 > this.mesPlazoIni){
+        this.openDialog('','Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 1 - Preconstrucción Meses</b>, dado que no coincide con la información inicial registrada para el contrato');
+      }
+      else if (this.addressForm.value.diasPlazoEjFase1 > this.diasPlazoIni){
+        this.openDialog('','Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 1 - Preconstrucción Días</b>, dado que no coincide con la información inicial registrada para el contrato');
       }
       else{
         const arrayContrato: EditContrato = {
@@ -240,14 +252,14 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             if(localStorage.getItem("origin")=="obra"){
               this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
                 this.realizoPeticion = true;
-                this.openDialog('La información ha sido guardada exitosamente.', "");
+                this.openDialog('', 'La información ha sido guardada exitosamente.');
                 this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
               });
             }
             else{
               this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data0=>{
                 this.realizoPeticion = true;
-                this.openDialog('La información ha sido guardada exitosamente.', "");
+                this.openDialog('','La información ha sido guardada exitosamente.');
                 this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
               });
             }
