@@ -248,21 +248,25 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       else{
         this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(data1 => {
           if (data1.code == "200") {
-            this.openDialog('La información ha sido guardada exitosamente.', "");
-            this.router.navigate(['/generarActaInicioConstruccion']);
+            if(localStorage.getItem("origin")=="interventoria"){
+              this.services.CambiarEstadoActa(this.idContrato,"2","usr2").subscribe(resp=>{
+                this.openDialog('La información ha sido guardada exitosamente.', "");
+                this.router.navigate(['/generarActaInicioConstruccion']);
+              });
+            }
+            else{
+              this.services.CambiarEstadoActa(this.idContrato,"14","usr2").subscribe(resp=>{
+                this.openDialog('La información ha sido guardada exitosamente.', "");
+                this.router.navigate(['/generarActaInicioConstruccion']);
+              });
+            }
+            
           }
           else {
             this.openDialog(data1.message, "");
           }
         });
-        if(localStorage.getItem("origin")=="interventoria"){
-          this.services.CambiarEstadoActa(this.idContrato,"2","usr2").subscribe(resp=>{
-          });
-        }
-        else{
-          this.services.CambiarEstadoActa(this.idContrato,"14","usr2").subscribe(resp=>{
-          });
-        }
+
       }
     }
     else{
