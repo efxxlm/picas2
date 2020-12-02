@@ -1225,6 +1225,38 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
+        private Proyecto CalcularFechaInicioContrato( int pContratoConstruccionId )
+        {
+
+            Proyecto proyecto = new Proyecto();
+
+            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                        .Where( cc => cc.ContratoConstruccionId == pContratoConstruccionId )
+                                                                        .Include( r => r.Contrato )
+                                                                            .ThenInclude( r => r.Contratacion )
+                                                                                .ThenInclude( r => r.DisponibilidadPresupuestal )
+                                                                        .Include( r => r.Contrato )
+                                                                            .ThenInclude( r => r.ContratoPoliza )
+                                                                        .Include( r => r.Proyecto )
+                                                                        .FirstOrDefault();
+
+
+            DateTime? fechaInicioContrato = contratoConstruccion?.Contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp;
+            DateTime? fechaPoliza = contratoConstruccion.Contrato?.ContratoPoliza?.OrderByDescending( r => r.FechaAprobacion )?.FirstOrDefault()?.FechaAprobacion;
+
+            if ( fechaInicioContrato != null && fechaPoliza != null ){
+                if ( fechaPoliza >= fechaInicioContrato)
+                    proyecto.FechaInicioEtapaObra = fechaPoliza.Value;
+                else
+                    proyecto.FechaInicioEtapaObra = fechaInicioContrato.Value;
+            }
+
+            DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra.AddMonths( contratoConstruccion.Proyecto.PlazoMesesObra.Value );
+            fechaFinalContrato = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value ); 
+
+            return proyecto;
+        }
+
         #endregion private
 
         #region business
@@ -2021,6 +2053,23 @@ namespace asivamosffie.services
                     }
 
                     ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(contratoConstruccionId);
+
+                    Proyecto proyecto = CalcularFechaInicioContrato( contratoConstruccionId );
+
+                    int numeroMes = 1;
+                    for ( DateTime fecha = proyecto.FechaInicioEtapaObra; fecha <= proyecto.FechaFinEtapaObra; fecha = fecha.AddMonths(1)){
+                        
+                        MesEjecucion mes = new MesEjecucion() {
+                            ContratoConstruccionId = contratoConstruccionId,
+                            Numero = numeroMes,
+                            FechaInicio = fecha,
+                            FechaFin = fecha.AddMonths(1),
+
+                        };
+
+                        _context.MesEjecucion.Add( mes );
+                        numeroMes++;
+                    } 
 
                     if (contratoConstruccion != null)
                     {

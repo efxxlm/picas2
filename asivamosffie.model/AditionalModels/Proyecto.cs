@@ -33,7 +33,14 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string sedeString { get; set; }
+
         [NotMapped]
         public string institucionEducativaString { get; set; }
+
+        [NotMapped]
+        public DateTime FechaInicioEtapaObra { get; set; }
+
+        [NotMapped]
+        public DateTime FechaFinEtapaObra { get; set; }
     }
 }

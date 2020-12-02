@@ -1,5 +1,5 @@
 <div class="w-100">
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 date-input-table">
     <ng-container matColumnDef="planesProgramas">
       <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Planes y programas </th>
       <td mat-cell *matCellDef="let element" align="center"> {{ element.nombrePlanesProgramas }} </td>
@@ -31,21 +31,22 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de radicado </th>
       <td mat-cell *matCellDef="let element" align="center">
         <section *ngIf="element.recibioRequisito === true || element.recibioRequisito === 2" class="mt-1em w-60">
-          <button mat-button 
-                  color="primary" 
-                  type="button" 
-                  (click)="fechaRadicado.open()" 
+          <button mat-button
+                  color="primary"
+                  type="button"
+                  (click)="fechaRadicado.open()"
                   class="btn-calendario">
-          <img  class="mr-bottom-1" 
-                src="assets/img/icon/calendarioCirculo.svg" 
+          <img  class="mr-bottom-1"
+                src="assets/img/icon/calendarioCirculo.svg"
                 alt="Abrir Calendario">
           </button>
-          <mat-form-field class="mt-min" 
-                         >
-          <input  matInput 
-                  [matDatepicker]="fechaRadicado" 
+          <span class="required-form-group required-calendar ml-05">*</span>
+          <mat-form-field class="mt-min mat-sin-borde">
+          <input  matInput
+                  [matDatepicker]="fechaRadicado"
                   [(ngModel)]="element.fechaRadicado"
-                  placeholder="DD/MM/AAAA">
+                  placeholder="DD/MM/AAAA"
+                  readonly>
           <mat-datepicker #fechaRadicado></mat-datepicker>
           </mat-form-field>
         </section>
@@ -56,21 +57,22 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación </th>
       <td mat-cell *matCellDef="let element" align="center">
         <section *ngIf="element.recibioRequisito === true || element.recibioRequisito === 2" class="mt-1em w-60">
-          <button mat-button 
-                  color="primary" 
-                  type="button" 
-                  (click)="fechaAprobacion.open()" 
+          <button mat-button
+                  color="primary"
+                  type="button"
+                  (click)="fechaAprobacion.open()"
                   class="btn-calendario">
-          <img  class="mr-bottom-1" 
-                src="assets/img/icon/calendarioCirculo.svg" 
+          <img  class="mr-bottom-1"
+                src="assets/img/icon/calendarioCirculo.svg"
                 alt="Abrir Calendario">
           </button>
-          <mat-form-field class="mt-min" 
-                         >
-          <input  matInput 
-                  [matDatepicker]="fechaAprobacion" 
+          <span class="required-form-group required-calendar ml-05">*</span>
+          <mat-form-field class="mt-min mat-sin-borde">
+          <input  matInput
+                  [matDatepicker]="fechaAprobacion"
                   [(ngModel)]="element.fechaAprobacion"
-                  placeholder="DD/MM/AAAA">
+                  placeholder="DD/MM/AAAA"
+                  readonly>
           <mat-datepicker #fechaAprobacion></mat-datepicker>
           </mat-form-field>
         </section>
@@ -97,7 +99,7 @@
       <td mat-cell *matCellDef="let element" align="center">
         <section *ngIf="element.requiereObservacion">
           <button mat-raised-button
-                  color="accent" 
+                  color="accent"
                   class="btn-table expansion-style--title btn-color h-2em"
                   [ngClass]="getSemaforo( element.observaciones )"
                   (click)="openDialog( element.nombrePlanesProgramas, element.observaciones, element.id )">
@@ -106,7 +108,7 @@
         </section>
       </td>
     </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
@@ -119,16 +121,16 @@
         </mat-form-field>
       </div>
     </div>
-    
+
     <div class="text-center">
-      <p><small>Indique la ruta del soporte de esta información</small></p>
+      <p class="text-center cursivayeso ">Indique la ruta del soporte de esta información</p>
     </div>
   </section>
-  
+
   <div class="text-center">
-    <button mat-button 
-            color="warn" 
-            class="btn-guardar" 
+    <button mat-button
+            color="warn"
+            class="btn-guardar"
             type="button"
             (click)="guardar()">
             <img  src="assets/img/icon/guardar.svg">

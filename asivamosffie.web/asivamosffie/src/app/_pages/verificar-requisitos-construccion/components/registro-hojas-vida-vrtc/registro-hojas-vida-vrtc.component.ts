@@ -13,7 +13,7 @@ import { ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.inter
   styleUrls: ['./registro-hojas-vida-vrtc.component.scss']
 })
 export class RegistroHojasVidaVrtcComponent implements OnInit {
-  
+
   formContratista        : FormGroup;
   minDate: Date;
   @Input() perfilProyecto: any[] = [];
@@ -42,7 +42,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
   constructor ( private fb                       : FormBuilder,
                 private commonSvc                : CommonService,
                 private faseUnoConstruccionSvc   : FaseUnoConstruccionService,
-                private dialog                   : MatDialog ) 
+                private dialog                   : MatDialog )
   {
     this.minDate = new Date();
     this.crearFormulario();
@@ -80,7 +80,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
             this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfiles.length ) );
             return;
           }
-          
+
           for ( let i = 0; i < nuevosPerfiles; i++ ) {
             this.perfiles.push(
               this.fb.group(
@@ -106,7 +106,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
         if ( this.formContratista.get( 'perfiles' ).dirty === false && Number( value ) > 0 ) {
           this.perfiles.clear();
           for ( let i = 0; i < Number(value); i++ ) {
-            this.perfiles.push( 
+            this.perfiles.push(
               this.fb.group(
                 {
                   estadoSemaforo              : [ 'sin-diligenciar' ],
@@ -132,7 +132,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
-        .subscribe( 
+        .subscribe(
           value => {
             if ( value < this.perfiles.length && value > 0 ) {
               this.openDialog(
@@ -170,7 +170,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
         let observacionSupervisor = null;
         let semaforo;
         if ( perfil['construccionPerfilNumeroRadicado'].length === 0 ) {
-          numeroRadicados.push( 
+          numeroRadicados.push(
             this.fb.group(
               {
                 contratoPerfilNumeroRadicadoId: 0,
@@ -181,7 +181,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
           )
         } else {
           for ( let radicado of perfil['construccionPerfilNumeroRadicado'] ) {
-            numeroRadicados.push( 
+            numeroRadicados.push(
               this.fb.group(
                 { construccionPerfilNumeroRadicadoId: radicado['construccionPerfilNumeroRadicadoId'] || 0,
                   contratoPerfilId: perfil.contratoPerfilId,
@@ -260,11 +260,11 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
   };
 
   openDialogTrueFalse (modalTitle: string, modalText: string) {
-    
+
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton: true }
@@ -305,7 +305,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
           this.formContratista.patchValue({
             numeroPerfiles: `${ this.perfiles.length }`
           });
-          this.openDialog( '', 'La información se ha eliminado correctamente.' );
+          this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
         };
       } );
   };
@@ -315,9 +315,9 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       .subscribe( value => {
         if ( value ) {
           this.faseUnoConstruccionSvc.deleteConstruccionPerfil( contratoPerfilId )
-            .subscribe( 
+            .subscribe(
               () => {
-                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 this.perfiles.removeAt( numeroPerfil );
                 this.formContratista.patchValue({
                   numeroPerfiles: `${ this.perfiles.length }`
@@ -345,7 +345,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
     this.faseUnoConstruccionSvc.deleteConstruccionPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
       .subscribe( () => {
         this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-        this.openDialog( '', 'La información se ha eliminado correctamente.' );
+        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
       } );
   };
 
@@ -365,13 +365,13 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       } )
     } else {
       perfiles.forEach( value => {
-        
+
         value['construccionPerfilId']             = value.contratoPerfilId;
         value.cantidadHvAprobadas                 = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
         value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value['observaciones']                    = value.observacion 
+        value['observaciones']                    = value.observacion
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;
