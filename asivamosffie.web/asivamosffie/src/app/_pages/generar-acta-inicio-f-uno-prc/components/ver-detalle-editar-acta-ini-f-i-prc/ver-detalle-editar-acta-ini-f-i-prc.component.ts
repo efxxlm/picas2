@@ -70,6 +70,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   conObervacionesActa: any;
   observacionesActaFase1: any;
   fechaCreacion: any;
+  elementsObservacion: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -124,6 +125,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   }
   loadObservaciones(id){
     this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
+      this.elementsObservacion = data;
       for(let i=0; i<data.length;i++){
         if(data[i].esActa==true && data[i].esActaFase1==true){
           this.conObervacionesActa = data[i].esActaFase1;
@@ -171,7 +173,9 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
     this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
-    if(localStorage.getItem("origin")=="interventoria"){
+    this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
+    this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+    if(this.opcion == 1){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
       this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
@@ -244,6 +248,12 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
+    }
+  }
+  textoLimpio(texto: string) {
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length > 500 ? 500 : textolimpio.length;
     }
   }
   number(e: { keyCode: any; }) {

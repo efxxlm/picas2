@@ -51,13 +51,25 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   numIdRepresentanteLegal: any;
   nomRepresentanteLegal: any;
   tipoProponente: any;
+  rolAsignado: any;
+  opcion: number;
   constructor(private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService, private router: Router,public dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    this.cargarRol();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
       this.contratoId = param.id;
     });
+  }
+  cargarRol() {
+    this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
+    if (this.rolAsignado == 2) {
+      this.opcion = 1;
+    }
+    else {
+      this.opcion = 2;
+    }
   }
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe((data:any)=>{

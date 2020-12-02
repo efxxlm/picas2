@@ -52,6 +52,9 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   dataSupervisor: boolean = false;
   numIdentifiacionSupervisor: string;
   nomSupervisor: string;
+  esRojo: boolean = false;
+  rolAsignado: any;
+  ocpion: number;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -66,6 +69,15 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
     });
+  }
+  cargarRol() {
+    this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
+    if (this.rolAsignado == 2) {
+      this.ocpion = 2;
+    }
+    else {
+      this.ocpion = 1;
+    }
   }
   openDialogConfirmar(modalTitle: string, modalText: string) {
     const confirmarDialog = this.dialog.open(ModalDialogComponent, {
@@ -197,8 +209,9 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       this.addressForm.get('diasPlazoEjFase2').setValue(0);
     }
     if(this.addressForm.value.fechaActaInicioFUnoPreconstruccion==null || this.addressForm.value.fechaPrevistaTerminacion==null || this.addressForm.value.mesPlazoEjFase1==null
-      ||this.addressForm.value.diasPlazoEjFase1==null  ||this.addressForm.value.mesPlazoEjFase2==null  ||this.addressForm.value.diasPlazoEjFase2==null ||this.addressForm.value.observacionesEspeciales==null){
-        this.openDialog('','Falta registrar información');
+      ||this.addressForm.value.diasPlazoEjFase1==null  ||this.addressForm.value.mesPlazoEjFase2==null  ||this.addressForm.value.diasPlazoEjFase2==null){
+        this.openDialog2('','<b>Falta registrar información</b>');
+        this.esRojo = true;
     }
     else{
       var sumaMeses;
@@ -214,10 +227,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       else if((this.valorFUno + this.valorFDos)!=this.valorIni){
         this.openDialog('','Debe verificar la información ingresada en el campo <b>Valor inicial del contrato</b>, dado que no coincide con la información inicial registrada para el contrato');
       }
-      else if (this.addressForm.value.mesPlazoEjFase1 > this.mesPlazoIni){
+      else if ((this.addressForm.value.mesPlazoEjFase1 > this.mesPlazoIni) || (this.addressForm.value.mesPlazoEjFase1 < this.mesPlazoIni)){
         this.openDialog('','Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 1 - Preconstrucción Meses</b>, dado que no coincide con la información inicial registrada para el contrato');
       }
-      else if (this.addressForm.value.diasPlazoEjFase1 > this.diasPlazoIni){
+      else if ((this.addressForm.value.diasPlazoEjFase1 > this.diasPlazoIni) || (this.addressForm.value.diasPlazoEjFase1 < this.diasPlazoIni)){
         this.openDialog('','Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 1 - Preconstrucción Días</b>, dado que no coincide con la información inicial registrada para el contrato');
       }
       else{
@@ -252,14 +265,14 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             if(localStorage.getItem("origin")=="obra"){
               this.service.CambiarEstadoActa(this.idContrato,"14").subscribe(data0=>{
                 this.realizoPeticion = true;
-                this.openDialog('', 'La información ha sido guardada exitosamente.');
+                this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
                 this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
               });
             }
             else{
               this.service.CambiarEstadoActa(this.idContrato,"2").subscribe(data0=>{
                 this.realizoPeticion = true;
-                this.openDialog('','La información ha sido guardada exitosamente.');
+                this.openDialog('','<b>La información ha sido guardada exitosamente.</b>');
                 this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
               });
             }

@@ -33,27 +33,32 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-  public dataTable;
+  dataTable: any[] = [];
   constructor(private router: Router, public dialog: MatDialog, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.cargarTablaDeDatos();
   }
   cargarTablaDeDatos(){
-    this.service.GetListGrillaActaInicio(8).subscribe(data=>{
-      this.dataTable = data;
+    this.service.GetListGrillaActaInicio(8).subscribe((data:any)=>{
+      for (let contrObras of data) {
+        if (contrObras.tipoContratoNombre === 'Interventoria') {
+          this.dataTable.push(contrObras);
+        };
+      };
+      console.log(this.dataTable);
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-      this.applyFilter("Interventoria");
     });
   }
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue;
-  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  };
   validarActaParaInicio(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "false");
@@ -73,21 +78,27 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   cambiarEstadoSupervisor(id) {
     if (localStorage.getItem("origin") == "interventoria") {
       this.service.CambiarEstadoActa(id, "3").subscribe(data => {
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+        );
       });
     }
   }
   cambiarEstadoInterventor(id, tieneObs) {
     if (localStorage.getItem("origin") == "interventoria") {
         this.service.CambiarEstadoActa(id, "5").subscribe(data => {
-          this.ngOnInit();
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+          );
         });
     }
   }
   enviarActaParaFirma(id) {
     if (localStorage.getItem("origin") == "interventoria") {
       this.service.CambiarEstadoActa(id, "6").subscribe(data => {
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+        );
       });
       this.descargarActaDesdeTabla(id);
     }
@@ -95,7 +106,9 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   enviarInterventorBtn(id){
     if (localStorage.getItem("origin") == "interventoria") {
       this.service.CambiarEstadoActa(id, "4").subscribe(data => {
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+        );
       });
     }
   }
@@ -119,7 +132,9 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {
         this.service.CambiarEstadoActa(id,"7").subscribe(data=>{
-          this.ngOnInit();
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
+          );
         });
       }
     });

@@ -28,6 +28,10 @@
                 <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
             </div>
             <div *ngIf="this.dataSupervisor==true">
+                <p><strong>Número de identificación del Supervisor:
+                </strong>{{this.numIdentifiacionSupervisor }}</p>
+            <p><strong>Nombre del Supervisor:
+                </strong>{{this.nomSupervisor}}</p>
                 <p><strong>Número de identificación del representante legal del contratista de inteventoría:
                 </strong>{{this.numIdRepresentanteLegal }}</p>
             <p><strong>Nombre del representante legal del contratista de interventoría:
@@ -58,8 +62,6 @@
             <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
                 {{this.diasPlazoIni}}</p>
             </div>
-
-
         </mat-card-content>
     </mat-card>
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
@@ -69,7 +71,8 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaActaInicioFUnoPreconstruccion">Fecha del acta de
+                                <label class="label-left" for="fechaActaInicioFUnoPreconstruccion" 
+                                [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaActaInicioFUnoPreconstruccion.invalid  && this.esRojo==true}">Fecha del acta de
                                     inicio de la fase 1 - Preconstrucción</label>
                             </div>
                             <div class="col d-flex align-items-center">
@@ -91,8 +94,8 @@
                 <div class="row">
                     <div class="col-md-7" style="padding-left: 0px;">
                         <div class="row">
-                            <div class="pr-1">
-                                <label class="label-left" for="fechaPrevistaTerminacion">Fecha prevista de
+                            <div class="pr-1" >
+                                <label class="label-left" for="fechaPrevistaTerminacion" [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaPrevistaTerminacion.invalid  && this.esRojo==true}">Fecha prevista de
                                     terminación</label>
                             </div>
                             <div class="col d-flex align-items-center">
@@ -109,10 +112,10 @@
                     <div class="col-md-9" style="padding-left: 0px;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left">Plazo de ejecución fase 1 – Preconstrucción:</label>
+                                <label class="label-left" [ngClass]="{'color-secondaryColor' : this.esRojo==true}">Plazo de ejecución fase 1 – Preconstrucción:</label>
                             </div>
                             <div class="col d-flex d-flex-row">
-                                <label class="label-left sub-label" for="mesPlazoEjFase1">
+                                <label class="label-left sub-label" for="mesPlazoEjFase1" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid  && this.esRojo==true}">
                                     Meses
                                 </label>
                                 <mat-form-field class="w-8em">
@@ -122,7 +125,7 @@
                                 </mat-form-field>
                                 <span
                                     class="contador">{{2 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                <label class="label-left sub-label">
+                                <label class="label-left sub-label" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid && this.esRojo==true}">
                                     Días
                                 </label>
                                 <mat-form-field class="w-8em">
