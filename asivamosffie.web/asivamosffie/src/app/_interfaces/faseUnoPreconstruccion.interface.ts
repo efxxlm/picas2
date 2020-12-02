@@ -36,6 +36,7 @@ export interface ContratoModificado {
 }
 
 export interface Contrato {
+  
   contratacionId: number;
   fechaTramite: string;
   tipoContratoCodigo: string;
@@ -67,6 +68,7 @@ export interface Contrato {
   contratoObservacion: any[];
   contratoPerfil: ContratoPerfil[];
   contratoPoliza: ContratoPoliza[];
+  fechaAprobacionRequisitosConstruccionInterventor?: string;
 }
 
 interface ContratoPoliza {

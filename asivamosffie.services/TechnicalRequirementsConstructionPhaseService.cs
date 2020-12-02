@@ -1530,9 +1530,10 @@ namespace asivamosffie.services
 
             try
             {
-
+                
                 Contrato contrato = _context.Contrato.Find(pContratoId);
-
+                //jflorez, este evento solo sucede cuando esta completo y se aprueban los requisitos, por ello seteo el dato 20201202
+                contrato.FechaAprobacionRequisitosConstruccionInterventor = DateTime.Now;
                 contrato.UsuarioModificacion = pUsuarioCreacion;
                 contrato.FechaModificacion = DateTime.Now;
 
