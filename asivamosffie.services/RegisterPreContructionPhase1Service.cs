@@ -498,7 +498,7 @@ namespace asivamosffie.services
                 ///Logica para devoluciones
                 ///
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_supervisor)
-                { 
+                {
                     foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
                     {
                         ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
@@ -507,7 +507,16 @@ namespace asivamosffie.services
                         contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
 
                         _context.Update(contratoPerfilOld);
-                    } 
+                    }
+                }
+
+                //Logica de actas cuando se aprueba
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
+                {
+                    if (contratoMod.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        contratoMod.EstadoActa = ConstanCodigoEstadoActaContrato.Sin_Revision;
+                    else
+                        contratoMod.EstadoActa = ConstanCodigoEstadoActaContrato.Sin_acta_generada;
                 }
 
                 _context.SaveChanges();

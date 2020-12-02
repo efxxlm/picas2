@@ -22,6 +22,7 @@ using DinkToPdf.Contracts;
 using System.Globalization;
 using OfficeOpenXml;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
@@ -1397,6 +1398,17 @@ namespace asivamosffie.services
 
                     }
                 }
+              
+                 
+                //Logica de actas cuando se aprueba
+                if (pEstado == ConstanCodigoEstadoContrato.Con_requisitos_tecnicos_aprobados_por_supervisor)
+                {
+                    if (contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        contratoCambiarEstado.EstadoActaFase2 = ConstanCodigoEstadoActaContrato.Sin_Revision;
+                    else
+                        contratoCambiarEstado.EstadoActaFase2 = ConstanCodigoEstadoActaContrato.Sin_acta_generada;
+                }
+
                 _context.SaveChanges();
 
                 return
