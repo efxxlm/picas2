@@ -16,7 +16,9 @@ export class PlanesProgramasArtcComponent implements OnInit {
 
 
   dataPlanesProgramas: any[] = [];
-  dataSource                 = new MatTableDataSource();
+  dataSource = new MatTableDataSource();
+  dataTableHistorial = new MatTableDataSource();
+  dataTableHistorialApoyo = new MatTableDataSource();
   displayedColumns: string[] = [
     'planesProgramas',
     'recibioRequisito',
@@ -25,16 +27,23 @@ export class PlanesProgramasArtcComponent implements OnInit {
     'requiereObservacion',
     'observaciones'
   ];
+  displayedColumnsHistorial: string[] = [
+    'fechaRevision',
+    'observacionesSupervision'
+  ];
   booleanosRequisitos: any[] = [
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
   ];
   require: any;
+  dataTablaHistorialObservacion: any[] = [];
+  dataTableApoyo: any[] = [];
   booleanosObservacion: any[] = [
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
   ];
   urlSoporte: string;
+  observacionPlanesProgramas = '2';
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
@@ -70,12 +79,34 @@ export class PlanesProgramasArtcComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataPlanesProgramas);
     this.getDataPlanesProgramas();
+    this.getDataTablePlanesProgramas();
   }
 
 
   guardar() {
     console.log( this.dataPlanesProgramas );
     console.log( this.urlSoporte );
+  }
+
+  getDataTablePlanesProgramas() {
+    this.planesProgramas.construccionObservacion.forEach( observacion => {
+      if (  observacion.tipoObservacionConstruccion === this.observacionPlanesProgramas
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === true ) {
+        this.dataTablaHistorialObservacion.push( observacion );
+      }
+      if (  observacion.tipoObservacionConstruccion === this.observacionPlanesProgramas
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === false ) {
+        this.dataTableApoyo.push( observacion );
+      }
+    } );
+    if ( this.dataTablaHistorialObservacion.length > 0 ) {
+      this.dataTableHistorial = new MatTableDataSource( this.dataTablaHistorialObservacion );
+    }
+    if ( this.dataTableApoyo.length > 0 ) {
+      this.dataTableHistorialApoyo = new MatTableDataSource( this.dataTableApoyo );
+    }
   }
 
   getDataPlanesProgramas() {

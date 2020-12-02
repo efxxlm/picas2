@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
@@ -31,8 +32,15 @@ export class ManejoAnticipoArtcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-
-
+  observacionManejoAnticipo = '3';
+  dataTablaHistorialObservacion: any[] = [];
+  dataTablaHistorialApoyo: any[] = [];
+  dataSource = new MatTableDataSource();
+  dataSourceApoyo = new MatTableDataSource();
+  displayedColumns: string[] = [
+    'fechaRevision',
+    'observacionesSupervision'
+  ];
   @Input() observacionesCompleted;
   @Input() contratacion: any;
   @Input() contratoConstruccionId: any;
@@ -47,7 +55,6 @@ export class ManejoAnticipoArtcComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.contratacion) {
-
       this.addressForm.get('tieneObservaciones')
         .setValue( this.contratacion.tieneObservacionesManejoAnticipoSupervisor !== undefined ?
           this.contratacion.tieneObservacionesManejoAnticipoSupervisor : null );
@@ -57,6 +64,24 @@ export class ManejoAnticipoArtcComponent implements OnInit {
       this.addressForm.get('construccionObservacionId')
         .setValue(this.contratacion.observacionManejoAnticipoSupervisor !== undefined ?
           this.contratacion.observacionManejoAnticipoSupervisor.construccionObservacionId : null );
+    }
+  }
+
+  getDataTable() {
+    this.contratacion.construccionObservacion.forEach( observacion => {
+      if (  observacion.tipoObservacionConstruccion === this.observacionManejoAnticipo
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === true ) {
+        this.dataTablaHistorialObservacion.push( observacion );
+      }
+      if (  observacion.tipoObservacionConstruccion === this.observacionManejoAnticipo
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === false ) {
+        this.dataTablaHistorialApoyo.push( observacion );
+      }
+    } );
+    if ( this.dataTablaHistorialObservacion.length > 0 ) {
+      this.dataSourceApoyo = new MatTableDataSource( this.dataTablaHistorialApoyo );
     }
   }
 

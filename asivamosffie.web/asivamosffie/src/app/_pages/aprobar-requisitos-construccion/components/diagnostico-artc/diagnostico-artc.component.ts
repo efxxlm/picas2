@@ -37,24 +37,25 @@ export class DiagnosticoArtcComponent implements OnInit {
 
   @Output() createEditDiagnostico = new EventEmitter();
   @Output() estadoSemaforoDiagnostico = new EventEmitter<string>();
-
+  observacionDiagnostico = '1';
   dataTablaHistorialObservacion: any[] = [];
-  dataSource                 = new MatTableDataSource();
+  dataTableHistorialApoyo: any[] = [];
+  dataSource = new MatTableDataSource();
+  dataSourceApoyo = new MatTableDataSource();
   displayedColumns: string[] = [
     'fechaRevision',
     'observacionesSupervision'
   ];
+
   constructor(
     private dialog: MatDialog,
     private fb: FormBuilder,
     private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService
   )
   {
-    this.getDataPlanesProgramas();
   }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
     if (this.construccion) {
       this.addressForm.get('tieneObservaciones')
         .setValue(
@@ -71,16 +72,29 @@ export class DiagnosticoArtcComponent implements OnInit {
           this.construccion.observacionDiagnosticoSupervisor !== undefined ?
           this.construccion.observacionDiagnosticoSupervisor.construccionObservacionId : null
         );
+      this.getDataTable();
     }
   }
 
-  getDataPlanesProgramas() {
-    this.dataTablaHistorialObservacion.push(
-      {
-        fechaRevision: '10/08/2020',
-        observacionesSupervision: 'El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000, realice el ajuste y tenga en cuenta que estos valores deben ser corregidos para poder continuar.'
+  getDataTable() {
+    this.construccion.construccionObservacion.forEach( observacion => {
+      if (  observacion.tipoObservacionConstruccion === this.observacionDiagnostico
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === true ) {
+        this.dataTablaHistorialObservacion.push( observacion );
       }
-    );
+      if (  observacion.tipoObservacionConstruccion === this.observacionDiagnostico
+        && observacion.observaciones !== undefined
+        && observacion.esSupervision === false ) {
+    this.dataTableHistorialApoyo.push( observacion );
+  }
+    } );
+    if ( this.dataTablaHistorialObservacion.length > 0 ) {
+      this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
+    }
+    if ( this.dataTableHistorialApoyo.length > 0 ) {
+      this.dataSourceApoyo = new MatTableDataSource( this.dataTableHistorialApoyo );
+    }
   }
 
   maxLength(e: any, n: number) {

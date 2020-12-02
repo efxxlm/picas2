@@ -1,36 +1,36 @@
-<div class="text-center container">
+<div class="text-center container" *ngIf="contrato" style="margin-bottom: 2em;">
     <div class="text-right">
         <a routerLink="/aprobarRequisitosTecnicosConstruccion" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Verificar requisitos de inicio contrato C326326 fase 2 - Construcción
+      Ver detalle requisitos de inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
     </h1>
-    <section class="container margin-1em color-primary">
+    <section class="container margin-1em color-primary" *ngIf="contrato.contratacion">
         <div class="text-center section-flex">
-            <p class="mr-1em">Fecha de aprobacion de póliza: <b>06/08/2020</b></p>
-            <p>Proyectos asociados: <b>2</b></p>
+          <p class="mr-1em">Fecha de aprobacion de póliza: <b>{{ contrato['fechaPolizaAprobacion'] | date: 'dd/MM/yyyy' }}</b></p>
+          <p>Proyectos asociados: <b>{{ contrato.contratacion.contratacionProyecto.length }}</b></p>
         </div>
     </section>
     <section>
-        <mat-accordion>
+        <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header w-45">
                     <mat-panel-title class="expansion-style--title">
-                      LL457326 - I.E. Nuestra Señora Del Carmen - Única sede
+                      {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
                     </mat-panel-title>
                   </mat-expansion-panel-header>
 
                   <div align="left">
                     <mat-card class="border">
                       <mat-card-content>
-                        <p><b>Nombre del contratista</b>: Constructora Colpatria</p>
-                        <p><b>Número de identificación (NIT/RUT)</b>: 900.675.987-4</p>
-                        <p><b>Tipo de intervención</b>: Remodelación</p>
-                        <p><b>Departamento</b>: Boyacá</p>
-                        <p><b>Municipio</b>: Susacón</p>
-                        <p><b>Valor total del proyecto</b>: $60.000.000</p>
+                        <p><b>Nombre del contratista</b>: {{ contrato.contratacion.contratista.nombre }}</p>
+                        <p><b>Número de identificación (NIT/RUT)</b>: {{ contrato.contratacion.contratista.numeroIdentificacion }}</p>
+                        <p><b>Tipo de intervención</b>: {{ contratacion.proyecto.tipoIntervencionCodigo }}</p>
+                        <p><b>Departamento</b>: {{ contratacion.proyecto.departamento }}</p>
+                        <p><b>Municipio</b>: {{ contratacion.proyecto.municipio }}</p>
+                        <p><b>Valor total del proyecto</b>: {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}</p>
                       </mat-card-content>
                     </mat-card>
                   </div>
@@ -41,7 +41,7 @@
                         Diagnóstico
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-diagnostico-artc [observacionesCompleted]="true"></app-diagnostico-artc>
+                    <app-diagnostico-artc [observacionesCompleted]="true" [construccion]="contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0]"></app-diagnostico-artc>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
@@ -50,7 +50,7 @@
                         Planes y Programas
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-planes-programas-artc [observacionesCompleted]="true"></app-planes-programas-artc>
+                    <app-planes-programas-artc [observacionesCompleted]="true" [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]"></app-planes-programas-artc>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
@@ -59,7 +59,7 @@
                         Manejo de anticipo
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-manejo-anticipo-artc [observacionesCompleted]="true"></app-manejo-anticipo-artc>
+                    <app-manejo-anticipo-artc [observacionesCompleted]="true" [contratacion]="contratacion.proyecto.contratoConstruccion[0]"></app-manejo-anticipo-artc>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
@@ -68,7 +68,19 @@
                         Hojas de vida del contratista de obra
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-hojas-vida-contratista-artc [observacionesCompleted]="true"></app-hojas-vida-contratista-artc>
+
+                    <mat-accordion *ngFor="let perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil; let j = index">
+                      <mat-expansion-panel class="expansion-style sub-expansion-black">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                          <mat-panel-title class="expansion-style--title">
+                            Perfil {{ j + 1 }}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+          
+                        <app-hojas-vida-contratista-artc [observacionesCompleted]="true" [perfil]="contratacion.proyecto.contratoConstruccion[0].construccionPerfil[j]"></app-hojas-vida-contratista-artc>
+      
+                      </mat-expansion-panel>
+                    </mat-accordion>
                   </mat-expansion-panel>
                  
                   <mat-expansion-panel class="expansion-style sub-expansion">
@@ -77,7 +89,7 @@
                         Programación de obra
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-programacion-obra-artc [observacionesCompleted]="true"></app-programacion-obra-artc>
+                    <app-programacion-obra-artc [observacionesCompleted]="true" [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"></app-programacion-obra-artc>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
@@ -86,7 +98,7 @@
                         Flujo de inversión de recursos
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                   <app-flujo-inversion-recursos-artc [observacionesCompleted]="true"></app-flujo-inversion-recursos-artc>
+                   <app-flujo-inversion-recursos-artc [observacionesCompleted]="true" [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]"></app-flujo-inversion-recursos-artc>
                   </mat-expansion-panel>
                   
             </mat-expansion-panel>

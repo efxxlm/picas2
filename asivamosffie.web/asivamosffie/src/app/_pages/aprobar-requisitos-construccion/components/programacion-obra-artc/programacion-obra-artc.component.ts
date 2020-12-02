@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -31,6 +32,12 @@ export class ProgramacionObraArtcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  dataTablaHistorialObservacion: any[] = [];
+  dataSource                 = new MatTableDataSource();
+  displayedColumns: string[] = [
+    'fechaRevision',
+    'observacionesSupervision'
+  ];
 
   @Input() observacionesCompleted;
   @Input() contratoConstruccion: any;

@@ -19,6 +19,24 @@
             </section>
         </mat-card-content>
     </mat-card>
+    <!--Tabla para historial de observaciones-->
+    <div class="w-100 table-responsive" *ngIf="dataTablaHistorialObservacion.length > 0">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="fechaRevision">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Fecha de revisión </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaCreacion | date: 'dd/MM/yyyy' }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="observacionesSupervision"  class="w-80">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Historial de observaciones del apoyo a la supervisión </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <section [innerHTML]="element.observaciones"></section>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
 </div>
 <div align="center" class="mt-2em" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarProgramacion()">
@@ -80,4 +98,22 @@
                 ser corregidos para poder continuar.</p>
         </mat-card-content>
     </mat-card>
+    <!--Tabla para historial de observaciones-->
+    <div class="w-100 table-responsive" *ngIf="dataTablaHistorialObservacion.length > 0">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="fechaRevision">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Fecha de revisión </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaCreacion | date: 'dd/MM/yyyy' }} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="observacionesSupervision"  class="w-80">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Historial de observaciones de la supervisión </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <section [innerHTML]="element.observaciones"></section>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
 </div>

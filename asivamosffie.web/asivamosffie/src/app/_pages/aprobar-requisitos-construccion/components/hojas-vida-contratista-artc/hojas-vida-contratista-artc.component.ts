@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -28,6 +29,12 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  dataTablaHistorialObservacion: any[] = [];
+  dataSource                 = new MatTableDataSource();
+  displayedColumns: string[] = [
+    'fechaRevision',
+    'observacionesSupervision'
+  ];
 
   @Input() observacionesCompleted;
   @Input() perfil: any;
@@ -49,6 +56,10 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
           ? this.perfil.observacionSupervisor.construccionPerfilObservacionId : null );
     }
   }
+
+  // getDataTable() {
+  //   this.perfil.construccionPerfilObservacion.forEach( observacion => {} );
+  // }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
