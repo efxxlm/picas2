@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-contrato-obra-artc',
@@ -29,6 +31,7 @@ export class TablaContratoObraArtcComponent implements OnInit {
 
   constructor(
     private routes: Router,
+    private dialog: MatDialog,
     private faseDosAprobarConstruccionSvc: FaseDosAprobarConstruccionService )
   {}
 
@@ -59,8 +62,23 @@ export class TablaContratoObraArtcComponent implements OnInit {
     this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion/validarRequisitosInicioObra', id ] );
   }
 
-  aprobarInicio( id: number ) {
-    console.log( id );
+  openDialog( modalTitle: string, modalText: string ) {
+    const dialogRef = this.dialog.open( ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  aprobarInicio( contratoId: number, pEstado: string ) {
+    this.faseDosAprobarConstruccionSvc.cambiarEstadoContratoEstadoVerificacionConstruccionCodigo( contratoId, pEstado )
+      .subscribe(
+        response => {
+          this.openDialog( '', `<b>${ response.message }</b>` );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/aprobarRequisitosTecnicosConstruccion' ] )
+          );
+        }
+      );
   }
 
   enviarAlInterventor( id: number ) {
