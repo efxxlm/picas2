@@ -287,13 +287,97 @@ namespace asivamosffie.services
             Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include(r => r.Contratacion).FirstOrDefault();
 
             if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-                return await ReplacePlantillaTecnica(pContratoId);
+                //Obra
+                return await ReplacePlantillaObra(pContratoId);
             else
-                return await ReplacePlantillaSupervisor(pContratoId);
+                //Interventoria
+                return await ReplacePlantillaInterventoria(pContratoId);
                       
         }
+        public async Task<byte[]> ReplacePlantillaObra(int pContratoId)
+        {
+            Contrato contrato = await GetContratoByContratoId(pContratoId, null);
 
-        public async Task<byte[]> ReplacePlantillaSupervisor(int pContratoId)
+            Plantilla plantilla = await _context.Plantilla
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)
+                .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
+
+            Usuario Supervisor = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
+
+            //Registros Proyectos 
+            string PlantillaRegistrosProyectos = _context.Plantilla
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registros_Tabla_proyectos).ToString()).FirstOrDefault().Contenido;
+            string RegistrosProyectos = string.Empty;
+
+            List<Dominio> ListTipointervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
+
+            List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Departamento).ToList();
+            List<Localizacion> ListMunicipios = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Municipio).ToList();
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+
+            foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
+            {
+                Localizacion Municipio = ListMunicipios.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                Localizacion Departamento = ListMunicipios.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
+                InstitucionEducativaSede InstitucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
+
+                RegistrosProyectos += PlantillaRegistrosProyectos;
+                RegistrosProyectos = RegistrosProyectos
+                    .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
+                    .Replace("[TIPO_INTERVENCION]", ListTipointervencion.Where(r => r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
+                    .Replace("[DEPARTAMENTO]", Departamento == null ? "" : Departamento.Descripcion)
+                    .Replace("[MUNICIPIO]", Municipio == null ? "" : Municipio.Descripcion)
+                    .Replace("[INSTITUCION_EDUCATIVA]", InstitucionEducativa == null ? "" : InstitucionEducativa.Nombre)
+                    .Replace("[SEDE]", Sede.Nombre);
+            }
+
+
+            string MesesFase1 = string.Empty;
+            string DiasFase1 = string.Empty;
+            string MesesFase2 = string.Empty;
+            string DiasFase2 = string.Empty;
+
+            MesesFase1 = contrato?.PlazoFase1PreMeses + (contrato?.PlazoFase1PreMeses == 1 ? " mes / " : " meses / ");
+            DiasFase1 = contrato?.PlazoFase1PreDias + (contrato?.PlazoFase1PreDias == 1 ? " dia " : "dias ");
+            MesesFase2 = contrato?.PlazoFase2ConstruccionMeses + (contrato?.PlazoFase2ConstruccionMeses == 1 ? " mes / " : " meses / ");
+            DiasFase2 = contrato?.PlazoFase2ConstruccionDias + (contrato?.PlazoFase2ConstruccionDias == 1 ? " dia " : " dias ");
+
+            plantilla.Contenido = plantilla.Contenido
+                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                    .Replace("[REGISTROS_PROYECTOS]", RegistrosProyectos)
+                    .Replace("[FECHA_ACTA_INICIO]", ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy"))
+                    .Replace("[NOMBRE_SUPERVISOR]", Supervisor?.Nombres + " " + Supervisor.Apellidos)
+                    .Replace("[CEDULA_SUPERVISOR]", Supervisor?.NumeroIdentificacion)
+                    .Replace("[CARGO_SUPERVISOR]", Supervisor?.NombreMaquina)
+                    .Replace("[NOMBRE_REPRESENTANTE_LEGAL]", " - ")
+                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.Nombre)
+                    .Replace("[NIT_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion)
+                    .Replace("[NUMERO_DRP]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDrp)
+                    .Replace("[FECHA_DRP]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MM-yy"))
+                    .Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy")))
+                    .Replace("[OBJETO]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto)
+                    .Replace("[VALOR_INICIAL]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().ValorSolicitud.ToString() ?? " ")
+                    .Replace("[VALOR_FASE_1]", contrato.ValorFase1.ToString() ?? " ")
+                    .Replace("[VALOR_FASE_2]", contrato.ValorFase2.ToString() ?? " ")
+                    .Replace("[VALOR_ACTUAL_CONTRATO]", contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString() ?? " ")
+                    .Replace("[PLAZO_INICIAL_CONTRATO]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaSolicitud).ToString("dd-MM-yy") ?? " ")
+                    .Replace("[PLAZO_FASE_1]", MesesFase1 + DiasFase1)
+                    .Replace("[PLAZO_FASE_2]", MesesFase2 + DiasFase2)
+                    .Replace("[FECHA_PREVISTA_TERMINACION]", contrato.TieneFase2 ? ((DateTime)contrato.FechaTerminacionFase2).ToString("dd-MM-yy") : ((DateTime)contrato.FechaTerminacion).ToString("dd-MM-yy"))
+                    .Replace("[OBSERVACIONES]", contrato.Observaciones)
+                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.Nombre ?? " ")
+                    .Replace("[NIT_CONTRATISTA_INTERVEENTORIA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion ?? " ")
+                    .Replace("[CC_SUPERVISOR]", contrato?.UsuarioInterventoria.NumeroIdentificacion ?? " ")
+                    .Replace("[CARGO]"," ")
+                    .Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
+
+
+
+            return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
+        }
+
+        public async Task<byte[]> ReplacePlantillaInterventoria(int pContratoId)
         {
             Contrato contrato = await GetContratoByContratoId(pContratoId, null);
 
@@ -370,92 +454,14 @@ namespace asivamosffie.services
                     .Replace("[OBSERVACIONES]", contrato.Observaciones)
                     .Replace("[NOMBRE_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.Nombre ?? " ")
                     .Replace("[NIT_CONTRATISTA_INTERVEENTORIA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion ?? " ")
+                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.Nombre)
+                    .Replace("[CC_SUPERVISOR]", contrato?.UsuarioInterventoria?.Nombres + " "+ contrato?.UsuarioInterventoria?.Apellidos)                 
+                    .Replace("[CARGO]"," ") 
                     .Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
 
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
-
-        public async Task<byte[]> ReplacePlantillaTecnica(int pContratoId)
-        {
-            Contrato contrato = await GetContratoByContratoId(pContratoId, null);
-
-            Plantilla plantilla = await _context.Plantilla
-                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)
-                .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
-
-            Usuario Supervisor = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
-
-            //Registros Proyectos 
-            string PlantillaRegistrosProyectos = _context.Plantilla
-                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registros_Tabla_proyectos).ToString()).FirstOrDefault().Contenido;
-            string RegistrosProyectos = string.Empty;
-
-            List<Dominio> ListTipointervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
-
-            List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Departamento).ToList();
-            List<Localizacion> ListMunicipios = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Municipio).ToList();
-            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
-
-            foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
-            {
-                Localizacion Municipio = ListMunicipios.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                Localizacion Departamento = ListMunicipios.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
-                InstitucionEducativaSede InstitucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
-
-                RegistrosProyectos += PlantillaRegistrosProyectos;
-                RegistrosProyectos = RegistrosProyectos
-                    .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
-                    .Replace("[TIPO_INTERVENCION]", ListTipointervencion.Where(r => r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
-                    .Replace("[DEPARTAMENTO]", Departamento == null ? "" : Departamento.Descripcion)
-                    .Replace("[MUNICIPIO]", Municipio == null ? "" : Municipio.Descripcion)
-                    .Replace("[INSTITUCION_EDUCATIVA]", InstitucionEducativa == null ? "" : InstitucionEducativa.Nombre)
-                    .Replace("[SEDE]", Sede.Nombre);
-            }
-
-
-            string MesesFase1 = string.Empty;
-            string DiasFase1 = string.Empty;
-            string MesesFase2 = string.Empty;
-            string DiasFase2 = string.Empty;
-
-            MesesFase1 = contrato?.PlazoFase1PreMeses + (contrato?.PlazoFase1PreMeses == 1 ? " mes / " : " meses / ");
-            DiasFase1 = contrato?.PlazoFase1PreDias + (contrato?.PlazoFase1PreDias == 1 ? " dia " : "dias ");
-            MesesFase2 = contrato?.PlazoFase2ConstruccionMeses + (contrato?.PlazoFase2ConstruccionMeses == 1 ? " mes / " : " meses / ");
-            DiasFase2 = contrato?.PlazoFase2ConstruccionDias + (contrato?.PlazoFase2ConstruccionDias == 1 ? " dia " : " dias ");
-
-            plantilla.Contenido = plantilla.Contenido
-                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                    .Replace("[REGISTROS_PROYECTOS]", RegistrosProyectos)
-                    .Replace("[FECHA_ACTA_INICIO]", ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy"))
-                    .Replace("[NOMBRE_SUPERVISOR]", Supervisor?.Nombres + " " + Supervisor.Apellidos)
-                    .Replace("[CEDULA_SUPERVISOR]", Supervisor?.NumeroIdentificacion)
-                    .Replace("[CARGO_SUPERVISOR]", Supervisor?.NombreMaquina)
-                    .Replace("[NOMBRE_REPRESENTANTE_LEGAL]", " - ")
-                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA_INTERVENTORIA]", contrato?.Contratacion?.Contratista?.Nombre)
-                    .Replace("[NIT_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion)
-                    .Replace("[NUMERO_DRP]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDrp)
-                    .Replace("[FECHA_DRP]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MM-yy"))
-                    .Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy")))
-                    .Replace("[OBJETO]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto)
-                    .Replace("[VALOR_INICIAL]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().ValorSolicitud.ToString() ?? " ")
-                    .Replace("[VALOR_FASE_1]", contrato.ValorFase1.ToString() ?? " ")
-                    .Replace("[VALOR_FASE_2]", contrato.ValorFase2.ToString() ?? " ")
-                    .Replace("[VALOR_ACTUAL_CONTRATO]", contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString() ?? " ")
-                    .Replace("[PLAZO_INICIAL_CONTRATO]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaSolicitud).ToString("dd-MM-yy") ?? " ")
-                    .Replace("[PLAZO_FASE_1]", MesesFase1 + DiasFase1)
-                    .Replace("[PLAZO_FASE_2]", MesesFase2 + DiasFase2)
-                    .Replace("[FECHA_PREVISTA_TERMINACION]", contrato.TieneFase2 ? ((DateTime)contrato.FechaTerminacionFase2).ToString("dd-MM-yy") : ((DateTime)contrato.FechaTerminacion).ToString("dd-MM-yy"))
-                    .Replace("[OBSERVACIONES]", contrato.Observaciones)
-                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.Nombre ?? " ")
-                    .Replace("[NIT_CONTRATISTA_INTERVEENTORIA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion ?? " ")
-                    .Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
-
-
-
-            return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
-        }
-
+         
         public async Task<Respuesta> CreateEditObservacionesActa(ContratoObservacion pcontratoObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Edit_Contrato_Observacion, (int)EnumeratorTipoDominio.Acciones);

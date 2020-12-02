@@ -145,6 +145,7 @@ interface Contratacion {
 }
 
 export interface ContratacionProyecto2 {
+  
   estadoSemaforo: string;
   estadoSemaforoContratacion: string;
   contratacionProyectoId: number;
@@ -158,6 +159,7 @@ export interface ContratacionProyecto2 {
   proyecto: Proyecto2;
   contratacionProyectoAportante: any[];
   sesionSolicitudObservacionProyecto: any[];
+  fasePreConstruccionNotMapped?: any;
 }
 
 interface Proyecto2 {

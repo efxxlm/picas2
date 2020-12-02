@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class Programacion
     {
+        public Programacion()
+        {
+            FlujoInversion = new HashSet<FlujoInversion>();
+        }
+
         public int ProgramacionId { get; set; }
         public int ContratoConstruccionId { get; set; }
         public string TipoActividadCodigo { get; set; }
@@ -15,5 +20,6 @@ namespace asivamosffie.model.Models
         public int Duracion { get; set; }
 
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }
+        public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }
     }
 }

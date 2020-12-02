@@ -330,6 +330,20 @@ namespace asivamosffie.services
                     ContratacionProyecto.Proyecto.Departamento = Listlocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault().Descripcion;
                     ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
                     ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
+                    //verifico que fases tiene
+                    var componentes=_context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId && !(bool)x.Eliminado).ToList();
+                    bool construccion = false;
+                    bool preconstruccion = false;
+                    if(componentes.Where(x=>x.FaseCodigo == ConstanCodigoFaseContrato.Construccion).Count()>0)
+                    {
+                        construccion = true;
+                    }
+                    if (componentes.Where(x => x.FaseCodigo == ConstanCodigoFaseContrato.Preconstruccion).Count() > 0)
+                    {
+                        preconstruccion = true;
+                    }
+                    ContratacionProyecto.faseConstruccionNotMapped = construccion;
+                    ContratacionProyecto.fasePreConstruccionNotMapped = preconstruccion;
                 }
 
                 return contrato;
