@@ -610,7 +610,90 @@ namespace asivamosffie.services
               };
             }
         }
-        
+
+
+        public async Task<Respuesta> EditarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria,
+            string pUsuarioModificacion
+            //, AppSettingsService _appSettingsService
+           )
+        {
+            //            Fecha de la firma del documento por parte del contratista de obra -FechaFirmaContratista - contrato
+            //Fecha de la firma del documento por parte del contratista de interventoría -FechaFirmaActaContratistaInterventoria - contrato
+
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Cargar_Acta_Suscrita_Contrato_Fase_2, (int)EnumeratorTipoDominio.Acciones);
+
+            Contrato contrato;
+
+            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+            try
+            {
+                contrato.FechaFirmaContratista = pFechaFirmaContratista;
+                contrato.FechaFirmaActaContratistaInterventoriaFase2 = pFechaFirmaActaContratistaInterventoria;
+                contrato.UsuarioModificacion = pUsuarioModificacion;
+                contrato.FechaModificacion = DateTime.Now;
+
+               
+
+                //Auditoria
+                //contratacionOld.FechaModificacion = DateTime.Now;
+                //contratacionOld.UsuarioModificacion = pContratacion.UsuarioCreacion;
+                //Registros
+                //contratacionOld.RutaMinuta = strFilePatch;
+                //contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
+                //contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
+
+                //contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_suscrita_y_cargada).ToString();
+                
+                //contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
+                _context.Contrato.Update(contrato);
+                _context.SaveChanges();
+
+                //                notificación de alerta al interventor, al apoyo a la
+                //supervisión y al supervisor
+
+                //notificación al interventor y al apoyo a la supervisión.
+
+                
+                //}
+           
+
+                //}
+                //catch (Exception ex)
+                //{
+
+                //    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesActaInicio.ErrorEnviarCorreo };
+                //    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), lstMails, "Gestión Acta Inicio Fase II") + ": " + ex.ToString() + ex.InnerException;
+                //    return respuesta;
+                //}
+
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = true,
+                     IsException = false,
+                     IsValidation = false,
+                     Code = ConstantGestionarActaInicioFase2.OperacionExitosa,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, ConstantGestionarActaInicioFase2.OperacionExitosa, idAccion, contrato.UsuarioModificacion, " EDITAR CARGAR ACTA SUSCRITA CONTRATO")
+                 };
+
+            }
+
+            catch (Exception ex)
+            {
+                return
+              new Respuesta
+              {
+                  IsSuccessful = false,
+                  IsException = true,
+                  IsValidation = false,
+                  Code = ConstantGestionarProcesosContractuales.Error,
+                  Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, ConstantGestionarActaInicioFase2.Error, idAccion, contrato.UsuarioModificacion, ex.InnerException.ToString())
+              };
+            }
+        }
+
 
         public async Task<Respuesta> EnviarCorreoSupervisorContratista(int pContratoId, AppSettingsService settings, int pPerfilId)
         {
