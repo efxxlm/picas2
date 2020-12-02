@@ -79,6 +79,7 @@ namespace asivamosffie.services
                                       .ThenInclude(r => r.ComponenteUso)
                         .Include(r => r.Contratacion)
                            .ThenInclude(r => r.Contratista)
+                            .ThenInclude(r => r.ProcesoSeleccionProponente)
                         .Include(r => r.Contratacion)
                            .ThenInclude(r => r.DisponibilidadPresupuestal)
                         .Include(r => r.ContratoPoliza)
@@ -308,7 +309,7 @@ namespace asivamosffie.services
             List<Dominio> ListTipointervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
 
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
- 
+
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
 
             foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
@@ -319,7 +320,7 @@ namespace asivamosffie.services
                 InstitucionEducativaSede InstitucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
 
                 RegistrosProyectos += PlantillaRegistrosProyectos;
-                RegistrosProyectos = RegistrosProyectos 
+                RegistrosProyectos = RegistrosProyectos
                     .Replace("[LLAVE_MEN]", ContratacionProyecto.Proyecto.LlaveMen)
                     .Replace("[TIPO_INTERVENCION]", ListTipointervencion.Where(r => r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre)
                     .Replace("[DEPARTAMENTO]", Departamento.Descripcion)
@@ -342,7 +343,7 @@ namespace asivamosffie.services
 
 
             plantilla.Contenido = plantilla.Contenido
-                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)  
+                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
                     .Replace("[REGISTROS_PROYECTOS]", RegistrosProyectos)
                     .Replace("[FECHA_ACTA_INICIO]", ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy"))
                     .Replace("[NOMBRE_SUPERVISOR]", Supervisor?.Nombres + " " + Supervisor.Apellidos)
