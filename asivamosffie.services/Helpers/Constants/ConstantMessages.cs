@@ -853,30 +853,6 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
-    public class ConstantMessagesContratoPoliza
-    {
-
-        #region Mensajes Informativos
-
-        public const string NoExitenArchivos = "100";
-        public const string CamposVacios = "101";
-
-        #endregion Mensajes Informativos
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-        
-
-        #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-        #endregion Mensajes Redireccion
-
-        #region 
-        public const string Error = "500";
-        #endregion
-    }
+    
     
 }

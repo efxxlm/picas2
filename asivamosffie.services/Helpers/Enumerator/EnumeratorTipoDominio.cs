@@ -126,7 +126,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipos_De_Ensayos_De_Laboratorio = 74,
         Causas_De_Accidentes_Laborales = 75,
 
-        Causas_De_Accidentes_Laborales = 75,
 
         Tiempo_Aprobar_Acta = 84,
 
