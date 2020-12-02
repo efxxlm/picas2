@@ -624,10 +624,14 @@ namespace asivamosffie.services
             int pIdTemplate = (int)enumeratorTemplate.ActaInicioFase2ObraInterventoria;
             Contrato contrato=null;
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-            
+
+            Contratacion contratacion = null;
+            contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();                     
+
             VistaGenerarActaInicioContrato actaInicio=new VistaGenerarActaInicioContrato();
             if(contrato!=null)
-                actaInicio = await getDataActaInicioAsync(pContratoId,Convert.ToInt32( contrato.TipoContratoCodigo));
+                //actaInicio = await getDataActaInicioAsync(pContratoId,Convert.ToInt32( contrato.TipoContratoCodigo));
+                actaInicio = await getDataActaInicioAsync(pContratoId, Convert.ToInt32(contratacion.TipoSolicitudCodigo));
 
             //perfilId = 8; //  Supervisor
             //perfilId = (int)EnumeratorPerfil.Supervisor; //  Supervisor
@@ -665,18 +669,20 @@ namespace asivamosffie.services
                 int tipoContrato = 0;
 
                 //Contrato contrato = null;
-                contrato = _context.Contrato.Where(r => r.NumeroContrato == actaInicio.NumeroContrato).FirstOrDefault();
+                //contrato = _context.Contrato.Where(r => r.NumeroContrato == actaInicio.NumeroContrato).FirstOrDefault();
 
                 //tipoContrato = 2;
                 tipoContrato = ConstanCodigoTipoContratacion.Interventoria;
 
                 template = template.Replace("_Numero_Contrato_", actaInicio.NumeroContrato);
-                template = template.Replace("_Fecha_Aprobacion_Poliza_", actaInicio.FechaAprobacionGarantiaPoliza);
+                template = template.Replace("_Fecha_Aprobacion_Poliza_", actaInicio.FechaAprobacionGarantiaPoliza);                              
 
-                if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Interventoria)
+                //if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Interventoria)
+                if (Convert.ToInt32(contratacion.TipoSolicitudCodigo) == ConstanCodigoTipoContratacion.Interventoria)
                     template = template.Replace("_Obra_O_Interventoria_", "interventoría");
-                else if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Obra)
-                    template = template.Replace("_Obra_O_Interventoria_", "obra");
+                //else if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Obra)
+                 else if (Convert.ToInt32(contratacion.TipoSolicitudCodigo) == ConstanCodigoTipoContratacion.Obra)
+                            template = template.Replace("_Obra_O_Interventoria_", "obra");
 
                 template = template.Replace("_Cantidad_Proyectos_Asociados_", actaInicio.CantidadProyectosAsociados.ToString());
 
@@ -689,7 +695,30 @@ namespace asivamosffie.services
                 //_settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
                 //actaInicio, pIdTemplate
                 //correo = "cdaza@ivolucion.com";
-                blEnvioCorreo = Helpers.Helpers.EnviarCorreo(correo, "Gestión Acta Inicio Fase II", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+
+                string lstCorreos = "";
+
+                //            1   Administrador  - //2   Técnica
+                //3   Financiera - //4   Jurídica
+                //5   Administrativa - //6   Miembros Comite
+                //7   Secretario comité - //8   Supervisor
+                List<UsuarioPerfil> lstUsuariosPerfil = new List<UsuarioPerfil>();
+
+                lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
+
+                List<Usuario> lstUsuarios = new List<Usuario>();
+
+                foreach (var item in lstUsuariosPerfil)
+                {
+                    lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                    foreach (var usuario in lstUsuarios)
+                    {
+                        //lstCorreos = lstCorreos += usuario.Email + ";";
+                        //lstCorreos = lstCorreos += usuario.Email;
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Acta Inicio Fase II", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                    }
+                }                           
 
                 if (blEnvioCorreo)
                     respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.CorreoEnviado };
