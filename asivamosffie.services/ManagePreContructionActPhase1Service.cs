@@ -198,7 +198,7 @@ namespace asivamosffie.services
                     return new Respuesta();
 
                 ContratoOld.FechaActaInicioFase1 = pContrato.FechaActaInicioFase1;
-                ContratoOld.FechaTerminacion = pContrato.FechaTerminacion; 
+                ContratoOld.FechaTerminacion = pContrato.FechaTerminacion;
                 ContratoOld.EstadoActa = ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada;
 
 
@@ -276,7 +276,7 @@ namespace asivamosffie.services
 
         public async Task<byte[]> ReplacePlantillaSupervisor(int pContratoId)
         {
-            Contrato contrato = _context.Contrato.Find(pContratoId);
+            Contrato contrato = await GetContratoByContratoId(pContratoId);
 
 
             Plantilla plantilla = await _context.Plantilla
@@ -284,18 +284,34 @@ namespace asivamosffie.services
                 .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
 
             Usuario Supervisor = _context.Usuario.Where(r => r.Email == contrato.UsuarioCreacion).FirstOrDefault();
+            string MesesFase1 = string.Empty;
+            string DiasFase1 = string.Empty;
+            string MesesFase2 = string.Empty;
+            string DiasFase2 = string.Empty;
+
+            MesesFase1 = contrato?.PlazoFase1PreMeses == 1 ? "mes" : "meses";
+            DiasFase1 = contrato?.PlazoFase1PreDias == 1 ? "dia" : "dias";
+
 
             plantilla.Contenido = plantilla.Contenido
                     .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
                     .Replace("[FECHA_ACTA_INICIO]", ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MMM-yy"))
-                    .Replace("[NOMBRE_SUPERVISOR]", Supervisor.Nombres + " " + Supervisor.Apellidos)
-                    .Replace("[CEDULA_SUPERVISOR]", Supervisor.NumeroIdentificacion)
-                    .Replace("[CARGO_SUPERVISOR]", Supervisor.NombreMaquina)
-                    .Replace("[NOMBRE_REPRESENTANTE_LEGAL]"," - ")
-
-                ;
-
-
+                    .Replace("[NOMBRE_SUPERVISOR]", Supervisor?.Nombres + " " + Supervisor.Apellidos)
+                    .Replace("[CEDULA_SUPERVISOR]", Supervisor?.NumeroIdentificacion)
+                    .Replace("[CARGO_SUPERVISOR]", Supervisor?.NombreMaquina)
+                    .Replace("[NOMBRE_REPRESENTANTE_LEGAL]", " - ")
+                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA_INTERVENTORIA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NombreProponente)
+                    .Replace("[NIT_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion)
+                    .Replace("[NUMERO_DRP]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDrp)
+                    .Replace("[FECHA_DRP]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MMM-yy"))
+                    .Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MMM-yy")))
+                    .Replace("[OBJETO]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto)
+                    .Replace("[VALOR_INICIAL]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().ValorSolicitud.ToString() ?? " ")
+                    .Replace("[VALOR_FASE_1]", contrato.ValorFase1.ToString() ?? " ")
+                    .Replace("[VALOR_FASE_2]", contrato.ValorFase2.ToString() ?? " ")
+                    .Replace("[VALOR_ACTUAL_CONTRATO]", contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString() ?? " ")
+                    .Replace("[PLAZO_INICIAL_CONTRATO]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaSolicitud).ToString("dd-MM-yy") ?? " ")
+                    .Replace("[PLAZO_FASE_1]", contrato?.PlazoFase1PreMeses.ToString());
 
 
 
@@ -428,7 +444,7 @@ namespace asivamosffie.services
         }
 
         public async Task GetListContratoConActaSinDocumento(AppSettingsService appSettingsService)
-        { 
+        {
             DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, DateTime.Now);
 
             List<Contrato> contratos = _context.Contrato
