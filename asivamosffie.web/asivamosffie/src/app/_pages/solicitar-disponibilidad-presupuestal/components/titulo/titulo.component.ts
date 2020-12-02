@@ -13,32 +13,33 @@ export class TituloComponent implements OnInit {
   tipoDisponibilidad: FormControl;
 
   selectDisponibilidad: Dominio[] = [];
-  perfil: number = 0;
-    
+  perfil = 0;
+
+  verAyuda = false;
+
   constructor(
-              private router: Router,
-              private commonService: CommonService
-             ) 
-  { }
+    private router: Router,
+    private commonService: CommonService
+  ) { }
 
   ngOnInit(): void {
 
-    let session =  JSON.parse(localStorage.getItem('actualUser'));
-    if ( session ){
+    let session = JSON.parse(localStorage.getItem('actualUser'));
+    if (session) {
       session.rol.forEach(element => {
         this.perfil = element.perfilId;
       });
     }
 
-    if ( this.perfil == 5 ){
+    if (this.perfil == 5) {
 
     }
 
     this.declararSelect();
-    
-    this.commonService.listaTipoDisponibilidadPresupuestal().subscribe( respuesta =>  {
+
+    this.commonService.listaTipoDisponibilidadPresupuestalNotCode('3').subscribe(respuesta => {
       this.selectDisponibilidad = respuesta;
-    })
+    });
 
   }
 
@@ -49,14 +50,14 @@ export class TituloComponent implements OnInit {
   crearSolicitud() {
 
 
-    if ( this.perfil == 5 ){
-      this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudAdministrativa/nueva',0])
-    }else {
+    if (this.perfil === 5) {
+      this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudAdministrativa/nueva', 0]);
+    } else {
       switch (this.tipoDisponibilidad.value.codigo) {
-        case "1":
+        case '1':
           this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudTradicional']);
           break;
-        case "2":
+        case '2':
           this.router.navigate(['/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial']);
           break;
       }

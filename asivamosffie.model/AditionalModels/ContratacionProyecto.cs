@@ -13,5 +13,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string PorcentajeAvanceObraString { get; set; }
+
+        [NotMapped]
+        public string TieneAlgunRegistro { get; set; }
     }
 }

@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { CommonService } from '../common/common.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AutenticacionService {
   public actualUser: Usuario;
   public actualUser$: Observable<Usuario>;
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private common:CommonService) {
     this.actualUserSubject = new BehaviorSubject<Usuario>(JSON.parse(localStorage.getItem('actualUser')));
     this.actualUser$ = this.actualUserSubject.asObservable();
   }
@@ -33,8 +34,10 @@ export class AutenticacionService {
               user.data.datausuario.token = user.token;
               let usuariocompleto=user.data.datausuario;
               usuariocompleto.rol=user.data.dataperfiles;
+              usuariocompleto.menus=user.data.datamenu;
+              
               //usuariocompleto.token=user.token;
-              localStorage.setItem('actualUser', JSON.stringify(usuariocompleto));
+              localStorage.setItem('actualUser', JSON.stringify(usuariocompleto));              
               this.actualUser = usuariocompleto;
               this.actualUserSubject.next(usuariocompleto);
       }
@@ -90,6 +93,10 @@ export class AutenticacionService {
       this.seteventLogOut().subscribe();
     }    
     localStorage.removeItem('actualUser');
+    localStorage.removeItem('actaSuscrita');
+    localStorage.removeItem('conObservaciones');
+    localStorage.removeItem('origin');
+    localStorage.removeItem('editable');
     this.actualUserSubject.next(null);
     this.actualUser = null;
     this.router.navigate(['/inicio']);
@@ -117,6 +124,7 @@ export class AutenticacionService {
 }
 
 export interface Usuario{
+  menus?: any[];
   usuarioId?: number;
   Email?: string;
   Contrasena?: string;

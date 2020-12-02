@@ -13,7 +13,7 @@
   </div>
   
   <div class="text-center mr-1">
-    <span> <b>{{ acta.fechaComite }}</b> </span>
+    <span> <strong>{{ acta.fechaOrdenDia | date: 'dd/MM/yyyy' }}</strong> </span>
   </div>
 
   <section class="container">
@@ -24,7 +24,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content class="colorMainColor">
-          <div class="d-flex">
+          <div class="d-flex" style="margin-left: 1.5em;">
             <p *ngFor="let participante of miembrosParticipantes; let i = index" class="ml-min"> {{ participante }}<span *ngIf="i < miembrosParticipantes.length-1">,</span><span *ngIf="i === miembrosParticipantes.length-1">.</span></p>
           </div>
         </mat-card-content>
@@ -37,21 +37,46 @@
             Validación de solicitudes contractuales
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <section *ngIf="acta.sesionComiteSolicitudComiteTecnico !== null">
 
-        </section>
+        <section *ngIf="acta.sesionComiteSolicitudComiteTecnico !== null">
           <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnico">
             <mat-expansion-panel class="expansion-style sub-expansion">
-              <mat-expansion-panel-header class="expansion-style--header">
-                  <mat-panel-title class="expansion-style--title sub-expansion">
-                    <b>Solicitud {{ sesionComite.contratacion.numeroSolicitud }}</b>
-                  </mat-panel-title>
-              </mat-expansion-panel-header>
+              <mat-expansion-panel-header class="expansion-style--header" *ngIf="sesionComite.tipoSolicitudCodigo === '1'">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-expansion-panel-header class="expansion-style--header" *ngIf="sesionComite.tipoSolicitudCodigo === '2'">
+              <mat-panel-title class="expansion-style--title sub-expansion">
+                <b>Solicitud {{ sesionComite.numeroSolicitud }}</b>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
     
-              <app-form-solicitud [solicitudes]="sesionComite"></app-form-solicitud>
+              <app-form-solicitud [solicitudes]="sesionComite" [esComiteFiduciario]="false"></app-form-solicitud>
   
             </mat-expansion-panel>
           </mat-accordion>
+        </section>
+
+        <section *ngIf="acta.sesionComiteSolicitudComiteTecnicoFiduciario !== null">
+          <mat-accordion *ngFor="let sesionComite of acta.sesionComiteSolicitudComiteTecnicoFiduciario">
+            <mat-expansion-panel class="expansion-style sub-expansion">
+              <mat-expansion-panel-header class="expansion-style--header" *ngIf="sesionComite.tipoSolicitudCodigo === '1'">
+                  <mat-panel-title class="expansion-style--title sub-expansion">
+                    <b>Solicitud {{ sesionComite.procesoSeleccion.numeroProceso }}</b>
+                  </mat-panel-title>
+              </mat-expansion-panel-header>
+              <mat-expansion-panel-header class="expansion-style--header" *ngIf="sesionComite.tipoSolicitudCodigo === '2'">
+                <mat-panel-title class="expansion-style--title sub-expansion">
+                  <b>Solicitud {{ sesionComite.contratacion.numeroSolicitud }}</b>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+    
+              <app-form-solicitud [solicitudes]="sesionComite" [esComiteFiduciario]="true"></app-form-solicitud>
+  
+            </mat-expansion-panel>
+          </mat-accordion>
+        </section>
 
       </mat-expansion-panel>
 
@@ -73,14 +98,18 @@
             <div align="left">
               <mat-card class="border">
                 <mat-card-content>
-                  <h2 class="card-subTitle back-color">Desarrollo</h2>
-                  <p><b>Tema</b>: {{ tema.tema }} </p>
-                  <p><b>Responsable</b>: {{ tema.responsableCodigo }} </p>
-                  <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observaciones ) }} </p>
-                  <h2 class="card-subTitle back-color">Decisiones</h2>
-                  <p><b>Estado de la solicitud</b>: {{ tema.estadoTemaCodigo }} </p>
-                  <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observacionesDecision ) }} </p>
-                  <h2 class="card-subTitle back-color">Compromisos</h2>
+                  <h2 class="card-subTitle">Desarrollo</h2>
+                  <p><b>Tema</b>: <span class="text-color"> {{ tema.tema }} </span> </p>
+                  <p><b>Responsable</b>: <span class="text-color"> {{ tema.responsableCodigo }} </span> </p>
+                  <section>
+                    <b>Observaciones</b>: <div class="text-color" [innerHTML]="innerObservacion( tema.observaciones )"></div>
+                  </section>
+                  <h2 class="card-subTitle">Decisiones</h2>
+                  <p><b>Estado de la solicitud</b>: <span class="text-color"> {{ tema.estadoTemaCodigo }} </span> </p>
+                  <section>
+                    <b>Observaciones</b>: <div class="text-color" [innerHTML]="innerObservacion( tema.observacionesDecision )"></div>
+                  </section>
+                  <h2 class="card-subTitle">Compromisos</h2>
                   <div class="row">
                     <div class="col-md-8">
                       <div class="row">
@@ -99,9 +128,9 @@
                   <div *ngIf="tema.temaCompromiso.length > 0" class="margin-compromisos">
                     <div *ngFor="let compromiso of tema.temaCompromiso; let j = index">
                       <h3><b>Compromiso {{ j+1 }} </b></h3>
-                      <p><b>Tarea</b>: {{ compromiso.tarea }} </p>
-                      <p><b>Responsable</b>: {{ compromiso.responsableNavigation.usuario.nombres }} {{ compromiso.responsableNavigation.usuario.apellidos }} </p>
-                      <p><b>Fecha de cumplimiento</b>: {{ compromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+                      <p><b>Tarea</b>: <span class="text-color"> {{ compromiso.tarea }} </span> </p>
+                      <p><b>Responsable</b>: <span class="text-color"> {{ compromiso.responsableNavigation.usuario.nombres }} {{ compromiso.responsableNavigation.usuario.apellidos }} </span> </p>
+                      <p><b>Fecha de cumplimiento</b>: <span class="text-color"> {{ compromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
                     </div>
                   </div>
                 </mat-card-content>
@@ -131,14 +160,18 @@
             <div align="left">
               <mat-card class="border">
                 <mat-card-content>
-                  <h2 class="card-subTitle back-color">Desarrollo</h2>
-                  <p><b>Tema</b>: {{ tema.tema }} </p>
-                  <p><b>Responsable</b>: {{ tema.responsableCodigo }} </p>
-                  <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observaciones ) }} </p>
-                  <h2 class="card-subTitle back-color">Decisiones</h2>
-                  <p><b>Estado de la solicitud</b>: {{ tema.estadoTemaCodigo }} </p>
-                  <p><b>Observaciones</b>: {{ textoLimpioMessage( tema.observacionesDecision ) }} </p>
-                  <h2 class="card-subTitle back-color">Compromisos</h2>
+                  <h2 class="card-subTitle">Desarrollo</h2>
+                  <p><b>Tema</b>: <span class="text-color"></span>{{ tema.tema }} </p>
+                  <p><b>Responsable</b>: <span class="text-color"> {{ tema.responsableCodigo }} </span> </p>
+                  <section>
+                    <b>Observaciones</b>: <div class="text-color" [innerHTML]="innerObservacion( tema.observaciones )"></div>
+                  </section>
+                  <h2 class="card-subTitle">Decisiones</h2>
+                  <p><b>Estado de la solicitud</b>: <span class="text-color"> {{ tema.estadoTemaCodigo }} </span> </p>
+                  <section>
+                    <b>Observaciones</b>: <div class="text-color" [innerHTML]="innerObservacion( tema.observacionesDecision )"></div>
+                  </section>
+                  <h2 class="card-subTitle">Compromisos</h2>
                   <div class="row">
                     <div class="col-md-8">
                       <div class="row">
@@ -157,9 +190,9 @@
                   <div *ngIf="tema.temaCompromiso.length > 0" class="margin-compromisos">
                     <div *ngFor="let compromiso of tema.temaCompromiso; let j = index">
                       <h3><b>Compromiso {{ j+1 }} </b></h3>
-                      <p><b>Tarea</b>: {{ compromiso.tarea }} </p>
-                      <p><b>Responsable</b>: {{ compromiso.responsableNavigation.usuario.nombres }} {{ compromiso.responsableNavigation.usuario.apellidos }} </p>
-                      <p><b>Fecha de cumplimiento</b>: {{ compromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+                      <p><b>Tarea</b>: <span class="text-color"> {{ compromiso.tarea }} </span> </p>
+                      <p><b>Responsable</b>: <span class="text-color"> {{ compromiso.responsableNavigation.usuario.nombres }} {{ compromiso.responsableNavigation.usuario.apellidos }} </span> </p>
+                      <p><b>Fecha de cumplimiento</b>: <span class="text-color"> {{ compromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
                     </div>
                   </div>
                 </mat-card-content>
@@ -184,8 +217,8 @@
   <button mat-raised-button 
           color="accent" 
           class="tabs--btn"
-          (click)="comentarActa = !comentarActa"
-          *ngIf="acta.estadoActaCodigo ==='2'">
+          *ngIf="acta.estadoActaCodigo ==='2'"
+          (click)="comentarActa = !comentarActa">
           Comentar y devolver acta
   </button>
   <button mat-raised-button 
@@ -205,20 +238,31 @@
 
 <div *ngIf="comentarActa">
   <form autocomplete="off" [formGroup]="form" (ngSubmit)="onSubmit()">
-
-    <div class="d-flex align-items-center">
-      <div class="text-area-quill">
-        <label class="text-area-quill--label">Comentarios al acta</label>
-        <p class="padding-p">Fecha: <b class="text-color"></b></p>
-        <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 1000)" formControlName="comentarioActa" required></quill-editor>
+    <mat-card style="margin-bottom: 1em;">
+      <mat-card-title class="text-area-quill--label text-color">Comentarios al acta</mat-card-title>
+      <mat-card-content>
+        <p class="padding-p">Fecha: <b class="text-color"> {{ acta.sesionComentario.length > 0 ? ( acta.sesionComentario[0].fecha | date: 'dd/MM/yyyy' ) : ( fechaComentario | date: 'dd/MM/yyyy' ) }} </b></p>
+        <div class="d-flex align-items-center">
+          <quill-editor class="quill-editor-style card"
+                        [styles]="editorStyle"
+                        [modules]="config"
+                        (onContentChanged)="maxLength($event, 1000)"
+                        formControlName="comentarioActa"
+                        required>
+            </quill-editor>
+        <span class="contador" *ngIf="form.get('comentarioActa').value !== null">
+          {{1000 - textoLimpio(form.get('comentarioActa').value, 1000)}}
+        </span>
+        <span class="contador" *ngIf="form.get('comentarioActa').value === null">
+          1000
+        </span>
       </div>
-      <span class="contador" *ngIf="form.get('comentarioActa').value !== null">
-        {{1000 - textoLimpio(form.get('comentarioActa').value)}}
-      </span>
-      <span class="contador" *ngIf="form.get('comentarioActa').value === null">
-        1000
-      </span>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="text-center" class="flex-text-center">
+      <img src="assets/img/icon/sim.svg" style="width: 2.5%;">
+      <p class="margin-p"><i> Indique sobre que tema, subtema o proyecto realiza su comentario, sea claro y especifico frente a su solicitud </i></p>
     </div>
 
     <div class="text-center">

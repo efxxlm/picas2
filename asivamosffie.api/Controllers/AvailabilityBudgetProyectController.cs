@@ -24,8 +24,7 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
             _converter = converter;
         }
-
-
+         
         [Route("GetAvailabilityBudgetProyect")]
         public async Task<IActionResult> GetAvailabilityBudgetProyect()
         {
@@ -52,13 +51,10 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }
-
-
-
+         
         [HttpGet]
         [Route("StartDownloadPDF")]
         public async Task<IActionResult>  StartDownloadPDF([FromBody] DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal)

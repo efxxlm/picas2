@@ -44,7 +44,12 @@ export class FormProposicionesYVariosComponent implements OnInit {
   }
 
   constructor(private fb: FormBuilder) { }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -68,7 +73,7 @@ export class FormProposicionesYVariosComponent implements OnInit {
   crearCompromiso() {
     return this.fb.group({
       tarea: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       responsable: [null, Validators.required],
       fecha: [null, Validators.required]

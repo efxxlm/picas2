@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AplazarSesionComponent } from '../aplazar-sesion/aplazar-sesion.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { ComiteTecnico, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
   objetoComiteTecnico: ComiteTecnico = {};
+  cargoRegistro: boolean = false
 
   estadosComite = EstadosComite
   
@@ -22,6 +23,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
                 public dialog: MatDialog,
                 private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
                 private activatedRoute: ActivatedRoute,
+                private router: Router,
 
              ) 
   { 
@@ -29,6 +31,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
   }
 
   openDialogAplazarSesion() {
+    console.log( this.objetoComiteTecnico )
     this.dialog.open(AplazarSesionComponent, {
       width: '42em', data: { comite: this.objetoComiteTecnico }
     });
@@ -49,8 +52,8 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
 
     this.fiduciaryCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
       .subscribe( respuesta => {
-        this.openDialog('', '“No se cuenta con el Quorum necesario para realizar la sesión”.');
-        this.ngOnInit();
+        this.openDialog('', '<b>No se cuenta con el Quorum necesario para realizar la sesión.</b>');
+        this.router.navigate(["/comiteTecnico"]);
       })
   }
   
@@ -68,7 +71,7 @@ export class RegistrarSesionComiteFiduciarioComponent implements OnInit {
           console.log( response )
 
           this.objetoComiteTecnico = response;
-
+          this.cargoRegistro = true
 
           setTimeout(() => {
 

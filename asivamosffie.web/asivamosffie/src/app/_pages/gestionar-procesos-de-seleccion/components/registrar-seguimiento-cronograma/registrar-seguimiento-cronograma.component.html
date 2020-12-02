@@ -5,11 +5,11 @@
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
-              <label for="tipoIntervencion" class="label-left">Tipo de Intervención</label>
+              <label for="tipoIntervencion" class="label-left">Etapa actual del proceso</label>
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="tipoIntervencion" required>
+                <mat-select formControlName="tipoIntervencion" (selectionChange)="onChangeEstado()" required>
                   <mat-option *ngFor="let tipo of listaTipoIntervencion" [value]="tipo">
                     {{ tipo.nombre }}
                   </mat-option>
@@ -42,6 +42,9 @@
                   Fecha máxima
                 </th>
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+                  Etapa actual del proceso
+                </th>
+                <th class="mat-header-cell cdk-header-cell ng-star-inserted">
                   Fecha de monitoreo
                 </th>
                 <th class="mat-header-cell cdk-header-cell ng-star-inserted mx-gestion">
@@ -55,51 +58,64 @@
             <tbody *ngIf="actividades.length > 0">
               <tr *ngFor="let form of actividades.controls; let i = index" [formGroupName]="i">
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  <p>
-                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                      formControlName="descripcion" readOnly="true">
-                    </quill-editor>
-                  </p>
+                  <textarea formControlName="descripcion" readOnly="true" hidden="hidden" style="margin: 0px; width: 162px;border: none;height: 15em;">
+                  </textarea>
+                  <div [innerHtml]="descripciones[i]"></div>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
-                  <p>
-                    <input type="text" formControlName="fechaMaxima" readonly style="border:0">
-                  </p>
-                </td>
-                <td class="mat-cell cdk-cell ng-star-inserted">
-                  <button mat-button color="primary" (click)="picker.open()" class="btn-calendario"
-                  type="button">
-                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                  </button>
-                  <mat-form-field class="example-full-width calendar-class">
-                    <input matInput [matDatepicker]="picker" formControlName="fechaMonitoreo" [max]="maxDate" readonly
-                      (click)="picker.open()">
-                    <input formControlName="procesoSeleccionCronogramaId" type="hidden">
-                    <input formControlName="estadoActividadInicialCodigo" type="hidden">
-
+                  <mat-form-field class="example-full-width">
+                    <input formControlName="fechaMaxima" matInput  readonly>
                     <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
+                </mat-form-field>
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <p>
-                    <mat-select formControlName="estadoActividad" required>
+                    <input type="text" formControlName="etapaActualProceso"  readonly style="border:0; color:#174193;text-align: center;width: 100%;">
+                  </p>
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted">
+                  <div *ngIf="activo[i]">
+                    <button mat-button color="primary" (click)="picker.open()" class="btn-calendario" type="button">
+                      <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                    </button>
+                    <mat-form-field class="example-full-width calendar-class">
+                      <input matInput [matDatepicker]="picker" formControlName="fechaMonitoreo" [max]="maxDate" readonly
+                        (click)="picker.open()" placeholder="DD/MM/AAAA">
+                      <input formControlName="procesoSeleccionCronogramaId" type="hidden">
+                      <input formControlName="estadoActividadInicialCodigo" type="hidden">
+
+                      <mat-datepicker #picker ></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="!activo[i]">
+                    {{form.get('fechaMonitoreo').value | date:'dd/MM/yyyy'}}
+                  </div>
+                </td>
+                <td class="mat-cell cdk-cell ng-star-inserted" [ngClass]="{'redBackground': pasado[i]}" >
+                  <div class="select-table">
+                    <mat-select formControlName="estadoActividad" required *ngIf="activo[i]">
                       <mat-option *ngFor="let tipo of listaEstadosSeguimiento" [value]="tipo">
                         {{ tipo.nombre }}
                       </mat-option>
                     </mat-select>
-                  </p>
+                    <div *ngIf="!activo[i]">
+                      {{form.get('estadoActividad').value.nombre}}
+                    </div>
+                  </div>
+
                 </td>
                 <td class="mat-cell cdk-cell ng-star-inserted">
                   <div class="d-flex justify-content-center">
-                    <!-- <span class="contador" *ngIf="addressForm.get(i).get('descripcion').value">
-                              {{500 - addressForm.get(i).get('descripcion').value.length}}
-                          </span>
-                          <span class="contador" *ngIf="addressForm.get(i).get('descripcion').value">
-                              500
-                          </span> -->
+                    <span class="contador mt-1em" *ngIf="form.get('observacion').value && activo[i]">
+                      {{800 - (textoLimpio(form.get('observacion').value)>800?800:textoLimpio(form.get('observacion').value))}}
+                    </span>
+                    <span class="contador mt-1em" *ngIf="!form.get('observacion').value && activo[i]">
+                      800
+                    </span>
                   </div>
                   <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                    (onContentChanged)="maxLength($event, 500)" formControlName="observacion"></quill-editor>
+                    (onContentChanged)="maxLength($event, 800)" formControlName="observacion"  *ngIf="activo[i]"></quill-editor>
+                    <div *ngIf="!activo[i]" [innerHtml]="form.get('observacion').value"></div>
                 </td>
               </tr>
             </tbody>

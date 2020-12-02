@@ -23,6 +23,12 @@ namespace asivamosffie.api.Controllers
         {
             common = prmCommon;
             _settings = settings;
+        }  
+        [HttpGet]
+        [Route("CalculardiasLaborales")]
+        public Task<DateTime> CalculardiasLaborales([FromQuery]int pDias, DateTime pFechaCalcular)
+        {
+            return common.CalculardiasLaborales(pDias, pFechaCalcular);
         }
          
         [HttpGet]
@@ -61,6 +67,14 @@ namespace asivamosffie.api.Controllers
         {
             var result = await common.GetListDominioByIdTipoDominio(pIdDominio);
             return result;
+        }
+
+        [HttpGet]
+        [Route("dominioByIdDominioNotCode")]
+        public async Task<ActionResult<List<Dominio>>> GetDominioByIdDominioNotCode(int pIdDominio, string pMinCode)
+        {
+            var result = await common.GetListDominioByIdTipoDominio(pIdDominio);
+            return result.Where(x=>x.Codigo!=pMinCode).ToList();
         }
 
         [HttpGet]

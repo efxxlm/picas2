@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Listados, Proyecto, ProjectService } from 'src/app/core/_services/project/project.service';
 import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
@@ -15,6 +15,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class FormularioProyectosComponent implements OnInit {
 
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+  permiso que tenga el usuario
+  */
+
+  estaEditando = false;
+
+  bitPuedoEditar=true;
   maxDate: Date;
   tipoAportante = TiposAportante;
   listadoDocumentoAcreditacion: Dominio[];
@@ -38,6 +45,52 @@ export class FormularioProyectosComponent implements OnInit {
     this.maxDate = new Date();
   }
 
+  noGuardado=true;
+  
+  ngOnDestroy(): void {
+    console.log("destroy"+this.proyecto.llaveMen);
+
+    if (this.noGuardado==true && (this.proyecto.fechaSesionJunta!=null ||  
+      this.proyecto.numeroActaJunta!=null ||  
+      this.proyecto.tipoIntervencionCodigo!=null ||  
+      this.proyecto.llaveMen!=''||
+      this.proyecto.localizacionIdMunicipio!=null ||  
+      this.proyecto.institucionEducativaId !=null||
+      this.proyecto.sedeId!=null || 
+      this.proyecto.convocatoriaId!=null ||  
+      this.proyecto.cantPrediosPostulados!=null ||  
+      this.proyecto.tipoPredioCodigo!= ''||
+      this.proyecto.predioPrincipalId!=null ||  
+      this.proyecto.valorObra!=null ||  
+      this.proyecto.valorInterventoria!=null ||  
+      this.proyecto.valorTotal!=null ||  
+      this.proyecto.estadoProyectoCodigo!=''||
+      this.proyecto.eliminado!=null ||  
+      this.proyecto.fechaCreacion!=null || 
+      this.proyecto.fechaModificacion!=null ||  
+      this.proyecto.usuarioModificacion!=''||
+      this.proyecto.institucionEducativaSede!=null ||  
+      this.proyecto.localizacionIdMunicipioNavigation!=null ||  
+      this.proyecto.plazoDiasInterventoria!=null ||  
+      this.proyecto.plazoMesesInterventoria!=null ||  
+      this.proyecto.plazoMesesObra!=null ||  
+      this.proyecto.plazoDiasObra!=null ||  
+      this.proyecto.coordinacionResponsableCodigo!=null)
+      ) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
+
   listadoTipoIntervencion: Dominio[];
   listadoregion: Localizacion[];
   listadoDepartamento: Localizacion[];
@@ -52,9 +105,9 @@ export class FormularioProyectosComponent implements OnInit {
     numeroActaJunta: null,
     tipoIntervencionCodigo: null,
     llaveMen: '',
-    localizacionIdMunicipio: '',
-    institucionEducativaId:0,
-    sedeId: 0,
+    localizacionIdMunicipio: null,
+    institucionEducativaId:null,
+    sedeId: null,
     enConvocatoria: false,
     convocatoriaId: null,
     cantPrediosPostulados: null,
@@ -71,10 +124,15 @@ export class FormularioProyectosComponent implements OnInit {
     usuarioModificacion: '',
     institucionEducativaSede: null,
     localizacionIdMunicipioNavigation: null,
+    plazoDiasInterventoria: null,
+    plazoMesesInterventoria: null,
+    plazoMesesObra: null,
+    plazoDiasObra: null,
+    coordinacionResponsableCodigo: null,
     predioPrincipal: {
       cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
       fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
-      usuarioCreacion: '', predioId: 0, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''
+      usuarioCreacion: '', predioId: null, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''
     },
     sede: null,
     infraestructuraIntervenirProyecto: [],
@@ -87,8 +145,8 @@ export class FormularioProyectosComponent implements OnInit {
 
   onSubmit() {
     // ajusto latitud y longitud de predios
-    this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°' + this.proyecto.predioPrincipal.ubicacionLatitud2;
-    this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' + this.proyecto.predioPrincipal.ubicacionLongitud2;
+    this.proyecto.predioPrincipal.ubicacionLatitud = this.proyecto.predioPrincipal.ubicacionLatitud + '°' ;// + this.proyecto.predioPrincipal.ubicacionLatitud2;
+    this.proyecto.predioPrincipal.ubicacionLongitud = this.proyecto.predioPrincipal.ubicacionLongitud + '°' ;// + this.proyecto.predioPrincipal.ubicacionLongitud2;
     //this.proyecto.institucionEducativaId = this.proyecto.institucionEducativaId;
     //this.proyecto.sedeId = this.proyecto.sede.institucionEducativaSedeId?this.proyecto.sede.institucionEducativaSedeId:this.proyecto.sedeId;
     //voy a revisar algunos datos minimos
@@ -98,17 +156,31 @@ export class FormularioProyectosComponent implements OnInit {
       this.openDialog('', '<b>El tipo de intervención es obligatorio.</b>');
       return;
     }
+    if(!this.proyecto.llaveMen)
+    {
+      this.openDialog('', '<b>La llave MEN es obligatoria.</b>');
+      return;
+    }
     this.projectServices.createOrUpdateProyect(this.proyecto).subscribe(respuesta => {
       if(respuesta.code=="200")
       {
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        this.noGuardado=false;
         this.router.navigate(['/crearProyecto']); 
       }
       else
       {
+        //if (this.proyecto.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {
+          const lat = this.proyecto.predioPrincipal.ubicacionLatitud.split('°');
+          this.proyecto.predioPrincipal.ubicacionLatitud = lat[0];
+        //}
+        //if (this.proyecto.predioPrincipal.ubicacionLongitud.indexOf('°') > 1) {
+          const lon = this.proyecto.predioPrincipal.ubicacionLongitud.split('°');
+          this.proyecto.predioPrincipal.ubicacionLongitud = lon[0];
+        //}
         if(respuesta.code)
         {
-          this.openDialog('', respuesta.message);
+          this.openDialog('', `<b>${respuesta.message}</b>`);
         }
         else{
           this.openDialog('','<b>Error en el formulario, debe ingresar los datos obligatorios.</b>');
@@ -147,8 +219,8 @@ export class FormularioProyectosComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     console.log(id);
 
-
     if (id) {
+      this.estaEditando = true;
       this.commonServices.forkProject().subscribe(listas => {
         console.log(listas);
         this.listadoTipoIntervencion = listas[0];
@@ -160,43 +232,68 @@ export class FormularioProyectosComponent implements OnInit {
         this.listaCordinaciones = listas[6];
         this.listadoConvocatoria = listas[7];
         this.projectServices.getProjectById(Number(id)).subscribe(respuesta => {
-          console.log("este es el proyecto ");
-          console.log(respuesta);
+          
           this.proyecto = respuesta;
-          console.log(this.proyecto);
-          console.log(this.proyecto.predioPrincipal.tipoPredioCodigo);
+          if(this.proyecto.estadoProyectoCodigo!='1')
+          {
+            this.bitPuedoEditar=false;
+          }
           //this.proyecto.predioPrincipal.tipoPredioCodigo;
           // ajusto lartitud y longitud
-          if (respuesta.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {
-            const lat = respuesta.predioPrincipal.ubicacionLatitud.split('°');
-            this.proyecto.predioPrincipal.ubicacionLatitud = lat[0];
-            this.proyecto.predioPrincipal.ubicacionLatitud2 = lat[1];
+          console.log("viene predio?");
+          console.log(respuesta.predioPrincipal==undefined);
+          console.log(respuesta.predioPrincipal==null);
+          if(!respuesta.predioPrincipal || respuesta.predioPrincipal==undefined)
+          {
+            console.log("si, es nulo");
+            this.proyecto.predioPrincipal=
+            {
+              cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
+              fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
+              usuarioCreacion: '', predioId: null, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''//,ubicacionLatitud2:'',ubicacionLongitud2:''
+            }; 
           }
-          if (respuesta.predioPrincipal.ubicacionLongitud.indexOf('°') > 1) {
-            const lon = respuesta.predioPrincipal.ubicacionLongitud.split('°');
-            this.proyecto.predioPrincipal.ubicacionLongitud = lon[0];
-            this.proyecto.predioPrincipal.ubicacionLongitud2 = lon[1];
-          }
-
-          this.proyecto.cantidadAportantes = respuesta.proyectoAportante.length;
-          this.getInstitucion(respuesta.institucionEducativaId,respuesta.sedeId);
-          
-          this.commonServices.forkDepartamentoMunicipio(respuesta.localizacionIdMunicipio).subscribe(
-            listadoregiones => {
-              this.listadoMunicipio = listadoregiones[0];
-              this.listadoDepartamento = listadoregiones[1];
-              this.proyecto.localizacionIdMunicipio = respuesta.localizacionIdMunicipio;
-
-              this.proyecto.depid = listadoregiones[0][0].idPadre;
-              this.proyecto.regid = listadoregiones[1][0].idPadre;
+          else{
+            if (respuesta.predioPrincipal.ubicacionLatitud.indexOf('°') > 1) {
+              const lat = respuesta.predioPrincipal.ubicacionLatitud.split('°');
+              this.proyecto.predioPrincipal.ubicacionLatitud = lat[0];
+              //this.proyecto.predioPrincipal.ubicacionLatitud2 = lat[1];
             }
-          );
+            if (respuesta.predioPrincipal.ubicacionLongitud.indexOf('°') > 1) {
+              const lon = respuesta.predioPrincipal.ubicacionLongitud.split('°');
+              this.proyecto.predioPrincipal.ubicacionLongitud = lon[0];
+              //this.proyecto.predioPrincipal.ubicacionLongitud2 = lon[1];
+            }
+          }
+          
+
+          this.proyecto.cantidadAportantes = respuesta.proyectoAportante.length==0?null:respuesta.proyectoAportante.length;
+          this.codigoDaneSede=this.proyecto.sede?.codigoDane;
+          this.getInstitucion(respuesta.institucionEducativaId,respuesta.sedeId); 
+          
+          if(respuesta.localizacionIdMunicipio!=undefined)
+          {
+            this.commonServices.forkDepartamentoMunicipio(respuesta.localizacionIdMunicipio).subscribe(
+              listadoregiones => {
+                this.listadoMunicipio = listadoregiones[0];
+                this.listadoDepartamento = listadoregiones[1];
+                this.proyecto.localizacionIdMunicipio = respuesta.localizacionIdMunicipio;
+  
+                this.proyecto.depid = listadoregiones[0][0].idPadre;
+                this.proyecto.regid = listadoregiones[1][0].idPadre;
+              }
+            );
+            
+          }
           let i = 0;
-          respuesta.proyectoAportante.forEach(element => {
-            this.getAportanteById(element.aportante.tipoAportanteId, i);
-            this.getVigenciaById(element.aportanteId, i);
-            i++;
-          });
+            respuesta.proyectoAportante.forEach(element => {
+              console.log("reviso por tipo");
+              console.log(element);
+              this.getAportanteById(element.aportante.tipoAportanteId, i);
+              this.getVigenciaById(element.aportanteId, i);
+              i++;
+            });
+          
         },
           err => {
             let mensaje: string;
@@ -216,6 +313,7 @@ export class FormularioProyectosComponent implements OnInit {
 
     }
     else {
+      
       // this.proyecto
       // agrego el predio principal
 
@@ -458,7 +556,11 @@ export class FormularioProyectosComponent implements OnInit {
     {
       let institucion=this.listadoInstitucion.filter(x=>x.institucionEducativaSedeId==this.proyecto.institucionEducativaId);
       console.log(institucion);
-      this.CodigoDaneIE = institucion?institucion[0].codigoDane:"";  
+      if(institucion.length>0)
+      {
+        this.CodigoDaneIE = institucion?institucion[0].codigoDane:"";  
+      }
+      
     }
     
     console.log("loading sede");
@@ -500,7 +602,7 @@ export class FormularioProyectosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         if(tipo==1)
         {
@@ -540,19 +642,15 @@ export class FormularioProyectosComponent implements OnInit {
 
   addInfraestructura() {
     this.proyecto.infraestructuraIntervenirProyecto.push({
-      infraestrucutraIntervenirProyectoId: 0,
-      proyectoId: 0,
+      infraestrucutraIntervenirProyectoId: null,
+      proyectoId: null,
       infraestructuraCodigo: '',
       cantidad: null,
       eliminado: false,
       fechaCreacion: null,
       usuarioCreacion: '',
       usuarioEliminacion: '',
-      plazoMesesObra: null,
-      plazoDiasObra: null,
-      plazoMesesInterventoria: null,
-      plazoDiasInterventoria: null,
-      coordinacionResponsableCodigo: ''
+      
     });
   }
 
@@ -582,9 +680,16 @@ export class FormularioProyectosComponent implements OnInit {
             }
 
           });
+          
           if(bitesvacio)
           {
-            this.proyecto.proyectoPredio.pop();
+            let aeliminar=this.proyecto.proyectoPredio.length-this.proyecto.cantPrediosPostulados;
+            console.log(aeliminar);
+            for(let i=0;i<=aeliminar;i++)
+            {
+              this.proyecto.proyectoPredio.pop();
+            }
+            
           }
           else
           {
@@ -598,11 +703,11 @@ export class FormularioProyectosComponent implements OnInit {
           if (this.proyecto.cantPrediosPostulados > this.proyecto.proyectoPredio.length+1) {            
             for (let a = this.proyecto.proyectoPredio.length + 1; a < this.proyecto.cantPrediosPostulados; a++) {
               this.proyecto.proyectoPredio.push({
-                proyectoPredioId: 0, usuarioCreacion: '',
+                proyectoPredioId: null, usuarioCreacion: '',
                 predio: {
                   cedulaCatastral: '', direccion: '', documentoAcreditacionCodigo: '',
                   fechaCreacion: new Date, institucionEducativaSedeId: null, numeroDocumento: '',
-                  usuarioCreacion: '', predioId: 0, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''
+                  usuarioCreacion: '', predioId: null, tipoPredioCodigo: '', ubicacionLatitud: '', ubicacionLongitud: ''
                 }
               });
             }
@@ -639,7 +744,13 @@ export class FormularioProyectosComponent implements OnInit {
           });
           if(bitesvacio)
           {
-            this.proyecto.proyectoAportante.pop();
+            let aeliminar=this.proyecto.proyectoAportante.length-this.proyecto.cantidadAportantes;
+            console.log(aeliminar);
+            for(let i=0;i<aeliminar;i++)
+            {
+              this.proyecto.proyectoAportante.pop();
+            }
+            
           }
           else
           {            
@@ -662,12 +773,12 @@ export class FormularioProyectosComponent implements OnInit {
                 cofinanciacionDocumentoID: null,
                 nombreAportante:"",
                 aportante: {
-                  cofinanciacionAportanteId: 0,
+                  cofinanciacionAportanteId: null,
                   cofinanciacionDocumento: null,
-                  cofinanciacionId: 0,
-                  municipioId: 0,
-                  departamentoId:0,
-                  tipoAportanteId: 0
+                  cofinanciacionId: null,
+                  municipioId: null,
+                  departamentoId:null,
+                  tipoAportanteId: null
                 }
               });
               let listavacia:any[]=[];
@@ -707,7 +818,7 @@ export class FormularioProyectosComponent implements OnInit {
         {
           this.listaAportante[i]=respuestaok;
           console.log(this.listaAportante[i]);
-          this.listadoDepto[i]=[{localizacionId:0,descripcion:"un momento por favor."}]
+          this.listadoDepto[i]=[{localizacionId:null,descripcion:"un momento por favor."}]
           this.commonServices.listaDepartamentos().subscribe(res=>{
             this.listadoDepto[i]=res;
           });
@@ -945,6 +1056,14 @@ export class FormularioProyectosComponent implements OnInit {
     return patron.test(te);
   }
 
+  numberUbicacion(e: { keyCode: any; }) {
+    const tecla = e.keyCode;
+    const patron = /[\d{1,7}+(\.\d{1,8})]/; // ver nota
+    const te = String.fromCharCode(tecla);
+    console.log( patron.test(te) );
+    return patron.test(te);
+  }
+
 
   validateKeypressLlave(event: KeyboardEvent) {
     const alphanumeric = /[A-Za-z0-9-]/;
@@ -954,7 +1073,7 @@ export class FormularioProyectosComponent implements OnInit {
   deleteInfraestructura(indice:number)
   {
     console.log(indice)
-    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",3,indice);
+    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",3,indice);
     //this.proyecto.infraestructuraIntervenirProyecto.splice(indice,1); 
   }
 }

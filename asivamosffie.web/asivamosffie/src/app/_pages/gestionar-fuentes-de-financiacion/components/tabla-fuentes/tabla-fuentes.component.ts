@@ -88,7 +88,7 @@ export class TablaFuentesComponent implements OnInit {
     this.router.navigate(['/registrarFuentes',e,idTipo]);
   }
   eliminarFuente(e: number) {
-    this.openDialogSiNo('','¿Está seguro de eliminar este registro?',e)
+    this.openDialogSiNo('','<b>¿Está seguro de eliminar este registro?</b>',e)
   }
 
   controlRecursosFuente(e: number) {
@@ -102,7 +102,7 @@ export class TablaFuentesComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.eliminarRegistro(e);
       }           
@@ -119,7 +119,7 @@ export class TablaFuentesComponent implements OnInit {
   eliminarRegistro(e: number){
     this.fuenteFinanciacionService.eliminarFuentesFinanciacion(e).subscribe( resultado => {
       let res = resultado as Respuesta;
-      this.openDialog('', res.message);
+      this.openDialog('', `<b>${res.message}</b>`);
       this.ngOnInit();
     })
   }

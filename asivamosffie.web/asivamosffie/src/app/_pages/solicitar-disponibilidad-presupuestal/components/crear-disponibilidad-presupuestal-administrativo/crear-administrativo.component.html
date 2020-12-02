@@ -5,7 +5,7 @@
         </a>
     </div>
     <div class="text-center">
-        <h1 class="title-menu--h1">
+        <h1 class="title-menu--h1 mb-1em">
             Crear solicitud de disponibilidad presupuestal
         </h1>
     </div>
@@ -26,43 +26,46 @@
     </div>
 
     <mat-card class="shipping-card var-main-gris">
-        <mat-card-content *ngFor=" let aportante of listaAportantes; let i = index ">
+        <mat-card-content >
 
             <mat-card-title class="header-card--text">
-                Aportante {{ i + 1 }}
+                Aportante 
             </mat-card-title>
 
-            <p>
+            <p *ngIf="false">
                 <strong>Valor del aportante al proyecto:</strong>
-                {{ aportante.valorAporte }}
+                {{ listaAportantes.valorAporte }}
             </p>
             <p>
                 <strong>Nombre del aportante:</strong>
-                {{ aportante.nombreAportante }}
+                {{ listaAportantes.nombreAportante }}
             </p>
-            <p>
-                <strong>Fuente 1:</strong>
-                {{ aportante.nombreFuente }}
-            </p>
-            <p>
-                <strong>Valor fuente 1:</strong>
-                {{ aportante.valorFuente | currency }}
-            </p>
+            <div *ngFor="let fuentej of listaAportantes.aportanteFuenteFinanciacion;let j =index;">                
+                <p>
+                    <strong>Fuente {{j+1}}:</strong>
+                    {{fuentej.fuenteFinanciacionString }}
+                </p>
+                <p>
+                    <strong>Valor fuente {{j+1}}:</strong>
+                    {{ fuentej.valorFuente | currency }}
+                </p>
+            </div>
+            
         </mat-card-content>
     </mat-card>
 
     <div class="d-flex align-items-center">
         <div class="text-area-quill">
-            <label for="alcanceParticular" class="text-area-quill--label">Nueva observación</label>
+            <label for="alcanceParticular" class="text-area-quill--label">Objeto</label>
             <quill-editor class="quill-editor-style" #objeto [styles]="editorStyle" [modules]="config"
-                (onContentChanged)="maxLength($event, 1000)" formControlName="objeto"></quill-editor>
+                (onContentChanged)="maxLength($event, 1000)" formControlName="objeto" required></quill-editor>
                 <input type="hidden" formControlName="proyectoAdministrativoId">
                 <input type="hidden" formControlName="disponibilidadPresupuestalId">
         </div>
         <span class="contador miles" *ngIf="formulario.get('objeto').value">
-            {{1000 - textoLimpio(formulario.get('objeto').value)}}
+            {{1000 - (textoLimpio(formulario.get('objeto').value)>1000?1000:textoLimpio(formulario.get('objeto').value))}}
         </span>
-        <span class="contador miles" *ngIf="formulario.get('objeto').value">
+        <span class="contador miles" *ngIf="!formulario.get('objeto').value">
             1000
         </span>
     </div>

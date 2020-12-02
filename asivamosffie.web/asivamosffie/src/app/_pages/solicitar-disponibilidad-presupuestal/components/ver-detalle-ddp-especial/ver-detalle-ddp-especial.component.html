@@ -1,0 +1,162 @@
+<div class="container text-center" *ngIf="disponibilidadPresupuestal">
+    <div class="text-right">
+        <a routerLink="/solicitarDisponibilidadPresupuestal/crearSolicitudEspecial" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Ver Detalle solicitud DDP especial
+        </h1>
+    </div>
+    <mat-card class="shipping-card mainGris">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text textoGris">
+                DDP especial
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p *ngIf="disponibilidadPresupuestal.tipoSolicitudEspecialCodigo === tipoSolicitudCodigos.solicitudExpensas">
+                <strong>Tipo de solicitud DDP especial:</strong>
+                Expensas
+            </p>
+            <p *ngIf="disponibilidadPresupuestal.tipoSolicitudEspecialCodigo === tipoSolicitudCodigos.solicitudOtrosCostos">
+                <strong>Tipo de solicitud DDP especial:</strong>
+                Otros costos/Servicios
+            </p>
+            <p>
+                <strong>Objeto:</strong>
+            </p>
+            <div [innerHtml]="disponibilidadPresupuestal.objeto"></div>
+            <p>
+                <strong>Número de radicado de la solicitud:</strong>
+                {{disponibilidadPresupuestal.numeroRadicadoSolicitud}}
+            </p>
+
+            <div *ngIf="disponibilidadPresupuestal.tipoSolicitudCodigo === tipoSolicitudCodigos.solicitudExpensas">
+                <h2 class="card-subTitle backgrondGris">Expensas</h2>
+                <section style="display: flex;">
+                    <strong>¿Cuenta con carta de autorización de la ET?:</strong>
+                    <p *ngIf="disponibilidadPresupuestal.cuentaCartaAutorizacion === true" style="margin-left: .4em;">Si</p>
+                    <p *ngIf="disponibilidadPresupuestal.cuentaCartaAutorizacion === false" style="margin-left: .4em;">No</p>
+                </section>
+                <p>
+                    <strong>Departamento:</strong>
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto['departamentoObj'].descripcion }}
+                </p>
+                <p>
+                    <strong>Municipio:</strong>
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto['municipioObj'].descripcion }}
+                </p>
+                <p>
+                    <strong>Llave MEN:</strong>
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen }}
+                </p>
+            </div>
+
+            <div *ngIf="disponibilidadPresupuestal.tipoSolicitudEspecialCodigo === tipoSolicitudCodigos.solicitudOtrosCostos">
+                <h2 class="card-subTitle backgrondGris">Otros costos/Servicios</h2>
+                <p><strong>Número de contrato:</strong> {{ disponibilidadPresupuestal.numeroContrato }} </p>
+            </div>
+        </mat-card-content>
+    </mat-card>
+
+    <div *ngIf="disponibilidadPresupuestal.tipoSolicitudEspecialCodigo === tipoSolicitudCodigos.solicitudExpensas">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto.llaveMen }}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p>
+                    <b>Tipo de intervención:</b>
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto.tipoIntervencionString }}
+                </p>
+                <p>
+                    <b>Nombre de la I.E:</b>
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto.sedeString }}
+                </p>
+                <p>
+                    <b>Sede:</b>
+                    {{ disponibilidadPresupuestal.disponibilidadPresupuestalProyecto[0].proyecto.institucionEducativaString }}
+                </p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Aportante
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p>
+                    <b>Nombre del aportante:</b>
+                    {{disponibilidadPresupuestal.stringAportante}}
+                </p>
+                <p>
+                    <b>Valor:</b>
+                    {{disponibilidadPresupuestal.valorSolicitud}}
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div *ngIf="disponibilidadPresupuestal.tipoSolicitudEspecialCodigo === tipoSolicitudCodigos.solicitudOtrosCostos">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    {{ disponibilidadPresupuestal.numeroContrato }}
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p>
+                    <b>Nombre de la entidad contratista:</b>
+                    {{ disponibilidadPresupuestal[ 'contratista' ].nombre }}
+                </p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Limitación especial
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <section [innerHTML]="innerObservacion( disponibilidadPresupuestal.limitacionEspecial ? disponibilidadPresupuestal.limitacionEspecial : 'No tiene observaciones de limitación especial' )"></section>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Aportante
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p>
+                    <b>Tipo de aportante:</b>
+                    {{ disponibilidadPresupuestal[ 'tipoAportante' ] }}
+                </p>
+                <p>
+                    <b>Nombre del aportante:</b>
+                    {{ disponibilidadPresupuestal[ 'nombreAportante' ] }}
+                </p>
+                <p>
+                    <b>Valor:</b>
+                   {{ disponibilidadPresupuestal.valorAportante | currency:' ':'symbol-narrow':'.0-0' }}
+                </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <mat-card class="shipping-card mainGris">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text textoGris">
+                URL con soporte
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            {{ disponibilidadPresupuestal.urlSoporte }}
+        </mat-card-content>
+    </mat-card>
+</div>

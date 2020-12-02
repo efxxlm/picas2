@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
-using asivamosffie.services.PostParameters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,14 +18,31 @@ namespace asivamosffie.api.Controllers
         private readonly IRequestBudgetAvailabilityService _managementCommitteeReportService;
         private readonly IOptions<AppSettings> _settings;
 
-        public RequestBudgetAvailabilityController(IOptions<AppSettings> settings, IRequestBudgetAvailabilityService managementCommitteeReportService)
+        public RequestBudgetAvailabilityController(
+            IOptions<AppSettings> settings, IRequestBudgetAvailabilityService managementCommitteeReportService)
         {
             _managementCommitteeReportService = managementCommitteeReportService;
             _settings = settings;
 
+        } 
+
+        [Route("GetListAportanteByTipoAportanteByProyectoId")]
+        public async Task<dynamic> GetListAportanteByTipoAportanteByProyectoId([FromQuery] int pProyectoId, int pTipoAportanteId)
+        {
+            return await _managementCommitteeReportService.GetListAportanteByTipoAportanteByProyectoId(pProyectoId, pTipoAportanteId);
         }
 
-
+        [Route("GetListContatoByNumeroContrato")]
+        public async Task<Contrato> GetListContatoByNumeroContrato([FromQuery] string pNumero)
+        {
+            return await _managementCommitteeReportService.GetListContatoByNumeroContrato(pNumero);
+        }
+         
+        [Route("GetContratoByNumeroContrato")]
+        public async Task<Contrato> GetContratoByNumeroContrato([FromQuery] string pNumero)
+        {
+            return await _managementCommitteeReportService.GetContratoByNumeroContrato(pNumero);
+        }
 
         [Route("GetReuestCommittee")]
         public async Task<IActionResult> GetReuestCommittee()
@@ -42,7 +58,6 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
 
         [Route("GetAportantesByProyectoId")]
         public async Task<IActionResult> GetAportantesByProyectoId(int proyectoId)
@@ -74,8 +89,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
         [Route("GetDDPEspecial")]
         public async Task<IActionResult> GetDDPEspecial()
         {
@@ -105,7 +118,6 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
 
         [Route("GetDetailInfoAdditionalById")]
         public async Task<IActionResult> GetDetailInfoAdditionalById(int disponibilidadPresupuestalId)
@@ -152,12 +164,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
-
-
-
-
         [Route("CreateOrEditReportProgress")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditReportProgress([FromBody] CompromisoSeguimiento compromisoSeguimiento)
@@ -178,6 +184,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("CreateUpdateDisponibilidaPresupuestalEspecial")]
+        [HttpPost]
+        public async Task<IActionResult> CreateUpdateDisponibilidaPresupuestalEspecial([FromBody] DisponibilidadPresupuestal pDisponibilidadPresupuestal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                pDisponibilidadPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.CreateUpdateDisponibilidaPresupuestalEspecial(pDisponibilidadPresupuestal);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
         [Route("CreateOrEditProyectoAdministrtivo")]
         [HttpPost]
@@ -199,10 +224,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
-
-
-
         [Route("CreateOrEditServiceCosts")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId)
@@ -212,7 +233,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 disponibilidadPresupuestal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal,proyectoId);
+                respuesta = await _managementCommitteeReportService.CreateOrEditServiceCosts(disponibilidadPresupuestal, proyectoId);
                 return Ok(respuesta);
 
             }
@@ -222,7 +243,6 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
 
         [Route("CreateOrEditInfoAdditional")]
         [HttpPost]
@@ -233,7 +253,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 string user = HttpContext.User.FindFirst("User").Value.ToUpper();
-                respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional( pDisponibilidad, user);
+                respuesta = await _managementCommitteeReportService.CreateOrEditInfoAdditional(pDisponibilidad, user);
                 return Ok(respuesta);
 
             }
@@ -244,7 +264,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
         [Route("SendRequest")]
         [HttpPost]
         public async Task<IActionResult> SendRequest(int disponibilidadPresupuestalId)
@@ -254,7 +273,7 @@ namespace asivamosffie.api.Controllers
             {
 
                 string user = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId);
+                respuesta = await _managementCommitteeReportService.SendRequest(disponibilidadPresupuestalId,_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
 
             }
@@ -268,6 +287,26 @@ namespace asivamosffie.api.Controllers
         [Route("EliminarDisponibilidad")]
         [HttpDelete]
         public async Task<IActionResult> EliminarDisponibilidad(int disponibilidadPresupuestalId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+
+                string user = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _managementCommitteeReportService.EliminarDisponibilidad(disponibilidadPresupuestalId);
+                return Ok(respuesta);
+
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("EliminarDisponibilidad")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarDisponibilidadPost(int disponibilidadPresupuestalId)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -303,6 +342,13 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
+        }
+
+        
+        [Route("GetContratos")]
+        public async Task<dynamic> GetContratos()
+        {
+            return await _managementCommitteeReportService.GetContratos();
         }
 
     }

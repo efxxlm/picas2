@@ -41,6 +41,6 @@
   margin-right: auto;
 }
 
-.pr-3-3 {
-  padding-right: 3.25em;
+.quill-editor-style[required]::after {
+  right: 0;
 }

@@ -16,15 +16,35 @@ namespace asivamosffie.api.Controllers
     [ApiController]
     public class PublicController : ControllerBase
     {
+        public readonly IRegisterPreContructionPhase1Service _RegisterPreContructionPhase1Service;
         public readonly ISourceFundingService _sourceFunding;
-        public readonly IActBeginService _actBegin;
-        private readonly IOptions<AppSettings> _settings;
+        public readonly ISelectionProcessService _selectionProcess;
+        public readonly IGuaranteePolicyService _guaranteePolicy;
+        public readonly IManagementCommitteeReportService _managementCommitteeReportService;
+        public readonly IOptions<AppSettings> _settings;
+        public readonly IManagePreContructionActPhase1Service _managePreContructionActPhase1Service;
 
-        public PublicController(ISourceFundingService sourceFunding, IOptions<AppSettings> settings, IActBeginService actBegin)
+        public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy)
         {
+            _managePreContructionActPhase1Service = managePreContructionActPhase1Service;
+            _RegisterPreContructionPhase1Service = registerPreContructionPhase1Service;
             _sourceFunding = sourceFunding;
             _settings = settings;
-            _actBegin = actBegin;
+            _selectionProcess = selectionProcess;
+            _managementCommitteeReportService = managementCommitteeReportService;
+            _guaranteePolicy = guaranteePolicy;
+        }
+
+        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService
+            {
+                MailPort = appSettings.Value.MailPort,
+                MailServer = appSettings.Value.MailServer,
+                Password = appSettings.Value.Password,
+                Sender = appSettings.Value.Sender
+            };
+            return appSettingsService;
         }
 
         [HttpGet("GetConsignationValue")]
@@ -42,17 +62,145 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [HttpGet("GetNoLoadDocumentValue")]
-        public async Task GetNoLoadDocumentValue()
+        [HttpGet("GetMonitorWithoutFollow")]
+        public async Task GetMonitorWithoutFollow()
         {
             try
             {
-                await _actBegin.GetDocumentoNoCargadoValue(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                await _selectionProcess.getActividadesVencidas(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 //return result;
             }
             catch (Exception ex)
             {
 
+                throw ex;
+            }
+        }
+
+        [HttpGet("NoApprovedLegalFiduciaryPolicy4d")]
+        public async Task NoApprovedLegalFiduciaryPolicy4d()
+        {
+            //Task task1;
+            try
+            {
+                //paquete 1: no tienen registro inicial contrato poliza
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+
+                //paquete 2: estado diferente a Aprobado
+                await _guaranteePolicy.EnviarCorreoSupervisor4dPolizaNoAprobada2(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                //return result;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// JMartinez
+        // Aprobar Actas de
+        // Comité Con Fecha
+        // vencida Según Fecha paramétrica 
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("GetApproveExpiredMinutes")]
+        public async Task GetApproveExpiredMinutes()
+        {
+            try
+            {
+                await _managementCommitteeReportService.GetApproveExpiredMinutes(_settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// JMartinez
+        //Enviar notificacion a interventor, 
+        //tecnica y suipervisor si la poliza 
+        //tiene 4 dias habiles y aun no tiene gestion
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        //316
+        [HttpGet("GetContratosConPolizaVencida")]
+        public async Task GetContratosConPolizaVencida()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.EnviarNotificacion(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //317
+        [HttpGet("GetContratosConPolizaVencidaInterventoria")]
+        public async Task GetContratosConPolizaVencidaInterventoria()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.EnviarNotificacionInteventoria(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //317
+        [HttpGet("GetContratosSinGestionarVerificacionRequisitos")]
+        public async Task GetContratosIntrerventoriaSinGestionar()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.GetContratosIntrerventoriaSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //318
+        [HttpGet("GetContratosObraSinGestionar")]
+        public async Task GetContratosObraSinGestionar()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.GetContratosObraSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //318
+        [HttpGet("GetContratosInterventoriaSinGestionar")]
+        public async Task GetContratosInterventoriaSinGestionar()
+        {
+            try
+            {
+                await _RegisterPreContructionPhase1Service.GetContratosInterventoriaSinGestionar(_settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        //3.1.9
+        [HttpGet("GetListContratoConActaSinDocumento")]
+        public async Task GetListContratoConActaSinDocumento()
+        {
+            try
+            {
+                AppSettingsService appSettingsService = ToAppSettingsService(_settings);
+                await _managePreContructionActPhase1Service.GetListContratoConActaSinDocumento(appSettingsService);
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }

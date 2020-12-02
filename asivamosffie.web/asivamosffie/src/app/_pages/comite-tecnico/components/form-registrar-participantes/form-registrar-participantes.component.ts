@@ -147,13 +147,13 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     return this.fb.group({
       sesionInvitadoId: [],
       nombre: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       cargo: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(50)])
       ],
       entidad: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ]
     });
   }
@@ -166,6 +166,14 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   validarSolicitudes() {
+
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnico.length == 0) {
+
+        this.estadoSolicitudes = this.estadoFormulario.completo;
+
+      return true;
+    }
+
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
@@ -207,8 +215,21 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   validarTemas(esProposicion: boolean) {
+
+    if (this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).length == 0) {
+
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+
+      return true;
+    } 
+
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
+    let sinDiligenciar = true;
 
     this.objetoComiteTecnico.sesionComiteTema
       .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
@@ -229,13 +250,15 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
             }
           })
+          sinDiligenciar = false;
           //})
         } else if (tem.requiereVotacion == false) {
           cantidadTemas++;
           cantidadTemasCompletas++;
+          sinDiligenciar = false;
         }
         else {
-          cantidadTemasCompletas--;
+          cantidadTemas++;
         }
       })
 
@@ -247,11 +270,19 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       else
         this.estadoOtrosTemas = this.estadoFormulario.enProceso;
 
+        if (sinDiligenciar) // no se ha llenado nada
+        if (esProposicion)
+          this.estadoProposiciones = this.estadoFormulario.sinDiligenciar;
+        else
+          this.estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
+
       if (cantidadTemas == cantidadTemasCompletas)
         if (esProposicion)
           this.estadoProposiciones = this.estadoFormulario.completo;
         else
           this.estadoOtrosTemas = this.estadoFormulario.completo;
+    } else {
+
     }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
@@ -259,6 +290,8 @@ export class FormRegistrarParticipantesComponent implements OnInit {
   }
 
   onUpdate() {
+
+    this.estaTodo = false;
 
     this.validarSolicitudes();
     this.validarTemas(true);
@@ -276,8 +309,12 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       btnProposiciones.click();
     }
 
-    if (this.estadoSolicitudes == this.estadoFormulario.completo)
+    if (this.estadoSolicitudes == this.estadoFormulario.completo &&
+      this.estadoOtrosTemas == this.estadoFormulario.completo &&
+      this.estadoProposiciones == this.estadoFormulario.completo
+    ) {
       this.estaTodo = true;
+    }
   }
 
   onDelete(i: number) {
@@ -286,7 +323,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
     this.technicalCommitteSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
-        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.borrarArray(this.invitados, i)
       })
 
@@ -298,7 +335,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result === true) {
         this.onDelete(e)
       }
     });
@@ -312,7 +349,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
     }
     this.technicalCommitteSessionService.cambiarEstadoComiteTecnico(comite)
       .subscribe(respuesta => {
-        this.openDialog('', 'La sesión ha sido registrada exitosamente.');
+        this.openDialog('', '<b>La sesión ha sido registrada exitosamente.</b>');
         if (respuesta.code == "200")
           this.router.navigate(['/comiteTecnico']);
       })
@@ -361,7 +398,7 @@ export class FormRegistrarParticipantesComponent implements OnInit {
 
       this.technicalCommitteSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
-          this.openDialog('', respuesta.message)
+          this.openDialog('', `<b>${respuesta.message}</b>`)
           if (respuesta.code == "200")
             this.ngOnInit();
         })

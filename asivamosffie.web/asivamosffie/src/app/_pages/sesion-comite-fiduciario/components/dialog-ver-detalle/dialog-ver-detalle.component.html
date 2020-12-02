@@ -1,0 +1,41 @@
+<section *ngIf="compromisoSeguimiento">
+    <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+      <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+    </button>
+    
+    <div class="text-center">
+      <h1 class="title-menu--h1">
+        Gestión realizada
+      </h1>
+    
+      <p class="p">
+        {{ compromisoSeguimiento.compromisos.tarea }}
+      </p>
+    
+      <p class="p">
+        <b>
+          {{ compromisoSeguimiento.compromisos.nombreResponsable }}
+        </b>
+      </p>
+    </div>
+  
+    <mat-card class="shipping-card" 
+              *ngIf=" compromisoSeguimiento.compromisos.temaCompromisoSeguimiento !== undefined
+                      && compromisoSeguimiento.compromisos.temaCompromisoSeguimiento.length > 0">
+      <mat-card-content>
+        <ol class="ol">
+          <li *ngFor="let compromiso of compromisoSeguimiento.compromisos.temaCompromisoSeguimiento" [innerHTML]="compromiso.tarea"></li>
+        </ol>
+      </mat-card-content>
+    </mat-card>
+  
+    <mat-card class="shipping-card" 
+              *ngIf=" compromisoSeguimiento.compromisos.compromisoSeguimiento !== undefined
+                      && compromisoSeguimiento.compromisos.compromisoSeguimiento.length > 0">
+      <mat-card-content>
+        <ol class="ol">
+          <li *ngFor="let compromiso of compromisoSeguimiento.compromisos.compromisoSeguimiento" [innerHTML]="compromiso.descripcionSeguimiento"></li>
+        </ol>
+      </mat-card-content>
+    </mat-card>
+  </section>

@@ -6,4 +6,8 @@
 
 main {
     flex: 1 0 auto;
+
+    @media screen and (min-width: 0\0) {
+        min-height: calc(100vh - 13.5em);
+    }
 }

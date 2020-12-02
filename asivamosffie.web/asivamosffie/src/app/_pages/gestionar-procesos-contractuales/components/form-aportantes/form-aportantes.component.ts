@@ -19,7 +19,7 @@ export class FormAportantesComponent implements OnInit {
 
   getData () {
     this.data.forEach( contratacion => {
-      this.institucionesEducativa.push( contratacion.proyecto.institucionEducativa )
+      this.institucionesEducativa.push( contratacion.proyecto )
     } );
     console.log( this.institucionesEducativa );
   }

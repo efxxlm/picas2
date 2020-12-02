@@ -10,6 +10,7 @@ import { CommonService } from '../../../../core/_services/common/common.service'
 export class FormSolicitudComponent implements OnInit {
 
   @Input() solicitudes: any;
+  @Input() esComiteFiduciario: boolean = false;
   totalAprobado: number = 0;
   totalNoAprobado: number = 0;
   resultadoVotacion: string;
@@ -28,12 +29,13 @@ export class FormSolicitudComponent implements OnInit {
       value: 'devueltoComite' 
     }
   ];
+  tipoSolicitud: any[] = [];
 
   get compromisos() {
     return this.addressForm.get('compromisos') as FormArray;
   };
 
-  constructor ( private fb: FormBuilder,
+  constructor ( private fb       : FormBuilder,
                 private commonSvc: CommonService ) 
   {
   };
@@ -42,8 +44,15 @@ export class FormSolicitudComponent implements OnInit {
     this.resultadosVotaciones( this.solicitudes )
     this.commonSvc.listaEstadoSolicitud()
     .subscribe( ( resp: any[] ) => {
-      this.estadoSolicitud = resp.filter( estado => this.solicitudes.contratacion.estadoSolicitudCodigo === estado.codigo );
+      this.estadoSolicitud = resp.filter( estado => this.solicitudes.estadoCodigo === estado.codigo );
     } );
+  };
+
+  innerObservacion ( observacion: string ) {
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return `<b>${ observacionHtml }</b>`;
+    };
   };
 
   resultadosVotaciones ( solicitud: any ) {
@@ -59,6 +68,16 @@ export class FormSolicitudComponent implements OnInit {
     else
       this.resultadoVotacion = 'Aprobó'
   };
+
+  compromisosFiduciario ( compromisos: any ) {
+    const compromisosCF = [];
+    compromisos.forEach( compromiso => {
+      if ( compromiso.esFiduciario === true ) {
+        compromisosCF.push( compromiso );
+      };
+    } );
+    return compromisosCF;
+  }
 
   textoLimpioMessage (texto: string) {
     if ( texto ){

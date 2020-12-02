@@ -6,6 +6,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 
 
 @Component({
@@ -41,19 +42,15 @@ export class TableSolicitudContratacionComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.projectContractingService.getListContratacion().subscribe(response => {
-
+      console.log( response );
       this.dataSource = new MatTableDataSource(response);
-      console.log(response);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
-    })
-
-
+    });
   }
 
   detallarSolicitud(id: number) {
@@ -61,26 +58,33 @@ export class TableSolicitudContratacionComponent implements OnInit {
   }
 
   onDelete(id: number) {
-    this.openDialogSiNo('', '¿Está seguro de eliminar este registro?', id)
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', id);
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e: number) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
 
-      if (result) {
+      if (result === true) {
         this.eliminarSolicitud(e);
-      }
+      };
     });
   }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+  }
+
+  observacionesDialog ( numeroSolicitud: string, contratacionProyecto: any[] ) {
+    const dialogRef = this.dialog.open(DialogObservacionesComponent, {
+      width: '60em',
+      data: { numeroSolicitud, contratacionProyecto }
     });
   }
 
@@ -88,19 +92,16 @@ export class TableSolicitudContratacionComponent implements OnInit {
     console.log(id);
     this.projectContractingService.eliminarContratacion(id)
       .subscribe(respuesta => {
-
-        this.openDialog('', 'La información se ha eliminado correctamente')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
         this.ngOnInit();
-
       });
   }
 
   enviarSolicitud(id: number) {
     this.projectContractingService.changeStateContratacionByIdContratacion(id, this.estadosSolicitud.RechazadaPorComiteTecnico)
       .subscribe(respuesta => {
-        this.openDialog('Solicitud Contratacion', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         this.ngOnInit();
-
       });
   }
 

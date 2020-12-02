@@ -6,6 +6,7 @@ import { ComiteTecnico, SesionComiteTema } from 'src/app/_interfaces/technicalCo
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { Router } from '@angular/router';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 
 @Component({
   selector: 'app-form-proposiciones-varios',
@@ -13,8 +14,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./form-proposiciones-varios.component.scss']
 })
 export class FormProposicionesVariosComponent {
-  
-  @Input() objetoComiteTecnico: ComiteTecnico 
+
+  @Input() objetoComiteTecnico: ComiteTecnico
   @Output() semaforo: EventEmitter<string> = new EventEmitter();
   listaMiembros: Dominio[] = [];
 
@@ -34,9 +35,10 @@ export class FormProposicionesVariosComponent {
               public dialog: MatDialog,
               private commonService: CommonService,
               private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
-              private router: Router
+              private router: Router,
+              private techicalCommitteeSessionService: TechnicalCommitteSessionService,
 
-             ) 
+             )
   {
 
   }
@@ -78,15 +80,13 @@ export class FormProposicionesVariosComponent {
     return this.fb.group({
       sesionTemaId: [],
       tema: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(1000)])
       ],
       responsable: [null, Validators.required],
       tiempoIntervencion: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(3)])
       ],
-      url: [null, [
-        ,
-      ]],
+      url: [null, [Validators.required]],
     });
   }
 
@@ -108,19 +108,19 @@ export class FormProposicionesVariosComponent {
           esProposicionesVarios: true,
 
         }
-  
+
         temas.push( sesionComiteTema );
       });
 
       this.fiduciaryCommitteeSessionService.createEditSesionComiteTema( temas )
         .subscribe( respuesta => {
-          this.openDialog('Comité Técnico', respuesta.message)
+          this.openDialog('', `<b>${respuesta.message}</b>`)
           if ( respuesta.code == "200" )
             this.validarCompletos(respuesta.data);
         })
 
     }else{
-      this.openDialog('', 'Falta registrar información.')
+      this.openDialog('', '<b>Falta registrar información</b>')
     }
   }
 
@@ -159,6 +159,40 @@ export class FormProposicionesVariosComponent {
     }
 
     console.log(cantidadIncompletos)
+  }
+
+  eliminarTema(i) {
+    let tema = this.addressForm.get('tema');
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i, tema);
+
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number, grupo: any) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result===true) {
+        this.deleteTema(e)
+      }
+    });
+  }
+
+  deleteTema(i) {
+    let grupo = this.addressForm.get('tema') as FormArray;
+    let tema = grupo.controls[i];
+
+    console.log(tema)
+
+    this.techicalCommitteeSessionService.deleteSesionComiteTema(tema.get('sesionTemaId').value)
+      .subscribe(respuesta => {
+        this.borrarArray(grupo, i)
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
+        this.ngOnInit();
+      })
+
   }
 
   cargarRegistros(){

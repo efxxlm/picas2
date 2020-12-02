@@ -7,12 +7,11 @@ export interface OrdenDelDia {
   id: number;
   fecha: string;
   numero: string;
+  estadoRegistro:string;
   tipo: string;
 }
 
-const ELEMENT_DATA: OrdenDelDia[] = [
-  { id: 0, fecha: '24/06/2020', numero: 'CT_00001', tipo: 'Sin acta' }
-];
+const ELEMENT_DATA: OrdenDelDia[] = [];
 
 @Component({
   selector: 'app-tabla-con-validacion-presupuestal',
@@ -21,7 +20,7 @@ const ELEMENT_DATA: OrdenDelDia[] = [
 })
 export class TablaConValidacionPresupuestalComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'tipo', 'id'];
+  displayedColumns: string[] = ['fecha', 'numero', 'tipo','estadoRegistro', 'id'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
   @Input()disponibilidadPresupuestal: any;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -37,8 +36,15 @@ export class TablaConValidacionPresupuestalComponent implements OnInit {
   ngOnInit(): void {
     let elements:OrdenDelDia[]=[];
     this.disponibilidadPresupuestal.disponibilidadPresupuestal.forEach(element => {
+      if(element.numeroDdp==null)
+      {
+        if(element.estadoRegistro)
+        {
+          element.estadoRegistro=false;
+        }
+      }      
       elements.push({id:element.disponibilidadPresupuestalId,
-        fecha:element.fechaSolicitud,numero:element.numeroSolicitud,
+        fecha:element.fechaSolicitud,numero:element.numeroSolicitud,estadoRegistro:element.estadoRegistro,
         tipo:element.tipoSolicitud})
     });
     this.dataSource = new MatTableDataSource(elements);

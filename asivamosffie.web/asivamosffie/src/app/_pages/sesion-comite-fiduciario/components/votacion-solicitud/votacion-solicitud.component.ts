@@ -153,7 +153,7 @@ export class VotacionSolicitudComponent implements OnInit {
 
     this.fiduciaryCommitteeSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
     .subscribe( respuesta => {
-      this.openDialog('', respuesta.message)
+      this.openDialog('', `<b>${respuesta.message}</b>`)
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.objetoComiteTecnico);
       }

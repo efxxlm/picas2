@@ -141,13 +141,13 @@ export class FormRegistrarParticipantesComponent {
     return this.fb.group({
       sesionInvitadoId: [],
       nombre: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       cargo: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(50)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(50)])
       ],
       entidad: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ]
     });
   }
@@ -160,6 +160,14 @@ export class FormRegistrarParticipantesComponent {
   }
 
   validarSolicitudes() {
+
+    if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length == 0) {
+
+      this.estadoSolicitudes = this.estadoFormulario.completo;
+
+    return true;
+  }
+
     let cantidadSolicitudesCompletas = 0;
     let cantidadSolicitudes = 0;
 
@@ -178,7 +186,7 @@ export class FormRegistrarParticipantesComponent {
               sol.completo = false;
             }
           })
-        } else if (sol.requiereVotacion == false) {
+        } else if (sol.requiereVotacionFiduciario == false) {
           cantidadSolicitudes++;
           cantidadSolicitudesCompletas++;
         }
@@ -186,6 +194,8 @@ export class FormRegistrarParticipantesComponent {
           cantidadSolicitudesCompletas--;
         }
       })
+
+      console.log(cantidadSolicitudes, cantidadSolicitudesCompletas);
 
       if (this.objetoComiteTecnico.sesionComiteSolicitudComiteTecnicoFiduciario.length > 0) {
         if (cantidadSolicitudes > 0) {
@@ -201,63 +211,86 @@ export class FormRegistrarParticipantesComponent {
   }
 
   validarTemas(esProposicion: boolean) {
+
+    if (this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).length == 0) {
+
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+
+      return true;
+    }
+
     let cantidadTemasCompletas = 0;
     let cantidadTemas = 0;
+    let sinDiligenciar = true;
 
-      this.objetoComiteTecnico.sesionComiteTema
-        .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
-          tem.completo = true;
+    this.objetoComiteTecnico.sesionComiteTema
+      .filter(t => (t.esProposicionesVarios ? t.esProposicionesVarios : false) == esProposicion).forEach(tem => {
+        tem.completo = true;
 
-          if (tem.requiereVotacion == true) {
-            //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
-            if (tem.sesionTemaVoto.length == 0)
-              cantidadTemas++;
-
-            tem.sesionTemaVoto.forEach(vot => {
-              cantidadTemas++;
-
-              if (vot.esAprobado == false || vot.esAprobado == true) {
-                cantidadTemasCompletas++;
-              } else {
-                tem.completo = false;
-
-              }
-            })
-            //})
-          } else if (tem.requiereVotacion == false) {
+        if (tem.requiereVotacion == true) {
+          //this.objetoComiteTecnico.sesionParticipante.forEach(par => {
+          if (tem.sesionTemaVoto.length == 0)
             cantidadTemas++;
-            cantidadTemasCompletas++;
-          }
-          else {
-            cantidadTemasCompletas--;
-          }
-        })
+
+          tem.sesionTemaVoto.forEach(vot => {
+            cantidadTemas++;
+
+            if (vot.esAprobado == false || vot.esAprobado == true) {
+              cantidadTemasCompletas++;
+            } else {
+              tem.completo = false;
+
+            }
+          })
+          sinDiligenciar = false;
+          //})
+        } else if (tem.requiereVotacion == false) {
+          cantidadTemas++;
+          cantidadTemasCompletas++;
+          sinDiligenciar = false;
+        }
+        else {
+          cantidadTemas++;
+        }
+      })
 
 
 
-      if (cantidadTemas > 0) {
+    if (cantidadTemas > 0) {
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.enProceso;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.enProceso;
+
+      if (sinDiligenciar) // no se ha llenado nada
         if (esProposicion)
-          this.estadoProposiciones = this.estadoFormulario.enProceso;
+          this.estadoProposiciones = this.estadoFormulario.sinDiligenciar;
         else
-          this.estadoOtrosTemas = this.estadoFormulario.enProceso;
+          this.estadoOtrosTemas = this.estadoFormulario.sinDiligenciar;
 
-        if (cantidadTemas == cantidadTemasCompletas)
-          if (esProposicion)
-            this.estadoProposiciones = this.estadoFormulario.completo;
-          else
-            this.estadoOtrosTemas = this.estadoFormulario.completo;
-      }else{
+      if (cantidadTemas == cantidadTemasCompletas)
         if (esProposicion)
-          this.estadoProposiciones = '';
-        else 
-          this.estadoOtrosTemas = '';
-      }
+          this.estadoProposiciones = this.estadoFormulario.completo;
+        else
+          this.estadoOtrosTemas = this.estadoFormulario.completo;
+    } else {
+      if (esProposicion)
+        this.estadoProposiciones = this.estadoFormulario.completo;
+      else
+        this.estadoOtrosTemas = this.estadoFormulario.completo;
+    }
 
     console.log(cantidadTemas, this.estadoOtrosTemas, this.estadoProposiciones)
 
   }
 
   onUpdate() {
+
+    this.estaTodo = false;
 
     this.validarSolicitudes();
     this.validarTemas(true);
@@ -274,8 +307,12 @@ export class FormRegistrarParticipantesComponent {
       btnProposiciones.click();
     }
 
-    if (this.estadoSolicitudes == this.estadoFormulario.completo)
+    if (this.estadoSolicitudes == this.estadoFormulario.completo &&
+      this.estadoOtrosTemas == this.estadoFormulario.completo &&
+      this.estadoProposiciones == this.estadoFormulario.completo
+    ) {
       this.estaTodo = true;
+    }
   }
 
   onDelete(i: number) {
@@ -284,7 +321,7 @@ export class FormRegistrarParticipantesComponent {
     let idInvitado = grupo.get('sesionInvitadoId').value ? grupo.get('sesionInvitadoId').value : 0;
     this.fiduciaryCommitteeSessionService.deleteSesionInvitado(idInvitado)
       .subscribe(respuesta => {
-        this.openDialog('', 'La información se ha eliminado correctamente.')
+        this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
         this.borrarArray(this.invitados, i)
       })
 
@@ -296,7 +333,7 @@ export class FormRegistrarParticipantesComponent {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result === true) {
         this.onDelete(e)
       }
     });
@@ -310,7 +347,7 @@ export class FormRegistrarParticipantesComponent {
     }
     this.fiduciaryCommitteeSessionService.cambiarEstadoComiteTecnico(comite)
       .subscribe(respuesta => {
-        this.openDialog('', 'La sesión ha sido registrada exitosamente.');
+        this.openDialog('', '<b>La sesión ha sido registrada exitosamente.</b>');
         if (respuesta.code == "200")
           this.router.navigate(['/comiteFiduciario']);
       })
@@ -359,7 +396,7 @@ export class FormRegistrarParticipantesComponent {
 
       this.fiduciaryCommitteeSessionService.createEditSesionInvitadoAndParticipante(comite)
         .subscribe(respuesta => {
-          this.openDialog('', respuesta.message)
+          this.openDialog('', `<b>${respuesta.message}</b>`)
           if (respuesta.code == "200")
             this.ngOnInit();
         })

@@ -1,0 +1,31 @@
+.mainGris{
+    border: 1px solid var(--fontColor) !important;
+}
+.textoGris{
+    color: var(--fontColor) !important;
+}
+p,
+.mat-typography p {
+    margin-bottom: .2em;
+}
+
+.mb-1em {
+    margin-bottom: 1em;
+}
+
+.departamento {
+    font-weight: 500;
+    margin-top: .3em;
+}
+
+.solicitud {
+    margin-top: 0.5em;
+    margin-left: 2em;
+    margin-right: 2em;
+    color: var(--mainColor);
+    font-size: 1.1em;
+}
+
+.sub-card {
+    margin: 0 -24px;
+}

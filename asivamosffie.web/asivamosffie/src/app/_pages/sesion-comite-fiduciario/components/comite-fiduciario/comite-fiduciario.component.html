@@ -53,10 +53,10 @@
             <div class="pr-1">
                 <label class="label-left">Fecha del próximo comité</label>
             </div>
-            <div class="col d-flex align-items-center">
+            <div class="d-flex align-items-center">
                 <mat-form-field class="example-full-width">
                     <input [formControl]="fechaComite" matInput [matDatepicker]="picker" required [min]="minDate"
-                        readonly (click)="picker.open()">
+                        readonly (click)="picker.open()" placeholder="DD/MM/AAAA">
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">

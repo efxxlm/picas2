@@ -5,16 +5,16 @@
     </a>
   </div>
 
-  <div *ngIf="comite.estadoCodigo === '1'">
+  <div *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1'">
     <div class="text-center">
       <h1 class="title-menu--h1">
         Reportar avance compromiso {{ comite.numeroComite }}
       </h1>
     </div>
-  
+
     <div class="text-center flex-column">
-      <span>{{ comite.compromiso }}</span>
-      <span> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
+      <h3 style="color: #174193;font-size: 1.5em;"><b>{{ comite.compromiso }}</b></h3>
+      <span style="font-size: 1.2em;"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
     </div>
   </div>
 
@@ -24,10 +24,10 @@
         Ver detalle/ Editar avance compromiso {{ comite.numeroComite }}
       </h1>
     </div>
-  
+
     <div class="text-center flex-column">
-      <span>Realizar seguimiento semanal del cronograma</span>
-      <span> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
+      <h3 style="color: #174193;font-size: 1.5em;"><b>{{ comite.compromiso }}</b></h3>
+      <span style="font-size: 1.2em;"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
     </div>
   </div>
 
@@ -37,23 +37,24 @@
         Ver detalle compromiso {{ comite.numeroComite }}
       </h1>
     </div>
-  
+
     <div class="text-center flex-column">
-      <span>Realizar seguimiento semanal del cronograma</span>
-      <span> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
+      <h3 style="color: #174193;font-size: 1.5em;"><b>{{ comite.compromiso }}</b></h3>
+      <span style="font-size: 1.2em;"> <b>Fecha limite</b>: {{ comite.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span>
     </div>
   </div>
 
-  <app-tabla-detalle-compromiso *ngIf="comite.estadoCodigo === '3' || comite.estadoCodigo === '2'" [sesionComiteTecnicoCompromisoId]="comite.sesionComiteTecnicoCompromisoId"></app-tabla-detalle-compromiso>
+  <app-tabla-detalle-compromiso *ngIf="comite.estadoCodigo === '3' || comite.estadoCodigo === '2' || comite.estadoCodigo === '1'"
+    [compromisoId]="comite.compromisoId" [tipoCompromiso]="comite.tipoSolicitud"></app-tabla-detalle-compromiso>
 
-  <div class="text-center flex" *ngIf="comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
+  <div class="text-center flex mb-2em" *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
 
     <div class="mr-right-1">
-      <h3>Estado del compromiso</h3>
+      <label>Estado del compromiso</label>
     </div>
 
     <div class="w-30">
-      <mat-form-field appearance="fill">
+      <mat-form-field>
         <mat-select [(ngModel)]="estadoCodigo" required>
           <mat-option *ngFor="let estado of estados" [value]="estado.value">
             {{estado.viewValue}}
@@ -64,33 +65,29 @@
 
   </div>
 
-  <div *ngIf="comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
+  <div *ngIf="comite.estadoCodigo === undefined || comite.estadoCodigo === '1' || comite.estadoCodigo === '2'">
     <form autocomplete="off" [formGroup]="reporte" (ngSubmit)="onSubmit()">
 
       <div class="d-flex align-items-center">
         <div class="text-area-quill">
-          <label for="justificacion" class="text-area-quill--label">Gestión realizada</label>
+          <label for="reporteEstado" class="text-area-quill--label header">Gestión realizada</label>
           <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-            (onContentChanged)="maxLength($event, 500)" formControlName="reporteEstado"></quill-editor>
+            (onContentChanged)="maxLength($event, 500)" formControlName="reporteEstado" required></quill-editor>
         </div>
-        <span class="contador" *ngIf="reporte.get('reporteEstado').value !== null">
-          {{500 - textoLimpio(reporte.get('reporteEstado').value)}}
+        <span class="contador miles" *ngIf="reporte.get('reporteEstado').value !== null">
+          {{500 - textoLimpio(reporte.get('reporteEstado').value, 500)}}
         </span>
-        <span class="contador" *ngIf="reporte.get('reporteEstado').value === null">
+        <span class="contador miles" *ngIf="reporte.get('reporteEstado').value === null">
           500
         </span>
       </div>
-  
       <div class="text-center">
-  
-        <button mat-button 
-          color="warn" 
-          class="btn-guardar mr-bottom-2" 
-          type="submit">
+
+        <button mat-button color="warn" class="btn-guardar mr-bottom-2" type="submit">
           <img src="assets/img/icon/guardar.svg" alt="Guardar">
         </button>
       </div>
-  
+
     </form>
   </div>
 

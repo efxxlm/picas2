@@ -12,7 +12,7 @@ import { EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 })
 export class TablaMonitoreoCompromisosComponent implements OnInit {
 
-  displayedColumns: string[] = ['fecha', 'numero', 'numeroCompromisos', 'nivelCumplimiento', 'id'];
+  displayedColumns: string[] = ['fechaOrdenDia', 'numero', 'cantidadCompromisos', 'nivelCumplimiento', 'id'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -24,21 +24,20 @@ export class TablaMonitoreoCompromisosComponent implements OnInit {
   }
 
   constructor(
-                private technicalCommitteeSessionService: TechnicalCommitteSessionService,
-
-             ) 
-  {
-
-  }
+    private technicalCommitteeSessionService: TechnicalCommitteSessionService,
+  ) { }
 
   ngOnInit(): void {
 
-      this.technicalCommitteeSessionService.getListComiteGrilla()
-        .subscribe( response => {
-          response = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
-          this.dataSource = new MatTableDataSource( response );
-      })
-
+    this.technicalCommitteeSessionService.getListComite( 'False' )
+      .subscribe(response => {
+        // esponse = response.filter( c => c.estadoComiteCodigo == EstadosComite.conActaDeSesionAprobada )
+        // console.log(response);
+        this.dataSource = new MatTableDataSource(response);
+        this.initPaginator();
+      });
+    }
+    initPaginator() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

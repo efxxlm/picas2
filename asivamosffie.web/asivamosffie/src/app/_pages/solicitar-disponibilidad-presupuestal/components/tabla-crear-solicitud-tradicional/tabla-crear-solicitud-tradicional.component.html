@@ -57,7 +57,14 @@
     
             <ng-container matColumnDef="estado">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la solicitud </th>
-                <td mat-cell *matCellDef="let element"> {{element.estadoSolicitudText}} </td>
+                <td mat-cell *matCellDef="let element">
+                    <section *ngIf=" element.estadoSolicitudText.length === 0">
+                        Sin registro
+                    </section>
+                    <section *ngIf=" element.estadoSolicitudText.length > 0">
+                        {{element.estadoSolicitudText}}
+                    </section>
+                </td>
             </ng-container>
     
             <ng-container matColumnDef="id">
@@ -67,14 +74,22 @@
                     <button mat-raised-button color="accent" 
                             class="btn-table" 
                             (click)="enviarSolicitud(element.disponibilidadPresupuestalId)"
+                            *ngIf="element.disponibilidadPresupuestalId && element.estadoSolicitudText == '' ||
+                            element.estadoSolicitudText == 'Devuelta por validación presupuestal'">
+                            Enviar solicitud
+                    </button>
+                    <button mat-raised-button color="accent" 
+                            class="btn-table" 
+                            (click)="eliminarSolicitud(element.disponibilidadPresupuestalId)"
                             *ngIf="element.disponibilidadPresupuestalId && element.estadoSolicitudText == ''">
-                            Enviar Solicitud
+                            Eliminar
                     </button>
                     
                     <a mat-raised-button color="accent" 
                             class="btn-table" 
                             [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,1]"
-                            *ngIf="element.disponibilidadPresupuestalId != 0">
+                            *ngIf="element.disponibilidadPresupuestalId != 0 && (element.estadoSolicitudText == '' ||
+                            element.estadoSolicitudText == 'Devuelta por validación presupuestal')">
                             Ver detalle /Editar
                     </a>
                     
@@ -83,6 +98,17 @@
                         [routerLink]="['./registrar', element.contratacionId, element.disponibilidadPresupuestalId,1]"
                         *ngIf="element.disponibilidadPresupuestalId == 0">
                         Registrar información adicional
+                    </a>
+
+                    <a  mat-raised-button color="accent" 
+                        class="btn-table" 
+                        [routerLink]="['verDetalle', element.contratacionId, element.disponibilidadPresupuestalId,1]"
+                        *ngIf="element.disponibilidadPresupuestalId != 0 && ( element.estadoSolicitudText === 'Con validación presupuestal' ||
+                         element.estadoSolicitudText === 'En validación presupuestal' ||  element.estadoSolicitudText === 'Con disponibilidad presupuestal'
+                         ||  element.estadoSolicitudText === 'Rechazada por validación presupuestal' 
+                         ||  element.estadoSolicitudText === 'Devuelta por coordinación financiera'
+                         ||  element.estadoSolicitudText === 'Con registro presupuestal')">
+                        Ver detalle
                     </a>
     
                     </td>
