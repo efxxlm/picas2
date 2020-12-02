@@ -73,6 +73,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
   fechaCreacion: Date;
   observacionesActaFase2: string;
   conObervacionesActa: boolean;
+  objeto: any;
+  numeroIdentificacionRepresentanteContratistaInterventoria: any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService) {
     this.maxDate = new Date();
@@ -103,7 +105,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
     })
   }
   loadData(id) {
-    this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
+    this.services.GetVistaGenerarActaInicio(id).subscribe((data:any) => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
       this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
@@ -113,9 +115,11 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       this.numeroDRP1 = data.numeroDRP1;
       this.fechaGeneracionDRP1 = data.fechaGeneracionDRP1;
       this.numeroDRP2 = data.numeroDRP2;
+      this.objeto = data.objeto;
       this.fechaGeneracionDRP2 = data.fechaGeneracionDRP2;
       this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
       this.observacionOConsideracionesEspeciales = data.objeto;
+      this.numeroIdentificacionRepresentanteContratistaInterventoria = data.numeroIdentificacionRepresentanteContratistaInterventoria;
       this.valorInicialContrato = data.valorInicialContrato;
       this.valorActualContrato = data.valorActualContrato;
       this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
@@ -146,7 +150,15 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit {
       });
 
   }
+  generarFechaRestante(){
+    let newdate = new Date(this.addressForm.value.fechaActaInicioFDosConstruccion);
+    newdate.setDate(newdate.getDate() + (this.plazoActualContratoMeses*30));
+    let newDateFinal = new Date(newdate);
+    newDateFinal.setDate(newDateFinal.getDate() + this.plazoActualContratoDias)
+    console.log(newDateFinal);
+    this.addressForm.get('fechaPrevistaTerminacion').setValue(newDateFinal);
 
+  }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '37em',
