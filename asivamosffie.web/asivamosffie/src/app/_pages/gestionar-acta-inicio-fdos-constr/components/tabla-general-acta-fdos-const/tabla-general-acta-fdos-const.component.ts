@@ -55,11 +55,23 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
       this.paginator._intl.previousPageLabel = 'Anterior';
     });
   }
-  generarActaFDos(id){
+  generarActaFDos(id,tipoContrato){
+    if(tipoContrato=='Interventoria'){
+      localStorage.setItem("origin", "interventoria");
+    }
+    else{
+      localStorage.setItem("origin","obra");
+    }
     localStorage.setItem("editable","false");
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
-  verDetalleEditarActaFDos(id){
+  verDetalleEditarActaFDos(id,tipoContrato){
+    if(tipoContrato=='Interventoria'){
+      localStorage.setItem("origin", "interventoria");
+    }
+    else{
+      localStorage.setItem("origin","obra");
+    }
     localStorage.setItem("editable","true");
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
