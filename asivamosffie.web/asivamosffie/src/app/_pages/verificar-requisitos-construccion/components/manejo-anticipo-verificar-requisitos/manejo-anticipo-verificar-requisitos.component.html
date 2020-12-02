@@ -8,7 +8,7 @@
     </mat-card>
 </div>
 <div align="left" *ngIf="contratacion">
-    <p><b>Url con soporte</b>: {{ contratacion.manejoAnticipoRutaSoporte }}</p>
+    <p><b>URL con soporte</b>: {{ contratacion.manejoAnticipoRutaSoporte }}</p>
 </div>
 <div align="center" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarManejo()">

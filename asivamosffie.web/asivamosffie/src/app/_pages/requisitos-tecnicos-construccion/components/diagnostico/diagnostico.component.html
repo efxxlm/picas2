@@ -1,7 +1,7 @@
 <form autocomplete="off" [formGroup]="formDiagnostico" (ngSubmit)="enviar()">
   <mat-card>
     <mat-card-content>
-      
+
       <section class="example-section">
         <label class="example-margin"> <b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b> </label>
         <mat-radio-group formControlName="esInformeDiagnostico">
@@ -9,10 +9,10 @@
           <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'esInformeDiagnostico' ).value === false">No *</mat-radio-button>
         </mat-radio-group>
       </section>
-  
+
       <section *ngIf="formDiagnostico.get( 'esInformeDiagnostico' ).value">
         <div class="d-flex mt-1em">
-          <label class="mr-label" class="label-left"><b>Url con soporte</b></label>
+          <label class="mr-label" class="label-left"><b>URL con soporte</b></label>
         <div class="col d-flex w-80">
           <mat-form-field>
             <input matInput type="text" formControlName="rutaInforme" required>
@@ -21,7 +21,7 @@
       </div>
       <span class="color-secundary">Indique la ruta del soporte de esta información</span>
       </section>
-  
+
     </mat-card-content>
   </mat-card>
 
@@ -34,7 +34,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          
+
           <section>
             <div class="d-flex mt-1em">
               <label class="mr-label" class="label-left"><b>a.</b> Costo directo</label>
@@ -56,7 +56,7 @@
             </div>
           </div>
           </section>
-  
+
           <section>
             <div class="d-flex mt-1em">
               <label class="mr-label" class="label-left"><b>b.</b> A (administración)</label>
@@ -78,7 +78,7 @@
             </div>
           </div>
           </section>
-  
+
           <section>
             <div class="d-flex mt-1em">
               <label class="mr-label" class="label-left"><b>c.</b> I (Imprevistos)</label>
@@ -100,7 +100,7 @@
             </div>
           </div>
           </section>
-  
+
           <section>
             <div class="d-flex mt-1em">
               <label class="mr-label" class="label-left"><b>d.</b> U (Utilidad)</label>
@@ -122,7 +122,7 @@
             </div>
           </div>
           </section>
-  
+
           <section>
             <div class="d-flex mt-1em">
               <label class="mr-label" class="label-left"><b>Valor total de la fase 2 - Construcción</b></label>
@@ -137,7 +137,7 @@
             </div>
           </div>
           </section>
-  
+
         </mat-card-content>
       </mat-card>
     </div>
@@ -176,9 +176,9 @@
   </section>
 
   <div class="text-center">
-    <button mat-button 
-            color="warn" 
-            class="btn-guardar" 
+    <button mat-button
+            color="warn"
+            class="btn-guardar"
             type="submit">
             <img  src="assets/img/icon/guardar.svg">
     </button>

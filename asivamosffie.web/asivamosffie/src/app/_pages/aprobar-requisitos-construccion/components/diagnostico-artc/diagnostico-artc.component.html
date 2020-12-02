@@ -2,7 +2,7 @@
     <mat-card class="border">
         <mat-card-content>
             <p style="margin-left: 2em;"><b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b>: {{ construccion.esInformeDiagnostico === true ? 'Si' : 'No' }}</p>
-            <p style="margin-left: 2em;"><b>Url con soporte</b>: {{ construccion.rutaInforme }}</p>
+            <p style="margin-left: 2em;"><b>URL con soporte</b>: {{ construccion.rutaInforme }}</p>
         </mat-card-content>
     </mat-card>
 </div>
@@ -116,7 +116,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Fecha de revisión </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaRevision }} </td>
             </ng-container>
-    
+
             <ng-container matColumnDef="observacionesSupervision"  class="w-80">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Historial de observaciones del apoyo a la supervisión </th>
                 <td mat-cell *matCellDef="let element" align="center">
