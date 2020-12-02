@@ -1787,8 +1787,14 @@ namespace asivamosffie.services
                 string proponenteCodigo = "";
                 string proponenteNombre = "";
 
+                decimal ValorActualContratoTmp, ValorFase1PreconstruccionTmp, Valorfase2ConstruccionObraTmp;
+                ValorActualContratoTmp= ValorFase1PreconstruccionTmp= Valorfase2ConstruccionObraTmp=0;
+
                 if (contratacion != null)
                 {
+
+                    //Vlrfase2ConstruccionObra = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId)).ToString();
+
                     TipoContratacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
                     if (TipoContratacionCodigo != null)
                         strTipoContratacion = TipoContratacionCodigo.Nombre;
@@ -1863,6 +1869,8 @@ namespace asivamosffie.services
 
                 string strFecSolicitudDisponibPresup = "";
 
+                int PlazoDias=0, PlazoMeses=0;
+
                 if (disponibilidadPresupuestal != null)
                 {
                     strNumeroDRP1 = disponibilidadPresupuestal.NumeroDrp;
@@ -1871,7 +1879,10 @@ namespace asivamosffie.services
 
                     strObjetoDisponibilidadPresupuestal = disponibilidadPresupuestal.Objeto;
 
-                    strFecSolicitudDisponibPresup = disponibilidadPresupuestal.FechaSolicitud.ToString("yyyy");
+                    strFecSolicitudDisponibPresup = disponibilidadPresupuestal.FechaSolicitud.ToString("dd/MM/yyyy");
+
+                    PlazoDias = Convert.ToInt32( disponibilidadPresupuestal.PlazoDias);
+                    PlazoMeses = Convert.ToInt32(disponibilidadPresupuestal.PlazoMeses);
                 }
                 //disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
                 //                [DisponibilidadPresupuestalProyecto] - [ProyectoId]
@@ -1928,7 +1939,9 @@ namespace asivamosffie.services
                 }
                 actaInicio = new VistaGenerarActaInicioContrato();
                 actaInicio.NumeroDRP1 = "ERROR";
-       
+
+                
+
 
                 if (contrato != null)
                     actaInicio = new VistaGenerarActaInicioContrato
@@ -1965,6 +1978,9 @@ namespace asivamosffie.services
 
                         PlazoFase1PreDias = contrato.PlazoFase1PreDias,
                         PlazoFase2ConstruccionMeses = contrato.PlazoFase2ConstruccionMeses,
+
+                        PlazoActualContratoMeses= PlazoMeses,
+                        PlazoActualContratoDias = PlazoDias,
 
                         NombreEntidadContratistaObra = contratista.Nombre,
                         NombreEntidadContratistaSupervisorInterventoria = contratista.Nombre,

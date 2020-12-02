@@ -59,5 +59,7 @@ namespace asivamosffie.model.APIModels
         public string FechaAprobacionRequisitosSupervisor { get; set; }
         public string ProponenteCodigo { get; set; }
         public string ProponenteNombre { get; set; }
+        public int PlazoActualContratoMeses { get; set; }
+        public int PlazoActualContratoDias { get; set; }
     }
 }
