@@ -804,7 +804,9 @@ namespace asivamosffie.services
 
             if(actaInicio.ContratacionId!=null)
             {
-                VlrFase1Preconstruccion = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId)).ToString();
+                VlrFase1Preconstruccion = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId),
+                    "1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+                    ).ToString();
                 
             }            
 
@@ -816,7 +818,9 @@ namespace asivamosffie.services
 
                 if (actaInicio.ContratacionId != null)
                 {
-                    Vlrfase2ConstruccionObra = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId)).ToString();
+                    Vlrfase2ConstruccionObra = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId), "2"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+                        ).ToString();
+                    //if (ComponenteAportante.FaseCodigo =="1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
 
                 }
 
@@ -1374,9 +1378,26 @@ namespace asivamosffie.services
         //Task<ActionResult<VistaGenerarActaInicioContrato>> GetListVistaGenerarActaInicio(int pContratoId);
         //GetListVistaGenerarActaInicio
 
-        private decimal getSumVlrContratoComponente(int contratacionId)
+        private decimal getSumVlrContratoComponente(int contratacionId, string FaseCodigo)
         {
-            var sum = _context.ComponenteUso.Where(x => x.ComponenteAportante.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == contratacionId).Sum(x => x.ValorUso);
+
+            //if (ComponenteAportante.FaseCodigo =="1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+            //    )
+            //{
+            //    contrato.ValorFase1 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
+            //    contrato.TieneFase1 = true;
+            //}
+            //else
+            //{
+            //    contrato.ValorFase2 += ComponenteAportante.ComponenteUso.Sum(r => r.ValorUso);
+            //    contrato.TieneFase2 = true;
+            //}
+
+            var sum = _context.ComponenteUso.Where(
+                x => x.ComponenteAportante.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == contratacionId
+                && x.ComponenteAportante.FaseCodigo == FaseCodigo
+
+                ).Sum(x => x.ValorUso);
             return sum;
 
         }
@@ -1794,6 +1815,13 @@ namespace asivamosffie.services
                 {
 
                     //Vlrfase2ConstruccionObra = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId)).ToString();
+                    Valorfase2ConstruccionObraTmp = getSumVlrContratoComponente(Convert.ToInt32(contratacion.ContratacionId),
+                  "2"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+                  );
+                    ValorFase1PreconstruccionTmp = getSumVlrContratoComponente(Convert.ToInt32(contratacion.ContratacionId),
+                 "1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+                 );
+                    ValorActualContratoTmp = Valorfase2ConstruccionObraTmp + ValorFase1PreconstruccionTmp;
 
                     TipoContratacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoContratacionCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
                     if (TipoContratacionCodigo != null)
@@ -1963,10 +1991,10 @@ namespace asivamosffie.services
                         FechaAprobacionRequisitosSupervisor = contrato.FechaAprobacionRequisitosSupervisor != null ? Convert.ToDateTime(contrato.FechaAprobacionRequisitosSupervisor).ToString("dd/MM/yyyy") : contrato.FechaAprobacionRequisitosSupervisor.ToString(),
 
                         Objeto = strObjetoDisponibilidadPresupuestal,
-                        ValorInicialContrato = strValor,
-                        ValorActualContrato = " PENDIENTE",
-                        ValorFase1Preconstruccion = " PENDIENTE",
-                        Valorfase2ConstruccionObra = " PENDIENTE",
+                        ValorInicialContrato = strValor,                         
+                         ValorActualContrato = ValorActualContratoTmp.ToString(),
+                        ValorFase1Preconstruccion = ValorFase1PreconstruccionTmp.ToString(),
+                        Valorfase2ConstruccionObra = Valorfase2ConstruccionObraTmp.ToString(),
                         //PlazoInicialContratoSupervisor = contrato.Plazo.ToString(),
 
                         //PlazoInicialContratoSupervisor = contrato.Plazo != null ? Convert.ToDateTime(contrato.Plazo).ToString("dd/MM/yyyy") : contrato.Plazo.ToString(),
