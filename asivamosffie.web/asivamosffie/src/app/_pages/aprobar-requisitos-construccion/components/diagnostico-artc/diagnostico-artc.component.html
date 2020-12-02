@@ -78,9 +78,10 @@
                     <div class="col">
                         <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
                             <mat-radio-button [value]="true">Sí</mat-radio-button>
-                            <mat-radio-button [value]="false">No *</mat-radio-button>
+                            <mat-radio-button [value]="false">No</mat-radio-button>
                         </mat-radio-group>
                     </div>
+                    <span class="required-form-group m-0">*</span>
                 </div>
             </div>
         </div>
@@ -94,7 +95,7 @@
                 <mat-card-content>
 
                     <quill-editor class="quill-editor-style w-65 ml-1em" [styles]="editorStyle" [modules]="config"
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones">
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
                     </quill-editor>
 
                 </mat-card-content>

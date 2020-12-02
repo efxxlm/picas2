@@ -70,7 +70,7 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   textoLimpio(texto: string) {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
     }
   }
 

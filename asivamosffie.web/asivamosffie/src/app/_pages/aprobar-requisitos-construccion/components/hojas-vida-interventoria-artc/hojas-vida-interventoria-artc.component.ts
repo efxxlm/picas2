@@ -75,7 +75,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
 
   textoLimpio(texto: string) {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    return textolimpio.length > 1000 ? 1000 : textolimpio.length;
   }
 
   openDialog(modalTitle: string, modalText: string) {

@@ -1,16 +1,17 @@
 <div align="center" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-        <div class="row" align="center">
+        <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="row">
                     <div class="pr-1">
                         <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones a las hojas de vida de este perfil?</label>
                     </div>
-                    <div class="col">
+                    <div>
                         <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-                            <mat-radio-button [value]="true">Sí</mat-radio-button>
-                            <mat-radio-button [value]="false">No</mat-radio-button>
+                            <mat-radio-button [value]="true" [checked]="addressForm.get('tieneObservaciones').value === true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="addressForm.get('tieneObservaciones').value === false">No</mat-radio-button>
                         </mat-radio-group>
+                        <span class="required-form-group m-0">*</span>
                     </div>
                 </div>
             </div>
@@ -25,7 +26,7 @@
                 <mat-card-content>
 
                     <quill-editor class="quill-editor-style w-65 ml-1em" [styles]="editorStyle" [modules]="config"
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones">
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
                     </quill-editor>
 
                 </mat-card-content>
@@ -38,8 +39,12 @@
             </span>
         </div>
         <div class="text-center mt-1em">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
-                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit"
+                    [disabled]="addressForm.get('tieneObservaciones').value === null">
+                <img src="assets/img/icon/guardar.svg">
             </button>
         </div>
     </form>
