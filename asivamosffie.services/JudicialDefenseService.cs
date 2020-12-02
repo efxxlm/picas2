@@ -124,6 +124,79 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<Respuesta> CreateOrEditDefensaJudicial(DefensaJudicial defensaJudicial)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = string.Empty, strUsuario = string.Empty; ;
+
+            DefensaJudicial defensaJudicialBD = null;
+            try
+            {
+
+                if (string.IsNullOrEmpty(defensaJudicial.DefensaJudicialId.ToString()) || defensaJudicial.DefensaJudicialId == 0)
+                {
+                    //Auditoria
+                    strCrearEditar = "REGISTRAR DEFENSA JUDICIAL";
+                    defensaJudicial.FechaCreacion = DateTime.Now;
+                    defensaJudicial.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                    //fichaEstudio.DefensaJudicialId = fichaEstudio.DefensaJudicialId;
+                    defensaJudicial.Eliminado = false;
+                    _context.DefensaJudicial.Add(defensaJudicial);
+                }
+                else
+                {
+                    strCrearEditar = "EDIT DEFENSA JUDICIAL";
+                    defensaJudicialBD = _context.DefensaJudicial.Find(defensaJudicial.DefensaJudicialId);
+
+                    //Auditoria
+                    defensaJudicialBD.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
+                    defensaJudicialBD.Eliminado = false;
+
+                    //Registros
+                    defensaJudicialBD.LocalizacionIdMunicipio = defensaJudicial.LocalizacionIdMunicipio;
+                    defensaJudicialBD.TipoAccionCodigo = defensaJudicial.TipoAccionCodigo;
+                    defensaJudicialBD.JurisdiccionCodigo = defensaJudicial.JurisdiccionCodigo;
+                    defensaJudicialBD.Pretensiones = defensaJudicial.Pretensiones;
+                    defensaJudicialBD.CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios;
+
+                    defensaJudicialBD.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
+                    defensaJudicialBD.EsRequiereSupervisor = defensaJudicial.EsRequiereSupervisor;
+
+                    _context.DefensaJudicial.Update(defensaJudicialBD);
+
+                }
+
+                _context.SaveChanges();
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, defensaJudicial.UsuarioCreacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, defensaJudicial.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+
+        }
+
         public async Task<Respuesta> CreateOrEditFichaEstudio(FichaEstudio fichaEstudio)
         {
             Respuesta respuesta = new Respuesta();
@@ -170,9 +243,9 @@ namespace asivamosffie.services
                     fichaEstudioBD.EsAprobadoAperturaProceso = fichaEstudio.EsAprobadoAperturaProceso;
                     fichaEstudioBD.EsPresentadoAnteComiteFfie = fichaEstudio.EsPresentadoAnteComiteFfie;
 
-                    fichaEstudio.EsCompleto = ValidarRegistroCompletoFichaEstudio(fichaEstudio);
+                    fichaEstudio.EsCompleto = ValidarRegistroCompletoFichaEstudio(fichaEstudioBD);
 
-                    _context.FichaEstudio.Update(fichaEstudio);
+                    _context.FichaEstudio.Update(fichaEstudioBD);
 
                 }
 
@@ -415,23 +488,24 @@ namespace asivamosffie.services
                 try
                 {     
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
+                    string TipoAccionNombre = "sin definir";
+
                     string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio TipoSolicitudCodigoContratoPoliza;
+                    Dominio TipoAccion;
                     Dominio EstadoSolicitudCodigoContratoPoliza;
 
                     //if (contratoPoliza != null)
                     //{
-                        //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
-                        //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
-                        //if (TipoSolicitudCodigoContratoPoliza != null)
-                        //    strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                    TipoAccion = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
+                    //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                    if (TipoAccion != null)
+                        TipoAccionNombre = TipoAccion.Nombre;
 
-                        //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
-                        //if (EstadoSolicitudCodigoContratoPoliza != null)
-                        //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+                    //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    //if (EstadoSolicitudCodigoContratoPoliza != null)
+                    //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
                     //}
                     bool bRegistroCompleto = false;
@@ -448,9 +522,9 @@ namespace asivamosffie.services
                         DefensaJudicialId = defensaJudicial.DefensaJudicialId,
                         FechaRegistro = defensaJudicial.FechaCreacion.ToString("dd/MM/yyyy"),
                         LegitimacionPasivaActiva= (bool)defensaJudicial.EsLegitimacionActiva ? "Activa" : "Pasiva",
-                        NumeroProceso="DJ"+ defensaJudicial.DefensaJudicialId.ToString() + defensaJudicial.FechaCreacion.ToString("yyyy"),
+                        NumeroProceso="DJ"+ defensaJudicial.DefensaJudicialId.ToString("000") + defensaJudicial.FechaCreacion.ToString("yyyy"),
                         TipoAccionCodigo= defensaJudicial.TipoAccionCodigo,
-                        TipoAccion = "PENDIENTE",
+                        TipoAccion = TipoAccionNombre,
                         EstadoProceso= "PENDIENTE",
                         EstadoProcesoCodigo =defensaJudicial.EstadoProcesoCodigo,
                         

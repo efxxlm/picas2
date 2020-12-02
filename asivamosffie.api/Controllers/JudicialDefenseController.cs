@@ -47,6 +47,29 @@ namespace asivamosffie.api.Controllers
             }
         }
         
+        [HttpPost]
+        [Route("CreateOrEditDefensaJudicial")]
+        public async Task<IActionResult> CreateOrEditDefensaJudicial(DefensaJudicial defensaJudicial)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if (defensaJudicial.DefensaJudicialId == 0)
+                    defensaJudicial.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    defensaJudicial.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+
+                respuesta = await _judicialDefense.CreateOrEditDefensaJudicial(defensaJudicial);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [Route("GetNombreContratistaByContratoId")]
         [HttpGet]
         

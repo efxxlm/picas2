@@ -11,10 +11,11 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Respuesta> CreateOrEditDemandadoConvocado(DemandadoConvocado demandadoConvocado);
         Task<string> GetNombreContratistaByContratoId(int pContratoId);
+
         Task<Respuesta> CreateOrEditFichaEstudio(FichaEstudio fichaEstudio);
+        Task<Respuesta> CreateOrEditDefensaJudicial(DefensaJudicial defensaJudicial);
 
         Task<List<ProyectoGrilla>> GetListProyects( int pProyectoId);
-
         Task<List<GrillaProcesoDefensaJudicial>> ListGrillaProcesosDefensaJudicial();
     }
 }
