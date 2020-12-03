@@ -156,7 +156,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       /*Campo de texto editable*/
       if(this.editable == true){
-        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase1DateTime);
+        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase2DateTime);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaPrevistaTerminacionDateTime);
         this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
         this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);

@@ -51,13 +51,4 @@ export class GestionarActaInicioFdosConstrComponent implements OnInit {
       this.ocpion = 1;
     }
   }
-  cambiarTab(opc) {
-    this.selTab=opc;
-    if(this.selTab==1){
-      localStorage.setItem("origin","obra");
-    }
-    else if (this.selTab==2){
-      localStorage.setItem("origin","interventoria");
-    }
-  }
 }

@@ -56,6 +56,9 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   esSupervision: any;
   tipoObservacionConstruccion: any;
   realizoPeticion: boolean = false;
+  objeto: any;
+  valorProponente: any;
+  numeroIdentificacionRepresentanteContratistaInterventoria: any;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -104,25 +107,28 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       this.numeroDRP1 = data.numeroDRP1;
       this.fechaGeneracionDRP1 = data.fechaGeneracionDRP1;
       this.numeroDRP2 = data.numeroDRP2;
+      this.objeto = data.objeto;
       this.fechaGeneracionDRP2 = data.fechaGeneracionDRP2;
       this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
       this.observacionOConsideracionesEspeciales = data.objeto;
+      this.numeroIdentificacionRepresentanteContratistaInterventoria = data.numeroIdentificacionRepresentanteContratistaInterventoria;
       this.valorInicialContrato = data.valorInicialContrato;
       this.valorActualContrato = data.valorActualContrato;
       this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
       this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
       this.nombreEntidadContratistaSupervisorInterventoria = data.nombreEntidadContratistaSupervisorInterventoria;
       this.nombreEntidadContratistaObra = data.nombreEntidadContratistaObra;
+      this.valorProponente = data.proponenteCodigo;
       /*Campo de texto no editable*/
-      this.fechaActaInicioConstruccion = data.fechaActaInicioDateTime;
+      this.fechaActaInicioConstruccion = data.fechaActaInicioFase2DateTime;
       this.fechaPrevistaTerminacion = data.fechaPrevistaTerminacionDateTime;
-      this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
-      this.plazoActualContratoMeses = 12;
-      this.plazoActualContratoDias = 26;
+      this.plazoActualContratoMeses = data.plazoActualContratoMeses;
+      this.plazoActualContratoDias = data.plazoActualContratoDias;
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
-      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
-      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionDias;
+      this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
+      this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
+      this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
     });
     this.contratoId = id;
   }

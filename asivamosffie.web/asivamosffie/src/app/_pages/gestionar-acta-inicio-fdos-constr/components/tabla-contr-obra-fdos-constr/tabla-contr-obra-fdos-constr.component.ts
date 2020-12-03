@@ -172,7 +172,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   cargarActaSuscrita(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '45%';
+    dialogConfig.width = '865px';
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
   }
   descargarActaDesdeTabla(id){
