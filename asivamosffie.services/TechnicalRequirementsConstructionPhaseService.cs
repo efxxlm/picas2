@@ -320,6 +320,8 @@ namespace asivamosffie.services
                     cc.ObservacionDevolucionProgramacionObra = _context.ConstruccionObservacion.Find(cc.ObservacionProgramacionObraSupervisorId);
                     cc.ObservacionDevolucionFlujoInversion = _context.ConstruccionObservacion.Find(cc.ObservacionFlujoInversionSupervisorId);
 
+                    //List<VRequisitosTecnicosInicioConstruccion> listaProyectos = _context.VRequisitosTecnicosInicioConstruccion.Where( r => r.ContratoId ==  pContratoId ).ToList();
+
                 });
 
 
@@ -352,6 +354,19 @@ namespace asivamosffie.services
             {
                 return new Contrato();
             }
+        }
+
+        private bool TieneFasePreconstruccion( int pIdContrato )
+        {
+            bool tieneFasePreconstruccion = false;
+
+            List<VRequisitosTecnicosInicioConstruccion> listaProyectos = _context.VRequisitosTecnicosInicioConstruccion.Where( r => r.ContratoId == pIdContrato ).ToList();
+
+            if ( listaProyectos.Where( r => r.TieneFasePreconstruccion > 0 ).Count() > 0 ){
+                tieneFasePreconstruccion = true;
+            }
+
+            return tieneFasePreconstruccion;
         }
 
         public async Task<ContratoConstruccion> GetContratoConstruccionByContratoconstruccionId(int pContratoconstruccionId)
@@ -1063,7 +1078,7 @@ namespace asivamosffie.services
                 bool completoConstruccion = true;
 
                 if (
-                        cc.RegistroCompletoDiagnostico != true ||
+                        (TieneFasePreconstruccion( construccionTemp.ContratoId ) &&  cc.RegistroCompletoDiagnostico != true ) ||
                         cc.RegistroCompletoPlanesProgramas != true ||
                         cc.RegistroCompletoManejoAnticipo != true ||
                         cc.RegistroCompletoProgramacionObra != true ||
