@@ -75,6 +75,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     });
   }
   verDetalleActaFDos(id) {
+    localStorage.setItem("actaSuscrita", "false");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa', id]);
   }
   enviarActaParaFirma(id) {

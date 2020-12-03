@@ -47,6 +47,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   objeto: any;
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
   valorProponente: any;
+  rutaActaSuscrita: any;
   constructor(private activatedRoute: ActivatedRoute,private services: ActBeginService, private commonSvc: CommonService) { }
 
   ngOnInit(): void {
@@ -105,6 +106,8 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
+      //ruta del acta suscrita
+      this.rutaActaSuscrita = data.rutaActaSuscrita;
     });
     this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data1=>{
       this.conObservacionesSupervisor = data1.esActa;

@@ -79,5 +79,5 @@
     </div>
 </section>
 <section class="container text-center" *ngIf="this.botonDescargar==true">
-    <button mat-raised-button color="accent" (click)="this.descargarActaSuscrita('ruta.pdf')">Descargar acta suscrita</button>
+    <button mat-raised-button color="accent" (click)="this.descargarActaSuscrita(this.rutaActaSuscrita)">Descargar acta suscrita</button>
 </section>
