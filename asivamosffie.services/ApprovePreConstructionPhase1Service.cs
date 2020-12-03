@@ -159,15 +159,10 @@ namespace asivamosffie.services
 
                 bool RegistroCompleto = true;
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
-                {
-
-                    if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
+                { 
+                    if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor)
                         RegistroCompleto = false;
-                    else if ((ContratoPerfil.TieneObservacionSupervisor == null)
-                         || (ContratoPerfil.TieneObservacionSupervisor.HasValue
-                         && (bool)ContratoPerfil.TieneObservacionSupervisor
-                         && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
-                         && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor)))
+                    if (!ContratoPerfil.TieneObservacionSupervisor.HasValue)
                         RegistroCompleto = false;
                 }
 
