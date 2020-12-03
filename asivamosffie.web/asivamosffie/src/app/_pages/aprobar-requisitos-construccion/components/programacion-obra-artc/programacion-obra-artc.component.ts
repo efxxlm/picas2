@@ -32,8 +32,11 @@ export class ProgramacionObraArtcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  observacionProgramacionObra = '5';
   dataTablaHistorialObservacion: any[] = [];
-  dataSource                 = new MatTableDataSource();
+  dataTablaHistorialApoyo: any[] = [];
+  dataSource = new MatTableDataSource();
+  dataSourceApoyo = new MatTableDataSource();
   displayedColumns: string[] = [
     'fechaRevision',
     'observacionesSupervision'
@@ -67,6 +70,28 @@ export class ProgramacionObraArtcComponent implements OnInit {
       .setValue(
         this.contratoConstruccion.observacionProgramacionObraSupervisor !== undefined ?
         this.contratoConstruccion.observacionProgramacionObraSupervisor.construccionObservacionId : null );
+    this.getDataTable();
+  }
+
+  getDataTable() {
+    this.contratoConstruccion.construccionObservacion.forEach( observacion => {
+      if (  observacion.tipoObservacionConstruccion === this.observacionProgramacionObra
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === true ) {
+        this.dataTablaHistorialObservacion.push( observacion );
+      }
+      if (  observacion.tipoObservacionConstruccion === this.observacionProgramacionObra
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === false ) {
+        this.dataTablaHistorialApoyo.push( observacion );
+      }
+    } );
+    if ( this.dataTablaHistorialObservacion.length > 0 ) {
+      this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
+    }
+    if ( this.dataTablaHistorialApoyo.length > 0 ) {
+      this.dataSourceApoyo = new MatTableDataSource( this.dataTablaHistorialApoyo );
+    }
   }
 
   maxLength(e: any, n: number) {

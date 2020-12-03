@@ -65,6 +65,7 @@ export class ManejoAnticipoArtcComponent implements OnInit {
         .setValue(this.contratacion.observacionManejoAnticipoSupervisor !== undefined ?
           this.contratacion.observacionManejoAnticipoSupervisor.construccionObservacionId : null );
     }
+    this.getDataTable();
   }
 
   getDataTable() {
@@ -81,6 +82,9 @@ export class ManejoAnticipoArtcComponent implements OnInit {
       }
     } );
     if ( this.dataTablaHistorialObservacion.length > 0 ) {
+      this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
+    }
+    if ( this.dataTablaHistorialApoyo.length > 0 ) {
       this.dataSourceApoyo = new MatTableDataSource( this.dataTablaHistorialApoyo );
     }
   }

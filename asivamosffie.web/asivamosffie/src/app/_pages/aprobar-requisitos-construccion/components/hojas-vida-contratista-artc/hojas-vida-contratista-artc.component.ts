@@ -30,7 +30,9 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
     ]
   };
   dataTablaHistorialObservacion: any[] = [];
-  dataSource                 = new MatTableDataSource();
+  dataTablaHistorialApoyo: any[] = [];
+  dataSource = new MatTableDataSource();
+  dataSourceApoyo = new MatTableDataSource();
   displayedColumns: string[] = [
     'fechaRevision',
     'observacionesSupervision'
@@ -57,9 +59,22 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
     }
   }
 
-  // getDataTable() {
-  //   this.perfil.construccionPerfilObservacion.forEach( observacion => {} );
-  // }
+  getDataTable() {
+    this.perfil.construccionPerfilObservacion.forEach( observacion => {
+      if (  observacion.esSupervision === true ) {
+        this.dataTablaHistorialObservacion.push( observacion );
+      }
+      if (  observacion.esSupervision === false ) {
+        this.dataTablaHistorialApoyo.push( observacion );
+      }
+    } );
+    if ( this.dataTablaHistorialObservacion.length > 0 ) {
+      this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
+    }
+    if ( this.dataTablaHistorialApoyo.length > 0 ) {
+      this.dataSourceApoyo = new MatTableDataSource( this.dataTablaHistorialApoyo );
+    }
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
