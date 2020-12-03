@@ -19,81 +19,127 @@
 
         <mat-card>
           <mat-card-content>
-            <section class="d-flex mt-1em">
-              <label class="mr-label mr-min label-left" style="margin-top: 1.7em;"><b>Perfil</b></label>
-              <mat-form-field class="w-50">
-                <mat-select formControlName="perfilCodigo" class="padding-left" required>
-                  <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
-                    {{perfilCv.nombre}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </section>
-
-            <section class="d-flex mt-1em">
-              <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida requeridas para el perfil</b></label>
-              <div class="col d-flex">
-                <mat-form-field style="width: 28%;">
-                  <input matInput type="text" maxlength="3" formControlName="cantidadHvRequeridas" required>
-                </mat-form-field>
-                <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.length}}</span>
+            
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="perfilCodigo"
+                [ngClass]="{'color-secondaryColor' : perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched || perfil.get('perfilCodigo').invalid && estaEditando}">
+                  Perfil
+                </label>
               </div>
-            </section>
-
-            <section class="d-flex mt-1em">
-              <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida recibidas para el perfil</b></label>
-              <div class="col d-flex">
-                <mat-form-field style="width: 29%;">
-                  <input matInput type="text" maxlength="3" formControlName="cantidadHvRecibidas" required>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="perfilCodigo">
+                    <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
+                      {{perfilCv.nombre}}
+                    </mat-option>
+                  </mat-select>
                 </mat-form-field>
-                <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.length}}</span>
               </div>
-            </section>
+            </div>
 
-            <section class="d-flex mt-1em">
-              <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
-              <div class="col d-flex">
-                <mat-form-field style="width: 28%;">
-                  <input matInput type="text" maxlength="3" formControlName="cantidadHvAprobadas" required>
-                </mat-form-field>
-                <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.length}}</span>
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left"
+                    [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvRequeridas').invalid && perfil.get('cantidadHvRequeridas').touched || perfil.get('cantidadHvRequeridas').invalid && estaEditando}">
+                      Cantidad de hojas de vida requeridas para el perfil
+                    </label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput type="number" maxlength="3" formControlName="cantidadHvRequeridas" required
+                        #cantidadHvRequeridas (keypress)="validateNumberKeypress($event)"
+                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    </mat-form-field>
+                    <span class="contador">{{3 - cantidadHvRequeridas.value.length}}</span>
+                  </div>
+                </div>
               </div>
-            </section>
+            </div>
 
-            <section class="d-flex mt-1em w-60">
-              <label class="mr-label mr-min mt-1em"><b>Fecha de aprobación de la totalidad de las hojas de vida</b></label>
-              <div class="d-flex">
-                <mat-form-field class="mt-min">
-                <input  matInput
-                        [matDatepicker]="fechaAprobacion"
-                        formControlName="fechaAprobacion"
-                        [min]="minDate"
-                        placeholder="DD/MM/AAAA"
-                        required
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left"
+                    [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvRecibidas').invalid && perfil.get('cantidadHvRecibidas').touched || perfil.get('cantidadHvRecibidas').invalid && estaEditando}">
+                      Cantidad de hojas de vida recibidas para el perfil
+                    </label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput type="number" maxlength="3" formControlName="cantidadHvRecibidas" required
+                        #cantidadHvRecibidas (keypress)="validateNumberKeypress($event)"
+                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    </mat-form-field>
+                    <span class="contador">{{3 - cantidadHvRecibidas.value.length}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+              
+
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left"
+                    [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvAprobadas').invalid && perfil.get('cantidadHvAprobadas').touched || perfil.get('cantidadHvAprobadas').invalid && estaEditando}">
+                      Cantidad de hojas de vida aprobadas para el perfil
+                    </label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width">
+                      <input matInput type="number" maxlength="3" formControlName="cantidadHvAprobadas" required
+                        #cantidadHvAprobadas (keypress)="validateNumberKeypress($event)"
+                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                    </mat-form-field>
+                    <span class="contador">{{3 - cantidadHvAprobadas.value.length}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left"
+                    [ngClass]="{'color-secondaryColor' : perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched || perfil.get('fechaAprobacion').invalid && estaEditando}">
+                      Fecha de aprobación de la totalidad de las hojas de vida
+                    </label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="mt-min">
+                      <input matInput [matDatepicker]="fechaAprobacion" formControlName="fechaAprobacion" [min]="minDate"
+                        placeholder="DD/MM/AAAA" required
                         [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
-                <mat-datepicker #fechaAprobacion></mat-datepicker>
-                </mat-form-field>
-                <button mat-button
-                        color="primary"
-                        type="button"
-                        (click)="fechaAprobacion.open()"
-                        class="btn-calendario">
-                <img  class="mr-bottom-1"
-                      src="assets/img/icon/calendarioCirculo.svg"
-                      alt="Abrir Calendario">
-                </button>
+                      <mat-datepicker #fechaAprobacion></mat-datepicker>
+                    </mat-form-field>
+                    <button mat-button color="primary" type="button" (click)="fechaAprobacion.open()"
+                      class="btn-calendario">
+                      <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                    </button>
+                  </div>
+                </div>
               </div>
-            </section>
+            </div>
 
             <section class="d-flex mt-1em" align="left">
-              <label class="mr-label mr-min mt-1em"><b>Observaciones</b></label>
+              <label class="mr-label mr-min mt-1em"
+              [ngClass]="{'color-secondaryColor' : perfil.get('observacion').invalid && perfil.get('observacion').touched || perfil.get('observacion').invalid && estaEditando}">
+                <b>Observaciones</b>
+              </label>
               <quill-editor class="quill-editor-style w-65 ml-1em card"
                             [styles]="editorStyle"
                             [modules]="config"
                             (onContentChanged)="maxLength($event, 1000)"
                             formControlName="observacion"></quill-editor>
               <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
-                <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">                  
+                <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
                   {{1000 - (textoLimpio(perfil.get('observacion').value)>1000?1000:textoLimpio(perfil.get('observacion').value))}}
                 </span>
                 <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
@@ -104,7 +150,10 @@
 
             <section formArrayName="contratoPerfilNumeroRadicado">
               <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
-                <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }} </b></label>
+                <label class="mr-label mr-min mt-1em"
+                [ngClass]="{'color-secondaryColor' : numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched || numero.get('numeroRadicado').invalid && estaEditando}">
+                  <b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }} </b>
+                </label>
                 <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
                   <mat-form-field class="w-38">
                     <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
@@ -155,13 +204,23 @@
             </section>
 
             <section class="d-flex mt-1em">
-              <label class="mr-label mr-min mt-1em"><b>URL con soporte</b></label>
+              <label class="mr-label mr-min mt-1em"
+              [ngClass]="{'color-secondaryColor' : perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched || perfil.get('rutaSoporte').invalid && estaEditando}">
+                <b>URL con soporte</b>
+              </label>
               <div class="col d-flex" style="width: 85%;">
                 <mat-form-field class="w-38">
                   <input matInput type="text" formControlName="rutaSoporte" required>
                 </mat-form-field>
               </div>
             </section>
+            <div class="d-flex justify-content-center size-text-descriptivo">
+              <p class="color-text-descriptivo">
+                <i>
+                  Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal
+                </i>
+              </p>
+            </div>
           </mat-card-content>
         </mat-card>
         <div class="text-right" *ngIf="perfiles.controls.length > 1">

@@ -1,7 +1,11 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
   <div class="d-flex mt-1em" style="justify-content: center;display: inline-flex;">
-    <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el
-        proyecto?</b></label>
+    <label class="mr-label" class="label-left"
+    [ngClass]="{'color-secondaryColor' : formContratista.get('numeroPerfiles').invalid && formContratista.get('numeroPerfiles').touched|| formContratista.get('numeroPerfiles').invalid && estaEditando}">
+      <b>
+        ¿Cuántos perfiles diferentes se requieren para ejecutar el proyecto?
+      </b>
+    </label>
     <div class="col d-flex">
       <mat-form-field class="w-38">
         <input matInput type="number" formControlName="numeroPerfiles" #cantidadPerfiles maxlength="3" min="1" max="999"
@@ -25,7 +29,10 @@
         <mat-card-content>
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="perfilCodigo">Perfil</label>
+              <label class="label-left" for="perfilCodigo"
+              [ngClass]="{'color-secondaryColor' : perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched|| perfil.get('perfilCodigo').invalid && estaEditando}">
+                Perfil
+              </label>
             </div>
             <div class="col">
               <mat-form-field class="select-width">
@@ -42,7 +49,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">
+                  <label class="label-left"
+                  [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvRequeridas').invalid && perfil.get('cantidadHvRequeridas').touched|| perfil.get('cantidadHvRequeridas').invalid && estaEditando}">
                     Cantidad de hojas de vida requeridas para el perfil
                   </label>
                 </div>
@@ -62,7 +70,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">
+                  <label class="label-left"
+                  [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvRecibidas').invalid && perfil.get('cantidadHvRecibidas').touched|| perfil.get('cantidadHvRecibidas').invalid && estaEditando}">
                     Cantidad de hojas de vida recibidas para el perfil
                   </label>
                 </div>
@@ -82,7 +91,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">
+                  <label class="label-left"
+                  [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvAprobadas').invalid && perfil.get('cantidadHvAprobadas').touched|| perfil.get('cantidadHvAprobadas').invalid && estaEditando}">
                     Cantidad de hojas de vida aprobadas para el perfil
                   </label>
                 </div>
@@ -102,7 +112,8 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left">
+                  <label class="label-left"
+                  [ngClass]="{'color-secondaryColor' : perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched|| perfil.get('fechaAprobacion').invalid && estaEditando}">
                     Fecha de aprobación de la totalidad de las hojas de vida
                   </label>
                 </div>
@@ -123,7 +134,10 @@
           </div>
 
           <section class="d-flex mt-1em" align="left">
-            <label class="mr-label mr-min mt-1em"><b>Observaciones</b></label>
+            <label class="mr-label mr-min mt-1em" 
+            [ngClass]="{'color-secondaryColor' : perfil.get('observacion').invalid && perfil.get('observacion').touched|| perfil.get('observacion').invalid && estaEditando}">
+              <b>Observaciones</b>
+            </label>
             <quill-editor class="quill-editor-style position-relative ml-1em card" [styles]="editorStyle"
               [modules]="config" (onContentChanged)="maxLength($event, 1000)" formControlName="observacion" required>
             </quill-editor>
@@ -139,8 +153,10 @@
 
           <section formArrayName="contratoPerfilNumeroRadicado">
             <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
-              <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida
-                  {{ j+1 }} </b></label>
+              <label class="mr-label mr-min mt-1em"
+              [ngClass]="{'color-secondaryColor' : numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched|| numero.get('numeroRadicado').invalid && estaEditando}">
+                <b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }} </b>
+                </label>
               <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
                 <mat-form-field class="w-38">
                   <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
@@ -178,7 +194,10 @@
           </section>
 
           <section class="d-flex mt-1em">
-            <label class="mr-label mr-min mt-1em"><b>URL con soporte</b></label>
+            <label class="mr-label mr-min mt-1em"
+            [ngClass]="{'color-secondaryColor' : perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched|| perfil.get('rutaSoporte').invalid && estaEditando}">
+              <b>URL con soporte</b>
+            </label>
             <div class="col d-flex" style="width: 85%;">
               <mat-form-field class="w-38">
                 <input matInput type="text" formControlName="rutaSoporte" required>
