@@ -1,25 +1,26 @@
-<mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion aux">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title personalizado">
-              Perfil 1
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <div align="left">
-            <mat-card class="border">
-                <mat-card-content>
-                    <p><b>Perfil</b>: Ingeniero de obra</p>
-                    <p><b>Cantidad de hojas de vida requeridas para el perfil</b>: 2</p>
-                    <p><b>Cantidad de hojas de vida recibidas para el perfil:</b>: 10</p>
-                    <p><b>Cantidad de hojas de vida aprobadas para el perfil</b>: 3</p>
-                    <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>: 07/08/2020</p>
-                    <p><b>Observaciones:</b></p>
-                    <br>
-                    <p><b>Número de radicado en FFIE de aprobación de hojas de vida 1</b>: FFFLL098764-00</p>
-                    <p><b>Número de radicado en FFIE de aprobación de hojas de vida 2</b>: DDDNN5678-00</p>
-                    <p><b>URL con soporte</b>: https://drive.google.com/drive/perfil/Ingenierodeobra/hojasdevida</p>
-                </mat-card-content>
-            </mat-card>
-        </div>
-    </mat-expansion-panel>
-</mat-accordion>
+<div align="left" *ngIf="perfil">
+    <mat-card class="border">
+        <mat-card-content>
+            <p><b>Perfil</b>: {{ perfil.nombrePerfil }}</p>
+            <p><b>Cantidad de hojas de vida requeridas para el perfil</b>:
+                {{ perfil.cantidadHvRequeridas }} </p>
+            <p><b>Cantidad de hojas de vida recibidas para el perfil:</b>:
+                {{ perfil.cantidadHvRecibidas }} </p>
+            <p><b>Cantidad de hojas de vida aprobadas para el perfil</b>:
+                {{ perfil.cantidadHvAprobadas }} </p>
+            <p><b>Fecha de aprobación de la totalidad de las hojas de vida</b>:
+                {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
+            <section>
+                <b>Observaciones:</b>
+                <div [innerHTML]="innerObservacion( perfil.observaciones )"></div>
+            </section>
+            <section
+                *ngIf="perfil.construccionPerfilNumeroRadicado && perfil.construccionPerfilNumeroRadicado.length > 0">
+                <p *ngFor="let radicado of perfil.construccionPerfilNumeroRadicado; index as k">
+                    <b>Número de radicado en FFIE de aprobación de hojas de vida {{ k+1 }}</b>:
+                    {{ radicado.numeroRadicado }} </p>
+            </section>
+            <p><b>URL con soporte</b>: {{ perfil.rutaSoporte }} </p>
+        </mat-card-content>
+    </mat-card>
+</div>
