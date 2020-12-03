@@ -187,7 +187,7 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
       // tslint:disable-next-line: no-string-literal
-      observacion: perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
+      observacion: perfil[ 'verificarObservacion' ] === null || perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
       // tslint:disable-next-line: no-string-literal
       tieneObservacionApoyo: perfil[ 'tieneObservaciones' ]
     };

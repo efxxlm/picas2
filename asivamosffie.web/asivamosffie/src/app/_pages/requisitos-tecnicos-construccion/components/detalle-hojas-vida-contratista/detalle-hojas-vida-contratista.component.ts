@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-detalle-hojas-vida-contratista',
@@ -7,9 +7,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetalleHojasVidaContratistaComponent implements OnInit {
 
+  @Input() perfil: any;
+  
   constructor() { }
 
   ngOnInit(): void {
   }
+
+  innerObservacion ( observacion: string ) {
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return observacionHtml;
+    };
+  };
 
 }
