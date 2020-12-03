@@ -19,7 +19,11 @@ namespace asivamosffie.services.Interfaces
         Task<ArchivoCargue> GetArchivoCargueByName(string pNombre , string pUser);
 
         Task<bool> SaveFileContratacion(IFormFile pFile, string pFilePatch, string pNameFile);
+
         Task<List<ArchivoCargue>> GetListloadedDocumentsByRelacionId(string pOrigenId, int pRelacionId);
+
         Task<string> DownloadOrdenElegibilidadFilesByName(string pNameFiles,string ruta, string pUser);
+
+        Task<ArchivoCargue> GetArchivoCargueById(int pArchivoCargueId , string pUser);
     }
 }

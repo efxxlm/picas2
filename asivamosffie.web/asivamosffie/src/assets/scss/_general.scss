@@ -101,6 +101,10 @@ strong {
   }
 }
 
+.m-0 {
+  margin: 0 !important;
+}
+
 .mb-0 {
   margin-bottom: 0 !important;
 }
@@ -137,6 +141,10 @@ strong {
 .mx-1em {
   margin-left: 1em;
   margin-right: 1em;
+}
+
+.ml-05 {
+  margin-left: 0.5em !important;
 }
 
 .pl-0 {
@@ -238,6 +246,12 @@ input[type="number"]::-webkit-outer-spin-button {
     padding-left: 0;
     padding-right: 0;
   }
+}
+
+.cursivayeso {
+  font-size: 0.8rem;
+  color: var(--fontColor);
+  font-style: italic;
 }
 
 .d-block {

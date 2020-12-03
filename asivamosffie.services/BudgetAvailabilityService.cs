@@ -82,8 +82,8 @@ namespace asivamosffie.services
                     EstadoRegistro = blnEstado,
                     TipoSolicitudEspecial = DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                     //si no viene el campo puede ser contratación
-                    DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
-                    "Contratación",
+                    DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
+                    ConstanStringTipoSolicitudContratacion.contratacion,
                     TipoSolicitud = strTipoSolicitud,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
                     NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud
@@ -207,7 +207,7 @@ namespace asivamosffie.services
                 if(DisponibilidadPresupuestal.TipoSolicitudCodigo== ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
                 {
                     List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => x.DisponibilidadPresupuestalProyectoId).ToList();
-                    if (_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId != null && ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId)).Count() > 0)
+                    if (_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
                     {
                         blnEstado = true;
                     }
@@ -237,10 +237,11 @@ namespace asivamosffie.services
                     TipoSolicitud = strTipoSolicitud,
                     TipoSolicitudEspecial= DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                     //si no viene el campo puede ser contratación
-                    DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
-                    "Contratación",
+                    DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
+                    ConstanStringTipoSolicitudContratacion.contratacion,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
                     NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
+                    NumeroDDP = DisponibilidadPresupuestal.NumeroDdp,
                     FechaFirmaContrato = fechaContrato == null ? "" : Convert.ToDateTime(fechaContrato).ToString("dd/MM/yyyy"),
                     NumeroContrato = numeroContrato,
                     Contratacion = contratacion
@@ -252,6 +253,8 @@ namespace asivamosffie.services
 
         }
 
+        /*3.3.4 listado de rp
+         jflorez: cambio 20201118 deben filtrarse por los contratos que esten en estado registrado*/
         public async Task<List<DisponibilidadPresupuestalGrilla>> GetListDisponibilidadPresupuestalContratacionByCodigoEstadoSolicitud(string pCodigoEstadoSolicitud)
         {
             int codigocondvalidacionpre = (int)EnumeratorEstadoSolicitudPresupuestal.Con_registro_presupuestal;
@@ -260,8 +263,9 @@ namespace asivamosffie.services
                 await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado
                     && (r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud) || r.EstadoSolicitudCodigo.Equals(codigocondvalidacionpre.ToString())
                     || r.EstadoSolicitudCodigo.Equals(codigocancelada.ToString()))
-                    && r.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional )
-                .Include(x => x.DisponibilidadPresupuestalProyecto)
+                    && r.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional
+                    && r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados)
+                .Include(x => x.DisponibilidadPresupuestalProyecto).Include(x=>x.Contratacion).ThenInclude(x=>x.Contrato)
                 .ToListAsync();
 
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
@@ -323,8 +327,8 @@ namespace asivamosffie.services
                     TipoSolicitud = strTipoSolicitud,
                     TipoSolicitudEspecial = DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                     //si no viene el campo puede ser contratación
-                    DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
-                    "Contratación",
+                    DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
+                    ConstanStringTipoSolicitudContratacion.contratacion,
                     DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
                     NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
                     FechaFirmaContrato = fechaContrato == null ? "" : Convert.ToDateTime(fechaContrato).ToString("dd/MM/yyyy"),
@@ -333,6 +337,7 @@ namespace asivamosffie.services
                         x.Codigo==DisponibilidadPresupuestal.EstadoSolicitudCodigo).FirstOrDefault().Nombre
 
                 };
+               
                 ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
             }
             return ListDisponibilidadPresupuestalGrilla.OrderByDescending(r => r.DisponibilidadPresupuestalId).ToList();
@@ -1039,8 +1044,8 @@ namespace asivamosffie.services
                         pStrContenido =
                             pStrContenido.Replace(place.Nombre, pDisponibilidad.TipoSolicitudEspecialCodigo != null ? _context.Dominio.Where(x=>x.Codigo==pDisponibilidad.TipoSolicitudEspecialCodigo && x.TipoDominioId==(int)EnumeratorTipoDominio.Tipo_DDP_Espacial).FirstOrDefault().Nombre :
                     //si no viene el campo puede ser contratación
-                    pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
-                    "Contratación"); break;
+                    pDisponibilidad.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
+                    ConstanStringTipoSolicitudContratacion.contratacion); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_OPCION_CONTRATAR: pStrContenido =
                             pStrContenido.Replace(place.Nombre, opcionContratarCodigo); break;
                     case ConstanCodigoVariablesPlaceHolders.DDP_TABLA_LIMITACION_ESPECIAL:
@@ -1434,8 +1439,7 @@ namespace asivamosffie.services
         public async Task<Respuesta> CreateDRP(int pId, string pUsuarioModificacion, string urlDestino, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         {
             var DisponibilidadCancelar = _context.DisponibilidadPresupuestal.Include(x => x.Contratacion).
-                ThenInclude(x => x.ContratacionProyecto).ThenInclude(x => x.ContratacionProyectoAportante).ThenInclude(x => x.CofinanciacionAportante).
-                ThenInclude(x => x.FuenteFinanciacion).FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
+                ThenInclude(x => x.Contrato).FirstOrDefault(x => x.DisponibilidadPresupuestalId == pId);
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
             int consecutivo = _context.DisponibilidadPresupuestal.Where(x => x.NumeroDrp != null).Count();
             try
@@ -1464,7 +1468,11 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido;
 
                 template = template.Replace("_LinkF_", urlDestino);
-                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroSolicitud);
+                template = template.Replace("[NUMEROCONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().NumeroContrato);
+                template = template.Replace("[FECHACONTRATO]", DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato!=null?Convert.ToDateTime(DisponibilidadCancelar.Contratacion.Contrato.FirstOrDefault().FechaFirmaContrato).ToString("dd/MM/yyyy"):"");
+                template = template.Replace("[TIPOSOLICITUD]", ConstanStringTipoSolicitudContratacion.contratacion);//esto va a cambiar
+                template = template.Replace("[NUMERODRP]", DisponibilidadCancelar.NumeroDrp);
+                template = template.Replace("[NUMERODISPONIBILIDAD]", DisponibilidadCancelar.NumeroDdp);
                 /*busco usuario Juridico*/
                 var usuarioJuridico = _context.UsuarioPerfil.Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica ||
                 x.PerfilId == (int)EnumeratorPerfil.Financiera || x.PerfilId == (int)EnumeratorPerfil.Tecnica)

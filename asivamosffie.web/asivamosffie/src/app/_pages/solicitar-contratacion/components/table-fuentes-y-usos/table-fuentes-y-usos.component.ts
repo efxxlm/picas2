@@ -73,4 +73,5 @@ export class TableFuentesYUsosComponent implements OnInit {
     };
   };
 
+
 }

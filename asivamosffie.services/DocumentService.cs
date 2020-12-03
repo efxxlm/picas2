@@ -81,19 +81,28 @@ namespace asivamosffie.services
                 {
                     Directory.CreateDirectory(pFilePatch);
                 }
-                var streamFile = new FileStream(pFilePatch + "/" + pNameFile, FileMode.Create);
-                using (streamFile)
-                {
-                    await pFile.CopyToAsync(streamFile);
-           
-                    return true;
+                if (!string.IsNullOrEmpty(pNameFile)) {
+                    var streamFile = new FileStream(pFilePatch + "/" + pNameFile, FileMode.Create);
+                    using (streamFile)
+                    {
+                        await pFile.CopyToAsync(streamFile);
+
+                        return true;
+                    }
                 }
+                else{
+                    var streamFile = new FileStream(pFilePatch, FileMode.Create);
+                    using (streamFile)
+                    {
+                        await pFile.CopyToAsync(streamFile); 
+                        return true;
+                    }
+                } 
             }
             catch (Exception)
             {
                 return false;
             }
-
         }
 
         public async  Task <List<ArchivoCargue>> GetListloadedDocuments(string pOrigenId = "1")
@@ -208,5 +217,28 @@ namespace asivamosffie.services
             }
             return "";
         }
+
+        public async Task<ArchivoCargue> GetArchivoCargueById(int pArchivoCargueId , string pUser) {
+
+            Respuesta respuesta = new Respuesta();
+            ArchivoCargue archivoCargue = new ArchivoCargue();
+            try
+            { 
+                archivoCargue = _context.ArchivoCargue.Find( pArchivoCargueId );
+
+                if (archivoCargue != null)
+                {
+                    return archivoCargue;
+                }
+                else {
+                    throw new Exception( "No se encontro el archivo" );
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

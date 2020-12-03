@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class ConstruccionObservacion
     {
         public int ConstruccionObservacionId { get; set; }
-        public int ContratoConstruccionId { get; set; }
+        public int? ContratoConstruccionId { get; set; }
         public string TipoObservacionConstruccion { get; set; }
         public string Observaciones { get; set; }
         public bool? EsSupervision { get; set; }
@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public bool? Eliminado { get; set; }
+        public bool? Archivada { get; set; }
 
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }
     }

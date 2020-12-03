@@ -86,7 +86,12 @@ const routes: Routes = [
         path: 'cargarMasivamente',
         // tslint:disable-next-line: max-line-length
         loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
-          .then(m => m.CargarMasivamenteProyectosViabilizadosModule),
+          .then(m => m.CargarMasivamenteProyectosViabilizadosModule)
+      },
+      {
+        path: 'gestionarFuentes',
+        loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
+        .then(m => m.GestionarFuentesDeFinanciacionModule)
 
       },
       {
@@ -98,7 +103,6 @@ const routes: Routes = [
       {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
-
       },
       {
         path: 'solicitarDisponibilidadPresupuestal',
@@ -158,6 +162,26 @@ const routes: Routes = [
       {
         path: 'generarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
+        .then(m => m.GenerarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'verificarPreconstruccion',
+        loadChildren: () => import('./_pages/verificar-preconstruccion/verificar-preconstruccion.module')
+        .then(m => m.VerificarPreconstruccionModule)
+      },
+      {
+        path: 'aprobarPreconstruccion',
+        loadChildren: () => import('./_pages/aprobar-preconstruccion/aprobar-preconstruccion.module')
+        .then(m => m.AprobarPreconstruccionModule)
+      },
+      {
+        path: 'generarActaInicioFaseIPreconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
+        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
+      },
+      {
+        path: 'generarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
         .then(m => m.GenerarDisponibilidadPresupuestalModule),
 
       },
@@ -165,8 +189,6 @@ const routes: Routes = [
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule ),
-
-
       },
       {
         path: 'registroSeguimientoDiario',
@@ -182,7 +204,34 @@ const routes: Routes = [
         path: 'aprobarSeguimientoDiario',
         loadChildren: () => import('./_pages/aprobar-seguimiento-diario/aprobar-seguimiento-diario.module')
         .then(m => m.AprobarSeguimientoDiarioModule),
-      }
+      },
+	    {
+
+        path: 'generarActaInicioConstruccion',
+        loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
+        .then(m => m.GestionarActaInicioFdosConstrModule)
+      },
+      {
+        path: 'aprobarRequisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/aprobar-requisitos-construccion/aprobar-requisitos-construccion.module' )
+          .then( module => module.AprobarRequisitosConstruccionModule )
+ 
+      },
+      { 
+        path: 'verificarRequisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/verificar-requisitos-construccion/verificar-requisitos-construccion.module' )
+          .then( module => module.VerificarRequisitosConstruccionModule )
+      },
+      {
+        path: 'requisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
+          .then( module => module.RequisitosTecnicosConstruccionModule )
+      },
+      {
+        path: 'preconstruccion',
+        loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
+        .then(m => m.FasePreconstruccionModule)
+      },
     ]
 
   },

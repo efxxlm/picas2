@@ -75,7 +75,7 @@ namespace asivamosffie.services.Helpers
 
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
-            result = sha.ComputeHash(data);
+            result = sha.ComputeHash(data) ;
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
@@ -96,8 +96,8 @@ namespace asivamosffie.services.Helpers
         public static string CleanStringInput(string text)//ÁÉÍÓÚ //
         {
 
-            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
-            char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
+            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ',/* ' ',*/ ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+            char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', /*'/',*/ '.', ',', '@', '_', '(', ')', ':', ';' };
 
             if (text != null)
             {
@@ -232,7 +232,7 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort, bool pMailHighPriority = false)
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort, bool pMailHighPriority=false, string pFileNamePath="")
 
         {
             try
@@ -245,7 +245,14 @@ namespace asivamosffie.services.Helpers
                 mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
 
-                if (pMailHighPriority)
+                Attachment item;
+                if(pFileNamePath != "")
+                {
+                    item = new Attachment(pFileNamePath);
+                    mail.Attachments.Add(item);
+                }                    
+
+                if(pMailHighPriority)
                     mail.Priority = MailPriority.High;
                 mail.Body = pMensajeHtml;
                 SmtpServer.Port = pSmtpPort;
@@ -316,5 +323,6 @@ namespace asivamosffie.services.Helpers
             string def = "Az-" + randomw.Next(5).ToString();
             return string.Join(null, password) + def;
         }
+         
     }
 }

@@ -116,6 +116,19 @@
             color: #d1d1d1;
         }
     }
+
+    &.sub-expansion-black {
+        .expansion-style--title {
+            background-color: #3b3b3bec;
+            font-weight: 500;
+            color: #ffffff;
+            padding: .1em 1.5em;
+        }
+
+        span.mat-expansion-indicator::after{
+            color: #3b3b3bec;
+        }
+    }
 }
 
 span.mat-expansion-indicator::after {

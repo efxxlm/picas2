@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { FuenteFinanciacion, Aportante, ProyectoAdministrativo, Listados, ProjectService, AportanteFuenteFinanciacion } from 'src/app/core/_services/project/project.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -22,10 +22,25 @@ export class FormularioProyectosComponent implements OnInit {
   listadoFuentes: Dominio[];
 
   addFont(index: number) {
-    console.log("push");
-    console.log(index);
     this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
   }
+  noGuardado=true;
+  ngOnDestroy(): void {
+   
+    if (this.noGuardado===true && this.proyectoAdmin.proyectoAdministrativoAportante[0].aportanteId!=null) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   openDialogSiNo(modalTitle: string, modalText: string,key: AportanteFuenteFinanciacion, aportante: Aportante) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -192,7 +207,9 @@ export class FormularioProyectosComponent implements OnInit {
 
   onSubmit() {
     this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
+      this.noGuardado=false;
       this.openDialog('', `<b>${respuesta.message}</b>`,true);
+
     },
       err => {
         let mensaje: string;
