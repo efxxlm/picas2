@@ -61,16 +61,15 @@ namespace asivamosffie.services
                     if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
                         EstaDevuelto = true;
                     foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado).OrderBy(r=> r.EstadoRequisitosVerificacionCodigo))
-                    {
+                    { 
                         bool RegistroCompletoObservaciones = true;
+
                         foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
                         {
-                            if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).LastOrDefault().Observacion))
+                            if (ContratoPerfil.TieneObservacionSupervisor.HasValue && !(bool)ContratoPerfil.TieneObservacionSupervisor ||
+                                    (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor))
                                 RegistroCompletoObservaciones = false;
-
-                            if (!ContratoPerfil.TieneObservacionSupervisor.HasValue)
-                                RegistroCompletoObservaciones = false;
-
+                             
                             if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor) == 0)
                                 RegistroCompleto = false;
                             else if ((ContratoPerfil.TieneObservacionSupervisor == null)
@@ -83,13 +82,12 @@ namespace asivamosffie.services
                             if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor)
                             {
                                 TieneObservacionSupervisor = true;
-                            }
-                        } 
-                        if (RegistroCompletoObservaciones)
+                            } 
+                        }
+                        if (!RegistroCompletoObservaciones)
                             CantidadProyectosConPerfilesAprobados++;
                         else
-                            CantidadProyectosConPerfilesPendientes++; 
-                  
+                            CantidadProyectosConPerfilesPendientes++;
                     } 
                     if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
                         RegistroCompleto = true;
