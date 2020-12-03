@@ -75,10 +75,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
     if (this.rolAsignado == 2) {
-      this.ocpion = 2;
+      this.ocpion = 1;
     }
     else {
-      this.ocpion = 1;
+      this.ocpion = 2;
     }
   }
   openDialogConfirmar(modalTitle: string, modalText: string) {
@@ -227,6 +227,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
           this.openDialog('', 'Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 1 - Preconstrucción Días</b>, dado que no coincide con la información inicial registrada para el contrato');
         }
         else {
+          const arrayObservacion=[{
+            'ContratoId':this.idContrato,
+            "observaciones":this.addressForm.value.observacionesEspeciales,
+            'esActa':false,
+            'esActaFase1':false
+          }];
           const arrayContrato: EditContrato = {
             contratoId: this.idContrato,
             contratacionId: this.contratacionId,
@@ -249,7 +255,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             conObervacionesActa: this.observacionesOn,
             registroCompleto: true,
             contratoConstruccion: [],
-            contratoObservacion: [],
+            contratoObservacion: arrayObservacion,
             contratoPerfil: [],
             contratoPoliza: []
           };

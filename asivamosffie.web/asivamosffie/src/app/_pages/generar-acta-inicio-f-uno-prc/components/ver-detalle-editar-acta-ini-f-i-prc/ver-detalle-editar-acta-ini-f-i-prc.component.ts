@@ -298,12 +298,15 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     sumaMeses = parseInt(this.addressForm.value.mesPlazoEjFase1) + parseInt(this.addressForm.value.mesPlazoEjFase2);
     sumaDias = parseInt(this.addressForm.value.diasPlazoEjFase1) + parseInt(this.addressForm.value.diasPlazoEjFase2);
     if (sumaMeses > this.mesPlazoIni || sumaDias > this.diasPlazoIni) {
-      this.openDialog('Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato', "");
+      this.openDialog('','Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato');
     }
     else {
       const arrayObservacion=[{
+        'ContratoId':this.idContrato,
         "ContratoObservacionId": this.indexContratacionID,
-        "observaciones":this.addressForm.value.observacionesEspeciales
+        "observaciones":this.addressForm.value.observacionesEspeciales,
+        'esActa':false,
+        'esActaFase1':false
       }];
       const arrayContrato: EditContrato = {
         contratoId: this.idContrato,
