@@ -218,11 +218,17 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     polizasYSeguros ? this.obj4 = true : this.obj4 = false;
 
   }
-  openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string, reload=false) {
+    let ref= this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    ref.afterClosed().subscribe(result => {
+      if(reload)
+      {
+        this.router.navigate(['/generarPolizasYGarantias']);
+      }      
+     });
   }
 
   onSubmit() {
@@ -345,8 +351,8 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
           });
         });
         this.realizoPeticion = true;
-        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        this.router.navigate(['/generarPolizasYGarantias']);
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>',true);
+        
       }
       else {
         this.openDialog('', `<b>${data.message}</b>`);
