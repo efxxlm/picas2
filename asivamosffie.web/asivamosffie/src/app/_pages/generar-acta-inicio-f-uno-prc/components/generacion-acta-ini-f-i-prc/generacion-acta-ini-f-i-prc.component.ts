@@ -217,6 +217,13 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   onSubmit() {
     let mesPlazoFase2;
     let diasPlazoFase2;
+    let esSupervisionBool;
+    if (this.ocpion==1){
+      esSupervisionBool=true;
+    }
+    else{
+      esSupervisionBool=false;
+    }
     if (this.valorFDos == 0) {
       mesPlazoFase2 = 0;
       diasPlazoFase2 = 0;
@@ -236,8 +243,9 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
           const arrayObservacion=[{
             'ContratoId':this.idContrato,
             "observaciones":this.addressForm.value.observacionesEspeciales,
-            'esActa':true,
-            'esActaFase1':true
+            'esActa':false,
+            'esActaFase1':true,
+            'esSupervision':esSupervisionBool
           }];
           const arrayContrato: EditContrato = {
             contratoId: this.idContrato,
@@ -258,7 +266,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             plazoFase2ConstruccionMeses: mesPlazoFase2,
             plazoFase2ConstruccionDias: diasPlazoFase2,
             observaciones: this.addressForm.value.observacionesEspeciales,
-            conObervacionesActa: this.observacionesOn,
+            conObervacionesActa: true,
             registroCompleto: true,
             contratoConstruccion: [],
             contratoObservacion: arrayObservacion,
@@ -312,8 +320,9 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
           const arrayObservacion2=[{
             'ContratoId':this.idContrato,
             "observaciones":this.addressForm.value.observacionesEspeciales,
-            'esActa':true,
-            'esActaFase1':true
+            'esActa':false,
+            'esActaFase1':true,
+            'esSupervision':esSupervisionBool
           }];
           const arrayContrato2: EditContrato = {
             contratoId: this.idContrato,
@@ -334,7 +343,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
             plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
             observaciones: this.addressForm.value.observacionesEspeciales,
-            conObervacionesActa: this.observacionesOn,
+            conObervacionesActa: true,
             registroCompleto: true,
             contratoConstruccion: [],
             contratoObservacion: arrayObservacion2,

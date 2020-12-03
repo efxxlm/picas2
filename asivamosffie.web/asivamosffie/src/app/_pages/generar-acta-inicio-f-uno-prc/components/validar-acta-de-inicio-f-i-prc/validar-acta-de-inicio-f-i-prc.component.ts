@@ -103,7 +103,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
       this.dataElements = data;
       for(let i=0; i<data.length;i++){ 
-        if(data[i].esActa==false && data[i].esActaFase1==true){
+        if(data[i].esSupervision==false){
           this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
           this.observacionesUltimas = this.dataElements[i].observaciones;
           this.fechaCreacionObs = this.dataElements[i].fechaCreacion;

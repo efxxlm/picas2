@@ -73,6 +73,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   elementsObservacion: any;
   tipoCodigo: any;
   esActa: any;
+  anotacionesSupervisor: boolean;
+  observacionSupervisor: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -107,11 +109,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   };
   loadData(id){
     this.service.GetContratoByContratoId(id).subscribe((data:any)=>{
-      for(let i=0; i<data.contratoObservacion.length;i++){
-        if(data.contratoObservacion[i].esActa==false && data.contratoObservacion[i].esActaFase1==true){
-          this.indexObservacionFinal=data.contratoObservacion[i].observaciones;
-        }
-      }
       this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
       //Datos correspondientes al formulario
@@ -128,15 +125,23 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
       this.elementsObservacion = data;
       for(let i=0; i<data.length;i++){
-        if(data[i].esActa==false && data[i].esActaFase1==true){
+        if(data[i].esSupervision==false){
           this.esActa = data[i].esActa;
           this.conObervacionesActa = data[i].esActaFase1;
           this.observacionesActaFase1 = data[i].observaciones;
           this.fechaCreacion = data[i].fechaCreacion;
+          this.indexObservacionFinal=data[i].contratoObservacionId;
           this.addressForm.get('observacionesEspeciales').setValue(this.observacionesActaFase1);
         }
       }
-  });
+      // Anotaciones Supervisor
+      for(let i=0; i<data.length;i++){
+        if(data[i].esSupervision==true){
+          this.anotacionesSupervisor =true;
+          this.observacionSupervisor = data[i].observaciones;
+        }
+      }
+      });
 }
 
   cargarRol() {
@@ -278,6 +283,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     return patron.test(te);
   }
   onSubmit() {
+    let esSupervisionBool;
     let fecha = Date.parse(this.addressForm.get( 'fechaActaInicioFUnoPreconstruccion' ).value);
     this.fechaSesion = new Date(fecha);
     this.fechaSesionString = `${ this.fechaSesion.getFullYear() }-${ this.fechaSesion.getMonth() + 1 }-${ this.fechaSesion.getDate() }` 
@@ -291,6 +297,12 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     }
     else{
       this.observacionesOn=false;
+    }
+    if (this.opcion==1){
+      esSupervisionBool=true;
+    }
+    else{
+      esSupervisionBool=false;
     }
     //compara los meses
     var sumaMeses;
@@ -306,7 +318,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         "ContratoObservacionId": this.indexContratacionID,
         "observaciones":this.addressForm.value.observacionesEspeciales,
         'esActa':true,
-        'esActaFase1':true
+        'esActaFase1':true,
+        'esSupervision':esSupervisionBool
       }];
       const arrayContrato: EditContrato = {
         contratoId: this.idContrato,
@@ -327,7 +340,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         plazoFase2ConstruccionMeses: this.addressForm.value.mesPlazoEjFase2,
         plazoFase2ConstruccionDias: this.addressForm.value.diasPlazoEjFase2,
         observaciones: this.addressForm.value.observacionesEspeciales,
-        conObervacionesActa: this.observacionesOn,
+        conObervacionesActa: true,
         registroCompleto: false,
         contratoConstruccion: [],
         contratoObservacion:  arrayObservacion,
