@@ -154,8 +154,8 @@
           </mat-expansion-panel-header>
 
           <div class="d-flex mt-2em text-center" style="justify-content: center;">
-            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>5</b></p>
-            <p>Valor total del contrato: <b> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
+            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto.plazoMesesObra }}</b></p>
+            <p>Valor total del Proyecto: <b> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
           </div>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
             <app-programacion-obra-flujo-inversion  
