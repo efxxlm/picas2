@@ -55,6 +55,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   esRojo: boolean = false;
   rolAsignado: any;
   ocpion: number;
+  tipoCodigo: any;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -128,6 +129,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+    this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     if(this.ocpion == 2){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;

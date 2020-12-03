@@ -56,6 +56,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   numIdentifiacionSupervisor: any;
   nomSupervisor: string;
   dataSupervisor: boolean;
+  tipoCodigo: any;
   constructor(private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService, private router: Router,public dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -120,6 +121,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
     this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
+    this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
     if(this.opcion == 1){

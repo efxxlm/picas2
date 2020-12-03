@@ -59,6 +59,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   nomSupervisor: string;
   numIdentifiacionSupervisor: string;
   rutaDocumento: any;
+  tipoCodigo: any;
   constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService,  private commonSvc: CommonService) { }
 
   ngOnInit(): void {
@@ -138,6 +139,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
     this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
+    this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
     this.rutaDocumento = data.rutaActaFase1;
@@ -170,7 +172,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.commonSvc.getDocumento(doc).subscribe(
       response => {
 
-        const documento = `ActaSuscrita.pdf`; // Valor de prueba
+        const documento = `Acta fase 1 contrato ${this.numContrato}.pdf`;
         const text = documento,
         blob = new Blob([response], { type: 'application/pdf' }),
         anchor = document.createElement('a');

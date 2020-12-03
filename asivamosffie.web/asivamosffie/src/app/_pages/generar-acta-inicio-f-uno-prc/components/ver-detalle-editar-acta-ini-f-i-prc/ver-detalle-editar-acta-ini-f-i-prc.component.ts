@@ -71,6 +71,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   observacionesActaFase1: any;
   fechaCreacion: any;
   elementsObservacion: any;
+  tipoCodigo: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -177,6 +178,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+    this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     if(this.opcion == 1){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
