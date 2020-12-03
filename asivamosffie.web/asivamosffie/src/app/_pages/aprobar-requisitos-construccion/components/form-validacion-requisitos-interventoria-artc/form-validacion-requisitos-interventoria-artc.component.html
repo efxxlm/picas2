@@ -51,8 +51,8 @@
                             <mat-panel-title class="expansion-style--title" [ngClass]="perfil.semaforoPerfil">
                               Perfil {{ j+1 }}
                             </mat-panel-title>
-                          </mat-expansion-panel-header>
-                          <div align="left">
+                        </mat-expansion-panel-header>
+                        <div align="left">
                             <mat-card class="border">
                                 <mat-card-content>
                                     <p><b>Perfil</b>: {{ getTipoPerfil( perfil.perfilCodigo ) }} </p>
@@ -79,6 +79,7 @@
                         <app-hojas-vida-interventoria-artc  [observacionesCompleted]="false"
                                                             [tieneObservacion]="perfil.tieneObservacionesSupervisor !== undefined ? perfil.tieneObservacionesSupervisor : undefined"
                                                             [observacionesPerfil]="perfil.observacionSupervisor"
+                                                            [fechaModificacion]="perfil.fechaModificacion"
                                                             [construccionPerfilId]="perfil.construccionPerfilId"
                                                             (seRealizoPeticion)="recargarComponente( $event )">
                         </app-hojas-vida-interventoria-artc>

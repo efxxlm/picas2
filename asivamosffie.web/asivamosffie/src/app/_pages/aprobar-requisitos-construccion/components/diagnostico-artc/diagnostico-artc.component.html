@@ -77,8 +77,8 @@
                     </div>
                     <div class="col">
                         <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-                            <mat-radio-button [value]="true">Sí</mat-radio-button>
-                            <mat-radio-button [value]="false">No</mat-radio-button>
+                            <mat-radio-button [value]="true" [checked]="addressForm.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="addressForm.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
                         </mat-radio-group>
                     </div>
                     <span class="required-form-group m-0">*</span>

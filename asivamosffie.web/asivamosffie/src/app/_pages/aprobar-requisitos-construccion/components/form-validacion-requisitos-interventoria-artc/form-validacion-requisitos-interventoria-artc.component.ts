@@ -67,18 +67,27 @@ export class FormValidacionRequisitosInterventoriaArtcComponent implements OnIni
                     perfilCompleto++;
                   }
                 }
-                console.log( perfilSinDiligenciar, perfilEnProceso, perfilCompleto );
                 if (  perfilSinDiligenciar > 0
                       && perfilSinDiligenciar === contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
                 {
                   contratacion[ 'estadoSemaforo' ] = 'sin-diligenciar';
                 }
                 if (  perfilCompleto > 0
-                      && perfilCompleto === contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length ) 
+                      && perfilCompleto === contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
                 {
                   contratacion[ 'estadoSemaforo' ] = 'completo';
                 }
                 if ( perfilEnProceso > 0 ) {
+                  contratacion[ 'estadoSemaforo' ] = 'en-proceso';
+                }
+                if (  perfilSinDiligenciar > 0
+                      && perfilSinDiligenciar < contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
+                {
+                  contratacion[ 'estadoSemaforo' ] = 'en-proceso';
+                }
+                if (  perfilCompleto > 0
+                      && perfilCompleto < contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
+                {
                   contratacion[ 'estadoSemaforo' ] = 'en-proceso';
                 }
               }
