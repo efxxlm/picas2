@@ -99,10 +99,10 @@
         </table>
     </div>
 </div>
-<div align="center" class="mt-2em" *ngIf="this.observacionesCompleted==false"> 
+<div align="center" class="mt-2em" *ngIf="this.observacionesCompleted==false">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarPlanes()">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
+        <div class="row justify-content-center" style="margin-left: 5em;">
+            <div class="col-md-8">
                 <div class="row">
                     <div class="pr-1">
                         <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones a los planes y programas?</label>
@@ -140,7 +140,7 @@
             </span>
         </div>
         <div class="text-center mt-1em">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.get('tieneObservaciones').value === null">
                 <img src="assets/img/icon/guardar.svg" alt="Regresar">
             </button>
         </div>

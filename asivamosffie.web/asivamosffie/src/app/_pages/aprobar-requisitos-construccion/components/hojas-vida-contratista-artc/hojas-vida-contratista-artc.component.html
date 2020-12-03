@@ -101,7 +101,7 @@
             </span>
         </div>
         <div class="text-center mt-1em">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.get('tieneObservaciones').value === null">
                 <img src="assets/img/icon/guardar.svg">
             </button>
         </div>
