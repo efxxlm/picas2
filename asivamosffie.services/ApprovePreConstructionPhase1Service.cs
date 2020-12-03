@@ -123,7 +123,7 @@ namespace asivamosffie.services
                 contratoPerfilOld.UsuarioModificacion = pContratoPerfilObservacion.UsuarioCreacion;
                 contratoPerfilOld.FechaModificacion = DateTime.Now;
                 contratoPerfilOld.TieneObservacionSupervisor = pContratoPerfilObservacion.TieneObservacionSupervisor;
-                contratoPerfilOld.RegistroCompleto = false;
+                
 
                 if (pContratoPerfilObservacion.ContratoPerfilObservacionId == 0)
                 {
