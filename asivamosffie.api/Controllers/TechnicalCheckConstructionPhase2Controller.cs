@@ -27,7 +27,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetContractsGrid")]
-        public Task<List<dynamic>> GetContractsGrid([FromQuery] string pTipoContrato)
+        public Task<List<VRequisitosTecnicosConstruccionAprobar>> GetContractsGrid([FromQuery] string pTipoContrato)
         {
             return _technicalCheckConstructionPhase2Service.GetContractsGrid(" ", pTipoContrato);
         }

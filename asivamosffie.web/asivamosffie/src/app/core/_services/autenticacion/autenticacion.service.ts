@@ -97,6 +97,7 @@ export class AutenticacionService {
     localStorage.removeItem('conObservaciones');
     localStorage.removeItem('origin');
     localStorage.removeItem('editable');
+    localStorage.removeItem('observacionesEspecialesInterventoria');
     this.actualUserSubject.next(null);
     this.actualUser = null;
     this.router.navigate(['/inicio']);

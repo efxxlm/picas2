@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { ActivatedRoute } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-ver-detalle-acta-ini-f-i-prc',
@@ -57,7 +58,9 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   dataSupervisor: boolean =false; 
   nomSupervisor: string;
   numIdentifiacionSupervisor: string;
-  constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) { }
+  rutaDocumento: any;
+  tipoCodigo: any;
+  constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService,  private commonSvc: CommonService) { }
 
   ngOnInit(): void {
     this.cargarRol();
@@ -136,8 +139,10 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.mesPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoMeses;
     this.diasPlazoIni= data.contratacion.disponibilidadPresupuestal[0].plazoDias;
     this.tipoProponente = data.contratacion.contratista.tipoProponenteCodigo;
+    this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.nombres+" "+data.usuarioInterventoria.apellidos;
+    this.rutaDocumento = data.rutaActaFase1;
     if(this.opcion == 1){
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
@@ -163,16 +168,21 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
       this.botonDescargarActaSuscrita=false;
     }
   }
-  generarActaSuscrita(){
-    this.service.GetActaByIdPerfil(this.rolAsignado,this.contratoId).subscribe(resp=>{
-      const documento = `Prueba.pdf`; // Valor de prueba
-      const text = documento,
-      blob = new Blob([resp], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
-      anchor.download = documento;
-      anchor.href = window.URL.createObjectURL(blob);
-      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-      anchor.click();
-    });
+  generarActaSuscrita(doc){
+    this.commonSvc.getDocumento(doc).subscribe(
+      response => {
+
+        const documento = `Acta fase 1 contrato ${this.numContrato}.pdf`;
+        const text = documento,
+        blob = new Blob([response], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+
+      },
+      err => console.log( `<b>${err.message}</b>` )
+    );
   }
 }

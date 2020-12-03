@@ -160,6 +160,7 @@ namespace asivamosffie.services
                             ContratoObservacion.EsActa = true;
                             ContratoObservacion.EsActaFase1 = true;
                             ContratoObservacion.EsActaFase2 = false;
+                            _context.ContratoObservacion.Add(ContratoObservacion);
                         }
                         else
                         {
@@ -176,8 +177,8 @@ namespace asivamosffie.services
                 return
                      new Respuesta
                      {
-                         IsSuccessful = false,
-                         IsException = true,
+                         IsSuccessful = true,
+                         IsException = false,
                          IsValidation = false,
                          Code = RegisterPreContructionPhase1.OperacionExitosa,
                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Preconstruccion_Fase_1, RegisterPreContructionPhase1.OperacionExitosa, idAccion, pContrato.UsuarioCreacion, "EDITAR ACTA DE INICIO DE CONTRATO FASE 1 PRECONSTRUCCION")

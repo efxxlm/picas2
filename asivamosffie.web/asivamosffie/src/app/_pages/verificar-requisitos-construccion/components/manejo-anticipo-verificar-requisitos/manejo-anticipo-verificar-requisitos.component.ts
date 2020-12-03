@@ -55,8 +55,8 @@ export class ManejoAnticipoVerificarRequisitosComponent implements OnInit, OnCha
     if (this.contratacion) {
 
       this.addressForm.get('tieneObservaciones').setValue(this.contratacion.tieneObservacionesManejoAnticipoApoyo)
-      this.addressForm.get('observaciones').setValue(this.contratacion.observacionManejoAnticipo ? this.contratacion.observacionManejoAnticipo.observaciones : null)
-      this.addressForm.get('construccionObservacionId').setValue(this.contratacion.observacionManejoAnticipo ? this.contratacion.observacionManejoAnticipo.construccionObservacionId : null)
+      this.addressForm.get('observaciones').setValue(this.contratacion.observacionManejoAnticipoApoyo ? this.contratacion.observacionManejoAnticipoApoyo.observaciones : null)
+      this.addressForm.get('construccionObservacionId').setValue(this.contratacion.observacionManejoAnticipoApoyo ? this.contratacion.observacionManejoAnticipoApoyo.construccionObservacionId : 0)
 
       //this.validarSemaforo();
     }

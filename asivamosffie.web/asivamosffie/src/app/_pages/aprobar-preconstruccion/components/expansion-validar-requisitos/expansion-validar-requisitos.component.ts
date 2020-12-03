@@ -202,7 +202,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
     }
     console.log( observacionPerfil );
     // tslint:disable-next-line: no-string-literal
-    if ( perfil[ 'tieneObservaciones' ] === false && this.totalGuardados === 0 ) {
+    if ( perfil[ 'tieneObservaciones' ] === false && this.totalGuardados === 0 && perfil['tieneObservacionApoyo'] === true ) {
       this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
       this.totalGuardados++;
       return;

@@ -21,7 +21,7 @@
     </mat-card>
     <!--Tabla para historial de observaciones-->
     <div class="w-100 table-responsive" *ngIf="dataTablaHistorialObservacion.length > 0">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSourceApoyo" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="fechaRevision">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Fecha de revisión </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaCreacion | date: 'dd/MM/yyyy' }} </td>
@@ -48,8 +48,8 @@
                     </div>
                     <div>
                         <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-                            <mat-radio-button [value]="true">Sí</mat-radio-button>
-                            <mat-radio-button [value]="false">No</mat-radio-button>
+                            <mat-radio-button [value]="true" [checked]="addressForm.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="addressForm.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
                         </mat-radio-group>
                     </div>
                     <span class="required-form-group m-0">*</span>
@@ -86,17 +86,17 @@
     </form>
 </div>
 <div align="center" *ngIf="this.observacionesCompleted==true">
-    <mat-card class="border mt-1em">
+    <mat-card class="border mt-1em" *ngIf="contratoConstruccion.tieneObservacionesProgramacionObraSupervisor !== undefined && contratoConstruccion.tieneObservacionesProgramacionObraSupervisor === true">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
                 Validación de la supervisión
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>10/08/2020</b></p>
-            <p><b>¿Tiene observaciones a la programación de obra?:</b> Sí</p>
-            <p>El valor del costo directo debe ser de $20.000.000 y la utilidad de $14.000.000, realice el ajuste y tenga en cuenta que estos valores deben
-                ser corregidos para poder continuar.</p>
+            <p style="margin-left: 2em;"><b> {{ contratoConstruccion.observacionProgramacionObraSupervisor.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p *ngIf="contratoConstruccion.tieneObservacionesProgramacionObraSupervisor === true" style="margin-left: 2em;"><b>¿Tiene observaciones a la programación de obra?:</b> Si</p>
+            <p *ngIf="contratoConstruccion.tieneObservacionesProgramacionObraSupervisor === false" style="margin-left: 2em;"><b>¿Tiene observaciones a la programación de obra?:</b> No</p>
+            <section *ngIf="contratoConstruccion.observacionProgramacionObraSupervisor.observaciones !== undefined" [innerHTML]="contratoConstruccion.observacionProgramacionObraSupervisor.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
     <!--Tabla para historial de observaciones-->

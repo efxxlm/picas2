@@ -14,6 +14,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
   @Input() observacionesCompleted;
   @Input() observacionesPerfil;
   @Input() tieneObservacion;
+  @Input() fechaModificacion;
   @Input() construccionPerfilId: number;
   @Output() seRealizoPeticion = new EventEmitter<boolean>();
   observacionSupervisor = '3';

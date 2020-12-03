@@ -23,6 +23,7 @@ namespace asivamosffie.api.Controllers
         private readonly IConverter _converter;
 
 
+
         public TechnicalRequirementsConstructionPhaseController(IOptions<AppSettings> settings, IConverter converter, ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService)
         {
             _technicalRequirementsConstructionPhaseService = technicalRequirementsConstructionPhaseService;
@@ -387,7 +388,9 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _technicalRequirementsConstructionPhaseService.EnviarAlSupervisor(pContratoId, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _technicalRequirementsConstructionPhaseService.EnviarAlSupervisor(pContratoId,
+                    HttpContext.User.FindFirst("User").Value
+                     , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
