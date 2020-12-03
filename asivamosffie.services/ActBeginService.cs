@@ -2108,12 +2108,14 @@ namespace asivamosffie.services
                 //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                 //VistaGenerarActaInicioContrato
 
+                string rutaActaSuscrita="";
                 string strValor="";
                 if (contrato != null)
                 {
                     strValor = contrato.Valor.ToString();
                     if(strValor.Length>3)
-                        strValor = strValor.Remove(strValor.Length - 3);       
+                        strValor = strValor.Remove(strValor.Length - 3);
+                    rutaActaSuscrita = contrato.RutaActaSuscrita;
 
                 }
                 actaInicio = new VistaGenerarActaInicioContrato();
@@ -2180,6 +2182,7 @@ namespace asivamosffie.services
                         CantidadProyectosAsociados = intCantidadProyectosAsociados,
                         NumeroIdentificacionRepresentanteContratistaInterventoria = contratista.RepresentanteLegalNumeroIdentificacion,
 
+                        RutaActaSuscrita= rutaActaSuscrita,
                         //RegistroCompleto = contrato.RegistroCompleto
 
                         //,EstadoRegistro = "COMPLETO"
