@@ -135,7 +135,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
             }
           }
           this.realizoPeticion = true;
-          this.openDialog("",'La información ha sido guardada exitosamente.');
+          this.openDialog("",'<b>La información ha sido guardada exitosamente.</b>');
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
         else{
@@ -179,7 +179,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
             }
           }
           this.realizoPeticion = true;
-          this.openDialog("",'La información ha sido guardada exitosamente.');
+          this.openDialog("",'<b>La información ha sido guardada exitosamente.</b>');
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
         else{

@@ -144,7 +144,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   generarFechaRestante() {
     let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
-    newdate.setDate(newdate.getDate() + (this.mesPlazoIni * 30.43));
+    newdate.setDate(newdate.getDate() + (this.mesPlazoIni * 30.44));
+    console.log(newdate);
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.diasPlazoIni)
     console.log(newDateFinal);
@@ -183,7 +184,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       diasPlazoEjFase1: [null, Validators.required],
       mesPlazoEjFase2: [null, Validators.required],
       diasPlazoEjFase2: [null, Validators.required],
-      observacionesEspeciales: [null]
+      observacionesEspeciales: ['']
     })
   }
   maxLength(e: any, n: number) {
