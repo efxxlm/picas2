@@ -2282,6 +2282,8 @@ namespace asivamosffie.services
 
             //Numero semanas
             int numberOfWeeks = Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
+            if ( Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays % 7)) > 0 )
+                numberOfWeeks++;
 
             //Capitulos cargados
             Programacion[] listaProgramacion = _context.Programacion
@@ -2308,10 +2310,23 @@ namespace asivamosffie.services
                     using var package = new ExcelPackage(stream);
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
 
+                    int cantidadCapitulos = 0;
+                    int cantidadSemnas = 0;
+
+                    int posicion = 2;
+                    while( !string.IsNullOrEmpty(worksheet.Cells[1, posicion++ ].Text )){
+                        cantidadSemnas++;
+                    }
+
+                    posicion = 2;
+                    while( !string.IsNullOrEmpty(worksheet.Cells[posicion++, 1 ].Text )){
+                        cantidadCapitulos++;
+                    }
+
                     bool tieneErrores = false;
 
                     // valida numero semanas
-                    if ( numberOfWeeks != ( worksheet.Dimension.Columns -2 ) )
+                    if ( numberOfWeeks != cantidadSemnas )
                     {
                         worksheet.Cells[1, 1].AddComment("Numero de semanas no es igual al del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -2322,7 +2337,7 @@ namespace asivamosffie.services
                     }
 
                     //valida numero capitulos
-                    if ( listaProgramacion.Count() != ( worksheet.Dimension.Rows -1 ) && worksheet.Cells[1, 1].Comment == null )
+                    if ( listaProgramacion.Count() != cantidadCapitulos && worksheet.Cells[1, 1].Comment == null )
                     {
                         worksheet.Cells[1, 1].AddComment("Numero de capitulos no es igual a la programacion", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -2335,12 +2350,14 @@ namespace asivamosffie.services
                     decimal sumaTotal = 0;
 
                     // Capitulos
-                    for (int i = 2; i <= worksheet.Dimension.Rows; i++)
+                    //int i = 2;
+                    for (int i = 2; i <= cantidadCapitulos + 1; i++)
                     {
                         try
                         {
                             // semanas
-                            for (int k = 2; k < worksheet.Dimension.Columns; k++)
+                            //int k = 2;
+                            for (int k = 2; k < cantidadSemnas + 2; k++)
                             {
 
                                 TempFlujoInversion temp = new TempFlujoInversion();
@@ -2350,6 +2367,8 @@ namespace asivamosffie.services
                                 temp.FechaCreacion = DateTime.Now;
                                 temp.UsuarioCreacion = pUsuarioCreo;
                                 temp.ContratoConstruccionId = pContratoConstruccionId;
+                                temp.Posicion = k - 2;
+                                temp.PosicionCapitulo = i - 2;
 
                                 //Valores
                                 // Mes
@@ -2425,7 +2444,7 @@ namespace asivamosffie.services
                     //-2 ya los registros comienzan desde esta fila
                     archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                     archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                    archivoCarge.CantidadRegistros = ((worksheet.Dimension.Rows - 1) * (worksheet.Dimension.Columns - 2) - CantidadRegistrosVacios);
+                    archivoCarge.CantidadRegistros = (cantidadCapitulos * cantidadSemnas) - CantidadRegistrosVacios;
                     _context.ArchivoCargue.Update(archivoCarge);
 
 
@@ -2538,6 +2557,10 @@ namespace asivamosffie.services
                         List<SeguimientoSemanal> listaSeguimientos = _context.SeguimientoSemanal
                                                                     .Where(p => p.ContratacionProyectoId == idContratacionproyecto).ToList();
 
+                        // eliminar registros cargados
+                        List<FlujoInversion> listaFlujo = _context.FlujoInversion.Where( r => r.ContratoConstruccionId == contratoConstruccionId ).ToList();
+                        _context.FlujoInversion.RemoveRange( listaFlujo );
+
                         // elimina los existentes
                         _context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
 
@@ -2575,7 +2598,7 @@ namespace asivamosffie.services
                     }
 
                     SeguimientoSemanal[] listaSeguimientoSemanal = _context.SeguimientoSemanal
-                                                                                    .Where( s => s.ContratacionProyectoId == contratoConstruccionId )
+                                                                                    .Where( s => s.ContratacionProyectoId == contratacionProyecto.ContratacionProyectoId )
                                                                                     .OrderBy( s => s.NumeroSemana )
                                                                                     .ToArray();
 
@@ -2584,27 +2607,50 @@ namespace asivamosffie.services
                                                             .OrderBy( s => s.Numero )
                                                             .ToArray();
 
+                    Programacion[] listaProgramacion = _context.Programacion
+                                                                .Where( 
+                                                                        p => p.ContratoConstruccionId == contratoConstruccionId && 
+                                                                        p.TipoActividadCodigo == "C" )
+                                                                .OrderBy( p => p.ProgramacionId )
+                                                                .ToArray();
+
                     
-                    // eliminar registros cargados
-                    List<FlujoInversion> listaFlujo = _context.FlujoInversion.Where( r => r.ContratoConstruccionId == contratoConstruccionId ).ToList();
-                    _context.FlujoInversion.RemoveRange( listaFlujo );
+                    
                     _context.SaveChanges();
 
                     listTempFlujoInversion.ForEach(tempFlujo =>
                     {
 
-                       
+                        int? mesId = 0;
+
+                        listaMeses.ToList().ForEach( m => {
+                            if ( 
+                                    listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaInicio.Value.Date >= m.FechaInicio.Date &&
+                                    listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaFin.Value.Date <= m.FechaFin.Date
+                                )
+                                {
+                                    mesId = m.MesEjecucionId;
+                                }else if (
+                                            listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaInicio.Value.Date <= m.FechaFin &&
+                                            listaSeguimientoSemanal[tempFlujo.Posicion.Value].FechaFin.Value.Date >= m.FechaFin
+                                         ) 
+                                {
+                                    mesId = m.MesEjecucionId;
+                                }
+                        });
                        FlujoInversion flujo = new FlujoInversion()
                        {
                            ContratoConstruccionId = tempFlujo.ContratoConstruccionId,
                            Semana = tempFlujo.Semana,
                            Valor = tempFlujo.Valor,
-                           
+                           SeguimientoSemanalId = listaSeguimientoSemanal[tempFlujo.Posicion.Value].SeguimientoSemanalId,
+                           MesEjecucionId = mesId.Value == 0 ? null : mesId,
+                           ProgramacionId = listaProgramacion[ tempFlujo.PosicionCapitulo.Value ].ProgramacionId,
 
                         };
 
                         _context.FlujoInversion.Add(flujo);
-                        _context.SaveChanges();
+                        //_context.SaveChanges();
 
 
 
@@ -2612,8 +2658,9 @@ namespace asivamosffie.services
                         tempFlujo.EstaValidado = true;
                         tempFlujo.FechaModificacion = DateTime.Now;
                         tempFlujo.UsuarioModificacion = pUsuarioModifico;
-                        _context.TempFlujoInversion.Update(tempFlujo);
+                        //_context.TempFlujoInversion.Update(tempFlujo);
                         _context.SaveChanges();
+
                     });
 
                     
