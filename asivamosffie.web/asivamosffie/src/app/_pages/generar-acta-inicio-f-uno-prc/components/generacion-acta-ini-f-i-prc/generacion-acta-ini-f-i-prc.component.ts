@@ -76,7 +76,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
-    if (this.rolAsignado == 2) {
+    if (this.rolAsignado == 11) {
       this.ocpion = 1;
     }
     else {

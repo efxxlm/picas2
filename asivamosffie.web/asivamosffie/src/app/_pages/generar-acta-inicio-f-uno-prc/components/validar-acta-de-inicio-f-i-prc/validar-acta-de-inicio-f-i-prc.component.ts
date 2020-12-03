@@ -73,7 +73,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
-    if (this.rolAsignado == 2) {
+    if (this.rolAsignado == 11) {
       this.opcion = 1;
     }
     else {
