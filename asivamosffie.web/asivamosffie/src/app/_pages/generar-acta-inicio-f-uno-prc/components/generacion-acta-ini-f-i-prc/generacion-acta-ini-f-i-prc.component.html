@@ -157,10 +157,10 @@
                     <div class="col-md-9" style="padding-left: 0px;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left">Plazo de ejecución fase 2 – Construcción:</label>
+                                <label class="label-left" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase2.invalid && this.esRojo==true}">Plazo de ejecución fase 2 – Construcción:</label>
                             </div>
                             <div class="col d-flex d-flex-row">
-                                <label class="label-left sub-label" for="mesPlazoEjFase2">
+                                <label class="label-left sub-label" for="mesPlazoEjFase2" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase2.invalid && this.esRojo==true}">
                                     Meses
                                 </label>
                                 <mat-form-field class="w-8em">
@@ -170,7 +170,7 @@
                                 </mat-form-field>
                                 <span
                                     class="contador">{{2 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                <label class="label-left sub-label">
+                                <label class="label-left sub-label" [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase2.invalid && this.esRojo==true}">
                                     Días
                                 </label>
                                 <mat-form-field class="w-8em">
@@ -179,7 +179,7 @@
                                         type="number" formControlName="diasPlazoEjFase2">
                                 </mat-form-field>
                                 <span
-                                    class="contador">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}</span>
+                                    class="contador">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase2').value.toString().length:0)}}</span>
                             </div>
                         </div>
                     </div>
