@@ -149,7 +149,7 @@ namespace asivamosffie.services
 
 
 
-                if (ContratoOld.ConObervacionesActa.HasValue && (bool)ContratoOld.ConObervacionesActa)
+                if (ContratoOld.ConObervacionesActa.HasValue )
                 {
                     foreach (var ContratoObservacion in pContrato.ContratoObservacion)
                     {
@@ -595,12 +595,12 @@ namespace asivamosffie.services
                 int Dias = 0, Meses = 0;
                 Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
                 Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
-                Dias += Meses * 30;
+      
                 string template = TemplateRecoveryPassword.Contenido
                             .Replace("_LinkF_", appSettingsService.DominioFront)
                             .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
                             .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                            .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias)).ToString("dd-MM-yy"))
+                            .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias).AddMonths(Meses)).ToString("dd-MM-yy"))
                             .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
                             .Replace("[FECHA_ACTA_INICIO]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy") : " ")
                             .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
