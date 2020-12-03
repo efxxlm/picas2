@@ -2311,7 +2311,7 @@ namespace asivamosffie.services
                     bool tieneErrores = false;
 
                     // valida numero semanas
-                    if ( numberOfWeeks != ( worksheet.Dimension.Columns -1 ) )
+                    if ( numberOfWeeks != ( worksheet.Dimension.Columns -2 ) )
                     {
                         worksheet.Cells[1, 1].AddComment("Numero de semanas no es igual al del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -2574,11 +2574,21 @@ namespace asivamosffie.services
 
                     }
 
+                    SeguimientoSemanal[] listaSeguimientoSemanal = _context.SeguimientoSemanal
+                                                                                    .Where( s => s.ContratacionProyectoId == contratoConstruccionId )
+                                                                                    .OrderBy( s => s.NumeroSemana )
+                                                                                    .ToArray();
 
+                    MesEjecucion[] listaMeses = _context.MesEjecucion
+                                                            .Where( s => s.ContratoConstruccionId == contratoConstruccionId )
+                                                            .OrderBy( s => s.Numero )
+                                                            .ToArray();
+
+                    
                     // eliminar registros cargados
                     List<FlujoInversion> listaFlujo = _context.FlujoInversion.Where( r => r.ContratoConstruccionId == contratoConstruccionId ).ToList();
                     _context.FlujoInversion.RemoveRange( listaFlujo );
-                    //_context.SaveChanges();
+                    _context.SaveChanges();
 
                     listTempFlujoInversion.ForEach(tempFlujo =>
                     {
@@ -2589,6 +2599,7 @@ namespace asivamosffie.services
                            ContratoConstruccionId = tempFlujo.ContratoConstruccionId,
                            Semana = tempFlujo.Semana,
                            Valor = tempFlujo.Valor,
+                           
 
                         };
 
