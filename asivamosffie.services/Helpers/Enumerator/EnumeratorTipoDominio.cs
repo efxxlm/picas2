@@ -59,7 +59,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Etapa_Proceso_Seleccion = 34,
 
-	Tipo_Documento = 30,
+     	Tipo_Documento = 30,
 
         Estado_Solicitud = 31,
 
@@ -77,8 +77,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         EstadoComite = 38,
 
         Estado_Comite = 38,
-
-
+         
         Estado_Solicitud_Disponibilidad_Presupuestal = 39,
 
         Estado_Cronograma_Seguimiento = 40,
@@ -141,7 +140,9 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_avance_reclamacion = 91,
 
-        
+        Estados_acta_Interventoria_319 = 107,
+
+
 
     }
 }

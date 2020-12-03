@@ -2,29 +2,51 @@
   <form autocomplete="off" [formGroup]="formAnticipo" (ngSubmit)="guardar()">
     <mat-card>
       <mat-card-content>
-        <section class="example-section">
-          <label class="example-margin"> <b>¿El contrato requiere anticipo?</b> </label>
-          <mat-radio-group formControlName="requiereAnticipo">
-            <mat-radio-button class="example-margin" [value]="true" [checked]="formAnticipo.get( 'requiereAnticipo' ).value === true">Sí</mat-radio-button>
-            <mat-radio-button class="example-margin" [value]="false" [checked]="formAnticipo.get( 'requiereAnticipo' ).value === false">No *</mat-radio-button>
-          </mat-radio-group>
-        </section>
 
-        <section class="example-section" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
-          <label class="example-margin"> <b>¿Cuenta con plan de inversión aprobado para el anticipo?</b> </label>
-          <mat-radio-group formControlName="planInversionAnticipo">
-            <mat-radio-button class="example-margin" [value]="true" [checked]="formAnticipo.get( 'planInversionAnticipo' ).value === true">Sí</mat-radio-button>
-            <mat-radio-button class="example-margin" [value]="false" [checked]="formAnticipo.get( 'planInversionAnticipo' ).value === false">No *</mat-radio-button>
-          </mat-radio-group>
-        </section>
-
-        <section class="example-section" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
-          <label class="example-margin"> <b>¿Cuenta con cronograma de amortización aprobado?</b> </label>
-          <mat-radio-group formControlName="cronogramaAmortizacionAprobado">
-            <mat-radio-button class="example-margin" [value]="true" [checked]="formAnticipo.get( 'cronogramaAmortizacionAprobado' ).value === true">Sí</mat-radio-button>
-            <mat-radio-button class="example-margin" [value]="false" [checked]="formAnticipo.get( 'cronogramaAmortizacionAprobado' ).value === false">No *</mat-radio-button>
-          </mat-radio-group>
-        </section>
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left" for="tieneObservacion">
+              ¿El contrato requiere anticipo?
+            </label>
+          </div>
+          <div>
+            <mat-radio-group class="radioInput" formControlName="requiereAnticipo">
+              <mat-radio-button [value]="true" [checked]="formAnticipo.get( 'requiereAnticipo' ).value === true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false" [checked]="formAnticipo.get( 'requiereAnticipo' ).value === false">No</mat-radio-button>
+            </mat-radio-group>
+            <span class="required-form-group m-0">*</span>
+          </div>
+        </div>
+      
+        <div class="row animatedDown" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+          <div class="pr-1">
+            <label class="label-left" for="tieneObservacion">
+              ¿Cuenta con plan de inversión aprobado para el anticipo?
+            </label>
+          </div>
+          <div>
+            <mat-radio-group class="radioInput" formControlName="planInversionAnticipo">
+              <mat-radio-button [value]="true" [checked]="formAnticipo.get( 'planInversionAnticipo' ).value === true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false" [checked]="formAnticipo.get( 'planInversionAnticipo' ).value === false">No</mat-radio-button>
+            </mat-radio-group>
+            <span class="required-form-group m-0">*</span>
+          </div>
+        </div>
+      
+        <div class="row animatedDown" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+          <div class="pr-1">
+            <label class="label-left" for="tieneObservacion">
+              ¿Cuenta con cronograma de amortización aprobado?
+            </label>
+          </div>
+          <div>
+            <mat-radio-group class="radioInput" formControlName="cronogramaAmortizacionAprobado">
+              <mat-radio-button [value]="true" [checked]="formAnticipo.get( 'cronogramaAmortizacionAprobado' ).value === true">Sí</mat-radio-button>
+              <mat-radio-button [value]="false" [checked]="formAnticipo.get( 'cronogramaAmortizacionAprobado' ).value === false">No</mat-radio-button>
+            </mat-radio-group>
+            <span class="required-form-group m-0">*</span>
+          </div>
+        </div>
       </mat-card-content>
     </mat-card>
 
@@ -39,7 +61,7 @@
       </div>
       
       <div class="text-center">
-        <p><small>Indique la ruta del soporte de esta información</small></p>
+        <p class="text-center cursivayeso">Indique la ruta del soporte de esta información</p>
       </div>
     </section>
     

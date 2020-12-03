@@ -25,7 +25,6 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
   editorStyle = {
     height: '100px'
   };
-
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -34,8 +33,11 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  observacionFlujoInversion = '6';
   dataTablaHistorialObservacion: any[] = [];
-  dataSource                 = new MatTableDataSource();
+  dataTablaHistorialApoyo: any[] = [];
+  dataSource = new MatTableDataSource();
+  dataSourceApoyo = new MatTableDataSource();
   displayedColumns: string[] = [
     'fechaRevision',
     'observacionesSupervision'
@@ -73,8 +75,30 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
           this.contratoConstruccion.observacionFlujoInversionSupervisor !== undefined ?
           this.contratoConstruccion.observacionFlujoInversionSupervisor.construccionObservacionId : null
         );
+      this.getDataTable();
     }
 
+  }
+
+  getDataTable() {
+    this.contratoConstruccion.construccionObservacion.forEach( observacion => {
+      if (  observacion.tipoObservacionConstruccion === this.observacionFlujoInversion
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === true ) {
+        this.dataTablaHistorialObservacion.push( observacion );
+      }
+      if (  observacion.tipoObservacionConstruccion === this.observacionFlujoInversion
+            && observacion.observaciones !== undefined
+            && observacion.esSupervision === false ) {
+        this.dataTablaHistorialApoyo.push( observacion );
+      }
+    } );
+    if ( this.dataTablaHistorialObservacion.length > 0 ) {
+      this.dataSource = new MatTableDataSource( this.dataTablaHistorialObservacion );
+    }
+    if ( this.dataTablaHistorialApoyo.length > 0 ) {
+      this.dataSourceApoyo = new MatTableDataSource( this.dataTablaHistorialApoyo );
+    }
   }
 
   validarSemaforo() {

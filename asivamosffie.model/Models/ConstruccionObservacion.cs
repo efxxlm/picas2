@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class ConstruccionObservacion
     {
         public int ConstruccionObservacionId { get; set; }
-        public int ContratoConstruccionId { get; set; }
+        public int? ContratoConstruccionId { get; set; }
         public string TipoObservacionConstruccion { get; set; }
         public string Observaciones { get; set; }
         public bool? EsSupervision { get; set; }

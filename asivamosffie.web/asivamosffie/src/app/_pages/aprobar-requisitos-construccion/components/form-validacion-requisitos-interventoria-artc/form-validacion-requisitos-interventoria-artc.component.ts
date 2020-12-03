@@ -37,62 +37,58 @@ export class FormValidacionRequisitosInterventoriaArtcComponent implements OnIni
               this.contrato = response;
               console.log( this.contrato );
 
-              for ( const contratacionProyecto of this.contrato.contratacion.contratacionProyecto ) {
-                let semaforoSinDiligenciar = 0;
-                let semaforoEnProceso = 0;
-                let semaforoCompleto = 0;
-                for ( const perfil of contratacionProyecto.proyecto.contratoConstruccion[0].construccionPerfil ) {
-                  const observacionTipo3 = [];
-                  for ( const observacion of perfil.construccionPerfilObservacion ) {
-                    if ( observacion.tipoObservacionCodigo === this.observacionSupervisor ) {
-                      observacionTipo3.push( observacion );
+              for ( const contratacion of this.contrato.contratacion.contratacionProyecto ) {
+
+                let perfilSinDiligenciar = 0;
+                let perfilEnProceso = 0;
+                let perfilCompleto = 0;
+                for ( const perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil ) {
+                  perfil.semaforoPerfil = 'sin-diligenciar';
+                  if  ( perfil.tieneObservacionesSupervisor !== undefined
+                        && (  perfil.tieneObservacionesSupervisor === true
+                              || perfil.tieneObservacionesSupervisor === false )
+                  )
+                  {
+                    perfil.semaforoPerfil = 'completo';
+                    if (  perfil.observacionSupervisor !== undefined
+                          && perfil.observacionSupervisor.observacion === undefined
+                          && perfil.tieneObservacionesSupervisor === true )
+                    {
+                      perfil.semaforoPerfil = 'en-proceso';
                     }
                   }
-                  if ( observacionTipo3.length > 0 ) {
-                    if (
-                      observacionTipo3[ observacionTipo3.length - 1 ].esSupervision !== undefined
-                      && observacionTipo3[ observacionTipo3.length - 1 ].esSupervision === false
-                    ) {
-                      perfil.estadoSemaforo = 'completo';
-                      semaforoCompleto++;
-                    }
-                    if (  observacionTipo3[ observacionTipo3.length - 1 ].esSupervision !== undefined
-                          && observacionTipo3[ observacionTipo3.length - 1 ].esSupervision === true
-                          && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined )
-                    {
-                      perfil.estadoSemaforo = 'en-proceso';
-                      semaforoEnProceso++;
-                    }
-                    if (  observacionTipo3[ observacionTipo3.length - 1 ].esSupervision !== undefined
-                          && observacionTipo3[ observacionTipo3.length - 1 ].esSupervision === true
-                          && observacionTipo3[ observacionTipo3.length - 1 ].observacion !== undefined )
-                    {
-                      perfil.estadoSemaforo = 'completo';
-                      semaforoCompleto++;
-                    }
-                  } else {
-                    perfil.estadoSemaforo = 'sin-diligenciar';
-                    semaforoSinDiligenciar++;
+                  if ( perfil.semaforoPerfil === 'sin-diligenciar' ) {
+                    perfilSinDiligenciar++;
+                  }
+                  if ( perfil.semaforoPerfil === 'en-proceso' ) {
+                    perfilEnProceso++;
+                  }
+                  if ( perfil.semaforoPerfil === 'completo' ) {
+                    perfilCompleto++;
                   }
                 }
-                if (  semaforoCompleto > 0
-                      && semaforoCompleto === contratacionProyecto.proyecto.contratoConstruccion[0].construccionPerfil.length ) {
-                  contratacionProyecto.estadoSemaforoContratacion = 'completo';
+                if (  perfilSinDiligenciar > 0
+                      && perfilSinDiligenciar === contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
+                {
+                  contratacion[ 'estadoSemaforo' ] = 'sin-diligenciar';
                 }
-                if (  semaforoSinDiligenciar > 0
-                      && semaforoSinDiligenciar === contratacionProyecto.proyecto.contratoConstruccion[0].construccionPerfil.length ) {
-                  contratacionProyecto.estadoSemaforoContratacion = 'sin-diligenciar';
+                if (  perfilCompleto > 0
+                      && perfilCompleto === contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
+                {
+                  contratacion[ 'estadoSemaforo' ] = 'completo';
                 }
-                if (  semaforoEnProceso > 0
-                      && semaforoEnProceso < contratacionProyecto.proyecto.contratoConstruccion[0].construccionPerfil.length ) {
-                  contratacionProyecto.estadoSemaforoContratacion = 'en-proceso';
+                if ( perfilEnProceso > 0 ) {
+                  contratacion[ 'estadoSemaforo' ] = 'en-proceso';
                 }
-                if (  semaforoCompleto > 0
-                      && semaforoSinDiligenciar > 0
-                      && semaforoSinDiligenciar + semaforoCompleto
-                      === contratacionProyecto.proyecto.contratoConstruccion[0].construccionPerfil.length
-                    ) {
-                  contratacionProyecto.estadoSemaforoContratacion = 'en-proceso';
+                if (  perfilSinDiligenciar > 0
+                      && perfilSinDiligenciar < contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
+                {
+                  contratacion[ 'estadoSemaforo' ] = 'en-proceso';
+                }
+                if (  perfilCompleto > 0
+                      && perfilCompleto < contratacion.proyecto.contratoConstruccion[0].construccionPerfil.length )
+                {
+                  contratacion[ 'estadoSemaforo' ] = 'en-proceso';
                 }
               }
             } );

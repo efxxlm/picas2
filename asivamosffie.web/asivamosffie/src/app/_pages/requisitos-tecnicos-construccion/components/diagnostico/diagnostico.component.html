@@ -6,11 +6,12 @@
         <label class="example-margin"> <b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b> </label>
         <mat-radio-group formControlName="esInformeDiagnostico">
           <mat-radio-button class="example-margin" [value]="true" [checked]="formDiagnostico.get( 'esInformeDiagnostico' ).value === true">Sí</mat-radio-button>
-          <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'esInformeDiagnostico' ).value === false">No *</mat-radio-button>
+          <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'esInformeDiagnostico' ).value === false">No</mat-radio-button>
         </mat-radio-group>
+        <span class="required-form-group m-0">*</span>
       </section>
 
-      <section *ngIf="formDiagnostico.get( 'esInformeDiagnostico' ).value">
+      <section class="animatedDown" *ngIf="formDiagnostico.get( 'esInformeDiagnostico' ).value">
         <div class="d-flex mt-1em">
           <label class="mr-label" class="label-left"><b>URL con soporte</b></label>
         <div class="col d-flex w-80">
@@ -19,7 +20,7 @@
           </mat-form-field>
         </div>
       </div>
-      <span class="color-secundary">Indique la ruta del soporte de esta información</span>
+      <p class="text-center cursivayeso">Indique la ruta del soporte de esta información</p>
       </section>
 
     </mat-card-content>
@@ -28,15 +29,14 @@
   <section>
     <div>
       <mat-card>
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
           <mat-card-title class="header-card--text">
             Valor total de la fase 2 construcción
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
 
-          <section>
-            <div class="d-flex mt-1em">
+            <div class="d-flex">
               <label class="mr-label" class="label-left"><b>a.</b> Costo directo</label>
             <div class="col d-flex">
               <mat-form-field style="width: 35.5%;">
@@ -55,10 +55,8 @@
               </span>
             </div>
           </div>
-          </section>
 
-          <section>
-            <div class="d-flex mt-1em">
+            <div class="d-flex">
               <label class="mr-label" class="label-left"><b>b.</b> A (administración)</label>
             <div class="col d-flex">
               <mat-form-field style="width: 33.5%;">
@@ -77,13 +75,11 @@
               </span>
             </div>
           </div>
-          </section>
 
-          <section>
-            <div class="d-flex mt-1em">
+            <div class="d-flex">
               <label class="mr-label" class="label-left"><b>c.</b> I (Imprevistos)</label>
             <div class="col d-flex">
-              <mat-form-field style="width: 35%;">
+              <mat-form-field style="width: 35.1%;">
                 <input  matInput
                         maxlength="28"
                         formControlName="imprevistos"
@@ -99,13 +95,11 @@
               </span>
             </div>
           </div>
-          </section>
 
-          <section>
-            <div class="d-flex mt-1em">
+            <div class="d-flex">
               <label class="mr-label" class="label-left"><b>d.</b> U (Utilidad)</label>
             <div class="col d-flex">
-              <mat-form-field style="width: 36%;">
+              <mat-form-field style="width: 36.3%;">
                 <input  matInput
                         maxlength="28"
                         formControlName="utilidad"
@@ -121,10 +115,8 @@
               </span>
             </div>
           </div>
-          </section>
 
-          <section>
-            <div class="d-flex mt-1em">
+            <div class="d-flex">
               <label class="mr-label" class="label-left"><b>Valor total de la fase 2 - Construcción</b></label>
             <div class="col d-flex">
               <mat-form-field style="width: 29%;">
@@ -136,7 +128,6 @@
               </mat-form-field>
             </div>
           </div>
-          </section>
 
         </mat-card-content>
       </mat-card>
@@ -151,8 +142,9 @@
           <label class="example-margin"> <b>¿Se requirió modificación contractual?</b> </label>
           <mat-radio-group formControlName="requiereModificacionContractual">
             <mat-radio-button class="example-margin" [value]="true" [checked]="formDiagnostico.get( 'requiereModificacionContractual' ).value">Sí</mat-radio-button>
-            <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'requiereModificacionContractual' ).value === false">No *</mat-radio-button>
+            <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'requiereModificacionContractual' ).value === false">No</mat-radio-button>
           </mat-radio-group>
+          <span class="required-form-group m-0">*</span>
         </div>
 
         <mat-card *ngIf="formDiagnostico.get( 'requiereModificacionContractual' ).value">

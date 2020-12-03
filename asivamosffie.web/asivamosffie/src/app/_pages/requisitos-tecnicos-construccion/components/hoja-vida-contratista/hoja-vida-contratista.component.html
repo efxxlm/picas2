@@ -1,16 +1,20 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
   <div class="d-flex mt-1em" style="justify-content: center;display: inline-flex;">
-    <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el proyecto?</b></label>
+    <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el
+        proyecto?</b></label>
     <div class="col d-flex">
       <mat-form-field class="w-38">
-        <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles required>
+        <input matInput type="number" formControlName="numeroPerfiles" #cantidadPerfiles maxlength="3" min="1" max="999"
+          required (keypress)="validateNumberKeypress($event)"
+          onKeyPress="if(this.value.length>=this.maxLength) return false;">
       </mat-form-field>
       <span class="contador">{{3 - formContratista.get( 'numeroPerfiles' ).value.length}}</span>
     </div>
   </div>
 
   <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroPerfiles' ).value !== null">
-    <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
+    <mat-expansion-panel class="expansion-style sub-expansion-black"
+      *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
       <mat-expansion-panel-header class="expansion-style--header">
         <mat-panel-title class="expansion-style--title" [ngClass]="perfil.get( 'estadoSemaforo' ).value">
           Perfil {{ i+1 }}
@@ -34,73 +38,98 @@
             </div>
           </div>
 
-          <section class="d-flex mt-1em">
-            <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida requeridas para el perfil</b></label>
-            <div class="col d-flex">
-              <mat-form-field style="width: 28%;">
-                <input matInput type="number" maxlength="3" formControlName="cantidadHvRequeridas" required #cantidadHvRequeridas
-                (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
-              </mat-form-field>
-              <span class="contador">{{3 - cantidadHvRequeridas.value.length}}</span>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">
+                    Cantidad de hojas de vida requeridas para el perfil
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput type="number" maxlength="3" formControlName="cantidadHvRequeridas" required
+                      #cantidadHvRequeridas (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  </mat-form-field>
+                  <span class="contador">{{3 - cantidadHvRequeridas.value.length}}</span>
+                </div>
+              </div>
             </div>
-          </section>
+          </div>
 
-          <section class="d-flex mt-1em">
-            <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida recibidas para el perfil</b></label>
-            <div class="col d-flex">
-              <mat-form-field style="width: 29%;">
-                <input matInput type="number" maxlength="3" formControlName="cantidadHvRecibidas" required #cantidadHvRecibidas
-                (keypress)="validateNumberKeypress($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;">
-              </mat-form-field>
-              <span class="contador">{{3 - cantidadHvRecibidas.value.length}}</span>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">
+                    Cantidad de hojas de vida recibidas para el perfil
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput type="number" maxlength="3" formControlName="cantidadHvRecibidas" required
+                      #cantidadHvRecibidas (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  </mat-form-field>
+                  <span class="contador">{{3 - cantidadHvRecibidas.value.length}}</span>
+                </div>
+              </div>
             </div>
-          </section>
+          </div>
 
-          <section class="d-flex mt-1em">
-            <label class="mr-label mr-min mt-1em"><b>Cantidad de hojas de vida aprobadas para el perfil</b></label>
-            <div class="col d-flex">
-              <mat-form-field style="width: 28.5%;">
-                <input matInput type="number" maxlength="3" formControlName="cantidadHvAprobadas" required >
-              </mat-form-field>
-              <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.length}}</span>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">
+                    Cantidad de hojas de vida aprobadas para el perfil
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput type="number" maxlength="3" formControlName="cantidadHvAprobadas" required
+                      #cantidadHvAprobadas (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  </mat-form-field>
+                  <span class="contador">{{3 - cantidadHvAprobadas.value.length}}</span>
+                </div>
+              </div>
             </div>
-          </section>
+          </div>
 
-          <section class="d-flex mt-1em w-60">
-            <label class="mr-label mr-min mt-1em"><b>Fecha de aprobación de la totalidad de las hojas de vida</b></label>
-            <div class="d-flex">
-              <mat-form-field class="mt-min">
-              <input  matInput
-                      [matDatepicker]="fechaAprobacion"
-                      formControlName="fechaAprobacion"
-                      [min]="minDate"
-                      placeholder="DD/MM/AAAA"
-                      required
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">
+                    Fecha de aprobación de la totalidad de las hojas de vida
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="mt-min">
+                    <input matInput [matDatepicker]="fechaAprobacion" formControlName="fechaAprobacion" [min]="minDate"
+                      placeholder="DD/MM/AAAA" required
                       [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
-              <mat-datepicker #fechaAprobacion></mat-datepicker>
-              </mat-form-field>
-              <button mat-button
-                      color="primary"
-                      type="button"
-                      (click)="fechaAprobacion.open()"
-                      class="btn-calendario">
-              <img  class="mr-bottom-1"
-                    src="assets/img/icon/calendarioCirculo.svg"
-                    alt="Abrir Calendario">
-              </button>
+                    <mat-datepicker #fechaAprobacion></mat-datepicker>
+                  </mat-form-field>
+                  <button mat-button color="primary" type="button" (click)="fechaAprobacion.open()"
+                    class="btn-calendario">
+                    <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                  </button>
+                </div>
+              </div>
             </div>
-          </section>
+          </div>
 
           <section class="d-flex mt-1em" align="left">
             <label class="mr-label mr-min mt-1em"><b>Observaciones</b></label>
-            <quill-editor class="quill-editor-style position-relative ml-1em card"
-                          [styles]="editorStyle"
-                          [modules]="config"
-                          (onContentChanged)="maxLength($event, 1000)"
-                          formControlName="observacion" required></quill-editor>
+            <quill-editor class="quill-editor-style position-relative ml-1em card" [styles]="editorStyle"
+              [modules]="config" (onContentChanged)="maxLength($event, 1000)" formControlName="observacion" required>
+            </quill-editor>
             <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
               <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                {{1000 - textoLimpio(perfil.get('observacion').value)}}
+                {{1000 - (textoLimpio(perfil.get('observacion').value)>1000?1000:textoLimpio(perfil.get('observacion').value))}}
               </span>
               <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
                 1000
@@ -110,7 +139,8 @@
 
           <section formArrayName="contratoPerfilNumeroRadicado">
             <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
-              <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }} </b></label>
+              <label class="mr-label mr-min mt-1em"><b>Número de radicado en FFIE de aprobación de hojas de vida
+                  {{ j+1 }} </b></label>
               <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
                 <mat-form-field class="w-38">
                   <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
@@ -118,42 +148,29 @@
                 <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
               </div>
               <div class="text-right" *ngIf="numeroRadicado( i ).length > 1">
-                <button mat-button
-                        color="warn"
-                        type="button"
-                        class="btn-eliminar"
-                        (click)="eliminarNumeroRadicado( i, j )"
-                        *ngIf="perfilProyecto.length === 0">
+                <button mat-button color="warn" type="button" class="btn-eliminar"
+                  (click)="eliminarNumeroRadicado( i, j )" *ngIf="perfilProyecto.length === 0">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                   Eliminar número de radicado
                 </button>
-                <button mat-button
-                        color="warn"
-                        type="button"
-                        class="btn-eliminar"
-                        (click)="deleteRadicado( numero.get( 'contratoPerfilNumeroRadicadoId' ).value, i, j )"
-                        *ngIf="perfilProyecto.length > 0">
+                <button mat-button color="warn" type="button" class="btn-eliminar"
+                  (click)="deleteRadicado( numero.get( 'contratoPerfilNumeroRadicadoId' ).value, i, j )"
+                  *ngIf="perfilProyecto.length > 0">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                   Eliminar número de radicado
                 </button>
               </div>
               <div class="text-right" *ngIf="numeroRadicado( i ).length === 1">
-                <button mat-button
-                        color="warn"
-                        type="button"
-                        class="btn-eliminar"
-                        (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                <button mat-button color="warn" type="button" class="btn-eliminar"
+                  (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
                   <img src="assets/img/icon/mas.svg">
                   Agregar otro número de radicado
                 </button>
               </div>
             </div>
             <div class="text-right w-margin" *ngIf="numeroRadicado( i ).length > 1">
-              <button mat-button
-                      color="warn"
-                      type="button"
-                      class="btn-eliminar"
-                      (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+              <button mat-button color="warn" type="button" class="btn-eliminar"
+                (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
                 <img src="assets/img/icon/mas.svg">
                 Agregar otro número de radicado
               </button>
@@ -170,45 +187,35 @@
           </section>
           <div class="d-flex justify-content-center size-text-descriptivo">
             <p class="color-text-descriptivo">
-                <i>
-                  Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal
-                </i>
+              <i>
+                Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de
+                personal
+              </i>
             </p>
           </div>
         </mat-card-content>
       </mat-card>
       <div class="text-right" *ngIf="perfiles.controls.length > 1">
-        <button mat-button
-                color="warn"
-                type="button"
-                class="btn-eliminar"
-                (click)="eliminarPerfil( i )"
-                *ngIf="perfilProyecto.length === 0">
+        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarPerfil( i )"
+          *ngIf="perfilProyecto.length === 0">
           <img src="assets/img/icon/menos.svg">
           Eliminar perfil
         </button>
-        <button mat-button
-                color="warn"
-                type="button"
-                class="btn-eliminar"
-                (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value, i )"
-                *ngIf="perfilProyecto.length > 0">
+        <button mat-button color="warn" type="button" class="btn-eliminar"
+          (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value, i )" *ngIf="perfilProyecto.length > 0">
           <img src="assets/img/icon/menos.svg">
           Eliminar perfil
         </button>
       </div>
 
       <div class="text-center">
-        <button mat-button
-                color="warn"
-                class="btn-guardar"
-                type="button"
-                (click)="guardar()">
-                <img  src="assets/img/icon/guardar.svg">
+        <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
+          <img src="assets/img/icon/guardar.svg">
         </button>
       </div>
 
-      <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="perfil.get( 'observacionSupervisor' ).value !== null">
+      <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;"
+        *ngIf="perfil.get( 'observacionSupervisor' ).value !== null">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text">
             Observaciones del supervisor
@@ -225,16 +232,16 @@
       </mat-card>
       <div align="center" *ngIf="perfil.value.observacionDevolucion">
         <mat-card class="border" style="margin-top: 20px;">
-            <mat-card-header class="header-card">
-                <mat-card-title class="header-card--text grayTitle">
-                  Observaciones de la supervisión
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content align="left" >
-                <p><b>{{ perfil.value.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-                <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-                <p>{{ perfil.value.observacionDevolucion.observacion }}</p>
-            </mat-card-content>
+          <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+              Observaciones de la supervisión
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content align="left">
+            <p><b>{{ perfil.value.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <p>{{ perfil.value.observacionDevolucion.observacion }}</p>
+          </mat-card-content>
         </mat-card>
       </div>
     </mat-expansion-panel>

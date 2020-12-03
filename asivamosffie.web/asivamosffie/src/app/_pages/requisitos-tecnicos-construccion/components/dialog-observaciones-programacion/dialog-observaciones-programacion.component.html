@@ -4,7 +4,7 @@
     </button>
 
     <h1 class="title-menu--h1" style="margin-top: 0px;">
-      Observaciones flujo de inversión de recursos
+      Observaciones programación
     </h1>
 
     <section class="flex-center">
@@ -29,10 +29,10 @@
 
                 </mat-card-content>
             </mat-card>
-            <span class="contador miles mb-2em" *ngIf="formObservacion.get('observaciones').value !== null">
-                {{3000 - textoLimpio(formObservacion.get('observaciones').value)}}
+            <span class="contador miles" *ngIf="formObservacion.get('observaciones').value !== null">
+                {{3000 - (textoLimpio(formObservacion.get('observaciones').value)>3000?3000:textoLimpio(formObservacion.get('observaciones').value))}}
             </span>
-            <span class="contador miles mb-2em" *ngIf="formObservacion.get('observaciones').value === null">
+            <span class="contador miles" *ngIf="formObservacion.get('observaciones').value === null">
                 3000
             </span>
         </div>

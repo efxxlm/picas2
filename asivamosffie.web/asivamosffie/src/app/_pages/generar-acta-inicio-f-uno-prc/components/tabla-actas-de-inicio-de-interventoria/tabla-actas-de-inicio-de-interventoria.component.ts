@@ -75,6 +75,10 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   generarActaFDos(id) {
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/generarActaFDos', id]);
   }
+  verDetalleActaCargada(id) {
+    localStorage.setItem("actaSuscrita", "true");
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa', id]);
+  }
   cambiarEstadoSupervisor(id) {
     if (localStorage.getItem("origin") == "interventoria") {
       this.service.CambiarEstadoActa(id, "3").subscribe(data => {
@@ -95,7 +99,7 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   }
   enviarActaParaFirma(id) {
     if (localStorage.getItem("origin") == "interventoria") {
-      this.service.CambiarEstadoActa(id, "6").subscribe(data => {
+      this.service.CambiarEstadoActa(id, "3").subscribe(data => {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
         );
@@ -131,7 +135,7 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {
-        this.service.CambiarEstadoActa(id,"7").subscribe(data=>{
+        this.service.CambiarEstadoActa(id,"4").subscribe(data=>{
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
             () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
           );

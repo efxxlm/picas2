@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,7 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-validar-acta-inicio-construccion.component.html',
   styleUrls: ['./form-validar-acta-inicio-construccion.component.scss']
 })
-export class FormValidarActaInicioConstruccionComponent implements OnInit {
+export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDestroy {
   addressForm = this.fb.group({});
   dataDialog: {
     modalTitle: string,
@@ -55,6 +55,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   esActa: any;
   esSupervision: any;
   tipoObservacionConstruccion: any;
+  realizoPeticion: boolean = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -64,19 +65,36 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     });
     this.loadConditionals();
   }
-
-  loadConditionals(){
-    if(localStorage.getItem("editable")=="true"){
-      this.editable=true;
-      this.title='Ver detalle/Editar';
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true && this.realizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
     }
-    else{
-      this.editable=false;
-      this.title='Validar';
+  }
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe(response => {
+        if (response === true) {
+          this.onSubmit();
+        }
+      });
+  };
+  loadConditionals() {
+    if (localStorage.getItem("editable") == "true") {
+      this.editable = true;
+      this.title = 'Ver detalle/Editar';
+    }
+    else {
+      this.editable = false;
+      this.title = 'Validar';
     }
   }
   loadData(id) {
-    this.services.GetVistaGenerarActaInicio(id).subscribe((data:any) => {
+    this.services.GetVistaGenerarActaInicio(id).subscribe((data: any) => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
       this.fechaAprobacionSupervisor = data.fechaAprobacionRequisitosSupervisor;
@@ -108,22 +126,22 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     });
     this.contratoId = id;
   }
-  loadDataObservaciones(id){
-    if(localStorage.getItem("editable")=="true"){
-      this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data0=>{
+  loadDataObservaciones(id) {
+    if (localStorage.getItem("editable") == "true") {
+      this.services.GetContratoObservacionByIdContratoId(id, true).subscribe(data0 => {
         this.addressForm.get('tieneObservaciones').setValue(data0.esActa);
         this.addressForm.get('observaciones').setValue(data0.observaciones);
         this.loadData2(data0);
         this.fechaCreacion = data0.fechaCreacion;
       });
     }
-    else{
-      this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data2=>{
+    else {
+      this.services.GetContratoObservacionByIdContratoId(id, true).subscribe(data2 => {
         this.fechaCreacion = data2.fechaCreacion;
       });
     }
   }
-  loadData2(data){
+  loadData2(data) {
     this.construccionObservacionId = data.construccionObservacionId;
     this.contratoConstruccionId = data.contratoConstruccionId;
     this.esActa = data.esActa;
@@ -133,10 +151,10 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
 
   }
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '25em',
       data: { modalTitle, modalText }
-    });   
+    });
   }
   editorStyle = {
     height: '45px',
@@ -155,7 +173,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   crearFormulario() {
     return this.fb.group({
       tieneObservaciones: [null, Validators.required],
-      observaciones:[null, Validators.required],
+      observaciones: [null, Validators.required],
     })
   }
   maxLength(e: any, n: number) {
@@ -164,12 +182,12 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
     }
   }
 
-  generarActaSuscrita(){
-    this.services.GetPlantillaActaInicio(this.contratoId).subscribe(resp=>{
+  generarActaSuscrita() {
+    this.services.GetPlantillaActaInicio(this.contratoId).subscribe(resp => {
       const documento = `Prueba.pdf`; // Valor de prueba
       const text = documento,
-      blob = new Blob([resp], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
       anchor.download = documento;
       anchor.href = window.URL.createObjectURL(blob);
       anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
@@ -179,85 +197,97 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit {
   onSubmit() {
     this.fechaSesion = new Date(this.fechaCreacion);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
-    const contratoObs: ConstruccionObservacion ={
+    const contratoObs: ConstruccionObservacion = {
       ContratoConstruccionId: this.contratoConstruccionId,
       TipoObservacionConstruccion: "",
       Observaciones: this.addressForm.value.observaciones,
       UsuarioModificacion: "usr3",
-      FechaCreacion:this.fechaSesionString,
-      UsuarioCreacion:"usr3",
-      EsSupervision:true,
-      EsActa:true,
-     FechaModificacion:this.fechaSesionString
+      FechaCreacion: this.fechaSesionString,
+      UsuarioCreacion: "usr3",
+      EsSupervision: true,
+      EsActa: true,
+      FechaModificacion: this.fechaSesionString
     };
-    
-    if(localStorage.getItem("editable")=="false"){
-      this.services.CreateTieneObservacionesActaInicio(this.contratoId,this.addressForm.value.observaciones,"usr3",true,this.addressForm.value.tieneObservaciones).subscribe(resp=>{
-        if(resp.code=="200"){
-          if(this.addressForm.value.tieneObservaciones==true){
-            if(localStorage.getItem("origin")=="interventoria"){
-              this.services.CambiarEstadoActa(this.contratoId,"8","usr2").subscribe(data0=>{
-            
+
+    if (localStorage.getItem("editable") == "false") {
+      this.services.CreateTieneObservacionesActaInicio(this.contratoId, this.addressForm.value.observaciones, "usr3", true, this.addressForm.value.tieneObservaciones).subscribe(resp => {
+        if (resp.code == "200") {
+          if (this.addressForm.value.tieneObservaciones == true) {
+            if (localStorage.getItem("origin") == "interventoria") {
+              this.services.CambiarEstadoActa(this.contratoId, "8", "usr2").subscribe(data0 => {
+                this.realizoPeticion = true;
+                this.openDialog("", resp.message);
+                this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
-            else{
-              this.services.CambiarEstadoActa(this.contratoId,"16","usr2").subscribe(data0=>{
-            
-              });
-            }
-          }
-          else{
-            if(localStorage.getItem("origin")=="interventoria"){
-              this.services.CambiarEstadoActa(this.contratoId,"5","usr2").subscribe(data1=>{
-            
-              });
-            }
-            else{
-              this.services.CambiarEstadoActa(this.contratoId,"15","usr2").subscribe(data1=>{
-            
+            else {
+              this.services.CambiarEstadoActa(this.contratoId, "16", "usr2").subscribe(data0 => {
+                this.realizoPeticion = true;
+                this.openDialog("", resp.message);
+                this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
           }
-          this.openDialog(resp.message, "");
-          this.router.navigate(['/generarActaInicioConstruccion']);
+          else {
+            if (localStorage.getItem("origin") == "interventoria") {
+              this.services.CambiarEstadoActa(this.contratoId, "5", "usr2").subscribe(data1 => {
+                this.realizoPeticion = true;
+                this.openDialog("", resp.message);
+                this.router.navigate(['/generarActaInicioConstruccion']);
+              });
+            }
+            else {
+              this.services.CambiarEstadoActa(this.contratoId, "15", "usr2").subscribe(data1 => {
+                this.realizoPeticion = true;
+                this.openDialog("", resp.message);
+                this.router.navigate(['/generarActaInicioConstruccion']);
+              });
+            }
+          }
         }
-        else{
-          this.openDialog(resp.message, "");
+        else {
+          this.openDialog("", resp.message);
         }
       });
-    } 
-    else{
-      this.services.CreateEditContratoObservacion(contratoObs).subscribe(resp=>{
-        if(resp.code=="200"){
-          if(this.addressForm.value.tieneObservaciones==true){
-            if(localStorage.getItem("origin")=="interventoria"){
-              this.services.CambiarEstadoActa(this.contratoId,"8","usr2").subscribe(data0=>{
-            
+    }
+    else {
+      this.services.CreateEditContratoObservacion(contratoObs).subscribe(resp => {
+        if (resp.code == "200") {
+          if (this.addressForm.value.tieneObservaciones == true) {
+            if (localStorage.getItem("origin") == "interventoria") {
+              this.services.CambiarEstadoActa(this.contratoId, "8", "usr2").subscribe(data0 => {
+                this.realizoPeticion = true;
+                this.openDialog("", resp.message);
+                this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
-            else{
-              this.services.CambiarEstadoActa(this.contratoId,"16","usr2").subscribe(data0=>{
-            
-              });
-            }
-          }
-          else{
-            if(localStorage.getItem("origin")=="interventoria"){
-              this.services.CambiarEstadoActa(this.contratoId,"5","usr2").subscribe(data1=>{
-            
-              });
-            }
-            else{
-              this.services.CambiarEstadoActa(this.contratoId,"15","usr2").subscribe(data1=>{
-            
+            else {
+              this.services.CambiarEstadoActa(this.contratoId, "16", "usr2").subscribe(data0 => {
+                this.realizoPeticion = true;
+                this.openDialog("", resp.message);
+                this.router.navigate(['/generarActaInicioConstruccion']);
               });
             }
           }
-          this.openDialog(resp.message, "");
-          this.router.navigate(['/generarActaInicioConstruccion']);
+          else {
+            if (localStorage.getItem("origin") == "interventoria") {
+              this.services.CambiarEstadoActa(this.contratoId, "5", "usr2").subscribe(data1 => {
+                this.realizoPeticion = true;
+                this.openDialog("", resp.message);
+                this.router.navigate(['/generarActaInicioConstruccion']);
+              });
+            }
+            else {
+              this.services.CambiarEstadoActa(this.contratoId, "15", "usr2").subscribe(data1 => {
+                this.realizoPeticion = true;
+                this.openDialog("", resp.message);
+                this.router.navigate(['/generarActaInicioConstruccion']);
+              });
+            }
+          }
         }
-        else{
-          this.openDialog(resp.message, "");
+        else {
+          this.openDialog("", resp.message);
         }
       });
     }

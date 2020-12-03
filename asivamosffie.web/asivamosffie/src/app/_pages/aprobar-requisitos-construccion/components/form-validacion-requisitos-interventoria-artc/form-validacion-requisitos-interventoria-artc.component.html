@@ -24,7 +24,7 @@
         <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header w-45">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="contratacion[ 'estadoSemaforoContratacion' ]">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="contratacion[ 'estadoSemaforo' ]">
                         {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -48,11 +48,11 @@
                 <mat-accordion *ngFor="let perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil; index as j">
                     <mat-expansion-panel class="expansion-style sub-expansion aux">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title" [ngClass]="perfil[ 'estadoSemaforo' ]">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="perfil.semaforoPerfil">
                               Perfil {{ j+1 }}
                             </mat-panel-title>
-                          </mat-expansion-panel-header>
-                          <div align="left">
+                        </mat-expansion-panel-header>
+                        <div align="left">
                             <mat-card class="border">
                                 <mat-card-content>
                                     <p><b>Perfil</b>: {{ getTipoPerfil( perfil.perfilCodigo ) }} </p>
@@ -77,7 +77,9 @@
                             </mat-card>
                         </div>
                         <app-hojas-vida-interventoria-artc  [observacionesCompleted]="false"
-                                                            [observacionesPerfil]="perfil.construccionPerfilObservacion"
+                                                            [tieneObservacion]="perfil.tieneObservacionesSupervisor !== undefined ? perfil.tieneObservacionesSupervisor : undefined"
+                                                            [observacionesPerfil]="perfil.observacionSupervisor"
+                                                            [fechaModificacion]="perfil.fechaModificacion"
                                                             [construccionPerfilId]="perfil.construccionPerfilId"
                                                             (seRealizoPeticion)="recargarComponente( $event )">
                         </app-hojas-vida-interventoria-artc>

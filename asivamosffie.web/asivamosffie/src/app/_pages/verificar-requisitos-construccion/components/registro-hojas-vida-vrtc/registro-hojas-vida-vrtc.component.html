@@ -2,10 +2,12 @@
     <div class="d-flex mt-1em" style="justify-content: center;display: inline-flex;">
       <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el proyecto?</b></label>
       <div class="col d-flex">
-        <mat-form-field class="w-38">
-          <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles required>
+        <mat-form-field class="w-38">          
+          <input matInput type="number" formControlName="numeroPerfiles" #cantidadPerfiles maxlength="3" min="1" max="999"
+          required (keypress)="validateNumberKeypress($event)"
+          onKeyPress="if(this.value.length>=this.maxLength) return false;">
         </mat-form-field>
-        <span class="contador">{{3 - formContratista.get( 'numeroPerfiles' ).value.length}}</span>
+        <span class="contador">{{formContratista.get( 'numeroPerfiles' ).value? 3 - formContratista.get( 'numeroPerfiles' ).value.toString().length:3}}</span>
       </div>
     </div>
 
@@ -93,8 +95,8 @@
                             (onContentChanged)="maxLength($event, 1000)"
                             formControlName="observacion"></quill-editor>
               <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
-                <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                  {{1000 - textoLimpio(perfil.get('observacion').value)}}
+                <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">                  
+                  {{1000 - (textoLimpio(perfil.get('observacion').value)>1000?1000:textoLimpio(perfil.get('observacion').value))}}
                 </span>
                 <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
                   1000

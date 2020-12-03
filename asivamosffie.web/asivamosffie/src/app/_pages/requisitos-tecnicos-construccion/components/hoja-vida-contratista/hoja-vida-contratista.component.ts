@@ -130,13 +130,13 @@ export class HojaVidaContratistaComponent implements OnInit {
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
       this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
-        .subscribe( 
+        .subscribe(
           value => {
             if ( value < this.perfiles.length && value > 0 ) {
               this.openDialog(
                 '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
               );
-              this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
+              this.cantidadPerfiles.nativeElement.value =  this.perfiles.length;
               return;
             }
             const nuevosPerfiles = Number( value ) - this.perfiles.length;
@@ -304,7 +304,7 @@ export class HojaVidaContratistaComponent implements OnInit {
           this.formContratista.patchValue({
             numeroPerfiles: `${ this.perfiles.length }`
           });
-          this.openDialog( '', 'La información se ha eliminado correctamente.' );
+          this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
         }
       } );
   }
@@ -316,7 +316,7 @@ export class HojaVidaContratistaComponent implements OnInit {
           this.faseUnoConstruccionSvc.deleteConstruccionPerfil( contratoPerfilId )
             .subscribe(
               () => {
-                this.openDialog( '', 'La información se ha eliminado correctamente.' );
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                 this.perfiles.removeAt( numeroPerfil );
                 this.formContratista.patchValue({
                   numeroPerfiles: `${ this.perfiles.length }`
@@ -351,7 +351,7 @@ export class HojaVidaContratistaComponent implements OnInit {
     this.faseUnoConstruccionSvc.deleteConstruccionPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
       .subscribe( () => {
         this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-        this.openDialog( '', 'La información se ha eliminado correctamente.' );
+        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
       } );
   }
 

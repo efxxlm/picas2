@@ -27,38 +27,46 @@
             <div *ngIf="this.valorFDos!=0">
                 <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
             </div>
-            <div *ngIf="this.dataSupervisor==true">
+            <div *ngIf="this.tipoCodigo == '1' && this.ocpion == 2">
+                <p><strong>Número de identificación del representante legal del contratista de obra:
+                    </strong>{{this.numIdRepresentanteLegal }}</p>
+                <p><strong>Nombre del representante legal del contratista de obra:
+                    </strong>{{this.nomRepresentanteLegal}}</p>
+                <p><strong>Número de identificación de la entidad contratista de obra:
+                    </strong>{{this.nitContratistaInterventoria}}</p>
+                <p><strong>Nombre entidad contratista de obra: </strong>{{this.nomEntidadContratistaIntervn}}</p>
+                <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
+                    {{this.diasPlazoIni}}</p>
+            </div>
+            <div *ngIf="this.tipoCodigo == '1' && this.ocpion == 1">
+                <p><strong>Número de identificación del Supervisor:
+                </strong>{{this.numIdentifiacionSupervisor }}</p>
+            <p><strong>Nombre del Supervisor:
+                </strong>{{this.nomSupervisor}}</p>
+                <p><strong>Número de identificación del representante legal del contratista de obra:
+                </strong>{{this.numIdRepresentanteLegal }}</p>
+            <p><strong>Nombre del representante legal del contratista de obra:
+                </strong>{{this.nomRepresentanteLegal}}</p>
+            <p><strong>Número de identificación de la entidad contratista de obra:
+                </strong>{{this.nitContratistaInterventoria}}</p>
+            <p><strong>Nombre entidad contratista de obra: </strong>{{this.nomEntidadContratistaIntervn}}</p>
+            <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
+                {{this.diasPlazoIni}}</p>
+            </div>
+            <div *ngIf="this.tipoCodigo == '2' && this.ocpion == 1">
                 <p><strong>Número de identificación del Supervisor:
                 </strong>{{this.numIdentifiacionSupervisor }}</p>
             <p><strong>Nombre del Supervisor:
                 </strong>{{this.nomSupervisor}}</p>
                 <p><strong>Número de identificación del representante legal del contratista de inteventoría:
-                </strong>{{this.numIdRepresentanteLegal }}</p>
+                </strong></p>
             <p><strong>Nombre del representante legal del contratista de interventoría:
-                </strong>{{this.nomRepresentanteLegal}}</p>
+                </strong></p>
             <p><strong>Número de identificación del contratista de interventoría:
                 </strong>{{this.nitContratistaInterventoria}}</p>
-            <p><strong>Nombre de la entidad contratista de interventoría: </strong>{{this.nomEntidadContratistaIntervn}}
+            <p><strong>Nombre de la entidad contratista de interventoría:
+                </strong>{{this.nomEntidadContratistaIntervn}}
             </p>
-            <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
-                {{this.diasPlazoIni}}</p>
-            </div>
-            <div *ngIf="this.dataSupervisor==false">
-                <div *ngIf="this.tipoProponente=='1'">
-                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
-                    </strong>{{this.numIdRepresentanteLegal }}</p>
-                <p><strong>Nombre del representante legal del contratista de interventoría:
-                    </strong>{{this.nomRepresentanteLegal}}</p>
-                <p><strong>Número de identificación del contratista de interventoría:
-                    </strong>{{this.nitContratistaInterventoria}}</p>
-                <p><strong>Nombre de la entidad contratista de interventoría: </strong>{{this.nomEntidadContratistaIntervn}}
-                </p>
-                </div>
-                <p><strong>Número de identificación del representante legal del contratista de obra: </strong>{{this.numIdRepresentanteLegal }}</p>
-                <p><strong>Nombre del representante legal del contratista de obra: </strong>{{this.nomRepresentanteLegal}}</p>
-                <p><strong>Número de identificación de la entidad contratista de obra:
-                    </strong>{{this.nitContratistaInterventoria}}</p>
-                <p><strong>Nombre entidad contratista de obra: </strong>{{this.nomEntidadContratistaIntervn}}</p>
             <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
                 {{this.diasPlazoIni}}</p>
             </div>
@@ -71,8 +79,9 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaActaInicioFUnoPreconstruccion" 
-                                [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaActaInicioFUnoPreconstruccion.invalid  && this.esRojo==true}">Fecha del acta de
+                                <label class="label-left" for="fechaActaInicioFUnoPreconstruccion"
+                                    [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaActaInicioFUnoPreconstruccion.invalid  && this.esRojo==true}">Fecha
+                                    del acta de
                                     inicio de la fase 1 - Preconstrucción</label>
                             </div>
                             <div class="col d-flex align-items-center">
@@ -94,8 +103,10 @@
                 <div class="row">
                     <div class="col-md-7" style="padding-left: 0px;">
                         <div class="row">
-                            <div class="pr-1" >
-                                <label class="label-left" for="fechaPrevistaTerminacion" [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaPrevistaTerminacion.invalid  && this.esRojo==true}">Fecha prevista de
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaPrevistaTerminacion"
+                                    [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaPrevistaTerminacion.invalid  && this.esRojo==true}">Fecha
+                                    prevista de
                                     terminación</label>
                             </div>
                             <div class="col d-flex align-items-center">
@@ -112,10 +123,12 @@
                     <div class="col-md-9" style="padding-left: 0px;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" [ngClass]="{'color-secondaryColor' : this.esRojo==true}">Plazo de ejecución fase 1 – Preconstrucción:</label>
+                                <label class="label-left" [ngClass]="{'color-secondaryColor' : this.esRojo==true}">Plazo
+                                    de ejecución fase 1 – Preconstrucción:</label>
                             </div>
                             <div class="col d-flex d-flex-row">
-                                <label class="label-left sub-label" for="mesPlazoEjFase1" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid  && this.esRojo==true}">
+                                <label class="label-left sub-label" for="mesPlazoEjFase1"
+                                    [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid  && this.esRojo==true}">
                                     Meses
                                 </label>
                                 <mat-form-field class="w-8em">
@@ -125,7 +138,8 @@
                                 </mat-form-field>
                                 <span
                                     class="contador">{{2 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                <label class="label-left sub-label" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid && this.esRojo==true}">
+                                <label class="label-left sub-label"
+                                    [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid && this.esRojo==true}">
                                     Días
                                 </label>
                                 <mat-form-field class="w-8em">
@@ -143,10 +157,10 @@
                     <div class="col-md-9" style="padding-left: 0px;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left">Plazo de ejecución fase 2 – Construcción:</label>
+                                <label class="label-left" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase2.invalid && this.esRojo==true}">Plazo de ejecución fase 2 – Construcción:</label>
                             </div>
                             <div class="col d-flex d-flex-row">
-                                <label class="label-left sub-label" for="mesPlazoEjFase2">
+                                <label class="label-left sub-label" for="mesPlazoEjFase2" [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase2.invalid && this.esRojo==true}">
                                     Meses
                                 </label>
                                 <mat-form-field class="w-8em">
@@ -156,7 +170,7 @@
                                 </mat-form-field>
                                 <span
                                     class="contador">{{2 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                <label class="label-left sub-label">
+                                <label class="label-left sub-label" [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase2.invalid && this.esRojo==true}">
                                     Días
                                 </label>
                                 <mat-form-field class="w-8em">
@@ -165,7 +179,7 @@
                                         type="number" formControlName="diasPlazoEjFase2">
                                 </mat-form-field>
                                 <span
-                                    class="contador">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}</span>
+                                    class="contador">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase2').value.toString().length:0)}}</span>
                             </div>
                         </div>
                     </div>
@@ -188,8 +202,7 @@
             </mat-card-content>
         </mat-card>
         <div class="text-center">
-            <button mat-button color="warn" class="btn-guardar"
-                type="submit">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
                 <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </div>

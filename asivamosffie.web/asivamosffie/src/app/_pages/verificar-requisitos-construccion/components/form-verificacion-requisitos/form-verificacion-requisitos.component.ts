@@ -24,8 +24,9 @@ export class FormVerificacionRequisitosComponent implements OnInit {
     private dialog: MatDialog,) {
     this.getContrato();
 
-    if (this.router.getCurrentNavigation().extras.state)
-      this.fechaPoliza = this.router.getCurrentNavigation().extras.state.fechaPoliza;
+
+    /*if (this.router.getCurrentNavigation().extras.state)
+      this.fechaPoliza = this.router.getCurrentNavigation().extras.state.fechaPoliza;*/
   }
 
   ngOnInit(): void {
@@ -42,6 +43,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
     this.faseUnoConstruccionService.getContratoByContratoId(this.activatedRoute.snapshot.params.id)
       .subscribe(response => {
         this.contrato = response;
+        this.fechaPoliza=response.fechaAprobacionRequisitosConstruccionInterventor;
         console.log(this.contrato);
         for ( let contratacion of this.contrato.contratacion.contratacionProyecto ) {
           let semaforoGeneralconteo=0;
@@ -80,7 +82,7 @@ export class FormVerificacionRequisitosComponent implements OnInit {
           {
             semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'completo';
-            if ( contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === true )
+            if ( contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipoApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === true )
               contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'en-proceso';
           };
 
@@ -145,7 +147,8 @@ export class FormVerificacionRequisitosComponent implements OnInit {
               contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'en-proceso';
           };
 
-          contratacion.proyecto.semaforoGeneral=semaforoGeneralconteo==6?"completo":semaforoGeneralconteo==0?"sin-diligenciar":"en-proceso";
+          let maxvar=contratacion.fasePreConstruccionNotMapped?6:5;
+          contratacion.proyecto.semaforoGeneral=semaforoGeneralconteo>=maxvar?"completo":semaforoGeneralconteo==0?"sin-diligenciar":"en-proceso";
         };
       });
   };
