@@ -2145,12 +2145,24 @@ namespace asivamosffie.services
                                                                 .Where(r => r.ArchivoCargueId == archivoCargue.ArchivoCargueId && !(bool)r.EstaValidado)
                                                                 .ToListAsync();
 
+
+
                 if (listTempProgramacion.Count() > 0)
                 {
+
+                    contratoConstruccionId = listTempProgramacion.FirstOrDefault().ContratoConstruccionId;
+
+                    // Eliminar meses ya cargados
+                    List<MesEjecucion> listaMeses = _context.MesEjecucion.Where( m => m.ContratoConstruccionId == contratoConstruccionId ).ToList();
+                    _context.MesEjecucion.RemoveRange( listaMeses );
+
+                    //eliminar Programacion
+                    List<Programacion> listaProgramacion = _context.Programacion.Where( p => p.ContratoConstruccionId == contratoConstruccionId ).ToList();
+                    _context.Programacion.RemoveRange( listaProgramacion );
+
+                    // copia la información
                     foreach (TempProgramacion tempProgramacion in listTempProgramacion)
                     {
-
-                        contratoConstruccionId = tempProgramacion.ContratoConstruccionId;
 
                         Programacion programacion = new Programacion()
                         {
@@ -2181,6 +2193,10 @@ namespace asivamosffie.services
 
                     Proyecto proyecto = CalcularFechaInicioContrato(contratoConstruccionId);
 
+                    
+
+
+
                     int numeroMes = 1;
                     int idMes = 0;
                     for (DateTime fecha = proyecto.FechaInicioEtapaObra; fecha <= proyecto.FechaFinEtapaObra; fecha = fecha.AddMonths(1))
@@ -2200,7 +2216,7 @@ namespace asivamosffie.services
                     }
                     _context.SaveChanges();
 
-                    MesEjecucion ultimoMes = _context.MesEjecucion.Where(m => m.ContratoConstruccionId == contratoConstruccionId).OrderByDescending(m => m.MesEjecucionId).FirstOrDefault();
+                    MesEjecucion ultimoMes = _context.MesEjecucion.Where( m => m.ContratoConstruccionId == contratoConstruccionId ).OrderByDescending( m => m.Numero ).FirstOrDefault();
                     ultimoMes.FechaFin = proyecto.FechaFinEtapaObra;
 
                     _context.SaveChanges();
@@ -2261,7 +2277,19 @@ namespace asivamosffie.services
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
 
+            // rango de fechas
             Proyecto proyecto = CalcularFechaInicioContrato( pContratoConstruccionId );
+
+            //Numero semanas
+            int numberOfWeeks = Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
+
+            //Capitulos cargados
+            Programacion[] listaProgramacion = _context.Programacion
+                                                                .Where( 
+                                                                        p => p.ContratoConstruccionId == pContratoConstruccionId && 
+                                                                        p.TipoActividadCodigo == "C" )
+                                                                .OrderBy( p => p.ProgramacionId )
+                                                                .ToArray();
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -2279,9 +2307,30 @@ namespace asivamosffie.services
 
                     using var package = new ExcelPackage(stream);
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-                    //Controlar Registros
-                    //Filas <=
-                    //No comienza desde 0 por lo tanto el = no es necesario
+
+                    bool tieneErrores = false;
+
+                    // valida numero semanas
+                    if ( numberOfWeeks != ( worksheet.Dimension.Columns -1 ) )
+                    {
+                        worksheet.Cells[1, 1].AddComment("Numero de semanas no es igual al del proyecto", "Admin");
+                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        CantidadRegistrosInvalidos++;
+                        CantidadResgistrosValidos--;
+                        tieneErrores = true;
+                    }
+
+                    //valida numero capitulos
+                    if ( listaProgramacion.Count() != ( worksheet.Dimension.Rows -1 ) && worksheet.Cells[1, 1].Comment == null )
+                    {
+                        worksheet.Cells[1, 1].AddComment("Numero de capitulos no es igual a la programacion", "Admin");
+                        worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                        worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                        CantidadRegistrosInvalidos++;
+                        CantidadResgistrosValidos--;
+                        tieneErrores = true;
+                    }
 
                     decimal sumaTotal = 0;
 
@@ -2293,7 +2342,6 @@ namespace asivamosffie.services
                             // semanas
                             for (int k = 2; k < worksheet.Dimension.Columns; k++)
                             {
-                                bool tieneErrores = false;
 
                                 TempFlujoInversion temp = new TempFlujoInversion();
                                 //Auditoria
@@ -2328,7 +2376,7 @@ namespace asivamosffie.services
                                 }
                                 else
                                 {
-                                    temp.Capitulo = worksheet.Cells[i, 1].Text;
+                                    temp.ProgramacionId = listaProgramacion[i-2].ProgramacionId;
                                 }
 
                                 //Valor
@@ -2365,7 +2413,7 @@ namespace asivamosffie.services
 
                     }
 
-                    if ( proyecto.ValorObra != sumaTotal ){
+                    if ( proyecto.ValorObra != sumaTotal && worksheet.Cells[1, 1].Comment == null ){
                         worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor total de obra del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
@@ -2458,14 +2506,87 @@ namespace asivamosffie.services
 
                 if (listTempFlujoInversion.Count() > 0)
                 {
+                    contratoConstruccionId = listTempFlujoInversion.FirstOrDefault().ContratoConstruccionId;
+
+                    Proyecto proyecto = CalcularFechaInicioContrato( contratoConstruccionId );
+
+                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
+                                                                            .Where(r => r.ContratoConstruccionId == contratoConstruccionId)
+                                                                            .Include(r => r.Contrato)
+                                                                                .ThenInclude(r => r.Contratacion)
+                                                                                    .ThenInclude(r => r.ContratacionProyecto)
+                                                                            .Include(r => r.Proyecto)
+
+                                                                            .FirstOrDefault();
+
+                    //carga el seguimiento semanal 
+                    ContratacionProyecto contratacionProyecto = contratoConstruccion.Contrato.Contratacion.ContratacionProyecto.Where(p => p.ProyectoId == contratoConstruccion.ProyectoId).FirstOrDefault();
+                    if (contratacionProyecto != null)
+                    {
+                        List<dynamic> listaFechas = new List<dynamic>();
+
+                        DateTime fechaTemp = proyecto.FechaInicioEtapaObra;
+
+                        while (proyecto.FechaFinEtapaObra >= fechaTemp)
+                        {
+                            listaFechas.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
+                            fechaTemp = fechaTemp.AddDays(7);
+                        }
+
+                        int idContratacionproyecto = contratacionProyecto.ContratacionProyectoId;
+
+                        List<SeguimientoSemanal> listaSeguimientos = _context.SeguimientoSemanal
+                                                                    .Where(p => p.ContratacionProyectoId == idContratacionproyecto).ToList();
+
+                        // elimina los existentes
+                        _context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
+
+                        int i = 1;
+                        listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
+                        {
+
+                            SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
+                            {
+                                ContratacionProyectoId = idContratacionproyecto,
+                                Eliminado = false,
+                                UsuarioCreacion = pUsuarioModifico,
+                                FechaCreacion = DateTime.Now,
+                                NumeroSemana = i,
+                                FechaInicio = f.fechaInicio,
+                                FechaFin = f.fechaFin,
+                                RegistroCompleto = false,
+                            };
+
+                            _context.SeguimientoSemanal.Add(seguimientoSemanal);
+                            _context.SaveChanges();
+
+                            i++;
+
+                        });
+
+                        SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal
+                                                                            .Where( s => s.ContratacionProyectoId == idContratacionproyecto )
+                                                                            .OrderByDescending( s => s.NumeroSemana )
+                                                                            .FirstOrDefault();
+
+                        seguimientoSemanal.FechaFin = proyecto.FechaFinEtapaObra; 
+                        _context.SaveChanges();
+
+                    }
+
+
+                    // eliminar registros cargados
+                    List<FlujoInversion> listaFlujo = _context.FlujoInversion.Where( r => r.ContratoConstruccionId == contratoConstruccionId ).ToList();
+                    _context.FlujoInversion.RemoveRange( listaFlujo );
+                    //_context.SaveChanges();
+
                     listTempFlujoInversion.ForEach(tempFlujo =>
                     {
 
-                       contratoConstruccionId = tempFlujo.ContratoConstruccionId;
+                       
                        FlujoInversion flujo = new FlujoInversion()
                        {
                            ContratoConstruccionId = tempFlujo.ContratoConstruccionId,
-                           Capitulo = tempFlujo.Capitulo,
                            Semana = tempFlujo.Semana,
                            Valor = tempFlujo.Valor,
 
@@ -2484,14 +2605,7 @@ namespace asivamosffie.services
                         _context.SaveChanges();
                     });
 
-                    ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                            .Where(r => r.ContratoConstruccionId == contratoConstruccionId)
-                                                                            .Include(r => r.Contrato)
-                                                                                .ThenInclude(r => r.Contratacion)
-                                                                                    .ThenInclude(r => r.ContratacionProyecto)
-                                                                            .Include(r => r.Proyecto)
-
-                                                                            .FirstOrDefault();
+                    
 
                     if (contratoConstruccion != null)
                     {
@@ -2502,58 +2616,7 @@ namespace asivamosffie.services
 
                         VerificarRegistroCompletoContratoObra(contratoConstruccion.ContratoId);
 
-                        DateTime? fechaInicio = contratoConstruccion.Contrato.FechaActaInicioFase2;
-                        if (fechaInicio != null)
-                        {
-
-                            DateTime fechaFin = fechaInicio.Value.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
-                            fechaFin = fechaFin.AddDays(contratoConstruccion.Proyecto.PlazoDiasObra.Value);
-
-                            DateTime fechaTemp = fechaInicio.Value;
-
-                            while (fechaFin >= fechaTemp)
-                            {
-                                listaFechas.Add(new { fechaInicio = fechaTemp, fechaFin = fechaTemp.AddDays(6) });
-                                fechaTemp = fechaTemp.AddDays(7);
-                            }
-
-
-                            ContratacionProyecto contratacionProyecto = contratoConstruccion.Contrato.Contratacion.ContratacionProyecto.Where(p => p.ProyectoId == contratoConstruccion.ProyectoId).FirstOrDefault();
-                            if (contratacionProyecto != null)
-                            {
-                                int idContratacionproyecto = contratacionProyecto.ContratacionProyectoId;
-
-                                List<SeguimientoSemanal> listaSeguimientos = _context.SeguimientoSemanal
-                                                                            .Where(p => p.ContratacionProyectoId == idContratacionproyecto).ToList();
-
-                                // elimina los existentes
-                                _context.SeguimientoSemanal.RemoveRange(listaSeguimientos);
-
-                                int i = 1;
-                                listaFechas.OrderBy(p => p.fechaInicio).ToList().ForEach(f =>
-                                {
-
-                                    SeguimientoSemanal seguimientoSemanal = new SeguimientoSemanal()
-                                    {
-                                        ContratacionProyectoId = idContratacionproyecto,
-                                        Eliminado = false,
-                                        UsuarioCreacion = pUsuarioModifico,
-                                        FechaCreacion = DateTime.Now,
-                                        NumeroSemana = i,
-                                        FechaInicio = f.fechaInicio,
-                                        FechaFin = f.fechaFin,
-                                        RegistroCompleto = false,
-                                    };
-
-                                    _context.SeguimientoSemanal.Add(seguimientoSemanal);
-                                    _context.SaveChanges();
-
-                                    i++;
-
-                                });
-
-                            }
-                        }
+                        
                     }
 
                     return respuesta =
@@ -2883,7 +2946,7 @@ namespace asivamosffie.services
                     }
                 }
                 var contrato = _context.Contrato.Where(x => x.ContratoId == contratoConstruccion.ContratoId).Include(x => x.Contratacion).FirstOrDefault();
-                if (contrato.Contratacion.TipoSolicitudCodigo == "2")//cambiar esto, no encontre la constante inteventoria
+                if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())//cambiar esto, no encontre la constante inteventoria
                 {
                     contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                 }

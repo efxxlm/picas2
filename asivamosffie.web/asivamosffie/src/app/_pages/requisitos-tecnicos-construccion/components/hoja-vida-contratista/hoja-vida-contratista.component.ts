@@ -12,6 +12,8 @@ import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoCo
 })
 export class HojaVidaContratistaComponent implements OnInit {
 
+  estaEditando = false;
+
   formContratista: FormGroup;
   minDate: Date;
   @Input() perfilProyecto: any[] = [];
@@ -123,6 +125,8 @@ export class HojaVidaContratistaComponent implements OnInit {
             );
           }
         }
+        this.estaEditando = true;
+
       } );
       this.perfilesCompletados.emit( 'sin-diligenciar' );
     } else {

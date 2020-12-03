@@ -60,6 +60,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   numIdentifiacionSupervisor: string;
   rutaDocumento: any;
   tipoCodigo: any;
+  observacionesUltimasSup: any;
   constructor( private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService,  private commonSvc: CommonService) { }
 
   ngOnInit(): void {
@@ -101,14 +102,17 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     });
   }
   loadService(id){
-    this.service.GetListContratoObservacionByContratoId(id).subscribe(data=>{
+    this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
       this.dataElements = data;
-      for(let i=0; i<this.dataElements.length;i++){ 
-
-        this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
-        this.observacionesUltimas = this.dataElements[i].observaciones;
-        this.contratoObservacionId = this.dataElements[i].contratoObservacionId;
-        this.fechaCreacionObs = this.dataElements[i].fechaCreacion
+      for(let i=0; i<data.length;i++){ 
+        if(data[i].esSupervision==false){
+          this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
+          this.observacionesUltimas = this.dataElements[i].observaciones;
+          this.fechaCreacionObs = this.dataElements[i].fechaCreacion;
+        }
+        else{
+          this.observacionesUltimasSup = this.dataElements[i].observaciones;
+        }
       }
     });
   }

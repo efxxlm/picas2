@@ -105,7 +105,8 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
         'ContratoId':this.contratoId,
         'Observaciones':this.addressForm.value.observaciones,
         'EsActa':false,
-        'EsActaFase1':this.addressForm.value.tieneObservaciones
+        'EsActaFase1':this.addressForm.value.tieneObservaciones,
+        'esSupervision':true
       };
       this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data:any)=>{
         if(data.code=="200"){
@@ -134,7 +135,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
             }
           }
           this.realizoPeticion = true;
-          this.openDialog('La información ha sido guardada exitosamente.', "");
+          this.openDialog("",'La información ha sido guardada exitosamente.');
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
         else{
@@ -147,8 +148,9 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
         'ContratoObservacionId':this.contratoObservacionId,
         'ContratoId':this.contratoId,
         'Observaciones':this.addressForm.value.observaciones,
-        'EsActa':true,
-        'EsActaFase1':this.addressForm.value.tieneObservaciones
+        'esActa':false,
+        'EsActaFase1':this.addressForm.value.tieneObservaciones,
+        'esSupervision':true
       };
       this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data2:any)=>{
         if(data2.code=="200"){
@@ -177,7 +179,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
             }
           }
           this.realizoPeticion = true;
-          this.openDialog('La información ha sido guardada exitosamente.', "");
+          this.openDialog("",'La información ha sido guardada exitosamente.');
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
         else{

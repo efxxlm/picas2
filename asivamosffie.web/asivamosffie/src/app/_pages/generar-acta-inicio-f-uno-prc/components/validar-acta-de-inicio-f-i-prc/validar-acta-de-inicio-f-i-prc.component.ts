@@ -57,12 +57,17 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
   nomSupervisor: string;
   dataSupervisor: boolean;
   tipoCodigo: any;
+  dataElements: any;
+  tieneObservacionesBool: any;
+  observacionesUltimas: any;
+  fechaCreacionObs: any;
   constructor(private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService, private router: Router,public dialog: MatDialog, private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.cargarRol();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
+      this.loadService(param.id)
       this.contratoId = param.id;
     });
   }
@@ -91,6 +96,18 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
       }
       else{
         this.observaciones = data.observaciones;
+      }
+    });
+  }
+  loadService(id){
+    this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
+      this.dataElements = data;
+      for(let i=0; i<data.length;i++){ 
+        if(data[i].esSupervision==false){
+          this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
+          this.observacionesUltimas = this.dataElements[i].observaciones;
+          this.fechaCreacionObs = this.dataElements[i].fechaCreacion;
+        }
       }
     });
   }

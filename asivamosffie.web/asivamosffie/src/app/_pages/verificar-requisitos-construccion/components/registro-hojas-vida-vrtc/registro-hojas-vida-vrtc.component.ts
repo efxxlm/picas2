@@ -14,8 +14,10 @@ import { ContratoPerfil } from 'src/app/_interfaces/faseUnoPreconstruccion.inter
 })
 export class RegistroHojasVidaVrtcComponent implements OnInit {
 
-  formContratista        : FormGroup;
+  formContratista: FormGroup;
   minDate: Date;
+  estaEditando = false;
+
   @Input() perfilProyecto: any[] = [];
   @Input() contratoId    : number;
   @Input() proyectoId    : number;
@@ -349,6 +351,13 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
       } );
   };
 
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
+
+
   guardar () {
     let perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
@@ -382,10 +391,5 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
     this.enviarPerfilesContrato.emit( perfiles );
   };
 
-  // evalua tecla a tecla
-  validateNumberKeypress(event: KeyboardEvent) {
-    const alphanumeric = /[0-9]/;
-    const inputChar = String.fromCharCode(event.charCode);
-    return alphanumeric.test(inputChar) ? true : false;
-  }
+  
 };

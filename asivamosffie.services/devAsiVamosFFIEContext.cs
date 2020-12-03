@@ -157,6 +157,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -646,7 +647,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ContratoConstruccion)
                     .WithMany(p => p.ConstruccionObservacion)
                     .HasForeignKey(d => d.ContratoConstruccionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ConstruccionObservacion_ContratoConstruccion");
             });
 
@@ -2277,11 +2277,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<FlujoInversion>(entity =>
             {
-                entity.Property(e => e.Capitulo)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Semana)
                     .IsRequired()
                     .HasMaxLength(2000)
@@ -4699,11 +4694,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<TempFlujoInversion>(entity =>
             {
-                entity.Property(e => e.Capitulo)
-                    .IsRequired()
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -5341,7 +5331,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaAprobacion).HasColumnType("datetime");
 
-                entity.Property(e => e.FechaAprobacionRequisitosConstruccionInterventor).HasColumnType("datetime");
+                entity.Property(e => e.FechaAprobacionRequisitosConstruccionApoyo).HasColumnType("datetime");
 
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)

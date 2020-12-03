@@ -8,7 +8,7 @@ namespace asivamosffie.model.Models
         public int ContratoId { get; set; }
         public string RutaActaFase1 { get; set; }
         public DateTime? FechaActaInicioFase1 { get; set; }
-        public DateTime? FechaAprobacionRequisitosConstruccionInterventor { get; set; }
+        public DateTime? FechaAprobacionRequisitosConstruccionApoyo { get; set; }
         public bool? RegistroCompletoConstruccion { get; set; }
         public DateTime? FechaAprobacion { get; set; }
         public string NumeroContrato { get; set; }
@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public int? CantidadProyectosAsociados { get; set; }
         public int? CantidadProyectosRequisitosAprobados { get; set; }
         public int? CantidadProyectosRequisitosVerificados { get; set; }
+        public int? CantidadProyectosRequisitosPendientes { get; set; }
         public int? TieneFasePreconstruccion { get; set; }
         public int? TieneFaseConstruccion { get; set; }
         public string EstadoCodigo { get; set; }
