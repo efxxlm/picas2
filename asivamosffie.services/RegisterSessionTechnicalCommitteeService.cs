@@ -3270,7 +3270,7 @@ namespace asivamosffie.services
         public byte[] ConvertirPDF(Plantilla pPlantilla)
         {
             string strEncabezado = "";
-            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            if (!string.IsNullOrEmpty(pPlantilla?.Encabezado?.Contenido))
             {
                 strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
             }
