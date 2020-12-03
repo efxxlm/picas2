@@ -2282,7 +2282,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Mes)
+                entity.Property(e => e.Semana)
                     .IsRequired()
                     .HasMaxLength(2000)
                     .IsUnicode(false);
@@ -4708,7 +4708,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Mes)
+                entity.Property(e => e.Semana)
                     .IsRequired()
                     .HasMaxLength(2000)
                     .IsUnicode(false);

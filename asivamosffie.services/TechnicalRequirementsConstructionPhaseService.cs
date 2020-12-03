@@ -1244,6 +1244,8 @@ namespace asivamosffie.services
             DateTime? fechaInicioContrato = contratoConstruccion?.Contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp;
             DateTime? fechaPoliza = contratoConstruccion.Contrato?.ContratoPoliza?.OrderByDescending( r => r.FechaAprobacion )?.FirstOrDefault()?.FechaAprobacion;
 
+            proyecto = contratoConstruccion.Proyecto;
+
             if ( fechaInicioContrato != null && fechaPoliza != null ){
                 if ( fechaPoliza >= fechaInicioContrato)
                     proyecto.FechaInicioEtapaObra = fechaPoliza.Value;
@@ -1253,6 +1255,8 @@ namespace asivamosffie.services
 
             DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra.AddMonths( contratoConstruccion.Proyecto.PlazoMesesObra.Value );
             proyecto.FechaFinEtapaObra = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value ); 
+
+            
 
             return proyecto;
         }
@@ -2135,20 +2139,7 @@ namespace asivamosffie.services
             int CantidadResgistrosValidos = 0;
             int CantidadRegistrosInvalidos = 0;
 
-            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                        .Where( cc => cc.ContratoConstruccionId == pContratoConstruccionId )
-                                                                        .Include( r => r.Contrato )
-                                                                            .ThenInclude( r => r.Contratacion )
-                                                                                .ThenInclude( r => r.DisponibilidadPresupuestal )
-                                                                        .Include( r => r.Contrato )
-                                                                            .ThenInclude( r => r.ContratoPoliza )
-                                                                        .Include( r => r.Proyecto )
-                                                                        .FirstOrDefault();
-
-
-            DateTime? fechaInicioContrato = contratoConstruccion?.Contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp.Value;
-            DateTime fechaFinalContrato = fechaInicioContrato.Value.AddMonths( contratoConstruccion.Proyecto.PlazoMesesObra.Value );
-            fechaFinalContrato = fechaFinalContrato.AddDays( contratoConstruccion.Proyecto.PlazoDiasObra.Value );
+            Proyecto proyecto = CalcularFechaInicioContrato( pContratoConstruccionId );
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -2172,10 +2163,12 @@ namespace asivamosffie.services
 
                     decimal sumaTotal = 0;
 
+                    // Capitulos
                     for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                     {
                         try
                         {
+                            // semanas
                             for (int k = 2; k < worksheet.Dimension.Columns; k++)
                             {
                                 bool tieneErrores = false;
@@ -2200,7 +2193,7 @@ namespace asivamosffie.services
                                 }
                                 else
                                 {
-                                    temp.Mes = worksheet.Cells[1, k].Text;
+                                    temp.Semana = worksheet.Cells[1, k].Text;
                                 }
 
                                 //Capitulo
@@ -2250,7 +2243,7 @@ namespace asivamosffie.services
 
                     }
 
-                    if ( contratoConstruccion.Proyecto.ValorObra != sumaTotal ){
+                    if ( proyecto.ValorObra != sumaTotal ){
                         worksheet.Cells[1, 1].AddComment("La suma de los valores no es igual al valor total de obra del proyecto", "Admin");
                         worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
@@ -2351,7 +2344,7 @@ namespace asivamosffie.services
                        {
                            ContratoConstruccionId = tempFlujo.ContratoConstruccionId,
                            Capitulo = tempFlujo.Capitulo,
-                           Mes = tempFlujo.Mes,
+                           Semana = tempFlujo.Semana,
                            Valor = tempFlujo.Valor,
 
                        };
