@@ -76,7 +76,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
   enviarParaRevision(idContrato){
-    this.services.CambiarEstadoActa(idContrato,"14","usr2").subscribe(data=>{
+    this.services.CambiarEstadoActa(idContrato,"21","usr2").subscribe(data=>{
       this.ngOnInit();
     });
   }
@@ -122,7 +122,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {
-        if(tipoContrato=='Obra e Interventoria'){
+        if(tipoContrato=='Obra'){
           this.services.CambiarEstadoActa(id,"20","usr2").subscribe(data=>{
             this.ngOnInit();
           });

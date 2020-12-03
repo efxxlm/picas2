@@ -69,7 +69,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   }
 
   loadData(id) {
-    this.services.GetVistaGenerarActaInicio(id).subscribe(data => {
+    this.services.GetVistaGenerarActaInicio(id).subscribe((data:any) => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
       this.fechaAprobacionSupervisor = data.plazoInicialContratoSupervisor;
@@ -92,8 +92,8 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.fechaActaInicioConstruccion = data.fechaActaInicioDateTime;
       this.fechaPrevistaTerminacion = data.fechaPrevistaTerminacionDateTime;
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
-      this.plazoActualContratoMeses = 12;
-      this.plazoActualContratoDias = 26;
+      this.plazoActualContratoMeses = data.plazoActualContratoMeses;
+      this.plazoActualContratoDias = data.plazoActualContratoDias;
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionMeses;
