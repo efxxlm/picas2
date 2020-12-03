@@ -167,9 +167,9 @@ namespace asivamosffie.services
                             ContratoObservacion contratoObservacionOld = _context.ContratoObservacion.Where(r => r.ContratoObservacionId == ContratoObservacion.ContratoObservacionId).FirstOrDefault();
 
                             contratoObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
-                            contratoObservacionOld.FechaModificacion = DateTime.Now;
-
+                            contratoObservacionOld.FechaModificacion = DateTime.Now; 
                             contratoObservacionOld.Observaciones = ContratoObservacion.Observaciones;
+                            _context.Update(contratoObservacionOld);
                         }
                     }
                 }
