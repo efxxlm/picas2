@@ -99,7 +99,7 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
         if (respuesta.code == "200"){
-
+          location.reload()
         }
           //this.createEdit.emit(true);
       });
