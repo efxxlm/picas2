@@ -45,7 +45,7 @@
           </mat-card>
         </div>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="contratacion.fasePreConstruccionNotMapped">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
               {{ contratacion.proyecto.contratoConstruccion[0] ? contratacion.proyecto.contratoConstruccion[0].registroCompletoDiagnostico == true ? 
