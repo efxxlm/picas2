@@ -32,33 +32,13 @@ namespace asivamosffie.services
             _commonService = commonService;
         }
 
-        public async Task<List<dynamic>> GetContractsGrid(string pUsuarioId, string pTipoContrato)
+        public async Task<List<VRequisitosTecnicosConstruccionAprobar>> GetContractsGrid(string pUsuarioId, string pTipoContrato)
         {
-            List<dynamic> listaContrats = new List<dynamic>();
-            List<VRequisitosTecnicosInicioConstruccion> lista = new List<VRequisitosTecnicosInicioConstruccion>();
-            if (pTipoContrato == ConstanCodigoTipoContratacion.Obra.ToString())
-                lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10").ToListAsync();
+            if (pTipoContrato == ConstanCodigoTipoContratacion.Obra.ToString()) 
+                return await _context.VRequisitosTecnicosConstruccionAprobar.Where(r => r.TipoContratoCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFaseConstruccion > 0 && ( r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10")).ToListAsync();
             else
-                lista = await _context.VRequisitosTecnicosInicioConstruccion.Where(r => r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10" || r.EstadoCodigo == "11").ToListAsync();
-           
-            
-            lista.Where(c => c.TipoContratoCodigo == pTipoContrato).ToList()
-                .ForEach(c =>
-                {
-                    listaContrats.Add(new
-                    {
-                        ContratoId = c.ContratoId,
-                        FechaAprobacion = c.FechaAprobacion,
-                        NumeroContrato = c.NumeroContrato,
-                        CantidadProyectosAsociados = c.CantidadProyectosAsociados,
-                        CantidadProyectosRequisitosAprobados = c.CantidadProyectosRequisitosAprobados,
-                        CantidadProyectosRequisitosPendientes = c.CantidadProyectosAsociados - c.CantidadProyectosRequisitosAprobados,
-                        EstadoCodigo = c.EstadoCodigo,
-                        EstadoNombre = c.EstadoNombre,
-                        Existeregistro = c.ExisteRegistro,
-                    });
-                });
-            return listaContrats;
+                return await _context.VRequisitosTecnicosConstruccionAprobar.Where(r => r.TipoContratoCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() && r.TieneFaseConstruccion > 0  && ( r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10" || r.EstadoCodigo == "11")).ToListAsync();
+             
         }
 
 

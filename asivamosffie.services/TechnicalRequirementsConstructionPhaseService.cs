@@ -1580,21 +1580,44 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion)
+        public async Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             string CreateEdit = string.Empty;
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Al_Supervisor, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
+                Contrato contrato = _context.Contrato.Where(c=>c.ContratoId==pContratoId).Include(x=>x.Contratacion).FirstOrDefault();
+                //envio correo
+                //envio correo a supervisor
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.VerificacionRequisitosTecnicosConstruccionFase2);
+                
+                string ncontrato = "";
+                string fechaContrato = "";
+                string template = TemplateRecoveryPassword.Contenido.
+                    Replace("[NUMEROCONTRATO]",contrato.NumeroContrato).
+                    Replace("_LinkF_", pDominioFront).
+                    Replace("[FECHAVERIFICACION]", contrato.FechaAprobacionRequisitosConstruccionInterventor == null?"":Convert.ToDateTime(contrato.FechaAprobacionRequisitosConstruccionInterventor).ToString("dd/MM/yyyy")).
+                    Replace("[CANTIDADPROYECTOSASOCIADOS]", _context.ContratacionProyecto.Where(x=>x.ContratacionId==contrato.ContratacionId).Count().ToString()).
+                    Replace("[CANTIDADPROYECTOSVERIFICADOS]", contrato.Contratacion.TipoSolicitudCodigo=="1"? _context.ContratoConstruccion.Where(x=>x.RegistroCompletoVerificacion==true && x.ContratoId==contrato.ContratoId).Count().ToString():
+                    _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
+                    Replace("[TIPOCONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == "1" ? "obra":"interventoría");//OBRA O INTERVENTORIA
 
-                Contrato contrato = _context.Contrato.Find(pContratoId);
+
+                var usuariosadmin = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Supervisor).Include(y => y.Usuario).ToList();
+                foreach (var usuarioadmin in usuariosadmin)
+                {
+                    bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Verificación de requisitos técnicos para fase 2-construcción", template, pSender, pPassword, pMailServer, pMailPort);
+                }
+
+
+                
 
                 contrato.UsuarioModificacion = pUsuarioCreacion;
                 contrato.FechaModificacion = DateTime.Now;
 
                 contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Enviado_al_supervisor;
-
+                
 
                 _context.SaveChanges();
                 return
@@ -2923,7 +2946,7 @@ namespace asivamosffie.services
                     }
                 }
                 var contrato = _context.Contrato.Where(x => x.ContratoId == contratoConstruccion.ContratoId).Include(x => x.Contratacion).FirstOrDefault();
-                if (contrato.Contratacion.TipoSolicitudCodigo == "2")//cambiar esto, no encontre la constante inteventoria
+                if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())//cambiar esto, no encontre la constante inteventoria
                 {
                     contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                 }

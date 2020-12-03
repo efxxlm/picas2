@@ -10,6 +10,6 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ITechnicalCheckConstructionPhase2Service
     {
-        Task<List<dynamic>> GetContractsGrid(string pUsuarioId, string pTipoContrato);
+        Task<List<VRequisitosTecnicosConstruccionAprobar>> GetContractsGrid(string pUsuarioId, string pTipoContrato);
     }
 }

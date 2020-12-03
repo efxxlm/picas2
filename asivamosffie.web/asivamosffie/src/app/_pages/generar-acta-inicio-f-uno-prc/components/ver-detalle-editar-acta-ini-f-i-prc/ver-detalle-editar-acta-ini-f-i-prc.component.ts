@@ -72,6 +72,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   fechaCreacion: any;
   elementsObservacion: any;
   tipoCodigo: any;
+  esActa: any;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -109,9 +110,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       for(let i=0; i<data.contratoObservacion.length;i++){
         if(data.contratoObservacion[i].esActa==false && data.contratoObservacion[i].esActaFase1==true){
           this.indexObservacionFinal=data.contratoObservacion[i].observaciones;
-          this.observacionesActaFase1 = data.contratoObservacion[i].observaciones;
         }
-        
       }
       this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
@@ -129,13 +128,14 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.service.GetListContratoObservacionByContratoId(id).subscribe((data:any)=>{
       this.elementsObservacion = data;
       for(let i=0; i<data.length;i++){
-        if(data[i].esActa==true && data[i].esActaFase1==true){
+        if(data[i].esActa==false && data[i].esActaFase1==true){
+          this.esActa = data[i].esActa;
           this.conObervacionesActa = data[i].esActaFase1;
           this.observacionesActaFase1 = data[i].observaciones;
           this.fechaCreacion = data[i].fechaCreacion;
+          this.addressForm.get('observacionesEspeciales').setValue(this.observacionesActaFase1);
         }
       }
-      this.addressForm.get('observacionesEspeciales').setValue(this.observacionesActaFase1);
   });
 }
 
@@ -298,12 +298,15 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     sumaMeses = parseInt(this.addressForm.value.mesPlazoEjFase1) + parseInt(this.addressForm.value.mesPlazoEjFase2);
     sumaDias = parseInt(this.addressForm.value.diasPlazoEjFase1) + parseInt(this.addressForm.value.diasPlazoEjFase2);
     if (sumaMeses > this.mesPlazoIni || sumaDias > this.diasPlazoIni) {
-      this.openDialog('Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato', "");
+      this.openDialog('','Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato');
     }
     else {
       const arrayObservacion=[{
+        'ContratoId':this.idContrato,
         "ContratoObservacionId": this.indexContratacionID,
-        "observaciones":this.addressForm.value.observacionesEspeciales
+        "observaciones":this.addressForm.value.observacionesEspeciales,
+        'esActa':true,
+        'esActaFase1':true
       }];
       const arrayContrato: EditContrato = {
         contratoId: this.idContrato,

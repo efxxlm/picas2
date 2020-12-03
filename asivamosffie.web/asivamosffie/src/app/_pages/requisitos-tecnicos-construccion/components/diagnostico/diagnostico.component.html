@@ -3,7 +3,10 @@
     <mat-card-content>
 
       <section class="example-section">
-        <label class="example-margin"> <b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b> </label>
+        <label class="example-margin"
+        [ngClass]="{'color-secondaryColor' : formDiagnostico.get('esInformeDiagnostico').invalid && formDiagnostico.get('esInformeDiagnostico').dirty|| formDiagnostico.get('esInformeDiagnostico').invalid && estaEditando}">
+        <b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b>
+      </label>
         <mat-radio-group formControlName="esInformeDiagnostico">
           <mat-radio-button class="example-margin" [value]="true" [checked]="formDiagnostico.get( 'esInformeDiagnostico' ).value === true">Sí</mat-radio-button>
           <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'esInformeDiagnostico' ).value === false">No</mat-radio-button>
@@ -13,7 +16,10 @@
 
       <section class="animatedDown" *ngIf="formDiagnostico.get( 'esInformeDiagnostico' ).value">
         <div class="d-flex mt-1em">
-          <label class="mr-label" class="label-left"><b>URL con soporte</b></label>
+          <label class="mr-label" class="label-left"
+          [ngClass]="{'color-secondaryColor' : formDiagnostico.get('rutaInforme').invalid && formDiagnostico.get('rutaInforme').dirty|| formDiagnostico.get('rutaInforme').invalid && estaEditando}">
+            <b>URL con soporte</b>
+          </label>
         <div class="col d-flex w-80">
           <mat-form-field>
             <input matInput type="text" formControlName="rutaInforme" required>
@@ -37,7 +43,10 @@
         <mat-card-content>
 
             <div class="d-flex">
-              <label class="mr-label" class="label-left"><b>a.</b> Costo directo</label>
+              <label class="mr-label" class="label-left"
+              [ngClass]="{'color-secondaryColor' : formDiagnostico.get('costoDirecto').invalid && formDiagnostico.get('costoDirecto').dirty|| formDiagnostico.get('costoDirecto').invalid && estaEditando}">
+                <b>a.</b> Costo directo
+              </label>
             <div class="col d-flex">
               <mat-form-field style="width: 35.5%;">
                 <input  matInput
@@ -57,7 +66,10 @@
           </div>
 
             <div class="d-flex">
-              <label class="mr-label" class="label-left"><b>b.</b> A (administración)</label>
+              <label class="mr-label" class="label-left"
+              [ngClass]="{'color-secondaryColor' : formDiagnostico.get('administracion').invalid && formDiagnostico.get('administracion').dirty|| formDiagnostico.get('administracion').invalid && estaEditando}">
+                <b>b.</b> A (administración)
+              </label>
             <div class="col d-flex">
               <mat-form-field style="width: 33.5%;">
                 <input  matInput
@@ -77,7 +89,10 @@
           </div>
 
             <div class="d-flex">
-              <label class="mr-label" class="label-left"><b>c.</b> I (Imprevistos)</label>
+              <label class="mr-label" class="label-left"
+              [ngClass]="{'color-secondaryColor' : formDiagnostico.get('imprevistos').invalid && formDiagnostico.get('imprevistos').dirty|| formDiagnostico.get('imprevistos').invalid && estaEditando}">
+                <b>c.</b> I (Imprevistos)
+              </label>
             <div class="col d-flex">
               <mat-form-field style="width: 35.1%;">
                 <input  matInput
@@ -97,7 +112,10 @@
           </div>
 
             <div class="d-flex">
-              <label class="mr-label" class="label-left"><b>d.</b> U (Utilidad)</label>
+              <label class="mr-label" class="label-left"
+              [ngClass]="{'color-secondaryColor' : formDiagnostico.get('utilidad').invalid && formDiagnostico.get('utilidad').dirty|| formDiagnostico.get('utilidad').invalid && estaEditando}">
+                <b>d.</b> U (Utilidad)
+              </label>
             <div class="col d-flex">
               <mat-form-field style="width: 36.3%;">
                 <input  matInput
@@ -117,7 +135,10 @@
           </div>
 
             <div class="d-flex">
-              <label class="mr-label" class="label-left"><b>Valor total de la fase 2 - Construcción</b></label>
+              <label class="mr-label" class="label-left"
+              [ngClass]="{'color-secondaryColor' : formDiagnostico.get('valorTotalFaseConstruccion').invalid && formDiagnostico.get('valorTotalFaseConstruccion').dirty|| formDiagnostico.get('valorTotalFaseConstruccion').invalid && estaEditando}">
+                <b>Valor total de la fase 2 - Construcción</b>
+              </label>
             <div class="col d-flex">
               <mat-form-field style="width: 29%;">
                 <input  matInput
@@ -139,7 +160,10 @@
       <div *ngIf="( formDiagnostico.get( 'imprevistos' ).value !== null ) && ( formDiagnostico.get( 'utilidad' ).value !== null )">
 
         <div class="example-section text-center">
-          <label class="example-margin"> <b>¿Se requirió modificación contractual?</b> </label>
+          <label class="example-margin"
+          [ngClass]="{'color-secondaryColor' : formDiagnostico.get('requiereModificacionContractual').invalid && formDiagnostico.get('requiereModificacionContractual').dirty|| formDiagnostico.get('requiereModificacionContractual').invalid && estaEditando}">
+            <b>¿Se requirió modificación contractual?</b>
+          </label>
           <mat-radio-group formControlName="requiereModificacionContractual">
             <mat-radio-button class="example-margin" [value]="true" [checked]="formDiagnostico.get( 'requiereModificacionContractual' ).value">Sí</mat-radio-button>
             <mat-radio-button class="example-margin" [value]="false" [checked]="formDiagnostico.get( 'requiereModificacionContractual' ).value === false">No</mat-radio-button>
@@ -150,7 +174,10 @@
         <mat-card *ngIf="formDiagnostico.get( 'requiereModificacionContractual' ).value">
           <mat-card-content>
             <div class="example-section-left w-70 mt-min" align="left">
-              <p>Número de solicitud de la modificación</p>
+              <p
+              [ngClass]="{'color-secondaryColor' : formDiagnostico.get('numeroSolicitudModificacion').invalid && formDiagnostico.get('numeroSolicitudModificacion').dirty|| formDiagnostico.get('numeroSolicitudModificacion').invalid && estaEditando}">
+                <b>Número de solicitud de la modificación</b>
+              </p>
               <mat-form-field class="w-40 mr-min">
                 <mat-select formControlName="numeroSolicitudModificacion" class="padding-left">
                   <mat-option></mat-option>

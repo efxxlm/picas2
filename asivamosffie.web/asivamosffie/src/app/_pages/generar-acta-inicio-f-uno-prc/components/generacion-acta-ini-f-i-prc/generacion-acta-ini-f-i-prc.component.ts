@@ -56,6 +56,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   rolAsignado: any;
   ocpion: number;
   tipoCodigo: any;
+  numIdentificacionRepLegalInterventoria: any;
+  nomRepresentanteLegalContrInterventoria: any;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -75,10 +77,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
     if (this.rolAsignado == 2) {
-      this.ocpion = 2;
+      this.ocpion = 1;
     }
     else {
-      this.ocpion = 1;
+      this.ocpion = 2;
     }
   }
   openDialogConfirmar(modalTitle: string, modalText: string) {
@@ -130,6 +132,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
+
+    this.numIdentificacionRepLegalInterventoria = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
+    this.nomRepresentanteLegalContrInterventoria = data.contratacion.contratista.representanteLegal;
+
     if (this.ocpion == 2) {
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
@@ -227,6 +233,12 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
           this.openDialog('', 'Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 1 - Preconstrucción Días</b>, dado que no coincide con la información inicial registrada para el contrato');
         }
         else {
+          const arrayObservacion=[{
+            'ContratoId':this.idContrato,
+            "observaciones":this.addressForm.value.observacionesEspeciales,
+            'esActa':true,
+            'esActaFase1':true
+          }];
           const arrayContrato: EditContrato = {
             contratoId: this.idContrato,
             contratacionId: this.contratacionId,
@@ -249,7 +261,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             conObervacionesActa: this.observacionesOn,
             registroCompleto: true,
             contratoConstruccion: [],
-            contratoObservacion: [],
+            contratoObservacion: arrayObservacion,
             contratoPerfil: [],
             contratoPoliza: []
           };
@@ -297,7 +309,13 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
           this.openDialog('', 'Debe verificar la información ingresada en el campo <b>Valor inicial del contrato</b>, dado que no coincide con la información inicial registrada para el contrato');
         }
         else {
-          const arrayContrato: EditContrato = {
+          const arrayObservacion2=[{
+            'ContratoId':this.idContrato,
+            "observaciones":this.addressForm.value.observacionesEspeciales,
+            'esActa':true,
+            'esActaFase1':true
+          }];
+          const arrayContrato2: EditContrato = {
             contratoId: this.idContrato,
             contratacionId: this.contratacionId,
             fechaTramite: this.fechaTramite,
@@ -319,11 +337,11 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
             conObervacionesActa: this.observacionesOn,
             registroCompleto: true,
             contratoConstruccion: [],
-            contratoObservacion: [],
+            contratoObservacion: arrayObservacion2,
             contratoPerfil: [],
             contratoPoliza: []
           };
-          this.service.EditContrato(arrayContrato).subscribe((data: any) => {
+          this.service.EditContrato(arrayContrato2).subscribe((data: any) => {
             if (data.code == "200") {
               if (localStorage.getItem("origin") == "obra") {
                 this.service.CambiarEstadoActa(this.idContrato, "14").subscribe(data0 => {
