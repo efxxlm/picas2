@@ -475,9 +475,13 @@ namespace asivamosffie.services
 
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
-                    if (ContratoPerfil.TieneObservacionApoyo.HasValue && !(bool)ContratoPerfil.TieneObservacionApoyo ||
-                                (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && !string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion) && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)) ;
-                    // RegistroCompleto = false;
+                    string UltimaObservacionApoyo = ContratoPerfil.ContratoPerfilObservacion.OrderBy(r => r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).LastOrDefault().Observacion;
+
+                    if (((bool)ContratoPerfil.TieneObservacionApoyo && UltimaObservacionApoyo == null))
+                        RegistroCompleto = false;
+                    if (!ContratoPerfil.TieneObservacionApoyo.HasValue)
+                        RegistroCompleto = false;
+
                 }
 
                 if (RegistroCompleto)
