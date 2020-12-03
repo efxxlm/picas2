@@ -2883,7 +2883,7 @@ namespace asivamosffie.services
                     }
                 }
                 var contrato = _context.Contrato.Where(x => x.ContratoId == contratoConstruccion.ContratoId).Include(x => x.Contratacion).FirstOrDefault();
-                if (contrato.Contratacion.TipoSolicitudCodigo == "2")//cambiar esto, no encontre la constante inteventoria
+                if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())//cambiar esto, no encontre la constante inteventoria
                 {
                     contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                 }
