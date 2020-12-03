@@ -1514,12 +1514,36 @@ namespace asivamosffie.services
             //    contrato.TieneFase2 = true;
             //}
 
-            var sum = _context.ComponenteUso.Where(
-                x => x.ComponenteAportante.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == contratacionId
-                && x.ComponenteAportante.FaseCodigo == FaseCodigo
+            Contratacion contratacion=_context.Contratacion.Where(r=>r.ContratacionId==contratacionId).Include(r=>r.ContratacionProyecto)
+                .ThenInclude(r=>r.ContratacionProyectoAportante).ThenInclude(r=>r.ComponenteAportante).ThenInclude(r=>r.ComponenteUso).FirstOrDefault();
 
-                ).Sum(x => x.ValorUso);
-            return sum;
+            decimal vlrFase1=0, vlrFase2 = 0;
+            foreach (var contratacionProyecto in contratacion.ContratacionProyecto)
+            {
+                foreach (var contratacionProyectoAportante in contratacionProyecto.ContratacionProyectoAportante)
+                {
+                    foreach (var componenteAportante in contratacionProyectoAportante.ComponenteAportante)
+                    {
+                        if (componenteAportante.FaseCodigo == ConstanCodigoFaseContrato.Preconstruccion)
+                            vlrFase1 += componenteAportante.ComponenteUso.Sum(r => r.ValorUso);
+                        else
+                            vlrFase2 += componenteAportante.ComponenteUso.Sum(r => r.ValorUso);
+
+                    }
+
+                }
+
+            }
+
+            //var sum = _context.ComponenteUso.Where(
+            //    x => x.ComponenteAportante.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == contratacionId
+            //    && x.ComponenteAportante.FaseCodigo == FaseCodigo
+
+            //    ).Sum(x => x.ValorUso);
+            if (FaseCodigo == ConstanCodigoFaseContrato.Preconstruccion)
+                return vlrFase1;
+            else
+                return vlrFase2;
 
         }
         public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId)
@@ -2084,12 +2108,14 @@ namespace asivamosffie.services
                 //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                 //VistaGenerarActaInicioContrato
 
+                string rutaActaSuscrita="";
                 string strValor="";
                 if (contrato != null)
                 {
                     strValor = contrato.Valor.ToString();
                     if(strValor.Length>3)
-                        strValor = strValor.Remove(strValor.Length - 3);       
+                        strValor = strValor.Remove(strValor.Length - 3);
+                    rutaActaSuscrita = contrato.RutaActaSuscrita;
 
                 }
                 actaInicio = new VistaGenerarActaInicioContrato();
@@ -2156,6 +2182,7 @@ namespace asivamosffie.services
                         CantidadProyectosAsociados = intCantidadProyectosAsociados,
                         NumeroIdentificacionRepresentanteContratistaInterventoria = contratista.RepresentanteLegalNumeroIdentificacion,
 
+                        RutaActaSuscrita= rutaActaSuscrita,
                         //RegistroCompleto = contrato.RegistroCompleto
 
                         //,EstadoRegistro = "COMPLETO"
