@@ -158,8 +158,13 @@ namespace asivamosffie.services
                 bool RegistroCompleto = true;
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
-                    if (!ContratoPerfil.TieneObservacionSupervisor.HasValue || ((bool)ContratoPerfil.TieneObservacionSupervisor && string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion)))
+                    string UltimaObservacionSupervisor = ContratoPerfil.ContratoPerfilObservacion.OrderBy(r=> r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).LastOrDefault().Observacion;
+
+                    if (((bool)ContratoPerfil.TieneObservacionSupervisor && UltimaObservacionSupervisor == null))
                          RegistroCompleto = false;
+                    if (!ContratoPerfil.TieneObservacionSupervisor.HasValue)
+                          RegistroCompleto = false;
+
 
                 }
 
