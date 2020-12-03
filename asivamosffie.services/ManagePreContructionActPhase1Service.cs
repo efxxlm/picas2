@@ -286,22 +286,21 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<byte[]> GetActaByIdPerfil(int PIdPerfil, int pContratoId)
+        public async Task<byte[]> GetActaByIdPerfil(int PIdPerfil, int pContratoId, int pUserId)
         {
             Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include(r => r.Contratacion).FirstOrDefault();
 
             if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                 //Obra
-                return await ReplacePlantillaObra(pContratoId);
+                return await ReplacePlantillaObra(pContratoId , pUserId);
             else
                 //Interventoria
-                return await ReplacePlantillaInterventoria(pContratoId);
-                      
+                return await ReplacePlantillaInterventoria(pContratoId , pUserId);  
         }
 
-        public async Task<byte[]> ReplacePlantillaObra(int pContratoId)
+        public async Task<byte[]> ReplacePlantillaObra(int pContratoId ,int pUserId)
         {
-            Contrato contrato = await GetContratoByContratoId(pContratoId, null);
+            Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
 
             Plantilla plantilla = await _context.Plantilla
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)
@@ -382,9 +381,9 @@ namespace asivamosffie.services
             return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
 
-        public async Task<byte[]> ReplacePlantillaInterventoria(int pContratoId)
+        public async Task<byte[]> ReplacePlantillaInterventoria(int pContratoId ,int pUserId)
         {
-            Contrato contrato = await GetContratoByContratoId(pContratoId, null);
+            Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
 
             Plantilla plantilla = await _context.Plantilla
                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)

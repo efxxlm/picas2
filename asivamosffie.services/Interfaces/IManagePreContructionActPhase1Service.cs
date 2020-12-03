@@ -28,7 +28,7 @@ namespace asivamosffie.services.Interfaces
          
         Task<Respuesta> CambiarEstadoActa(int pContratoId, string pEstadoContrato, string pUsuarioModificacion);
 
-        Task<byte[]> GetActaByIdPerfil(int pPerfilId, int pContratoId);
+        Task<byte[]> GetActaByIdPerfil(int pPerfilId, int pContratoId ,int pUserId);
 
         Task GetListContratoConActaSinDocumento(AppSettingsService appSettingsService);
     }
