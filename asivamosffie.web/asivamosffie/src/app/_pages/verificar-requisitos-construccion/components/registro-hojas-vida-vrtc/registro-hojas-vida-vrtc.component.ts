@@ -391,10 +391,5 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
     this.enviarPerfilesContrato.emit( perfiles );
   };
 
-  // evalua tecla a tecla
-  validateNumberKeypress(event: KeyboardEvent) {
-    const alphanumeric = /[0-9]/;
-    const inputChar = String.fromCharCode(event.charCode);
-    return alphanumeric.test(inputChar) ? true : false;
-  }
+  
 };
