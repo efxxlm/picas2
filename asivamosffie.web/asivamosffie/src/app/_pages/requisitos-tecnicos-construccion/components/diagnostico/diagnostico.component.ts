@@ -19,13 +19,16 @@ export class DiagnosticoComponent implements OnInit {
   @Output() diagnostico = new EventEmitter();
   @ViewChild( 'valorTotalFaseConstruccion', { static: true } ) totalFaseConstruccion: ElementRef;
 
+  estaEditando = false;
+
+
   solicitudesModificacion: any[] = [
     {value: 'PI_00089', viewValue: 'PI_00089'}
-  ]
+  ];
 
-  constructor ( private fb: FormBuilder,
-                private dialog: MatDialog,
-                private currencyPipe: CurrencyPipe ) 
+  constructor( private fb: FormBuilder,
+               private dialog: MatDialog,
+               private currencyPipe: CurrencyPipe )
   {
     this.crearFormulario();
     this.valorTotalFaseConstruccion();
@@ -45,16 +48,16 @@ export class DiagnosticoComponent implements OnInit {
           requiereModificacionContractual: this.contratoConstruccion.requiereModificacionContractual !== undefined ? this.contratoConstruccion.requiereModificacionContractual : null,
           numeroSolicitudModificacion    : this.contratoConstruccion.numeroSolicitudModificacion !== undefined ? this.contratoConstruccion.numeroSolicitudModificacion : null
         }
-      )
+      );
       this.formDiagnostico.valueChanges.subscribe( ( values: any ) => {
-        const totalFase = Number( values.costoDirecto )+Number( values.administracion )+Number( values.imprevistos )+Number( values.utilidad );
+        const totalFase = Number( values.costoDirecto ) + Number( values.administracion ) + Number( values.imprevistos ) + Number( values.utilidad );
         this.totalConstruccion = totalFase;
         this.totalFaseConstruccion.nativeElement.value = this.currencyPipe.transform( totalFase, 'COP', 'symbol-narrow', '.0-0' );
       } );
     }
-  };
+  }
 
-  crearFormulario () {
+  crearFormulario() {
     this.formDiagnostico = this.fb.group({
       esInformeDiagnostico: [ null ],
       rutaInforme: [ '' ],
@@ -66,24 +69,25 @@ export class DiagnosticoComponent implements OnInit {
       requiereModificacionContractual: [ null ],
       numeroSolicitudModificacion: [ null ]
     });
-  };
+  }
 
-  valorTotalFaseConstruccion () {
+  valorTotalFaseConstruccion() {
     this.formDiagnostico.valueChanges.subscribe( ( values: any ) => {
-      const totalFase = Number( values.costoDirecto )+Number( values.administracion )+Number( values.imprevistos )+Number( values.utilidad );
+      const totalFase = Number( values.costoDirecto ) + Number( values.administracion ) + Number( values.imprevistos ) + Number( values.utilidad );
       this.totalConstruccion = totalFase;
       this.totalFaseConstruccion.nativeElement.value = this.currencyPipe.transform( totalFase, 'COP', 'symbol-narrow', '.0-0' );
+      this.estaEditando = true;
     } );
-  };
+  }
 
-  openDialog (modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
 
-  enviar () {
+  enviar() {
 
     this.formDiagnostico.get( 'valorTotalFaseConstruccion' ).setValue( this.totalConstruccion );
     console.log( this.formDiagnostico.value.requiereModificacionContractual );
@@ -97,8 +101,8 @@ export class DiagnosticoComponent implements OnInit {
       valorTotalFaseConstruccion: this.formDiagnostico.get( 'valorTotalFaseConstruccion' ).value,
       requiereModificacionContractual: this.formDiagnostico.get( 'requiereModificacionContractual' ).value,
       numeroSolicitudModificacion: this.formDiagnostico.get( 'numeroSolicitudModificacion' ).value,
-    }
+    };
     this.diagnostico.emit( diagnostico );
-  };
+  }
 
-};
+}
