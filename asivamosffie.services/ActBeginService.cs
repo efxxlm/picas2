@@ -1065,6 +1065,11 @@ namespace asivamosffie.services
             //    strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
             //}
 
+            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            {
+                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            }
+
             var globalSettings = new GlobalSettings
             {
                 ImageQuality = 1080,
