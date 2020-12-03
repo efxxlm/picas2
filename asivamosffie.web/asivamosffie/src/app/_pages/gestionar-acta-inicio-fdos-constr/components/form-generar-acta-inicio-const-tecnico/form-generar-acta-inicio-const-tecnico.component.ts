@@ -156,7 +156,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
       /*Campo de texto editable*/
       if(this.editable == true){
-        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase1DateTime);
+        this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase2DateTime);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaPrevistaTerminacionDateTime);
         this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
         this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
@@ -267,10 +267,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
         sumaDias = this.plazoEjecucionPreConstruccionDias + parseInt(this.addressForm.value.diasPlazoEjFase2);
         console.log(sumaDias);
         if (sumaMeses > this.plazoActualContratoMeses) {
-          this.openDialog("", 'Debe verificar la información ingresada en el campo Meses, dado que no coincide con la información inicial registrada para el contrato');
+          this.openDialog("", 'Debe verificar la información ingresada en el campo <b>Meses</b>, dado que no coincide con la información inicial registrada para el contrato');
         }
         else if (sumaDias > this.plazoActualContratoDias){
-          this.openDialog("", 'Debe verificar la información ingresada en el campo Días, dado que no coincide con la información inicial registrada para el contrato');
+          this.openDialog("", 'Debe verificar la información ingresada en el campo <b>Días</b>, dado que no coincide con la información inicial registrada para el contrato');
         }
         else{
           this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(data1 => {
@@ -278,14 +278,14 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
               if(localStorage.getItem("origin")=="interventoria"){
                 this.services.CambiarEstadoActa(this.idContrato,"2","usr2").subscribe(resp=>{
                   this.realizoPeticion = true;
-                  this.openDialog("", 'La información ha sido guardada exitosamente.');
+                  this.openDialog("", '<b>La información ha sido guardada exitosamente.</b>');
                   this.router.navigate(['/generarActaInicioConstruccion']);
                 });
               }
               else{
                 this.services.CambiarEstadoActa(this.idContrato,"14","usr2").subscribe(resp=>{
                   this.realizoPeticion = true;
-                  this.openDialog("", 'La información ha sido guardada exitosamente.');
+                  this.openDialog("", '<b>La información ha sido guardada exitosamente.</b>');
                   this.router.navigate(['/generarActaInicioConstruccion']);
                 });
               }

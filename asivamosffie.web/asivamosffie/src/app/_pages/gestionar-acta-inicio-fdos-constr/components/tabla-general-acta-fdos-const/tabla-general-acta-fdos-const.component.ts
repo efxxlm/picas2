@@ -35,7 +35,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  public dataTable;
+  dataTable: any[]= [];
   loadDataItems: Subscription;
   @Input () dataTableAux;
   constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
@@ -45,8 +45,12 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.cargarTablaDeDatos();
   }
   cargarTablaDeDatos(){
-    this.services.GetListGrillaActaInicio(2).subscribe(data=>{
-      this.dataTable = data;
+    this.services.GetListGrillaActaInicio(2).subscribe((data:any)=>{
+      for (let actas of data){
+        if(actas.tipoContrato == 'Obra'){
+          this.dataTable.push(actas);
+        }
+      }
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -76,8 +80,10 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos',id]);
   }
   enviarParaRevision(idContrato){
-    this.services.CambiarEstadoActa(idContrato,"14","usr2").subscribe(data=>{
-      this.ngOnInit();
+    this.services.CambiarEstadoActa(idContrato,"21","usr2").subscribe(data=>{
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['/generarActaInicioConstruccion'])
+      );
     });
   }
   verDetalleActaFDos(id){
@@ -86,17 +92,23 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   enviarActaParaFirma(id){
     this.descargarActaDesdeTabla(id);
     this.services.CambiarEstadoActa(id,"19","usr2").subscribe(data=>{
-      this.ngOnInit();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['/generarActaInicioConstruccion'])
+      );
     });
   }
   enviarRevisionAprobacionInt(id){
     this.services.CambiarEstadoActa(id,"3","usr2").subscribe(data=>{
-      this.ngOnInit();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['/generarActaInicioConstruccion'])
+      );
     });
   }
   enviarRevisionAprobacionTecEst2(id){
     this.services.CambiarEstadoActa(id,"2","usr2").subscribe(data=>{
-      this.ngOnInit();
+      this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+        () => this.router.navigate(['/generarActaInicioConstruccion'])
+      );
     });
   }
   verDetalleActaCargada(id){
@@ -117,19 +129,23 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
     }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '45%';
+    dialogConfig.width = '865px';
     dialogConfig.data = {id:id, idRol:idRol, numContrato:numContrato, fecha1Titulo:fecha1Titulo, fecha2Titulo:fecha2Titulo};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {
-        if(tipoContrato=='Obra e Interventoria'){
+        if(tipoContrato=='Obra'){
           this.services.CambiarEstadoActa(id,"20","usr2").subscribe(data=>{
-            this.ngOnInit();
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/generarActaInicioConstruccion'])
+            );
           });
         }
         else{
           this.services.CambiarEstadoActa(id,"7","usr2").subscribe(data0=>{
-            this.ngOnInit();
+            this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+              () => this.router.navigate(['/generarActaInicioConstruccion'])
+            );
           });
         }
       }

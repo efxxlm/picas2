@@ -17,6 +17,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public int? MesEjecucionId { get; set; }
         public int? ProgramacionId { get; set; }
+        public int? SeguimientoSemanalId { get; set; }
 
         public virtual ArchivoCargue ArchivoCargue { get; set; }
         public virtual ContratoConstruccion ContratoConstruccion { get; set; }

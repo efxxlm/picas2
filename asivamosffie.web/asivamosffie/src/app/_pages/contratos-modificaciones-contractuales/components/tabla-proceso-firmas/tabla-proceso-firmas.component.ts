@@ -111,13 +111,15 @@ export class TablaProcesoFirmasComponent implements OnInit {
   }
 
   cambioEstadoRegistrado( elemento ) {
-    elemento.contratacion.estadoSolicitudCodigo = this.estadoCodigos.registrado;
-    elemento.estadoCodigo = this.estadoCodigos.registrado;
+    const registro = elemento;
+    this.dataSource = new MatTableDataSource();
+    registro.contratacion.estadoSolicitudCodigo = this.estadoCodigos.registrado;
+    registro.estadoCodigo = this.estadoCodigos.registrado;
 
     const pContrato = new FormData();
 
-    pContrato.append( 'contratacionId', `${ elemento.contratacion.contrato[0].contratacionId }` );
-    pContrato.append( 'contratoId', `${ elemento.contratacion.contrato[0].contratoId }` );
+    pContrato.append( 'contratacionId', `${ registro.contratacion.contrato[0].contratacionId }` );
+    pContrato.append( 'contratoId', `${ registro.contratacion.contrato[0].contratoId }` );
 
     this.contratosContractualesSvc.postRegistroTramiteContrato( pContrato, this.estadoCodigos.registrado )
       .subscribe(

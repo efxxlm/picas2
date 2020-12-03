@@ -515,7 +515,7 @@ namespace asivamosffie.services
                             if (pses.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
                             {
                                 //obtengo el proponente y lo convierto en contratista
-                                var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion);
+                                var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion).ToList();
                                 foreach (var p in proponentes)
                                 {
                                     Contratista contratista = new Contratista();

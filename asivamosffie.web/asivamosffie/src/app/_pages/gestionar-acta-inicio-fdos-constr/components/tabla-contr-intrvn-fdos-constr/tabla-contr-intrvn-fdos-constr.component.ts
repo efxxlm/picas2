@@ -118,21 +118,27 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   cambiarEstadoSupervisor(id) {
     if (localStorage.getItem("origin") == "interventoria") {
       this.services.CambiarEstadoActa(id, "3", "usr2").subscribe(data => {
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioConstruccion'])
+        );
       });
     }
   }
   cambiarEstadoInterventor(id, tieneObs) {
     if (localStorage.getItem("origin") == "interventoria") {
         this.services.CambiarEstadoActa(id, "5", "usr2").subscribe(data => {
-          this.ngOnInit();
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/generarActaInicioConstruccion'])
+          );
         });
     }
   }
   enviarActaParaFirma(id) {
     if (localStorage.getItem("origin") == "interventoria") {
       this.services.CambiarEstadoActa(id, "6", "usr2").subscribe(data => {
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioConstruccion'])
+        );
       });
       this.descargarActaDesdeTabla(id);
     }
@@ -140,7 +146,9 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   enviarInterventorBtn(id){
     if (localStorage.getItem("origin") == "interventoria") {
       this.services.CambiarEstadoActa(id, "4", "usr2").subscribe(data => {
-        this.ngOnInit();
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/generarActaInicioConstruccion'])
+        );
       });
     }
   }
@@ -158,13 +166,15 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     }
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '45%';
+    dialogConfig.width = '865px';
     dialogConfig.data = {id:id, idRol:idRol, numContrato:numContrato, fecha1Titulo:fecha1Titulo, fecha2Titulo:fecha2Titulo};
     const dialogRef = this.dialog.open(DialogCargarActaSuscritaConstComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
       if (value == 'aceptado') {
         this.services.CambiarEstadoActa(id,"7","usr2").subscribe(data=>{
-          this.ngOnInit();
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+            () => this.router.navigate(['/generarActaInicioConstruccion'])
+          );
         });
       }
     });
