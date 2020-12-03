@@ -160,6 +160,7 @@ namespace asivamosffie.services
                             ContratoObservacion.EsActa = true;
                             ContratoObservacion.EsActaFase1 = true;
                             ContratoObservacion.EsActaFase2 = false;
+
                             _context.ContratoObservacion.Add(ContratoObservacion);
                         }
                         else
@@ -169,6 +170,8 @@ namespace asivamosffie.services
                             contratoObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                             contratoObservacionOld.FechaModificacion = DateTime.Now; 
                             contratoObservacionOld.Observaciones = ContratoObservacion.Observaciones;
+                            contratoObservacionOld.EsSupervision = ContratoObservacion.EsSupervision;
+                             
                             _context.Update(contratoObservacionOld);
                         }
                     }
