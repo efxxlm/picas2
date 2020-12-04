@@ -67,6 +67,24 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [Route("DeleteComponenteAportante")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteComponenteAportante([FromBody] int pComponenteAportanteId )
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _projectService.DeleteComponenteAportante(pComponenteAportanteId , HttpContext.User.FindFirst("User").Value.ToUpper());
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        } 
+         
+
         [Route("SetValidateMassiveLoadProjects")]
         [HttpPost]
         public async Task<IActionResult> SetValidateCargueMasivoProyectos(IFormFile file)
