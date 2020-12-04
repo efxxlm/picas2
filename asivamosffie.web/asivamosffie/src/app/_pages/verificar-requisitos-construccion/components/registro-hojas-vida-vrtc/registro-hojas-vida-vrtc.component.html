@@ -130,25 +130,31 @@
               </div>
             </div>
 
-            <section class="d-flex mt-1em" align="left">
-              <label class="mr-label mr-min mt-1em"
-              [ngClass]="{'color-secondaryColor' : perfil.get('observacion').invalid && perfil.get('observacion').touched || perfil.get('observacion').invalid && estaEditando}">
-                <b>Observaciones</b>
-              </label>
-              <quill-editor class="quill-editor-style w-65 ml-1em card"
-                            [styles]="editorStyle"
-                            [modules]="config"
-                            (onContentChanged)="maxLength($event, 1000)"
-                            formControlName="observacion"></quill-editor>
-              <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
-                <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                  {{1000 - (textoLimpio(perfil.get('observacion').value)>1000?1000:textoLimpio(perfil.get('observacion').value))}}
-                </span>
-                <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
-                  1000
-                </span>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left"><b>Observaciones</b></label>
+                  </div>
+                  <div class="col d-flex">
+                    <quill-editor class="quill-editor-style w-65 card position-relative"
+                                  [styles]="editorStyle"
+                                  [modules]="config"
+                                  (onContentChanged)="maxLength($event, 1000)"
+                                  formControlName="observacion"
+                                  required></quill-editor>
+                    <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
+                      <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
+                        {{1000 - textoLimpio(perfil.get('observacion').value)}}
+                      </span>
+                      <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
+                        1000
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </section>
+            </div>
 
             <section formArrayName="contratoPerfilNumeroRadicado">
               <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
@@ -217,7 +223,7 @@
               </div>
             </section>
             <div class="d-flex justify-content-center size-text-descriptivo">
-              <p class="color-text-descriptivo">
+              <p class="color-text-descriptivo" style="margin-left: 8em;">
                 <i>
                   Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal
                 </i>
@@ -251,7 +257,8 @@
                   color="warn"
                   class="btn-guardar"
                   type="button"
-                  (click)="guardar()">
+                  (click)="guardar()"
+                  [disabled]="formContratista.dirty === false">
                   <img  src="assets/img/icon/guardar.svg">
           </button>
         </div>

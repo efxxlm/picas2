@@ -1,8 +1,9 @@
-<section *ngIf="!esFlujoInversion">
+<section *ngIf="esFlujoInversion === false">
   <button mat-raised-button 
           color="accent" 
           type="submit"
-          (click)="cargarProgramacion()">
+          (click)="cargarProgramacion()"
+          *ngIf="archivoCargueIdProgramacionObra === undefined">
           Cargar programación
   </button>
 </section>
@@ -10,14 +11,16 @@
   <button mat-raised-button 
           color="accent" 
           type="submit"
-          class="mr-2em">
+          class="mr-2em"
+          >
           Ver documento de registro presupuestal
   </button>
 
   <button mat-raised-button
           color="accent" 
           type="submit"
-          (click)="cargarProgramacion()">
+          (click)="cargarProgramacion()"
+          *ngIf="archivoCargueIdFlujoInversion === undefined">
           Cargar flujo de inversión de recursos
   </button>
 </section>

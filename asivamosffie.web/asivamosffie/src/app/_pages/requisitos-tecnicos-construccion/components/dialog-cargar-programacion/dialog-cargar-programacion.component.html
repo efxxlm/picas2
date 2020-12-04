@@ -4,7 +4,7 @@
 
 <div class="text-center">
   <h1 class="title-menu--h1">
-    Cargar programación
+    {{ esFlujoInversion == true ? 'Cargar Flujo inversión' : 'Cargar programación' }}
   </h1>
 
   <form [formGroup]="formCargarProgramacion" (ngSubmit)="guardar()">

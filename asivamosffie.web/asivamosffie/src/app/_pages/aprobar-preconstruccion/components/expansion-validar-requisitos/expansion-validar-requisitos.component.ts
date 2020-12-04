@@ -207,7 +207,7 @@ export class ExpansionValidarRequisitosComponent implements OnInit {
       this.totalGuardados++;
       return;
     }
-    if ( this.totalGuardados === 1 || observacionPerfil.tieneObservacionSupervisor === true ) {
+    if ( this.totalGuardados > 1 || perfil[ 'tieneObservaciones' ] !== null ) {
       this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
         .subscribe(
           response => {

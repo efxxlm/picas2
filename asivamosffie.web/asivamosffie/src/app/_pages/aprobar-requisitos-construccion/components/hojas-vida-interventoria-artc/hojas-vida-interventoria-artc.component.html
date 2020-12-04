@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex mt-2em align-items-center" *ngIf="addressForm.value.tieneObservaciones == true">
+        <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="addressForm.value.tieneObservaciones == true">
             <div class="text-area-quill"
             [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid">
                 <label  class="text-area-quill--label align-left-label"

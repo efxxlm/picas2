@@ -13,17 +13,19 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   @Input() contratoConstruccionId: number;
   @Input() observacionDevolucionProgramacionObra: number;
   @Input() observacionDevolucionFlujoInversion: number;
+  @Input() archivoCargueIdProgramacionObra: number;
+  @Input() archivoCargueIdFlujoInversion: number;
   @Output() terminoCarga = new EventEmitter();
   @Output() realizoObservacion = new EventEmitter();
-  tieneRegistrosObra: boolean = true;
-  tieneRegistrosInversion: boolean = true;
+  tieneRegistrosObra = true;
+  tieneRegistrosInversion = true;
 
-  constructor ( private dialog: MatDialog ) { }
+  constructor( private dialog: MatDialog ) { }
 
   ngOnInit(): void {
   }
 
-  cargarProgramacion () {
+  cargarProgramacion() {
     const dialogCargarProgramacion = this.dialog.open( DialogCargarProgramacionComponent, {
       width: '75em',
       data: { esFlujoInversion: this.esFlujoInversion, contratoConstruccionId: this.contratoConstruccionId }
@@ -33,12 +35,12 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
       console.log( 'termino carga masiva?', response );
       this.terminoCarga.emit( response.terminoCarga );
     } );
-  };
+  }
 
-  esObservacion ( realizoObservacion: boolean ) {
+  esObservacion( realizoObservacion: boolean ) {
     if ( realizoObservacion === true ) {
       this.realizoObservacion.emit( realizoObservacion );
-    };
-  };
+    }
+  }
 
 }

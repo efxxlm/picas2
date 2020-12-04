@@ -44,11 +44,11 @@ export class GestionarActaInicioFdosConstrComponent implements OnInit {
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
-    if (this.rolAsignado == 2) {
-      this.ocpion = 2;
+    if (this.rolAsignado == 11) {
+      this.ocpion = 1;
     }
     else {
-      this.ocpion = 1;
+      this.ocpion = 2;
     }
   }
 }

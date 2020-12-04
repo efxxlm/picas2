@@ -41,7 +41,8 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
               )
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'completo';
-            if (  contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor === undefined
+            if (  contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor !== undefined
+                  && contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor.observaciones === undefined
                   && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === true ) {
               contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
             }
@@ -60,7 +61,8 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
           )
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'completo';
-            if (  contratacion.proyecto.contratoConstruccion[0].observacionPlanesProgramasSupervisor === undefined
+            if (  contratacion.proyecto.contratoConstruccion[0].observacionPlanesProgramasSupervisor !== undefined
+                  && contratacion.proyecto.contratoConstruccion[0].observacionPlanesProgramasSupervisor.observaciones === undefined
                   && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasSupervisor === true ) {
               contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'en-proceso';
             }
@@ -78,7 +80,8 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
           )
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'completo';
-            if (  contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipoSupervisor === undefined
+            if (  contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipoSupervisor !== undefined
+                  && contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipoSupervisor.observaciones === undefined
                   && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoSupervisor === true ) {
               contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'en-proceso';
             }
@@ -135,7 +138,8 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
           )
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'completo';
-            if (  contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObraSupervisor === undefined
+            if (  contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObraSupervisor !== undefined
+                  && contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObraSupervisor.observaciones === undefined
                   && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraSupervisor === true ) {
               contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'en-proceso';
             }
@@ -153,7 +157,8 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
           )
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'completo';
-            if (  contratacion.proyecto.contratoConstruccion[0].observacionFlujoInversionSupervisor === undefined
+            if (  contratacion.proyecto.contratoConstruccion[0].observacionFlujoInversionSupervisor !== undefined
+                  && contratacion.proyecto.contratoConstruccion[0].observacionFlujoInversionSupervisor.observaciones === undefined
                   && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionSupervisor === true ) {
               contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'en-proceso';
             }
@@ -164,6 +169,7 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
           if ( contratacion.proyecto.contratoConstruccion[0].semaforoFlujo === 'completo' ) { semaforoCompleto++; }
 
           // Condiciones semaforos del proyecto
+          console.log( semaforoCompleto, semaforoEnProceso, semaforoSinDiligenciar );
           if ( semaforoCompleto > 0 && semaforoCompleto === totalAcordeones ) { contratacion.estadoSemaforo = 'completo'; }
           if (  semaforoSinDiligenciar > 0
                 && semaforoSinDiligenciar === totalAcordeones )
@@ -182,7 +188,7 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
   }
 
   Cargar( seGuardo: boolean ) {
-    if ( seGuardo ) {
+    if ( seGuardo === true ) {
       this.contrato = null;
       this.getContrato();
     }

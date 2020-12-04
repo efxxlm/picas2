@@ -18,11 +18,9 @@ export class DiagnosticoArtcComponent implements OnInit {
     observaciones: [null],
     construccionObservacionId: []
   });
-
   editorStyle = {
     height: '100px'
   };
-
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -34,9 +32,9 @@ export class DiagnosticoArtcComponent implements OnInit {
   @Input() observacionesCompleted: boolean;
   @Input() construccion: any;
   @Input() contratoConstruccionId: any;
-
   @Output() createEditDiagnostico = new EventEmitter();
   @Output() estadoSemaforoDiagnostico = new EventEmitter<string>();
+  totalGuardados = 0;
   observacionDiagnostico = '1';
   dataTablaHistorialObservacion: any[] = [];
   dataTableHistorialApoyo: any[] = [];
@@ -107,6 +105,8 @@ export class DiagnosticoArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    } else {
+      return 0;
     }
   }
 
@@ -135,11 +135,26 @@ export class DiagnosticoArtcComponent implements OnInit {
     };
 
     console.log(construccion);
-    this.faseDosAprobarConstruccionSvc.createEditObservacionDiagnosticoSupervisor( construccion )
-      .subscribe(
-        response => this.openDialog( '', response.message ),
-        err => this.openDialog( '', err.message )
-      );
+
+    if (  this.addressForm.value.tieneObservaciones === false
+          && this.totalGuardados === 0
+          && this.construccion.tieneObservacionesDiagnosticoApoyo === true ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      console.log( 'condicion 1' );
+      return;
+    }
+    if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
+      console.log( 'condicion 2' );
+      this.faseDosAprobarConstruccionSvc.createEditObservacionDiagnosticoSupervisor( construccion )
+        .subscribe(
+          response => {
+            this.openDialog( '', response.message );
+            this.createEditDiagnostico.emit( true );
+          },
+          err => this.openDialog( '', err.message )
+        );
+    }
 
   }
 

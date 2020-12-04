@@ -33,33 +33,29 @@
               </div>
               <div class="col">
                   <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
-                      <mat-radio-button [value]="true">Sí</mat-radio-button>
-                      <mat-radio-button [value]="false">No</mat-radio-button>
+                      <mat-radio-button [value]="true" [checked]="addressForm.value.tieneObservaciones === true">Si</mat-radio-button>
+                      <mat-radio-button [value]="false" [checked]="addressForm.value.tieneObservaciones === false">No</mat-radio-button>
                   </mat-radio-group>
                 <span class="required-form-group m-0">*</span>
               </div>
           </div>
         </div>
-        <div class="flex-editor mt-2em animatedDown" *ngIf="addressForm.value.tieneObservaciones == true">
-            <mat-card class="shipping-card w-80">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text">
-                        Observaciones a las hojas de vida del contratista de obra
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="required-05">
-
-                    <quill-editor class="quill-editor-style w-65 ml-1em" [styles]="editorStyle" [modules]="config"
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
-                    </quill-editor>
-
-                </mat-card-content>
-            </mat-card>
-            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">                
-                {{1000 - (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
+        <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="addressForm.value.tieneObservaciones == true">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid">
+                <label  class="text-area-quill--label align-left-label"
+                        [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid)">
+                        Observaciones a las hojas de vida del contratista de interventoría
+                </label>
+                <quill-editor   class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+                </quill-editor>
+            </div>
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
+              {{1000 - textoLimpio(addressForm.get('observaciones').value )}}
             </span>
-            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones === null">
-                1000
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+              1000
             </span>
         </div>
         <div class="text-center mb-2em">

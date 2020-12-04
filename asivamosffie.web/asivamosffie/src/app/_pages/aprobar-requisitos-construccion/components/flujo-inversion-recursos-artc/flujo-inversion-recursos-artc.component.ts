@@ -42,12 +42,11 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
     'fechaRevision',
     'observacionesSupervision'
   ];
-
   @Input() observacionesCompleted;
   @Input() contratoConstruccion: any;
   @Input() contratoConstruccionId: any;
-
   @Output() createEdit = new EventEmitter();
+  totalGuardados = 0;
 
   constructor(
     private dialog: MatDialog,
@@ -124,6 +123,8 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    } else {
+      return 0;
     }
   }
 
@@ -167,11 +168,24 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
     };
 
     console.log( construccion );
-    this.faseDosAprobarConstruccionSvc.createEditObservacionFlujoInversionSupervisor( construccion )
-      .subscribe(
-        response => this.openDialog( '', response.message ),
-        err => this.openDialog( '', err.message )
-      );
+
+    if (  this.addressForm.value.tieneObservaciones === false
+          && this.totalGuardados === 0
+          && this.contratoConstruccion.tieneObservacionesFlujoInversionApoyo === true ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      return;
+    }
+    if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
+      this.faseDosAprobarConstruccionSvc.createEditObservacionFlujoInversionSupervisor( construccion )
+        .subscribe(
+          response => {
+            this.openDialog( '', response.message );
+            this.createEdit.emit( true );
+          },
+          err => this.openDialog( '', err.message )
+        );
+    }
 
   }
 

@@ -76,7 +76,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
-    if (this.rolAsignado == 2) {
+    if (this.rolAsignado == 11) {
       this.ocpion = 1;
     }
     else {
@@ -114,7 +114,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     this.fechaFirmaContratista = data.fechaFirmaContratista;
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
     this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
-    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
+    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaDrp;
     this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
     this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
     this.numIdRepresentanteLegal = data.contratacion.contratista.representanteLegalNumeroIdentificacion;
@@ -144,7 +144,8 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   }
   generarFechaRestante() {
     let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
-    newdate.setDate(newdate.getDate() + (this.mesPlazoIni * 30.43));
+    newdate.setDate(newdate.getDate() + (this.mesPlazoIni * 30.44));
+    console.log(newdate);
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.diasPlazoIni)
     console.log(newDateFinal);
@@ -183,7 +184,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
       diasPlazoEjFase1: [null, Validators.required],
       mesPlazoEjFase2: [null, Validators.required],
       diasPlazoEjFase2: [null, Validators.required],
-      observacionesEspeciales: [null]
+      observacionesEspeciales: ['']
     })
   }
   maxLength(e: any, n: number) {

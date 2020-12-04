@@ -1,4 +1,4 @@
-<div class="text-center container" *ngIf="contrato">
+<div class="text-center container" *ngIf="contrato !== undefined">
     <div class="text-right">
         <a routerLink="/verificarRequisitosTecnicosConstruccion" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -9,7 +9,7 @@
     </h1>
     <section class="container margin-1em color-primary">
         <div class="text-center section-flex">
-            <p class="mr-1em">Fecha de aprobacion de póliza: <b>{{ fechaPoliza | date: 'dd/MM/yyyy' }}</b></p>
+            <p class="mr-1em">Fecha de aprobacion de póliza: <b>{{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}</b></p>
             <p>Proyectos asociados: <b>{{ contrato.contratacion.contratacionProyecto.length }}</b></p>
         </div>
     </section>
@@ -24,7 +24,7 @@
         <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header w-45">
-                    <mat-panel-title class="expansion-style--title {{ contratacion.proyecto['estadoSemaforo'] }}">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="contratacion.proyecto['estadoSemaforo']">
                         {{ contratacion.proyecto.llaveMen }} -
                         {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} -
                         {{ contratacion.proyecto[ 'sede' ].nombre }}
@@ -47,9 +47,10 @@
                 <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
                     <app-registro-hojas-vida-vrtc
                         [perfilProyecto]="contratacion.proyecto.contratoConstruccion[0].construccionPerfil"
-                        [contratoId]="contrato.contratoId" 
+                        [contratoId]="contrato.contratoId"
                         [proyectoId]="contratacion.proyectoId"
                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
+                        (perfilEliminado)="recargarContrato( $event )"
                         (perfilesCompletados)="estadoSemaforo( i, $event )">
                     </app-registro-hojas-vida-vrtc>
                 </section>
@@ -58,6 +59,7 @@
                         [perfilProyecto]="[]" 
                         [contratoId]="contrato.contratoId"
                         [proyectoId]="contratacion.proyectoId"
+                        (perfilEliminado)="recargarContrato( $event )"
                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
                         (perfilesCompletados)="estadoSemaforo( i, $event )">
                     </app-registro-hojas-vida-vrtc>

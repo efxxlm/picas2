@@ -5,7 +5,7 @@
       </a>
   </div>
   <h1 class="title-menu--h1">
-    Gestionar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
+   {{ contrato['estadoVerificacionConstruccionCodigo'] == '0' ? 'Gestionar' : 'Ver Detalle/Editar' }}  requisitos para inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
   </h1>
 
   <section class="container margin-1em color-primary" *ngIf="contrato.contratacion">
@@ -24,14 +24,16 @@
         </p>
     </div>
 
+    
+
     <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header w-45">
-          <mat-panel-title class="expansion-style--title sin-diligenciar">
+          <mat-panel-title class="expansion-style--title {{contratacion['estadoSemaforo']}}" >
+            
             {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
           </mat-panel-title>
         </mat-expansion-panel-header>
-
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
@@ -45,7 +47,7 @@
           </mat-card>
         </div>
 
-        <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngIf="contratacion.fasePreConstruccionNotMapped">
           <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title 
               {{ contratacion.proyecto.contratoConstruccion[0] ? contratacion.proyecto.contratoConstruccion[0].registroCompletoDiagnostico == true ? 
@@ -131,13 +133,15 @@
                                                   [esFlujoInversion]="false" 
                                                   [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
                                                   [observacionDevolucionProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionProgramacionObra"
+                                                  [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra"
                                                   (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
             <app-programacion-obra-flujo-inversion 
                                                   [esFlujoInversion]="false" 
-                                                  [contratoConstruccionId]="0" 
+                                                  [contratoConstruccionId]="0"
+                                                  [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra"
                                                   (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
@@ -154,8 +158,8 @@
           </mat-expansion-panel-header>
 
           <div class="d-flex mt-2em text-center" style="justify-content: center;">
-            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>5</b></p>
-            <p>Valor total del contrato: <b> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
+            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoMesesObra'] }}</b></p>
+            <p>Valor total del Proyecto: <b> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
           </div>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
             <app-programacion-obra-flujo-inversion  
@@ -163,12 +167,14 @@
                                                     [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
                                                     (terminoCarga)="getCargaMasiva( $event )"
                                                     [observacionDevolucionFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionFlujoInversion"
+                                                    [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion"
                                                     (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion>
           </section>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
             <app-programacion-obra-flujo-inversion  [esFlujoInversion]="true"
                                                     [contratoConstruccionId]="0"
+                                                    [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion"
                                                     (terminoCarga)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion>
           </section>

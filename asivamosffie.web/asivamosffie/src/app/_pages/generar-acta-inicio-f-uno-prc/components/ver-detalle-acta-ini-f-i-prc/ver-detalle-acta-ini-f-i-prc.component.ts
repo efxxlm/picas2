@@ -74,7 +74,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
-    if (this.rolAsignado == 2) {
+    if (this.rolAsignado == 11) {
       this.opcion = 1;
     }
     else {
@@ -112,6 +112,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
         }
         else{
           this.observacionesUltimasSup = this.dataElements[i].observaciones;
+          this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
         }
       }
     });
@@ -128,7 +129,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
     this.fechaFirmaContratista = data.fechaFirmaContratista;
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
     this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
-    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
+    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaDrp;
     this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
     this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
     this.numIdRepresentanteLegal = data.contratacion.contratista.representanteLegalNumeroIdentificacion;

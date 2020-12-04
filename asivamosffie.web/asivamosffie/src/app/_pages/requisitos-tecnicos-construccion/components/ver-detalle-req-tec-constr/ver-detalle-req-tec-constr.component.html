@@ -78,7 +78,24 @@
                         Hojas de vida del contratista de obra
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-detalle-hojas-vida-contratista></app-detalle-hojas-vida-contratista>
+
+                    <mat-accordion *ngFor="let perfil of contratacion.proyecto.contratoConstruccion[0].construccionPerfil; let j = index">
+                      <mat-expansion-panel class="expansion-style sub-expansion aux">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                          <mat-panel-title class="expansion-style--title">
+                            Perfil {{ j + 1 }}
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+            
+                        <app-detalle-hojas-vida-contratista
+                                                            [perfil]="contratacion.proyecto.contratoConstruccion[0].construccionPerfil[j]"
+                        >
+                      </app-detalle-hojas-vida-contratista>
+                      </mat-expansion-panel>
+                    </mat-accordion>
+
+
+                    
                   </mat-expansion-panel>
                  
                   <mat-expansion-panel class="expansion-style sub-expansion">

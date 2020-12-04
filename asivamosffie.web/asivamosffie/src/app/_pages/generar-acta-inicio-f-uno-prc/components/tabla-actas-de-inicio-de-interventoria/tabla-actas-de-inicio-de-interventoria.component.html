@@ -39,7 +39,7 @@
                     -->
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActaCodigo=='2'"
-                        (click)="this.enviarActaParaFirma(element.contratoId)">Enviar acta para firma</button>
+                        (click)="this.enviarActaParaFirma(element.contratoId,element.numeroContratoObra)">Enviar acta para firma</button>
                    <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='8'"
                         (click)="this.enviarInterventorBtn(element.contratoId)">Enviar al interventor</button>

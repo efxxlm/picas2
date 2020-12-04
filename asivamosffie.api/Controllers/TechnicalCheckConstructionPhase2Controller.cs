@@ -31,5 +31,27 @@ namespace asivamosffie.api.Controllers
         {
             return _technicalCheckConstructionPhase2Service.GetContractsGrid(" ", pTipoContrato);
         }
+
+
+        //[Route("ChangeStateContrato")]
+        //[HttpPost]
+        //public async Task<IActionResult> ChangeStateContrato([FromQuery] int pContratoId, string pEstadoVerificacionContratoCodigo)
+        //{
+        //    Respuesta respuesta = new Respuesta();
+        //    try
+        //    {
+        //        respuesta = await _registerPreContructionPhase1Service.ChangeStateContrato(pContratoId, HttpContext.User.FindFirst("User").Value, pEstadoVerificacionContratoCodigo
+        //           , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender
+
+
+        //            );
+        //        return Ok(respuesta);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        respuesta.Data = ex.ToString();
+        //        return BadRequest(respuesta);
+        //    }
+        //}
     }
 }

@@ -14,6 +14,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   addressForm = this.fb.group({});
 
   @Input() contratoId;
+  @Input() numContrato;
   dataElements: any;
   tieneObservacionesBool: boolean;
   observacionesUltimas: any;
@@ -65,12 +66,18 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   crearFormulario() {
     return this.fb.group({
       tieneObservaciones: ['', Validators.required],
-      observaciones:['', Validators.required],
+      observaciones:["", Validators.required],
     })
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
+    }
+  }
+  textoLimpio(texto: string) {
+    if (texto) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
     }
   }
   loadService(id){
@@ -89,7 +96,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   }
   generarActaSuscrita(){
     this.service.GetActaByIdPerfil(8,this.contratoId).subscribe((resp:any)=>{
-      const documento = `Prueba.pdf`; // Valor de prueba
+      const documento = `Acta contrato ${this.numContrato}.pdf`; // Valor de prueba
       const text = documento,
       blob = new Blob([resp], { type: 'application/pdf' }),
       anchor = document.createElement('a');
@@ -100,17 +107,24 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
     });
   }
   onSubmit() {
+    let dataObsrvacionWrite;
+    if(this.addressForm.value.observaciones==null){
+      dataObsrvacionWrite = "";
+    }
+    else{
+      dataObsrvacionWrite = this.addressForm.value.observaciones;
+    }
     if(localStorage.getItem("editable")=="false"){
       const contratoObservacion={
         'ContratoId':this.contratoId,
-        'Observaciones':this.addressForm.value.observaciones,
+        'Observaciones':dataObsrvacionWrite,
         'EsActa':false,
         'EsActaFase1':this.addressForm.value.tieneObservaciones,
         'esSupervision':true
       };
       this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data:any)=>{
         if(data.code=="200"){
-          if(this.addressForm.value.tieneObservaciones==true){
+          if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.observaciones!=null){
             if(localStorage.getItem("origin")=="interventoria"){
               this.service.CambiarEstadoActa(this.contratoId,"8").subscribe(data0=>{
             
@@ -118,6 +132,18 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
             }
             else{
               this.service.CambiarEstadoActa(this.contratoId,"16").subscribe(data0=>{
+            
+              });
+            }
+          }
+          else if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.observaciones==null){
+            if(localStorage.getItem("origin")=="interventoria"){
+              this.service.CambiarEstadoActa(this.contratoId,"5").subscribe(data0=>{
+            
+              });
+            }
+            else{
+              this.service.CambiarEstadoActa(this.contratoId,"15").subscribe(data0=>{
             
               });
             }
@@ -135,7 +161,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
             }
           }
           this.realizoPeticion = true;
-          this.openDialog("",'La información ha sido guardada exitosamente.');
+          this.openDialog("",'<b>La información ha sido guardada exitosamente.</b>');
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
         else{
@@ -147,14 +173,14 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
       const contratoObservacion={
         'ContratoObservacionId':this.contratoObservacionId,
         'ContratoId':this.contratoId,
-        'Observaciones':this.addressForm.value.observaciones,
+        'Observaciones':dataObsrvacionWrite,
         'esActa':false,
         'EsActaFase1':this.addressForm.value.tieneObservaciones,
         'esSupervision':true
       };
       this.service.CreateEditObservacionesActa(contratoObservacion).subscribe((data2:any)=>{
         if(data2.code=="200"){
-          if(this.addressForm.value.tieneObservaciones==true){
+          if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.observaciones!=''){
             if(localStorage.getItem("origin")=="interventoria"){
               this.service.CambiarEstadoActa(this.contratoId,"8").subscribe(data0=>{
             
@@ -166,7 +192,19 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
               });
             }
           }
-          else{
+          else if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.observaciones==null){
+            if(localStorage.getItem("origin")=="interventoria"){
+              this.service.CambiarEstadoActa(this.contratoId,"5").subscribe(data0=>{
+            
+              });
+            }
+            else{
+              this.service.CambiarEstadoActa(this.contratoId,"15").subscribe(data0=>{
+            
+              });
+            }
+          }
+          else {
             if(localStorage.getItem("origin")=="interventoria"){
               this.service.CambiarEstadoActa(this.contratoId,"5").subscribe(data1=>{
             
@@ -179,7 +217,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
             }
           }
           this.realizoPeticion = true;
-          this.openDialog("",'La información ha sido guardada exitosamente.');
+          this.openDialog("",'<b>La información ha sido guardada exitosamente.</b>');
           this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
         }
         else{

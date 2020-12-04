@@ -1,3 +1,4 @@
+import { DetalleDialogPlanesProgramasComponent } from './../detalle-dialog-planes-programas/detalle-dialog-planes-programas.component';
 import { Component, EventEmitter, Input, OnInit, Output,  } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -5,7 +6,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FaseDosAprobarConstruccionService } from 'src/app/core/_services/faseDosAprobarConstruccion/fase-dos-aprobar-construccion.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { TiposObservacionConstruccion } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
-import { DialogObservacionesComponent } from 'src/app/_pages/requisitos-tecnicos-construccion/components/dialog-observaciones/dialog-observaciones.component';
 
 @Component({
   selector: 'app-planes-programas-artc',
@@ -43,17 +43,16 @@ export class PlanesProgramasArtcComponent implements OnInit {
     { value: false, viewValue: 'No' }
   ];
   urlSoporte: string;
+  totalGuardados = 0;
   observacionPlanesProgramas = '2';
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
     construccionObservacionId: []
   });
-
   editorStyle = {
     height: '100px'
   };
-
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -62,11 +61,9 @@ export class PlanesProgramasArtcComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-
   @Input() observacionesCompleted: boolean;
   @Input() planesProgramas: any;
   @Input() contratoConstruccionId: any;
-
   @Output() createEdit = new EventEmitter();
 
   constructor(
@@ -291,6 +288,8 @@ export class PlanesProgramasArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    } else {
+      return 0;
     }
   }
 
@@ -302,7 +301,7 @@ export class PlanesProgramasArtcComponent implements OnInit {
   }
 
   openDialogObservacion(planPrograma: string, observacion: string, id: number) {
-    const dialogObservacion = this.dialog.open(DialogObservacionesComponent, {
+    const dialogObservacion = this.dialog.open(DetalleDialogPlanesProgramasComponent, {
       width: '60em',
       data: { planPrograma, observacion }
     });
@@ -335,11 +334,24 @@ export class PlanesProgramasArtcComponent implements OnInit {
     };
 
     console.log( construccion );
-    this.faseDosAprobarConstruccionSvc.createEditObservacionPlanesProgramasSupervisor( construccion )
-      .subscribe(
-        response => this.openDialog( '', response.message ),
-        err => this.openDialog( '', err.message )
-      );
+
+    if (  this.addressForm.value.tieneObservaciones === false
+          && this.totalGuardados === 0
+          && this.planesProgramas.tieneObservacionesPlanesProgramasApoyo === true ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      return;
+    }
+    if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
+      this.faseDosAprobarConstruccionSvc.createEditObservacionPlanesProgramasSupervisor( construccion )
+        .subscribe(
+          response => {
+            this.openDialog( '', response.message );
+            this.createEdit.emit( true );
+          },
+          err => this.openDialog( '', err.message )
+        );
+    }
 
   }
 

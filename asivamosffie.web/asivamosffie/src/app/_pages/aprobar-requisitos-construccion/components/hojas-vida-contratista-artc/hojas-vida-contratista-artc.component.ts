@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -37,9 +37,10 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
     'fechaRevision',
     'observacionesSupervision'
   ];
-
   @Input() observacionesCompleted;
   @Input() perfil: any;
+  @Output() createEdit = new EventEmitter();
+  totalGuardados = 0;
 
   constructor(
     private dialog: MatDialog,
@@ -86,6 +87,8 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    } else {
+      return 0;
     }
   }
 
@@ -121,11 +124,23 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
 
     console.log( ConstruccionPerfil );
 
-    this.faseDosAprobarConstruccionSvc.createEditObservacionPerfilSupervisor( ConstruccionPerfil )
-      .subscribe(
-        response => this.openDialog( '', response.message ),
-        err => this.openDialog( '', err.message )
-      );
+    if (  this.addressForm.value.tieneObservaciones === false
+          && this.totalGuardados === 0
+          && this.perfil.tieneObservacionesApoyo === true ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      return;
+    }
+    if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
+      this.faseDosAprobarConstruccionSvc.createEditObservacionPerfilSupervisor( ConstruccionPerfil )
+        .subscribe(
+          response => {
+            this.openDialog( '', response.message );
+            this.createEdit.emit( true );
+          },
+          err => this.openDialog( '', err.message )
+        );
+    }
 
   }
 

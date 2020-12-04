@@ -14,7 +14,7 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   addressForm = this.fb.group({
     tieneObservaciones: [null, Validators.required],
     observaciones: [null, Validators.required],
-    construccionPerfilObservacionId:[]
+    construccionPerfilObservacionId: []
   });
 
   editorStyle = {
@@ -34,19 +34,19 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   @Input() perfil: any;
 
   constructor(
-      private dialog: MatDialog, 
+      private dialog: MatDialog,
       private fb: FormBuilder,
       private faseUnoConstruccionService: FaseUnoConstruccionService,
-      
       ) { }
 
   ngOnInit(): void {
     if (this.perfil){
 
-        this.addressForm.get('tieneObservaciones').setValue(this.perfil.tieneObservacionesApoyo)
-        this.addressForm.get('observaciones').setValue(this.perfil.observacionApoyo ? this.perfil.observacionApoyo.observacion : null)
-        this.addressForm.get('construccionPerfilObservacionId').setValue(this.perfil.observacionApoyo ? this.perfil.observacionApoyo.construccionPerfilObservacionId : null)
-  
+        this.addressForm.get('tieneObservaciones').setValue(this.perfil.tieneObservacionesApoyo);
+        this.addressForm.get('observaciones').setValue(this.perfil.observacionApoyo ? this.perfil.observacionApoyo.observacion : null);
+        this.addressForm.get('construccionPerfilObservacionId').setValue(
+          this.perfil.observacionApoyo ? this.perfil.observacionApoyo.construccionPerfilObservacionId : null
+        );
     }
   }
 
@@ -59,25 +59,25 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   textoLimpio(texto: string) {
     const textolimpio = texto.replace(/<[^>]*>/g, '');
     return textolimpio.length;
-  };
+  }
 
-  innerObservacion ( observacion: string ) {
+  innerObservacion( observacion: string ) {
     if ( observacion !== undefined ) {
       const observacionHtml = observacion.replace( '"', '' );
       return observacionHtml;
-    };
-  };
-  
-  openDialog (modalTitle: string, modalText: string) {
+    }
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
 
   onSubmit(){
 
-    let ConstraccionPerfil = {
+    const ConstraccionPerfil = {
       construccionPerfilId: this.perfil.construccionPerfilId,
       tieneObservacionesApoyo: this.addressForm.value.tieneObservaciones,
 
@@ -91,17 +91,17 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
 
         }
       ]
-    }
+    };
 
     console.log();
 
     this.faseUnoConstruccionService.createEditObservacionPerfil( ConstraccionPerfil )
       .subscribe(respuesta => {
         this.openDialog('', respuesta.message);
-        if (respuesta.code == "200"){
-          location.reload()
+        if (respuesta.code === '200'){
+          location.reload();
         }
-          //this.createEdit.emit(true);
+          // this.createEdit.emit(true);
       });
 
   }

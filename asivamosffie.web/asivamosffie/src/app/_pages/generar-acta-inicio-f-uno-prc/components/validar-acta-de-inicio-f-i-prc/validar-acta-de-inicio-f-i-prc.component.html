@@ -27,7 +27,16 @@
             <div *ngIf="this.valorFDos!=0">
                 <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
             </div>
-            <div *ngIf="this.tipoCodigo == '1' && this.opcion == 2">
+            <div *ngIf="this.tipoCodigo == '1' && this.opcion == 1">
+                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                </strong></p>
+            <p><strong>Nombre del representante legal del contratista de interventoría:
+                </strong> </p>
+            <p><strong>Número de identificación del contratista de interventoría:
+                </strong> {{this.numIdentifiacionSupervisor }}</p>
+            <p><strong>Nombre de la entidad contratista de interventoría:
+                </strong>{{this.nomSupervisor}}
+            </p>
                 <p><strong>Número de identificación del representante legal del contratista de obra:
                     </strong>{{this.numIdRepresentanteLegal }}</p>
                 <p><strong>Nombre del representante legal del contratista de obra:
@@ -38,7 +47,7 @@
                 <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
                     {{this.diasPlazoIni}}</p>
             </div>
-            <div *ngIf="this.tipoCodigo == '1' && this.opcion == 1">
+            <div *ngIf="this.tipoCodigo == '1' && this.opcion == 2">
                 <p><strong>Número de identificación del Supervisor:
                 </strong>{{this.numIdentifiacionSupervisor }}</p>
             <p><strong>Nombre del Supervisor:
@@ -53,7 +62,7 @@
             <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
                 {{this.diasPlazoIni}}</p>
             </div>
-            <div *ngIf="this.tipoCodigo == '2' && this.opcion == 1">
+            <div *ngIf="this.tipoCodigo == '2' && this.opcion == 2">
                 <p><strong>Número de identificación del Supervisor:
                 </strong>{{this.numIdentifiacionSupervisor }}</p>
             <p><strong>Nombre del Supervisor:
@@ -84,5 +93,5 @@
             <div [innerHtml]="this.observacionesUltimas"></div>
         </mat-card-content>
     </mat-card>
-    <app-formulario-tiene-observaciones [contratoId]="this.contratoId"></app-formulario-tiene-observaciones>
+    <app-formulario-tiene-observaciones [contratoId]="this.contratoId" [numContrato]="this.numContrato"></app-formulario-tiene-observaciones>
 </section>

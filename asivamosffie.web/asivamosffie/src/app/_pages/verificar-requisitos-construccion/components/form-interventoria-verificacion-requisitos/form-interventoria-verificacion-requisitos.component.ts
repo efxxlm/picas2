@@ -16,41 +16,47 @@ export class FormInterventoriaVerificacionRequisitosComponent implements OnInit 
   fechaPoliza: string;
 
   constructor(
-                private faseUnoConstruccionService: FaseUnoConstruccionService,
-                private activatedRoute: ActivatedRoute,
-                private router: Router,
-                private dialog: MatDialog,
-             ) 
-  { 
+    private faseUnoConstruccionService: FaseUnoConstruccionService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private dialog: MatDialog )
+  {
     this.getContrato();
-
-    if (this.router.getCurrentNavigation().extras.state)
+    if (this.router.getCurrentNavigation().extras.state) {
       this.fechaPoliza = this.router.getCurrentNavigation().extras.state.fechaPoliza;
+    }
   }
 
   ngOnInit(): void {
   }
 
-  getContrato () {
+  getContrato() {
     this.faseUnoConstruccionService.getContratoByContratoId( this.activatedRoute.snapshot.params.id )
     .subscribe( response => {
       this.contrato = response;
       console.log( this.contrato );
     } );
-  };
+  }
 
-  openDialog (modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
-  estadoSemaforo ( index: number, semaforo: string ) {
+  estadoSemaforo( index: number, semaforo: string ) {
     this.contrato.contratacion.contratacionProyecto[index].proyecto['estadoSemaforo'] = semaforo;
   }
 
-  getPerfilesContrato ( index: number, perfilContrato: ContratoPerfil[] ) {
+  recargarContrato( value: boolean = false ) {
+    if ( value === true ) {
+      this.contrato = undefined;
+      this.getContrato();
+    }
+  }
+
+  getPerfilesContrato( index: number, perfilContrato: ContratoPerfil[] ) {
 
     const construccionPerfil: any = {
       contratoId: this.contrato.contratoId,
@@ -58,10 +64,11 @@ export class FormInterventoriaVerificacionRequisitosComponent implements OnInit 
       construccionPerfil: perfilContrato
     };
     if ( this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoConstruccion.length > 0 ) {
-      construccionPerfil.contratoConstruccionId = this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoConstruccion[0].contratoConstruccionId;
+      const construccionId = this.contrato.contratacion.contratacionProyecto[index].proyecto.contratoConstruccion[0].contratoConstruccionId;
+      construccionPerfil.contratoConstruccionId = construccionId;
     }
     this.faseUnoConstruccionService.createEditConstruccionPerfil( construccionPerfil )
-      .subscribe( 
+      .subscribe(
         response => {
           this.openDialog( '', response.message );
           this.getContrato();
@@ -69,6 +76,6 @@ export class FormInterventoriaVerificacionRequisitosComponent implements OnInit 
         err => this.openDialog( '', err.message )
       );
 
-  };  
+  }
 
 }
