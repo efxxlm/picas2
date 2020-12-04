@@ -49,7 +49,6 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
       .subscribe(
         response => {
           this.estadosPreconstruccionInterventoria = response;
-          console.log( this.estadosPreconstruccionInterventoria );
           this.faseUnoAprobarPreconstruccionSvc.getListContratacion()
           .subscribe( listas => {
             const dataTable = [];
@@ -66,7 +65,6 @@ export class TablaContratoDeInterventoriaComponent implements OnInit {
                 dataTable.push( lista );
               }
             } );
-            console.log( dataTable );
             this.dataSource = new MatTableDataSource( dataTable );
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;

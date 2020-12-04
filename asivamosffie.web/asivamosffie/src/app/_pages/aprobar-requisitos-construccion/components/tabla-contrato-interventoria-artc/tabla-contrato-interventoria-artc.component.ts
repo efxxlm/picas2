@@ -44,8 +44,21 @@ export class TablaContratoInterventoriaArtcComponent implements OnInit {
           this.faseDosAprobarConstruccionSvc.getContractsGrid( this.tipoContratoInterventoria )
             .subscribe(
               listas => {
-                console.log( listas );
-                this.dataSource                        = new MatTableDataSource( listas );
+                const dataTable = [];
+                listas.forEach( lista => {
+                  if (  Number( lista[ 'estadoCodigo' ] ) >= Number( this.estadosConstruccionInterventoria.enviadoAlSupervisor.codigo )
+                        && lista[ 'tipoContratoCodigo' ] === this.tipoContratoInterventoria )
+                  {
+                    dataTable.push( lista );
+                  }
+                  if (  lista[ 'estaDevuelto' ] === true
+                        && Number( lista[ 'estadoCodigo' ] ) < Number( this.estadosConstruccionInterventoria.enviadoAlSupervisor.codigo )
+                        && lista[ 'tipoContratoCodigo' ] === this.tipoContratoInterventoria )
+                  {
+                    dataTable.push( lista );
+                  }
+                } );
+                this.dataSource                        = new MatTableDataSource( dataTable );
                 this.dataSource.paginator              = this.paginator;
                 this.dataSource.sort                   = this.sort;
                 this.paginator._intl.itemsPerPageLabel = 'Elementos por página';

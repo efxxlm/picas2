@@ -42,13 +42,27 @@ export class TablaContratoObraArtcComponent implements OnInit {
           this.estadosConstruccionObra = response;
           console.log( this.estadosConstruccionObra );
           this.faseDosAprobarConstruccionSvc.getContractsGrid( this.tipoContratoObra )
-            .subscribe( listas => {
-              console.log( listas );
-              this.dataSource                        = new MatTableDataSource( listas );
-              this.dataSource.paginator              = this.paginator;
-              this.dataSource.sort                   = this.sort;
-              this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-            } );
+            .subscribe(
+              listas => {
+                const dataTable = [];
+                listas.forEach( lista => {
+                  if (  Number( lista[ 'estadoCodigo' ] ) >= Number( this.estadosConstruccionObra.enviadoAlSupervisor.codigo )
+                        && lista[ 'tipoSolicitudCodigo' ] === this.tipoContratoObra )
+                  {
+                    dataTable.push( lista );
+                  }
+                  if ( (  lista[ 'estaDevuelto' ] === true
+                          && Number( lista[ 'estadoCodigo' ] ) < Number( this.estadosConstruccionObra.enviadoAlSupervisor.codigo ) )
+                        && lista[ 'tipoSolicitudCodigo' ] === this.tipoContratoObra )
+                  {
+                    dataTable.push( lista );
+                  }
+                } );
+                this.dataSource                        = new MatTableDataSource( dataTable );
+                this.dataSource.paginator              = this.paginator;
+                this.dataSource.sort                   = this.sort;
+                this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+              } );
         }
       );
   }
