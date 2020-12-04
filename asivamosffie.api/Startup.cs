@@ -151,6 +151,7 @@ namespace asivamosffie.api
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IActBeginService, ActBeginService>();
+            services.AddTransient<IResourceControlService, ResourceControlService>();
             
         }
 
