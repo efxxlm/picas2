@@ -133,13 +133,15 @@
                                                   [esFlujoInversion]="false" 
                                                   [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
                                                   [observacionDevolucionProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionProgramacionObra"
+                                                  [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra"
                                                   (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
             <app-programacion-obra-flujo-inversion 
                                                   [esFlujoInversion]="false" 
-                                                  [contratoConstruccionId]="0" 
+                                                  [contratoConstruccionId]="0"
+                                                  [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra"
                                                   (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
@@ -156,7 +158,7 @@
           </mat-expansion-panel-header>
 
           <div class="d-flex mt-2em text-center" style="justify-content: center;">
-            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto.plazoMesesObra }}</b></p>
+            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoMesesObra'] }}</b></p>
             <p>Valor total del Proyecto: <b> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
           </div>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
