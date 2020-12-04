@@ -13,7 +13,7 @@ export class DialogObservacionesProgramacionComponent implements OnInit {
 
   formObservacion: FormGroup;
   editorStyle = {
-    height: '45px'
+    height: '70px'
   };
   config = {
     toolbar: [

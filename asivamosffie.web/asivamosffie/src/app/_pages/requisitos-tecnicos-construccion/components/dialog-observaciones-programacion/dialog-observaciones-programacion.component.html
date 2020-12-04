@@ -1,46 +1,42 @@
 <section class="text-center">
-    <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
-        <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
-    </button>
+  <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  </button>
 
-    <h1 class="title-menu--h1" style="margin-top: 0px;">
-      Observaciones programación
-    </h1>
+  <h1 class="title-menu--h1" style="margin-top: 0px;">
+    Observaciones programación
+  </h1>
 
-    <section class="flex-center">
-        <span><strong>{{ data.fechaCreacion | date: 'dd/MM/yyyy' }}</strong></span>
-        <span class="info-text sin-diligenciar" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Fallido'">Fallido</span>
-        <span class="info-text completo" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Validos'">Valido</span>
-    </section>
+  <section class="flex-center mt-05em">
+    <span><strong>{{ data.fechaCreacion | date: 'dd/MM/yyyy' }}</strong></span>
+    <span class="info-text sin-diligenciar" style="margin-left: 1em;"
+      *ngIf="data.estadoCargue === 'Fallido'">Fallido</span>
+    <span class="info-text completo" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Validos'">Valido</span>
+  </section>
 
-    <form autocomplete="off" [formGroup]="formObservacion" (ngSubmit)="guardar()">
-        <div class="flex-editor mt-2em">
-            <mat-card class="shipping-card w-80">
-                <mat-card-header class="header-card">
-                    <mat-card-title class="header-card--text">
-                        Observaciones
-                    </mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="required-05">
+  <form autocomplete="off" [formGroup]="formObservacion" (ngSubmit)="guardar()">
 
-                    <quill-editor class="quill-editor-style w-65 ml-1em" [styles]="editorStyle" [modules]="config"
-                        (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required>
-                    </quill-editor>
+    <div class="d-flex align-items-center mt-1em">
+      <div class="text-area-quill">
+        <label for="observaciones" class="text-area-quill--label size-label colorMainColor">
+          Observaciones
+        </label>
+        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+          (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required>
+        </quill-editor>
+      </div>
+      <span class="contador miles" *ngIf="formObservacion.get('observaciones').value !== null">
+        {{3000 - (textoLimpio(formObservacion.get('observaciones').value)>3000?3000:textoLimpio(formObservacion.get('observaciones').value))}}
+      </span>
+      <span class="contador miles" *ngIf="formObservacion.get('observaciones').value === null">
+        3000
+      </span>
+    </div>
 
-                </mat-card-content>
-            </mat-card>
-            <span class="contador miles" *ngIf="formObservacion.get('observaciones').value !== null">
-                {{3000 - (textoLimpio(formObservacion.get('observaciones').value)>3000?3000:textoLimpio(formObservacion.get('observaciones').value))}}
-            </span>
-            <span class="contador miles" *ngIf="formObservacion.get('observaciones').value === null">
-                3000
-            </span>
-        </div>
-
-        <div class="text-center">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
-                <img src="assets/img/icon/guardar.svg">
-            </button>
-        </div>
-    </form>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg">
+      </button>
+    </div>
+  </form>
 </section>
