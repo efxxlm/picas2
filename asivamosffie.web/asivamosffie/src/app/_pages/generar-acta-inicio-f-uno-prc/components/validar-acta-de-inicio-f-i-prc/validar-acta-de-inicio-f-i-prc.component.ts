@@ -123,7 +123,7 @@ export class ValidarActaDeInicioFIPreconstruccionComponent implements OnInit {
     this.fechaFirmaContratista = data.fechaFirmaContratista;
     this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
     this.numDRP = data.contratacion.disponibilidadPresupuestal[0].numeroDrp;
-    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaCreacion;
+    this.fechaDRP = data.contratacion.disponibilidadPresupuestal[0].fechaDrp;
     this.objeto = data.contratacion.disponibilidadPresupuestal[0].objeto;
     this.valorIni = data.contratacion.disponibilidadPresupuestal[0].valorSolicitud;
     this.numIdRepresentanteLegal = data.contratacion.contratista.representanteLegalNumeroIdentificacion;

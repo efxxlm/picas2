@@ -24,7 +24,7 @@
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
                 {{1000 - textoLimpio(addressForm.get('observaciones').value)}}
             </span>
-            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === ''">
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === '' || addressForm.get('observaciones').value === null">
                 1000
             </span>
         </div>

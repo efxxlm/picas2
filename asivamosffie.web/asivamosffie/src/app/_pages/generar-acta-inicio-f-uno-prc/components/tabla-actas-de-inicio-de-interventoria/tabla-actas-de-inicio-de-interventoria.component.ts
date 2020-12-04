@@ -67,7 +67,7 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   verDetalleEditar(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "true");
-    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/validarActaDeInicio', id]);
+    this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleEditarActa', id]);
   }
   verDetalle(id) {
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa', id]);
