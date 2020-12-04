@@ -160,7 +160,7 @@ namespace asivamosffie.services
                 {
                     string UltimaObservacionSupervisor = ContratoPerfil.ContratoPerfilObservacion.OrderBy(r=> r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).LastOrDefault().Observacion;
 
-                    if (((bool)ContratoPerfil.TieneObservacionSupervisor && UltimaObservacionSupervisor == null))
+                    if ((ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && UltimaObservacionSupervisor == null))
                          RegistroCompleto = false;
                     if (!ContratoPerfil.TieneObservacionSupervisor.HasValue)
                           RegistroCompleto = false;

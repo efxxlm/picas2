@@ -477,7 +477,7 @@ namespace asivamosffie.services
                 {
                     string UltimaObservacionApoyo = ContratoPerfil.ContratoPerfilObservacion.OrderBy(r => r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).LastOrDefault().Observacion;
 
-                    if (((bool)ContratoPerfil.TieneObservacionApoyo && UltimaObservacionApoyo == null))
+                    if ((ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && UltimaObservacionApoyo == null))
                         RegistroCompleto = false;
                     if (!ContratoPerfil.TieneObservacionApoyo.HasValue)
                         RegistroCompleto = false;
