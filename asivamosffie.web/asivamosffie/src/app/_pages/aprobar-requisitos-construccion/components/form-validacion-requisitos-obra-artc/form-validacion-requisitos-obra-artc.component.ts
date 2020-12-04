@@ -42,7 +42,6 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'completo';
             if (  contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor !== undefined
-                  && contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSuperviso.observaciones === undefined
                   && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === true ) {
               contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
             }
@@ -165,6 +164,7 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
           if ( contratacion.proyecto.contratoConstruccion[0].semaforoFlujo === 'completo' ) { semaforoCompleto++; }
 
           // Condiciones semaforos del proyecto
+          console.log( semaforoCompleto, semaforoEnProceso, semaforoSinDiligenciar );
           if ( semaforoCompleto > 0 && semaforoCompleto === totalAcordeones ) { contratacion.estadoSemaforo = 'completo'; }
           if (  semaforoSinDiligenciar > 0
                 && semaforoSinDiligenciar === totalAcordeones )
