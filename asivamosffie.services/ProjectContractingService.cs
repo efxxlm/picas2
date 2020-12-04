@@ -384,9 +384,9 @@ namespace asivamosffie.services
 
                 if (ContratacionProyectoAportante.ComponenteAportante.Count() > 0)
                 {
-                    ContratacionProyectoAportante.ComponenteAportante = ContratacionProyectoAportante.ComponenteAportante.Where(r => !(bool)r.Eliminado).ToList();
+                    ContratacionProyectoAportante.ComponenteAportante = ContratacionProyectoAportante.ComponenteAportante.Where(r => !r.Eliminado.HasValue || ( r.Eliminado.HasValue && !(bool)r.Eliminado)).ToList();
                 }
-                foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante.Where(r => !(bool)r.Eliminado))
+                foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                 {
                     ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
                 }
