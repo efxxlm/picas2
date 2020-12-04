@@ -37,6 +37,9 @@ export class ContractualControversyService implements OnInit{
   GetListGrillaControversiaActuacion(pControversiaContractualId:number){
     return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuacion?pControversiaContractualId=${pControversiaContractualId}`);
   }
+  GetListGrillaActuacionSeguimiento(){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaActuacionSeguimiento`);
+  }
   GetVistaContratoContratista(pContratoId: number){
     return this.http.get<GetVistaContratoContratista>(`${environment.apiUrl}/ContractualControversy/GetVistaContratoContratista?pContratoId=${pContratoId}`);
   }

@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-control-y-tabla-reclamacion-cc',
@@ -22,6 +23,7 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     'estadoReclamacion',
     'gestion'
   ];
+  /*
   dataTable: any[] = [
     {
       fechaActualizacion: '10/08/2020',
@@ -47,14 +49,18 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
       estadoReclamacion: 'Aprobada por comité técnico',
       id: 3
     }
-  ]; 
-  constructor(private router: Router) { }
+  ]; */
+  dataTable: any[] = [];
+  constructor(private router: Router, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.services.GetListGrillaActuacionSeguimiento().subscribe((data:any)=>{
+      this.dataTable = data;
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    });
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
