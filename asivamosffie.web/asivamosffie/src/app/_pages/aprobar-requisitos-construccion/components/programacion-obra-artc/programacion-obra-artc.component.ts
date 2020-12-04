@@ -33,6 +33,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
     ]
   };
   observacionProgramacionObra = '5';
+  totalGuardados = 0;
   dataTablaHistorialObservacion: any[] = [];
   dataTablaHistorialApoyo: any[] = [];
   dataSource = new MatTableDataSource();
@@ -41,11 +42,9 @@ export class ProgramacionObraArtcComponent implements OnInit {
     'fechaRevision',
     'observacionesSupervision'
   ];
-
   @Input() observacionesCompleted;
   @Input() contratoConstruccion: any;
   @Input() contratoConstruccionId: any;
-
   @Output() createEdit = new EventEmitter();
 
   constructor(
@@ -145,11 +144,21 @@ export class ProgramacionObraArtcComponent implements OnInit {
     };
 
     console.log( construccion );
-    this.faseDosAprobarConstruccionSvc.createEditObservacionProgramacionObraSupervisor( construccion )
-      .subscribe(
-        response => this.openDialog( '', response.message ),
-        err => this.openDialog( '', err.message )
-      );
+
+    if (  this.addressForm.value.tieneObservaciones === false
+          && this.totalGuardados === 0
+          && this.contratoConstruccion.tieneObservacionesProgramacionObraApoyo === true ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      return;
+    }
+    if ( this.totalGuardados === 1 && this.addressForm.value.tieneObservaciones !== null ) {
+      this.faseDosAprobarConstruccionSvc.createEditObservacionProgramacionObraSupervisor( construccion )
+        .subscribe(
+          response => this.openDialog( '', response.message ),
+          err => this.openDialog( '', err.message )
+        );
+    }
 
   }
 

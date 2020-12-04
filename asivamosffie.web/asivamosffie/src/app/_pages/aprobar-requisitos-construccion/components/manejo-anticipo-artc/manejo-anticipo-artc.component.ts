@@ -33,6 +33,7 @@ export class ManejoAnticipoArtcComponent implements OnInit {
     ]
   };
   observacionManejoAnticipo = '3';
+  totalGuardados = 0;
   dataTablaHistorialObservacion: any[] = [];
   dataTablaHistorialApoyo: any[] = [];
   dataSource = new MatTableDataSource();
@@ -44,7 +45,6 @@ export class ManejoAnticipoArtcComponent implements OnInit {
   @Input() observacionesCompleted;
   @Input() contratacion: any;
   @Input() contratoConstruccionId: any;
-
   @Output() createEdit = new EventEmitter();
 
   constructor(
@@ -142,11 +142,21 @@ export class ManejoAnticipoArtcComponent implements OnInit {
     };
 
     console.log( construccion );
-    this.faseDosAprobarConstruccionSvc.createEditObservacionManejoAnticipoSupervisor( construccion )
-      .subscribe(
-        response => this.openDialog( '', response.message ),
-        err => this.openDialog( '', err.message )
-      );
+
+    if (  this.addressForm.value.tieneObservaciones === false
+          && this.totalGuardados === 0
+          && this.contratacion.tieneObservacionesManejoAnticipoApoyo === true ) {
+      this.openDialog( '', '<b>Le recomendamos verificar su respuesta; tenga en cuenta que el apoyo a la supervisión si tuvo observaciones.</b>' );
+      this.totalGuardados++;
+      return;
+    }
+    if ( this.totalGuardados === 1 && this.addressForm.value.tieneObservaciones !== null ) {
+      this.faseDosAprobarConstruccionSvc.createEditObservacionManejoAnticipoSupervisor( construccion )
+        .subscribe(
+          response => this.openDialog( '', response.message ),
+          err => this.openDialog( '', err.message )
+        );
+    }
 
   }
 
