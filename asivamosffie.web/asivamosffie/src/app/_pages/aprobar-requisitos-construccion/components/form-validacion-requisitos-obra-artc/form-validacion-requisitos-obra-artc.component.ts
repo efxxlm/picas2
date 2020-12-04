@@ -41,7 +41,8 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
               )
           {
             contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'completo';
-            if (  contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor === undefined
+            if (  contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor !== undefined
+                  && contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSuperviso.observaciones === undefined
                   && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === true ) {
               contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
             }
