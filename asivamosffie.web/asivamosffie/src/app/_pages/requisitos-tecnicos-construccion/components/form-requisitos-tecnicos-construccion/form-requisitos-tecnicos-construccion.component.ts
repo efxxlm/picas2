@@ -40,6 +40,55 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
       .subscribe( response => {
         this.contrato = response;
         console.log( this.contrato );
+
+        this.contrato.contratacion.contratacionProyecto.forEach( cp => {
+          let perfilCompleto = true;
+          cp.proyecto.contratoConstruccion[0].construccionPerfil.forEach( p => {
+            if ( p.registroCompleto != true )
+              perfilCompleto = false
+          });
+          
+          cp['estadoSemaforo'] = 'sin-diligenciar'
+
+          if (cp.proyecto.contratoConstruccion[0].contratoConstruccionId)
+            cp['estadoSemaforo'] = 'en-proceso'
+
+          if ( cp['fasePreConstruccionNotMapped'])
+          {
+            if (
+              cp.proyecto.contratoConstruccion[0].registroCompletoDiagnostico && 
+              cp.proyecto.contratoConstruccion[0].registroCompletoPlanesProgramas &&
+              cp.proyecto.contratoConstruccion[0].registroCompletoManejoAnticipo &&
+              perfilCompleto &&
+              cp.proyecto.contratoConstruccion[0].registroCompletoProgramacionObra &&
+              cp.proyecto.contratoConstruccion[0].registroCompletoFlujoInversion
+            ){
+            cp['estadoSemaforo'] = 'completo';
+            console.log( this.contrato.contratacion.contratacionProyecto );
+
+            }
+          }else{ 
+            console.log('entro', cp.proyecto.contratoConstruccion[0], cp.proyecto['estadoSemaforo'],cp.proyecto)
+
+            if (
+              cp.proyecto.contratoConstruccion[0].registroCompletoPlanesProgramas &&
+              cp.proyecto.contratoConstruccion[0].registroCompletoManejoAnticipo &&
+              perfilCompleto && 
+              cp.proyecto.contratoConstruccion[0].registroCompletoProgramacionObra &&
+              cp.proyecto.contratoConstruccion[0].registroCompletoFlujoInversion
+            ){
+            cp['estadoSemaforo'] = 'completo';
+            console.log( this.contrato.contratacion.contratacionProyecto );
+
+            }
+          }
+
+           
+
+          
+
+        });
+
       } );
   };
 

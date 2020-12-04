@@ -24,14 +24,16 @@
         </p>
     </div>
 
+    
+
     <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header w-45">
-          <mat-panel-title class="expansion-style--title sin-diligenciar">
+          <mat-panel-title class="expansion-style--title {{contratacion['estadoSemaforo']}}" >
+            
             {{ contratacion.proyecto.llaveMen }} - {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratacion.proyecto[ 'sede' ].nombre }}
           </mat-panel-title>
         </mat-expansion-panel-header>
-
         <div align="left">
           <mat-card class="border">
             <mat-card-content>
