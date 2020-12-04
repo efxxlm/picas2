@@ -129,6 +129,18 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
               });
             }
           }
+          else if(this.addressForm.value.tieneObservaciones==true && this.addressForm.value.tieneObservaciones==''){
+            if(localStorage.getItem("origin")=="interventoria"){
+              this.service.CambiarEstadoActa(this.contratoId,"5").subscribe(data0=>{
+            
+              });
+            }
+            else{
+              this.service.CambiarEstadoActa(this.contratoId,"15").subscribe(data0=>{
+            
+              });
+            }
+          }
           else{
             if(localStorage.getItem("origin")=="interventoria"){
               this.service.CambiarEstadoActa(this.contratoId,"5").subscribe(data1=>{
