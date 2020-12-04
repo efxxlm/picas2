@@ -315,14 +315,14 @@ namespace asivamosffie.services
 
             List<Dominio> ListTipointervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
 
-            List<Localizacion> ListDepartamentos = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Departamento).ToList();
-            List<Localizacion> ListMunicipios = _context.Localizacion.Where(r => r.Nivel == (int)ConstanCodigoTipoNivelLocalizacion.Municipio).ToList();
+            List<Localizacion> ListLocalizacion= _context.Localizacion.ToList();
+     
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
 
             foreach (var ContratacionProyecto in contrato.Contratacion.ContratacionProyecto)
             {
-                Localizacion Municipio = ListMunicipios.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-                Localizacion Departamento = ListMunicipios.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+                Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                Localizacion Departamento = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
                 InstitucionEducativaSede InstitucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
 
@@ -355,14 +355,15 @@ namespace asivamosffie.services
                     .Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", Supervisor?.Nombres + " " + Supervisor.Apellidos)
                     .Replace("[ENTIDAD_CONTRATISTA_INTERVENTORIA]", " - ")
                     .Replace("[NIT_CONTRATISTA_INTERVENTORIA]", Supervisor?.NumeroIdentificacion)
-                     //Contratista
-                     .Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.Nombre)
-                       
+                    .Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion)
+                    //Contratista
+                    .Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegal)
+                    .Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegal) 
                     .Replace("[CEDULA_SUPERVISOR]", Supervisor?.NumeroIdentificacion)
+                    .Replace("[NIT_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion)
                     .Replace("[CARGO_SUPERVISOR]", Supervisor?.NombreMaquina)
                     .Replace("[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.Nombre)
-                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegal)
-                    .Replace("[NIT_CONTRATISTA_INTERVENTORIA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion)
+                    .Replace("[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegal) 
                     .Replace("[NUMERO_DRP]", contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().NumeroDrp)
                     .Replace("[FECHA_GENERACION_DRP]", ((DateTime)contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().FechaDrp).ToString("dd-MM-yy"))
                     .Replace("[FECHA_APROBACION_POLIZAS]", (((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy")))
@@ -379,7 +380,8 @@ namespace asivamosffie.services
                     .Replace("[NOMBRE_ENTIDAD_CONTRATISTA]", contrato?.Contratacion?.Contratista?.Nombre ?? " ")
                     .Replace("[NIT_CONTRATISTA_INTERVEENTORIA]", contrato?.Contratacion?.Contratista?.ProcesoSeleccionProponente?.NumeroIdentificacion ?? " ")
                     .Replace("[CC_SUPERVISOR]", contrato?.UsuarioInterventoria.NumeroIdentificacion ?? " ")
-                    .Replace("[CARGO]", " ")
+                    .Replace("[CARGO]", " ")    
+                    .Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion)
                     .Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
 
 

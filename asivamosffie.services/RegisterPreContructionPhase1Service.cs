@@ -490,8 +490,15 @@ namespace asivamosffie.services
                 //Enviar Correo Botón aprobar inicio 3.1.8
                 if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_interventor)
                 {
-                    //se reinicia los contadores 
-                    contratoMod.RegistroCompleto = false;
+                    foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
+                    {
+                        ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
+                        contratoPerfilOld.FechaModificacion = DateTime.Now;
+                        contratoPerfilOld.RegistroCompleto = false;
+                        contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
+
+                        _context.Update(contratoPerfilOld);
+                    }
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender); 
                 }
 
