@@ -1111,7 +1111,7 @@ namespace asivamosffie.services
 
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                         {
-                            if (!(bool)ComponenteAportante.Eliminado)
+                            if (ComponenteAportante.Eliminado.HasValue && !(bool)ComponenteAportante.Eliminado)
                             {
                                 if (string.IsNullOrEmpty(ComponenteAportante.TipoComponenteCodigo)
                                    || string.IsNullOrEmpty(ComponenteAportante.FaseCodigo))
