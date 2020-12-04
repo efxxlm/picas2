@@ -67,7 +67,7 @@ export class ProjectContractingService {
   }
 
   deleteComponenteAportante( pComponenteAportanteId: number ) {
-    return this.http.post( `${ environment.apiUrl }ProjectContracting/DeleteComponenteAportante?pComponenteAportanteId=${ pComponenteAportanteId }`, '' );
+    return this.http.post( `${ environment.apiUrl }/ProjectContracting/DeleteComponenteAportante`, pComponenteAportanteId );
   }
 
 }
