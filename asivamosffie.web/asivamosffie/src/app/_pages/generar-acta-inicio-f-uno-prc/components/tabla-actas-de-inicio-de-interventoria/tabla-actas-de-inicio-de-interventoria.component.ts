@@ -97,14 +97,14 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
         });
     }
   }
-  enviarActaParaFirma(id) {
+  enviarActaParaFirma(id,numeroContrato) {
     if (localStorage.getItem("origin") == "interventoria") {
       this.service.CambiarEstadoActa(id, "3").subscribe(data => {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
         );
       });
-      this.descargarActaDesdeTabla(id);
+      this.descargarActaDesdeTabla(id,numeroContrato);
     }
   }
   enviarInterventorBtn(id){
@@ -143,9 +143,9 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
       }
     });
   }
-  descargarActaDesdeTabla(id) {
+  descargarActaDesdeTabla(id,numeroContrato) {
     this.service.GetActaByIdPerfil(8,id).subscribe(resp => {
-      const documento = `Prueba.pdf`; // Valor de prueba
+      const documento = `Acta contrato ${numeroContrato}.pdf`; // Valor de prueba
       const text = documento,
         blob = new Blob([resp], { type: 'application/pdf' }),
         anchor = document.createElement('a');
