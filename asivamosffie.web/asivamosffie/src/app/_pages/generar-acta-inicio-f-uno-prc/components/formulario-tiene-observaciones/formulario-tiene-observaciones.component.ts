@@ -14,6 +14,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   addressForm = this.fb.group({});
 
   @Input() contratoId;
+  @Input() numContrato;
   dataElements: any;
   tieneObservacionesBool: boolean;
   observacionesUltimas: any;
@@ -65,12 +66,18 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   crearFormulario() {
     return this.fb.group({
       tieneObservaciones: ['', Validators.required],
-      observaciones:['', Validators.required],
+      observaciones:[null, Validators.required],
     })
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
+    }
+  }
+  textoLimpio(texto: string) {
+    if (texto) {
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
     }
   }
   loadService(id){
@@ -89,7 +96,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   }
   generarActaSuscrita(){
     this.service.GetActaByIdPerfil(8,this.contratoId).subscribe((resp:any)=>{
-      const documento = `Prueba.pdf`; // Valor de prueba
+      const documento = `Acta contrato ${this.numContrato}.pdf`; // Valor de prueba
       const text = documento,
       blob = new Blob([resp], { type: 'application/pdf' }),
       anchor = document.createElement('a');
