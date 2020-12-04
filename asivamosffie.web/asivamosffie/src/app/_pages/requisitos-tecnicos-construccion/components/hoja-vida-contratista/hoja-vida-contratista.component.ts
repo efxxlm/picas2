@@ -86,7 +86,7 @@ export class HojaVidaContratistaComponent implements OnInit {
               this.fb.group(
                 {
                   estadoSemaforo              : [ 'sin-diligenciar' ],
-                  contratoPerfilId            : [ 0 ],
+                  construccionPerfilId            : [ 0 ],
                   perfilCodigo                : [ null ],
                   cantidadHvRequeridas        : [ '' ],
                   cantidadHvRecibidas         : [ '' ],
@@ -109,7 +109,7 @@ export class HojaVidaContratistaComponent implements OnInit {
               this.fb.group(
                 {
                     estadoSemaforo              : [ 'sin-diligenciar' ],
-                    contratoPerfilId            : [ 0 ],
+                    construccionPerfilId            : [ 0 ],
                     perfilCodigo                : [ null ],
                     cantidadHvRequeridas        : [ '' ],
                     cantidadHvRecibidas         : [ '' ],
@@ -149,7 +149,7 @@ export class HojaVidaContratistaComponent implements OnInit {
                 this.fb.group(
                   {
                     estadoSemaforo              : [ 'sin-diligenciar' ],
-                    contratoPerfilId            : [ 0 ],
+                    construccionPerfilId            : [ 0 ],
                     perfilCodigo                : [ null ],
                     cantidadHvRequeridas        : [ '' ],
                     cantidadHvRecibidas         : [ '' ],
@@ -175,8 +175,8 @@ export class HojaVidaContratistaComponent implements OnInit {
           numeroRadicados.push(
             this.fb.group(
               {
-                contratoPerfilNumeroRadicadoId: 0,
-                contratoPerfilId: perfil.contratoPerfilId,
+                construccionPerfilNumeroRadicadoId: 0,
+                construccionPerfilId: perfil.construccionPerfilId,
                 numeroRadicado: '',
 
 
@@ -187,8 +187,8 @@ export class HojaVidaContratistaComponent implements OnInit {
           for ( const radicado of perfil['construccionPerfilNumeroRadicado'] ) {
             numeroRadicados.push(
               this.fb.group(
-                { contratoPerfilNumeroRadicadoId: radicado.contratoPerfilNumeroRadicadoId || 0,
-                  contratoPerfilId: perfil.contratoPerfilId,
+                { construccionPerfilNumeroRadicadoId: radicado.construccionPerfilNumeroRadicadoId || 0,
+                  construccionPerfilId: perfil.construccionPerfilId,
                   numeroRadicado: radicado.numeroRadicado
                 }
               )
@@ -219,7 +219,7 @@ export class HojaVidaContratistaComponent implements OnInit {
           this.fb.group(
             {
               estadoSemaforo              : [ semaforo || 'sin-diligenciar' ],
-              contratoPerfilId            : [ perfil.construccionPerfilId ? perfil.construccionPerfilId : 0 ],
+              construccionPerfilId            : [ perfil.construccionPerfilId ? perfil.construccionPerfilId : 0 ],
               perfilObservacion           : [ perfil.observaciones ],
               perfilCodigo                : [ perfil.perfilCodigo ? perfil.perfilCodigo : null ],
               cantidadHvRequeridas        : [ perfil.cantidadHvRequeridas ? String( perfil.cantidadHvRequeridas ) : '' ],
@@ -313,11 +313,11 @@ export class HojaVidaContratistaComponent implements OnInit {
       } );
   }
 
-  deletePerfil( contratoPerfilId: number, numeroPerfil: number ) {
+  deletePerfil( construccionPerfilId: number, numeroPerfil: number ) {
     this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
       .subscribe( value => {
         if ( value ) {
-          this.faseUnoConstruccionSvc.deleteConstruccionPerfil( contratoPerfilId )
+          this.faseUnoConstruccionSvc.deleteConstruccionPerfil( construccionPerfilId )
             .subscribe(
               () => {
                 this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
@@ -339,20 +339,20 @@ export class HojaVidaContratistaComponent implements OnInit {
     return alphanumeric.test(inputChar) ? true : false;
   }
 
-  agregarNumeroRadicado( numeroRadicado: number, contratoPerfilId: number ) {
-    this.numeroRadicado( numeroRadicado ).push( this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId, numeroRadicado: '' }) );
+  agregarNumeroRadicado( numeroRadicado: number, construccionPerfilId: number ) {
+    this.numeroRadicado( numeroRadicado ).push( this.fb.group({ construccionPerfilNumeroRadicadoId: 0, construccionPerfilId, numeroRadicado: '' }) );
   }
 
   eliminarNumeroRadicado( numeroPerfil: number, numeroRadicado ) {
     this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
   }
 
-  deleteRadicado( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
-    if ( contratoPerfilNumeroRadicadoId === 0 ) {
+  deleteRadicado( construccionPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
+    if ( construccionPerfilNumeroRadicadoId === 0 ) {
       this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
       return;
     }
-    this.faseUnoConstruccionSvc.deleteConstruccionPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
+    this.faseUnoConstruccionSvc.deleteConstruccionPerfilNumeroRadicado( construccionPerfilNumeroRadicadoId )
       .subscribe( () => {
         this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
         this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
@@ -360,7 +360,7 @@ export class HojaVidaContratistaComponent implements OnInit {
   }
 
   guardar() {
-    const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
+    const perfiles: any[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {
       perfiles.forEach( value => {
@@ -376,7 +376,7 @@ export class HojaVidaContratistaComponent implements OnInit {
     } else {
       perfiles.forEach( value => {
 
-        value['construccionPerfilId']             = value.contratoPerfilId;
+        value['construccionPerfilId']             = value.construccionPerfilId;
         value.cantidadHvAprobadas                 = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );

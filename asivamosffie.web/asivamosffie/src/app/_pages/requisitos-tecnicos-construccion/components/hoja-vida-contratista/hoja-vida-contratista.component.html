@@ -170,7 +170,7 @@
                   Eliminar número de radicado
                 </button>
                 <button mat-button color="warn" type="button" class="btn-eliminar"
-                  (click)="deleteRadicado( numero.get( 'contratoPerfilNumeroRadicadoId' ).value, i, j )"
+                  (click)="deleteRadicado( numero.get( 'construccionPerfilNumeroRadicadoId' ).value, i, j )"
                   *ngIf="perfilProyecto.length > 0">
                   <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                   Eliminar número de radicado
@@ -178,7 +178,7 @@
               </div>
               <div class="text-right" *ngIf="numeroRadicado( i ).length === 1">
                 <button mat-button color="warn" type="button" class="btn-eliminar"
-                  (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                  (click)="agregarNumeroRadicado( i, perfil.get( 'construccionPerfilId' ).value )">
                   <img src="assets/img/icon/mas.svg">
                   Agregar otro número de radicado
                 </button>
@@ -186,7 +186,7 @@
             </div>
             <div class="text-right w-margin" *ngIf="numeroRadicado( i ).length > 1">
               <button mat-button color="warn" type="button" class="btn-eliminar"
-                (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                (click)="agregarNumeroRadicado( i, perfil.get( 'construccionPerfilId' ).value )">
                 <img src="assets/img/icon/mas.svg">
                 Agregar otro número de radicado
               </button>
@@ -221,7 +221,7 @@
           Eliminar perfil
         </button>
         <button mat-button color="warn" type="button" class="btn-eliminar"
-          (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value, i )" *ngIf="perfilProyecto.length > 0">
+          (click)="deletePerfil( perfil.get( 'construccionPerfilId' ).value, i )" *ngIf="perfilProyecto.length > 0">
           <img src="assets/img/icon/menos.svg">
           Eliminar perfil
         </button>
