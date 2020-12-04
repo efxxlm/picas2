@@ -721,6 +721,8 @@ namespace asivamosffie.services
                     ComponenteAportante componenteAportanteOld = await _context.ComponenteAportante.FindAsync(pComponenteAportante.ComponenteAportanteId);
                     componenteAportanteOld.UsuarioModificacion = pComponenteAportante.UsuarioCreacion;
                     componenteAportanteOld.FechaModificacion = DateTime.Now;
+                    componenteAportanteOld.Eliminado = pComponenteAportante.Eliminado;
+
 
                     componenteAportanteOld.TipoComponenteCodigo = pComponenteAportante.TipoComponenteCodigo;
                     componenteAportanteOld.FaseCodigo = pComponenteAportante.FaseCodigo;
