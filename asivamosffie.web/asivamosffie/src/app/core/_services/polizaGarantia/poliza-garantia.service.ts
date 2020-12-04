@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 import { environment } from 'src/environments/environment';
 import { pid } from 'process';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PolizaGarantiaService implements OnInit {
-
+  loadDataItems= new Subject();
+  loadTableObservaciones = new Subject();
   constructor(private http: HttpClient) { }
   ngOnInit(): void {
 
@@ -26,10 +28,10 @@ export class PolizaGarantiaService implements OnInit {
     return this.http.post<Respuesta>(`${environment.apiUrl}/guaranteePolicy/EditarContratoPoliza`, contratoPoliza);
   }
   GetListPolizaObservacionByContratoPolizaId(pContratoPolizaId: number) {
-    return this.http.get<CreatePolizaObservacion>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaObservacionByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaObservacionByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
   }
   GetListPolizaGarantiaByContratoPolizaId(pContratoPolizaId: number) {
-    return this.http.get<CreatePolizaGarantia>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaGarantiaByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
+    return this.http.get<any[]>(`${environment.apiUrl}/guaranteePolicy/GetListPolizaGarantiaByContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
   }
   GetContratoPolizaByIdContratoPolizaId(pContratoPolizaId: number) {
     return this.http.get<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/GetContratoPolizaByIdContratoPolizaId?pContratoPolizaId=${pContratoPolizaId}`);
@@ -38,13 +40,13 @@ export class PolizaGarantiaService implements OnInit {
     return this.http.get<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/GetListVistaContratoGarantiaPoliza?pContratoId=${pContratoId}`);
   }
   GetListGrillaContratoGarantiaPoliza() {
-    return this.http.get<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/GetListGrillaContratoGarantiaPoliza`);
+    return this.http.get<any[]>(`${environment.apiUrl}/guaranteePolicy/GetListGrillaContratoGarantiaPoliza`);
   }
   GetContratoPolizaByIdContratoId(pContratoId: number) {
     return this.http.get<GetContratoPolizaByIdContratoId>(`${environment.apiUrl}/guaranteePolicy/GetContratoPolizaByIdContratoId?pContratoId=${pContratoId}`);
   }
-  AprobarContratoByIdContrato(pContratoPolizaId: number) {
-    return this.http.post<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/AprobarContratoByIdContrato?pContratoPolizaId=${pContratoPolizaId}`, pContratoPolizaId);
+  AprobarContratoByIdContrato(pIdContrato: number) {
+    return this.http.post<ContratoPoliza>(`${environment.apiUrl}/guaranteePolicy/AprobarContratoByIdContrato?pIdContrato=${pIdContrato}`, null);
   }
   CambiarEstadoPoliza(pContratoPolizaId: number, pCodigoNuevoEstadoPoliza: string) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/guaranteePolicy/CambiarEstadoPoliza?pContratoPolizaId=${pContratoPolizaId}&pCodigoNuevoEstadoPoliza=${pCodigoNuevoEstadoPoliza}`, null);
@@ -182,6 +184,7 @@ export interface GetContratoPolizaByIdContratoId {
   responsableAprobacion: any;
   tipoModificacionCodigo:  any;
   tipoSolicitudCodigo: any;
+  usuarioCreacion: any;
   valorAmparo: number;
   vigencia:  any;
   vigenciaAmparo:  any;
@@ -194,4 +197,5 @@ export interface GetNotificacionContratoPolizaByIdContratoId{
   fechaRevisionDateTime: any;
   fechaAprobacion: any;
   estadoRevision: any;
+  observaciones: any;
 }

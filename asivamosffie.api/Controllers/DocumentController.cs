@@ -42,7 +42,7 @@ namespace asivamosffie.api.Controllers
                 return File(stream, "application/octet-stream");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest("Archivo no encontrado");
             }
@@ -120,6 +120,34 @@ namespace asivamosffie.api.Controllers
             {
                 return BadRequest("Archivo no encontrado");
             }
+        }
+
+        [HttpGet]
+        [Route("DownloadFilesById")]
+        public async Task<ActionResult> DownloadFilesById([FromQuery] int pArchivoCargueId)
+        {
+            if (pArchivoCargueId == null || pArchivoCargueId == 0)
+                throw new Exception( "Parametro invalido" );
+
+            try
+            {
+                string  pUser = HttpContext.User.FindFirst("User").Value;
+                ArchivoCargue archivoCargue = await  _documentService.GetArchivoCargueById(pArchivoCargueId  , pUser);
+
+                string Ruta = archivoCargue.Ruta + '/' + archivoCargue.Nombre+ ".xlsx";
+
+                Stream stream = new FileStream(Ruta, FileMode.Open, FileAccess.Read);
+
+                if (stream == null)
+                    return NotFound();
+                return  File(stream, "application/octet-stream");
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Archivo no encontrado");
+            }
+
         }
 
 

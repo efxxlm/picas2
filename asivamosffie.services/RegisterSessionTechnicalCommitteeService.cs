@@ -3270,7 +3270,7 @@ namespace asivamosffie.services
         public byte[] ConvertirPDF(Plantilla pPlantilla)
         {
             string strEncabezado = "";
-            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            if (!string.IsNullOrEmpty(pPlantilla?.Encabezado?.Contenido))
             {
                 strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
             }
@@ -4078,14 +4078,33 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
-                                        string TextoResultadoVotacion = PlantillaVotacionUnanime;
+                                        string TextoResultadoVotacion = "";
 
-                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
+                                        if (
+                                            SesionComiteSolicitud.RequiereVotacion != null && 
+                                            SesionComiteSolicitud.RequiereVotacion.Value == true
+                                            )
                                         {
 
-                                            TextoResultadoVotacion = PlantillaNoVotacionUnanime;
+                                            int cantidadAprobado = 0;
+                                            int cantidadNoAprobado = 0;
+
+                                            SesionComiteSolicitud.SesionSolicitudVoto.Where( v => v.Eliminado != true && v.ComiteTecnicoFiduciarioId == null ).ToList().ForEach( ssv => {
+                                                if (ssv.EsAprobado == true)
+                                                    cantidadAprobado++;
+                                                else
+                                                    cantidadNoAprobado++;
+                                            });
+
+                                            if ( cantidadNoAprobado == 0){
+                                                TextoResultadoVotacion = PlantillaVotacionUnanime;
+                                            }else if ( cantidadAprobado > cantidadNoAprobado ){
+                                                TextoResultadoVotacion = PlantillaNoVotacionUnanime;
+                                            } 
+
+                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
+
                                         }
-                                        TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
 
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);
@@ -4899,5 +4918,6 @@ namespace asivamosffie.services
             }
             return ListGrilla;
         }
+
     }
 }

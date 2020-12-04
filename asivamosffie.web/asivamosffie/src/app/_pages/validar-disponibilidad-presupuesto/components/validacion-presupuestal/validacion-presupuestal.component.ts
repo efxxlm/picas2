@@ -87,7 +87,7 @@ export class ValidacionPresupuestalComponent implements OnInit {
       } 
     }
     else{
-      return true;
+      return false;
     }    
   }
 

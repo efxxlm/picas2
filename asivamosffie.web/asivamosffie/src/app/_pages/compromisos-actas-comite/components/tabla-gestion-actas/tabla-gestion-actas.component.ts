@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { CompromisosActasComiteService } from '../../../../core/_services/compromisosActasComite/compromisos-actas-comite.service';
 import { TechnicalCommitteSessionService } from '../../../../core/_services/technicalCommitteSession/technical-committe-session.service';
 
@@ -23,9 +24,11 @@ export class TablaGestionActasComponent implements OnInit {
     devuelto: '4'
   };
 
-  constructor ( private routes: Router,
-                private compromisoSvc: CompromisosActasComiteService,
-                private comiteTecnicoSvc: TechnicalCommitteSessionService ) { }
+  constructor(
+    private routes: Router,
+    private compromisoSvc: CompromisosActasComiteService,
+    private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+    private comiteTecnicoSvc: TechnicalCommitteSessionService ) { }
 
   ngOnInit(): void {
     this.getData();
@@ -34,10 +37,10 @@ export class TablaGestionActasComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
+  }
 
-  //getDataTabla
-  getData () {
+  // getDataTabla
+  getData() {
 
     this.compromisoSvc.getGrillaActas()
       .subscribe( ( resp: any[] ) => {
@@ -49,7 +52,7 @@ export class TablaGestionActasComponent implements OnInit {
                 || value.estadoActaCodigo === this.estadoActa.devuelto ) 
           {
             dataTable.push( value );
-          };
+          }
         } );
 
         this.dataSource = new MatTableDataSource( dataTable );
@@ -60,24 +63,36 @@ export class TablaGestionActasComponent implements OnInit {
 
   }
 
-  revisarActa ( acta: any ) {
-    this.routes.navigate( [ '/compromisosActasComite/revisionActa', acta.comiteTecnicoId ] )
+  revisarActa( acta: any ) {
+    this.routes.navigate( [ '/compromisosActasComite/revisionActa', acta.comiteTecnicoId ] );
   }
 
-  getActaPdf ( comiteTecnicoId: number , numeroComite: string ) {
-    this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudId( comiteTecnicoId )
-      .subscribe( ( resp: any ) => {
-
-        const documento = `Acta ${ numeroComite }.pdf`;
-        const text = documento,
-        blob = new Blob([resp], { type: 'application/pdf' }),
-        anchor = document.createElement('a');
-        anchor.download = documento;
-        anchor.href = window.URL.createObjectURL(blob);
-        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-        anchor.click();
-        
-      } )
+  getActaPdf( comiteTecnicoId: number , numeroComite: string ) {
+    const esFiduciario = numeroComite.includes( 'F' );
+    if ( esFiduciario === true ) {
+      this.fiduciaryCommitteeSessionService.getPlantillaActaBySesionComiteSolicitudId(comiteTecnicoId)
+        .subscribe(resp => {
+          const documento = `Acta ${ numeroComite }.pdf`;
+          const  blob = new Blob([resp], { type: 'application/pdf' });
+          const  anchor = document.createElement('a');
+          anchor.download = documento;
+          anchor.href = window.URL.createObjectURL(blob);
+          anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+          anchor.click();
+        });
+    }
+    if ( esFiduciario === false ) {
+      this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudId( comiteTecnicoId )
+        .subscribe( ( resp: any ) => {
+          const documento = `Acta ${ numeroComite }.pdf`;
+          const blob = new Blob([resp], { type: 'application/pdf' });
+          const anchor = document.createElement('a');
+          anchor.download = documento;
+          anchor.href = window.URL.createObjectURL(blob);
+          anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+          anchor.click();
+        } );
+    }
   }
 
 }

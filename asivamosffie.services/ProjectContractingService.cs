@@ -583,9 +583,9 @@ namespace asivamosffie.services
             {
 
                 //Contratista 
-                if (Pcontratacion.Contratista != null)
+               /* if (Pcontratacion.Contratista != null)
                     await CreateEditContratista(Pcontratacion.Contratista, true);
-
+                    */
                 //ContratacionProyecto 
                 foreach (var ContratacionProyecto in Pcontratacion.ContratacionProyecto)
                 {
@@ -861,11 +861,15 @@ namespace asivamosffie.services
             }
 
         }
-
+        /*
+         * jflorez 20201127
+         * edit: tiene monitoreo web es obligatorio
+             */
         private bool? ValidarRegistroCompletoContratacionProyecto(ContratacionProyecto pContratacionProyectoAntiguo)
         {
             if (
-                    pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1
+                 pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1
                  && pContratacionProyectoAntiguo.EsAvanceobra.HasValue      //Pregunta 2
                  && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4
                  && pContratacionProyectoAntiguo.LicenciaVigente.HasValue   //Pregunta 5
@@ -875,7 +879,8 @@ namespace asivamosffie.services
             }
 
             if (
-                 pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
+                 pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
               && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
               && pContratacionProyectoAntiguo.RequiereLicencia.HasValue   //Pregunta 4
                )
@@ -884,7 +889,8 @@ namespace asivamosffie.services
             }
 
             if (
-                  pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
+               pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue     //Pregunta 1
                && pContratacionProyectoAntiguo.EsAvanceobra.HasValue       //Pregunta 2
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue    //Pregunta 5
             )
@@ -892,22 +898,38 @@ namespace asivamosffie.services
                 return true;
             }
             if (
-                pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
-             && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
+                pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
+                 && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
+                && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
               )
             {
-                return true;
+                if(pContratacionProyectoAntiguo.RequiereLicencia==false)
+                {
+                    return true;
+                }
+                
             }
-
+            
 
             if (
-                  pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
+                  pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
+               && pContratacionProyectoAntiguo.EsReasignacion.HasValue    //Pregunta 1 
                && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue   //Pregunta 5
             )
             {
-                return true;
-            }
+                if (pContratacionProyectoAntiguo.LicenciaVigente==true)   //Pregunta 5
+                {
+                    if (pContratacionProyectoAntiguo.NumeroLicencia != null && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }            
             return false;
         }
 

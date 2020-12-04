@@ -13,7 +13,7 @@
   <div class="d-flex align-items-center animatedDown" *ngIf="addressForm.controls.reasignacion.value === true">
     <div class="text-area-quill">
       <label for="alcanceParticular" class="text-area-quill--label">Descripción</label>
-      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+      <quill-editor class="quill-editor-style" [modules]="config"
         (onContentChanged)="maxLength($event, 2000)" formControlName="descripcion" required>
       </quill-editor>
     </div>

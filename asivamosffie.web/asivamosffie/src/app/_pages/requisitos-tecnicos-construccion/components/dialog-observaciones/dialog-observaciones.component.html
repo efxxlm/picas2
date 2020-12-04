@@ -1,0 +1,46 @@
+<section class="text-center">
+  <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  </button>
+
+  <h1 class="title-menu--h1">
+    Observaciones
+  </h1>
+
+  <p class="p mt-05em">
+    {{ data.planPrograma }}
+  </p>
+
+  <form autocomplete="off" [formGroup]="formObservacion">
+
+    <div class="d-flex align-items-center">
+      <div class="text-area-quill">
+        <label for="observaciones" class="text-area-quill--label size-label colorMainColor">
+          Observaciones
+        </label>
+        <quill-editor class="quill-editor-style miles"
+                        [styles]="editorStyle"
+                        [modules]="config"
+                        (onContentChanged)="maxLength($event, 1000)"
+                        formControlName="observaciones" required>
+          </quill-editor>
+      </div>
+      <span class="contador miles" *ngIf="formObservacion.get('observaciones').value !== null">
+        {{1000 - (textoLimpio(formObservacion.get('observaciones').value)>1000?1000:textoLimpio(formObservacion.get('observaciones').value))}}
+      </span>
+      <span class="contador miles" *ngIf="formObservacion.get('observaciones').value === null">
+        1000
+      </span>
+    </div>
+
+    <div class="text-center">
+      <button mat-raised-button
+              color="accent"
+              class="btn-dialog"
+              type="submit"
+              (click)="guardar()">
+              Realizar observación
+      </button>
+    </div>
+  </form>
+</section>

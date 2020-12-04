@@ -1,0 +1,31 @@
+<section class="text-center">
+    <div class="colorMainColor">
+        <p>Estado de la obra: <b>En ejecución</b> </p>
+    </div>
+
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Resumen de alertas generadas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="colorMainColor">
+                <p> <b>Disponiblidad personal: Insuficiente</b> </p>
+            </div>
+
+            <app-tabla-avance-resumen-alertas></app-tabla-avance-resumen-alertas>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title completo">
+                    Avance físico
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-tabla-avance-fisico></app-tabla-avance-fisico>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

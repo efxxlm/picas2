@@ -1,16 +1,219 @@
 <section class="container text-center">
-    <div class="text-right">
-      <a routerLink="/generarPolizasYGarantias" mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
-      </a>
-    </div>
-    <h1 class="title-menu--h1">
-      Ver detalle contrato 123456
-    </h1>
-    <p class="info-sub-title">
-      <span>Fecha de firma del contrato <b>20/08/2020</b></span>
-      <span><b>Contratacion</b></span>
-      <span>Estado: <b>Con aprobación de pólizas</b></span>
-    </p>
+  <div class="text-right">
+    <a routerLink="/generarPolizasYGarantias" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Ver detalle contrato {{this.numContrato}}
+  </h1>
+  <p class="info-sub-title">
+    <span>Fecha de firma del contrato <b>{{this.fechaFirmaContrato}}</b></span>
+    <span><b>{{this.tipoSolicitud}}</b></span>
+    <span>Estado: <b>Con aprobación de pólizas</b></span>
+  </p>
+</section>
+<section class="container">
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>Tipo de contrato:</strong>
+        {{this.tipoContrato}}
+      </p>
+      <p>
+        <strong>Objeto:</strong>
+      </p>
+      <p [innerHtml]="this.objeto">
+      </p>
+      <p>
+        <strong>Nombre del contratista:</strong>
+        {{this.nombreContratista}}
+      </p>
+      <p>
+        <strong>Tipo de identificación:</strong>
+        {{this.tipoIdentificacion}}
+      </p>
+      <p>
+        <strong>Número de identificación:</strong>
+        {{this.numeroIdentificacion}}
+      </p>
+      <p>
+        <strong>Valor del contrato:</strong>
+        ${{this.valorContrato}}
+      </p>
+      <p>
+        <strong>Plazo:</strong>
+        {{this.plazoContrato}}
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-content>
+      <p>
+        <strong>Nombre de la aseguradora:</strong>
+        {{this.nomAseguradora}}
+      </p>
+      <p>
+        <strong>Número de la póliza:</strong>
+        {{this.numPoliza}}
+      </p>
+      <p>
+        <strong>Número de certificado:</strong>
+        {{this.numCertificado}}
+      </p>
+      <p>
+        <strong>Fecha de expedición de la póliza:</strong>
+        {{this.fechaExpPoliza | date:'dd/MM/yyyy'}}
+      </p>
+      <p>
+        <strong>Vigencia de la póliza:</strong>
+        {{this.vigenciaPoliza| date:'dd/MM/yyyy'}}
+      </p>
+      <p>
+        <strong>Vigencia del amparo:</strong>
+        {{this.vigenciaAmparo| date:'dd/MM/yyyy'}}
+      </p>
+      <p>
+        <strong>Valor del amparo:</strong>
+        {{this.valorAmparo | currency}}
+      </p>
+      <h2 class="card-subTitle">Pólizas y seguros</h2>
+      <div *ngIf="this.obj1==true">
+        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+          Buen manejo y correcta inversión del anticipo
+        </mat-card-title>
+        <p *ngIf="this.buenManejoCorrectaInversionAnticipo==true">
+          <strong>¿Está incluida en la póliza presentada?:</strong>
+          Sí
+        </p>
+        <p *ngIf="this.buenManejoCorrectaInversionAnticipo==false">
+          <strong>¿Está incluida en la póliza presentada?:</strong>
+          No
+        </p>
+      </div>
+      <div *ngIf="this.obj2==true">
+        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+          Garantía de estabilidad y calidad de la obra
+        </mat-card-title>
+        <p *ngIf="this.estabilidadYCalidad==true">
+          <strong>¿Está incluida en la póliza presentada?:</strong>
+          Sí
+        </p>
+        <p *ngIf="this.estabilidadYCalidad==false">
+          <strong>¿Está incluida en la póliza presentada?:</strong>
+          No
+        </p>
+      </div>
+      <div *ngIf="this.obj3==true">
+        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+          Póliza de cumplimiento
+        </mat-card-title>
+        <p *ngIf="this.polizaYCoumplimiento==true">
+          <strong>¿Está incluida en la póliza presentada?:</strong>
+          Sí
+        </p>
+        <p *ngIf="this.polizaYCoumplimiento==false">
+          <strong>¿Está incluida en la póliza presentada?:</strong>
+          No
+        </p>
+      </div>
+      <div *ngIf="this.obj4==true">
+        <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
+          Pólizas y seguros
+        </mat-card-title>
+        <p *ngIf="this.polizasYSegurosCompleto==true">
+          <strong>¿Está incluida en la póliza presentada?:</strong>
+          Sí
+        </p>
+        <p *ngIf="this.polizasYSegurosCompleto==false">
+          <strong>¿Está incluida en la póliza presentada?:</strong>
+          No
+        </p>
+      </div>
+      <h2 class="card-subTitle">Lista de chequeo</h2>
+      <p *ngIf="this.cumpleDatosAsegurado==true">
+        <strong>¿Cumple con los datos del Asegurado/ Beneficiario?:</strong>
+        Sí
+      </p>
+      <p *ngIf="this.cumpleDatosAsegurado==false">
+        <strong>¿Cumple con los datos del Asegurado/ Beneficiario?:</strong>
+        No
+      </p>
+      <p *ngIf="this.cumpleDatosBeneficiario==true">
+        <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?:</strong>
+        Sí
+      </p>
+      <p *ngIf="this.cumpleDatosBeneficiario==false">
+        <strong>¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?:</strong>
+        No
+      </p>
+      <p *ngIf="this.cumpleDatosTomador==true">
+        <strong>¿Cumple con los datos del Tomador / Afianzado?:</strong>
+        Sí
+      </p>
+      <p *ngIf="this.cumpleDatosTomador==false">
+        <strong>¿Cumple con los datos del Tomador / Afianzado?:</strong>
+        No
+      </p>
+      <p *ngIf="this.incluyeReciboPago==true">
+        <strong>¿Se incluye el recibo de pago con los datos requeridos?:</strong>
+        Sí
+      </p>
+      <p *ngIf="this.incluyeReciboPago==false">
+        <strong>¿Se incluye el recibo de pago con los datos requeridos?:</strong>
+        No
+      </p>
+      <p *ngIf="this.incluyeCondicionesGenerales==true">
+        <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?:</strong>
+        Sí
+      </p>
+      <p *ngIf="this.incluyeCondicionesGenerales==false">
+        <strong>¿Se incluyen las condiciones generales de la póliza/ o su clausulado?:</strong>
+        No
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card">
+      <mat-card-title class="header-card--text">
+        Revisión
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong>Fecha de la revisión:</strong>
+        {{this.fechaRevision | date:'dd/MM/yyyy'}}
+      </p>
+      <p *ngIf="this.estadoRevision=='1'">
+        <strong>Estado de la revisión:</strong>
+        Devuelta
+      </p>
+      <p *ngIf="this.estadoRevision=='2'">
+        <strong>Estado de la revisión:</strong>
+        Aprobada
+      </p>
+      <h2 class="card-subTitle">Aprobación</h2>
+      <p>
+        <strong>Fecha de aprobación:</strong>
+        {{this.fechaAprobacion}}
+      </p>
+      <p>
+        <strong>Responsable de aprobación:</strong>
+        {{this.nomAprobado}}
+      </p>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card">
+      <mat-card-title class="header-card--text">
+        Observaciones generales
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+    <!--jflorez, quito esto pues ya tiene la tabla
+    <div [innerHtml]="this.observaciones"></div>-->  
+      <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
+    </mat-card-content>
+  </mat-card>
   
-  </section>
+</section>

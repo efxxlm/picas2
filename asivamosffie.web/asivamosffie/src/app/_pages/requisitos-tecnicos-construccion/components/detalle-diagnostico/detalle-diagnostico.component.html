@@ -1,0 +1,48 @@
+<div align="left">
+    <mat-card class="border">
+        <mat-card-content>
+            <p><b>¿Cuenta con informe de diagnóstico aprobado por la interventoría?</b>: Sí</p>
+            <p><b>URL con soporte</b>: https://drive.google.com/drive/informeinterventoria1</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div align="left">
+    <mat-card class="border">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                Valor total de la fase 2 construcción
+            </mat-card-title>
+          </mat-card-header>
+        <mat-card-content>
+            <p><b>a. Costo directo</b>: {{ construccion.costoDirecto | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>b. A (administracion)</b>: {{ construccion.administracion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>c. I (Imprevistos)</b>: {{ construccion.imprevistos | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>d. U (Utilidad)</b>: {{ construccion.utilidad | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            <p><b>Valor total de la fase 2 - Construcción</b>: {{ construccion.valorTotalFaseConstruccion | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div align="center">
+    <p><b>¿Se requirió modificación contractual?</b>: {{construccion.requiereModificacionContractual === true ? 'Si' : 'No'}}</p>
+</div>
+<div align="left">
+    <mat-card class="border">
+        <mat-card-content>
+            <p><b>Número de solicitud de la modificación</b>: {{construccion.numeroSolicitudModificacion}}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<!-- <div align="center" *ngIf="construccion.observacionDevolucionDiagnostico">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+              Observaciones de la supervisión
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left" >
+            <p><b>{{ construccion.observacionDevolucionDiagnostico.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <p>{{ construccion.observacionDevolucionDiagnostico.observaciones }}</p>
+        </mat-card-content>
+    </mat-card>
+  </div> -->

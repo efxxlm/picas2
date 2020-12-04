@@ -1,0 +1,65 @@
+.mat-button.mat-warn[disabled], .mat-button[disabled][disabled] {
+  opacity: .5;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.shipping-card {
+  min-width: 120px;
+  margin: 20px auto;
+}
+
+.mat-radio-button {
+  display: block;
+  margin: 5px 0;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.col:last-child {
+  margin-right: 0;
+}
+
+.w-margin {
+  width: 99%;
+  margin-top: 1em;
+}
+
+.mt-1em {
+  margin-top: .8em;
+}
+
+.padding-left {
+  padding-left: .7em
+}
+
+.mr-min {
+  margin-right: .7em;
+}
+
+.w-30 {
+  width: 30%;
+}
+
+.w-31 {
+  width: 31%;
+}
+
+.color-text-descriptivo {
+  color: rgba(0, 0, 0, 0.555);
+}
+
+.size-text-descriptivo {
+  width: 100%;
+  margin-left: 12em;
+}
