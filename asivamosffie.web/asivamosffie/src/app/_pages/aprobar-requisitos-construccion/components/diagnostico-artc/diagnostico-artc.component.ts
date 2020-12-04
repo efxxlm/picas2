@@ -148,7 +148,10 @@ export class DiagnosticoArtcComponent implements OnInit {
       console.log( 'condicion 2' );
       this.faseDosAprobarConstruccionSvc.createEditObservacionDiagnosticoSupervisor( construccion )
         .subscribe(
-          response => this.openDialog( '', response.message ),
+          response => {
+            this.openDialog( '', response.message );
+            this.createEditDiagnostico.emit( true );
+          },
           err => this.openDialog( '', err.message )
         );
     }

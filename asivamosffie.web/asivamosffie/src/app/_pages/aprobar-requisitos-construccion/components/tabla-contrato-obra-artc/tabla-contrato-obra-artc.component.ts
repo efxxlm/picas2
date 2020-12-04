@@ -53,11 +53,12 @@ export class TablaContratoObraArtcComponent implements OnInit {
                   }
                   if ( (  lista[ 'estaDevuelto' ] === true
                           && Number( lista[ 'estadoCodigo' ] ) < Number( this.estadosConstruccionObra.enviadoAlSupervisor.codigo ) )
-                        && lista[ 'tipoSolicitudCodigo' ] === this.tipoContratoObra )
+                        && lista[ 'tipoContratoCodigo' ] === this.tipoContratoObra )
                   {
                     dataTable.push( lista );
                   }
                 } );
+                console.log( listas );
                 this.dataSource                        = new MatTableDataSource( dataTable );
                 this.dataSource.paginator              = this.paginator;
                 this.dataSource.sort                   = this.sort;

@@ -157,7 +157,10 @@ export class ProgramacionObraArtcComponent implements OnInit {
     if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
       this.faseDosAprobarConstruccionSvc.createEditObservacionProgramacionObraSupervisor( construccion )
         .subscribe(
-          response => this.openDialog( '', response.message ),
+          response => {
+            this.openDialog( '', response.message );
+            this.createEdit.emit( true );
+          },
           err => this.openDialog( '', err.message )
         );
     }

@@ -183,7 +183,7 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
   }
 
   Cargar( seGuardo: boolean ) {
-    if ( seGuardo ) {
+    if ( seGuardo === true ) {
       this.contrato = null;
       this.getContrato();
     }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -39,6 +39,7 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
   ];
   @Input() observacionesCompleted;
   @Input() perfil: any;
+  @Output() createEdit = new EventEmitter();
   totalGuardados = 0;
 
   constructor(
@@ -133,7 +134,10 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
     if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
       this.faseDosAprobarConstruccionSvc.createEditObservacionPerfilSupervisor( ConstruccionPerfil )
         .subscribe(
-          response => this.openDialog( '', response.message ),
+          response => {
+            this.openDialog( '', response.message );
+            this.createEdit.emit( true );
+          },
           err => this.openDialog( '', err.message )
         );
     }
