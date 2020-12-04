@@ -78,8 +78,8 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     localStorage.setItem("actaSuscrita", "false");
     this.router.navigate(['/generarActaInicioFaseIPreconstruccion/verDetalleActa', id]);
   }
-  enviarActaParaFirma(id) {
-    this.descargarActaDesdeTabla(id);
+  enviarActaParaFirma(id,numContrato) {
+    this.descargarActaDesdeTabla(id, numContrato);
     this.service.CambiarEstadoActa(id, "19").subscribe(data => {
       this.router.navigateByUrl('/', { skipLocationChange: true }).then(
         () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
@@ -140,9 +140,9 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
       }
     });
   }
-  descargarActaDesdeTabla(id) {
+  descargarActaDesdeTabla(id,numContrato) {
     this.service.GetActaByIdPerfil(2, id).subscribe(resp => {
-      const documento = `Prueba.pdf`; // Valor de prueba
+      const documento = `Acta contrato ${numContrato}.pdf`; // Valor de prueba
       const text = documento,
         blob = new Blob([resp], { type: 'application/pdf' }),
         anchor = document.createElement('a');
