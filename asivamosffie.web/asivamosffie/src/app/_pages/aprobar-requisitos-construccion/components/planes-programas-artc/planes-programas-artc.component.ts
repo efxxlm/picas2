@@ -288,6 +288,8 @@ export class PlanesProgramasArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    } else {
+      return 0;
     }
   }
 
@@ -340,7 +342,7 @@ export class PlanesProgramasArtcComponent implements OnInit {
       this.totalGuardados++;
       return;
     }
-    if ( this.totalGuardados === 1 && this.addressForm.value.tieneObservaciones !== null ) {
+    if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
       this.faseDosAprobarConstruccionSvc.createEditObservacionPlanesProgramasSupervisor( construccion )
         .subscribe(
           response => this.openDialog( '', response.message ),

@@ -123,6 +123,8 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    } else {
+      return 0;
     }
   }
 

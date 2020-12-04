@@ -81,7 +81,7 @@
         </mat-card-content>
     </mat-card>
     <!--Tabla para historial de observaciones-->
-    <div class="w-100 table-responsive" *ngIf="dataTableApoyo.length > 0">
+    <div class="w-100 table-responsive" *ngIf="dataTableApoyo.length > 1 && planesProgramas.observacionDevolucionPlanesProgramas !== undefined">
         <table mat-table [dataSource]="dataTableHistorialApoyo" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="fechaRevision">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Fecha de revisión </th>
@@ -161,7 +161,7 @@
         </mat-card-content>
     </mat-card>
     <!--Tabla para historial de observaciones-->
-    <div class="w-100 table-responsive" *ngIf="dataTablaHistorialObservacion.length > 0">
+    <div class="w-100 table-responsive" *ngIf="dataTablaHistorialObservacion.length > 1 && planesProgramas.observacionDevolucionPlanesProgramas !== undefined">
         <table mat-table [dataSource]="dataTableHistorial" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="fechaRevision">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Fecha de revisión </th>

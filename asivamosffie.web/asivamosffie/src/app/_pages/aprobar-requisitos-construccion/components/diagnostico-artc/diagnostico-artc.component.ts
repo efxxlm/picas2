@@ -105,6 +105,8 @@ export class DiagnosticoArtcComponent implements OnInit {
     if ( texto !== undefined ) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    } else {
+      return 0;
     }
   }
 
@@ -142,7 +144,7 @@ export class DiagnosticoArtcComponent implements OnInit {
       console.log( 'condicion 1' );
       return;
     }
-    if ( this.totalGuardados === 1 && this.addressForm.value.tieneObservaciones !== null ) {
+    if ( this.totalGuardados === 1 || this.addressForm.value.tieneObservaciones !== null ) {
       console.log( 'condicion 2' );
       this.faseDosAprobarConstruccionSvc.createEditObservacionDiagnosticoSupervisor( construccion )
         .subscribe(
