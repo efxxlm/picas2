@@ -112,6 +112,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
         }
         else{
           this.observacionesUltimasSup = this.dataElements[i].observaciones;
+          this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
         }
       }
     });
