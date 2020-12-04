@@ -14,6 +14,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   @Input() observacionDevolucionProgramacionObra: number;
   @Input() observacionDevolucionFlujoInversion: number;
   @Input() archivoCargueIdProgramacionObra: number;
+  @Input() archivoCargueIdFlujoInversion: number;
   @Output() terminoCarga = new EventEmitter();
   @Output() realizoObservacion = new EventEmitter();
   tieneRegistrosObra = true;

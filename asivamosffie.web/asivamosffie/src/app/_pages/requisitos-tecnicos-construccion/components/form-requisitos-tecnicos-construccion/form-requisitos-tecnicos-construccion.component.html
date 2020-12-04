@@ -167,12 +167,14 @@
                                                     [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
                                                     (terminoCarga)="getCargaMasiva( $event )"
                                                     [observacionDevolucionFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionFlujoInversion"
+                                                    [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion"
                                                     (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion>
           </section>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
             <app-programacion-obra-flujo-inversion  [esFlujoInversion]="true"
                                                     [contratoConstruccionId]="0"
+                                                    [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion"
                                                     (terminoCarga)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion>
           </section>
