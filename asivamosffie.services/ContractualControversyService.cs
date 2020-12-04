@@ -256,6 +256,389 @@ namespace asivamosffie.services
         //    return await _context.Contrato.Where(r=>r.Eliminado==false).ToList<Contrato>();
         //}
 
+        //public async Task<byte[]> GetPlantillaActaInicio(int pContratoId)
+        //{
+        //    if (pContratoId == 0)
+        //    {
+        //        return Array.Empty<byte>();
+        //    }
+
+        //    VistaGenerarActaInicioContrato actaInicio;
+
+        //    int pTipoContrato = 2;
+
+        //    //               --Contratacion.TipoContratacionCodigo  14 DOM, tipoidentificacion
+
+        //    ////DOM 14 1   Obra            
+        //    //pTipoContrato = 1;
+
+        //    //DOM 14 2   interventoria            
+        //    pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
+        //    actaInicio = await getDataActaInicioAsync(pContratoId, pTipoContrato);
+
+        //    string Vlrfase2ConstruccionObra = "", VlrFase1Preconstruccion = "";
+        //    VlrFase1Preconstruccion = actaInicio.ValorFase1Preconstruccion;
+
+        //    if (actaInicio.ContratacionId != null)
+        //    {
+        //        VlrFase1Preconstruccion = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId),
+        //            "1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+        //            ).ToString();
+
+        //    }
+
+        //    pTipoContrato = ConstanCodigoTipoContratacion.Obra;
+        //    if (actaInicio.NumeroDRP1 == "ERROR")
+        //    {
+        //        actaInicio = await getDataActaInicioAsync(pContratoId, pTipoContrato);
+        //        Vlrfase2ConstruccionObra = actaInicio.Valorfase2ConstruccionObra;
+
+        //        if (actaInicio.ContratacionId != null)
+        //        {
+        //            Vlrfase2ConstruccionObra = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId), "2"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+        //                ).ToString();
+        //            //if (ComponenteAportante.FaseCodigo =="1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+
+        //        }
+
+        //    }
+
+        //    if (actaInicio == null)
+        //    {
+        //        return Array.Empty<byte>();
+        //    }
+
+        //    Contrato contrato = null;
+        //    contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+        //    Contratacion contratacion = null;
+        //    if (contrato != null)
+        //        contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+        //    Plantilla plantilla = null;
+
+        //    if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+        //    //if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+        //    {
+        //        pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
+        //        plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_interventoria_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+        //    }
+
+        //    //else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+        //    else if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+        //    {
+        //        pTipoContrato = ConstanCodigoTipoContratacion.Obra;
+        //        plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_obra_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+        //    }
+
+        //    //Plantilla plantilla = new Plantilla();
+        //    //plantilla.Contenido = "";
+        //    if (plantilla != null)
+        //        plantilla.Contenido = await ReemplazarDatosPlantillaActaInicio(plantilla.Contenido, actaInicio, "cdaza");
+        //    return ConvertirPDF(plantilla);
+        //}
+
+        //private async Task<string> ReemplazarDatosPlantillaActaInicio(string strContenido, VistaGenerarActaInicioContrato pActaInicio, string usuario)
+        //{
+        //    string str = "";
+        //    string valor = "";
+
+        //    ControversiaContractual controversiaContractual;
+        //    Contrato contrato;
+        //    ControversiaMotivo controversiaMotivo;
+        //    ActuacionSeguimiento actuacionSeguimiento;
+        //    ControversiaActuacion controversiaActuacion;
+
+        //    Contratista contratista;
+        //    Contratacion contratacion;
+
+
+        //    //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Eliminado == false).FirstOrDefault();
+        //    contrato = _context.Contrato.Where(r => r.ContratoId == 16 && r.Eliminado == false).FirstOrDefault();
+
+        //    if (contrato != null)
+        //    {
+        //        contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+        //        if (contratacion != null)
+        //        {
+        //            contratista = _context.Contratista.Where(r => r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
+        //        }
+
+        //    }
+
+        //    controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == 16 && r.Eliminado == false
+        //    && r.Eliminado == false).FirstOrDefault();
+
+        //    // controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == contrato.ContratoId && r.Eliminado == false
+        //    //&& r.Eliminado == false).FirstOrDefault();
+
+        //    string strEstadoCodigoControversia = "sin definir";
+        //    string strTipoControversiaCodigo = "sin definir";
+        //    string strTipoControversia = "sin definir";
+
+        //    Dominio TipoControversiaCodigo;
+
+        //    TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+        //    if (TipoControversiaCodigo != null)
+        //    {
+        //        strTipoControversia = TipoControversiaCodigo.Nombre;
+        //        strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
+
+        //    }
+        //    controversiaMotivo=_context.ControversiaMotivo.Where(r=>r.ControversiaContractualId==controversiaContractual.ControversiaContractualId).FirstOrDefault()
+
+        //    string controversiaMotivoSolicitudNombre="";
+        //    Dominio MotivoSolicitudCodigo;
+        //    if (controversiaMotivo!=null)
+        //    {                
+                     
+        //        MotivoSolicitudCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaMotivo.MotivoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+        //        if (MotivoSolicitudCodigo != null)
+        //        {
+        //            //strTipoControversia = MotivoSolicitudCodigo.Nombre;
+        //            controversiaMotivoSolicitudNombre = MotivoSolicitudCodigo.Codigo;
+
+        //        }
+
+        //    }
+
+        //    strContenido = strContenido.Replace("_Numero_Solicitud_", controversiaContractual.NumeroSolicitud);
+        //    strContenido = strContenido.Replace("_Fecha_Solicitud_", controversiaContractual.FechaSolicitud.ToString("dd/MM/yyyy"));
+        //    strContenido = strContenido.Replace("_Tipo_Controversia_", strTipoControversia);
+
+        //    strContenido = strContenido.Replace("_Numero_Contrato_", contrato.NumeroContrato);
+        //    strContenido = strContenido.Replace("_Nombre_Contratista_", contratista.Nombre);
+        //    strContenido = strContenido.Replace("_Fecha_inicio_contrato_", "PENDIENTE");
+        //    strContenido = strContenido.Replace("_Fecha_fin_contrato_", "PENDIENTE");
+        //    strContenido = strContenido.Replace("_Cantidad_proyectos_asociados_", "PENDIENTE");
+
+        //    strContenido = strContenido.Replace("_Tipo_Intervencion_", );
+        //    strContenido = strContenido.Replace("_Llave_MEN_", );
+        //    strContenido = strContenido.Replace("_Region_", );
+        //    strContenido = strContenido.Replace("_Departamento_", );
+        //    strContenido = strContenido.Replace("_Municipio_", );
+        //    strContenido = strContenido.Replace("_Institucion_Educativa_", );
+        //    strContenido = strContenido.Replace("_Codigo_DANE_IE_", );
+        //    strContenido = strContenido.Replace("_Sede_", );
+        //    strContenido = strContenido.Replace("_Codigo_DANE_SEDE_", );
+        //    strContenido = strContenido.Replace("", );
+
+
+        //    strContenido = strContenido.Replace("Espacios_intervenir_nombre", );
+        //    strContenido = strContenido.Replace("Espacios_intervenir_cantidad", );
+
+        //    //Plazo de obra
+        //    strContenido = strContenido.Replace("_Meses_", );
+        //    strContenido = strContenido.Replace("_Dias_", );
+        //    //Plazo de Interventoría
+        //    strContenido = strContenido.Replace("_Meses_", );
+        //    strContenido = strContenido.Replace("_Dias_", );
+        //    strContenido = strContenido.Replace("_Valor_obra_", );
+        //    strContenido = strContenido.Replace("_Valor_Interventoria_", );
+        //    strContenido = strContenido.Replace("_Valor_Total_proyecto_", );
+        //    strContenido = strContenido.Replace("", );
+
+        //    strContenido = strContenido.Replace("_Estado_obra_", );
+        //    strContenido = strContenido.Replace("_Programacion_obra_acumulada_", );
+        //    strContenido = strContenido.Replace("_Avance_físico_acumulado_ejecutado_", );
+        //    strContenido = strContenido.Replace("Facturacion_programada_acumulada_", );
+        //    strContenido = strContenido.Replace("_Facturacion_ejecutada_acumulada_", );
+
+        //    strContenido = strContenido.Replace(">>>>>SECCION_TAI>>>>>>>>", "");
+        //    strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
+        //    strContenido = strContenido.Replace("_Fecha_Comite_Pre_Tecnico_", controversiaContractual.FechaComitePreTecnico);
+        //    strContenido = strContenido.Replace("_Conclusion_Comite_pretecnico_", controversiaContractual.ConclusionComitePreTecnico);
+        //    strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
+
+        //    strContenido = strContenido.Replace(">>>>> SECCION_OTRAS >>>>>>>>", );
+        //    strContenido = strContenido.Replace("_Fecha_radicado_SAC_Numero_radicado_SAC_", controversiaContractual.NumeroRadicadoSac);
+        //    strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
+        //    strContenido = strContenido.Replace("_Resumen_justificacion_solicitud_", controversiaContractual.MotivoJustificacionRechazo);
+        //    strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
+
+        //    //Historial de Modificaciones                           
+
+        //    string prefijo = "";
+
+        //    if (contrato != null)
+        //    {
+        //        if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
+        //            prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
+        //        else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
+        //            prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
+        //    }
+        //    controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+
+        //    strContenido = strContenido.Replace("Modificación 1", );
+        //    strContenido = strContenido.Replace("_Numero_solicitud_", controversiaContractual.NumeroSolicitudFormat);
+        //    strContenido = strContenido.Replace("_Tipo_Novedad_", );
+                      
+
+        //    strContenido = strContenido.Replace(">>>>> SECCION_SUSPENSION_PRORROGA_REINICIO >>>>>>>>", );
+        //    strContenido = strContenido.Replace("_Plazo_solicitado_", );
+        //    strContenido = strContenido.Replace("_Fecha_Inicio_", );
+        //    strContenido = strContenido.Replace("_Fecha_Fin_", );
+        //    //ContratacionProyecto ComiteTecnicoProyecto  ComiteTecnico
+        //    strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", );
+        //    strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", );               
+
+        //    strContenido = strContenido.Replace(">>>>> SECCION_ADICION >>>>>>>>", );
+        //    strContenido = strContenido.Replace("_Presupuesto_adicional_solicitado_", );
+        //    strContenido = strContenido.Replace("_Nombre_aportante_1_", );
+        //    strContenido = strContenido.Replace("_Valor_aporte_", );
+        //    strContenido = strContenido.Replace("_Fuente_", );
+        //    strContenido = strContenido.Replace("_Fase_", );
+        //    strContenido = strContenido.Replace("_Componente_", );
+        //    strContenido = strContenido.Replace("_Uso_", );
+        //    strContenido = strContenido.Replace("_Valor_uso_", );
+
+        //    strContenido = strContenido.Replace("_Nombre_aportante_n_", );
+        //    strContenido = strContenido.Replace("_Valor_aporte_", );
+        //    strContenido = strContenido.Replace("_Fuente_", );
+        //    strContenido = strContenido.Replace("_Fase_", );
+        //    strContenido = strContenido.Replace("_Componente_", );
+        //    strContenido = strContenido.Replace("_Valor_uso_", );
+
+        //    strContenido = strContenido.Replace(">>>>> SECCION_ES_PRORROGA >>>>>>>>", );
+        //    strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", );
+        //    strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", );
+        //    strContenido = strContenido.Replace("_Estado_", );
+                        
+        //        //NovedadContractual
+        //        //AjusteClausula
+        //        //ClausulaModificar
+        //    strContenido = strContenido.Replace(">>>>> SECCION_MODIFICACION_CONDICIONES_CONTRACTUALES >>>>>>>>", );
+        //    strContenido = strContenido.Replace("_Clausula_modificar_", );
+        //    strContenido = strContenido.Replace("_Ajuste_solicitado_clausula_", );
+        //    strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", );
+        //    strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", );
+        //    strContenido = strContenido.Replace("_Estado_", );
+
+        //    string EstadoAvanceTramiteCodigoNombre = "";
+        //    string ActuacionAdelantadaCodigoNombre = "";
+
+        //    Dominio EstadoAvanceTramiteCodigo;
+        //    //Dominio EstadoAvanceTramiteCodigo;
+        //    Dominio ActuacionAdelantadaCodigo;
+
+        //    if (controversiaActuacion != null)
+        //    {
+        //        EstadoAvanceTramiteCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+        //        if (EstadoAvanceTramiteCodigo != null)
+        //        {
+        //            //strTipoControversia = MotivoSolicitudCodigo.Nombre;
+        //            EstadoAvanceTramiteCodigoNombre = EstadoAvanceTramiteCodigo.Nombre;
+
+        //        }
+
+        //        ActuacionAdelantadaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+        //        if (ActuacionAdelantadaCodigo != null)
+        //        {
+        //            ActuacionAdelantadaCodigoNombre = MotivoSolicitudCodigo.Nombre;
+        //            //ActuacionAdelantadaCodigoNombre = ActuacionAdelantadaCodigo.Codigo;
+
+        //        }                                
+
+        //    }
+
+        //    //Historial de Actuaciones
+        //    strContenido = strContenido.Replace(">>>>> SECCION_LISTA_ACTUACIONES >>>>>>>>", );
+        //    //(LISTA ACTUACIONES....)
+        //    strContenido = strContenido.Replace("Actuación 1", );
+        //    strContenido = strContenido.Replace("_Estado_avance_tramite_", EstadoAvanceTramiteCodigoNombre);
+        //    strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada?);
+
+        //    strContenido = strContenido.Replace("_Actuacion_adelantada_", ActuacionAdelantadaCodigoNombre);
+        //    strContenido = strContenido.Replace("_Actuacion_adelantada_", controversiaActuacion.ActuacionAdelantadaOtro);
+
+        //    strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", controversiaActuacion.ProximaActuacionCodigo);
+        //    strContenido = strContenido.Replace("_Observaciones_", controversiaActuacion.Observaciones);
+        //    strContenido = strContenido.Replace("_URL_soporte_", controversiaActuacion.RutaSoporte);                     
+
+
+        //    //Resumen de la propuesta de reclamación ante la aseguradora:
+        //    strContenido = strContenido.Replace("Actuación de la reclamación 1", );
+        //    strContenido = strContenido.Replace("_Estado_avance_reclamacion_", ;
+        //    strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada);
+        //    strContenido = strContenido.Replace("_Actuacion_adelantada_",actuacionSeguimiento.FechaActuacionAdelantada );
+        //    strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", actuacionSeguimiento.ProximaActuacion);
+        //    strContenido = strContenido.Replace("_Observaciones_", actuacionSeguimiento.Observaciones);
+        //    strContenido = strContenido.Replace("_URL_soporte_", actuacionSeguimiento.RutaSoporte);
+        //    strContenido = strContenido.Replace("_reclamacion_resultado_definitivo_cerrado_ante_aseguradora_", Convert.ToBoolean( actuacionSeguimiento.EsResultadoDefinitivo).ToString());
+
+
+        //    //datos exclusivos interventoria
+
+        //    UsuarioPerfil UsuarioPerfil = _context.UsuarioPerfil.Where(y => y.Usuario.Email == usuario).Include(y => y.Perfil).FirstOrDefault();
+
+        //    Perfil perfil = null;
+
+        //    if (UsuarioPerfil != null)
+        //    {
+        //        perfil = _context.Perfil.Where(y => y.PerfilId == UsuarioPerfil.PerfilId).FirstOrDefault();
+
+        //    }
+        //    if (UsuarioPerfil != null)
+        //    {
+        //        strContenido = strContenido.Replace("_Cargo_Usuario_", perfil.Nombre);
+        //    }
+        //    strContenido = strContenido.Replace("_Nombre_Supervisor_", "_Nombre_Supervisor_");
+
+        //    return strContenido;
+
+        //}
+
+
+        //public byte[] ConvertirPDF(Plantilla pPlantilla)
+        //{
+        //    string strEncabezado = " encabezado";
+
+        //    //pendiente
+        //    //if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+        //    //{
+        //    pPlantilla.Contenido = pPlantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
+        //    //    pPlantilla.Encabezado.Contenido = pPlantilla.Encabezado.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
+        //    //    strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+        //    //}
+
+        //    var globalSettings = new GlobalSettings
+        //    {
+        //        ImageQuality = 1080,
+        //        PageOffset = 0,
+        //        ColorMode = ColorMode.Color,
+        //        Orientation = Orientation.Portrait,
+        //        PaperSize = PaperKind.A4,
+        //        Margins = new MarginSettings
+        //        {
+        //            Top = pPlantilla.MargenArriba,
+        //            Left = pPlantilla.MargenIzquierda,
+        //            Right = pPlantilla.MargenDerecha,
+        //            Bottom = pPlantilla.MargenAbajo
+        //        },
+        //        DocumentTitle = DateTime.Now.ToString(),
+        //    };
+
+        //    var objectSettings = new ObjectSettings
+        //    {
+        //        PagesCount = true,
+        //        HtmlContent = pPlantilla.Contenido,
+        //        WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
+        //        HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
+        //        FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
+        //    };
+
+        //    var pdf = new HtmlToPdfDocument()
+        //    {
+        //        GlobalSettings = globalSettings,
+        //        Objects = { objectSettings },
+        //    };
+
+        //    return _converter.Convert(pdf);
+        //}
+
         public async Task<List<Contrato>> GetListContratos(/*int id*/)
         {
             List<Contrato> ListContratos = new List<Contrato>();
