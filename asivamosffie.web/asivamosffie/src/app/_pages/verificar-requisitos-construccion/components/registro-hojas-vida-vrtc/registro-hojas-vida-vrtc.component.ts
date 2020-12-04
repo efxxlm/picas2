@@ -19,12 +19,14 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
   estaEditando = false;
 
   @Input() perfilProyecto: any[] = [];
-  @Input() contratoId    : number;
-  @Input() proyectoId    : number;
+  @Input() contratoId: number;
+  @Input() proyectoId: number;
   @Output() enviarPerfilesContrato = new EventEmitter();
   @Output() perfilesCompletados = new EventEmitter();
+  @Output() perfilEliminado = new EventEmitter();
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
-  perfilesCompletos: number = 0;
+  perfilesCompletos = 0;
+  perfilesEnProceso = 0;
   editorStyle = {
     height: '45px'
   };
@@ -37,14 +39,15 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
     ]
   };
   perfilesCv: Dominio[] = [];
-  get perfiles () {
+  get perfiles() {
     return this.formContratista.get( 'perfiles' ) as FormArray;
-  };
+  }
 
-  constructor ( private fb                       : FormBuilder,
-                private commonSvc                : CommonService,
-                private faseUnoConstruccionSvc   : FaseUnoConstruccionService,
-                private dialog                   : MatDialog )
+  constructor(
+    private fb: FormBuilder,
+    private commonSvc: CommonService,
+    private faseUnoConstruccionSvc: FaseUnoConstruccionService,
+    private dialog: MatDialog )
   {
     this.minDate = new Date();
     this.crearFormulario();
@@ -58,16 +61,16 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
     setTimeout(() => {
       this.perfilesProyecto();
     }, 1000);
-  };
+  }
 
-  crearFormulario () {
+  crearFormulario() {
     this.formContratista = this.fb.group({
       numeroPerfiles: [ '' ],
       perfiles: this.fb.array([])
     });
-  };
+  }
 
-  perfilesProyecto () {
+  perfilesProyecto() {
     if ( this.perfilProyecto.length === 0 ) {
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
       .subscribe( value => {
@@ -126,7 +129,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
                 }
               )
             );
-          };
+          }
         }
       } );
       this.perfilesCompletados.emit( 'sin-diligenciar' );
@@ -166,8 +169,8 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
               );
             }
           });
-      for ( let perfil of this.perfilProyecto ) {
-        let numeroRadicados = [];
+      for ( const perfil of this.perfilProyecto ) {
+        const numeroRadicados = [];
         let observaciones = null;
         let fechaObservacion = null;
         let observacionSupervisor = null;
@@ -181,9 +184,9 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
                 numeroRadicado: ''
               }
             )
-          )
+          );
         } else {
-          for ( let radicado of perfil['construccionPerfilNumeroRadicado'] ) {
+          for ( const radicado of perfil['construccionPerfilNumeroRadicado'] ) {
             numeroRadicados.push(
               this.fb.group(
                 { construccionPerfilNumeroRadicadoId: radicado['construccionPerfilNumeroRadicadoId'] || 0,
@@ -192,11 +195,11 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
                 }
               )
             );
-          };
-        };
+          }
+        }
 
         if ( perfil['construccionPerfilObservacion'].length > 0 ) {
-          for ( let obs of perfil['construccionPerfilObservacion'] ) {
+          for ( const obs of perfil['construccionPerfilObservacion'] ) {
             if ( obs.tipoObservacionCodigo === '1' ) {
               observaciones = perfil['observaciones'];
             } else if ( obs.tipoObservacionCodigo === '3' ) {
@@ -204,16 +207,22 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
               observacionSupervisor = obs.observacion;
             }
           }
-        };
+        }
 
         if ( perfil.registroCompleto ) {
           this.perfilesCompletos++;
           semaforo = 'completo';
         }
-        if ( !perfil.registroCompleto && (perfil.cantidadHvRequeridas > 0 || perfil.cantidadHvRecibidas > 0 || perfil.cantidadHvAprobadas > 0) ) {
-          semaforo = 'en-proceso'
+        if (  perfil.registroCompleto === false
+              && perfil.perfilCodigo !== undefined
+              && (  perfil.construccionPerfilId !== undefined
+                    || perfil.cantidadHvRequeridas > 0
+                    || perfil.cantidadHvRecibidas > 0
+                    || perfil.cantidadHvAprobadas > 0  ) ) {
+          semaforo = 'en-proceso';
+          this.perfilesEnProceso++;
         }
-
+        console.log( perfil, semaforo );
         this.perfiles.push(
           this.fb.group(
             {
@@ -234,145 +243,187 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
 
             }
           )
-        )
-      };
-      if ( this.perfilesCompletos === this.perfilProyecto.length ) {
+        );
+      }
+      if ( this.perfilesCompletos > 0 && this.perfilesCompletos === this.perfilProyecto.length ) {
         this.perfilesCompletados.emit( 'completo' );
       }
-      if ( this.perfilesCompletos < this.perfilProyecto.length && this.perfilesCompletos > 0 ) {
+      if (  this.perfilesEnProceso > 0
+            || ( this.perfilesEnProceso === 0 && this.perfilesCompletos > 0 && this.perfilesCompletos < this.perfilProyecto.length ) ) {
         this.perfilesCompletados.emit( 'en-proceso' );
       }
-      if ( this.perfilesCompletos === 0 ) {
+      if ( this.perfilesCompletos === 0 && this.perfilesEnProceso === 0 && this.perfilProyecto.length > 0 ) {
         this.perfilesCompletados.emit( 'sin-diligenciar' );
       }
-    };
-  };
+    }
+  }
 
-  disabledDate ( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
-    if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
+  disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
+    if ( Number( cantidadHvAprobadas ) >= Number( cantidadHvRequeridas ) ) {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
     } else {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
     }
-    if ( cantidadHvRequeridas.length === 0 ) {
+    if ( cantidadHvRequeridas === null ) {
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue( null );
     }
-  };
+  }
 
-  openDialog (modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
-  };
+  }
 
-  openDialogTrueFalse (modalTitle: string, modalText: string) {
+  openDialogTrueFalse(modalTitle: string, modalText: string) {
 
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton: true }
     });
 
     return dialogRef.afterClosed();
-  };
+  }
 
-  numeroRadicado ( i: number ) {
+  numeroRadicado( i: number ) {
     return this.perfiles.controls[i].get( 'contratoPerfilNumeroRadicado' ) as FormArray;
   }
 
-  textoLimpio (texto: string) {
+  textoLimpio(texto: string) {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio.length;
-    };
-  };
+    }
+  }
 
-  textoLimpioMessage (texto: string) {
+  textoLimpioMessage(texto: string) {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio;
-    };
-  };
+    }
+  }
 
-  maxLength (e: any, n: number) {
+  maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
-    };
-  };
+    }
+  }
 
-  eliminarPerfil ( numeroPerfil: number ) {
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+  eliminarPerfil( numeroPerfil: number ) {
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
       .subscribe( value => {
         if ( value ) {
           this.perfiles.removeAt( numeroPerfil );
           this.formContratista.patchValue({
             numeroPerfiles: `${ this.perfiles.length }`
           });
-          this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-        };
-      } );
-  };
-
-  deletePerfil( contratoPerfilId: number, numeroPerfil: number ) {
-    this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
-      .subscribe( value => {
-        if ( value ) {
-          this.faseUnoConstruccionSvc.deleteConstruccionPerfil( contratoPerfilId )
-            .subscribe(
-              () => {
-                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                this.perfiles.removeAt( numeroPerfil );
-                this.formContratista.patchValue({
-                  numeroPerfiles: `${ this.perfiles.length }`
-                });
-              },
-              err => this.openDialog( '', err.message )
-            );
+          this.openDialog( '', '<b>La información se ha eliminado correctamente.</b' );
         }
       } );
   }
 
-  agregarNumeroRadicado ( numeroRadicado: number, contratoPerfilId: number ) {
-    this.numeroRadicado( numeroRadicado ).push( this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId: contratoPerfilId, numeroRadicado: '' }) )
+  deletePerfil( contratoPerfilId: number, numeroPerfil: number ) {
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+      .subscribe( value => {
+        if ( value === true ) {
+          if ( contratoPerfilId !== 0 ) {
+            this.faseUnoConstruccionSvc.deleteConstruccionPerfil( contratoPerfilId )
+              .subscribe(
+                () => {
+                  this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                  this.perfiles.removeAt( numeroPerfil );
+                  this.perfilEliminado.emit( true );
+                  this.formContratista.patchValue({
+                    numeroPerfiles: `${ this.perfiles.length }`
+                  });
+                },
+                err => this.openDialog( '', err.message )
+              );
+          } else {
+            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+            this.perfiles.removeAt( numeroPerfil );
+            this.formContratista.patchValue({
+              numeroPerfiles: `${ this.perfiles.length }`
+            });
+          }
+        }
+      } );
   }
 
-  eliminarNumeroRadicado ( numeroPerfil: number, numeroRadicado ) {
-    this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-  };
+  agregarNumeroRadicado( numeroRadicado: number, contratoPerfilId: number ) {
+    this.numeroRadicado( numeroRadicado ).push(
+      this.fb.group({ contratoPerfilNumeroRadicadoId: 0, contratoPerfilId, numeroRadicado: '' })
+    );
+  }
 
-  deleteRadicado ( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
+  eliminarNumeroRadicado( numeroPerfil: number, numeroRadicado ) {
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+      .subscribe(
+        value => {
+          if ( value === true ) {
+            this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
+            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+            return;
+          }
+        }
+      );
+  }
+
+  deleteRadicado( contratoPerfilNumeroRadicadoId: number, numeroPerfil: number, numeroRadicado ) {
     if ( contratoPerfilNumeroRadicadoId === 0 ) {
-      this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
+      this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+        .subscribe(
+          value => {
+            if ( value === true ) {
+              this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
+              this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+              return;
+            }
+          }
+        );
       return;
     }
-    this.faseUnoConstruccionSvc.deleteConstruccionPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
-      .subscribe( () => {
-        this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
-        this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-      } );
-  };
+    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+      .subscribe(
+        value => {
+          if ( value === true ) {
+            this.faseUnoConstruccionSvc.deleteConstruccionPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId )
+              .subscribe( () => {
+                this.numeroRadicado( numeroPerfil ).removeAt( numeroRadicado );
+                this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                return;
+              } );
+          }
+        }
+      );
+  }
 
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
+    // tslint:disable-next-line: deprecation
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
 
 
-  guardar () {
-    let perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
+  guardar() {
+    const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {
       perfiles.forEach( value => {
         value.cantidadHvAprobadas                 = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
-        value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
+        value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 )
+                                                      ? null : value.contratoPerfilNumeroRadicado;
         value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;
-      } )
+      } );
     } else {
       perfiles.forEach( value => {
 
@@ -380,17 +431,18 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
         value.cantidadHvAprobadas                 = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas                 = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
-        value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ? null : value.contratoPerfilNumeroRadicado;
-        value['observaciones']                    = value.observacion
+        value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 )
+                                                      ? null : value.contratoPerfilNumeroRadicado;
+        value['observaciones']                    = value.observacion;
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;
-      } )
+      } );
     }
 
     console.log( perfiles );
     this.enviarPerfilesContrato.emit( perfiles );
-  };
+  }
 
-  
-};
+
+}

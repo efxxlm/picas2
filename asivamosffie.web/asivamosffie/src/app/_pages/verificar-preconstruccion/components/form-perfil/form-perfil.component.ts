@@ -138,6 +138,7 @@ export class FormPerfilComponent implements OnInit {
     } else {
       const estadosArray = [];
       this.formContratista.get( 'numeroPerfiles' ).setValue( String( this.perfilProyecto.length ) );
+      this.formContratista.get( 'numeroPerfiles' ).setValidators( Validators.min( this.perfiles.length ) );
       this.formContratista.get( 'numeroPerfiles' ).valueChanges
         .subscribe(
           value => {
@@ -423,7 +424,6 @@ export class FormPerfilComponent implements OnInit {
         value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-                                                // tslint:disable-next-line: no-string-literal
         value.contratoPerfilNumeroRadicado = (  value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ?
                                                 null : value.contratoPerfilNumeroRadicado;
         value.contratoPerfilObservacion    = value.observacion ? [{ observacion: value.observacion }] : null;
@@ -436,12 +436,10 @@ export class FormPerfilComponent implements OnInit {
         value.cantidadHvAprobadas          = Number( value.cantidadHvAprobadas );
         value.cantidadHvRecibidas          = Number( value.cantidadHvRecibidas );
         value.cantidadHvRequeridas         = Number( value.cantidadHvRequeridas );
-                                                // tslint:disable-next-line: no-string-literal
         value.contratoPerfilNumeroRadicado = (  value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 ) ?
                                                 null : value.contratoPerfilNumeroRadicado;
         value.contratoPerfilObservacion    = value.observacion ?  [
                                                 {
-                                                  // tslint:disable-next-line: no-string-literal
                                                   ContratoPerfilObservacionId: value[ 'perfilObservacion' ],
                                                   contratoPerfilId: value.contratoPerfilId,
                                                   observacion: value.observacion
