@@ -47,7 +47,7 @@ export class TablaContratoObraArtcComponent implements OnInit {
                 const dataTable = [];
                 listas.forEach( lista => {
                   if (  Number( lista[ 'estadoCodigo' ] ) >= Number( this.estadosConstruccionObra.enviadoAlSupervisor.codigo )
-                        && lista[ 'tipoSolicitudCodigo' ] === this.tipoContratoObra )
+                        && lista[ 'tipoContratoCodigo' ] === this.tipoContratoObra )
                   {
                     dataTable.push( lista );
                   }
