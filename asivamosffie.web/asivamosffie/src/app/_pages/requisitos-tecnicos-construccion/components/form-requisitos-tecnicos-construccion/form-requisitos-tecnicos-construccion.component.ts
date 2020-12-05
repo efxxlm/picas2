@@ -43,14 +43,16 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
 
         this.contrato.contratacion.contratacionProyecto.forEach( cp => {
           let perfilCompleto = true;
-          cp.proyecto.contratoConstruccion[0].construccionPerfil.forEach( p => {
-            if ( p.registroCompleto != true )
-              perfilCompleto = false
-          });
+          if ( cp.proyecto.contratoConstruccion.length > 0 ) {
+            cp.proyecto.contratoConstruccion[0].construccionPerfil.forEach( p => {
+              if ( p.registroCompleto != true )
+                perfilCompleto = false
+            });
+          }
           
-          cp['estadoSemaforo'] = 'sin-diligenciar'
+          cp['estadoSemaforo'] = 'sin-diligenciar';
 
-          if (cp.proyecto.contratoConstruccion[0].contratoConstruccionId)
+          if ( cp.proyecto.contratoConstruccion.length > 0 && cp.proyecto.contratoConstruccion[0].contratoConstruccionId)
             cp['estadoSemaforo'] = 'en-proceso'
 
           if ( cp['fasePreConstruccionNotMapped'])
@@ -71,9 +73,10 @@ export class FormRequisitosTecnicosConstruccionComponent implements OnInit {
             console.log('entro', cp.proyecto.contratoConstruccion[0], cp.proyecto['estadoSemaforo'],cp.proyecto)
 
             if (
+              cp.proyecto.contratoConstruccion.length > 0 &&
               cp.proyecto.contratoConstruccion[0].registroCompletoPlanesProgramas &&
               cp.proyecto.contratoConstruccion[0].registroCompletoManejoAnticipo &&
-              perfilCompleto && 
+              perfilCompleto &&
               cp.proyecto.contratoConstruccion[0].registroCompletoProgramacionObra &&
               cp.proyecto.contratoConstruccion[0].registroCompletoFlujoInversion
             ){
