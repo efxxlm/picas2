@@ -1122,7 +1122,7 @@ namespace asivamosffie.services
                                     return false;
                                 foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                                 {
-                                    if (string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo.ToString()) || ComponenteUso.ValorUso == 0)
+                                    if (ComponenteUso.TipoUsoCodigo==null || string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo.ToString()) || ComponenteUso.ValorUso == 0)
                                         return false;
                                 }
                             }
