@@ -189,7 +189,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     let fecha3 = Date.parse(this.addressForm.get('fechaRadicadoSAC').value);
     this.fechaSesion3 = new Date(fecha3);
     this.fechaSesionString3 = `${this.fechaSesion3.getFullYear()}-${this.fechaSesion3.getMonth() + 1}-${this.fechaSesion3.getDate()}`;
-    
+
     if (this.addressForm.value.tipoControversia.codigo == '1') {
       if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
         && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
@@ -383,14 +383,14 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "RutaSoporte": "",
           "EstadoCodigo": estadoControversiaContratista,
           "EsCompleto": this.estaCompleto,
-          "ContratoId": this.idContrato,
+          "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           "UsuarioCreacion": "us cre",
           "UsuarioModificacion": "us mod",
           "FechaComitePreTecnico": '',
-          "EsProcede": '',
-          "EsRequiereComite": '',
+          "EsProcede": true,
+          "EsRequiereComite": true,
           "ControversiaContractualId": parseInt(this.idControversia),
           "FechaCreacion": "2020-11-01"
         };
@@ -399,20 +399,20 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         formArrayNoTaiContratista = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
           "FechaSolicitud": this.fechaSesionString3,
-          "NumeroSolicitud": this.numeroSolicitud,
+          "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": this.addressForm.value.numeroRadicadoSAC,
           "RutaSoporte": "",
           "EstadoCodigo": estadoControversiaContratista,
           "EsCompleto": this.estaCompleto,
-          "ContratoId": this.idContrato,
+          "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           "UsuarioCreacion": "us cre",
           "UsuarioModificacion": "us mod",
           "FechaComitePreTecnico": '',
-          "EsProcede": '',
-          "EsRequiereComite": '',
+          "EsProcede": true,
+          "EsRequiereComite": true,
           "FechaCreacion": "2020-11-01"
         };
       }
@@ -535,14 +535,14 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "RutaSoporte": "",
           "EstadoCodigo": estadoControversiaContratante,
           "EsCompleto": this.estaCompleto,
-          "ContratoId": this.idContrato,
+          "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           "UsuarioCreacion": "us cre",
           "UsuarioModificacion": "us mod",
           "FechaComitePreTecnico": '',
-          "EsProcede": '',
-          "EsRequiereComite": '',
+          "EsProcede": true,
+          "EsRequiereComite": true,
           "ControversiaContractualId": parseInt(this.idControversia),
           "FechaCreacion": "2020-11-01"
         };
@@ -551,20 +551,20 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         formArrayNoTaiContratante = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
           "FechaSolicitud": this.fechaSesionString,
-          "NumeroSolicitud": this.numeroSolicitud,
+          "NumeroSolicitud": "",
           "SolicitudId": 0,
           "NumeroRadicadoSac": 0,
           "RutaSoporte": "",
           "EstadoCodigo": estadoControversiaContratante,
           "EsCompleto": this.estaCompleto,
-          "ContratoId": this.idContrato,
+          "ContratoId": this.contratoId,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           "UsuarioCreacion": "us cre",
           "UsuarioModificacion": "us mod",
           "FechaComitePreTecnico": '',
-          "EsProcede": '',
-          "EsRequiereComite": '',
+          "EsProcede": true,
+          "EsRequiereComite": true,
           "FechaCreacion": "2020-11-01"
         };
       }
