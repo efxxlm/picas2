@@ -402,6 +402,16 @@ namespace asivamosffie.services
 
                 foreach (var comite in ListComiteTecnico)
                 {
+                    string nombreEstadoActa = "Sin Acta";
+
+                    if ( !string.IsNullOrEmpty( comite.EstadoActaCodigo ) )
+                    {
+                        if ( ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault() != null )
+                        {
+                            nombreEstadoActa = ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre;
+                        }
+                    } 
+
                     ComiteGrilla comiteGrilla = new ComiteGrilla
                     {
                         Id = comite.Id,
@@ -409,7 +419,7 @@ namespace asivamosffie.services
                         EstadoComiteCodigo = comite.EstadoComite,
                         EstadoComite = !string.IsNullOrEmpty(comite.EstadoComite) ? ListaEstadoComite.Where(r => r.Codigo == comite.EstadoComite).FirstOrDefault().Nombre : "",
                         NumeroComite = comite.NumeroComite,
-                        EstadoActa = !string.IsNullOrEmpty(comite.EstadoActaCodigo) ? ListaEstadoActa.Where(r => r.Codigo == comite.EstadoActaCodigo).FirstOrDefault().Nombre : "",
+                        EstadoActa = nombreEstadoActa,
                         EstadoActaCodigo = comite.EstadoActaCodigo,
                         RegistroCompletoNombre = (bool)comite.EsCompleto ? "Completo" : "Incompleto",
                         RegistroCompleto = comite.EsCompleto,
@@ -715,6 +725,8 @@ namespace asivamosffie.services
             //    comiteTecnico.SesionParticipante = sesionParticipantes;
 
             comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where(r => !(bool)r.Eliminado).ToList();
+
+            comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where( r => r.Eliminado != true ).ToList();
 
             comiteTecnico.SesionComiteTema.ToList().ForEach(ct =>
             {
@@ -1047,7 +1059,7 @@ namespace asivamosffie.services
 
                                         if (ContratacionProyectoAportante.ComponenteAportante.Count() > 0)
                                         {
-                                            string strTipoUso = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Usos && r.Codigo == ComponenteUso.TipoUsoCodigo).FirstOrDefault().Nombre;
+                                            string strTipoUso = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Usos && r.Codigo == ComponenteUso.TipoUsoCodigo)?.FirstOrDefault()?.Nombre;
 
                                             RegistrosFuentesUso = RegistrosFuentesUso.Replace("[USO_FUENTES_USO]", strTipoUso);
                                             RegistrosFuentesUso = RegistrosFuentesUso.Replace("[VALOR_USO_FUENTE_USO]", "$" + String.Format("{0:n0}", ComponenteUso.ValorUso.ToString()));
@@ -2345,6 +2357,8 @@ namespace asivamosffie.services
                 comite.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Enviada;
                 comite.EsCompleto = true;
                 _context.SaveChanges();
+            }else{
+                comite.EstadoActaCodigo = "0";
             }
 
             return estaCompleto;
@@ -2627,7 +2641,7 @@ namespace asivamosffie.services
                         CreateEdit = "CREAR TEMA COMPROMISO";
                         TemaCompromiso.UsuarioCreacion = pSesionComiteTema.UsuarioCreacion;
                         TemaCompromiso.FechaCreacion = DateTime.Now;
-                        TemaCompromiso.Eliminado = true;
+                        TemaCompromiso.Eliminado = false;
 
                         _context.TemaCompromiso.Add(TemaCompromiso);
                     }
