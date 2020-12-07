@@ -88,20 +88,20 @@ export class FaseUnoConstruccionService {
   
 
   //Peticiones POST Carga Masiva "Programación de obra"
-  uploadFileToValidateProgramming ( pContratoConstruccinId: number, documento: File ) {
+  uploadFileToValidateProgramming ( pContratoConstruccinId: number, pContratoId: number, pProyectoId: number, documento: File ) {
     const formData = new FormData(); 
     formData.append('file', documento, documento.name);
-    return this.http.post( `${ this.urlApi }/UploadFileToValidateProgramming?pContratoConstruccinId=${ pContratoConstruccinId }`, formData )
+    return this.http.post( `${ this.urlApi }/UploadFileToValidateProgramming?pContratoConstruccinId=${ pContratoConstruccinId }&pContratoId=${ pContratoId }&pProyectoId=${ pProyectoId }`, formData )
   }
 
   transferMassiveLoadProgramming ( pIdDocument: string ) {
     return this.http.post<Respuesta>( `${ this.urlApi }/TransferMassiveLoadProgramming?pIdDocument=${ pIdDocument }`, '' )
   };
   //Peticiones POST Carga Masiva "Flujo de inversión de recursos"
-  uploadFileToValidateInvestmentFlow ( pContratoConstruccinId: number, documento: File ) {
+  uploadFileToValidateInvestmentFlow ( pContratoConstruccinId: number, pContratoId: number, pProyectoId: number, documento: File ) {
     const formData = new FormData(); 
     formData.append('file', documento, documento.name);
-    return this.http.post( `${ this.urlApi }/UploadFileToValidateInvestmentFlow?pContratoConstruccinId=${ pContratoConstruccinId }`, formData )
+    return this.http.post( `${ this.urlApi }/UploadFileToValidateInvestmentFlow?pContratoConstruccinId=${ pContratoConstruccinId }&pContratoId=${ pContratoId }&pProyectoId=${ pProyectoId }`, formData )
   };
 
   transferMassiveLoadInvestmentFlow ( pIdDocument: string ) {

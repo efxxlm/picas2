@@ -456,7 +456,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("UploadFileToValidateProgramming")]
         [HttpPost]
-        public async Task<IActionResult> UploadFileToValidateProgramming(IFormFile file, [FromQuery] int pContratoConstruccinId)
+        public async Task<IActionResult> UploadFileToValidateProgramming(IFormFile file, [FromQuery] int pContratoConstruccinId, int pContratoId, int pProyectoId)
         {
             try
             {
@@ -466,7 +466,7 @@ namespace asivamosffie.api.Controllers
                 {
                     //string strUsuario = "";
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProgramacionObra), strUsuario, pContratoConstruccinId);
+                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateProgramming(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseProgramacionObra), strUsuario, pContratoConstruccinId, pContratoId, pProyectoId);
                 }
                 return Ok(respuesta);
             }
@@ -498,7 +498,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("UploadFileToValidateInvestmentFlow")]
         [HttpPost]
-        public async Task<IActionResult> UploadFileToValidateInvestmentFlow(IFormFile file, [FromQuery] int pContratoConstruccinId)
+        public async Task<IActionResult> UploadFileToValidateInvestmentFlow(IFormFile file, [FromQuery] int pContratoConstruccinId, int pContratoId, int pProyectoId)
         {
             try
             {
@@ -508,7 +508,7 @@ namespace asivamosffie.api.Controllers
                 {
                     //string strUsuario = "";
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateInvestmentFlow(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseFlujoInversion), strUsuario, pContratoConstruccinId);
+                    respuesta = await _technicalRequirementsConstructionPhaseService.UploadFileToValidateInvestmentFlow(file, Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryBaseFlujoInversion), strUsuario, pContratoConstruccinId, pContratoId, pProyectoId);
                 }
                 return Ok(respuesta);
             }

@@ -3,6 +3,7 @@ import { DialogCargarProgramacionComponent } from '../dialog-cargar-programacion
 import { MatDialog } from '@angular/material/dialog';
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
+import { Proyecto } from 'src/app/core/_services/project/project.service';
 
 @Component({
   selector: 'app-programacion-obra-flujo-inversion',
@@ -14,6 +15,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   @Input() esFlujoInversion: boolean;
   @Input() contratoConstruccionId: number;
   @Input() contrato: Contrato;
+  @Input() proyectoId: number;
   @Input() observacionDevolucionProgramacionObra: number;
   @Input() observacionDevolucionFlujoInversion: number;
   @Input() archivoCargueIdProgramacionObra: number;

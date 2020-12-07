@@ -19,6 +19,9 @@ export class TablaProgramacionObraComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @Input() contratoConstruccionId: number;
   @Input() observacionDevolucionProgramacionObra: number;
+  @Input() proyectoId: number;
+  @Input() contratoId: number;
+
   @Output() tieneRegistros = new EventEmitter();
   @Output() realizoObservacion = new EventEmitter();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;

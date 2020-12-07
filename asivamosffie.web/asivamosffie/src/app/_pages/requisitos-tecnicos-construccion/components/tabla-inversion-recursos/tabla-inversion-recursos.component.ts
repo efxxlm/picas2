@@ -20,6 +20,9 @@ export class TablaInversionRecursosComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @Input() contratoConstruccionId: number;
   @Input() observacionDevolucionFlujoInversion: any;
+  @Input() proyectoId: number;
+  @Input() contratoId: number;
+
   @Output() tieneRegistros = new EventEmitter();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
@@ -83,7 +86,7 @@ export class TablaInversionRecursosComponent implements OnInit {
   addObservaciones( pArchivoCargueId: number, estadoCargue: string, fechaCreacion, observaciones?: string ){
     const dialogCargarProgramacion = this.dialog.open( DialogObservacionesProgramacionComponent, {
       width: '75em',
-      data: { pArchivoCargueId, observaciones, estadoCargue, fechaCreacion }
+      data: { pArchivoCargueId, observaciones, estadoCargue, fechaCreacion, contratoId: this.contratoId, proyectoId: this.proyectoId }
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe( response => {

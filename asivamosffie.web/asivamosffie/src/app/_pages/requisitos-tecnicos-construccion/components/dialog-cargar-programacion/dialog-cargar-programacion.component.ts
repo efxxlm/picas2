@@ -98,7 +98,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
     };
     console.log( inputNode.files[0] );
     if ( this.esFlujoInversion ) {
-      this.faseUnoConstruccionSvc.uploadFileToValidateInvestmentFlow( this.contratoConstruccionId, inputNode.files[0] )
+      this.faseUnoConstruccionSvc.uploadFileToValidateInvestmentFlow( this.contratoConstruccionId, this.data.contratoId, this.data.proyectoId, inputNode.files[0] )
       .subscribe( 
         ( response: any ) => {
           console.log( response );
@@ -126,7 +126,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
         }
       )
     } else {
-      this.faseUnoConstruccionSvc.uploadFileToValidateProgramming( this.contratoConstruccionId, inputNode.files[0] )
+      this.faseUnoConstruccionSvc.uploadFileToValidateProgramming( this.contratoConstruccionId, this.data.contratoId, this.data.proyectoId, inputNode.files[0] )
       .subscribe( 
         ( response: any ) => {
           console.log( response );
