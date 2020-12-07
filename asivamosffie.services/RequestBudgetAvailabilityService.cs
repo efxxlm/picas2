@@ -1036,7 +1036,11 @@ namespace asivamosffie.services
                     List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
 
                     List<AportanteFuenteFinanciacion> aportantefuente = new List<AportanteFuenteFinanciacion>();
-                    foreach(var apor in _context.AportanteFuenteFinanciacion.Include(x=>x.FuenteFinanciacion).ThenInclude(x=>x.Aportante).Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId).ToList())
+                    foreach(var apor in _context.AportanteFuenteFinanciacion.
+                        Include(x=>x.FuenteFinanciacion)
+                        .ThenInclude(x=>x.Aportante).Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId
+                        && !(bool)x.FuenteFinanciacion.Eliminado
+                         && !(bool)x.Eliminado).ToList())
                     {
                         apor.FuenteFinanciacionString = _context.Dominio.Where(x => x.Codigo == apor.FuenteFinanciacion.FuenteRecursosCodigo 
                             && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
@@ -1851,16 +1855,24 @@ namespace asivamosffie.services
                 }
                 var contrato = _context.Contrato.Where(x => x.Contratacion.ContratacionId == detailDP.ContratacionId);
                 var fechaContrato = "";
+                
                 if (contrato.Any())
                 {
                     var fechafi = contrato.Select(x => x.FechaFirmaContrato).FirstOrDefault();
                     fechaContrato = Convert.ToDateTime(fechafi).ToString("dd/MM/yyyy");
+                    
                 }
-                
-                
+
+                string nombreEntidad = "";
                 string contratoNumero = !contrato.Any()?"":contrato.Select(x => x.NumeroContrato).FirstOrDefault().ToString();
-                var contratista = _context.Contratista.Where(x => x.Contratacion.FirstOrDefault().ContratacionId == detailDP.ContratacionId);
-                string nombreEntidad = !contratista.Any()?"": contratista.Select(x => x.Nombre).FirstOrDefault().ToString();
+                if (contrato.Any())
+                {
+                    var contratacion = _context.Contratacion.Find(contrato.FirstOrDefault().ContratacionId);
+                    var contratista = _context.Contratista.Find(contratacion.ContratistaId);
+                    nombreEntidad = contratista==null ? "" : contratista.Nombre;
+                }
+
+                   
                 var observaciones = _context.DisponibilidadPresupuestalObservacion.Where(x=>x.DisponibilidadPresupuestalId==detailDP.DisponibilidadPresupuestalId).ToList();
                 string observacionString = !observaciones.Any() ? "" : string.Join("<br><br>", observaciones.Select(x => x.Observacion));
                 var aportant = aportantes.Distinct();
