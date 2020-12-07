@@ -209,7 +209,7 @@ const routes: Routes = [
         path: 'registrarSolicitudNovedadContractual',
         loadChildren: () => import('./_pages/registrar-solicitud-novedad-contractual/registrar-solicitud-novedad-contractual.module')
         .then(m => m.RegistrarSolicitudNovedadContractualModule),
-      }
+      },
 	    {
 
         path: 'generarActaInicioConstruccion',
