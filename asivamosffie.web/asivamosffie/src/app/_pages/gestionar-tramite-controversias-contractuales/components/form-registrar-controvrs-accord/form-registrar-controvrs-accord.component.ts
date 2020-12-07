@@ -58,6 +58,9 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   fechaSesionString2: string;
   fechaSesion2: Date;
 
+  fechaSesionString3: string;
+  fechaSesion3: Date;
+
   constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
   ngOnInit(): void {
     this.loadtipoControversias();
@@ -174,12 +177,19 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
+
     let fecha1 = Date.parse(this.addressForm.get('fechaSolicitud').value);
     this.fechaSesion = new Date(fecha1);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
+
     let fecha2 = Date.parse(this.addressForm.get('fechaComitePretecnico').value);
     this.fechaSesion2 = new Date(fecha2);
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
+
+    let fecha3 = Date.parse(this.addressForm.get('fechaRadicadoSAC').value);
+    this.fechaSesion3 = new Date(fecha3);
+    this.fechaSesionString3 = `${this.fechaSesion3.getFullYear()}-${this.fechaSesion3.getMonth() + 1}-${this.fechaSesion3.getDate()}`;
+    
     if (this.addressForm.value.tipoControversia.codigo == '1') {
       if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
         && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
@@ -366,7 +376,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.isEditable == true) {
         formArrayNoTaiContratista = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.fechaSesionString3,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": this.addressForm.value.numeroRadicadoSAC,
@@ -388,7 +398,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       else {
         formArrayNoTaiContratista = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
-          "FechaSolicitud": this.fechaSesionString,
+          "FechaSolicitud": this.fechaSesionString3,
           "NumeroSolicitud": this.numeroSolicitud,
           "SolicitudId": 0,
           "NumeroRadicadoSac": this.addressForm.value.numeroRadicadoSAC,
