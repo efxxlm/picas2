@@ -1036,7 +1036,11 @@ namespace asivamosffie.services
                     List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
 
                     List<AportanteFuenteFinanciacion> aportantefuente = new List<AportanteFuenteFinanciacion>();
-                    foreach(var apor in _context.AportanteFuenteFinanciacion.Include(x=>x.FuenteFinanciacion).ThenInclude(x=>x.Aportante).Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId).ToList())
+                    foreach(var apor in _context.AportanteFuenteFinanciacion.
+                        Include(x=>x.FuenteFinanciacion)
+                        .ThenInclude(x=>x.Aportante).Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId
+                        && !(bool)x.FuenteFinanciacion.Eliminado
+                         && !(bool)x.Eliminado).ToList())
                     {
                         apor.FuenteFinanciacionString = _context.Dominio.Where(x => x.Codigo == apor.FuenteFinanciacion.FuenteRecursosCodigo 
                             && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;

@@ -274,11 +274,11 @@ namespace asivamosffie.services
                         //verifico si tiene municipio
                         if (praportante.CofinanciacionAportante.MunicipioId != null)
                         {
-                            praportante.CofinanciacionAportante.NombreAportanteString = _context.Localizacion.Find(praportante.CofinanciacionAportante.MunicipioId).Descripcion;
+                            praportante.CofinanciacionAportante.NombreAportanteString = "Alcaldía de "+ _context.Localizacion.Find(praportante.CofinanciacionAportante.MunicipioId).Descripcion;
                         }
                         else//solo departamento
                         {
-                            praportante.CofinanciacionAportante.NombreAportanteString = praportante.CofinanciacionAportante.DepartamentoId == null ? "Error" : _context.Localizacion.Find(praportante.CofinanciacionAportante.DepartamentoId).Descripcion;
+                            praportante.CofinanciacionAportante.NombreAportanteString = "Gobernación de " + praportante.CofinanciacionAportante.DepartamentoId == null ? "Error" : _context.Localizacion.Find(praportante.CofinanciacionAportante.DepartamentoId).Descripcion;
                         }
                     }
                     else
