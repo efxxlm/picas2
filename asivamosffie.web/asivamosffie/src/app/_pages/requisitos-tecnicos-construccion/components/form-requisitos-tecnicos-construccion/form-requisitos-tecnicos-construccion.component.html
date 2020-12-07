@@ -164,7 +164,8 @@
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
             <app-programacion-obra-flujo-inversion  
                                                     [esFlujoInversion]="true" 
-                                                    [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
+                                                    [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+                                                    [contrato]="contrato"
                                                     (terminoCarga)="getCargaMasiva( $event )"
                                                     [observacionDevolucionFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionFlujoInversion"
                                                     [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion : undefined"
@@ -174,9 +175,10 @@
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
             <app-programacion-obra-flujo-inversion  [esFlujoInversion]="true"
                                                     [contratoConstruccionId]="0"
+                                                    [contrato]="contrato" 
                                                     [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion : undefined"
                                                     (terminoCarga)="getCargaMasiva( $event )">
-            </app-programacion-obra-flujo-inversion>
+            </app-programacion-obra-flujo-inversion> 
           </section>
 
         </mat-expansion-panel>

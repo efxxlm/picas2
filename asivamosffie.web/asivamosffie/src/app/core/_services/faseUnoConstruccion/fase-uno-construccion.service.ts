@@ -125,5 +125,9 @@ export class FaseUnoConstruccionService {
     return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteArchivoCargue?pArchivoCargueId=${ pArchivoCargueId }&pContratoConstruccionId=${ pContratoConstruccionId }&pEsFlujoInvserion=${ pEsFlujoInvserion }` );
   };
   
+  GenerateDRP(id)
+  {        
+    return this.http.get(`${ this.urlApi }/GenerateDRP?pContratoId=${id}`, { responseType: "blob" } );
+  }
 
 }

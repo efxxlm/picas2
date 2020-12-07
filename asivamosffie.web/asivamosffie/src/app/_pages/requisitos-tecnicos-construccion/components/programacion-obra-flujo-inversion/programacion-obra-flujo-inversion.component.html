@@ -7,11 +7,12 @@
           Cargar programación
   </button>
 </section>
-<section *ngIf="esFlujoInversion" class="mt-2em">
+<section *ngIf="esFlujoInversion && contrato !== undefined" class="mt-2em">
   <button mat-raised-button 
           color="accent" 
           type="submit"
           class="mr-2em"
+          (click)="descargarDRPBoton()"
           >
           Ver documento de registro presupuestal
   </button>
@@ -21,7 +22,7 @@
           type="submit"
           (click)="cargarProgramacion()"
           *ngIf="archivoCargueIdFlujoInversion === undefined">
-          Cargar flujo de inversión de recursos
+          Cargar flujo de inversión de recursos 
   </button>
 </section>
 
