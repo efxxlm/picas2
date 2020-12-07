@@ -53,7 +53,7 @@ namespace asivamosffie.services
 
                 foreach (var c in listContratos.OrderBy(r => r.EstadoVerificacionCodigo))
                 {
-                  
+
                     int CantidadProyectosConPerfilesAprobados = 0;
                     int CantidadProyectosConPerfilesPendientes = 0;
                     bool RegistroCompleto = true;
@@ -64,10 +64,15 @@ namespace asivamosffie.services
                         bool RegistroCompletoObservaciones = true;
                         foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
                         {
-                            if (ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.Where(r=> r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).LastOrDefault().Observacion))
-                                RegistroCompletoObservaciones = false;
 
-                            if(!ContratoPerfil.TieneObservacionApoyo.HasValue)
+                            string UltimaObservacionApoyo = string.Empty;
+
+                            UltimaObservacionApoyo = ContratoPerfil?.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).Count() > 0 ? ContratoPerfil?.ContratoPerfilObservacion?.OrderBy(r => r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).LastOrDefault().Observacion : string.Empty;
+
+                            if ((ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && UltimaObservacionApoyo == null))
+                                RegistroCompleto = false;
+
+                            if (!ContratoPerfil.TieneObservacionApoyo.HasValue)
                                 RegistroCompletoObservaciones = false;
 
                             if (ContratoPerfil.ContratoPerfilObservacion.Count(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor) == 0)
@@ -77,7 +82,7 @@ namespace asivamosffie.services
                                  && (bool)ContratoPerfil.TieneObservacionApoyo
                                  && (ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().Observacion == null
                                  && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
-                                RegistroCompleto = false; 
+                                RegistroCompleto = false;
                         }
 
                         if (RegistroCompletoObservaciones)
@@ -462,6 +467,7 @@ namespace asivamosffie.services
                     if (pContratoPerfilObservacion.Observacion != null)
                         contratoPerfilObservacionOld.Observacion = pContratoPerfilObservacion.Observacion.ToUpper();
                 }
+                _context.Update(contratoPerfilOld);
                 _context.SaveChanges();
 
                 //Validar Estados Completos
@@ -475,7 +481,10 @@ namespace asivamosffie.services
 
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
-                    string UltimaObservacionApoyo = ContratoPerfil.ContratoPerfilObservacion.OrderBy(r => r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).LastOrDefault().Observacion;
+                    string UltimaObservacionApoyo = string.Empty;
+
+                    UltimaObservacionApoyo = ContratoPerfil?.ContratoPerfilObservacion
+                        .Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).Count() > 0 ? ContratoPerfil?.ContratoPerfilObservacion?.OrderBy(r => r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor).LastOrDefault().Observacion : string.Empty;
 
                     if ((ContratoPerfil.TieneObservacionApoyo.HasValue && (bool)ContratoPerfil.TieneObservacionApoyo && UltimaObservacionApoyo == null))
                         RegistroCompleto = false;
