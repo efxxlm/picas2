@@ -1062,6 +1062,88 @@ namespace asivamosffie.services
 
         #region private 
 
+        private void VerificarRegistroCompletoValidacionContratoObra(int pIdContrato)
+        {
+            bool esCompleto = true;
+
+            Contrato contrato = _context.Contrato
+                                            .Where(c => c.ContratoId == pIdContrato)
+                                            .Include(r => r.ContratoConstruccion)
+                                                .ThenInclude(r => r.ConstruccionPerfil)
+                                            .Include(r => r.Contratacion)
+                                            .FirstOrDefault();
+
+            if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+            {
+                contrato.ContratoConstruccion.ToList().ForEach(cc =>
+                {
+                    ContratoConstruccion construccionTemp = _context.ContratoConstruccion.Find(cc.ContratoConstruccionId);
+                    bool completoConstruccion = true;
+
+                    if (
+                            (TieneFasePreconstruccion(construccionTemp.ContratoId) && cc.RegistroCompletoDiagnostico != true) ||
+                            cc.RegistroCompletoPlanesProgramas != true ||
+                            cc.RegistroCompletoManejoAnticipo != true ||
+                            cc.RegistroCompletoProgramacionObra != true ||
+                            cc.RegistroCompletoFlujoInversion != true
+                        )
+                    {
+                        esCompleto = false;
+                        completoConstruccion = false;
+                    }
+                    else
+                    {
+                        cc.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList().ForEach(cp =>
+                        {
+                            if (cp.RegistroCompleto != true)
+                            {
+                                esCompleto = false;
+                                completoConstruccion = false;
+                            }
+                        });
+                    }
+
+                    construccionTemp.RegistroCompleto = completoConstruccion;
+                    _context.SaveChanges();
+
+                });
+            }else if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString()){
+                contrato.ContratoConstruccion.ToList().ForEach(cc =>
+                {
+                    ContratoConstruccion construccionTemp = _context.ContratoConstruccion.Find(cc.ContratoConstruccionId);
+                    bool completoConstruccion = true;
+
+                        cc.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList().ForEach(cp =>
+                        {
+                            if (cp.RegistroCompleto != true)
+                            {
+                                esCompleto = false;
+                                completoConstruccion = false;
+                            }
+                        });
+                    
+
+                    construccionTemp.RegistroCompleto = completoConstruccion;
+                    _context.SaveChanges();
+
+                });
+            }
+
+
+
+            contrato.RegistroCompletoConstruccion = esCompleto;
+            if (contrato.RegistroCompletoConstruccion == true)
+            {
+                contrato.FechaAprobacionRequisitosConstruccionInterventor = DateTime.Now;
+            }
+            else
+            {
+                contrato.FechaAprobacionRequisitosConstruccionInterventor = null;
+            }
+
+            _context.SaveChanges();
+        }
+
         private void VerificarRegistroCompletoContratoObra(int pIdContrato)
         {
             bool esCompleto = true;
@@ -1267,11 +1349,11 @@ namespace asivamosffie.services
             {
                 foreach (var ConstruccionPerfil in cc.ConstruccionPerfil.Where(r => r.Eliminado != true))
                 {
-                    ConstruccionPerfilObservacion UltimaObservacionSupervisor = getObservacionPerfil( ConstruccionPerfil, true );// ConstruccionPerfil.ConstruccionPerfilObservacion.OrderBy(r => r.ConstruccionPerfilObservacionId).Where(r => (bool)r.EsSupervision).LastOrDefault().Observacion;
+                    ConstruccionPerfilObservacion UltimaObservacionSupervisor = getObservacionPerfil(ConstruccionPerfil, true);// ConstruccionPerfil.ConstruccionPerfilObservacion.OrderBy(r => r.ConstruccionPerfilObservacionId).Where(r => (bool)r.EsSupervision).LastOrDefault().Observacion;
 
                     if (
-                            ConstruccionPerfil.TieneObservacionesSupervisor == null || 
-                            ( ConstruccionPerfil.TieneObservacionesSupervisor == true && string.IsNullOrEmpty( UltimaObservacionSupervisor != null ? UltimaObservacionSupervisor.Observacion : null ) )
+                            ConstruccionPerfil.TieneObservacionesSupervisor == null ||
+                            (ConstruccionPerfil.TieneObservacionesSupervisor == true && string.IsNullOrEmpty(UltimaObservacionSupervisor != null ? UltimaObservacionSupervisor.Observacion : null))
                        )
                         esCompleto = false;
                 }
@@ -2281,10 +2363,6 @@ namespace asivamosffie.services
 
                     Proyecto proyecto = CalcularFechaInicioContrato(contratoConstruccionId);
 
-
-
-
-
                     int numeroMes = 1;
                     int idMes = 0;
                     for (DateTime fecha = proyecto.FechaInicioEtapaObra; fecha <= proyecto.FechaFinEtapaObra; fecha = fecha.AddMonths(1))
@@ -2369,7 +2447,7 @@ namespace asivamosffie.services
             Proyecto proyecto = CalcularFechaInicioContrato(pContratoConstruccionId);
 
             //Numero semanas
-            int numberOfWeeks = Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
+            int numberOfWeeks = Convert.ToInt32(Math.Floor((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays / 7));
             if (Convert.ToInt32(Math.Round((proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra).TotalDays % 7)) > 0)
                 numberOfWeeks++;
 
@@ -3064,12 +3142,7 @@ namespace asivamosffie.services
                     else
                     {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion.Find(idObservacion);
-                        // .Where(r => r.ContratoConstruccionId == pContratoConstruccion.ContratoConstruccionId &&
-                        //            r.EsSupervision == true &&
-                        //            r.Eliminado != false &&
-                        //            r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico)
-                        // .OrderByDescending(r => r.FechaCreacion)
-                        //.FirstOrDefault();
+
                         if (observacionDelete != null)
                             observacionDelete.Eliminado = true;
                     }
@@ -3086,12 +3159,7 @@ namespace asivamosffie.services
                     else
                     {
                         ConstruccionObservacion observacionDelete = _context.ConstruccionObservacion.Find(idObservacion);
-                        // &&
-                        //            r.EsSupervision != true &&
-                        //            r.Eliminado != false &&
-                        //            r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico)
-                        // .OrderByDescending(r => r.FechaCreacion)
-                        // .FirstOrDefault();
+
                         if (observacionDelete != null)
                             observacionDelete.Eliminado = true;
                     }
