@@ -62,5 +62,6 @@ namespace asivamosffie.model.APIModels
         public int PlazoActualContratoMeses { get; set; }
         public int PlazoActualContratoDias { get; set; }
         public string RutaActaSuscrita { get; set; }
+        public string NumeroIdentificacionSupervisor { get; set; }
     }
 }
