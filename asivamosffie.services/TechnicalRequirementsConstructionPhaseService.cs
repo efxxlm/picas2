@@ -1271,7 +1271,7 @@ namespace asivamosffie.services
 
                     if (
                             ConstruccionPerfil.TieneObservacionesSupervisor == null || 
-                            ( ConstruccionPerfil.TieneObservacionesSupervisor == true && UltimaObservacionSupervisor == null )
+                            ( ConstruccionPerfil.TieneObservacionesSupervisor == true && string.IsNullOrEmpty( UltimaObservacionSupervisor != null ? UltimaObservacionSupervisor.Observacion : null ) )
                        )
                         esCompleto = false;
                 }
