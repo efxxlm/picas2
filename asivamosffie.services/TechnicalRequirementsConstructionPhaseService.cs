@@ -1267,7 +1267,7 @@ namespace asivamosffie.services
 
             foreach (var ConstruccionPerfil in cc.ConstruccionPerfil.Where(r => r.Eliminado))
             {
-                string UltimaObservacionApoyo = ConstruccionPerfil.ConstruccionPerfilObservacion.OrderBy(r => r.ConstruccionPerfilObservacionId).Where(r => (bool)r.EsSupervision).LastOrDefault().Observacion;
+                string UltimaObservacionApoyo = ConstruccionPerfil.ConstruccionPerfilObservacion.OrderBy(r => r.ConstruccionPerfilObservacionId).Where(r => r.EsSupervision.HasValue && (bool)r.EsSupervision).LastOrDefault().Observacion;
 
                 if ((ConstruccionPerfil.TieneObservacionesSupervisor.HasValue && (bool)ConstruccionPerfil.TieneObservacionesSupervisor && UltimaObservacionApoyo == null))
                     esCompleto = false;
