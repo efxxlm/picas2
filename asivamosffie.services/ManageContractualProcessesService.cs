@@ -557,7 +557,8 @@ namespace asivamosffie.services
             {
                 List<ComiteTecnico> ListComiteTecnicos = _context.ComiteTecnico
                     .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ToList();
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                    .Include(r=> r.SesionComiteSolicitudComiteTecnico).ToList();
 
                 ////ListComiteTecnicos = ListComiteTecnicos.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada).ToList();
 
