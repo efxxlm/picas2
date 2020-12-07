@@ -42,12 +42,12 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("GetPlantillaActaInicio")]
-        public async Task<FileResult> GetPlantillaActaInicio(int pContratoId)
-        {
-            return File(await _ActBegin.GetPlantillaActaInicio(pContratoId), "application/pdf");
-        }
+        //[HttpGet]
+        //[Route("GetPlantillaActaInicio")]
+        //public async Task<FileResult> GetPlantillaActaInicio(int pContratoId)
+        //{
+        //    //return File(await _ActBegin.GetPlantillaActaInicio(pContratoId), "application/pdf");
+        //}
 
         [HttpPost]
         [Route("CreateEditarControversiaMotivo")]
