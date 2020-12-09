@@ -84,8 +84,9 @@
                   color="accent"
                   class="btn-table"
                   (click)="verDetalle( element.contratoId )"
-                  *ngIf=" element.estadoCodigo === estadosConstruccionInterventoria.enviadoAlApoyo.codigo
-                          || element.estadoCodigo === estadosConstruccionInterventoria.conReqTecnicosAprobadosPorSupervisor.codigo">
+                  *ngIf=" element.estadoCodigo !== estadosConstruccionInterventoria.enviadoAlSupervisor.codigo
+                          && element.estadoCodigo !== estadosConstruccionInterventoria.enProcesoValidacionReqTecnicos.codigo
+                          && element.estadoCodigo !== estadosConstruccionInterventoria.conReqTecnicosValidados.codigo">
                   Ver detalle
           </button>
 

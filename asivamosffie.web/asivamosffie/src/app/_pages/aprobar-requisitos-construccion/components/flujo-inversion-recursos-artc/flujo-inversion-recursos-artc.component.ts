@@ -158,7 +158,7 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
           contratoConstruccionId: this.contratoConstruccionId,
           tipoObservacionConstruccion: TiposObservacionConstruccion.FlujoInversion,
-          esSupervision: false,
+          esSupervision: true,
           esActa: false,
           observaciones: this.addressForm.value.observaciones,
 

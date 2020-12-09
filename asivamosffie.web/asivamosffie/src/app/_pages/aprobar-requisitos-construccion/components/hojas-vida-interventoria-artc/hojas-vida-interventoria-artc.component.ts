@@ -86,6 +86,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
           esSupervision: true,
           esActa: false,
           observacion:  this.addressForm.get( 'observaciones' ).value !== null
+                        || this.addressForm.get( 'observaciones' ).value !== undefined
                         && this.addressForm.get( 'tieneObservaciones' ).value === true ?
                         this.addressForm.get( 'observaciones' ).value : null
         }

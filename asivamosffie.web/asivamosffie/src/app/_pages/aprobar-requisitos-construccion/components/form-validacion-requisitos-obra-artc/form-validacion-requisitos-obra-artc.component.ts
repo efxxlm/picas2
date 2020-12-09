@@ -11,6 +11,11 @@ import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 export class FormValidacionRequisitosObraArtcComponent implements OnInit {
 
   contrato: Contrato;
+  estadoConstruccion = {
+    enviadoAlSupervisor: '6',
+    enProcesoValidacionReqTecnicos: '7',
+    conReqTecnicosValidados: '8'
+  };
 
   constructor(
     private faseDosConstruccionSvc: FaseUnoConstruccionService,

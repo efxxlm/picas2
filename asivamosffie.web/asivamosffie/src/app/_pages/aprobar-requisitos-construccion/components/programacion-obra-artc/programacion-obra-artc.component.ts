@@ -137,7 +137,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
           contratoConstruccionId: this.contratoConstruccionId,
           tipoObservacionConstruccion: TiposObservacionConstruccion.ProgramacionObra,
-          esSupervision: false,
+          esSupervision: true,
           esActa: false,
           observaciones: this.addressForm.value.observaciones
         }
