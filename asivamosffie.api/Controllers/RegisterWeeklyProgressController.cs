@@ -41,6 +41,21 @@ namespace asivamosffie.api.Controllers
             {
                 throw ex;
             }
+        } 
+
+        [Route("GetLastSeguimientoSemanalByContratacionProyectoId")]
+        [HttpGet]
+        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
+        {
+            try
+            {
+                return await _registerWeeklyProgressService.GetLastSeguimientoSemanalByContratacionProyectoId(pContratacionProyectoId);
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
     }

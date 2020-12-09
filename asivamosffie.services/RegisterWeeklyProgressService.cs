@@ -34,17 +34,15 @@ namespace asivamosffie.services
             return await _context.VRegistrarAvanceSemanal.ToListAsync();
         }
 
-
-
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
 
             return await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
 
-                .Include(r=> r.SeguimientoDiario)
+                .Include(r => r.SeguimientoDiario)
 
                 .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                  
+
                 .Include(r => r.SeguimientoSemanalAvanceFisico)
 
                 //Gestion Obra 
@@ -71,7 +69,7 @@ namespace asivamosffie.services
                     .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
                         .ThenInclude(r => r.ManejoOtro)
 
-                  //Gestion Obra Calidad
+                 //Gestion Obra Calidad
                  .Include(r => r.SeguimientoSemanalGestionObra)
                     .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
                         .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
@@ -89,9 +87,9 @@ namespace asivamosffie.services
                 .Include(r => r.SeguimientoSemanalGestionObra)
                     .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
 
-                     
+
                 .Include(r => r.SeguimientoSemanalReporteActividad)
-                   //.ThenInclude(r => r.esta)
+                //.ThenInclude(r => r.esta)
 
 
                 .Include(r => r.SeguimientoSemanalRegistroFotografico)
@@ -99,7 +97,71 @@ namespace asivamosffie.services
                 .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
 
                 .FirstOrDefaultAsync();
-             
+
+        }
+
+
+        public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
+        {
+
+            bool registroCompleto = false;
+            try
+            {
+                SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
+
+                SaveUpdateAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
+
+                SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault());
+
+                SaveUpdateGestionObra(pSeguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault());
+
+                SaveUpdateReporteActividades(pSeguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault());
+
+                SaveUpdateRegistroFotografico(pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault());
+
+                SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault());
+
+
+
+                return new Respuesta();
+            }
+            catch (Exception)
+            {
+
+                return new Respuesta();
+            }
+
+
+        }
+
+        private bool SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra seguimientoSemanalRegistrarComiteObra)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico seguimientoSemanalRegistroFotografico)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool SaveUpdateGestionObra(SeguimientoSemanalGestionObra seguimientoSemanalGestionObra)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinanciero)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico)
+        {
+            throw new NotImplementedException();
         }
     }
 }
