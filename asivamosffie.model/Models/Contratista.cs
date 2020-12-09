@@ -25,6 +25,7 @@ namespace asivamosffie.model.Models
         public string TipoProponenteCodigo { get; set; }
         public int? ProcesoSeleccionProponenteId { get; set; }
 
+        public virtual ProcesoSeleccionProponente ProcesoSeleccionProponente { get; set; }
         public virtual ICollection<Contratacion> Contratacion { get; set; }
     }
 }

@@ -46,13 +46,53 @@ namespace asivamosffie.services
                 .Include(r => r.SeguimientoSemanalAvanceFinanciero)
                   
                 .Include(r => r.SeguimientoSemanalAvanceFisico)
-                 
-              
 
+                //Gestion Obra 
+                //Gestion Obra Ambiental
+                .Include(r => r.SeguimientoSemanalGestionObra)
+                   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                       .ThenInclude(r => r.ManejoMaterialesInsumo)
+                            .ThenInclude(r => r.ManejoMaterialesInsumosProveedor)
 
-                .Include(r => r.SeguimientoSemanalPersonalObra)
-        
+                .Include(r => r.SeguimientoSemanalGestionObra)
+                   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                       .ThenInclude(r => r.ManejoResiduosConstruccionDemolicion)
+                           .ThenInclude(r => r.ManejoResiduosConstruccionDemolicionGestor)
+
+                .Include(r => r.SeguimientoSemanalGestionObra)
+                   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                       .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
+
+                 .Include(r => r.SeguimientoSemanalGestionObra)
+                    .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                        .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
+
+                 .Include(r => r.SeguimientoSemanalGestionObra)
+                    .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                        .ThenInclude(r => r.ManejoOtro)
+
+                  //Gestion Obra Calidad
+                 .Include(r => r.SeguimientoSemanalGestionObra)
+                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                        .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                            .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+
+                 //Gestion Obra Calidad
+                 .Include(r => r.SeguimientoSemanalGestionObra)
+                    .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                        .ThenInclude(r => r.SeguridadSaludCausaAccidente)
+
+                 //Gestion Obra Social
+                 .Include(r => r.SeguimientoSemanalGestionObra)
+                    .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
+
+                .Include(r => r.SeguimientoSemanalGestionObra)
+                    .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
+
+                     
                 .Include(r => r.SeguimientoSemanalReporteActividad)
+                   //.ThenInclude(r => r.esta)
+
 
                 .Include(r => r.SeguimientoSemanalRegistroFotografico)
 
