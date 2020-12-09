@@ -1553,6 +1553,7 @@ namespace asivamosffie.services
                     .Where(r => r.ContratoId == ContratoId)
                     .Include(r => r.ContratoConstruccion)
                           .ThenInclude(r => r.ConstruccionObservacion)
+                    .Include( r => r.Contratacion )
                     .FirstOrDefaultAsync();
 
                 contratoCambiarEstado.UsuarioModificacion = pUsuarioMod;
