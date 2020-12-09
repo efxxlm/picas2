@@ -109,7 +109,7 @@ export class FormRegistrarNovedadComponent {
   }
 
   eliminarClausula(i: number) {
-    let tema = this.addressForm.get('tema');
+    const tema = this.addressForm.get('tema');
     this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', i, tema);
   }
 
@@ -125,30 +125,30 @@ export class FormRegistrarNovedadComponent {
   }
 
   openDialogSiNo(modalTitle: string, modalText: string, e: number, grupo: any) {
-    let dialogRef = this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if (result === true) {
-        this.deleteTema(e)
+        this.deleteTema(e);
       }
     });
   }
 
   deleteTema(i: number) {
-    let tema = this.clausulaField.controls[i];
+    const tema = this.clausulaField.controls[i];
 
-    console.log(tema)
+    console.log(tema);
 
-    this.borrarArray(this.clausulaField, i)
-    this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>')
+    this.borrarArray(this.clausulaField, i);
+    this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
   }
 
   onSubmit() {
     console.log(this.addressForm.value);
     this.estaEditando = true;
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>')
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 }

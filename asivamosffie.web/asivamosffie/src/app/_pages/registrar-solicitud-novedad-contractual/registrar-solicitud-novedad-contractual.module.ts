@@ -11,13 +11,19 @@ import { HomeComponent } from './components/home/home.component';
 import { RegistrarSolicitudComponent } from './components/registrar-solicitud/registrar-solicitud.component';
 import { ExpansionPanelComponent } from './components/expansion-panel/expansion-panel.component';
 import { FormRegistrarNovedadComponent } from './components/form-registrar-novedad/form-registrar-novedad.component';
+import { FormSoporteSolicitudComponent } from './components/form-soporte-solicitud/form-soporte-solicitud.component';
+import { TablaSolicitudNovedadContractualComponent } from './components/tabla-solicitud-novedad-contractual/tabla-solicitud-novedad-contractual.component';
+import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     RegistrarSolicitudComponent,
     ExpansionPanelComponent,
-    FormRegistrarNovedadComponent
+    FormRegistrarNovedadComponent,
+    FormSoporteSolicitudComponent,
+    TablaSolicitudNovedadContractualComponent,
+    VerDetalleComponent
   ],
   imports: [
     CommonModule,

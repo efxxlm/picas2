@@ -18,7 +18,7 @@ export class RegistrarSolicitudComponent implements OnInit {
   novedadesArray = [
     { name: 'contrato 1', value: '1' },
     { name: 'contrato 2', value: '2' },
-    { name: 'contrato 3', value: '3' }
+    { name: 'Proyecto', value: 'Proyecto' }
   ];
 
   constructor() { }
