@@ -34,7 +34,7 @@
                             <label class="label-left" [ngClass]="{'color-secondaryColor' : this.fechaFirmaContratistaInterventoria==undefined  && this.esRojo==true}">{{this.fecha2Titulo}}</label>
                         </div>
                         <div class="col d-flex">
-                            <mat-form-field class="example-full-width" style="width: 20%;">
+                            <mat-form-field class="example-full-width" [ngStyle]="{'width': this.fecha2Titulo=='Fecha de la firma del documento por parte del supervisor' ? '20%' : '0%' }">
                                 <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
                                     (click)="picker2.open()" [(ngModel)]="this.fechaFirmaContratistaInterventoria"
                                     placeholder="DD/MM/AAAA">

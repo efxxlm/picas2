@@ -30,7 +30,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-25"> Gestión </th>
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table"
-                        (click)="this.cargarActaSuscrita(element.contratoId, element.tipoContrato, element.numeroContratoObra)"
+                        (click)="this.cargarActaSuscrita(element.contratoId, element.tipoContratoNombre, element.numeroContratoObra)"
                         *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Cargar acta suscrita</button>
                         <!--
                     <button mat-raised-button color="accent" class="btn-table"

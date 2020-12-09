@@ -70,6 +70,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
     })
   }
   maxLength(e: any, n: number) {
+    console.log(e.editor.getLength()+" "+n);
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
