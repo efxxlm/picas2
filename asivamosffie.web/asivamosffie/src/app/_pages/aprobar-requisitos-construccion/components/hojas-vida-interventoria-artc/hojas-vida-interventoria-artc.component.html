@@ -58,10 +58,10 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p *ngIf="fechaModificacion !== undefined"><b> {{ fechaModificacion | date: 'dd/MM/yyyy' }} </b></p>
-            <p *ngIf="tieneObservacion === true"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> Si</p>
-            <p *ngIf="tieneObservacion === false"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> No</p>
-            <section *ngIf="tieneObservacion === true" [innerHTML]="this.observacionesPerfil.observacion"></section>
+            <p *ngIf="fechaModificacion !== undefined" style="margin-left: 2em;"><b> {{ fechaModificacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p *ngIf="tieneObservacion === true" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> Si</p>
+            <p *ngIf="tieneObservacion === false" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> No</p>
+            <section *ngIf="tieneObservacion === true" [innerHTML]="this.observacionesPerfil.observacion" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
 </div>
