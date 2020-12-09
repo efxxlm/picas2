@@ -663,7 +663,7 @@ namespace asivamosffie.services
 
                 foreach (var item in usuarios)
                 {
-                    Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Tiene solicitudes pendientes por revisión", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
+                    Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Generación de acta para fase 1 - Preconstrucción", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
                 }
 
             }
