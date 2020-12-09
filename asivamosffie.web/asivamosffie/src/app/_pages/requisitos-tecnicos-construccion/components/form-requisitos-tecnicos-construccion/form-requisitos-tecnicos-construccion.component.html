@@ -140,6 +140,7 @@
                                                   [observacionDevolucionProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionProgramacionObra"
                                                   [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
                                                   [proyectoId]="contratacion.proyecto.proyectoId"
+                                                  [contrato]="contrato"
                                                   (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
@@ -149,6 +150,7 @@
                                                   [contratoConstruccionId]="0"
                                                   [proyectoId]="contratacion.proyecto.proyectoId"
                                                   [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
+                                                  [contrato]="contrato"
                                                   (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
