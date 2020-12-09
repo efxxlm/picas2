@@ -455,7 +455,7 @@ namespace asivamosffie.services
 
             listaCargas.ForEach(archivo =>
             {
-                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válidos" : "Fallido";
 
             });
 
@@ -474,7 +474,7 @@ namespace asivamosffie.services
 
             listaCargas.ForEach(archivo =>
             {
-                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Validos" : "Fallido";
+                archivo.estadoCargue = archivo.CantidadRegistros == archivo.CantidadRegistrosValidos ? "Válidos" : "Fallido";
 
             });
 
