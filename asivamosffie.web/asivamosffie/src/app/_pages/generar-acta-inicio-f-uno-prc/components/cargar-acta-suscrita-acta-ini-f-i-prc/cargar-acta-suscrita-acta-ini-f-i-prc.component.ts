@@ -14,7 +14,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
   addressForm = new FormGroup({
     fechaFirmaContratistaObra: new FormControl(),
     fechaFirmaContratistaInterventoria: new FormControl(),
-    fileListaProyectos: new FormControl()
+    documentoFile: new FormControl()
   })
 
   boton: string = "Cargar";
@@ -93,7 +93,7 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
       });
     }
   }
-  cargarActa() {
+  onSubmit() {
     const pContrato = new FormData();
     this.fechaSesion = new Date(this.addressForm.value.fechaFirmaContratistaObra);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
