@@ -85,6 +85,10 @@ table {
 div.mat-paginator {
   &-page-size {
     order: 2;
+
+    @media only screen and (max-width: 48em) {
+      margin-right: 30px;
+    }
   }
 
   &-range-actions {
@@ -164,6 +168,14 @@ div.mat-paginator {
   width: 100%;
   min-width: 9em;
 
+  @media only screen and (max-width: 48em) {
+    display: inherit;
+
+    &::after {
+      right: .4em;
+    }
+  }
+
   &.btn-table--sm {
     width: 7em;
     min-width: 7em;
@@ -239,6 +251,10 @@ div.mat-paginator {
 
 .mat-paginator-container {
   width: 95% !important;
+
+  @media only screen and (max-width: 28em) {
+    margin-bottom: 1em;
+  }
 }
 
 .info-table--img {

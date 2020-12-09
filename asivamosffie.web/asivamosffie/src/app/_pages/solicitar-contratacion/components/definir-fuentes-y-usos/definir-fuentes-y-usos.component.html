@@ -166,7 +166,7 @@
                                 Eliminar uso
                               </button>
                             </div>
-                          </div>                          
+                          </div>
                           <div class="row">
                             <div class="col-md-8">
                               <div class="row">
@@ -204,7 +204,7 @@
                         <img src="assets/img/icon/menos.svg" alt="Eliminar componente">
                         Eliminar componente
                       </button>
-                      <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes.length === i + 1"
+                      <button mat-button color="warn" type="button" class="btn-eliminar animatedOpacity" *ngIf="componentes(j).controls.length === i + 1"
                         (click)="addComponent( j )">
                         <img src="assets/img/icon/mas.svg" alt="Agregar otro componente">
                         Agregar otro componente

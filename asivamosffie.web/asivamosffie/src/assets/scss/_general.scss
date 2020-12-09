@@ -28,6 +28,11 @@ strong {
 }
 
 .container {
+  @media only screen and (max-width: 48em) {
+    margin-right: .5em;
+    margin-left: .5em;
+  }
+
   @media only screen and (min-width: 48em) {
     width: 46rem;
   }
@@ -58,6 +63,10 @@ strong {
   padding: 0;
   border-radius: 2em;
   margin-top: 1em;
+
+  @media only screen and (max-width: 48em) {
+    margin-bottom: .5em;
+  }
 
   img {
     height: 2em;
@@ -277,4 +286,14 @@ input[type="number"]::-webkit-outer-spin-button {
   animation-name: animatedSelect;
   animation-duration: .2s;
   animation-fill-mode: forwards;
+}
+
+@media only screen and (max-width: 63em) {
+  .col-md-4,
+  .col-md-6,
+  .col-md-8,
+  .col-md-12 {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
 }
