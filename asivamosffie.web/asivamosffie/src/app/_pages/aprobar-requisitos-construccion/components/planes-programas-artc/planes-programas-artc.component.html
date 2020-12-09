@@ -124,12 +124,17 @@
                         [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid)">
                         Observaciones a los planes y programas
                 </label>
-                <quill-editor   class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+                <quill-editor   class="quill-editor-style ml-1em"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)"
+                                formControlName="observaciones"
+                                #obsPlanesProgramas
+                                required>
                 </quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{1000 - textoLimpio(addressForm.get('observaciones').value )}}
+              {{1000 - textoLimpio( obsPlanesProgramas.quillEditor, 1000 )}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
               1000

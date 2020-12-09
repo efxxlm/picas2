@@ -22,6 +22,7 @@
   width: 100%;
   margin-bottom: 1.5em;
   position: relative;
+  max-width: calc(100% - 7.3em);
 
   &.color-secondaryColor {
     border-color: $secondaryColor;
