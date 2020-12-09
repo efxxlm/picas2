@@ -31,7 +31,10 @@ namespace asivamosffie.services.Interfaces
         Task<ControversiaActuacion> GetControversiaActuacionById(int id);
         Task<List<ControversiaMotivo>> GetMotivosSolicitudByControversiaContractualId(int id);
 
-        Task<List<Contrato>> GetListContratos();
+        //Task<byte[]> GetPlantillaControversiaContractual(int pContratoId);
+            //Task<byte[]> GetPlantillaActaIdComite(int ComiteId);
+        
+       Task<List<Contrato>> GetListContratos();
         
         Task<Respuesta> CambiarEstadoControversiaActuacion2(int pControversiaActuacionId, string pNuevoCodigoProximaActuacion, string pUsuarioModifica);
         Task<Respuesta> CambiarEstadoControversiaActuacion(int pControversiaActuacionId, string pNuevoCodigoEstadoAvance, string pUsuarioModifica);
