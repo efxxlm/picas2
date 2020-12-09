@@ -11,7 +11,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   @Input() isEditable;
-
+  @Input() controversiaAct;
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   addressForm = this.fb.group({
     resumenReclamacionFiduciaria: [null, Validators.required],
     requereReclamacionComiteTecnico: [null, Validators.required],
@@ -66,7 +67,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
     let arrayReclam;
     if(this.isEditable==true){
       arrayReclam = {
-        "ControversiaContractualId":4 ,
+        "ControversiaContractualId":this.controversiaID,
         "ActuacionAdelantadaCodigo": "2",
         "ActuacionAdelantadaOtro": "2",
          "ProximaActuacionCodigo": "2",
@@ -79,8 +80,8 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
        "UsuarioCreacion":"US CRE w",
        "UsuarioModificacion": "US MODIF w",
        "EsCompleto": true,
-       "EsRequiereComiteReclamacion": this.addressForm.value.urlSoporte,
-       "ControversiaActuacionId":7
+       "EsRequiereComiteReclamacion": this.addressForm.value.requereReclamacionComiteTecnico,
+       "ControversiaActuacionId":this.controversiaAct
       };
       this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
         this.openDialog('', 'La información ha sido guardada exitosamente.');
@@ -88,7 +89,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
     }
     else{
       arrayReclam = {
-        "ControversiaContractualId":4 ,
+        "ControversiaContractualId":this.controversiaID,
         "ActuacionAdelantadaCodigo": "2",
         "ActuacionAdelantadaOtro": "2",
          "ProximaActuacionCodigo": "2",
@@ -101,8 +102,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
        "UsuarioCreacion":"US CRE w",
        "UsuarioModificacion": "US MODIF w",
        "EsCompleto": true,
-       "EsRequiereComiteReclamacion": this.addressForm.value.urlSoporte,
-       "ControversiaActuacionId":7
+       "EsRequiereComiteReclamacion": this.addressForm.value.requereReclamacionComiteTecnico,
       };
       this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
         this.openDialog('', 'La información ha sido guardada exitosamente.');
