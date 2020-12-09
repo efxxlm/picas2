@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-registar-reclamacion-aseguradora-cc',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./registar-reclamacion-aseguradora-cc.component.scss']
 })
 export class RegistarReclamacionAseguradoraCcComponent implements OnInit {
+  idControversia: any;
 
-  constructor() { }
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe(param => {
+      this.idControversia = param.id;
+    });
   }
 
 }
