@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Proyecto } from 'src/app/core/_services/project/project.service';
 
 @Component({
   selector: 'app-planes-programas',
@@ -14,6 +15,8 @@ import { MatSort } from '@angular/material/sort';
 export class PlanesProgramasComponent implements OnInit {
 
   @Input() planesProgramas: any;
+  @Input() proyecto: Proyecto;
+
   @Output() planesProgramasForm = new EventEmitter();
   @ViewChild( MatSort, { static: true } ) sort : MatSort;
   dataPlanesProgramas: any[] = [];
@@ -26,6 +29,10 @@ export class PlanesProgramasComponent implements OnInit {
     'requiereObservacion',
     'observaciones'
   ];
+
+  minDate: Date;
+  maxDate: Date;
+
   booleanosRequisitos: any[] = [
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
@@ -88,6 +95,9 @@ export class PlanesProgramasComponent implements OnInit {
   }
 
   getDataPlanesProgramas () {
+    this.minDate = this.proyecto.fechaInicioEtapaObra;
+    this.maxDate = this.proyecto.fechaFinEtapaObra;
+    console.log( this.proyecto.fechaInicioEtapaObra )
     this.urlSoporte = this.planesProgramas.planRutaSoporte ? this.planesProgramas.planRutaSoporte : null;
     this.dataPlanesProgramas.push(
       {

@@ -320,7 +320,10 @@ namespace asivamosffie.services
                     cc.ObservacionDevolucionProgramacionObra = _context.ConstruccionObservacion.Find(cc.ObservacionProgramacionObraSupervisorId);
                     cc.ObservacionDevolucionFlujoInversion = _context.ConstruccionObservacion.Find(cc.ObservacionFlujoInversionSupervisorId);
 
-                    //List<VRequisitosTecnicosInicioConstruccion> listaProyectos = _context.VRequisitosTecnicosInicioConstruccion.Where( r => r.ContratoId ==  pContratoId ).ToList();
+                    Proyecto proyectoTemp = CalcularFechaInicioContrato( cc.ContratoConstruccionId );
+
+                    contrato.Contratacion.ContratacionProyecto.Where( cp => cp.ProyectoId == cc.ProyectoId ).FirstOrDefault().Proyecto.FechaInicioEtapaObra = proyectoTemp.FechaInicioEtapaObra;
+                    contrato.Contratacion.ContratacionProyecto.Where( cp => cp.ProyectoId == cc.ProyectoId ).FirstOrDefault().Proyecto.FechaFinEtapaObra = proyectoTemp.FechaFinEtapaObra;
 
                 });
 
@@ -346,6 +349,8 @@ namespace asivamosffie.services
                     }
                     ContratacionProyecto.faseConstruccionNotMapped = construccion;
                     ContratacionProyecto.fasePreConstruccionNotMapped = preconstruccion;
+
+                    
                 }
 
                 return contrato;
