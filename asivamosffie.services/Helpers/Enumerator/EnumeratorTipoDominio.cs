@@ -143,9 +143,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_controversia= 89,
 
-        Estado_avance_reclamacion = 91,
+        //Estado_avance_reclamacion = 91,
+        Estado_avance_reclamacion = 108,
 
-        Proxima_actuacion_requerida=103,
+        Proxima_actuacion_requerida =103,
 
         Tipo_accion_judicial = 106,
 

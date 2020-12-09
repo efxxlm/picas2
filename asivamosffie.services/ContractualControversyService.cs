@@ -1887,6 +1887,7 @@ namespace asivamosffie.services
                         NumeroActuacion = actuacionSeguimiento.ActuacionAdelantada,
                         NumeroActuacionFormat = "ACT controversia " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
                         EstadoReclamacion =strEstadoReclamacion,
+                        EstadoReclamacionCodigo=actuacionSeguimiento.EstadoReclamacionCodigo,
                         FechaActualizacion = actuacionSeguimiento.FechaModificacion != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
                         NumeroReclamacion= "REC "+actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
                         Actuacion = "Actuación " +actuacionSeguimiento.ActuacionSeguimientoId.ToString(),                                              
