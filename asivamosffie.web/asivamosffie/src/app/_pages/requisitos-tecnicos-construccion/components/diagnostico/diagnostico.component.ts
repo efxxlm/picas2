@@ -23,7 +23,7 @@ export class DiagnosticoComponent implements OnInit {
 
 
   solicitudesModificacion: any[] = [
-    {value: 'PI_00089', viewValue: 'PI_00089'}
+    
   ];
 
   constructor( private fb: FormBuilder,

@@ -211,6 +211,8 @@ export interface Proyecto{
   plazoMesesInterventoria?:number ,
   plazoDiasInterventoria?:number ,
   coordinacionResponsableCodigo?:string ,
+  fechaInicioEtapaObra?: Date,
+  fechaFinEtapaObra?: Date,
 
   //no modelado
   cantidadAportantes?:number;
