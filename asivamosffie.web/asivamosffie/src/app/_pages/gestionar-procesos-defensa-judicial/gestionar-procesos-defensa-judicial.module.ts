@@ -12,11 +12,13 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { FormDetalleProcesoDjComponent } from './components/form-detalle-proceso-dj/form-detalle-proceso-dj.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { FormConvocadosDjComponent } from './components/form-convocados-dj/form-convocados-dj.component';
+import { FormUrlsoporteDjComponent } from './components/form-urlsoporte-dj/form-urlsoporte-dj.component';
+import { FormFichaEstudioDjComponent } from './components/form-ficha-estudio-dj/form-ficha-estudio-dj.component';
 
 
 
 @NgModule({
-  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent],
+  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent],
   imports: [
     CommonModule,
     MaterialModule,

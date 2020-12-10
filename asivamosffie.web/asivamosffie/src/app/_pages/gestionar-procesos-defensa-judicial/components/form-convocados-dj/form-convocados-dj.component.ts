@@ -10,36 +10,6 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./form-convocados-dj.component.scss']
 })
 export class FormConvocadosDjComponent implements OnInit {
-  displayedColumns: string[] = ['nomEntidadContratista', 'institucionEdu', 'codDane', 'sede', 'codSede', 'gestion'];
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  dataTable: any[] = [
-    {
-      nomEntidadContratista: 'Constructora Colpatria SAS',
-      institucionEdu: 'Andres Bello',
-      codDane: 'D435678',
-      sede: 'Sede Principal',
-      codSede: 'D435678',
-      id: 1
-    },
-    {
-      nomEntidadContratista: 'Constructora Colpatria SAS',
-      institucionEdu: 'Andres Bello',
-      codDane: 'D435678',
-      sede: 'Sede 2',
-      codSede: 'D435678',
-      id: 2
-    },
-    {
-      nomEntidadContratista: 'Constructora Colpatria SAS',
-      institucionEdu: 'Andres Bello',
-      codDane: 'D435678',
-      sede: 'Sede 3',
-      codSede: 'D435678',
-      id: 3
-    }
-  ];
   formContratista: FormGroup;
   editorStyle = {
     height: '45px'
@@ -52,9 +22,9 @@ export class FormConvocadosDjComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  contratosArray = [
-    { name: 'C223456789', value: '1' },
-    { name: 'C223456999', value: '2' },
+  tiposIdentificacionArray = [
+    { name: 'Cedula de ciudadanía', value: '1' },
+    { name: 'Cedula de extranjería', value: '2' },
   ];
 
   constructor ( private fb: FormBuilder ) {
@@ -69,14 +39,11 @@ export class FormConvocadosDjComponent implements OnInit {
           this.perfiles.push( 
             this.fb.group(
               {
-                contrato: [ null ],
-                cvRequeridas: [ '' ],
-                cvRecibidas: [ '' ],
-                cvAprobadas: [ '' ],
-                fechaAprobacionCv: [ null ],
-                observaciones: [ null ],
-                numeroRadicadoFfieAprobacionCv: this.fb.array([ [ '' ] ]),
-                urlSoporte: [ '' ]
+                nomConvocado: [ null ],
+                tipoIdentificacion: [ null ],
+                numIdentificacion: [ null ],
+                direccion: [ null ],
+                correo: [ null ]
               }
             ) 
           )
@@ -99,13 +66,6 @@ export class FormConvocadosDjComponent implements OnInit {
     } )
     return numero;
   };
-  seleccionAutocomplete(id:any){
-    this.perfiles.value.contrato = id;
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-  }
   textoLimpio (texto: string) {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
