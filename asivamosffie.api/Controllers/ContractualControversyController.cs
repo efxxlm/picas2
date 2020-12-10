@@ -49,13 +49,13 @@ namespace asivamosffie.api.Controllers
         //    //return File(await _ActBegin.GetPlantillaActaInicio(pContratoId), "application/pdf");
         //}
 
-        //[HttpGet]
-        //[Route("GetPlantillaControversiaContractual")]
-        //public async Task<FileResult> GetPlantillaControversiaContractual(int pContratoId)
-        //{
-        //    return File(await _contractualControversy.GetPlantillaControversiaContractual(pContratoId), "application/pdf");
-        //}
-        
+        [HttpGet]
+        [Route("GetPlantillaControversiaContractual")]
+        public async Task<FileResult> GetPlantillaControversiaContractual(int pContratoId)
+        {
+            return File(await _contractualControversy.GetPlantillaControversiaContractual(pContratoId), "application/pdf");
+        }
+
 
         [HttpPost]
         [Route("CreateEditarControversiaMotivo")]

@@ -737,24 +737,7 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Observaciones_", actuacionSeguimiento.Observaciones);
             strContenido = strContenido.Replace("_URL_soporte_", actuacionSeguimiento.RutaSoporte);
             strContenido = strContenido.Replace("_reclamacion_resultado_definitivo_cerrado_ante_aseguradora_", Convert.ToBoolean(actuacionSeguimiento.EsResultadoDefinitivo).ToString());
-
-
-            //datos exclusivos interventoria
-
-            UsuarioPerfil UsuarioPerfil = _context.UsuarioPerfil.Where(y => y.Usuario.Email == usuario).Include(y => y.Perfil).FirstOrDefault();
-
-            Perfil perfil = null;
-
-            if (UsuarioPerfil != null)
-            {
-                perfil = _context.Perfil.Where(y => y.PerfilId == UsuarioPerfil.PerfilId).FirstOrDefault();
-
-            }
-            if (UsuarioPerfil != null)
-            {
-                strContenido = strContenido.Replace("_Cargo_Usuario_", perfil.Nombre);
-            }
-            strContenido = strContenido.Replace("_Nombre_Supervisor_", "_Nombre_Supervisor_");
+                       
 
             return strContenido;
 

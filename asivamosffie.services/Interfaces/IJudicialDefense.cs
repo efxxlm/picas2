@@ -14,7 +14,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateOrEditFichaEstudio(FichaEstudio fichaEstudio);
         Task<Respuesta> CreateOrEditDefensaJudicial(DefensaJudicial defensaJudicial);
-
+        Task<byte[]> GetPlantillaDefensaJudicial(int pContratoId);
         Task<List<ProyectoGrilla>> GetListProyects( int pProyectoId);
         Task<List<GrillaProcesoDefensaJudicial>> ListGrillaProcesosDefensaJudicial();
     }

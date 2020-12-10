@@ -11,19 +11,25 @@ using System.Linq;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Constants;
+using System.IO;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 
 namespace asivamosffie.services
 {
     public class JudicialDefenseService : IJudicialDefense
     {
         private readonly ICommonService _commonService;
-        private readonly devAsiVamosFFIEContext _context;
+        private readonly devAsiVamosFFIEContext _context;     
+            
+            private readonly IConverter _converter;
 
-        public JudicialDefenseService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public JudicialDefenseService(devAsiVamosFFIEContext context, ICommonService commonService, IConverter converter)
         {
 
             _commonService = commonService;
             _context = context;
+            _converter = converter;
             //_settings = settings;
         }
 
@@ -198,7 +204,100 @@ namespace asivamosffie.services
 
         }
 
-        private async Task<string> ReemplazarDatosPlantillaControversiaContractual(string strContenido, int pContratoId , string usuario)
+        public async Task<byte[]> GetPlantillaDefensaJudicial(int pContratoId)
+        {
+            if (pContratoId == 0)
+            {
+                return Array.Empty<byte>();
+            }   
+                 
+
+            //if (actaInicio.ContratacionId != null)
+            //{
+            //    VlrFase1Preconstruccion = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId),
+            //        "1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+            //        ).ToString();
+
+            //}
+
+            
+            //if (actaInicio == null)
+            if (pContratoId == 0)
+            {
+                return Array.Empty<byte>();
+            }
+
+            Contrato contrato = null;
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+            Contratacion contratacion = null;
+            if (contrato != null)
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+            Plantilla plantilla = null;
+
+
+            //else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+
+            plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Ficha_Estudio_Defensa_Judicial).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
+
+
+            //Plantilla plantilla = new Plantilla();
+            //plantilla.Contenido = "";
+            if (plantilla != null)
+                plantilla.Contenido = await ReemplazarDatosPlantillaDefensaJudicial(plantilla.Contenido, pContratoId, "cdaza");
+            return ConvertirPDF(plantilla);
+        }
+
+
+        public byte[] ConvertirPDF(Plantilla pPlantilla)
+        {
+            string strEncabezado = " encabezado";
+
+            //pendiente
+            //if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
+            //{
+            pPlantilla.Contenido = pPlantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
+            //    pPlantilla.Encabezado.Contenido = pPlantilla.Encabezado.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
+            //    strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+            //}
+
+            var globalSettings = new GlobalSettings
+            {
+                ImageQuality = 1080,
+                PageOffset = 0,
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings
+                {
+                    Top = pPlantilla.MargenArriba,
+                    Left = pPlantilla.MargenIzquierda,
+                    Right = pPlantilla.MargenDerecha,
+                    Bottom = pPlantilla.MargenAbajo
+                },
+                DocumentTitle = DateTime.Now.ToString(),
+            };
+
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = pPlantilla.Contenido,
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18 },
+                FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
+            };
+
+            var pdf = new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings },
+            };
+
+            return _converter.Convert(pdf);
+        }
+
+        private async Task<string> ReemplazarDatosPlantillaDefensaJudicial(string strContenido, int pContratoId , string usuario)
         {
             string str = "";
             string valor = "";
@@ -236,7 +335,7 @@ namespace asivamosffie.services
             Contratacion contratacion = null;
             Contratista contratista = null;
 
-            NovedadContractual novedadContractual = null;   //sin rel?????
+            NovedadContractual novedadContractual = null;   //sin rel????? SolicitudId NumeroSolicitud 
 
             DisponibilidadPresupuestal disponibilidadPresupuestal = null;
 

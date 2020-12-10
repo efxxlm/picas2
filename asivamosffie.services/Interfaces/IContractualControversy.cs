@@ -31,7 +31,7 @@ namespace asivamosffie.services.Interfaces
         Task<ControversiaActuacion> GetControversiaActuacionById(int id);
         Task<List<ControversiaMotivo>> GetMotivosSolicitudByControversiaContractualId(int id);
 
-        //Task<byte[]> GetPlantillaControversiaContractual(int pContratoId);
+        Task<byte[]> GetPlantillaControversiaContractual(int pContratoId);
             //Task<byte[]> GetPlantillaActaIdComite(int ComiteId);
         
        Task<List<Contrato>> GetListContratos();

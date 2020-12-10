@@ -46,7 +46,16 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-        
+
+
+        [HttpGet]
+        [Route("GetPlantillaDefensaJudicial")]
+        public async Task<FileResult> GetPlantillaDefensaJudicial(int pContratoId)
+        {
+            return File(await _judicialDefense.GetPlantillaDefensaJudicial(pContratoId), "application/pdf");
+        }
+
+
         [HttpPost]
         [Route("CreateOrEditDefensaJudicial")]
         public async Task<IActionResult> CreateOrEditDefensaJudicial(DefensaJudicial defensaJudicial)
