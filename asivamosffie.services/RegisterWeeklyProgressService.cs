@@ -45,6 +45,7 @@ namespace asivamosffie.services
             {
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
                    //Informacion Proyecto
+         
                    .Include(r => r.ContratacionProyecto)
                       .ThenInclude(r => r.Contratacion)
                           .ThenInclude(r => r.Contrato)
@@ -55,10 +56,10 @@ namespace asivamosffie.services
                       .ThenInclude(r => r.Proyecto)
                    .Include(r => r.SeguimientoDiario)
                           .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-
-                   //mAP SUMA DEL AVANCE POR CAPITULO DESDE SEMANA ACTUAL MIRAR TABLA ? 
+                           
                    .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-
+                   .Include(r => r.FlujoInversion)
+                       .ThenInclude(r => r.Programacion)
                    .Include(r => r.SeguimientoSemanalAvanceFisico)
 
                    //Gestion Obra 
@@ -142,7 +143,8 @@ namespace asivamosffie.services
 
                  //mAP SUMA DEL AVANCE POR CAPITULO DESDE SEMANA ACTUAL MIRAR TABLA ? 
                  .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-
+                 .Include(r => r.FlujoInversion)
+                       .ThenInclude(r => r.Programacion)
                  .Include(r => r.SeguimientoSemanalAvanceFisico)
 
                  //Gestion Obra 
