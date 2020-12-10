@@ -7,12 +7,13 @@ using System.IO;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Http;
 
- 
-    namespace asivamosffie.model.Models
+
+namespace asivamosffie.model.Models
+{
+    public partial class Programacion
     {
-        public partial class Programacion
-        {
-            [NotMapped] 
-            public double RangoDias { get; set; }
-        }
+        [NotMapped]
+        public double RangoDias { get; set; }
+    }
+}
  

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
- 
+
 using System.IO;
 using Z.EntityFramework.Plus;
 using DinkToPdf;
@@ -113,7 +113,7 @@ namespace asivamosffie.services
                    .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
 
                    .FirstOrDefaultAsync();
-                 
+
                 foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
                 {
                     FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaInicio - FlujoInversion.Programacion.FechaFin).TotalDays;
@@ -202,6 +202,10 @@ namespace asivamosffie.services
 
                  .FirstOrDefaultAsync();
 
+                foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
+                {
+                    FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaInicio - FlujoInversion.Programacion.FechaFin).TotalDays;
+                }
 
                 Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == seguimientoSemanal.ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
@@ -222,7 +226,7 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
-            List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
+            List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && r.RegistroCompleto == true)
                 .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
                 .Include(r => r.ContratacionProyecto)
