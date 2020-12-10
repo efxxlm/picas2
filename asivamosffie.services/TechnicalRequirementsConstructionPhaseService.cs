@@ -1600,59 +1600,69 @@ namespace asivamosffie.services
                     {
                         //Observaciones Diagnostico
 
-                        if ((bool)ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor)
+                        if ( TieneFasePreconstruccion( contratoCambiarEstado.ContratoId ) && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ){
+                            if ((bool)ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor)
+                            {
+                                //Observacion Supervisor
+                                ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                                    .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico.ToString()
+                                            && r.EsSupervision == true
+                                            && r.Eliminado != true
+                                            && r.Archivada != true
+                                        )
+                                    .FirstOrDefault();
+
+                                construccionObservacionSupervisor.Archivada = true;
+
+                                //Observacion Apoyo
+                                if ( ContratoConstruccion.TieneObservacionesDiagnosticoApoyo == true ){
+                                    ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                                    .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico.ToString()
+                                        && r.EsSupervision == false
+                                        && r.Eliminado != true
+                                        && r.Archivada != true
+                                        )
+                                    .FirstOrDefault();
+
+                                    construccionObservacionApoyo.Archivada = true;
+                                }
+
+                                //Contrato Construccion
+                                ContratoConstruccion.ObservacionDiagnosticoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
+                                ContratoConstruccion.TieneObservacionesDiagnosticoApoyo = null;
+                                ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor = null;
+                                ContratoConstruccion.RegistroCompletoDiagnostico = false;
+                            }
+                        }
+
+                        //Observaciones Planes Y Programas
+
+                        if ((bool)ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             //Observacion Supervisor
                             ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
-                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico.ToString()
-                                        && (bool)r.EsSupervision
-                                        && !(bool)r.Eliminado
-                                        && !(bool)r.Archivada
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas.ToString()
+                                    && r.EsSupervision == true
+                                    && r.Eliminado != true
+                                    && r.Archivada != true
                                     )
                                 .FirstOrDefault();
 
                             construccionObservacionSupervisor.Archivada = true;
 
                             //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.Diagnostico.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
-
-                            construccionObservacionApoyo.Archivada = true;
-
-                            //Contrato Construccion
-                            ContratoConstruccion.ObservacionDiagnosticoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
-                            ContratoConstruccion.TieneObservacionesDiagnosticoApoyo = null;
-                            ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor = null;
-                            ContratoConstruccion.RegistroCompletoDiagnostico = false;
-                        }
-
-                        //Observaciones Planes Y Programas
-
-                        if ((bool)ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor)
-                        {
-                            //Observacion Supervisor
-                            ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
+                            if (ContratoConstruccion.TieneObservacionesPlanesProgramasApoyo == true) {
+                                ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
                                 .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas.ToString()
-                                    && (bool)r.EsSupervision
-                                    && !(bool)r.Eliminado
-                                    && !(bool)r.Archivada)
+                                    && r.EsSupervision == false
+                                    && r.Eliminado != true
+                                    && r.Archivada != true
+                                    )
                                 .FirstOrDefault();
 
-                            construccionObservacionSupervisor.Archivada = true;
+                                construccionObservacionApoyo.Archivada = true;
 
-                            //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.PlanesProgramas.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
-
-                            construccionObservacionApoyo.Archivada = true;
+                            }
 
                             //Contrato Construccion
                             ContratoConstruccion.ObservacionPlanesProgramasSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
@@ -1663,27 +1673,30 @@ namespace asivamosffie.services
 
                         //Observaciones Manejo de Anticipo
 
-                        if ((bool)ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor)
+                        if ((bool)ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             //Observacion Supervisor
                             ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
                                 .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo.ToString()
-                                    && (bool)r.EsSupervision
-                                    && !(bool)r.Eliminado
-                                    && !(bool)r.Archivada)
+                                    && r.EsSupervision == true
+                                    && r.Eliminado != true
+                                    && r.Archivada != true)
                                 .FirstOrDefault();
 
                             construccionObservacionSupervisor.Archivada = true;
 
                             //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
+                            if (ContratoConstruccion.TieneObservacionesManejoAnticipoApoyo == true){
+                                ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ManejoAnticipo.ToString()
+                                    &&  r.EsSupervision == false
+                                    && r.Eliminado != true
+                                    && r.Archivada != true
+                                )
+                                .FirstOrDefault();
 
-                            construccionObservacionApoyo.Archivada = true;
+                                construccionObservacionApoyo.Archivada = true;
+                            }
 
                             //Contrato Construccion
                             ContratoConstruccion.ObservacionManejoAnticipoSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
@@ -1694,27 +1707,31 @@ namespace asivamosffie.services
 
                         //Observaciones Programacion Obra  
 
-                        if ((bool)ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor)
+                        if ((bool)ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             //Observacion Supervisor
                             ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
                                 .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
-                                    && (bool)r.EsSupervision
-                                    && !(bool)r.Eliminado
-                                    && !(bool)r.Archivada)
-                                .FirstOrDefault();
+                                    && r.EsSupervision == true
+                                    && r.Eliminado != true
+                                    && r.Archivada != true )
+                                ?.FirstOrDefault();
 
                             construccionObservacionSupervisor.Archivada = true;
 
                             //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
+                            if (ContratoConstruccion.TieneObservacionesProgramacionObraApoyo == true){
+                                ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.ProgramacionObra.ToString()
+                                    && r.EsSupervision == false
+                                    && r.Eliminado != true
+                                    && r.Archivada != true
+                                        )
+                                .FirstOrDefault();
 
-                            construccionObservacionApoyo.Archivada = true;
+                                construccionObservacionApoyo.Archivada = true;
+
+                            }
 
                             //Contrato Construccion
                             ContratoConstruccion.ObservacionProgramacionObraSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
@@ -1725,27 +1742,32 @@ namespace asivamosffie.services
 
                         //Observaciones Flujo Inversion 
 
-                        if ((bool)ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor)
+                        if ((bool)ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             //Observacion Supervisor
                             ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
                                 .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
-                                    && (bool)r.EsSupervision
-                                    && !(bool)r.Eliminado
-                                    && !(bool)r.Archivada)
+                                    && r.EsSupervision == true
+                                    && r.Eliminado != true
+                                    && r.Archivada != true
+                                    )
                                 .FirstOrDefault();
 
                             construccionObservacionSupervisor.Archivada = true;
 
                             //Observacion Apoyo
-                            ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
-                               .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
-                                   && !(bool)r.EsSupervision
-                                   && !(bool)r.Eliminado
-                                   && !(bool)r.Archivada)
-                               .FirstOrDefault();
+                            if (ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor == true ){
+                                ConstruccionObservacion construccionObservacionApoyo = ContratoConstruccion.ConstruccionObservacion
+                                .Where(r => r.TipoObservacionConstruccion == ConstanCodigoTipoObservacionConstruccion.FlujoInversion.ToString()
+                                    && r.EsSupervision == false
+                                    && r.Eliminado != true
+                                    && r.Archivada != true
+                                        )
+                                .FirstOrDefault();
 
-                            construccionObservacionApoyo.Archivada = true;
+                                construccionObservacionApoyo.Archivada = true;
+
+                            }
 
                             //Contrato Construccion
                             ContratoConstruccion.ObservacionFlujoInversionSupervisorId = construccionObservacionSupervisor.ConstruccionObservacionId;
