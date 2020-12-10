@@ -203,6 +203,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
   }
 
+  listaTipoActividades() {
+    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=109` );
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

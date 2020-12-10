@@ -1,3 +1,4 @@
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 
@@ -14,16 +15,19 @@ export class GestionAmbientalComponent implements OnInit {
         { value: true, viewValue: 'Si' },
         { value: false, viewValue: 'No' }
     ];
-    tipoActividades: any[] = [
-        { value: '1', viewValue: 'Manejo de materiales e insumos' },
-        { value: '2', viewValue: 'Manejo de residuos de construcción y demolición' },
-        { value: '3', viewValue: 'Manejo de residuos peligrosos y especiales' },
-        { value: '4', viewValue: 'Otra' }
-    ];
+    tipoActividades: Dominio[] = [];
 
-    constructor( private fb: FormBuilder )
+    constructor(
+        private fb: FormBuilder,
+        private commonSvc: CommonService )
     {
-        this.crearFormulario();
+        this.commonSvc.listaTipoActividades()
+            .subscribe(
+                actividades => {
+                    this.tipoActividades = actividades;
+                    this.crearFormulario();
+                }
+            );
     }
 
     ngOnInit(): void {
