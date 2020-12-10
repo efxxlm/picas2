@@ -57,8 +57,10 @@ export class HojasVidaVerificarRequisitosComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    }
   }
 
   innerObservacion( observacion: string ) {

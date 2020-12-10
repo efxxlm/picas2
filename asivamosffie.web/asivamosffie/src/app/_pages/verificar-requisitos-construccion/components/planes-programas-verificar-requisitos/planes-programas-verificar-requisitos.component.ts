@@ -244,8 +244,10 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    }
   }
 
   guardarPlanes() {

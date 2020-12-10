@@ -142,6 +142,7 @@ namespace asivamosffie.services
                                     Existeregistro = c.ExisteRegistro,
                                     c.EstaDevuelto,
                                     c.RegistroCompletoConstruccion,
+                                    c.EstadoNombreVerificacion,
 
                                 });
                             }
@@ -161,6 +162,7 @@ namespace asivamosffie.services
                                 Existeregistro = c.ExisteRegistro,
                                 c.EstaDevuelto,
                                 c.RegistroCompletoConstruccion,
+                                c.EstadoNombreVerificacion,
 
                             });
                         }
@@ -198,6 +200,7 @@ namespace asivamosffie.services
                                     EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                     Existeregistro = c.ExisteRegistro,
                                     c.EstaDevuelto,
+                                    c.EstadoNombreVerificacion,
 
                                 });
                             }
@@ -216,6 +219,7 @@ namespace asivamosffie.services
                                 EstadoNombre = c.EstadoNombre, //string.IsNullOrEmpty( c.EstadoCodigo ) ? "Sin verificación de requisitos técnicos" : c.EstadoNombre,
                                 Existeregistro = c.ExisteRegistro,
                                 c.EstaDevuelto,
+                                c.EstadoNombreVerificacion,
 
                             });
                         }
@@ -385,7 +389,9 @@ namespace asivamosffie.services
                 var contratoConstruccion = _context.ContratoConstruccion.Where(x => x.ContratoConstruccionId == pContratoconstruccionId).
                     Include(x => x.ConstruccionObservacion).
                     Include(x => x.Contrato).
-                        ThenInclude(x => x.Contratacion).FirstOrDefault();
+                        ThenInclude(x => x.Contratacion)
+                    .FirstOrDefault();
+                    
 
                 contratoConstruccion.ConstruccionPerfil = contratoConstruccion.ConstruccionPerfil.Where(cp => cp.Eliminado != true).ToList();
                 contratoConstruccion.ConstruccionObservacion = contratoConstruccion.ConstruccionObservacion.Where(co => co.Eliminado != true).ToList();
@@ -1300,6 +1306,7 @@ namespace asivamosffie.services
 
             ContratoConstruccion cc = await _context.ContratoConstruccion.Where(cc => cc.ContratoConstruccionId == id)
                                                                 .Include(r => r.ConstruccionPerfil)
+                                                                    .ThenInclude( r => r.ConstruccionPerfilObservacion )
                                                                 .FirstOrDefaultAsync();
 
             cc.ObservacionDiagnosticoSupervisor = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.Diagnostico, pEsSupervicion);
@@ -1322,6 +1329,19 @@ namespace asivamosffie.services
             {
                 esCompleto = false;
             }
+
+            cc.ConstruccionPerfil.ToList().ForEach( cp => {
+                
+                 cp.ObservacionApoyo = getObservacionPerfil(cp, false);                
+
+                 if (
+                         cp.TieneObservacionesApoyo == null 
+                     ||  cp.TieneObservacionesApoyo == true && string.IsNullOrEmpty( cp.ObservacionApoyo != null ? cp.ObservacionApoyo.Observacion : null )
+                 ){
+                     esCompleto = false;
+                 }
+
+             });
 
             return esCompleto;
         }
@@ -1397,6 +1417,19 @@ namespace asivamosffie.services
                 esCompleto = false;
             }
 
+             cc.ConstruccionPerfil.ToList().ForEach( cp => {
+                
+                 cp.ObservacionApoyo = getObservacionPerfil(cp, false);                
+
+                 if (
+                         cp.TieneObservacionesApoyo == null 
+                     ||  cp.TieneObservacionesApoyo == true && string.IsNullOrEmpty( cp.ObservacionApoyo != null ? cp.ObservacionApoyo.Observacion : null )
+                 ){
+                     esCompleto = false;
+                 }
+
+             });
+
             return esCompleto;
         }
 
@@ -1454,8 +1487,8 @@ namespace asivamosffie.services
                  || string.IsNullOrEmpty(pPerfil.CantidadHvAprobadas.ToString())
                  || string.IsNullOrEmpty(pPerfil.FechaAprobacion.ToString())
                  || string.IsNullOrEmpty(pPerfil.RutaSoporte)
+                 || string.IsNullOrEmpty(pPerfil.Observaciones)
 
-                //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 
                 )
             {
                 return false;
@@ -1781,7 +1814,7 @@ namespace asivamosffie.services
                 string template = TemplateRecoveryPassword.Contenido.
                     Replace("[NUMEROCONTRATO]", contrato.NumeroContrato).
                     Replace("_LinkF_", pDominioFront).
-                    Replace("[FECHAVERIFICACION]", contrato.FechaAprobacionRequisitosConstruccionInterventor == null ? "" : Convert.ToDateTime(contrato.FechaAprobacionRequisitosConstruccionInterventor).ToString("dd/MM/yyyy")).
+                    Replace("[FECHAVERIFICACION]", contrato.FechaAprobacionRequisitosConstruccionApoyo == null ? "" : Convert.ToDateTime(contrato.FechaAprobacionRequisitosConstruccionApoyo).ToString("dd/MM/yyyy")).
                     Replace("[CANTIDADPROYECTOSASOCIADOS]", _context.ContratacionProyecto.Where(x => x.ContratacionId == contrato.ContratacionId).Count().ToString()).
                     Replace("[CANTIDADPROYECTOSVERIFICADOS]", contrato.Contratacion.TipoSolicitudCodigo == "1" ? _context.ContratoConstruccion.Where(x => x.RegistroCompletoVerificacion == true && x.ContratoId == contrato.ContratoId).Count().ToString() :
                     _context.ContratoConstruccion.Where(x => x.RegistroCompleto == true && x.ContratoId == contrato.ContratoId).Count().ToString()).
@@ -1793,9 +1826,6 @@ namespace asivamosffie.services
                 {
                     bool blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuarioadmin.Usuario.Email, "Verificación de requisitos técnicos para fase 2-construcción", template, pSender, pPassword, pMailServer, pMailPort);
                 }
-
-
-
 
                 contrato.UsuarioModificacion = pUsuarioCreacion;
                 contrato.FechaModificacion = DateTime.Now;

@@ -84,8 +84,10 @@ export class InversionFljrecursosVerificarRequisitosComponent implements OnInit,
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    if ( texto ){
+      const textolimpio = texto.replace(/<[^>]*>/g, '');
+      return textolimpio.length;
+    }
   }
   
   openDialog (modalTitle: string, modalText: string) {
