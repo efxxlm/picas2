@@ -138,6 +138,72 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           this.estaCompleto = false;
         }
         break;
+      case '2':
+        if (this.addressForm.value.tipoControversia.codigo == '2' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          this.estadoSemaforo.emit('completo');
+          this.estaCompleto = true;
+        }
+        else {
+          this.estadoSemaforo.emit('en-proceso');
+          this.estaCompleto = false;
+        }
+        break;
+      case '3':
+        if (this.addressForm.value.tipoControversia.codigo == '3' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          this.estadoSemaforo.emit('completo');
+          this.estaCompleto = true;
+        }
+        else {
+          this.estadoSemaforo.emit('en-proceso');
+          this.estaCompleto = false;
+        }
+        break;
+      case '4':
+        if (this.addressForm.value.tipoControversia.codigo == '4' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          this.estadoSemaforo.emit('completo');
+          this.estaCompleto = true;
+        }
+        else {
+          this.estadoSemaforo.emit('en-proceso');
+          this.estaCompleto = false;
+        }
+        break;
+      case '5':
+        if (this.addressForm.value.tipoControversia.codigo == '5' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          this.estadoSemaforo.emit('completo');
+          this.estaCompleto = true;
+        }
+        else {
+          this.estadoSemaforo.emit('en-proceso');
+          this.estaCompleto = false;
+        }
+        break;
+      case '6':
+        if (this.addressForm.value.tipoControversia.codigo == '6' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          this.estadoSemaforo.emit('completo');
+          this.estaCompleto = true;
+        }
+        else {
+          this.estadoSemaforo.emit('en-proceso');
+          this.estaCompleto = false;
+        }
+        break;
+      case '7':
+        if (this.addressForm.value.tipoControversia.codigo == '7' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          this.estadoSemaforo.emit('completo');
+          this.estaCompleto = true;
+        }
+        else {
+          this.estadoSemaforo.emit('en-proceso');
+          this.estaCompleto = false;
+        }
+        break;
     }
   }
 
@@ -518,7 +584,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       let motivosList2;
       let formArrayNoTaiContratante;
       let estadoControversiaContratante;
-      let motivosArrayCollectedNoTaiContratista;
+      let motivosArrayCollectedNoTaiContratante;
       if (this.estaCompleto == false) {
         estadoControversiaContratante = '1';
       }
@@ -568,6 +634,96 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "FechaCreacion": "2020-11-01"
         };
       }
+      this.services.CreateEditarControversiaTAI(formArrayNoTaiContratante).subscribe(resp_0 => {
+        if (resp_0.isSuccessful == true) {
+          this.openDialog('', 'La información ha sido guardada exitosamente.');
+          if (this.isEditable == true) {
+            if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+              for (let i = 0; i < motivosList2.length; i++) {
+                switch (motivosList2[i]) {
+                  case '1':
+                    motivosArrayCollectedNoTaiContratante = {
+                      "ControversiaContractualId": this.idControversia,
+                      'MotivoSolicitudCodigo': '1',
+                      "UsuarioCreacion": "",
+                      "UsuarioModificacion": "",
+                      "ControversiaMotivoId": this.idMotivo1
+                    };
+                    this.services.CreateEditarControversiaMotivo(motivosArrayCollectedNoTaiContratante).subscribe(r => {
+                    });
+                    break;
+                  case '2':
+                    motivosArrayCollectedNoTaiContratante = {
+                      "ControversiaContractualId": this.idControversia,
+                      'MotivoSolicitudCodigo': '2',
+                      "UsuarioCreacion": "",
+                      "UsuarioModificacion": "",
+                      "ControversiaMotivoId": this.idMotivo2
+                    };
+                    this.services.CreateEditarControversiaMotivo(motivosArrayCollectedNoTaiContratante).subscribe(r1 => {
+                    });
+                    break;
+                  case '3':
+                    motivosArrayCollectedNoTaiContratante = {
+                      "ControversiaContractualId": this.idControversia,
+                      'MotivoSolicitudCodigo': '3',
+                      "UsuarioCreacion": "",
+                      "UsuarioModificacion": "",
+                      "ControversiaMotivoId": this.idMotivo3
+                    };
+                    this.services.CreateEditarControversiaMotivo(motivosArrayCollectedNoTaiContratante).subscribe(r2 => {
+                    });
+                    break;
+                }
+              }
+            }
+            this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+          }
+          else {
+            if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
+              for (let i = 0; i < motivosList2.length; i++) {
+                switch (motivosList2[i]) {
+                  case '1':
+                    motivosArrayCollectedNoTaiContratante = {
+                      "ControversiaContractualId": resp_0.data.controversiaContractualId,
+                      'MotivoSolicitudCodigo': '1',
+                      "UsuarioCreacion": "",
+                      "UsuarioModificacion": "",
+                    };
+                    this.services.CreateEditarControversiaMotivo(motivosArrayCollectedNoTaiContratante).subscribe(r => {
+                    });
+                    break;
+                  case '2':
+                    motivosArrayCollectedNoTaiContratante = {
+                      "ControversiaContractualId": resp_0.data.controversiaContractualId,
+                      'MotivoSolicitudCodigo': '2',
+                      "UsuarioCreacion": "",
+                      "UsuarioModificacion": "",
+                    };
+                    this.services.CreateEditarControversiaMotivo(motivosArrayCollectedNoTaiContratante).subscribe(r1 => {
+                    });
+                    break;
+                  case '3':
+                    motivosArrayCollectedNoTaiContratante = {
+                      "ControversiaContractualId": resp_0.data.controversiaContractualId,
+                      'MotivoSolicitudCodigo': '3',
+                      "UsuarioCreacion": "",
+                      "UsuarioModificacion": "",
+                      "ControversiaMotivoId": 2
+                    };
+                    this.services.CreateEditarControversiaMotivo(motivosArrayCollectedNoTaiContratante).subscribe(r2 => {
+                    });
+                    break;
+                }
+              }
+            }
+            this.router.navigate(['/gestionarTramiteControversiasContractuales']);
+          }
+        }
+        else {
+          this.openDialog('', resp_0.message);
+        }
+      });
     }
   }
 }
