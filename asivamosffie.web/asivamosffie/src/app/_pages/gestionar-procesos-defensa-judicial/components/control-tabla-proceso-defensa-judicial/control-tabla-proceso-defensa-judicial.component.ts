@@ -29,6 +29,14 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
       numeroProceso: 'DJ0012021',
       estadoProceso: 'En análisis jurídico',
       id: 2
+    },
+    {
+      fecha: '22/06/2020',
+      legitimacion: 'Activa',
+      tipoAccion: 'Reparación Directa',
+      numeroProceso: 'DJ0012021',
+      estadoProceso: 'Aprobado por comité técnico',
+      id: 3
     }
   ]
   constructor(private router: Router) { }
@@ -45,5 +53,11 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
   };
   irNuevo() {
     this.router.navigate(['/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial']);
+  }
+  editProceso(id){
+    this.router.navigate(['/gestionarProcesoDefensaJudicial/verDetalleEditarProceso',id]);
+  }
+  actualizarProceso(id){
+    this.router.navigate(['/gestionarProcesoDefensaJudicial/actualizarProceso',id]);
   }
 }

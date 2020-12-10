@@ -48,7 +48,8 @@
                     Enviar proceso a comité técnico
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoProceso === 'En análisis jurídico'">
+                    *ngIf="element.estadoProceso === 'En análisis jurídico'"
+                    (click)="this.editProceso(element.id)">
                     Ver detalle/Editar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
@@ -60,7 +61,8 @@
                     Cerrar proceso
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoProceso === 'Aprobado por comité técnico' || element.estadoProceso === 'En desarrollo'">
+                    *ngIf="element.estadoProceso === 'Aprobado por comité técnico' || element.estadoProceso === 'En desarrollo'"
+                    (click)="this.actualizarProceso(element.id)">
                     Actualizar proceso
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"

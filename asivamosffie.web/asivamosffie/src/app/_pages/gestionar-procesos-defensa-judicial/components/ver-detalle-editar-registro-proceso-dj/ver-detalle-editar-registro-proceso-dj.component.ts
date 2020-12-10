@@ -3,11 +3,12 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-registro-nuevo-proceso-judicial',
-  templateUrl: './registro-nuevo-proceso-judicial.component.html',
-  styleUrls: ['./registro-nuevo-proceso-judicial.component.scss']
+  selector: 'app-ver-detalle-editar-registro-proceso-dj',
+  templateUrl: './ver-detalle-editar-registro-proceso-dj.component.html',
+  styleUrls: ['./ver-detalle-editar-registro-proceso-dj.component.scss']
 })
-export class RegistroNuevoProcesoJudicialComponent implements OnInit {
+export class VerDetalleEditarRegistroProcesoDjComponent implements OnInit {
+
   addressForm = this.fb.group({
     legitimacionActiva: [null, Validators.required],
     tipoProceso: [null, Validators.required],

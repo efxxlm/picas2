@@ -14,11 +14,13 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { FormConvocadosDjComponent } from './components/form-convocados-dj/form-convocados-dj.component';
 import { FormUrlsoporteDjComponent } from './components/form-urlsoporte-dj/form-urlsoporte-dj.component';
 import { FormFichaEstudioDjComponent } from './components/form-ficha-estudio-dj/form-ficha-estudio-dj.component';
+import { VerDetalleEditarRegistroProcesoDjComponent } from './components/ver-detalle-editar-registro-proceso-dj/ver-detalle-editar-registro-proceso-dj.component';
+import { ActualizarProcesoDjComponent } from './components/actualizar-proceso-dj/actualizar-proceso-dj.component';
 
 
 
 @NgModule({
-  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent],
+  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent, VerDetalleEditarRegistroProcesoDjComponent, ActualizarProcesoDjComponent],
   imports: [
     CommonModule,
     MaterialModule,

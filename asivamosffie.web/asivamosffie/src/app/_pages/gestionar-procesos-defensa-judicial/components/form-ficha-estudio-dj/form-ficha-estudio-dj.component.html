@@ -2,6 +2,305 @@
     <mat-card class="shipping-card">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text">
+                Ficha de estudio
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="antecedentes">Antecedentes</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    formControlName="antecedentes">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.antecedentes.value">
+                                {{2000 - textoLimpio(addressForm.controls.antecedentes.value)}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.antecedentes.value">
+                                2000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="hechosRelevantes">Hechos relevantes del caso</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    formControlName="hechosRelevantes">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.hechosRelevantes.value">
+                                {{2000 - textoLimpio(addressForm.controls.hechosRelevantes.value)}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.hechosRelevantes.value">
+                                2000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="jurisprudenciaDoctrina">Jurisprudencia - Doctrina</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    formControlName="jurisprudenciaDoctrina">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.jurisprudenciaDoctrina.value">
+                                {{2000 - textoLimpio(addressForm.controls.jurisprudenciaDoctrina.value)}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.jurisprudenciaDoctrina.value">
+                                2000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="decisionComite">Decisión del Comité en casos anteriores /
+                                Directrices de Conciliación</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    formControlName="decisionComite">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.decisionComite.value">
+                                {{2000 - textoLimpio(addressForm.controls.decisionComite.value)}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.decisionComite.value">
+                                2000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="analisisJuridico">Análisis jurídico</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    formControlName="analisisJuridico">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.analisisJuridico.value">
+                                {{2000 - textoLimpio(addressForm.controls.analisisJuridico.value)}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.analisisJuridico.value">
+                                2000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="recomendaciones">Recomendaciones</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    formControlName="recomendaciones">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.recomendaciones.value">
+                                {{2000 - textoLimpio(addressForm.controls.recomendaciones.value)}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.recomendaciones.value">
+                                2000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="procesoFichaComite">¿Este proceso y su ficha se presentaron
+                                ante el comité de defensa del FFIE?</label>
+                        </div>
+                        <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="procesoFichaComite" required>
+                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                            <span class="required-form-group">*</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="this.addressForm.value.procesoFichaComite==true">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left" for="fechaComiteDefensa">Fecha de comité de defensa</label>
+                    </div>
+                    <div class="col d-flex align-items-center">
+                      <mat-form-field class="example-full-width">
+                        <input matInput formControlName="fechaComiteDefensa" [matDatepicker]="pickerFecha"  readonly
+                          (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
+                        <mat-datepicker #pickerFecha></mat-datepicker>
+                      </mat-form-field>
+                      <button mat-button color="primary" type="button" (click)="pickerFecha.open()" class="btn-calendario">
+                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                      </button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="row"  *ngIf="this.addressForm.value.procesoFichaComite==true">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="recomendacionFinal">Recomendación final del comité de defensa judicial</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"  *ngIf="this.addressForm.value.procesoFichaComite==true">
+                <div class="col-md-12">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 2000)"
+                                    formControlName="recomendacionFinal">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.recomendacionFinal.value">
+                                {{2000 - textoLimpio(addressForm.controls.recomendacionFinal.value)}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.recomendacionFinal.value">
+                                2000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="aperturaFormalProceso">¿Se aprobó la apertura formal del proceso?</label>
+                        </div>
+                        <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="aperturaFormalProceso" required>
+                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                            <span class="required-form-group">*</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="tipoActuacionRecomendada">Tipo de actuación recomendada</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="tipoActuacionRecomendada" required>
+                                    <mat-option *ngFor="let contr of actuacionesArray" [value]="contr.value">
+                                        {{ contr.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="actuacionRecomendadaAlComite">¿La actuación recomendada debe surtir trámite en comité técnico?</label>
+                        </div>
+                        <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="actuacionRecomendadaAlComite" required>
+                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                            <span class="required-form-group">*</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card" style="margin-top: 3em;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text">
                 Soporte del material probatorio
             </mat-card-title>
         </mat-card-header>
@@ -14,10 +313,10 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="full-width">
-                                <input matInput #urlSoporte type="text" formControlName="urlSoporte"
-                                  required>
+                                <input matInput #urlSoporte type="text" formControlName="urlSoporte" required>
                             </mat-form-field>
-                            <div align="center">Indique la ruta en la que se encuentran los documentos de soporte del registro del proceso</div>
+                            <div align="center">Indique la ruta en la que se encuentran los documentos de soporte del
+                                registro del proceso</div>
                         </div>
                     </div>
                 </div>
