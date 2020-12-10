@@ -133,23 +133,27 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-12">
-              <div class="row">
-                <div class="pr-1 fuerzo-ancho-total">
-                  <label class="label-left">Observaciones</label>
-                </div>
-                <div class="col d-flex">
-                  <quill-editor class="quill-editor-style w-65 card position-relative" [styles]="editorStyle"
-                    [modules]="config" (onContentChanged)="maxLength($event, 1000)" formControlName="observacion"
-                    required></quill-editor>
-                  <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
-                    <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                      {{1000 - textoLimpio(perfil.get('observacion').value)}}
-                    </span>
-                    <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
-                      1000
-                    </span>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="row">
+                  <div class="pr-1">
+                    <label class="label-left"><b>Observaciones</b></label>
+                  </div>
+                  <div class="col d-flex">
+                    <quill-editor class="quill-editor-style w-65 card position-relative"
+                                  [styles]="editorStyle"
+                                  [modules]="config"
+                                  (onContentChanged)="maxLength($event, 1000)"
+                                  formControlName="observaciones"
+                                  required></quill-editor>
+                    <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
+                      <span class="contador miles" *ngIf="perfil.get('observaciones').value !== null">
+                        {{1000 - textoLimpio(perfil.get('observaciones').value)}}
+                      </span>
+                      <span class="contador miles" *ngIf="perfil.get('observaciones').value === null">
+                        1000
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
