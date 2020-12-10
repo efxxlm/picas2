@@ -3,7 +3,8 @@
           color="accent" 
           type="submit"
           (click)="cargarProgramacion()"
-          *ngIf="archivoCargueIdProgramacionObra === undefined">
+          [disabled]="archivoCargueIdProgramacionObra !== undefined"
+          >
           Cargar programación
   </button>
 </section>
@@ -21,7 +22,8 @@
           color="accent" 
           type="submit"
           (click)="cargarProgramacion()"
-          *ngIf="archivoCargueIdFlujoInversion === undefined">
+          [disabled]="archivoCargueIdFlujoInversion !== undefined"
+          >
           Cargar flujo de inversión de recursos 
   </button>
 </section>
