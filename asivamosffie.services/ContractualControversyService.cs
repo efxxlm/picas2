@@ -260,519 +260,536 @@ namespace asivamosffie.services
         //{
         //    return await _context.Contrato.Where(r=>r.Eliminado==false).ToList<Contrato>();
         //}
+
+        public async Task<byte[]> GetPlantillaControversiaContractual(int pContratoId)
+        {
+            if (pContratoId == 0)
+            {
+                return Array.Empty<byte>();
+            }
+
+            
+
+            int pTipoContrato = 2;
+
+            //               --Contratacion.TipoContratacionCodigo  14 DOM, tipoidentificacion
+
+            ////DOM 14 1   Obra            
+            //pTipoContrato = 1;
+
+            //DOM 14 2   interventoria            
+            pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
+            
+
+            string Vlrfase2ConstruccionObra = "", VlrFase1Preconstruccion = "";
+            
+
+            //if (actaInicio.ContratacionId != null)
+            //{
+            //    VlrFase1Preconstruccion = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId),
+            //        "1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
+            //        ).ToString();
+
+            //}
+
+            pTipoContrato = ConstanCodigoTipoContratacion.Obra;
+
+
+            //if (actaInicio == null)
+            if (pContratoId == 0)
+            {
+                return Array.Empty<byte>();
+            }
+
+            Contrato contrato = null;
+            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+            Contratacion contratacion = null;
+            if (contrato != null)
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+
+            Plantilla plantilla = null;
         
-        //public async Task<byte[]> GetPlantillaControversiaContractual(int pContratoId)
-        //{
-        //    if (pContratoId == 0)
-        //    {
-        //        return Array.Empty<byte>();
-        //    }
 
-        //    VistaGenerarActaInicioContrato actaInicio;
-
-        //    int pTipoContrato = 2;
-
-        //    //               --Contratacion.TipoContratacionCodigo  14 DOM, tipoidentificacion
-
-        //    ////DOM 14 1   Obra            
-        //    //pTipoContrato = 1;
-
-        //    //DOM 14 2   interventoria            
-        //    pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
-        //    actaInicio = await getDataActaInicioAsync(pContratoId, pTipoContrato);
-
-        //    string Vlrfase2ConstruccionObra = "", VlrFase1Preconstruccion = "";
-        //    VlrFase1Preconstruccion = actaInicio.ValorFase1Preconstruccion;
-
-        //    if (actaInicio.ContratacionId != null)
-        //    {
-        //        VlrFase1Preconstruccion = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId),
-        //            "1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
-        //            ).ToString();
-
-        //    }
-
-        //    pTipoContrato = ConstanCodigoTipoContratacion.Obra;
-        //    if (actaInicio.NumeroDRP1 == "ERROR")
-        //    {
-        //        actaInicio = await getDataActaInicioAsync(pContratoId, pTipoContrato);
-        //        Vlrfase2ConstruccionObra = actaInicio.Valorfase2ConstruccionObra;
-
-        //        if (actaInicio.ContratacionId != null)
-        //        {
-        //            Vlrfase2ConstruccionObra = getSumVlrContratoComponente(Convert.ToInt32(actaInicio.ContratacionId), "2"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
-        //                ).ToString();
-        //            //if (ComponenteAportante.FaseCodigo =="1"  //ConstanCodigoFaseContrato.Preconstruccion.ToString()
-
-        //        }
-
-        //    }
-
-        //    if (actaInicio == null)
-        //    {
-        //        return Array.Empty<byte>();
-        //    }
-
-        //    Contrato contrato = null;
-        //    contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-
-        //    Contratacion contratacion = null;
-        //    if (contrato != null)
-        //        contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
-
-        //    Plantilla plantilla = null;
-
-        //    if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-        //    //if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-        //    {
-        //        pTipoContrato = ConstanCodigoTipoContratacion.Interventoria;
-        //        plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_interventoria_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-
-        //    }
-
-        //    //else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
-        //    else if (contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
-        //    {
-        //        pTipoContrato = ConstanCodigoTipoContratacion.Obra;
-        //        plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Acta_inicio_obra_PDF).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
-
-        //    }
-
-        //    //Plantilla plantilla = new Plantilla();
-        //    //plantilla.Contenido = "";
-        //    if (plantilla != null)
-        //        plantilla.Contenido = await ReemplazarDatosPlantillaControversiaContractual(plantilla.Contenido, actaInicio, "cdaza");
-        //    return ConvertirPDF(plantilla);
-        //}
-
-        //private async Task<string> ReemplazarDatosPlantillaControversiaContractual(string strContenido, VistaGenerarActaInicioContrato pActaInicio, string usuario)
-        //{
-        //    string str = "";
-        //    string valor = "";
-
-        //    ControversiaContractual controversiaContractual; 
-        //    Contrato contrato; 
-        //    ControversiaMotivo controversiaMotivo; 
-        //    ActuacionSeguimiento actuacionSeguimiento; 
-        //    ControversiaActuacion controversiaActuacion;
+            //else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+                        
+                plantilla = _context.Plantilla.Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Controversia_Contractual).ToString()).Include(r => r.Encabezado).Include(r => r.PieDePagina).FirstOrDefault();
                         
 
-        //    Contratista contratista; 
-        //    Contratacion contratacion = null;            
+            //Plantilla plantilla = new Plantilla();
+            //plantilla.Contenido = "";
+            if (plantilla != null)
+                plantilla.Contenido = await ReemplazarDatosPlantillaControversiaContractual(plantilla.Contenido, pContratoId, "cdaza");
+            return ConvertirPDF(plantilla);
+        }
 
-        //    NovedadContractual novedadContractual;   //sin rel?????
+        private async Task<string> ReemplazarDatosPlantillaControversiaContractual(string strContenido, int pContratoId, string usuario)
+        {
+            string str = "";
+            string valor = "";
 
-        //    DisponibilidadPresupuestal disponibilidadPresupuestal; 
-
-        //    //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Eliminado == false).FirstOrDefault();
-        //    contrato = _context.Contrato.Where(r => r.ContratoId == 16 && r.Eliminado == false).FirstOrDefault();
-
-        //    if (contrato != null)
-        //    {
-        //        contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
-
-        //        if (contratacion != null)
-        //        {
-        //            contratista = _context.Contratista.Where(r => r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
-        //        }
-
-        //    }
-
-        //    controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == 16 && r.Eliminado == false
-        //    && r.Eliminado == false).FirstOrDefault();
-
-        //    // controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == contrato.ContratoId && r.Eliminado == false
-        //    //&& r.Eliminado == false).FirstOrDefault();
-
-        //    string strEstadoCodigoControversia = "sin definir";
-        //    string strTipoControversiaCodigo = "sin definir";
-        //    string strTipoControversia = "sin definir";
-
-        //    Dominio TipoControversiaCodigo;
-
-        //    TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
-        //    if (TipoControversiaCodigo != null)
-        //    {
-        //        strTipoControversia = TipoControversiaCodigo.Nombre;
-        //        strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
-
-        //    }
-        //    controversiaMotivo = _context.ControversiaMotivo.Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId).FirstOrDefault();
-
-        //    string controversiaMotivoSolicitudNombre = "";
-        //    Dominio MotivoSolicitudCodigo;
-        //    if (controversiaMotivo != null)
-        //    {
-
-        //        MotivoSolicitudCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaMotivo.MotivoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
-        //        if (MotivoSolicitudCodigo != null)
-        //        {
-        //            //strTipoControversia = MotivoSolicitudCodigo.Nombre;
-        //            controversiaMotivoSolicitudNombre = MotivoSolicitudCodigo.Codigo;
-
-        //        }
-
-        //    }
-
-        //    strContenido = strContenido.Replace("_Numero_Solicitud_", controversiaContractual.NumeroSolicitud);
-        //    strContenido = strContenido.Replace("_Fecha_Solicitud_", controversiaContractual.FechaSolicitud.ToString("dd/MM/yyyy"));
-        //    strContenido = strContenido.Replace("_Tipo_Controversia_", strTipoControversia);
-
-        //    strContenido = strContenido.Replace("_Numero_Contrato_", contrato.NumeroContrato);
-        //    strContenido = strContenido.Replace("_Nombre_Contratista_", contratista.Nombre?? "");
-        //    strContenido = strContenido.Replace("_Fecha_inicio_contrato_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Fecha_fin_contrato_", "PENDIENTE");
-        //    if (contratacion != null)
-        //        strContenido = strContenido.Replace("_Cantidad_proyectos_asociados_", contratacion.ContratacionProyecto.Count().ToString());
-
-
-        //    //string TipoPlantillaDetalleProyecto = ((int)ConstanCodigoPlantillas.Detalle_Proyecto).ToString();
-        //    string DetalleProyecto = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaDetalleProyecto).Select(r => r.Contenido).FirstOrDefault();
-
-        //    string TipoPlantillaRegistrosAlcance = ((int)ConstanCodigoPlantillas.Registros_Tabla_Alcance).ToString();
-        //    string RegistroAlcance = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaRegistrosAlcance).Select(r => r.Contenido).FirstOrDefault();
-
-        //    List<Dominio> ListaParametricas = _context.Dominio.ToList();
-
-        //    List<Localizacion> ListaLocalizaciones = _context.Localizacion.ToList();
-        //    List<InstitucionEducativaSede> ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
-
-        //    string DetallesProyectos = "";
-
-        //    string RegistrosAlcance = "";
-        //    //Contratacion pContratacion
-        //    if (contratacion != null)
-        //    {
-        //        foreach (var proyecto in contratacion.ContratacionProyecto)
-        //        {
-        //            DetallesProyectos += DetalleProyecto;
-
-        //            Localizacion Municipio = ListaLocalizaciones.Where(r => r.LocalizacionId == proyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-        //            Localizacion Departamento = ListaLocalizaciones.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-        //            Localizacion Region = ListaLocalizaciones.Where(r => r.LocalizacionId == Departamento.IdPadre).FirstOrDefault();
-
-        //            InstitucionEducativaSede IntitucionEducativa = ListaInstitucionEducativaSedes.Where(r => r.InstitucionEducativaSedeId == proyecto.Proyecto.InstitucionEducativaId).FirstOrDefault();
-        //            InstitucionEducativaSede Sede = ListaInstitucionEducativaSedes.Where(r => r.InstitucionEducativaSedeId == proyecto.Proyecto.SedeId).FirstOrDefault();
-
-        //            foreach (var infraestructura in proyecto.Proyecto.InfraestructuraIntervenirProyecto)
-        //            {
-        //                RegistrosAlcance += RegistroAlcance;
-
-        //                RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_ESPACIOS_A_INTERVENIR]", ListaParametricas
-        //                    .Where(r => r.Codigo == infraestructura.InfraestructuraCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Espacios_Intervenir)
-        //                    .FirstOrDefault().Nombre);
-        //                RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_CANTIDAD]", infraestructura.Cantidad.ToString());
-        //            }
-
-        //            strContenido = strContenido.Replace("_Tipo_Intervencion_", ListaParametricas
-        //            .Where(r => r.Codigo == proyecto.Proyecto.TipoIntervencionCodigo
-        //            && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre);
-
-        //            strContenido = strContenido.Replace("_Llave_MEN_", proyecto.Proyecto.LlaveMen);
-        //            strContenido = strContenido.Replace("_Departamento_", Departamento.Descripcion);
-        //            strContenido = strContenido.Replace("_Municipio_", Municipio.Descripcion);
-
-        //            strContenido = strContenido.Replace("_Institucion_Educativa_", IntitucionEducativa.Nombre);
-
-        //            strContenido = strContenido.Replace("_Codigo_DANE_IE_", IntitucionEducativa.CodigoDane);
-        //            //DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, /*IntitucionEducativa.CodigoDane*/);
-        //            strContenido = strContenido.Replace("_Sede_", Sede.Nombre);
-        //            //DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, Sede.Nombre);
-        //            strContenido = strContenido.Replace("_Codigo_DANE_SEDE_", Sede.CodigoDane);       
-
-        //            strContenido = strContenido.Replace("_Tipo_Intervencion_", ListaParametricas
-        //            .Where(r => r.Codigo == proyecto.Proyecto.TipoIntervencionCodigo
-        //            && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre);
-
-        //            strContenido = strContenido.Replace("_Llave_MEN_", proyecto.Proyecto.LlaveMen);
-        //            strContenido = strContenido.Replace("_Departamento_", Departamento.Descripcion);
-        //            strContenido = strContenido.Replace("_Municipio_", Municipio.Descripcion);
-        //            strContenido = strContenido.Replace("_Institucion_Educativa_", IntitucionEducativa.Nombre);
-        //            strContenido = strContenido.Replace("_Codigo_DANE_IE_", IntitucionEducativa.CodigoDane);
-        //            strContenido = strContenido.Replace("_Sede_", Sede.Nombre);
-        //            strContenido = strContenido.Replace("_Codigo_DANE_SEDE_", Sede.CodigoDane);
-
-        //            //Plazo de obra
-        //            strContenido = strContenido.Replace("_Meses_", proyecto.Proyecto.PlazoDiasObra.ToString());
-        //            strContenido = strContenido.Replace("_Dias_", proyecto.Proyecto.PlazoMesesObra.ToString());
-        //            //Plazo de Interventoría
-        //            strContenido = strContenido.Replace("_Meses_", proyecto.Proyecto.PlazoDiasInterventoria.ToString());
-        //            strContenido = strContenido.Replace("_Dias_", proyecto.Proyecto.PlazoMesesInterventoria.ToString());
-        //            strContenido = strContenido.Replace("_Valor_obra_", (proyecto.Proyecto.ValorObra!=null)? proyecto.Proyecto.ValorObra.ToString(): "0");
-        //            strContenido = strContenido.Replace("_Valor_Interventoria_", "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorInterventoria));
-        //            strContenido = strContenido.Replace("_Valor_Total_proyecto_", "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorTotal));
-        //            //strContenido = strContenido.Replace("", );
-
-        //        }
-        //        //DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, RegistrosAlcance);
-        //        //DetallesProyectos = DetallesProyectos.Replace("[REGISTROS_ALCANCE]", RegistrosAlcance);
-
-        //        strContenido = strContenido.Replace("[REGISTROS_ALCANCE]", RegistrosAlcance);
-
-        //    }
-
-        //    //    strContenido = strContenido.Replace("Espacios_intervenir_nombre", );
-        //    //strContenido = strContenido.Replace("Espacios_intervenir_cantidad", );
-
-        //    //contratoAprobar.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
-        //    strContenido = strContenido.Replace("_Estado_obra_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Programacion_obra_acumulada_", "PENDIENTE");  //??
-        //    strContenido = strContenido.Replace("_Avance_físico_acumulado_ejecutado_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("Facturacion_programada_acumulada_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Facturacion_ejecutada_acumulada_", "PENDIENTE");
-
-        //    strContenido = strContenido.Replace(">>>>>SECCION_TAI>>>>>>>>", "");
-        //    strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
-        //    strContenido = strContenido.Replace("_Fecha_Comite_Pre_Tecnico_", controversiaContractual.FechaComitePreTecnico != null ? Convert.ToDateTime(controversiaContractual.FechaComitePreTecnico).ToString("dd/MM/yyyy") : controversiaContractual.FechaComitePreTecnico.ToString());
             
-        //    strContenido = strContenido.Replace("_Conclusion_Comite_pretecnico_", controversiaContractual.ConclusionComitePreTecnico);
-        //    strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
+            Contrato contrato=_context.Contrato.Where(r=>r.ContratoId== pContratoId).FirstOrDefault();
+            ControversiaContractual controversiaContractual=null;
 
-        //    strContenido = strContenido.Replace(">>>>> SECCION_OTRAS >>>>>>>>", "");
-        //    strContenido = strContenido.Replace("_Fecha_radicado_SAC_Numero_radicado_SAC_", controversiaContractual.NumeroRadicadoSac);
-        //    strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
-        //    strContenido = strContenido.Replace("_Resumen_justificacion_solicitud_", controversiaContractual.MotivoJustificacionRechazo);
-        //    strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
+            ControversiaMotivo controversiaMotivo = null;
+            ControversiaActuacion controversiaActuacion=null;
 
-        //    //Historial de Modificaciones                           
+            ActuacionSeguimiento actuacionSeguimiento = null;
+            if (contrato != null)
+            {
+                 controversiaContractual= _context.ControversiaContractual
+                    .Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault(); 
 
-        //    string prefijo = "";
+            }
 
-        //    if (contrato != null)
-        //    {
-        //        if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
-        //            prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
-        //        else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
-        //            prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
-        //    }
-        //    controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+            if (controversiaContractual != null)
+            {
+                 controversiaMotivo = _context.ControversiaMotivo
+                    .Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId).FirstOrDefault();
 
-        //    strContenido = strContenido.Replace("Modificación 1", "");
-        //    strContenido = strContenido.Replace("_Numero_solicitud_", controversiaContractual.NumeroSolicitudFormat);
-        //    strContenido = strContenido.Replace("_Tipo_Novedad_", novedadContractual.TipoNovedadCodigo );
+                controversiaActuacion = _context.ControversiaActuacion
+                    .Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId).FirstOrDefault();
 
-        //    strContenido = strContenido.Replace(">>>>> SECCION_SUSPENSION_PRORROGA_REINICIO >>>>>>>>", "" );
-        //    strContenido = strContenido.Replace("_Plazo_solicitado_",Convert.ToInt32( novedadContractual.PlazoAdicionalMeses).ToString());
-        //    //strContenido = strContenido.Replace("_Plazo_solicitado_", novedadContractual.PlazoAdicionalDias);
-        //    strContenido = strContenido.Replace("_Fecha_Inicio_", novedadContractual.FechaInicioSuspension != null ? Convert.ToDateTime(novedadContractual.FechaInicioSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaInicioSuspension.ToString());
-            
-        //    strContenido = strContenido.Replace("_Fecha_Fin_", novedadContractual.FechaFinSuspension != null ? Convert.ToDateTime(novedadContractual.FechaFinSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaFinSuspension.ToString());
-        //    //ContratacionProyecto ComiteTecnicoProyecto  ComiteTecnico
-        //    strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");
+            }
 
-        //    if(disponibilidadPresupuestal!=null)
-        //    {
-        //        //empuezo con fuentes
-        //        var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado
-        //        && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId).
-        //            Include(x => x.FuenteFinanciacion).
-        //                ThenInclude(x => x.Aportante).
-        //                ThenInclude(x => x.CofinanciacionDocumento).
-        //            Include(x => x.DisponibilidadPresupuestalProyecto).
-        //                ThenInclude(x => x.Proyecto).
-        //                    ThenInclude(x => x.Sede).
-        //            ToList();
-
-        //        foreach (var gestion in gestionfuentes)
-        //        {
-        //            //el saldo actual de la fuente son todas las solicitudes a la fuentes
-        //            //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
-        //            var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
-        //            var saldofuente = _context.GestionFuenteFinanciacion.Where(
-        //                x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
-        //                x.DisponibilidadPresupuestalProyectoId != gestion.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
-        //            string fuenteNombre = _context.Dominio.Where(x => x.Codigo == gestion.FuenteFinanciacion.FuenteRecursosCodigo
-        //                    && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
-        //            //(decimal)font.FuenteFinanciacion.ValorFuente,
-        //            // Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente
-        //            //saldototal += (decimal)consignadoemnfuente - saldofuente;
-        //            string institucion = _context.InstitucionEducativaSede.Where(x => x.InstitucionEducativaSedeId == gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.PadreId).FirstOrDefault().Nombre;
-        //            //var tr = plantilla_fuentes.Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
-        //            var tr = strContenido.Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)                        
-        //                //.Replace("[INSTITUCION]", institucion)
-        //                //.Replace("[SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
-        //                .Replace("[APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
-        //                .Replace("[VALOR_APORTANTE]", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento
-        //                .Sum(x => x.ValorDocumento).ToString())
-        //                .Replace("[FUENTE]", fuenteNombre)
-        //                //.Replace("[SALDO_FUENTE]", saldototal.ToString())
-        //                .Replace("[VALOR_FUENTE]", gestion.ValorSolicitado.ToString());
-        //                //.Replace("[NUEVO_SALDO_FUENTE]", (saldototal - gestion.ValorSolicitado).ToString());
-
-        //            strContenido = strContenido.Replace(">>>>> SECCION_ADICION >>>>>>>>", "" );
-        //            strContenido = strContenido.Replace("_Presupuesto_adicional_solicitado_", "PENDIENTE");
-        //            strContenido = strContenido.Replace("_Nombre_aportante_1_", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante));
-        //            strContenido = strContenido.Replace("_Valor_aporte_", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento
-        //                .Sum(x => x.ValorDocumento).ToString());
-        //            strContenido = strContenido.Replace("_Fuente_", fuenteNombre);
-
-        //            //tablafuentes += tr;
-        //        }
+            if (controversiaActuacion != null)
+            {
+                actuacionSeguimiento = _context.ActuacionSeguimiento
+                    .Where(r => r.ControversiaActuacionId == controversiaActuacion.ControversiaActuacionId).FirstOrDefault();
+            }                
 
 
-        //        //usos                    
-        //        var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == disponibilidadPresupuestal.ContratacionId).
-        //            Include(x => x.ComponenteUso).
-        //            Include(x => x.ContratacionProyectoAportante).
-        //            ThenInclude(x => x.ContratacionProyecto).
-        //            ThenInclude(x => x.Proyecto).ToList();
-        //        foreach (var compAp in componenteAp)
-        //        {
-        //            List<string> uso = new List<string>();
-        //            List<decimal> usovalor = new List<decimal>();
-        //            decimal total = 0;
-        //            var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
-        //            var strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault();
-        //            foreach (var comp in compAp.ComponenteUso)
-        //            {
-        //                var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
-        //                uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
-        //                string llavemen = compAp.ContratacionProyectoAportante.ContratacionProyecto.Proyecto.LlaveMen;
-        //                //var fuentestring = plantilla_uso.Replace("[LLAVEMEN2]", llavemen).
+            Contratacion contratacion = null;
+            Contratista contratista = null;
 
-        //                var fuentestring = strContenido.Replace("[LLAVEMEN2]", llavemen).
-        //                    Replace("[FASE]", strFase.Nombre).
-        //                    Replace("[COMPONENTE]", dom.FirstOrDefault().Nombre).
-        //                    Replace("[USO]", usos.FirstOrDefault().Nombre).
-        //                    Replace("[VALOR_USO]", comp.ValorUso.ToString());
+            NovedadContractual novedadContractual = null;   //sin rel?????
 
-        //                strContenido = strContenido.Replace(">>>>> SECCION_ADICION >>>>>>>>","" );                   
-        //                strContenido = strContenido.Replace("_Fase_", strFase.Nombre);
-        //                strContenido = strContenido.Replace("_Componente_", dom.FirstOrDefault().Nombre);
-        //                strContenido = strContenido.Replace("_Uso_", usos.FirstOrDefault().Nombre);
-        //                strContenido = strContenido.Replace("_Valor_uso_", comp.ValorUso.ToString());
+            DisponibilidadPresupuestal disponibilidadPresupuestal = null;
 
-        //                //tablauso += fuentestring;
-        //            }
-        //        }
-        //    }                      
+            if (contrato != null)
+            {
+                contratacion = _context.Contratacion
+                    .Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
+            }
 
-        //    //strContenido = strContenido.Replace("_Nombre_aportante_n_", );
-        //    //strContenido = strContenido.Replace("_Valor_aporte_", );
-        //    //strContenido = strContenido.Replace("_Fuente_", );
-        //    //strContenido = strContenido.Replace("_Fase_", );
-        //    //strContenido = strContenido.Replace("_Componente_", );
-        //    //strContenido = strContenido.Replace("_Valor_uso_", );
+            if (contratacion != null)
+            {
+                contratista = _context.Contratista
+                    .Where(r => r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
 
-        //    strContenido = strContenido.Replace(">>>>> SECCION_ES_PRORROGA >>>>>>>>", "");
-        //    strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Estado_", "PENDIENTE");
+                disponibilidadPresupuestal = _context.DisponibilidadPresupuestal
+                    .Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+            }         
 
-        //    //NovedadContractual
-        //    //AjusteClausula
-        //    //ClausulaModificar
-        //    strContenido = strContenido.Replace(">>>>> SECCION_MODIFICACION_CONDICIONES_CONTRACTUALES >>>>>>>>",  "");
-        //    strContenido = strContenido.Replace("_Clausula_modificar_",novedadContractual.ClausulaModificar );
-        //    strContenido = strContenido.Replace("_Ajuste_solicitado_clausula_", novedadContractual.AjusteClausula);
-        //    strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Estado_", "PENDIENTE");
+            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Eliminado == false).FirstOrDefault();
+            //contrato = _context.Contrato.Where(r => r.ContratoId == 16 && r.Eliminado == false).FirstOrDefault();
 
-        //    string EstadoAvanceTramiteCodigoNombre = "";
-        //    string ActuacionAdelantadaCodigoNombre = "";
+            if (contrato != null)
+            {
+                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
 
-        //    Dominio EstadoAvanceTramiteCodigo;
-        //    //Dominio EstadoAvanceTramiteCodigo;
-        //    Dominio ActuacionAdelantadaCodigo;
+                if (contratacion != null)
+                {
+                    contratista = _context.Contratista.Where(r => r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
+                }
 
-        //    if (controversiaActuacion != null)
-        //    {
-        //        EstadoAvanceTramiteCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
-        //        if (EstadoAvanceTramiteCodigo != null)
-        //        {
-        //            //strTipoControversia = MotivoSolicitudCodigo.Nombre;
-        //            EstadoAvanceTramiteCodigoNombre = EstadoAvanceTramiteCodigo.Nombre;
+            }
 
-        //        }
+            controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == 16 && r.Eliminado == false
+            && r.Eliminado == false).FirstOrDefault();
 
-        //        ActuacionAdelantadaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
-        //        if (ActuacionAdelantadaCodigo != null)
-        //        {
-        //            ActuacionAdelantadaCodigoNombre = ActuacionAdelantadaCodigo.Nombre;
-        //            //ActuacionAdelantadaCodigoNombre = ActuacionAdelantadaCodigo.Codigo;
+            // controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == contrato.ContratoId && r.Eliminado == false
+            //&& r.Eliminado == false).FirstOrDefault();
 
-        //        }
+            string strEstadoCodigoControversia = "sin definir";
+            string strTipoControversiaCodigo = "sin definir";
+            string strTipoControversia = "sin definir";
 
-        //    }
+            Dominio TipoControversiaCodigo;
 
-        //    //Historial de Actuaciones
-        //    strContenido = strContenido.Replace(">>>>> SECCION_LISTA_ACTUACIONES >>>>>>>>", "");
-        //    //(LISTA ACTUACIONES....)
-        //    strContenido = strContenido.Replace("Actuación 1",  "");
-        //    strContenido = strContenido.Replace("_Estado_avance_tramite_", EstadoAvanceTramiteCodigoNombre);
-        //    strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
-            
-        //    strContenido = strContenido.Replace("_Actuacion_adelantada_", ActuacionAdelantadaCodigoNombre);
-        //    strContenido = strContenido.Replace("_Actuacion_adelantada_", controversiaActuacion.ActuacionAdelantadaOtro);
+            TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+            if (TipoControversiaCodigo != null)
+            {
+                strTipoControversia = TipoControversiaCodigo.Nombre;
+                strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
 
-        //    strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", controversiaActuacion.ProximaActuacionCodigo);
-        //    strContenido = strContenido.Replace("_Observaciones_", controversiaActuacion.Observaciones);
-        //    strContenido = strContenido.Replace("_URL_soporte_", controversiaActuacion.RutaSoporte);
+            }
+            controversiaMotivo = _context.ControversiaMotivo.Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId).FirstOrDefault();
 
-        //    //Resumen de la propuesta de reclamación ante la aseguradora:
-        //    strContenido = strContenido.Replace("Actuación de la reclamación 1", "" );
-        //    strContenido = strContenido.Replace("_Estado_avance_reclamacion_", "PENDIENTE" );
-        //    strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());                        
-        //    strContenido = strContenido.Replace("_Actuacion_adelantada_", actuacionSeguimiento.ActuacionAdelantada);
-        //    strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", actuacionSeguimiento.ProximaActuacion);
-        //    strContenido = strContenido.Replace("_Observaciones_", actuacionSeguimiento.Observaciones);
-        //    strContenido = strContenido.Replace("_URL_soporte_", actuacionSeguimiento.RutaSoporte);
-        //    strContenido = strContenido.Replace("_reclamacion_resultado_definitivo_cerrado_ante_aseguradora_", Convert.ToBoolean(actuacionSeguimiento.EsResultadoDefinitivo).ToString());
+            string controversiaMotivoSolicitudNombre = "";
+            Dominio MotivoSolicitudCodigo;
+            if (controversiaMotivo != null)
+            {
+
+                MotivoSolicitudCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaMotivo.MotivoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                if (MotivoSolicitudCodigo != null)
+                {
+                    //strTipoControversia = MotivoSolicitudCodigo.Nombre;
+                    controversiaMotivoSolicitudNombre = MotivoSolicitudCodigo.Codigo;
+
+                }
+
+            }
+
+            strContenido = strContenido.Replace("_Numero_Solicitud_", controversiaContractual.NumeroSolicitud);
+            strContenido = strContenido.Replace("_Fecha_Solicitud_", controversiaContractual.FechaSolicitud.ToString("dd/MM/yyyy"));
+            strContenido = strContenido.Replace("_Tipo_Controversia_", strTipoControversia);
+
+            strContenido = strContenido.Replace("_Numero_Contrato_", contrato.NumeroContrato);
+            strContenido = strContenido.Replace("_Nombre_Contratista_", contratista.Nombre ?? "");
+            strContenido = strContenido.Replace("_Fecha_inicio_contrato_", "PENDIENTE");
+            strContenido = strContenido.Replace("_Fecha_fin_contrato_", "PENDIENTE");
+            if (contratacion != null)
+                strContenido = strContenido.Replace("_Cantidad_proyectos_asociados_", contratacion.ContratacionProyecto.Count().ToString());
 
 
-        //    //datos exclusivos interventoria
+            string TipoPlantillaControversiaContractual = ((int)ConstanCodigoPlantillas.Controversia_Contractual).ToString();
+            string ControversiaContractual = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaControversiaContractual).Select(r => r.Contenido).FirstOrDefault();
 
-        //    UsuarioPerfil UsuarioPerfil = _context.UsuarioPerfil.Where(y => y.Usuario.Email == usuario).Include(y => y.Perfil).FirstOrDefault();
+            string TipoPlantillaRegistrosAlcance = ((int)ConstanCodigoPlantillas.Registros_Tabla_Alcance).ToString();
+            string RegistroAlcance = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaRegistrosAlcance).Select(r => r.Contenido).FirstOrDefault();
 
-        //    Perfil perfil = null;
+            List<Dominio> ListaParametricas = _context.Dominio.ToList();
 
-        //    if (UsuarioPerfil != null)
-        //    {
-        //        perfil = _context.Perfil.Where(y => y.PerfilId == UsuarioPerfil.PerfilId).FirstOrDefault();
+            List<Localizacion> ListaLocalizaciones = _context.Localizacion.ToList();
+            List<InstitucionEducativaSede> ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
 
-        //    }
-        //    if (UsuarioPerfil != null)
-        //    {
-        //        strContenido = strContenido.Replace("_Cargo_Usuario_", perfil.Nombre);
-        //    }
-        //    strContenido = strContenido.Replace("_Nombre_Supervisor_", "_Nombre_Supervisor_");
+            string DetallesProyectos = "";
 
-        //    return strContenido;
+            string RegistrosAlcance = "";
+            //Contratacion pContratacion
+            if (contratacion != null)
+            {
+                foreach (var proyecto in contratacion.ContratacionProyecto)
+                {
+                    DetallesProyectos += ControversiaContractual;
 
-        //}
+                    Localizacion Municipio = ListaLocalizaciones.Where(r => r.LocalizacionId == proyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
+                    Localizacion Departamento = ListaLocalizaciones.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
+                    Localizacion Region = ListaLocalizaciones.Where(r => r.LocalizacionId == Departamento.IdPadre).FirstOrDefault();
 
-        //private string getNombreAportante(CofinanciacionAportante confinanciacion)
-        //{
-        //    string nombreAportante;
-        //    if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
-        //    {
-        //        nombreAportante = ConstanStringTipoAportante.Ffie;
-        //    }
-        //    else if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
-        //    {
-        //        nombreAportante = confinanciacion.NombreAportanteId == null
-        //            ? "Error" :
-        //            _context.Dominio.Find(confinanciacion.NombreAportanteId).Nombre;
-        //    }
-        //    else
-        //    {
-        //        if (confinanciacion.MunicipioId == null)
-        //        {
-        //            nombreAportante = confinanciacion.DepartamentoId == null
-        //            ? "Error" :
-        //            "Gobernación " + _context.Localizacion.Find(confinanciacion.DepartamentoId).Descripcion;
-        //        }
-        //        else
-        //        {
-        //            nombreAportante = confinanciacion.MunicipioId == null
-        //            ? "Error" :
-        //            "Alcaldía " + _context.Localizacion.Find(confinanciacion.MunicipioId).Descripcion;
-        //        }
-        //    }
-        //    return nombreAportante;
-        //}
+                    InstitucionEducativaSede IntitucionEducativa = ListaInstitucionEducativaSedes.Where(r => r.InstitucionEducativaSedeId == proyecto.Proyecto.InstitucionEducativaId).FirstOrDefault();
+                    InstitucionEducativaSede Sede = ListaInstitucionEducativaSedes.Where(r => r.InstitucionEducativaSedeId == proyecto.Proyecto.SedeId).FirstOrDefault();
+
+                    foreach (var infraestructura in proyecto.Proyecto.InfraestructuraIntervenirProyecto)
+                    {
+                        RegistrosAlcance += RegistroAlcance;
+
+                        RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_ESPACIOS_A_INTERVENIR]", ListaParametricas
+                            .Where(r => r.Codigo == infraestructura.InfraestructuraCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Espacios_Intervenir)
+                            .FirstOrDefault().Nombre);
+                        RegistrosAlcance = RegistrosAlcance.Replace("[ALCANCE_CANTIDAD]", infraestructura.Cantidad.ToString());
+                    }
+
+                    strContenido = strContenido.Replace("_Tipo_Intervencion_", ListaParametricas
+                    .Where(r => r.Codigo == proyecto.Proyecto.TipoIntervencionCodigo
+                    && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre);
+
+                    strContenido = strContenido.Replace("_Llave_MEN_", proyecto.Proyecto.LlaveMen);
+                    strContenido = strContenido.Replace("_Departamento_", Departamento.Descripcion);
+                    strContenido = strContenido.Replace("_Municipio_", Municipio.Descripcion);
+
+                    strContenido = strContenido.Replace("_Institucion_Educativa_", IntitucionEducativa.Nombre);
+
+                    strContenido = strContenido.Replace("_Codigo_DANE_IE_", IntitucionEducativa.CodigoDane);
+                    //DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, /*IntitucionEducativa.CodigoDane*/);
+                    strContenido = strContenido.Replace("_Sede_", Sede.Nombre);
+                    //DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, Sede.Nombre);
+                    strContenido = strContenido.Replace("_Codigo_DANE_SEDE_", Sede.CodigoDane);
+
+                    strContenido = strContenido.Replace("_Tipo_Intervencion_", ListaParametricas
+                    .Where(r => r.Codigo == proyecto.Proyecto.TipoIntervencionCodigo
+                    && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre);
+
+                    strContenido = strContenido.Replace("_Llave_MEN_", proyecto.Proyecto.LlaveMen);
+                    strContenido = strContenido.Replace("_Departamento_", Departamento.Descripcion);
+                    strContenido = strContenido.Replace("_Municipio_", Municipio.Descripcion);
+                    strContenido = strContenido.Replace("_Institucion_Educativa_", IntitucionEducativa.Nombre);
+                    strContenido = strContenido.Replace("_Codigo_DANE_IE_", IntitucionEducativa.CodigoDane);
+                    strContenido = strContenido.Replace("_Sede_", Sede.Nombre);
+                    strContenido = strContenido.Replace("_Codigo_DANE_SEDE_", Sede.CodigoDane);
+
+                    //Plazo de obra
+                    strContenido = strContenido.Replace("_Meses_", proyecto.Proyecto.PlazoDiasObra.ToString());
+                    strContenido = strContenido.Replace("_Dias_", proyecto.Proyecto.PlazoMesesObra.ToString());
+                    //Plazo de Interventoría
+                    strContenido = strContenido.Replace("_Meses_", proyecto.Proyecto.PlazoDiasInterventoria.ToString());
+                    strContenido = strContenido.Replace("_Dias_", proyecto.Proyecto.PlazoMesesInterventoria.ToString());
+                    strContenido = strContenido.Replace("_Valor_obra_", (proyecto.Proyecto.ValorObra != null) ? proyecto.Proyecto.ValorObra.ToString() : "0");
+                    strContenido = strContenido.Replace("_Valor_Interventoria_", "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorInterventoria));
+                    strContenido = strContenido.Replace("_Valor_Total_proyecto_", "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorTotal));
+                    //strContenido = strContenido.Replace("", );
+
+                }
+                //DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, RegistrosAlcance);
+                //DetallesProyectos = DetallesProyectos.Replace("[REGISTROS_ALCANCE]", RegistrosAlcance);
+
+                strContenido = strContenido.Replace("[REGISTROS_ALCANCE]", RegistrosAlcance);
+
+            }
+
+            //    strContenido = strContenido.Replace("Espacios_intervenir_nombre", );
+            //strContenido = strContenido.Replace("Espacios_intervenir_cantidad", );
+
+            //contratoAprobar.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
+            strContenido = strContenido.Replace("_Estado_obra_", "PENDIENTE");
+            strContenido = strContenido.Replace("_Programacion_obra_acumulada_", "PENDIENTE");  //??
+            strContenido = strContenido.Replace("_Avance_físico_acumulado_ejecutado_", "PENDIENTE");
+            strContenido = strContenido.Replace("Facturacion_programada_acumulada_", "PENDIENTE");
+            strContenido = strContenido.Replace("_Facturacion_ejecutada_acumulada_", "PENDIENTE");
+
+            strContenido = strContenido.Replace(">>>>>SECCION_TAI>>>>>>>>", "");
+            strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
+            strContenido = strContenido.Replace("_Fecha_Comite_Pre_Tecnico_", controversiaContractual.FechaComitePreTecnico != null ? Convert.ToDateTime(controversiaContractual.FechaComitePreTecnico).ToString("dd/MM/yyyy") : controversiaContractual.FechaComitePreTecnico.ToString());
+
+            strContenido = strContenido.Replace("_Conclusion_Comite_pretecnico_", controversiaContractual.ConclusionComitePreTecnico);
+            strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
+
+            strContenido = strContenido.Replace(">>>>> SECCION_OTRAS >>>>>>>>", "");
+            strContenido = strContenido.Replace("_Fecha_radicado_SAC_Numero_radicado_SAC_", controversiaContractual.NumeroRadicadoSac);
+            strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
+            strContenido = strContenido.Replace("_Resumen_justificacion_solicitud_", controversiaContractual.MotivoJustificacionRechazo);
+            strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
+
+            //Historial de Modificaciones                           
+
+            string prefijo = "";
+
+            if (contrato != null)
+            {
+                if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
+                    prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
+                else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
+                    prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
+            }
+            controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+
+            strContenido = strContenido.Replace("Modificación 1", "");
+            strContenido = strContenido.Replace("_Numero_solicitud_", controversiaContractual.NumeroSolicitudFormat);
+            strContenido = strContenido.Replace("_Tipo_Novedad_", novedadContractual.TipoNovedadCodigo);
+
+            strContenido = strContenido.Replace(">>>>> SECCION_SUSPENSION_PRORROGA_REINICIO >>>>>>>>", "");
+            strContenido = strContenido.Replace("_Plazo_solicitado_", Convert.ToInt32(novedadContractual.PlazoAdicionalMeses).ToString());
+            //strContenido = strContenido.Replace("_Plazo_solicitado_", novedadContractual.PlazoAdicionalDias);
+            strContenido = strContenido.Replace("_Fecha_Inicio_", novedadContractual.FechaInicioSuspension != null ? Convert.ToDateTime(novedadContractual.FechaInicioSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaInicioSuspension.ToString());
+
+            strContenido = strContenido.Replace("_Fecha_Fin_", novedadContractual.FechaFinSuspension != null ? Convert.ToDateTime(novedadContractual.FechaFinSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaFinSuspension.ToString());
+            //ContratacionProyecto ComiteTecnicoProyecto  ComiteTecnico
+            strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
+            strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");
+
+            if (disponibilidadPresupuestal != null)
+            {
+                //empuezo con fuentes
+                var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado
+                && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId).
+                    Include(x => x.FuenteFinanciacion).
+                        ThenInclude(x => x.Aportante).
+                        ThenInclude(x => x.CofinanciacionDocumento).
+                    Include(x => x.DisponibilidadPresupuestalProyecto).
+                        ThenInclude(x => x.Proyecto).
+                            ThenInclude(x => x.Sede).
+                    ToList();
+
+                foreach (var gestion in gestionfuentes)
+                {
+                    //el saldo actual de la fuente son todas las solicitudes a la fuentes
+                    //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
+                    var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
+                    var saldofuente = _context.GestionFuenteFinanciacion.Where(
+                        x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
+                        x.DisponibilidadPresupuestalProyectoId != gestion.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
+                    string fuenteNombre = _context.Dominio.Where(x => x.Codigo == gestion.FuenteFinanciacion.FuenteRecursosCodigo
+                            && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                    //(decimal)font.FuenteFinanciacion.ValorFuente,
+                    // Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente
+                    //saldototal += (decimal)consignadoemnfuente - saldofuente;
+                    string institucion = _context.InstitucionEducativaSede.Where(x => x.InstitucionEducativaSedeId == gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.PadreId).FirstOrDefault().Nombre;
+                    //var tr = plantilla_fuentes.Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
+                    var tr = strContenido.Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
+                        //.Replace("[INSTITUCION]", institucion)
+                        //.Replace("[SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
+                        .Replace("[APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
+                        .Replace("[VALOR_APORTANTE]", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento
+                        .Sum(x => x.ValorDocumento).ToString())
+                        .Replace("[FUENTE]", fuenteNombre)
+                        //.Replace("[SALDO_FUENTE]", saldototal.ToString())
+                        .Replace("[VALOR_FUENTE]", gestion.ValorSolicitado.ToString());
+                    //.Replace("[NUEVO_SALDO_FUENTE]", (saldototal - gestion.ValorSolicitado).ToString());
+
+                    strContenido = strContenido.Replace(">>>>> SECCION_ADICION >>>>>>>>", "");
+                    strContenido = strContenido.Replace("_Presupuesto_adicional_solicitado_", "PENDIENTE");
+                    strContenido = strContenido.Replace("_Nombre_aportante_1_", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante));
+                    strContenido = strContenido.Replace("_Valor_aporte_", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento
+                        .Sum(x => x.ValorDocumento).ToString());
+                    strContenido = strContenido.Replace("_Fuente_", fuenteNombre);
+
+                    //tablafuentes += tr;
+                }
+
+                //usos                    
+                var componenteAp = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == disponibilidadPresupuestal.ContratacionId).
+                    Include(x => x.ComponenteUso).
+                    Include(x => x.ContratacionProyectoAportante).
+                    ThenInclude(x => x.ContratacionProyecto).
+                    ThenInclude(x => x.Proyecto).ToList();
+                foreach (var compAp in componenteAp)
+                {
+                    List<string> uso = new List<string>();
+                    List<decimal> usovalor = new List<decimal>();
+                    decimal total = 0;
+                    var dom = _context.Dominio.Where(x => x.Codigo == compAp.TipoComponenteCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Componentes).ToList();
+                    var strFase = _context.Dominio.Where(r => r.Codigo == compAp.FaseCodigo && r.TipoDominioId == (int)EnumeratorTipoDominio.Fases).FirstOrDefault();
+                    foreach (var comp in compAp.ComponenteUso)
+                    {
+                        var usos = _context.Dominio.Where(x => x.Codigo == comp.TipoUsoCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Usos).ToList();
+                        uso.Add(usos.Count() > 0 ? usos.FirstOrDefault().Nombre : "");
+                        string llavemen = compAp.ContratacionProyectoAportante.ContratacionProyecto.Proyecto.LlaveMen;
+                        //var fuentestring = plantilla_uso.Replace("[LLAVEMEN2]", llavemen).
+
+                        var fuentestring = strContenido.Replace("[LLAVEMEN2]", llavemen).
+                            Replace("[FASE]", strFase.Nombre).
+                            Replace("[COMPONENTE]", dom.FirstOrDefault().Nombre).
+                            Replace("[USO]", usos.FirstOrDefault().Nombre).
+                            Replace("[VALOR_USO]", comp.ValorUso.ToString());
+
+                        strContenido = strContenido.Replace(">>>>> SECCION_ADICION >>>>>>>>", "");
+                        strContenido = strContenido.Replace("_Fase_", strFase.Nombre);
+                        strContenido = strContenido.Replace("_Componente_", dom.FirstOrDefault().Nombre);
+                        strContenido = strContenido.Replace("_Uso_", usos.FirstOrDefault().Nombre);
+                        strContenido = strContenido.Replace("_Valor_uso_", comp.ValorUso.ToString());
+
+                        //tablauso += fuentestring;
+                    }
+                }
+            }
+
+            //strContenido = strContenido.Replace("_Nombre_aportante_n_", );
+            //strContenido = strContenido.Replace("_Valor_aporte_", );
+            //strContenido = strContenido.Replace("_Fuente_", );
+            //strContenido = strContenido.Replace("_Fase_", );
+            //strContenido = strContenido.Replace("_Componente_", );
+            //strContenido = strContenido.Replace("_Valor_uso_", );
+
+            strContenido = strContenido.Replace(">>>>> SECCION_ES_PRORROGA >>>>>>>>", "");
+            strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
+            strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");
+            strContenido = strContenido.Replace("_Estado_", "PENDIENTE");
+
+            //NovedadContractual
+            //AjusteClausula
+            //ClausulaModificar
+            strContenido = strContenido.Replace(">>>>> SECCION_MODIFICACION_CONDICIONES_CONTRACTUALES >>>>>>>>", "");
+            strContenido = strContenido.Replace("_Clausula_modificar_", novedadContractual.ClausulaModificar);
+            strContenido = strContenido.Replace("_Ajuste_solicitado_clausula_", novedadContractual.AjusteClausula);
+            strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
+            strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");
+            strContenido = strContenido.Replace("_Estado_", "PENDIENTE");
+
+            string EstadoAvanceTramiteCodigoNombre = "";
+            string ActuacionAdelantadaCodigoNombre = "";
+
+            Dominio EstadoAvanceTramiteCodigo;
+            //Dominio EstadoAvanceTramiteCodigo;
+            Dominio ActuacionAdelantadaCodigo;
+
+            if (controversiaActuacion != null)
+            {
+                EstadoAvanceTramiteCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                if (EstadoAvanceTramiteCodigo != null)
+                {
+                    //strTipoControversia = MotivoSolicitudCodigo.Nombre;
+                    EstadoAvanceTramiteCodigoNombre = EstadoAvanceTramiteCodigo.Nombre;
+
+                }
+
+                ActuacionAdelantadaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                if (ActuacionAdelantadaCodigo != null)
+                {
+                    ActuacionAdelantadaCodigoNombre = ActuacionAdelantadaCodigo.Nombre;
+                    //ActuacionAdelantadaCodigoNombre = ActuacionAdelantadaCodigo.Codigo;
+
+                }
+
+            }
+
+            //Historial de Actuaciones
+            strContenido = strContenido.Replace(">>>>> SECCION_LISTA_ACTUACIONES >>>>>>>>", "");
+            //(LISTA ACTUACIONES....)
+            strContenido = strContenido.Replace("Actuación 1", "");
+            strContenido = strContenido.Replace("_Estado_avance_tramite_", EstadoAvanceTramiteCodigoNombre);
+            strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
+
+            strContenido = strContenido.Replace("_Actuacion_adelantada_", ActuacionAdelantadaCodigoNombre);
+            strContenido = strContenido.Replace("_Actuacion_adelantada_", controversiaActuacion.ActuacionAdelantadaOtro);
+
+            strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", controversiaActuacion.ProximaActuacionCodigo);
+            strContenido = strContenido.Replace("_Observaciones_", controversiaActuacion.Observaciones);
+            strContenido = strContenido.Replace("_URL_soporte_", controversiaActuacion.RutaSoporte);
+
+            //Resumen de la propuesta de reclamación ante la aseguradora:
+            strContenido = strContenido.Replace("Actuación de la reclamación 1", "");
+            strContenido = strContenido.Replace("_Estado_avance_reclamacion_",actuacionSeguimiento.EstadoReclamacionCodigo);
+            strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
+            strContenido = strContenido.Replace("_Actuacion_adelantada_", actuacionSeguimiento.ActuacionAdelantada);
+            strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", actuacionSeguimiento.ProximaActuacion);
+            strContenido = strContenido.Replace("_Observaciones_", actuacionSeguimiento.Observaciones);
+            strContenido = strContenido.Replace("_URL_soporte_", actuacionSeguimiento.RutaSoporte);
+            strContenido = strContenido.Replace("_reclamacion_resultado_definitivo_cerrado_ante_aseguradora_", Convert.ToBoolean(actuacionSeguimiento.EsResultadoDefinitivo).ToString());
+
+
+            //datos exclusivos interventoria
+
+            UsuarioPerfil UsuarioPerfil = _context.UsuarioPerfil.Where(y => y.Usuario.Email == usuario).Include(y => y.Perfil).FirstOrDefault();
+
+            Perfil perfil = null;
+
+            if (UsuarioPerfil != null)
+            {
+                perfil = _context.Perfil.Where(y => y.PerfilId == UsuarioPerfil.PerfilId).FirstOrDefault();
+
+            }
+            if (UsuarioPerfil != null)
+            {
+                strContenido = strContenido.Replace("_Cargo_Usuario_", perfil.Nombre);
+            }
+            strContenido = strContenido.Replace("_Nombre_Supervisor_", "_Nombre_Supervisor_");
+
+            return strContenido;
+
+        }
+
+        private string getNombreAportante(CofinanciacionAportante confinanciacion)
+        {
+            string nombreAportante;
+            if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Ffie))
+            {
+                nombreAportante = ConstanStringTipoAportante.Ffie;
+            }
+            else if (confinanciacion.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
+            {
+                nombreAportante = confinanciacion.NombreAportanteId == null
+                    ? "Error" :
+                    _context.Dominio.Find(confinanciacion.NombreAportanteId).Nombre;
+            }
+            else
+            {
+                if (confinanciacion.MunicipioId == null)
+                {
+                    nombreAportante = confinanciacion.DepartamentoId == null
+                    ? "Error" :
+                    "Gobernación " + _context.Localizacion.Find(confinanciacion.DepartamentoId).Descripcion;
+                }
+                else
+                {
+                    nombreAportante = confinanciacion.MunicipioId == null
+                    ? "Error" :
+                    "Alcaldía " + _context.Localizacion.Find(confinanciacion.MunicipioId).Descripcion;
+                }
+            }
+            return nombreAportante;
+        }
 
 
         public byte[] ConvertirPDF(Plantilla pPlantilla)
