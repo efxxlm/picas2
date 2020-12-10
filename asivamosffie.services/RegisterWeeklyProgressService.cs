@@ -118,7 +118,6 @@ namespace asivamosffie.services
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
                 InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
 
-
                 seguimientoSemanal.ContratacionProyecto.Proyecto.tipoIntervencionString = TipoIntervencion.Where(r => r.Codigo == seguimientoSemanal.ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                 seguimientoSemanal.ContratacionProyecto.Proyecto.MunicipioObj = Municipio;
                 seguimientoSemanal.ContratacionProyecto.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
@@ -220,11 +219,10 @@ namespace asivamosffie.services
         {
             List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
                 .Include(r => r.ContratacionProyecto)
-                .ThenInclude(r => r.Proyecto)
-
-                   .Include(r => r.ContratacionProyecto)
-                .ThenInclude(r => r.Contratacion)
-                 .ThenInclude(r => r.Contrato)
+                   .ThenInclude(r => r.Proyecto)
+                .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Contratacion)
+                       .ThenInclude(r => r.Contrato)
                 .ToListAsync();
 
             List<dynamic> ListBitaCora = new List<dynamic>();
@@ -236,7 +234,6 @@ namespace asivamosffie.services
             {
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.ContratacionProyecto?.Proyecto?.SedeId).FirstOrDefault();
                 InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
-
 
                 ListBitaCora.Add(new
                 {
@@ -259,12 +256,12 @@ namespace asivamosffie.services
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
-             
+
             try
             {
                 SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
 
-                SaveUpdateAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                SaveUpdateAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.FlujoInversion, pSeguimientoSemanal.UsuarioCreacion);
 
                 SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
@@ -302,9 +299,36 @@ namespace asivamosffie.services
 
         }
 
-        private void SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico pSeguimientoSemanalAvanceFisico, string pUsuarioCreacion)
+        private void SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico pSeguimientoSemanalAvanceFisico, ICollection<FlujoInversion> pListFlujoInversion, string usuarioCreacion)
         {
-            throw new NotImplementedException();
+            bool RegistroCompleto = true;
+
+            foreach (var FlujoInversion in pListFlujoInversion)
+            {
+                Programacion programacionOld = _context.Programacion.Where(r => r.ProgramacionId == FlujoInversion.ProgramacionId).FirstOrDefault();
+                programacionOld.AvanceFisicoCapitulo = FlujoInversion.Programacion.AvanceFisicoCapitulo;
+
+                if (!programacionOld.AvanceFisicoCapitulo.HasValue)
+                {
+                    RegistroCompleto = false;
+                }
+            }
+
+            if (pSeguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoId == 0)
+            {
+                pSeguimientoSemanalAvanceFisico.RegistroCompleto = RegistroCompleto;
+                pSeguimientoSemanalAvanceFisico.UsuarioCreacion = usuarioCreacion;
+                pSeguimientoSemanalAvanceFisico.FechaCreacion = DateTime.Now;
+                pSeguimientoSemanalAvanceFisico.Eliminado = false;
+            }
+            {
+                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find();
+
+                seguimientoSemanalAvanceFisicoOld.RegistroCompleto = RegistroCompleto;
+                pSeguimientoSemanalAvanceFisico.UsuarioModificacion = usuarioCreacion;
+                pSeguimientoSemanalAvanceFisico.FechaModificacion = DateTime.Now;
+            }
+
         }
 
         private void SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero pSeguimientoSemanalAvanceFinanciero, string pUsuarioCreacion)
@@ -345,7 +369,6 @@ namespace asivamosffie.services
             }
         }
 
-  
         private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
         {
             throw new NotImplementedException();
@@ -360,6 +383,7 @@ namespace asivamosffie.services
         {
             throw new NotImplementedException();
         }
+
         #endregion
 
         #region Validar Registros Completos
