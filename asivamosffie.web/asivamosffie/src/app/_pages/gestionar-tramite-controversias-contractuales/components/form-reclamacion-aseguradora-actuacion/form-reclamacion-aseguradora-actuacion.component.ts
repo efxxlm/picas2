@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -29,7 +30,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor( private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(private router: Router, private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
       this.addressForm.get('requiereReclamacionAseguradora').setValue(true);
@@ -74,8 +75,8 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         "ProximaActuacionOtro": "2",
         "Observaciones": "" ,
         "ResumenPropuestaFiduciaria": this.addressForm.value.resumenReclamacionFiduciaria,
-        "RutaSoporte":  this.addressForm.value.urlSoporte ,
-        "EstadoAvanceTramiteCodigo": "1",
+        "RutaSoporte":  this.addressForm.value.urlSoporte,
+        "EstadoAvanceTramiteCodigo": "2",
        "FechaCreacion": "2020-3-3",
        "UsuarioCreacion":"US CRE w",
        "UsuarioModificacion": "US MODIF w",
@@ -85,6 +86,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       };
       this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
         this.openDialog('', 'La información ha sido guardada exitosamente.');
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       });
     }
     else{
@@ -97,7 +99,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         "Observaciones": "Observaciones w" ,
         "ResumenPropuestaFiduciaria": this.addressForm.value.resumenReclamacionFiduciaria ,
         "RutaSoporte":  this.addressForm.value.urlSoporte ,
-        "EstadoAvanceTramiteCodigo": "1",
+        "EstadoAvanceTramiteCodigo": "2",
        "FechaCreacion": "2020-3-3",
        "UsuarioCreacion":"US CRE w",
        "UsuarioModificacion": "US MODIF w",
@@ -106,6 +108,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       };
       this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
         this.openDialog('', 'La información ha sido guardada exitosamente.');
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       });
     }
   }
