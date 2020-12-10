@@ -7,15 +7,18 @@ import { QuillModule } from 'ngx-quill';
 import { GestionarProcesosDefensaJudicialRoutingModule } from './gestionar-procesos-defensa-judicial-routing.module';
 import { ControlTablaProcesoDefensaJudicialComponent } from './components/control-tabla-proceso-defensa-judicial/control-tabla-proceso-defensa-judicial.component';
 import { RegistroNuevoProcesoJudicialComponent } from './components/registro-nuevo-proceso-judicial/registro-nuevo-proceso-judicial.component';
+import { FormContratosAsociadosDjComponent } from './components/form-contratos-asociados-dj/form-contratos-asociados-dj.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
 @NgModule({
-  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent],
+  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatAutocompleteModule,
     FormsModule,
     GestionarProcesosDefensaJudicialRoutingModule,
     QuillModule.forRoot()
