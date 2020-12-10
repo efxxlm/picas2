@@ -35,7 +35,7 @@ namespace asivamosffie.services
             return await _context.VRegistrarAvanceSemanal.ToListAsync();
         }
 
-        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrpSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
+        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
             if (pContratacionProyectoId > 0)
             {
@@ -110,7 +110,8 @@ namespace asivamosffie.services
 
                     .FirstOrDefaultAsync();
             }
-            else { 
+            else
+            {
                 return await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
                       //Informacion Proyecto
                       .Include(r => r.ContratacionProyecto)
@@ -187,23 +188,33 @@ namespace asivamosffie.services
             }
         }
 
-        //public async Task<List<dynamic>> GetListSeguimientoSemanalBypContratacionProyectoId(int pContratacionProyectoId)
-        //{
+        public async Task<List<dynamic>> GetListSeguimientoSemanalBypContratacionProyectoId(int pContratacionProyectoId)
+        {
 
-        //    List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
-        //        .Include(r => r.ContratacionProyecto)
-        //        .ThenInclude(r => r.Proyecto)
-        //           .Include(r => r.ContratacionProyecto)
-        //        .ThenInclude(r => r.Contratacion)
-        //         .ThenInclude(r => r.Contrato)
-        //        .ToListAsync();
+            List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
+                .Include(r => r.ContratacionProyecto)
+                .ThenInclude(r => r.Proyecto)
+                   .Include(r => r.ContratacionProyecto)
+                .ThenInclude(r => r.Contratacion)
+                 .ThenInclude(r => r.Contrato)
+                .ToListAsync();
+
+            List<dynamic> ListBitaCora = new List<dynamic>();
+          //  List<Dominio> TipoIntervencion = _context.TipoDominio.Where(r=> r.)
+            foreach (var item in ListseguimientoSemanal)
+            {
+                ListBitaCora.Add(new {
+                    item.ContratacionProyecto?.Proyecto?.LlaveMen,
+                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
 
 
-        //    foreach (var item in collection)
-        //    {
 
-        //    }
-        //}
+                });
+
+
+            } 
+            return ListBitaCora;
+        }
         #endregion
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
