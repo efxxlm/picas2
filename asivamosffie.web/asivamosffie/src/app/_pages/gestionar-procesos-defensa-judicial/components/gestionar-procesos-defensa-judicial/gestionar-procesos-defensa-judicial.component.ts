@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./gestionar-procesos-defensa-judicial.component.scss']
 })
 export class GestionarProcesosDefensaJudicialComponent implements OnInit {
-
+  verAyuda = false;
   constructor() { }
 
   ngOnInit(): void {
