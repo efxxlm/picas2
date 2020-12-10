@@ -22,12 +22,12 @@
 
             <ng-container matColumnDef="numActuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.numActuacion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroActuacionFormat }} </td>
             </ng-container>
 
             <ng-container matColumnDef="numReclamacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de reclamación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.numReclamacion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroReclamacion }} </td>
             </ng-container>
 
             <ng-container matColumnDef="estadoReclamacion">
@@ -40,27 +40,27 @@
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoReclamacion=='Aprobada por comité técnico'"
-                        (click)="this.actualizarReclamacionAseguradora(element.id)">
+                        (click)="this.actualizarReclamacionAseguradora(element.actuacionSeguimientoId)">
                         Actualizar reclamación ante la aseguradora
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoReclamacion=='Sin registro'"
-                        (click)="this.registrarReclamacionAseguradora(element.id)">
+                        (click)="this.registrarReclamacionAseguradora(element.actuacionSeguimientoId)">
                         Registrar reclamación ante la aseguradora
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoReclamacion=='En proceso de registro'||element.estadoReclamacion=='Devuelta por comité técnico'"
-                        (click)="this.enviarReclamacionComiteTecnico(element.id)">
+                        (click)="this.enviarReclamacionComiteTecnico(element.actuacionSeguimientoId)">
                         Enviar reclamación a comité técnico
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoReclamacion=='En proceso de registro'||element.estadoReclamacion=='Devuelta por comité técnico'"
-                        (click)="this.verDetalleEditarReclamacion(element.id)">
+                        (click)="this.verDetalleEditarReclamacion(element.actuacionSeguimientoId)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoReclamacion=='Enviado a comité técnico'"
-                        (click)="this.verDetalleReclamacion(element.id)">
+                        *ngIf="element.estadoReclamacion=='Enviado comité técnico'"
+                        (click)="this.verDetalleReclamacion(element.actuacionSeguimientoId)">
                         Ver detalle
                     </button>
                 </td>

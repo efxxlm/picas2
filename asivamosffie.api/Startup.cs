@@ -151,6 +151,9 @@ namespace asivamosffie.api
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
             services.AddTransient<IContractualControversy, ContractualControversyService>();
+            services.AddTransient<IJudicialDefense, JudicialDefenseService>();
+
+            
 
         }
 

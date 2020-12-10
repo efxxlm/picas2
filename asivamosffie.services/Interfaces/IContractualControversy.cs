@@ -11,22 +11,32 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Respuesta> CreateEditarControversiaTAI(ControversiaContractual controversiaContractual);
 
-        Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion);
+        //Task<Respuesta> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion);
+        Task<Respuesta> CreateEditControversiaOtros(ControversiaActuacion controversiaActuacion);
 
-         Task<Respuesta> CreateEditarActuacionSeguimiento(ActuacionSeguimiento actuacionSeguimiento);
+        Task<Respuesta> CreateEditarActuacionSeguimiento(ActuacionSeguimiento actuacionSeguimiento);
+
+        Task<Respuesta> InsertEditControversiaMotivo(ControversiaMotivo controversiaMotivo);
 
         Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual();
 
-        Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion(int id = 0);
+        Task<List<GrillaActuacionSeguimiento>> ListGrillaActuacionSeguimiento(int pControversiaActuacionId  = 0);
 
-         Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId);
+        Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion(int id = 0, int pControversiaContractualId= 0);
+
+         Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId = 0);
 
         Task<ControversiaContractual> GetControversiaContractualById(int pControversiaContractualId);
 
         Task<ControversiaActuacion> GetControversiaActuacionById(int id);
+        Task<List<ControversiaMotivo>> GetMotivosSolicitudByControversiaContractualId(int id);
 
-        Task<List<Contrato>> GetListContratos();
-
+        //Task<byte[]> GetPlantillaControversiaContractual(int pContratoId);
+            //Task<byte[]> GetPlantillaActaIdComite(int ComiteId);
+        
+       Task<List<Contrato>> GetListContratos();
+        
+        Task<Respuesta> CambiarEstadoControversiaActuacion2(int pControversiaActuacionId, string pNuevoCodigoProximaActuacion, string pUsuarioModifica);
         Task<Respuesta> CambiarEstadoControversiaActuacion(int pControversiaActuacionId, string pNuevoCodigoEstadoAvance, string pUsuarioModifica);
 
         Task<Respuesta> CambiarEstadoControversiaContractual(int pControversiaContractualId, string pNuevoCodigoEstado, string pUsuarioModifica);
