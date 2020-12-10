@@ -37,7 +37,8 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   cargarProgramacion() {
     const dialogCargarProgramacion = this.dialog.open( DialogCargarProgramacionComponent, {
       width: '75em',
-      data: { esFlujoInversion: this.esFlujoInversion, contratoConstruccionId: this.contratoConstruccionId }
+      data: { esFlujoInversion: this.esFlujoInversion, contratoConstruccionId: this.contratoConstruccionId,
+              contratoId: this.contrato.contratoId, proyectoId: this.proyectoId }
     });
 
     dialogCargarProgramacion.afterClosed().subscribe( response => {

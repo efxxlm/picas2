@@ -79,14 +79,13 @@ export class HojasVidaContratistaArtcComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  textoLimpio(texto: string) {
-    if ( texto !== undefined ) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
     } else {
       return 0;
     }

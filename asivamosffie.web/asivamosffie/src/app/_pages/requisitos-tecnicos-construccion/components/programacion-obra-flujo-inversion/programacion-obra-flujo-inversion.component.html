@@ -3,7 +3,8 @@
           color="accent" 
           type="submit"
           (click)="cargarProgramacion()"
-          *ngIf="archivoCargueIdProgramacionObra === undefined">
+          [disabled]="archivoCargueIdProgramacionObra !== undefined"
+          >
           Cargar programación
   </button>
 </section>
@@ -21,11 +22,11 @@
           color="accent" 
           type="submit"
           (click)="cargarProgramacion()"
-          *ngIf="archivoCargueIdFlujoInversion === undefined">
+          [disabled]="archivoCargueIdFlujoInversion !== undefined"
+          >
           Cargar flujo de inversión de recursos 
   </button>
 </section>
-
 <div *ngIf="!esFlujoInversion && contrato">
         <app-tabla-programacion-obra  [contratoConstruccionId]="contratoConstruccionId"
                                       [proyectoId]="proyectoId"
