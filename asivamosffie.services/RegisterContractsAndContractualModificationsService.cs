@@ -31,7 +31,7 @@ namespace asivamosffie.services
         public async Task<List<SesionComiteSolicitud>> GetListSesionComiteSolicitud()
         {
             List<SesionComiteSolicitud> ListSesionComiteSolicitud = await _context.SesionComiteSolicitud
-                .Where(r => !(bool)r.Eliminado 
+                .Where(r => !(bool)r.Eliminado
                    &&
                   ((r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
                    || r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Modificacion_Contractual
@@ -319,17 +319,8 @@ namespace asivamosffie.services
         public async Task<bool> EnviarNotificaciones(Contrato pContrato, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionContratacion341);
-            DateTime? FechaFirmaFiduciaria = null;
+            DateTime? FechaFirmaFiduciaria = _context.SesionComiteSolicitud.Where(r => r.SolicitudId == pContrato.Contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.ComiteTecnicoFiduciario.FechaOrdenDia).FirstOrDefault();
 
-            try
-            {
-                FechaFirmaFiduciaria = _context.SesionComiteSolicitud.Where(r => r.SolicitudId == pContrato.Contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).Select(r => r.ComiteTecnicoFiduciario.FechaOrdenDia).FirstOrDefault();
-
-            }
-            catch (Exception)
-            { 
-            }
-            
             var emails = _context.UsuarioPerfil
                 .Where(x => (x.PerfilId == (int)EnumeratorPerfil.Juridica
                     || x.PerfilId == (int)EnumeratorPerfil.Tecnica) && x.Activo)

@@ -5,12 +5,12 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle controversia contractual {{this.numeroSolicitud}}
+        Ver detalle controversia contractual C0001
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>{{this.numeroSolicitud}}</b> Número del contrato: <b>{{this.numContrato}}</b> Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
+        <span>Solicitud: <b>CO00001</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación anticipada por incumplimiento (TAI)</b></span>
     </p>
-    <div style="margin-top: 2em">
+    <div>
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">
@@ -18,14 +18,14 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><strong>Nombre del contratista:</strong> {{this.nombreContratista}}</p>
-                <p><strong>Tipo de identificación:</strong> {{this.tipoIdentificacion}}</p>
-                <p><strong>Número de identificación:</strong> {{this.numIdentificacion}}</p>
-                <p><strong>Tipo de intervención:</strong> {{this.tipoIntervencion}}</p>
-                <p><strong>Valor del contrato:</strong> $ {{this.valorContrato}}</p>
-                <p><strong>Plazo:</strong> {{this.plazoContrato}}</p>
-                <p><strong>Fecha de inicio de contrato:</strong> {{this.fechaInicioContrato}}</p>
-                <p><strong>Fecha de finalización de contrato:</strong> {{this.fechaFinalizacionContrato}}</p>
+                <p><strong>Nombre del contratista:</strong> Constructora Colpatria SAS</p>
+                <p><strong>Tipo de identificación:</strong> NIT</p>
+                <p><strong>Número de identificación:</strong> 900.879.989</p>
+                <p><strong>Tipo de intervención:</strong> Remodelación</p>
+                <p><strong>Valor del contrato:</strong> $ 56.000.000</p>
+                <p><strong>Plazo:</strong> 12 meses / 10 días</p>
+                <p><strong>Fecha de inicio de contrato:</strong> 18/07/2020</p>
+                <p><strong>Fecha de finalización de contrato:</strong> 28/07/2021</p>
             </mat-card-content>
         </mat-card>
         <mat-accordion>
@@ -42,24 +42,15 @@
                         </mat-card-title>
                     </mat-card-header>
                     <mat-card-content style="text-align: left;">
-                        <p><strong>Tipo de controversia:</strong> {{this.tipoControversia}}</p>
-                        <p><strong>Fecha de solicitud:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}</p>
-                        <p><strong>Motivos de la solicitud:</strong></p>
-                        <div *ngFor="let motivo of this.motivosList; let i = index">
-                            <div *ngIf="motivo.motivoSolicitudCodigo=='1'">
-                                Motivo 1
-                            </div>
-                            <div *ngIf="motivo.motivoSolicitudCodigo=='2'">
-                                Motivo 2
-                            </div>
-                        </div>
-                        <p><strong>Fecha de Comité Pre-Técnico:</strong> {{this.fechaComitePreTecnico | date:'dd/MM/yyyy'}}</p>
+                        <p><strong>Tipo de controversia:</strong> Terminación anticipada por incumplimiento (TAI)</p>
+                        <p><strong>Fecha de solicitud:</strong> 05/08/2020</p>
+                        <p><strong>Motivos de la solicitud:</strong> Incuplimiento de contratista de obra</p>
+                        <p><strong>Fecha de Comité Pre-Técnico:</strong> 10/08/2020</p>
+                        <p><strong>Valor del contrato:</strong> $ 56.000.000</p>
                         <p><strong>Conclusión del Comité Pre-técnico de acuerdo con la solicitud:</strong></p>
-                        <div [innerHtml]="this.conclusionComitePreTecnico"></div>
-                        <p><strong>¿La solicitud procede?:</strong> {{this.laSolicitudProcede}}</p>
-                        <p *ngIf="this.laSolicitudProcede=='No'"><strong>Motivos de rechazo:</strong></p>
-                        <div *ngIf="this.laSolicitudProcede=='No'" [innerHtml]="this.motivosRechazo"></div>
-                        <p *ngIf="this.laSolicitudProcede=='Sí'"><strong>¿Requiere comité técnico?:</strong> {{this.vaParaComite}}</p>
+                        <p>Se decide realizar la terminación anticipada ya que la parte contratista no cumplio con tiempos en primera fase.</p>
+                        <p><strong>¿La solicitud procede?:</strong> Sí</p>
+                        <p><strong>¿Requiere comité técnico?:</strong> Sí</p>
                     </mat-card-content>
                 </mat-card>
             </mat-expansion-panel>
@@ -78,7 +69,7 @@
                         </mat-card-title>
                     </mat-card-header>
                     <mat-card-content style="text-align: left;">
-                        <p><strong>URL con soporte:</strong> {{this.soporteSolicitud}}</p>
+                        <p><strong>URL con soporte:</strong> https://drive.google.com/drive/registrodecontroversiacontractual</p>
                     </mat-card-content>
                 </mat-card>
             </mat-expansion-panel>

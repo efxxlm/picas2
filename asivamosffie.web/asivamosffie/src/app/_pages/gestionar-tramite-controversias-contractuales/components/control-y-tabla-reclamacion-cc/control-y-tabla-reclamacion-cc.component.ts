@@ -3,7 +3,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-control-y-tabla-reclamacion-cc',
@@ -11,7 +10,6 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./control-y-tabla-reclamacion-cc.component.scss']
 })
 export class ControlYTablaReclamacionCcComponent implements OnInit {
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -23,7 +21,6 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     'estadoReclamacion',
     'gestion'
   ];
-  /*
   dataTable: any[] = [
     {
       fechaActualizacion: '10/08/2020',
@@ -49,18 +46,14 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
       estadoReclamacion: 'Aprobada por comité técnico',
       id: 3
     }
-  ]; */
-  dataTable: any[] = [];
-  constructor(private router: Router, private services: ContractualControversyService) { }
+  ]; 
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
-    this.services.GetListGrillaActuacionSeguimiento(this.controversiaID).subscribe((data:any)=>{
-      this.dataTable = data;
-      this.dataSource = new MatTableDataSource(this.dataTable);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    });
+    this.dataSource = new MatTableDataSource(this.dataTable);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -77,9 +70,7 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarReclamacionAseguradora',id]);
   }
   enviarReclamacionComiteTecnico(id){
-    this.services.CambiarEstadoActuacionSeguimiento(id,'3').subscribe((data:any)=>{
-      this.ngOnInit();
-    });
+
   }
   verDetalleReclamacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleReclamacionAseguradora',id]);

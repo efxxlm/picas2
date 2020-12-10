@@ -10,11 +10,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Helpers.Constant;
-using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
-    public class JudicialDefenseService : IJudicialDefense
+    public class JudicialDefenseService /*: IGuaranteePolicyService*/
     {
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
@@ -92,7 +91,7 @@ namespace asivamosffie.services
                     demandadoConvocadoBD.UsuarioModificacion = demandadoConvocado.UsuarioModificacion;
                     demandadoConvocadoBD.Email = demandadoConvocado.Email;
                     
-                    _context.DemandadoConvocado.Update(demandadoConvocadoBD);
+                    _context.DemandadoConvocado.Update(demandadoConvocado);
 
                 }
 
@@ -125,429 +124,6 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<Respuesta> CreateOrEditDefensaJudicial(DefensaJudicial defensaJudicial)
-        {
-            Respuesta respuesta = new Respuesta();
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
-
-            string strCrearEditar = string.Empty, strUsuario = string.Empty; ;
-
-            DefensaJudicial defensaJudicialBD = null;
-            try
-            {
-
-                if (string.IsNullOrEmpty(defensaJudicial.DefensaJudicialId.ToString()) || defensaJudicial.DefensaJudicialId == 0)
-                {
-                    //Auditoria
-                    strCrearEditar = "REGISTRAR DEFENSA JUDICIAL";
-                    defensaJudicial.FechaCreacion = DateTime.Now;
-                    defensaJudicial.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
-                    //fichaEstudio.DefensaJudicialId = fichaEstudio.DefensaJudicialId;
-                    defensaJudicial.Eliminado = false;
-                    _context.DefensaJudicial.Add(defensaJudicial);
-                }
-                else
-                {
-                    strCrearEditar = "EDIT DEFENSA JUDICIAL";
-                    defensaJudicialBD = _context.DefensaJudicial.Find(defensaJudicial.DefensaJudicialId);
-
-                    //Auditoria
-                    defensaJudicialBD.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
-                    defensaJudicialBD.Eliminado = false;
-
-                    //Registros
-                    defensaJudicialBD.LocalizacionIdMunicipio = defensaJudicial.LocalizacionIdMunicipio;
-                    defensaJudicialBD.TipoAccionCodigo = defensaJudicial.TipoAccionCodigo;
-                    defensaJudicialBD.JurisdiccionCodigo = defensaJudicial.JurisdiccionCodigo;
-                    defensaJudicialBD.Pretensiones = defensaJudicial.Pretensiones;
-                    defensaJudicialBD.CuantiaPerjuicios = defensaJudicial.CuantiaPerjuicios;
-
-                    defensaJudicialBD.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
-                    defensaJudicialBD.EsRequiereSupervisor = defensaJudicial.EsRequiereSupervisor;
-
-                    _context.DefensaJudicial.Update(defensaJudicialBD);
-
-                }
-
-                _context.SaveChanges();
-
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = true,
-                    IsException = false,
-                    IsValidation = false,
-                    Data = defensaJudicial,
-                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, defensaJudicial.UsuarioCreacion, strCrearEditar)
-
-                };
-            }
-
-            catch (Exception ex)
-            {
-                return respuesta = new Respuesta
-                {
-                    IsSuccessful = false,
-                    IsException = true,
-                    IsValidation = false,
-                    Data = defensaJudicial,
-                    Code = ConstantMessagesJudicialDefense.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, defensaJudicial.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
-                };
-            }
-
-        }
-
-        //private async Task<string> ReemplazarDatosPlantillaControversiaContractual(string strContenido, VistaGenerarActaInicioContrato pActaInicio, string usuario)
-        //{
-        //    string str = "";
-        //    string valor = "";
-
-        //    ControversiaContractual controversiaContractual;
-        //    Contrato contrato;
-        //    ControversiaMotivo controversiaMotivo;
-        //    ActuacionSeguimiento actuacionSeguimiento;
-        //    ControversiaActuacion controversiaActuacion;
-
-
-        //    Contratista contratista;
-        //    Contratacion contratacion = null;
-
-        //    NovedadContractual novedadContractual;   //sin rel?????
-
-        //    DisponibilidadPresupuestal disponibilidadPresupuestal;
-
-        //    //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Eliminado == false).FirstOrDefault();
-        //    contrato = _context.Contrato.Where(r => r.ContratoId == 16 && r.Eliminado == false).FirstOrDefault();
-
-        //    if (contrato != null)
-        //    {
-        //        contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
-
-        //        if (contratacion != null)
-        //        {
-        //            contratista = _context.Contratista.Where(r => r.ContratistaId == contratacion.ContratistaId).FirstOrDefault();
-        //        }
-
-        //    }
-
-        //    controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == 16 && r.Eliminado == false
-        //    && r.Eliminado == false).FirstOrDefault();
-
-        //    // controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == contrato.ContratoId && r.Eliminado == false
-        //    //&& r.Eliminado == false).FirstOrDefault();
-
-        //    string strEstadoCodigoControversia = "sin definir";
-        //    string strTipoControversiaCodigo = "sin definir";
-        //    string strTipoControversia = "sin definir";
-
-        //    Dominio TipoControversiaCodigo;
-
-        //    TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
-        //    if (TipoControversiaCodigo != null)
-        //    {
-        //        strTipoControversia = TipoControversiaCodigo.Nombre;
-        //        strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
-
-        //    }
-        //    controversiaMotivo = _context.ControversiaMotivo.Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId).FirstOrDefault();
-
-        //    string controversiaMotivoSolicitudNombre = "";
-        //    Dominio MotivoSolicitudCodigo;
-        //    if (controversiaMotivo != null)
-        //    {
-
-        //        MotivoSolicitudCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaMotivo.MotivoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
-        //        if (MotivoSolicitudCodigo != null)
-        //        {
-        //            //strTipoControversia = MotivoSolicitudCodigo.Nombre;
-        //            controversiaMotivoSolicitudNombre = MotivoSolicitudCodigo.Codigo;
-
-        //        }
-
-        //    }
-
-        //    strContenido = strContenido.Replace("_Numero_Solicitud_", controversiaContractual.NumeroSolicitud);
-        //    strContenido = strContenido.Replace("_Fecha_Solicitud_", controversiaContractual.FechaSolicitud.ToString("dd/MM/yyyy"));
-        //    //strContenido = strContenido.Replace("_Tipo_Controversia_", strTipoControversia);
-        //    strContenido = strContenido.Replace("_Legitimacion_", );
-        //    strContenido = strContenido.Replace("_Tipo_proceso_", );
-        //    strContenido = strContenido.Replace("_Numero_contratos_proceso_", );
-
-
-        //strContenido = strContenido.Replace("_Numero_Contrato_", contrato.NumeroContrato);
-        //    strContenido = strContenido.Replace("_Nombre_Contratista_", contratista.Nombre ?? "");
-        //    //strContenido = strContenido.Replace("_Fecha_inicio_contrato_", "PENDIENTE");
-        //    //strContenido = strContenido.Replace("_Fecha_fin_contrato_", "PENDIENTE");
-        //    //if (contratacion != null)
-        //    //    strContenido = strContenido.Replace("_Cantidad_proyectos_asociados_", contratacion.ContratacionProyecto.Count().ToString());
-
-
-        //    //string TipoPlantillaDetalleProyecto = ((int)ConstanCodigoPlantillas.Detalle_Proyecto).ToString();
-        //    string DetalleProyecto = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaDetalleProyecto).Select(r => r.Contenido).FirstOrDefault();
-
-        //    string TipoPlantillaRegistrosAlcance = ((int)ConstanCodigoPlantillas.Registros_Tabla_Alcance).ToString();
-        //    string RegistroAlcance = _context.Plantilla.Where(r => r.Codigo == TipoPlantillaRegistrosAlcance).Select(r => r.Contenido).FirstOrDefault();
-
-        //    List<Dominio> ListaParametricas = _context.Dominio.ToList();
-
-        //    List<Localizacion> ListaLocalizaciones = _context.Localizacion.ToList();
-        //    List<InstitucionEducativaSede> ListaInstitucionEducativaSedes = _context.InstitucionEducativaSede.ToList();
-
-        //    string DetallesProyectos = "";
-
-        //    string RegistrosAlcance = "";
-        //    //Contratacion pContratacion
-        //    if (contratacion != null)
-        //    {
-        //        foreach (var proyecto in contratacion.ContratacionProyecto)
-        //        {
-        //            DetallesProyectos += DetalleProyecto;
-
-        //            Localizacion Municipio = ListaLocalizaciones.Where(r => r.LocalizacionId == proyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
-        //            Localizacion Departamento = ListaLocalizaciones.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
-        //            Localizacion Region = ListaLocalizaciones.Where(r => r.LocalizacionId == Departamento.IdPadre).FirstOrDefault();
-
-        //            InstitucionEducativaSede IntitucionEducativa = ListaInstitucionEducativaSedes.Where(r => r.InstitucionEducativaSedeId == proyecto.Proyecto.InstitucionEducativaId).FirstOrDefault();
-        //            InstitucionEducativaSede Sede = ListaInstitucionEducativaSedes.Where(r => r.InstitucionEducativaSedeId == proyecto.Proyecto.SedeId).FirstOrDefault();
-
-                 
-        //            strContenido = strContenido.Replace("_Tipo_Intervencion_", ListaParametricas
-        //            .Where(r => r.Codigo == proyecto.Proyecto.TipoIntervencionCodigo
-        //            && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre);
-
-        //            strContenido = strContenido.Replace("_Llave_MEN_", proyecto.Proyecto.LlaveMen);
-        //            strContenido = strContenido.Replace("_Departamento_", Departamento.Descripcion);
-        //            strContenido = strContenido.Replace("_Municipio_", Municipio.Descripcion);
-
-        //            strContenido = strContenido.Replace("_Institucion_Educativa_", IntitucionEducativa.Nombre);
-                    
-        //            strContenido = strContenido.Replace("_Sede_", Sede.Nombre);                  
-
-        //            //strContenido = strContenido.Replace("_Tipo_Intervencion_", ListaParametricas
-        //            //.Where(r => r.Codigo == proyecto.Proyecto.TipoIntervencionCodigo
-        //            //&& r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).FirstOrDefault().Nombre);
-
-        //            strContenido = strContenido.Replace("_Llave_MEN_", proyecto.Proyecto.LlaveMen);
-        //            strContenido = strContenido.Replace("_Departamento_", Departamento.Descripcion);
-        //            strContenido = strContenido.Replace("_Municipio_", Municipio.Descripcion);
-        //            strContenido = strContenido.Replace("_Institucion_Educativa_", IntitucionEducativa.Nombre);                    
-        //            strContenido = strContenido.Replace("_Sede_", Sede.Nombre);                    
-
-        //            //Plazo de obra
-        //            strContenido = strContenido.Replace("_Meses_", proyecto.Proyecto.PlazoDiasObra.ToString());
-        //            strContenido = strContenido.Replace("_Dias_", proyecto.Proyecto.PlazoMesesObra.ToString());
-        //            //Plazo de Interventoría
-        //            strContenido = strContenido.Replace("_Meses_", proyecto.Proyecto.PlazoDiasInterventoria.ToString());
-        //            strContenido = strContenido.Replace("_Dias_", proyecto.Proyecto.PlazoMesesInterventoria.ToString());
-        //            strContenido = strContenido.Replace("_Valor_obra_", (proyecto.Proyecto.ValorObra != null) ? proyecto.Proyecto.ValorObra.ToString() : "0");
-        //            strContenido = strContenido.Replace("_Valor_Interventoria_", "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorInterventoria));
-        //            strContenido = strContenido.Replace("_Valor_Total_proyecto_", "$" + String.Format("{0:n0}", proyecto.Proyecto.ValorTotal));
-        //            //strContenido = strContenido.Replace("", );
-
-        //        }
-        //        //DetallesProyectos = DetallesProyectos.Replace(placeholderDominio.Nombre, RegistrosAlcance);
-        //        //DetallesProyectos = DetallesProyectos.Replace("[REGISTROS_ALCANCE]", RegistrosAlcance);                
-
-        //    }
-
-        //    //    strContenido = strContenido.Replace("Espacios_intervenir_nombre", );
-        //    //strContenido = strContenido.Replace("Espacios_intervenir_cantidad", );
-
-        //    //contratoAprobar.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
-        //    strContenido = strContenido.Replace("_Estado_obra_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Programacion_obra_acumulada_", "PENDIENTE");  //??
-        //    strContenido = strContenido.Replace("_Avance_físico_acumulado_ejecutado_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("Facturacion_programada_acumulada_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Facturacion_ejecutada_acumulada_", "PENDIENTE");
-
-        //    //strContenido = strContenido.Replace(">>>>>SECCION_TAI>>>>>>>>", "");
-        //    //strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
-        //    //strContenido = strContenido.Replace("_Fecha_Comite_Pre_Tecnico_", controversiaContractual.FechaComitePreTecnico != null ? Convert.ToDateTime(controversiaContractual.FechaComitePreTecnico).ToString("dd/MM/yyyy") : controversiaContractual.FechaComitePreTecnico.ToString());
-
-        //    //strContenido = strContenido.Replace("_Conclusion_Comite_pretecnico_", controversiaContractual.ConclusionComitePreTecnico);
-        //    strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
-
-        //    //strContenido = strContenido.Replace(">>>>> SECCION_OTRAS >>>>>>>>", "");
-        //    //strContenido = strContenido.Replace("_Fecha_radicado_SAC_Numero_radicado_SAC_", controversiaContractual.NumeroRadicadoSac);
-        //    //strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
-        //    //strContenido = strContenido.Replace("_Resumen_justificacion_solicitud_", controversiaContractual.MotivoJustificacionRechazo);
-        //    strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
-
-        //    //Historial de Modificaciones                           
-
-        //    string prefijo = "";
-
-        //    if (contrato != null)
-        //    {
-        //        if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
-        //            prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
-        //        else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
-        //            prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
-        //    }
-        //    controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
-
-        //    strContenido = strContenido.Replace("Modificación 1", "");
-        //    strContenido = strContenido.Replace("_Numero_solicitud_", controversiaContractual.NumeroSolicitudFormat);
-        //    strContenido = strContenido.Replace("_Tipo_Novedad_", novedadContractual.TipoNovedadCodigo);
-
-        //    strContenido = strContenido.Replace(">>>>> SECCION_SUSPENSION_PRORROGA_REINICIO >>>>>>>>", "");
-        //    strContenido = strContenido.Replace("_Plazo_solicitado_", Convert.ToInt32(novedadContractual.PlazoAdicionalMeses).ToString());
-        //    //strContenido = strContenido.Replace("_Plazo_solicitado_", novedadContractual.PlazoAdicionalDias);
-        //    strContenido = strContenido.Replace("_Fecha_Inicio_", novedadContractual.FechaInicioSuspension != null ? Convert.ToDateTime(novedadContractual.FechaInicioSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaInicioSuspension.ToString());
-
-        //    strContenido = strContenido.Replace("_Fecha_Fin_", novedadContractual.FechaFinSuspension != null ? Convert.ToDateTime(novedadContractual.FechaFinSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaFinSuspension.ToString());
-        //    //ContratacionProyecto ComiteTecnicoProyecto  ComiteTecnico
-        //    strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");
-
-        //    if (disponibilidadPresupuestal != null)
-        //    {
-        //        //empuezo con fuentes
-        //        var gestionfuentes = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado
-        //        && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestal.DisponibilidadPresupuestalId).
-        //            Include(x => x.FuenteFinanciacion).
-        //                ThenInclude(x => x.Aportante).
-        //                ThenInclude(x => x.CofinanciacionDocumento).
-        //            Include(x => x.DisponibilidadPresupuestalProyecto).
-        //                ThenInclude(x => x.Proyecto).
-        //                    ThenInclude(x => x.Sede).
-        //            ToList();
-
-        //        foreach (var gestion in gestionfuentes)
-        //        {
-        //            //el saldo actual de la fuente son todas las solicitudes a la fuentes
-        //            //var consignadoemnfuente = _context.ControlRecurso.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorConsignacion);
-        //            var consignadoemnfuente = _context.FuenteFinanciacion.Where(x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId).Sum(x => x.ValorFuente);
-        //            var saldofuente = _context.GestionFuenteFinanciacion.Where(
-        //                x => x.FuenteFinanciacionId == gestion.FuenteFinanciacionId &&
-        //                x.DisponibilidadPresupuestalProyectoId != gestion.DisponibilidadPresupuestalProyectoId).Sum(x => x.ValorSolicitado);
-        //            string fuenteNombre = _context.Dominio.Where(x => x.Codigo == gestion.FuenteFinanciacion.FuenteRecursosCodigo
-        //                    && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
-        //            //(decimal)font.FuenteFinanciacion.ValorFuente,
-        //            // Saldo_actual_de_la_fuente = (decimal)font.FuenteFinanciacion.ValorFuente - saldofuente
-        //            //saldototal += (decimal)consignadoemnfuente - saldofuente;
-        //            string institucion = _context.InstitucionEducativaSede.Where(x => x.InstitucionEducativaSedeId == gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.PadreId).FirstOrDefault().Nombre;
-        //            //var tr = plantilla_fuentes.Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
-        //            var tr = strContenido.Replace("[LLAVEMEN]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.LlaveMen)
-        //                //.Replace("[INSTITUCION]", institucion)
-        //                //.Replace("[SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
-        //                .Replace("[APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
-        //                .Replace("[VALOR_APORTANTE]", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento
-        //                .Sum(x => x.ValorDocumento).ToString())
-        //                .Replace("[FUENTE]", fuenteNombre)
-        //                //.Replace("[SALDO_FUENTE]", saldototal.ToString())
-        //                .Replace("[VALOR_FUENTE]", gestion.ValorSolicitado.ToString());
-        //            //.Replace("[NUEVO_SALDO_FUENTE]", (saldototal - gestion.ValorSolicitado).ToString());
-
-
-        //            //tablafuentes += tr;
-        //        }
-
-
-        //        //usos                    
-             
-               
-        //    }
-
-      
-
-        //    string EstadoAvanceTramiteCodigoNombre = "";
-        //    string ActuacionAdelantadaCodigoNombre = "";
-
-        //    Dominio EstadoAvanceTramiteCodigo;
-        //    //Dominio EstadoAvanceTramiteCodigo;
-        //    Dominio ActuacionAdelantadaCodigo;
-
-        //    if (controversiaActuacion != null)
-        //    {
-        //        EstadoAvanceTramiteCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
-        //        if (EstadoAvanceTramiteCodigo != null)
-        //        {
-        //            //strTipoControversia = MotivoSolicitudCodigo.Nombre;
-        //            EstadoAvanceTramiteCodigoNombre = EstadoAvanceTramiteCodigo.Nombre;
-
-        //        }
-
-        //        ActuacionAdelantadaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ActuacionAdelantadaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
-        //        if (ActuacionAdelantadaCodigo != null)
-        //        {
-        //            ActuacionAdelantadaCodigoNombre = ActuacionAdelantadaCodigo.Nombre;
-        //            //ActuacionAdelantadaCodigoNombre = ActuacionAdelantadaCodigo.Codigo;
-
-        //        }
-
-        //    }
-
-        //    //DemandadoConvocado fichaestudio DefensaJudicial
-
-        //    strContenido = strContenido.Replace("_Departamento_inicio_proceso_", );
-
-        //    strContenido = strContenido.Replace("_Municipio_inicio_proceso_", );
-        //    strContenido = strContenido.Replace("_Autoridad_despacho_conocimiento_", );
-        //    strContenido = strContenido.Replace("_Fecha_radicado_despacho_conocimiento_", );
-        //    strContenido = strContenido.Replace("_Nombre_convocante_demandante_", );
-        //    strContenido = strContenido.Replace("_Nombre_convocado_demandado_", );
-        //    strContenido = strContenido.Replace("_Fecha_radicado_FFIE_", );
-        //    strContenido = strContenido.Replace("_Numero_radicado_FFIE_", );
-
-        //    strContenido = strContenido.Replace("", );
-        //    strContenido = strContenido.Replace("", );
-        //    strContenido = strContenido.Replace("", );
-        //    strContenido = strContenido.Replace("", );
-                    
-
-
-
-
-        //    ///no van no incluir
-
-
-        //      //Historial de Actuaciones
-        //      strContenido = strContenido.Replace(">>>>> SECCION_LISTA_ACTUACIONES >>>>>>>>", "");
-        //    //(LISTA ACTUACIONES....)
-        //    strContenido = strContenido.Replace("Actuación 1", "");
-        //    strContenido = strContenido.Replace("_Estado_avance_tramite_", EstadoAvanceTramiteCodigoNombre);
-        //    strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
-
-        //    strContenido = strContenido.Replace("_Actuacion_adelantada_", ActuacionAdelantadaCodigoNombre);
-        //    strContenido = strContenido.Replace("_Actuacion_adelantada_", controversiaActuacion.ActuacionAdelantadaOtro);
-
-        //    strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", controversiaActuacion.ProximaActuacionCodigo);
-        //    strContenido = strContenido.Replace("_Observaciones_", controversiaActuacion.Observaciones);
-        //    strContenido = strContenido.Replace("_URL_soporte_", controversiaActuacion.RutaSoporte);
-
-        //    //Resumen de la propuesta de reclamación ante la aseguradora:
-        //    strContenido = strContenido.Replace("Actuación de la reclamación 1", "");
-        //    strContenido = strContenido.Replace("_Estado_avance_reclamacion_", "PENDIENTE");
-        //    strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
-        //    strContenido = strContenido.Replace("_Actuacion_adelantada_", actuacionSeguimiento.ActuacionAdelantada);
-        //    strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", actuacionSeguimiento.ProximaActuacion);
-        //    strContenido = strContenido.Replace("_Observaciones_", actuacionSeguimiento.Observaciones);
-        //    strContenido = strContenido.Replace("_URL_soporte_", actuacionSeguimiento.RutaSoporte);
-        //    strContenido = strContenido.Replace("_reclamacion_resultado_definitivo_cerrado_ante_aseguradora_", Convert.ToBoolean(actuacionSeguimiento.EsResultadoDefinitivo).ToString());
-
-
-        //    //datos exclusivos interventoria
-
-        //    UsuarioPerfil UsuarioPerfil = _context.UsuarioPerfil.Where(y => y.Usuario.Email == usuario).Include(y => y.Perfil).FirstOrDefault();
-
-        //    Perfil perfil = null;
-
-        //    if (UsuarioPerfil != null)
-        //    {
-        //        perfil = _context.Perfil.Where(y => y.PerfilId == UsuarioPerfil.PerfilId).FirstOrDefault();
-
-        //    }
-        //    if (UsuarioPerfil != null)
-        //    {
-        //        strContenido = strContenido.Replace("_Cargo_Usuario_", perfil.Nombre);
-        //    }
-        //    strContenido = strContenido.Replace("_Nombre_Supervisor_", "_Nombre_Supervisor_");
-
-        //    return strContenido;
-
-        //}
         public async Task<Respuesta> CreateOrEditFichaEstudio(FichaEstudio fichaEstudio)
         {
             Respuesta respuesta = new Respuesta();
@@ -594,9 +170,9 @@ namespace asivamosffie.services
                     fichaEstudioBD.EsAprobadoAperturaProceso = fichaEstudio.EsAprobadoAperturaProceso;
                     fichaEstudioBD.EsPresentadoAnteComiteFfie = fichaEstudio.EsPresentadoAnteComiteFfie;
 
-                    fichaEstudio.EsCompleto = ValidarRegistroCompletoFichaEstudio(fichaEstudioBD);
+                    fichaEstudio.EsCompleto = ValidarRegistroCompletoFichaEstudio(fichaEstudio);
 
-                    _context.FichaEstudio.Update(fichaEstudioBD);
+                    _context.FichaEstudio.Update(fichaEstudio);
 
                 }
 
@@ -751,10 +327,8 @@ namespace asivamosffie.services
                                 Municipio = proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
                                 //InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
                                 //Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
-                                InstitucionEducativa = proyecto.InstitucionEducativa.CodigoDane,
-                                CodigoDane = proyecto.InstitucionEducativa.Nombre,
+                                InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
                                 Sede = proyecto.Sede.Nombre,
-                                SedeCodigo = proyecto.Sede.CodigoDane,
                                 ProyectoId = proyecto.ProyectoId,
 
 
@@ -775,16 +349,8 @@ namespace asivamosffie.services
 
                                 //item.Contratacion= item.Contratacion.wh(r => r.ContratacionId == item.ContratacionId ).FirstOrDefault();
 
-                                Contratista contratista = null;
-
                                 if (item.Contratacion != null)
                                 {
-                                     contratista = _context.Contratista.Where(r=>r.ContratistaId== item.Contratacion.ContratistaId).FirstOrDefault();
-
-                                    if (contratista != null)
-                                        proyectoGrilla.NombreContratista = contratista.Nombre;
-                                    else
-                                        proyectoGrilla.NombreContratista = "";
 
                                     if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
                                     {
@@ -839,24 +405,23 @@ namespace asivamosffie.services
                 try
                 {     
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string TipoAccionNombre = "sin definir";
-
+                    string strTipoSolicitudCodigoContratoPoliza = "sin definir";
                     string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
 
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio TipoAccion;
+                    Dominio TipoSolicitudCodigoContratoPoliza;
                     Dominio EstadoSolicitudCodigoContratoPoliza;
 
                     //if (contratoPoliza != null)
                     //{
-                    TipoAccion = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
-                    //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
-                    if (TipoAccion != null)
-                        TipoAccionNombre = TipoAccion.Nombre;
+                        //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
+                        //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
+                        //if (TipoSolicitudCodigoContratoPoliza != null)
+                        //    strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
 
-                    //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
-                    //if (EstadoSolicitudCodigoContratoPoliza != null)
-                    //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
+                        //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                        //if (EstadoSolicitudCodigoContratoPoliza != null)
+                        //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
                     //}
                     bool bRegistroCompleto = false;
@@ -873,9 +438,9 @@ namespace asivamosffie.services
                         DefensaJudicialId = defensaJudicial.DefensaJudicialId,
                         FechaRegistro = defensaJudicial.FechaCreacion.ToString("dd/MM/yyyy"),
                         LegitimacionPasivaActiva= (bool)defensaJudicial.EsLegitimacionActiva ? "Activa" : "Pasiva",
-                        NumeroProceso="DJ"+ defensaJudicial.DefensaJudicialId.ToString("000") + defensaJudicial.FechaCreacion.ToString("yyyy"),
+                        NumeroProceso="DJ"+ defensaJudicial.DefensaJudicialId.ToString() + defensaJudicial.FechaCreacion.ToString("yyyy"),
                         TipoAccionCodigo= defensaJudicial.TipoAccionCodigo,
-                        TipoAccion = TipoAccionNombre,
+                        TipoAccion = "PENDIENTE",
                         EstadoProceso= "PENDIENTE",
                         EstadoProcesoCodigo =defensaJudicial.EstadoProcesoCodigo,
                         

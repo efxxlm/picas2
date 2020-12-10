@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-registrar-nueva-mesatrabajo-act',
@@ -7,14 +6,10 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./registrar-nueva-mesatrabajo-act.component.scss']
 })
 export class RegistrarNuevaMesatrabajoActComponent implements OnInit {
-  idControversia: any;
 
-  constructor(private activatedRoute: ActivatedRoute) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(param => {
-      this.idControversia = param.id;
-    });
   }
 
 }

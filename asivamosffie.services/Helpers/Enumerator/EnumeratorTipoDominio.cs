@@ -136,20 +136,12 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Programacion_Inicial = 88,
         
-        //Tipo_de_controversia=80,
-        Tipo_de_controversia = 100,
+        Tipo_de_controversia=80,
 
         Estado_controversia_contractual_TAI = 90,
 
-        Estado_controversia= 89,
-
-        //Estado_avance_reclamacion = 91,
-        Estado_avance_reclamacion = 108,
-
-        Proxima_actuacion_requerida =103,
-
-        Tipo_accion_judicial = 106,
-
-
+        Estado_avance_reclamacion = 91,
+ 
+          
     }
 }

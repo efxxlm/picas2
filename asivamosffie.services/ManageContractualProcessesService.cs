@@ -587,7 +587,7 @@ namespace asivamosffie.services
                                     break;
                                 }
 
-                                //jflorez, pequeï¿½o ajsute porque toteaba                                    
+                                //jflorez, pequeño ajsute porque toteaba                                    
                                 if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp))
                                 {
                                     break;
@@ -862,7 +862,7 @@ namespace asivamosffie.services
                         .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MMMM-yy") : " ")
                         .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MMMM-yy") : " ")
                         .Replace("[NUMERO_SOLICITUD]", pSesionComiteSolicitud.Contratacion.NumeroSolicitud ?? " ");
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisiï¿½n", template, pSender, pPassword, pMailServer, pMailPort);
+                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisión", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
                 return blEnvioCorreo;

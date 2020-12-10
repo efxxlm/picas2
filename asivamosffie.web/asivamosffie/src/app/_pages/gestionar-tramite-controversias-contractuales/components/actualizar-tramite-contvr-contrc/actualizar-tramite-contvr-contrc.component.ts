@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-actualizar-tramite-contvr-contrc',
@@ -7,30 +6,16 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
   styleUrls: ['./actualizar-tramite-contvr-contrc.component.scss']
 })
 export class ActualizarTramiteContvrContrcComponent implements OnInit {
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  public controversiaID = localStorage.getItem("controversiaID");
   public selTab;
   public tipoControversia;
-  public fechaSolicitud;
-  public codigoSolicitud;
-  public numeroContrato;
-  constructor(private services: ContractualControversyService) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.loadDataContrato(this.controversiaID);
+    //this.tipoControversia="Terminación anticipada por incumplimiento (TAI)";
+    this.tipoControversia="Terminación anticipada por imposibilidad de ejecución (TAIE)"
   }
   cambiarTab(opc) {
     this.selTab=opc;
-  }
-  loadDataContrato(id){
-    this.services.GetControversiaContractualById(id).subscribe((data:any)=>{
-      switch(data.tipoControversiaCodigo){
-        case '1':
-          this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';
-        break;
-      };
-      this.fechaSolicitud = data.fechaSolicitud;
-      this.codigoSolicitud = data.numeroSolicitud;
-      this.numeroContrato = data.contrato.numeroContrato;
-    });
   }
 }

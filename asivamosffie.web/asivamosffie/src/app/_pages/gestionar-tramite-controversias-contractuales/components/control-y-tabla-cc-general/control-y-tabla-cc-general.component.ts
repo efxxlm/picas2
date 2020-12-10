@@ -17,16 +17,15 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   displayedColumns: string[] = [
     'fechaSolicitud',
     'numeroSolicitud',
-    'numeroContrato',
     'tipoControversia',
     'estadoControversia',
     'gestion',
   ];
   public dataTable;
   constructor(private router: Router, private services: ContractualControversyService) {
-  }
-  ngOnInit(): void {
-    this.services.GetListGrillaTipoSolicitudControversiaContractual().subscribe(data => {
+   }
+   ngOnInit(): void {
+    this.services.GetListGrillaTipoSolicitudControversiaContractual().subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;
@@ -47,36 +46,17 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  verDetalleEditarTramiteButton(id) {
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', id]);
+  verDetalleEditarTramiteButton(id){
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia',id]);
   }
 
-  deleteControversia(id) {
-    this.services.EliminarControversiaContractual(id).subscribe((dataEliminado: any) => {
-      if (dataEliminado.isSuccessful == true) {
-        this.ngOnInit();
-      }
-    });
-  }
-  sendTramiteToComite(id) {
-    this.services.CambiarEstadoControversiaContractual(id, "5").subscribe((dataUpdt: any) => {
-      if (dataUpdt.isSuccessful == true) {
-        this.ngOnInit();
-      }
-    });
-  }
-  actualizarTramiteButton(id) {
-    localStorage.setItem("controversiaID", id);
-    this.services.CambiarEstadoControversiaContractual(id, "10").subscribe((dataUpdt: any) => {
-      this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
-    });
-  }
-  consultarActualizaciones(id){
-    localStorage.setItem("controversiaID", id);
+  actualizarTramiteButton(id){
+    localStorage.setItem("controversiaID",id);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
   }
-  verDetalleButton(id) {
-    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleControversia', id]);
+
+  verDetalleButton(id){
+    this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleControversia',id]);
   }
 
 }
