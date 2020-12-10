@@ -157,6 +157,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -732,7 +733,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.Observacion)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoObservacionCodigo)
@@ -1337,7 +1338,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion).HasMaxLength(1250);
+                entity.Property(e => e.Observacion).HasMaxLength(3250);
 
                 entity.Property(e => e.TipoObservacionCodigo)
                     .IsRequired()
@@ -3396,6 +3397,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(2000)
                     .IsUnicode(false);
 
+                entity.Property(e => e.AvanceFisicoCapitulo).HasColumnType("decimal(18, 3)");
+
                 entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaInicio).HasColumnType("datetime");
@@ -3861,6 +3864,19 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalAvanceFisico>(entity =>
             {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalAvanceFisico)
                     .HasForeignKey(d => d.SeguimientoSemanalId)

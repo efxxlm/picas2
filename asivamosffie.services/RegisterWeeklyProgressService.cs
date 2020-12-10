@@ -254,6 +254,8 @@ namespace asivamosffie.services
             return ListBitaCora;
         }
         #endregion
+
+        #region Save Edit
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
@@ -343,6 +345,23 @@ namespace asivamosffie.services
             }
         }
 
+  
+        private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico pSeguimientoSemanalRegistroFotografico, string pUsuarioCreacion)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
         #region Validar Registros Completos
         private bool? ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor manejoMaterialesInsumosProveedor)
         {
@@ -360,19 +379,5 @@ namespace asivamosffie.services
         }
 
         #endregion
-        private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico pSeguimientoSemanalRegistroFotografico, string pUsuarioCreacion)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
