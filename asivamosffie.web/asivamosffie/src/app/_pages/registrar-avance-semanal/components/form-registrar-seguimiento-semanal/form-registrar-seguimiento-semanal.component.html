@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="seguimientoSemanal !== undefined">
     <div class="text-right">
         <a routerLink="/registrarAvanceSemanal" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -56,16 +56,15 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-avance-fisico-financiero></app-avance-fisico-financiero>
+                <app-avance-fisico-financiero [seguimientoDiario]="seguimientoSemanal.seguimientoDiario"></app-avance-fisico-financiero>
             </mat-expansion-panel>
 
-            <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel class="expansion-style" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title completo">
                         Avance financiero
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <!-- Por integrar -->
                 <app-avance-financiero></app-avance-financiero>
             </mat-expansion-panel>
 

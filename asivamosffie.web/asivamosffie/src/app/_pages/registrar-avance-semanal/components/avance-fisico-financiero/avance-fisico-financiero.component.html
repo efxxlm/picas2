@@ -1,4 +1,4 @@
-<section class="text-center" *ngIf="esVerDetalle === false">
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoDiario !== undefined">
     <div class="colorMainColor">
         <p>Estado de la obra: <b>En ejecución</b> </p>
     </div>
@@ -15,7 +15,7 @@
                 <p> <b>Disponiblidad personal: Insuficiente</b> </p>
             </div>
 
-            <app-tabla-avance-resumen-alertas></app-tabla-avance-resumen-alertas>
+            <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario"></app-tabla-avance-resumen-alertas>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">

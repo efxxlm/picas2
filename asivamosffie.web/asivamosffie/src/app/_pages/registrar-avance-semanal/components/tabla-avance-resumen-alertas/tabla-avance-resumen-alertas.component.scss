@@ -14,3 +14,14 @@
     display: inline-block;
     width: 90%;
 };
+
+.sub-item-table {
+    display: block;
+    &:not(:first-child) {
+        border-top: solid 1px var(--mainColor);
+    }
+}
+
+.padding-0em {
+    padding: 0em 0em !important;
+}

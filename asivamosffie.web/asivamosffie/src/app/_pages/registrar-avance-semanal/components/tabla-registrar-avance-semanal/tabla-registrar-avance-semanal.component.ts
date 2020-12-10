@@ -29,6 +29,7 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
       this.avanceSemanalSvc.getVRegistrarAvanceSemanal()
         .subscribe(
           listas => {
+            console.log( listas );
             this.tablaRegistro = new MatTableDataSource( listas );
             this.tablaRegistro.sort = this.sort;
             this.tablaRegistro.paginator = this.paginator;

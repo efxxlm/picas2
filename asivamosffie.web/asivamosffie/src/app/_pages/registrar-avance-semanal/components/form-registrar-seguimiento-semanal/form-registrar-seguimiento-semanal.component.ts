@@ -1,3 +1,5 @@
+import { ActivatedRoute } from '@angular/router';
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,7 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
 
-  constructor() { }
+  seguimientoSemanal: any;
+
+  constructor(
+    private avanceSemanalSvc: RegistrarAvanceSemanalService,
+    private activatedRoute: ActivatedRoute ) {
+    this.avanceSemanalSvc.getLastSeguimientoSemanalByContratacionProyectoId( this.activatedRoute.snapshot.params.id, 0 )
+      .subscribe(
+        seguimiento => {
+          this.seguimientoSemanal = seguimiento;
+          console.log( this.seguimientoSemanal );
+        }
+      );
+  }
 
   ngOnInit(): void {
   }

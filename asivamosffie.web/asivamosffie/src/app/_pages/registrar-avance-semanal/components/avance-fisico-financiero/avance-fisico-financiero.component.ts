@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class AvanceFisicoFinancieroComponent implements OnInit {
 
   @Input() esVerDetalle = false;
+  @Input() seguimientoDiario: any;
 
   constructor() { }
 

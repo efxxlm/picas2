@@ -12,6 +12,7 @@ import { DialogTablaAvanceResumenComponent } from '../dialog-tabla-avance-resume
 export class TablaAvanceResumenAlertasComponent implements OnInit {
 
     @Input() esVerDetalle = false;
+    @Input() seguimientoDiario: any;
     tablaAvanceResumen = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     displayedColumns: string[]  = [
@@ -22,21 +23,26 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
       'observaciones',
       'totalHorasRetraso'
     ];
-    dataTable: any[] = [
-        {
-            fechaReporte: '05/07/2020',
-            cantidadPersonalProgramado: 24,
-            cantidadPersonalTrabajando: 19,
-            horasRetraso: 6,
-            observaciones: 'Cinco personas se reportaron incapacitadas por enfermedad.',
-            totalHorasRetraso: 6
-        }
-    ];
 
     constructor( private dialog: MatDialog ) { }
 
     ngOnInit(): void {
-        this.tablaAvanceResumen = new MatTableDataSource( this.dataTable );
+        if ( this.seguimientoDiario !== undefined && this.seguimientoDiario.length > 0 ) {
+            const dataSeguimientoDiario = [
+            ];
+            let sumaTotal = 0;
+            for ( const seguimiento of this.seguimientoDiario ) {
+                sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
+            }
+            dataSeguimientoDiario.push(
+                {
+                    totalHorasRetraso: sumaTotal,
+                    resumenAlertas: [ ...this.seguimientoDiario ]
+                }
+            );
+            console.log( dataSeguimientoDiario );
+            this.tablaAvanceResumen = new MatTableDataSource( dataSeguimientoDiario );
+        }
     }
 
     openDialogObservaciones( observacion: string ) {
