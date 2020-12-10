@@ -19,12 +19,12 @@ import { ActualizarProcesoDjComponent } from './components/actualizar-proceso-dj
 import { ControlTablaActuacionProcesoComponent } from './components/control-tabla-actuacion-proceso/control-tabla-actuacion-proceso.component';
 import { RegistrarActuacionProcesoComponent } from './components/registrar-actuacion-proceso/registrar-actuacion-proceso.component';
 import { VerDetalleEditarActuacionProcesoComponent } from './components/ver-detalle-editar-actuacion-proceso/ver-detalle-editar-actuacion-proceso.component';
-import { DetalleEditarActuacionProcesoComponent } from './components/detalle-editar-actuacion-proceso/detalle-editar-actuacion-proceso.component';
+import { DetalleActuacionProcesoComponent } from './components/detalle-actuacion-proceso/detalle-actuacion-proceso.component';
 
 
 
 @NgModule({
-  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent, VerDetalleEditarRegistroProcesoDjComponent, ActualizarProcesoDjComponent, ControlTablaActuacionProcesoComponent, RegistrarActuacionProcesoComponent, VerDetalleEditarActuacionProcesoComponent, DetalleEditarActuacionProcesoComponent],
+  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent, VerDetalleEditarRegistroProcesoDjComponent, ActualizarProcesoDjComponent, ControlTablaActuacionProcesoComponent, RegistrarActuacionProcesoComponent, VerDetalleEditarActuacionProcesoComponent, DetalleActuacionProcesoComponent],
   imports: [
     CommonModule,
     MaterialModule,

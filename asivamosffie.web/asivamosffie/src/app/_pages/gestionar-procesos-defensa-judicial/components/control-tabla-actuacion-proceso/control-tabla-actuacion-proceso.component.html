@@ -46,7 +46,8 @@
                     Finalizar actuación
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoRegistro === 'Completo'">
+                    *ngIf="element.estadoRegistro === 'Completo'"
+                    (click)="verDetalleEditar(element.id)">
                     Ver detalle / Editar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
@@ -54,7 +55,8 @@
                     Eliminar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoRegistro === 'Completo'">
+                    *ngIf="element.estadoRegistro === 'Completo'"
+                    (click)="this.verDetalle(element.id)">
                     Ver detalle
                 </button>
             </td>

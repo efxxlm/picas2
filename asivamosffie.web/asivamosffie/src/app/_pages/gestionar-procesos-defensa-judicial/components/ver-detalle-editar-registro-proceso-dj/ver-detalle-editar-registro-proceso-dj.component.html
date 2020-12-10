@@ -7,6 +7,7 @@
     <h1 class="title-menu--h1">
         Ver detalle/Editar registro proceso de defensa judicial DJ0012020
     </h1>
+    <form [formGroup]="addressForm" novalidate>
     <mat-card class="shipping-card">
         <mat-card-content align="left">
             <div class="row">
@@ -45,6 +46,7 @@
             </div>
         </mat-card-content>
     </mat-card>
+</form>
     <div class="text-center">
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
@@ -72,7 +74,7 @@
             <app-form-detalle-proceso-dj></app-form-detalle-proceso-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion>
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==true">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar">
@@ -105,6 +107,19 @@
     <div style="margin-top: 1em;">
         Una vez las secciones habilitadas se encuentren diligenciadas y en color verde se habilitará la sección <strong>“Ficha de estudio”</strong> para continuar el proceso
     </div>
+    <!-- Cuando haya observaciones del comite tecnico, el integrador lo descomenta
+    <mat-card class="shipping-card mainGris">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text textoGris">
+                Observaciones
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <p>En el acordeón Convocados especificamente en Convocado 1 se debe realizar un ajuste en el número de identificación del convocado
+                ya que no es valido</p>
+        </mat-card-content>
+    </mat-card>
+    -->
 </div>
 
 

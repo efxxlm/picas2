@@ -38,4 +38,10 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
   irNuevo() {
     this.router.navigate(['/gestionarProcesoDefensaJudicial/registrarActuacionProceso']);
   }
+  verDetalle(id){
+    this.router.navigate(['/gestionarProcesoDefensaJudicial/verDetalleActuacion',id]);
+  }
+  verDetalleEditar(id){
+    this.router.navigate(['/gestionarProcesoDefensaJudicial/verDetalleEditarActuacionProceso',id]);
+  }
 }
