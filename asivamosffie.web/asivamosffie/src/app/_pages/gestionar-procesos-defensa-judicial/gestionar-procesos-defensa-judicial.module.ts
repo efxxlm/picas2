@@ -9,11 +9,14 @@ import { ControlTablaProcesoDefensaJudicialComponent } from './components/contro
 import { RegistroNuevoProcesoJudicialComponent } from './components/registro-nuevo-proceso-judicial/registro-nuevo-proceso-judicial.component';
 import { FormContratosAsociadosDjComponent } from './components/form-contratos-asociados-dj/form-contratos-asociados-dj.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormDetalleProcesoDjComponent } from './components/form-detalle-proceso-dj/form-detalle-proceso-dj.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { FormConvocadosDjComponent } from './components/form-convocados-dj/form-convocados-dj.component';
 
 
 
 @NgModule({
-  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent],
+  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -21,7 +24,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatAutocompleteModule,
     FormsModule,
     GestionarProcesosDefensaJudicialRoutingModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    CurrencyMaskModule
   ]
 })
 export class GestionarProcesosDefensaJudicialModule { }
