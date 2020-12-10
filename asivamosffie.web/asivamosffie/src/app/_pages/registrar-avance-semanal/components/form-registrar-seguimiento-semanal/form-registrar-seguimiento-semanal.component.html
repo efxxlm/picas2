@@ -7,35 +7,35 @@
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar seguimiento semanal LU990088
+            Registrar seguimiento semanal {{ seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
         </h1>
     </div>
 
-    <div class="text-center">
+    <div class="text-center colorMainColor mt-1em">
         <p>Número de contrato de obra:
-          <b>CC223456789</b>
+          <b> {{ seguimientoSemanal.contratacionProyecto.contratacion.contrato[0].numeroContrato }} </b>
         </p>
     </div>
 
-    <div align="left">
+    <div class="mt-1em" align="left">
         <mat-card class="border">
             <mat-card-content class="mt-1em">
-              <p><b>Tipo de intervención</b>: Remodelación</p>
-              <p><b>Departamento</b>: Atlántico</p>
-              <p><b>Municipio</b>: Baranoa</p>
-              <p><b>Institución Educativa</b>: María Inmaculada</p>
-              <p><b>Sede</b>: Sede 2</p>
+              <p><b>Tipo de intervención</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.tipoIntervencionString }} </p>
+              <p><b>Departamento</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.departamentoObj.descripcion }} </p>
+              <p><b>Municipio</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.municipioObj.descripcion }} </p>
+              <p><b>Institución Educativa</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.institucionEducativa.nombre }} </p>
+              <p><b>Sede</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.sede.nombre }} </p>
             </mat-card-content>
         </mat-card>
     </div>
 
-    <div align="left">
+    <div class="mt-1em" align="left">
         <mat-card class="border">
             <mat-card-title class="text-area-quill--label">Semana de reporte</mat-card-title>
             <mat-card-content class="mt-1em">
                 <section class="d-flex">
-                    <p class="ml-1em"><b>Fecha inicial</b>: 04/07/2020</p>
-                    <p class="ml-final-date"><b>Fecha final</b>: 11/07/2020</p>
+                    <p class="ml-1em"><b>Fecha inicial</b>: {{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} </p>
+                    <p class="ml-final-date"><b>Fecha final</b>: {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </p>
                 </section>
             </mat-card-content>
         </mat-card>

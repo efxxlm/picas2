@@ -15,8 +15,14 @@ export class RegistrarAvanceSemanalService {
     return this.http.get<any[]>( `${ this.urlApi }/GetVRegistrarAvanceSemanal` );
   }
 
-  getLastSeguimientoSemanalByContratacionProyectoId( pContratacionProyectoId: number, pSeguimientoSemanalId: number ) {
-    return this.http.get( `${ this.urlApi }/GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId?pContratacionProyectoId=${ pContratacionProyectoId }&pSeguimientoSemanalId=${ pSeguimientoSemanalId }` );
+  getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( pContratacionProyectoId: number, pSeguimientoSemanalId: number ) {
+    return this.http.get(
+      `${ this.urlApi }/GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId?pContratacionProyectoId=${ pContratacionProyectoId }&pSeguimientoSemanalId=${ pSeguimientoSemanalId }`
+    );
+  }
+
+  getListSeguimientoSemanalByContratacionProyectoId( pContratacionProyectoId: number ) {
+    return this.http.get( `${ this.urlApi }/GetListSeguimientoSemanalByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }` );
   }
 
 }

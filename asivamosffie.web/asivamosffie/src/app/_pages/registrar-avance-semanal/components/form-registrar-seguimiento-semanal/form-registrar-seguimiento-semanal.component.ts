@@ -14,7 +14,7 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
   constructor(
     private avanceSemanalSvc: RegistrarAvanceSemanalService,
     private activatedRoute: ActivatedRoute ) {
-    this.avanceSemanalSvc.getLastSeguimientoSemanalByContratacionProyectoId( this.activatedRoute.snapshot.params.id, 0 )
+    this.avanceSemanalSvc.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( this.activatedRoute.snapshot.params.id, 0 )
       .subscribe(
         seguimiento => {
           this.seguimientoSemanal = seguimiento;

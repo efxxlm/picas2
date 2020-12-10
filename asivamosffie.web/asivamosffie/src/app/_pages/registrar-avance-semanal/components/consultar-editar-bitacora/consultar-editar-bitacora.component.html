@@ -1,4 +1,4 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="consultarBitacora !== undefined">
     <div class="text-right">
         <a routerLink="/registrarAvanceSemanal" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -14,5 +14,5 @@
         <p style="margin-left: 2em;">Fecha de último reporte: <b>11/07/2020</b> </p>
     </div>
 
-    <app-tabla-consultar-editar-bitacora></app-tabla-consultar-editar-bitacora>
+    <app-tabla-consultar-editar-bitacora [consultarBitacora]="consultarBitacora"></app-tabla-consultar-editar-bitacora>
 </section>
