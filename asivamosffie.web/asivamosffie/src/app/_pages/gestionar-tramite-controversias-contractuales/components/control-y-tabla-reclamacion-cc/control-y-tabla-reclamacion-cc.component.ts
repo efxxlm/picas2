@@ -54,7 +54,7 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
   constructor(private router: Router, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.services.GetListGrillaActuacionSeguimiento().subscribe((data:any)=>{
+    this.services.GetListGrillaActuacionSeguimiento(this.controversiaID).subscribe((data:any)=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;
@@ -77,7 +77,9 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarReclamacionAseguradora',id]);
   }
   enviarReclamacionComiteTecnico(id){
-
+    this.services.CambiarEstadoActuacionSeguimiento(id,'3').subscribe((data:any)=>{
+      this.ngOnInit();
+    });
   }
   verDetalleReclamacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleReclamacionAseguradora',id]);
