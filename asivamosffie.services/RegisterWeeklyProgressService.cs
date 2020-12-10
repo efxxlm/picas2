@@ -29,6 +29,7 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        #region Get
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
             return await _context.VRegistrarAvanceSemanal.ToListAsync();
@@ -38,11 +39,20 @@ namespace asivamosffie.services
         {
 
             return await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
+                //Informacion Proyecto
+                .Include(r=> r.ContratacionProyecto)
+                   .ThenInclude(r => r.Contratacion)
+                       .ThenInclude(r => r.Contrato)
+                .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
+                       .ThenInclude(r => r.InstitucionEducativa) 
+                .Include(r => r.ContratacionProyecto)
+                   .ThenInclude(r => r.Proyecto)
+                       .ThenInclude(r => r.LocalizacionIdMunicipio)
 
                 .Include(r => r.SeguimientoDiario)
                        .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-
-                       //mAP SUMA DEL AVANCE POR CAPITULO DESDE SEMANA ACTUAL MIRAR TABLA ?
+                //mAP SUMA DEL AVANCE POR CAPITULO DESDE SEMANA ACTUAL MIRAR TABLA ?
 
                 .Include(r => r.SeguimientoSemanalAvanceFinanciero)
 
@@ -92,7 +102,7 @@ namespace asivamosffie.services
 
 
                 .Include(r => r.SeguimientoSemanalReporteActividad)
-           
+
 
 
                 .Include(r => r.SeguimientoSemanalRegistroFotografico)
@@ -103,7 +113,24 @@ namespace asivamosffie.services
 
         }
 
+        //public async Task<List<dynamic>> GetListSeguimientoSemanalBypContratacionProyectoId(int pContratacionProyectoId)
+        //{
 
+        //    List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
+        //        .Include(r => r.ContratacionProyecto)
+        //        .ThenInclude(r => r.Proyecto)
+        //           .Include(r => r.ContratacionProyecto)
+        //        .ThenInclude(r => r.Contratacion)
+        //         .ThenInclude(r => r.Contrato)
+        //        .ToListAsync();
+
+
+        //    foreach (var item in collection)
+        //    {
+
+        //    }
+        //}
+        #endregion
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
 
@@ -154,7 +181,13 @@ namespace asivamosffie.services
 
         private bool SaveUpdateGestionObra(SeguimientoSemanalGestionObra seguimientoSemanalGestionObra)
         {
-            throw new NotImplementedException();
+
+            if (seguimientoSemanalGestionObra.SeguimientoSemanalGestionObraId == 0)
+            {
+
+            }
+
+            return false;
         }
 
         private bool SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinanciero)
