@@ -21,11 +21,14 @@ import { RegistrarActuacionProcesoComponent } from './components/registrar-actua
 import { VerDetalleEditarActuacionProcesoComponent } from './components/ver-detalle-editar-actuacion-proceso/ver-detalle-editar-actuacion-proceso.component';
 import { DetalleActuacionProcesoComponent } from './components/detalle-actuacion-proceso/detalle-actuacion-proceso.component';
 import { FormDetalleProcesoPasivoDjComponent } from './components/form-detalle-proceso-pasivo-dj/form-detalle-proceso-pasivo-dj.component';
+import { FormDemandantesConvocantesDjComponent } from './components/form-demandantes-convocantes-dj/form-demandantes-convocantes-dj.component';
+import { FormDemandadosDjComponent } from './components/form-demandados-dj/form-demandados-dj.component';
+import { FormConvocadosPasivaDjComponent } from './components/form-convocados-pasiva-dj/form-convocados-pasiva-dj.component';
 
 
 
 @NgModule({
-  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent, VerDetalleEditarRegistroProcesoDjComponent, ActualizarProcesoDjComponent, ControlTablaActuacionProcesoComponent, RegistrarActuacionProcesoComponent, VerDetalleEditarActuacionProcesoComponent, DetalleActuacionProcesoComponent, FormDetalleProcesoPasivoDjComponent],
+  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent, VerDetalleEditarRegistroProcesoDjComponent, ActualizarProcesoDjComponent, ControlTablaActuacionProcesoComponent, RegistrarActuacionProcesoComponent, VerDetalleEditarActuacionProcesoComponent, DetalleActuacionProcesoComponent, FormDetalleProcesoPasivoDjComponent, FormDemandantesConvocantesDjComponent, FormDemandadosDjComponent, FormConvocadosPasivaDjComponent],
   imports: [
     CommonModule,
     MaterialModule,
