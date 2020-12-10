@@ -13,6 +13,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId);
 
+        Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId);
 
     }
 }

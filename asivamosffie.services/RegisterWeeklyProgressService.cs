@@ -49,7 +49,7 @@ namespace asivamosffie.services
                            .ThenInclude(r => r.InstitucionEducativa)
                     .Include(r => r.ContratacionProyecto)
                        .ThenInclude(r => r.Proyecto)
-                  
+
 
                     .Include(r => r.SeguimientoDiario)
                            .ThenInclude(r => r.SeguimientoDiarioObservaciones)
@@ -188,12 +188,12 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<List<dynamic>> GetListSeguimientoSemanalBypContratacionProyectoId(int pContratacionProyectoId)
+        public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
-
             List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
                 .Include(r => r.ContratacionProyecto)
                 .ThenInclude(r => r.Proyecto)
+
                    .Include(r => r.ContratacionProyecto)
                 .ThenInclude(r => r.Contratacion)
                  .ThenInclude(r => r.Contrato)
@@ -202,20 +202,27 @@ namespace asivamosffie.services
             List<dynamic> ListBitaCora = new List<dynamic>();
 
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            
+            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
 
             foreach (var item in ListseguimientoSemanal)
             {
-                ListBitaCora.Add(new {
+                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.ContratacionProyecto?.Proyecto?.SedeId).FirstOrDefault();
+                InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
+
+
+                ListBitaCora.Add(new
+                {
                     item.ContratacionProyecto?.Proyecto?.LlaveMen,
                     item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
-
-
-
+                    TipoIntervencion = !string.IsNullOrEmpty(item.ContratacionProyecto?.Proyecto.TipoIntervencionCodigo) ? TipoIntervencion.Where(r => r.Codigo == item.ContratacionProyecto?.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre : " ",
+                    institucionEducativa.Nombre,
+                    Sede = Sede.Nombre,
+                    item.FechaModificacion,
+                    EstadoObra = "Calcular" 
                 });
 
 
-            } 
+            }
             return ListBitaCora;
         }
         #endregion
