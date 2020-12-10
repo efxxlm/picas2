@@ -16,11 +16,15 @@ import { FormUrlsoporteDjComponent } from './components/form-urlsoporte-dj/form-
 import { FormFichaEstudioDjComponent } from './components/form-ficha-estudio-dj/form-ficha-estudio-dj.component';
 import { VerDetalleEditarRegistroProcesoDjComponent } from './components/ver-detalle-editar-registro-proceso-dj/ver-detalle-editar-registro-proceso-dj.component';
 import { ActualizarProcesoDjComponent } from './components/actualizar-proceso-dj/actualizar-proceso-dj.component';
+import { ControlTablaActuacionProcesoComponent } from './components/control-tabla-actuacion-proceso/control-tabla-actuacion-proceso.component';
+import { RegistrarActuacionProcesoComponent } from './components/registrar-actuacion-proceso/registrar-actuacion-proceso.component';
+import { VerDetalleEditarActuacionProcesoComponent } from './components/ver-detalle-editar-actuacion-proceso/ver-detalle-editar-actuacion-proceso.component';
+import { DetalleEditarActuacionProcesoComponent } from './components/detalle-editar-actuacion-proceso/detalle-editar-actuacion-proceso.component';
 
 
 
 @NgModule({
-  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent, VerDetalleEditarRegistroProcesoDjComponent, ActualizarProcesoDjComponent],
+  declarations: [GestionarProcesosDefensaJudicialComponent, ControlTablaProcesoDefensaJudicialComponent, RegistroNuevoProcesoJudicialComponent, FormContratosAsociadosDjComponent, FormDetalleProcesoDjComponent, FormConvocadosDjComponent, FormUrlsoporteDjComponent, FormFichaEstudioDjComponent, VerDetalleEditarRegistroProcesoDjComponent, ActualizarProcesoDjComponent, ControlTablaActuacionProcesoComponent, RegistrarActuacionProcesoComponent, VerDetalleEditarActuacionProcesoComponent, DetalleEditarActuacionProcesoComponent],
   imports: [
     CommonModule,
     MaterialModule,
