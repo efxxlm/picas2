@@ -45,7 +45,7 @@ namespace asivamosffie.services
             {
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
                    //Informacion Proyecto
-         
+
                    .Include(r => r.ContratacionProyecto)
                       .ThenInclude(r => r.Contratacion)
                           .ThenInclude(r => r.Contrato)
@@ -56,7 +56,7 @@ namespace asivamosffie.services
                       .ThenInclude(r => r.Proyecto)
                    .Include(r => r.SeguimientoDiario)
                           .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-                           
+
                    .Include(r => r.SeguimientoSemanalAvanceFinanciero)
                    .Include(r => r.FlujoInversion)
                        .ThenInclude(r => r.Programacion)
@@ -256,69 +256,121 @@ namespace asivamosffie.services
         #endregion
         public async Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
-
-            bool registroCompleto = false;
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
+             
             try
             {
                 SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
 
-                SaveUpdateAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
+                SaveUpdateAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault());
+                SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateGestionObra(pSeguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault());
+                SaveUpdateGestionObra(pSeguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateReporteActividades(pSeguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault());
+                SaveUpdateReporteActividades(pSeguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateRegistroFotografico(pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault());
+                SaveUpdateRegistroFotografico(pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault());
+                SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
+                await _context.SaveChangesAsync();
 
-
-                return new Respuesta();
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.OperacionExitosa, idAccion, pSeguimientoSemanal.UsuarioCreacion, pSeguimientoSemanal.FechaModificacion.HasValue ? "CREAR SEGUIMIENTO SEMANAL" : "EDITAR SEGUIMIENTO SEMANAL")
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return new Respuesta();
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.RegistrarComiteTecnico, ConstantSesionComiteTecnico.Error, idAccion, pSeguimientoSemanal.UsuarioCreacion, ex.InnerException.ToString())
+                };
             }
 
 
         }
-         
-        private bool SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico)
+
+        private void SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico pSeguimientoSemanalAvanceFisico, string pUsuarioCreacion)
         {
             throw new NotImplementedException();
         }
 
-        private bool SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinanciero)
+        private void SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero pSeguimientoSemanalAvanceFinanciero, string pUsuarioCreacion)
         {
             throw new NotImplementedException();
         }
 
-        private bool SaveUpdateGestionObra(SeguimientoSemanalGestionObra seguimientoSemanalGestionObra)
+        private void SaveUpdateGestionObra(SeguimientoSemanalGestionObra pSeguimientoSemanalGestionObra, string pUsuarioCreacion)
         {
-
-            if (seguimientoSemanalGestionObra.SeguimientoSemanalGestionObraId == 0)
+            if (pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraId == 0)
             {
+                pSeguimientoSemanalGestionObra.UsuarioCreacion = pUsuarioCreacion;
+                pSeguimientoSemanalGestionObra.Eliminado = false;
+                pSeguimientoSemanalGestionObra.FechaCreacion = DateTime.Now;
 
+                //Gestion Ambiental
+                foreach (var SeguimientoSemanalGestionObraAmbiental in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
+                {
+                    SeguimientoSemanalGestionObraAmbiental.UsuarioCreacion = pUsuarioCreacion;
+                    SeguimientoSemanalGestionObraAmbiental.Eliminado = false;
+                    SeguimientoSemanalGestionObraAmbiental.FechaCreacion = DateTime.Now;
+                    SeguimientoSemanalGestionObraAmbiental.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
+                    //Manejo Materiales Insumo
+                    SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.UsuarioCreacion = pUsuarioCreacion;
+                    SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Eliminado = false;
+                    SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.FechaCreacion = DateTime.Now;
+                    SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo);
+
+                    foreach (var ManejoMaterialesInsumosProveedor in SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor)
+                    {
+                        ManejoMaterialesInsumosProveedor.UsuarioCreacion = pUsuarioCreacion;
+                        ManejoMaterialesInsumosProveedor.Eliminado = false;
+                        ManejoMaterialesInsumosProveedor.FechaCreacion = DateTime.Now;
+                        ManejoMaterialesInsumosProveedor.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor);
+                    }
+                }
+                _context.SeguimientoSemanalGestionObra.Add(pSeguimientoSemanalGestionObra);
             }
+        }
 
+        #region Validar Registros Completos
+        private bool? ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor manejoMaterialesInsumosProveedor)
+        {
             return false;
         }
 
-        private bool SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad)
+        private bool? ValidarRegistroCompletoManejoMaterialesInsumo(ManejoMaterialesInsumos manejoMaterialesInsumo)
         {
-            throw new NotImplementedException();
+            return false;
         }
-         
-        private bool SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico seguimientoSemanalRegistroFotografico)
+
+        private bool? ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental seguimientoSemanalGestionObraAmbiental)
+        {
+            return false;
+        }
+
+        #endregion
+        private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
         {
             throw new NotImplementedException();
         }
 
-        private bool SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra seguimientoSemanalRegistrarComiteObra)
+        private void SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico pSeguimientoSemanalRegistroFotografico, string pUsuarioCreacion)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
         {
             throw new NotImplementedException();
         }

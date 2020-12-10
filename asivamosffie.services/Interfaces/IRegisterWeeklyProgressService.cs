@@ -15,5 +15,6 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId);
 
+        Task<Respuesta> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal);
     }
 }

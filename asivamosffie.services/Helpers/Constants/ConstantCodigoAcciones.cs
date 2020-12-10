@@ -153,7 +153,10 @@
         public const string  Crear_Editar_Ficha_Estudio= "145";
         public const string  Crear_Editar_Demandado_Convocado= "146";
         public const string  Cambiar_Estado_Proceso= "147";
-                
 
+        // 4.1.12
+        public const string Crear_Editar_Seguimiento_Semanal = "160";
+       
+        	
     }
 }

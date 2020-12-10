@@ -42,8 +42,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         } 
-
-
+         
         [Route("GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId")]
         [HttpGet]
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId([FromQuery] int pContratacionProyectoId , int pSeguimientoSemanalId)
@@ -58,8 +57,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+         
         [Route("GetListSeguimientoSemanalByContratacionProyectoId")]
         [HttpGet]
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
@@ -76,6 +74,24 @@ namespace asivamosffie.api.Controllers
         }
 
 
+        [HttpPost]
+        [Route("SaveUpdateSeguimientoSemanal")]
+        public async Task<IActionResult> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pSeguimientoSemanal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerWeeklyProgressService.SaveUpdateSeguimientoSemanal(pSeguimientoSemanal);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
 
 
     }
