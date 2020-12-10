@@ -8,45 +8,46 @@
         Ver detalle/Editar registro proceso de defensa judicial DJ0012020
     </h1>
     <form [formGroup]="addressForm" novalidate>
-    <mat-card class="shipping-card">
-        <mat-card-content align="left">
-            <div class="row">
-                <div class="col-md-6" style="padding-left: 0;">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="legitimacionActiva">Legitimación</label>
-                        </div>
-                        <div class="col">
-                            <mat-radio-group class="radioInput" formControlName="legitimacionActiva" required>
-                                <mat-radio-button [value]="true">Activa</mat-radio-button>
-                                <mat-radio-button [value]="false">Pasiva</mat-radio-button>
-                            </mat-radio-group>
-                            <span class="required-form-group">*</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6"  style="padding-left: 0;">
-                    <div class="row">
-                        <div class="pr-1">
-                            <label class="label-left" for="tipoProceso">Tipo de proceso</label>
-                        </div>
-                        <div class="col">
-                            <mat-form-field class="select-width">
-                                <mat-select formControlName="tipoProceso" required>
-                                    <mat-option *ngFor="let tipoProceso of tipoProcesoArray" [value]="tipoProceso.value">
-                                        {{ tipoProceso.name }}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
+        <mat-card class="shipping-card">
+            <mat-card-content align="left">
+                <div class="row">
+                    <div class="col-md-6" style="padding-left: 0;">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="legitimacionActiva">Legitimación</label>
+                            </div>
+                            <div class="col">
+                                <mat-radio-group class="radioInput" formControlName="legitimacionActiva" required>
+                                    <mat-radio-button [value]="true">Activa</mat-radio-button>
+                                    <mat-radio-button [value]="false">Pasiva</mat-radio-button>
+                                </mat-radio-group>
+                                <span class="required-form-group">*</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </mat-card-content>
-    </mat-card>
-</form>
+                <div class="row">
+                    <div class="col-md-6" style="padding-left: 0;">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="tipoProceso">Tipo de proceso</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="tipoProceso" required>
+                                        <mat-option *ngFor="let tipoProceso of tipoProcesoArray"
+                                            [value]="tipoProceso.value">
+                                            {{ tipoProceso.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </form>
     <div class="text-center">
         <p class="info-container">
             <span class="info-text sin-diligenciar">Sin diligenciar</span>
@@ -105,7 +106,8 @@
         </mat-expansion-panel>
     </mat-accordion>
     <div style="margin-top: 1em;">
-        Una vez las secciones habilitadas se encuentren diligenciadas y en color verde se habilitará la sección <strong>“Ficha de estudio”</strong> para continuar el proceso
+        Una vez las secciones habilitadas se encuentren diligenciadas y en color verde se habilitará la sección
+        <strong>“Ficha de estudio”</strong> para continuar el proceso
     </div>
     <!-- Cuando haya observaciones del comite tecnico, el integrador lo descomenta
     <mat-card class="shipping-card mainGris">
@@ -121,5 +123,3 @@
     </mat-card>
     -->
 </div>
-
-
