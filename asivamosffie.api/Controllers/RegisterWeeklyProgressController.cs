@@ -43,6 +43,7 @@ namespace asivamosffie.api.Controllers
             }
         } 
 
+
         [Route("GetLastSeguimientoSemanalByContratacionProyectoId")]
         [HttpGet]
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
