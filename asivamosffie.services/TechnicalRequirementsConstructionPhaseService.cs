@@ -1294,7 +1294,7 @@ namespace asivamosffie.services
 
         }
 
-        private async Task<bool> ValidarRegistroCompletoVerificacion(int id, bool pEsSupervicion)
+        private async Task<bool> ValidarRegistroCompletoVerificacionPreconstruccion(int id, bool pEsSupervicion)
         {
             bool esCompleto = true;
 
@@ -1377,9 +1377,6 @@ namespace asivamosffie.services
 
             return esCompleto;
         }
-
-
-
 
         private async Task<bool> ValidarRegistroCompletoVerificacionContruccion(int id, bool pEsSupervicion)
         {
@@ -2047,6 +2044,22 @@ namespace asivamosffie.services
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Programacion_Obra, (int)EnumeratorTipoDominio.Acciones);
 
+            if ( pContratoConstruccionId == 0 ){
+                ContratoConstruccion contratoTemp = new ContratoConstruccion();
+
+                contratoTemp.UsuarioCreacion = pUsuarioCreo;
+                contratoTemp.FechaCreacion = DateTime.Now;
+
+                contratoTemp.ContratoId = pContratoId;
+                contratoTemp.ProyectoId = pProyectoId;
+
+                _context.ContratoConstruccion.Add( contratoTemp);
+                _context.SaveChanges();
+
+                pContratoConstruccionId = contratoTemp.ContratoConstruccionId;
+            }
+
+
             ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
                                                                         .Where(cc => cc.ContratoConstruccionId == pContratoConstruccionId)
                                                                         .Include(r => r.Contrato)
@@ -2455,6 +2468,20 @@ namespace asivamosffie.services
         public async Task<Respuesta> UploadFileToValidateInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId, int pContratoId, int pProyectoId)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Validar_Excel_Flujo_Inversion, (int)EnumeratorTipoDominio.Acciones);
+
+            if ( pContratoConstruccionId == 0 ){
+                ContratoConstruccion contratoTemp = new ContratoConstruccion();
+
+                contratoTemp.UsuarioCreacion = pUsuarioCreo;
+                contratoTemp.FechaCreacion = DateTime.Now;
+
+                contratoTemp.ContratoId = pContratoId;
+                contratoTemp.ProyectoId = pProyectoId;
+
+                _context.ContratoConstruccion.Add( contratoTemp);
+                _context.SaveChanges();
+                pContratoConstruccionId = contratoTemp.ContratoConstruccionId;
+            }
 
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -3189,7 +3216,7 @@ namespace asivamosffie.services
                 if (!esSupervisor){
                     if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString())//cambiar esto, no encontre la constante inteventoria
                     {
-                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
+                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacionPreconstruccion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                     }
                     else
                     {
@@ -3309,7 +3336,7 @@ namespace asivamosffie.services
                 if (!esSupervisor){
                     if (contrato.Contratacion.TipoSolicitudCodigo == "2")//cambiar esto, no encontre la constante inteventoria
                     {
-                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
+                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacionPreconstruccion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                     }
                     else
                     {
@@ -3435,7 +3462,7 @@ namespace asivamosffie.services
                 if (!esSupervisor){
                     if (contrato.Contratacion.TipoSolicitudCodigo == "2")//cambiar esto, no encontre la constante inteventoria
                     {
-                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
+                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacionPreconstruccion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                     }
                     else
                     {
@@ -3562,7 +3589,7 @@ namespace asivamosffie.services
                 if (!esSupervisor){
                     if (contrato.Contratacion.TipoSolicitudCodigo == "2")//cambiar esto, no encontre la constante inteventoria
                     {
-                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
+                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacionPreconstruccion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                     }
                     else
                     {
@@ -3689,7 +3716,7 @@ namespace asivamosffie.services
 
                     if (contrato.Contratacion.TipoSolicitudCodigo == "2")//cambiar esto, no encontre la constante inteventoria
                     {
-                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
+                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacionPreconstruccion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                     }
                     else
                     {
@@ -3811,7 +3838,7 @@ namespace asivamosffie.services
 
                     if (contrato.Contratacion.TipoSolicitudCodigo == "2")//cambiar esto, no encontre la constante inteventoria
                     {
-                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
+                        contratoConstruccion.RegistroCompletoVerificacion = await ValidarRegistroCompletoVerificacionPreconstruccion(contratoConstruccion.ContratoConstruccionId, esSupervisor);
                     }
                     else
                     {
