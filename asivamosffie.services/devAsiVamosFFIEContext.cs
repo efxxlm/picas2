@@ -3827,6 +3827,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanal>(entity =>
             {
+                entity.Property(e => e.EstadoObraCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFin).HasColumnType("datetime");
@@ -4075,8 +4079,6 @@ namespace asivamosffie.model.Models
                     .HasName("PK__Seguimie__4163B7CD6A86F5F1");
 
                 entity.Property(e => e.SeguimientoSemanalRegistroFotografico1).HasColumnName("SeguimientoSemanalRegistroFotografico");
-
-                entity.Property(e => e.Descripcion).HasMaxLength(600);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
@@ -5202,6 +5204,10 @@ namespace asivamosffie.model.Models
 
                 entity.ToView("V_RegistrarAvanceSemanal");
 
+                entity.Property(e => e.EstadoObraCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.FechaUltimoReporte)
                     .HasMaxLength(30)
                     .IsUnicode(false);
@@ -5372,6 +5378,11 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.EstadoNombre)
                     .IsRequired()
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoNombreVerificacion)
+                    .IsRequired()
+                    .HasMaxLength(400)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaActaInicioFase1).HasColumnType("datetime");

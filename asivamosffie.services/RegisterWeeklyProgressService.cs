@@ -244,7 +244,7 @@ namespace asivamosffie.services
                     institucionEducativa.Nombre,
                     Sede = Sede.Nombre,
                     item.FechaModificacion,
-                    EstadoObra = "Calcular"
+                    EstadoObra = item.EstadoObraCodigo
                 });
 
 
