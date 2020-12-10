@@ -16,6 +16,7 @@ namespace asivamosffie.model.APIModels
         public string ProximaActuacionNombre { get; set; }
         public string ProximaActuacionCodigo { get; set; }
         public string EstadoActuacionCodigo { get; set; }
+        public string NumeroActuacionReclamacion { get; set; }
     }
 }
 

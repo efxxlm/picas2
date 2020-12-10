@@ -1927,7 +1927,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion(int id=0, int pControversiaContractualId=0)
+        public async Task<List<GrillaControversiaActuacionEstado>> ListGrillaControversiaActuacion(int id=0, int pControversiaContractualId=0, bool esActuacionReclamacion=false)
         {
             //await AprobarContratoByIdContrato(1);
 
@@ -1937,9 +1937,32 @@ namespace asivamosffie.services
             //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo      
 
             //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
-            List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.Where(r=>!(bool)r.Eliminado). Distinct().ToListAsync();
 
-            if(id!=0)
+            List<ControversiaActuacion> lstControversiaActuacion = await _context.ControversiaActuacion.
+                Where(r => !(bool)r.Eliminado).Distinct().ToListAsync();
+
+            List<ControversiaActuacion> lstControversiaActuacionCruce= new List<ControversiaActuacion>();
+
+            List<ActuacionSeguimiento> lstActuacionSeguimiento = await _context.ActuacionSeguimiento.
+             Where(r => !(bool)r.Eliminado).Distinct().ToListAsync();
+
+            if (esActuacionReclamacion)
+            {
+                //lista controversias con seguimiento(reclamacion)
+                foreach (var actuacionSeguimiento in lstActuacionSeguimiento)
+                {
+                    foreach (var controversiaActuacion in lstControversiaActuacion)
+                    {
+                        if (actuacionSeguimiento.ControversiaActuacionId == controversiaActuacion.ControversiaActuacionId)
+                            lstControversiaActuacionCruce.Add(controversiaActuacion);
+                    }
+
+                }
+                lstControversiaActuacion = lstControversiaActuacionCruce;
+            }
+           
+
+            if (id!=0)
             {
                 lstControversiaActuacion = lstControversiaActuacion.Where(r => r.ControversiaActuacionId == id).ToList();
 
@@ -2007,7 +2030,9 @@ namespace asivamosffie.services
                         EstadoActuacionCodigo = strEstadoAvanceTramiteCodigo,//controversia.EstadoAvanceTramiteCodigo
 
                         NumeroActuacion = "ACT controversia "+controversia.ControversiaActuacionId.ToString("000"),
-                        
+
+                        NumeroActuacionReclamacion = "ACT_REC " + controversia.ControversiaActuacionId.ToString("0000"),
+
                         RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
 
                         ProximaActuacionCodigo= strProximaActuacionCodigo,
