@@ -724,13 +724,40 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("_Actuacion_adelantada_", ActuacionAdelantadaCodigoNombre);
             strContenido = strContenido.Replace("_Actuacion_adelantada_", controversiaActuacion.ActuacionAdelantadaOtro);
 
-            strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", controversiaActuacion.ProximaActuacionCodigo);
+            Dominio ProximaActuacionCodigo;
+            string strProximaActuacionNombre="" ,
+            strProximaActuacionCodigo="";
+
+            ProximaActuacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
+            if (ProximaActuacionCodigo != null)
+            {
+                strProximaActuacionNombre = ProximaActuacionCodigo.Nombre;
+                strProximaActuacionCodigo = ProximaActuacionCodigo.Codigo;
+
+            }
+
+            strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", strProximaActuacionNombre);
             strContenido = strContenido.Replace("_Observaciones_", controversiaActuacion.Observaciones);
             strContenido = strContenido.Replace("_URL_soporte_", controversiaActuacion.RutaSoporte);
 
+            string strEstadoReclamacionCodigo = "";
+            string strEstadoReclamacion = "";
+            //string strEstadoAvanceTramite = "sin definir";
+
+            //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+            Dominio EstadoReclamacionCodigo;
+
+            EstadoReclamacionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(actuacionSeguimiento.EstadoReclamacionCodigo, (int)EnumeratorTipoDominio.Estado_avance_reclamacion);
+            if (EstadoReclamacionCodigo != null)
+            {
+                strEstadoReclamacion = EstadoReclamacionCodigo.Nombre;
+                strEstadoReclamacionCodigo = EstadoReclamacionCodigo.Codigo;
+
+            }
+
             //Resumen de la propuesta de reclamación ante la aseguradora:
             strContenido = strContenido.Replace("Actuación de la reclamación 1", "");
-            strContenido = strContenido.Replace("_Estado_avance_reclamacion_",actuacionSeguimiento.EstadoReclamacionCodigo);
+            strContenido = strContenido.Replace("_Estado_avance_reclamacion_", strEstadoReclamacion);
             strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
             strContenido = strContenido.Replace("_Actuacion_adelantada_", actuacionSeguimiento.ActuacionAdelantada);
             strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", actuacionSeguimiento.ProximaActuacion);
@@ -1460,8 +1487,6 @@ namespace asivamosffie.services
                             NumeroContratoTmp = contrato.NumeroContrato;
                             PlazoFormatTmp = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses).ToString("00") + " meses / " + Convert.ToInt32(contrato.PlazoFase2ConstruccionDias).ToString("00") + " dias ";
 
-
-
                         }
 
                         Dominio TipoDocumentoCodigoContratista;
@@ -1648,7 +1673,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual()
+        public async Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual(int pControversiaContractualId = 0)
         {
             //await AprobarContratoByIdContrato(1);
 
@@ -1659,6 +1684,12 @@ namespace asivamosffie.services
                         
             //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
             List<ControversiaContractual> ListControversiaContractual = await _context.ControversiaContractual.Where(r=>r.Eliminado==false).Distinct().ToListAsync();
+
+            if (pControversiaContractualId != 0)
+            {
+                 ListControversiaContractual = await _context.ControversiaContractual.Where(r => r.ControversiaContractualId == pControversiaContractualId).ToListAsync();                             
+
+            }
 
             foreach (var controversia in ListControversiaContractual)
             {

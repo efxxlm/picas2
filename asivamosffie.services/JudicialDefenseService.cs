@@ -204,6 +204,80 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<DefensaJudicial> GetVistaDatosBasicosProceso(int pDefensaJudicialId = 0)
+        {
+            DefensaJudicial defensaJudicial1 = new DefensaJudicial();
+            try
+            {
+               
+                //Contrato contrato = null;
+                List<DefensaJudicial> ListDefensaJudicial = new List<DefensaJudicial>();
+
+                if (pDefensaJudicialId == 0)
+                {
+                    ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false).Distinct()
+                .ToListAsync();
+
+                }
+                else
+                {
+                    ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false
+                    && r.DefensaJudicialId == pDefensaJudicialId).Distinct()
+                .ToListAsync();
+
+
+                }
+                //TipoAccionCodigo JurisdiccionCodigo TipoProcesoCodigo
+                Dominio TipoAccionCodigo;
+
+                Dominio TipoDocumentoCodigoContratista;
+
+                string TipoAccionTmp = string.Empty;
+                             
+                foreach (var defensaJudicial in ListDefensaJudicial)
+                {
+                    TipoAccionCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
+
+                    if (TipoAccionCodigo != null)
+                        defensaJudicial.TipoAccionCodigoNombre = TipoAccionCodigo.Nombre;
+
+                    defensaJudicial.JurisdiccionCodigoNombre = "PENDIENTE";
+                    defensaJudicial.TipoProcesoCodigoNombre = "PENDIENTE";
+
+                    defensaJudicial.ContratosAsociados = "PENDIENTE";
+                    defensaJudicial.FuenteProceso = "PENDIENTE";
+
+                    //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+
+                    string TipoDocumentoContratistaTmp = string.Empty;
+                    string NumeroIdentificacionContratistaTmp = string.Empty;
+
+                    string TipoIntervencionCodigoTmp = string.Empty;
+                    string TipoIntervencionNombreTmp = string.Empty;
+
+                    return defensaJudicial;
+
+                }
+            }
+            catch (Exception e)
+            {
+                defensaJudicial1 = new DefensaJudicial
+                {
+                    DefensaJudicialId = 0,
+                    NumeroProceso = e.InnerException.ToString(),
+                    FechaCreacionFormat = DateTime.Now.ToString(),
+                    FuenteProceso = e.ToString(),
+                    ContratosAsociados= "ERROR",
+                    TipoProcesoCodigo= "ERROR",
+                    TipoAccionCodigo= "ERROR",
+                    JurisdiccionCodigo= "ERROR",
+                    
+                };
+
+            }
+            return defensaJudicial1;
+        }
+
         public async Task<byte[]> GetPlantillaDefensaJudicial(int pContratoId)
         {
             if (pContratoId == 0)
@@ -408,6 +482,9 @@ namespace asivamosffie.services
                 }
 
             }
+            //string TipoProcesoCodigoText = ProcesoSeleccion.TipoProcesoCodigo != null ?
+            //    await _commonService.GetNombreDominioByCodigoAndTipoDominio(ProcesoSeleccion.TipoProcesoCodigo,
+            //    (int)EnumeratorTipoDominio.Tipo_Proceso_Seleccion) : "";
 
             strContenido = strContenido.Replace("_Numero_Solicitud_", controversiaContractual.NumeroSolicitud);
             strContenido = strContenido.Replace("_Fecha_Solicitud_", controversiaContractual.FechaSolicitud.ToString("dd/MM/yyyy"));
@@ -978,7 +1055,93 @@ namespace asivamosffie.services
 
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
+        public async Task<Respuesta> EliminarDefensaJudicial(int pDefensaJudicialId, string pUsuarioModifico)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            
+            DefensaJudicial defensaJudicial = null;
 
+            try
+            {
+                defensaJudicial = await _context.DefensaJudicial.Where(d => d.DefensaJudicialId == pDefensaJudicialId).FirstOrDefaultAsync();
+
+                if (defensaJudicial != null)
+                {
+                    strCrearEditar = "ELIMINAR DEFENSA JUDICIAL";
+                    defensaJudicial.FechaModificacion = DateTime.Now;
+                    defensaJudicial.UsuarioModificacion = pUsuarioModifico;
+                    //controversiaActuacion.UsuarioCreacion = disponibilidadPresupuestal.UsuarioCreacion;
+                    defensaJudicial.Eliminado = true;
+                    _context.DefensaJudicial.Update(defensaJudicial);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, defensaJudicial.UsuarioModificacion, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, defensaJudicial.UsuarioCreacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> CambiarEstadoDefensaJudicial(int pDefensaJudicialId, string pCodigoEstado, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Proceso, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                //DefensaJudicial /*defensaJudicial*/
+                DefensaJudicial defensaJudicialOld = _context.DefensaJudicial.Find(pDefensaJudicialId);
+                defensaJudicialOld.UsuarioModificacion = pUsuarioModifica;
+                defensaJudicialOld.FechaModificacion = DateTime.Now;
+                defensaJudicialOld.EstadoProcesoCodigo = pCodigoEstado;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO PROCESO DEFENSA JUDICIAL")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
+
+        }
         public async Task<List<GrillaProcesoDefensaJudicial>> ListGrillaProcesosDefensaJudicial()
         {
             //await AprobarContratoByIdContrato(1);

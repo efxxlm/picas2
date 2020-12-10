@@ -55,6 +55,19 @@ namespace asivamosffie.api.Controllers
             return File(await _judicialDefense.GetPlantillaDefensaJudicial(pContratoId), "application/pdf");
         }
 
+        [HttpGet]
+        [Route("GetVistaDatosBasicosProceso")]        
+        public async Task<ActionResult<DefensaJudicial>> GetVistaDatosBasicosProceso(int pDefensaJudicialId)
+        {
+            try
+            {
+                return await _judicialDefense.GetVistaDatosBasicosProceso(pDefensaJudicialId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [HttpPost]
         [Route("CreateOrEditDefensaJudicial")]
@@ -123,7 +136,43 @@ namespace asivamosffie.api.Controllers
             {
                 throw ex;
             }
-        }        
+        }
+
+        [HttpPut]
+        [Route("CambiarEstadoDefensaJudicial")]
+        
+        public async Task<IActionResult> CambiarEstadoDefensaJudicial([FromQuery] int pDefensaJudicialId, string pCodigoEstado)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _judicialDefense.CambiarEstadoDefensaJudicial(pDefensaJudicialId, pCodigoEstado, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [Route("EliminarDefensaJudicial")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarDefensaJudicial(int pDefensaJudicialId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _judicialDefense.EliminarDefensaJudicial(pDefensaJudicialId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
 
         [HttpGet]
         [Route("GetListGrillaProcesosDefensaJudicial")]

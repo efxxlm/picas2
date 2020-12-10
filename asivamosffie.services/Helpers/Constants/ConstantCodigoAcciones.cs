@@ -155,8 +155,7 @@
         public const string  Crear_Editar_Demandado_Convocado= "146";
         public const string  Cambiar_Estado_Proceso= "147";
         public const string Crear_Editar_Defensa_Judicial = "156";
-        
-
+        public const string Eliminar_Defensa_Judicial = "159";    
 
 
     }

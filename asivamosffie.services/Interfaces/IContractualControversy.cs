@@ -18,7 +18,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> InsertEditControversiaMotivo(ControversiaMotivo controversiaMotivo);
 
-        Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual();
+        Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual(int pControversiaContractualId = 0);
 
         Task<List<GrillaActuacionSeguimiento>> ListGrillaActuacionSeguimiento(int pControversiaActuacionId = 0);
 
