@@ -284,18 +284,13 @@ namespace asivamosffie.services
 
 
         }
-
-        private bool SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra seguimientoSemanalRegistrarComiteObra)
+         
+        private bool SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico)
         {
             throw new NotImplementedException();
         }
 
-        private bool SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico seguimientoSemanalRegistroFotografico)
-        {
-            throw new NotImplementedException();
-        }
-
-        private bool SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad)
+        private bool SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinanciero)
         {
             throw new NotImplementedException();
         }
@@ -311,12 +306,17 @@ namespace asivamosffie.services
             return false;
         }
 
-        private bool SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinanciero)
+        private bool SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividad)
+        {
+            throw new NotImplementedException();
+        }
+         
+        private bool SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico seguimientoSemanalRegistroFotografico)
         {
             throw new NotImplementedException();
         }
 
-        private bool SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisico)
+        private bool SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra seguimientoSemanalRegistrarComiteObra)
         {
             throw new NotImplementedException();
         }

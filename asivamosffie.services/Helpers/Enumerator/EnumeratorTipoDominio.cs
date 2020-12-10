@@ -57,7 +57,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_de_Solicitud = 29,
 
-   
+
 
         Tipo_Documento = 30,
 
@@ -100,7 +100,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_DDP_Espacial = 49,
 
-        Estado_Sesion_Comite_Solicitud=50,
+        Estado_Sesion_Comite_Solicitud = 50,
 
         Estado_Contrato_Poliza = 51,
 
@@ -127,21 +127,23 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipos_De_Ensayos_De_Laboratorio = 74,
 
         Causas_De_Accidentes_Laborales = 75,
-         
+
         Tiempo_Aprobar_Acta = 84,
- 
+
         Estados_actas_inicio_obra = 85,
 
         Estados_actas_inicio_interventoria = 86,
 
         Estado_Programacion_Inicial = 88,
-        
-        Tipo_de_controversia=80,
+
+        Tipo_de_controversia = 80,
 
         Estado_controversia_contractual_TAI = 90,
 
         Estado_avance_reclamacion = 91,
- 
-          
+         
+        Tipo_Actividad = 109
+
+
     }
 }
