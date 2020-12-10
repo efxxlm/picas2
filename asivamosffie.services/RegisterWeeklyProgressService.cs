@@ -35,82 +35,156 @@ namespace asivamosffie.services
             return await _context.VRegistrarAvanceSemanal.ToListAsync();
         }
 
-        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
+        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrpSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
+            if (pContratacionProyectoId > 0)
+            {
+                return await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
+                    //Informacion Proyecto
+                    .Include(r => r.ContratacionProyecto)
+                       .ThenInclude(r => r.Contratacion)
+                           .ThenInclude(r => r.Contrato)
+                    .Include(r => r.ContratacionProyecto)
+                       .ThenInclude(r => r.Proyecto)
+                           .ThenInclude(r => r.InstitucionEducativa)
+                    .Include(r => r.ContratacionProyecto)
+                       .ThenInclude(r => r.Proyecto)
+                           .ThenInclude(r => r.LocalizacionIdMunicipio)
 
-            return await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
-                //Informacion Proyecto
-                .Include(r=> r.ContratacionProyecto)
-                   .ThenInclude(r => r.Contratacion)
-                       .ThenInclude(r => r.Contrato)
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Proyecto)
-                       .ThenInclude(r => r.InstitucionEducativa) 
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Proyecto)
-                       .ThenInclude(r => r.LocalizacionIdMunicipio)
+                    .Include(r => r.SeguimientoDiario)
+                           .ThenInclude(r => r.SeguimientoDiarioObservaciones)
+                    //mAP SUMA DEL AVANCE POR CAPITULO DESDE SEMANA ACTUAL MIRAR TABLA ?
 
-                .Include(r => r.SeguimientoDiario)
-                       .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-                //mAP SUMA DEL AVANCE POR CAPITULO DESDE SEMANA ACTUAL MIRAR TABLA ?
+                    .Include(r => r.SeguimientoSemanalAvanceFinanciero)
 
-                .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                    .Include(r => r.SeguimientoSemanalAvanceFisico)
 
-                .Include(r => r.SeguimientoSemanalAvanceFisico)
+                    //Gestion Obra 
+                    //Gestion Obra Ambiental
+                    .Include(r => r.SeguimientoSemanalGestionObra)
+                       .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                           .ThenInclude(r => r.ManejoMaterialesInsumo)
+                                .ThenInclude(r => r.ManejoMaterialesInsumosProveedor)
 
-                //Gestion Obra 
-                //Gestion Obra Ambiental
-                .Include(r => r.SeguimientoSemanalGestionObra)
-                   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                       .ThenInclude(r => r.ManejoMaterialesInsumo)
-                            .ThenInclude(r => r.ManejoMaterialesInsumosProveedor)
+                    .Include(r => r.SeguimientoSemanalGestionObra)
+                       .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                           .ThenInclude(r => r.ManejoResiduosConstruccionDemolicion)
+                               .ThenInclude(r => r.ManejoResiduosConstruccionDemolicionGestor)
 
-                .Include(r => r.SeguimientoSemanalGestionObra)
-                   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                       .ThenInclude(r => r.ManejoResiduosConstruccionDemolicion)
-                           .ThenInclude(r => r.ManejoResiduosConstruccionDemolicionGestor)
+                    .Include(r => r.SeguimientoSemanalGestionObra)
+                       .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                           .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
 
-                .Include(r => r.SeguimientoSemanalGestionObra)
-                   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                       .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
+                     .Include(r => r.SeguimientoSemanalGestionObra)
+                        .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                            .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
 
-                 .Include(r => r.SeguimientoSemanalGestionObra)
-                    .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                        .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
+                     .Include(r => r.SeguimientoSemanalGestionObra)
+                        .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                            .ThenInclude(r => r.ManejoOtro)
 
-                 .Include(r => r.SeguimientoSemanalGestionObra)
-                    .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                        .ThenInclude(r => r.ManejoOtro)
+                     //Gestion Obra Calidad
+                     .Include(r => r.SeguimientoSemanalGestionObra)
+                        .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                            .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                .ThenInclude(r => r.EnsayoLaboratorioMuestra)
 
-                 //Gestion Obra Calidad
-                 .Include(r => r.SeguimientoSemanalGestionObra)
-                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                        .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                            .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+                     //Gestion Obra Calidad
+                     .Include(r => r.SeguimientoSemanalGestionObra)
+                        .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                            .ThenInclude(r => r.SeguridadSaludCausaAccidente)
 
-                 //Gestion Obra Calidad
-                 .Include(r => r.SeguimientoSemanalGestionObra)
-                    .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
-                        .ThenInclude(r => r.SeguridadSaludCausaAccidente)
+                     //Gestion Obra Social
+                     .Include(r => r.SeguimientoSemanalGestionObra)
+                        .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
 
-                 //Gestion Obra Social
-                 .Include(r => r.SeguimientoSemanalGestionObra)
-                    .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
-
-                .Include(r => r.SeguimientoSemanalGestionObra)
-                    .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
-
-
-                .Include(r => r.SeguimientoSemanalReporteActividad)
+                    .Include(r => r.SeguimientoSemanalGestionObra)
+                        .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
 
 
+                    .Include(r => r.SeguimientoSemanalReporteActividad)
 
-                .Include(r => r.SeguimientoSemanalRegistroFotografico)
+                    .Include(r => r.SeguimientoSemanalRegistroFotografico)
 
-                .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
+                    .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
 
-                .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync();
+            }
+            else { 
+                return await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
+                      //Informacion Proyecto
+                      .Include(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Contratacion)
+                             .ThenInclude(r => r.Contrato)
+                      .Include(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                             .ThenInclude(r => r.InstitucionEducativa)
+                      .Include(r => r.ContratacionProyecto)
+                         .ThenInclude(r => r.Proyecto)
+                             .ThenInclude(r => r.LocalizacionIdMunicipio)
 
+                      .Include(r => r.SeguimientoDiario)
+                             .ThenInclude(r => r.SeguimientoDiarioObservaciones)
+                      //mAP SUMA DEL AVANCE POR CAPITULO DESDE SEMANA ACTUAL MIRAR TABLA ?
+
+                      .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+
+                      .Include(r => r.SeguimientoSemanalAvanceFisico)
+
+                      //Gestion Obra 
+                      //Gestion Obra Ambiental
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                             .ThenInclude(r => r.ManejoMaterialesInsumo)
+                                  .ThenInclude(r => r.ManejoMaterialesInsumosProveedor)
+
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                             .ThenInclude(r => r.ManejoResiduosConstruccionDemolicion)
+                                 .ThenInclude(r => r.ManejoResiduosConstruccionDemolicionGestor)
+
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                             .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
+
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                          .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                              .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
+
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                          .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                              .ThenInclude(r => r.ManejoOtro)
+
+                       //Gestion Obra Calidad
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                          .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                              .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                  .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+
+                       //Gestion Obra Calidad
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                          .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                              .ThenInclude(r => r.SeguridadSaludCausaAccidente)
+
+                       //Gestion Obra Social
+                       .Include(r => r.SeguimientoSemanalGestionObra)
+                          .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
+
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                          .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
+
+
+                      .Include(r => r.SeguimientoSemanalReporteActividad)
+
+                      .Include(r => r.SeguimientoSemanalRegistroFotografico)
+
+                      .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
+
+                      .FirstOrDefaultAsync();
+
+
+
+            }
         }
 
         //public async Task<List<dynamic>> GetListSeguimientoSemanalBypContratacionProyectoId(int pContratacionProyectoId)

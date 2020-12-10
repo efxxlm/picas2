@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal();
 
-        Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId);
+        Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrpSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId);
 
 
     }
