@@ -217,6 +217,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
         .then(m => m.FasePreconstruccionModule)
       },
+      {
+        path: 'gestionarProcesoDefensaJudicial',
+        loadChildren: () => import('./_pages/gestionar-procesos-defensa-judicial/gestionar-procesos-defensa-judicial.module')
+        .then(m => m.GestionarProcesosDefensaJudicialModule)
+      },
     ]
 
   },
