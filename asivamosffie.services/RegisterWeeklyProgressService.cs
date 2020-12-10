@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.model.APIModels;
+ 
 using System.IO;
 using Z.EntityFramework.Plus;
 using DinkToPdf;
@@ -112,7 +113,11 @@ namespace asivamosffie.services
                    .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
 
                    .FirstOrDefaultAsync();
-
+                 
+                foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
+                {
+                    FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaInicio - FlujoInversion.Programacion.FechaFin).TotalDays;
+                }
 
                 Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == seguimientoSemanal.ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
