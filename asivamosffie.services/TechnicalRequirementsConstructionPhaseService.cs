@@ -1595,13 +1595,58 @@ namespace asivamosffie.services
 
                 if (pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_interventor.ToString() || pEstado == ConstanCodigoEstadoConstruccion.Enviado_al_apoyo.ToString())
                 {
-
                     foreach (var ContratoConstruccion in contratoCambiarEstado.ContratoConstruccion)
                     {
+
+                        //if ( contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() ){
+
+                            List<ConstruccionPerfil> listaPerfiles = _context.ConstruccionPerfil
+                                                                                .Where( cp => cp.ContratoConstruccionId == ContratoConstruccion.ContratoConstruccionId)
+                                                                                .Include( r => r.ConstruccionPerfilObservacion )
+                                                                                .ToList();
+
+                            listaPerfiles.ForEach( cp => {
+
+                                if ( cp.TieneObservacionesSupervisor == true ){
+                                
+                                    // observacion supervisor
+                                    ConstruccionPerfilObservacion construccionPerfilObservacionSupervisor = cp.ConstruccionPerfilObservacion
+                                        .Where( r => r.EsSupervision == true &&
+                                                r.Eliminado != true &&
+                                                r.Archivada != true
+                                            )
+                                        .FirstOrDefault();
+
+                                    construccionPerfilObservacionSupervisor.Archivada = true;
+                                    
+                                    if ( cp.TieneObservacionesApoyo == true ){
+                                        
+                                        // observacion apoyo
+                                        ConstruccionPerfilObservacion construccionPerfilObservacionApoyo = cp.ConstruccionPerfilObservacion
+                                        .Where( r => r.EsSupervision == false &&
+                                                r.Eliminado != true &&
+                                                r.Archivada != true
+                                            )
+                                        .FirstOrDefault();
+
+                                    construccionPerfilObservacionApoyo.Archivada = true;
+                                    }
+
+                                    //Construccion Perfil
+                                    cp.ObservacionSupervisorId = construccionPerfilObservacionSupervisor.ConstruccionPerfilObservacionId;
+                                    cp.TieneObservacionesApoyo = null;
+                                    cp.TieneObservacionesSupervisor = null;
+                                    cp.RegistroCompleto = false;
+
+                                }
+
+                            });
+                        //}
+
                         //Observaciones Diagnostico
 
                         if ( TieneFasePreconstruccion( contratoCambiarEstado.ContratoId ) && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ){
-                            if ((bool)ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor)
+                            if (ContratoConstruccion.TieneObservacionesDiagnosticoSupervisor == true)
                             {
                                 //Observacion Supervisor
                                 ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
@@ -1637,7 +1682,7 @@ namespace asivamosffie.services
 
                         //Observaciones Planes Y Programas
 
-                        if ((bool)ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        if (ContratoConstruccion.TieneObservacionesPlanesProgramasSupervisor == true && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             //Observacion Supervisor
                             ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
@@ -1673,7 +1718,7 @@ namespace asivamosffie.services
 
                         //Observaciones Manejo de Anticipo
 
-                        if ((bool)ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        if (ContratoConstruccion.TieneObservacionesManejoAnticipoSupervisor == true && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             //Observacion Supervisor
                             ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
@@ -1707,7 +1752,7 @@ namespace asivamosffie.services
 
                         //Observaciones Programacion Obra  
 
-                        if ((bool)ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        if (ContratoConstruccion.TieneObservacionesProgramacionObraSupervisor == true && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             //Observacion Supervisor
                             ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
@@ -1742,7 +1787,7 @@ namespace asivamosffie.services
 
                         //Observaciones Flujo Inversion 
 
-                        if ((bool)ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                        if (ContratoConstruccion.TieneObservacionesFlujoInversionSupervisor == true && contratoCambiarEstado.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                         {
                             //Observacion Supervisor
                             ConstruccionObservacion construccionObservacionSupervisor = ContratoConstruccion.ConstruccionObservacion
@@ -1804,7 +1849,7 @@ namespace asivamosffie.services
             }
             catch (Exception ex)
             {
-                return
+                return  
                     new Respuesta
                     {
                         IsSuccessful = false,

@@ -67,7 +67,7 @@
           <button mat-raised-button
                   color="accent"
                   class="btn-table"
-                  *ngIf="element.estadoCodigo === '5' && element.cantidadProyectosAsociados == element.cantidadProyectosRequisitosAprobados"
+                  *ngIf="( element.estadoCodigo === '5' || element.estadoCodigo === '10' ) && element.cantidadProyectosAsociados == element.cantidadProyectosRequisitosAprobados"
                   (click)="aprobarInicio( element.contratoId )">
                   Enviar al supervisor
           </button>
