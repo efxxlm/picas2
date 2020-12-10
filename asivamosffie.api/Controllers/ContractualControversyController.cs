@@ -128,11 +128,11 @@ namespace asivamosffie.api.Controllers
         
         [HttpGet]
         [Route("GetListGrillaActuacionSeguimiento")]
-        public async Task<ActionResult<List<GrillaActuacionSeguimiento>>> GetListGrillaActuacionSeguimiento()
+        public async Task<ActionResult<List<GrillaActuacionSeguimiento>>> GetListGrillaActuacionSeguimiento(int pControversiaActuacionId  = 0)
         {
             try
             {
-                return await _contractualControversy.ListGrillaActuacionSeguimiento();
+                return await _contractualControversy.ListGrillaActuacionSeguimiento(pControversiaActuacionId);
             }
             catch (Exception ex)
             {

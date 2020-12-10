@@ -1843,7 +1843,7 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<GrillaActuacionSeguimiento>> ListGrillaActuacionSeguimiento()
+        public async Task<List<GrillaActuacionSeguimiento>> ListGrillaActuacionSeguimiento( int pControversiaActuacionId /*pControversiaContractualId*/ = 0)
         {
             //await AprobarContratoByIdContrato(1);
 
@@ -1854,6 +1854,12 @@ namespace asivamosffie.services
 
             //List<ControversiaContractual> ListControversiaContractualGrilla = await _context.ControversiaContractual.Where(r => !(bool)r.EstadoCodigo).Distinct().ToListAsync();
             List<ActuacionSeguimiento> lstActuacionSeguimiento = await _context.ActuacionSeguimiento.Distinct().ToListAsync();
+
+            if (pControversiaActuacionId != 0)
+            {
+                lstActuacionSeguimiento = lstActuacionSeguimiento.Where(r => r.ControversiaActuacionId == pControversiaActuacionId).ToList();
+
+            }
 
             foreach (var actuacionSeguimiento in lstActuacionSeguimiento)
             {
@@ -1890,8 +1896,8 @@ namespace asivamosffie.services
                         EstadoReclamacionCodigo=actuacionSeguimiento.EstadoReclamacionCodigo,
                         FechaActualizacion = actuacionSeguimiento.FechaModificacion != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
                         NumeroReclamacion= "REC "+actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
-                        Actuacion = "Actuación " +actuacionSeguimiento.ActuacionSeguimientoId.ToString(),                                              
-                        
+                        Actuacion = "Actuación " +actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
+                        ControversiaActuacionId = actuacionSeguimiento.ControversiaActuacionId,
                         //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",                        
 
                     };
