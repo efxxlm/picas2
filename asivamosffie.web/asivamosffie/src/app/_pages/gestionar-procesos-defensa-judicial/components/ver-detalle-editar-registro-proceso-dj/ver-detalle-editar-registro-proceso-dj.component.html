@@ -72,7 +72,10 @@
                     Detalle del proceso
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-detalle-proceso-dj></app-form-detalle-proceso-dj>
+            <app-form-detalle-proceso-dj *ngIf="this.addressForm.value.legitimacionActiva==true">
+            </app-form-detalle-proceso-dj>
+            <app-form-detalle-proceso-pasivo-dj *ngIf="this.addressForm.value.legitimacionActiva==false">
+            </app-form-detalle-proceso-pasivo-dj>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==true">
@@ -83,6 +86,16 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <app-form-convocados-dj></app-form-convocados-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false">
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Demandantes/Convocantes
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-demandantes-convocantes-dj></app-form-demandantes-convocantes-dj>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>

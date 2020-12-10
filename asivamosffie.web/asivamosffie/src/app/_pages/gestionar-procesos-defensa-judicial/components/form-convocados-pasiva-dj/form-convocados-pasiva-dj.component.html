@@ -1,6 +1,6 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
     <div class="d-flex mt-1em col-md-6" style="margin: 0 auto;">
-        <label class="mr-label" class="label-left"><b>Número de demandados</b></label>
+        <label class="mr-label" class="label-left"><b>Número de convocados</b></label>
         <div class="col d-flex">
             <mat-form-field class="w-70">
                 <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
@@ -13,7 +13,7 @@
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar">
-                    Demandado {{ i+1 }}
+                    Convocado {{ i+1 }}
                 </mat-panel-title>
             </mat-expansion-panel-header>
 

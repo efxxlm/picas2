@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"  style="padding-left: 0;">
+                    <div class="col-md-6" style="padding-left: 0;">
                         <div class="row">
                             <div class="pr-1">
                                 <label class="label-left" for="tipoProceso">Tipo de proceso</label>
@@ -35,7 +35,8 @@
                             <div class="col">
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="tipoProceso" required>
-                                        <mat-option *ngFor="let tipoProceso of tipoProcesoArray" [value]="tipoProceso.value">
+                                        <mat-option *ngFor="let tipoProceso of tipoProcesoArray"
+                                            [value]="tipoProceso.value">
                                             {{ tipoProceso.name }}
                                         </mat-option>
                                     </mat-select>
@@ -71,11 +72,13 @@
                     Detalle del proceso
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-detalle-proceso-dj *ngIf="this.addressForm.value.legitimacionActiva==true"></app-form-detalle-proceso-dj>
-            <app-form-detalle-proceso-pasivo-dj *ngIf="this.addressForm.value.legitimacionActiva==false"></app-form-detalle-proceso-pasivo-dj>
+            <app-form-detalle-proceso-dj *ngIf="this.addressForm.value.legitimacionActiva==true">
+            </app-form-detalle-proceso-dj>
+            <app-form-detalle-proceso-pasivo-dj *ngIf="this.addressForm.value.legitimacionActiva==false">
+            </app-form-detalle-proceso-pasivo-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion  *ngIf="this.addressForm.value.legitimacionActiva==true">
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==true">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar">
@@ -85,7 +88,7 @@
             <app-form-convocados-dj></app-form-convocados-dj>
         </mat-expansion-panel>
     </mat-accordion>
-    <mat-accordion  *ngIf="this.addressForm.value.legitimacionActiva==false">
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar">
@@ -116,7 +119,7 @@
         </mat-expansion-panel>
     </mat-accordion>
     <div style="margin-top: 1em;">
-        Una vez las secciones habilitadas se encuentren diligenciadas y en color verde se habilitará la sección <strong>“Ficha de estudio”</strong> para continuar el proceso
+        Una vez las secciones habilitadas se encuentren diligenciadas y en color verde se habilitará la sección
+        <strong>“Ficha de estudio”</strong> para continuar el proceso
     </div>
 </div>
-
