@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,7 +11,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   @Input() isEditable;
-
+  @Input() controversiaAct;
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   addressForm = this.fb.group({
     resumenReclamacionFiduciaria: [null, Validators.required],
     requereReclamacionComiteTecnico: [null, Validators.required],
@@ -27,7 +29,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor( private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
       this.addressForm.get('requiereReclamacionAseguradora').setValue(true);
@@ -62,7 +64,49 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    let arrayReclam;
+    if(this.isEditable==true){
+      arrayReclam = {
+        "ControversiaContractualId":this.controversiaID,
+        "ActuacionAdelantadaCodigo": "2",
+        "ActuacionAdelantadaOtro": "2",
+         "ProximaActuacionCodigo": "2",
+        "ProximaActuacionOtro": "2",
+        "Observaciones": "" ,
+        "ResumenPropuestaFiduciaria": this.addressForm.value.resumenReclamacionFiduciaria,
+        "RutaSoporte":  this.addressForm.value.urlSoporte ,
+        "EstadoAvanceTramiteCodigo": "1",
+       "FechaCreacion": "2020-3-3",
+       "UsuarioCreacion":"US CRE w",
+       "UsuarioModificacion": "US MODIF w",
+       "EsCompleto": true,
+       "EsRequiereComiteReclamacion": this.addressForm.value.requereReclamacionComiteTecnico,
+       "ControversiaActuacionId":this.controversiaAct
+      };
+      this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
+      });
+    }
+    else{
+      arrayReclam = {
+        "ControversiaContractualId":this.controversiaID,
+        "ActuacionAdelantadaCodigo": "2",
+        "ActuacionAdelantadaOtro": "2",
+         "ProximaActuacionCodigo": "2",
+        "ProximaActuacionOtro": "2",
+        "Observaciones": "Observaciones w" ,
+        "ResumenPropuestaFiduciaria": this.addressForm.value.resumenReclamacionFiduciaria ,
+        "RutaSoporte":  this.addressForm.value.urlSoporte ,
+        "EstadoAvanceTramiteCodigo": "1",
+       "FechaCreacion": "2020-3-3",
+       "UsuarioCreacion":"US CRE w",
+       "UsuarioModificacion": "US MODIF w",
+       "EsCompleto": true,
+       "EsRequiereComiteReclamacion": this.addressForm.value.requereReclamacionComiteTecnico,
+      };
+      this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
+      });
+    }
   }
-
 }
