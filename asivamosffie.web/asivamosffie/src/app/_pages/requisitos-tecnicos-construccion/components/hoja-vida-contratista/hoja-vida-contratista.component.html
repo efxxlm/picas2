@@ -1,5 +1,5 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
-  <div class="d-flex mt-1em" style="justify-content: center;display: inline-flex;">
+  <div class="d-flex mt-1em inline-flex" style="justify-content: center;">
     <label class="mr-label" class="label-left"
     [ngClass]="{'color-secondaryColor' : formContratista.get('numeroPerfiles').invalid && formContratista.get('numeroPerfiles').touched|| formContratista.get('numeroPerfiles').invalid && estaEditando}">
       <b>
@@ -120,7 +120,7 @@
                 <div class="col d-flex">
                   <mat-form-field class="mt-min">
                     <input matInput [matDatepicker]="fechaAprobacion" formControlName="fechaAprobacion" [min]="minDate"
-                      placeholder="DD/MM/AAAA" required readonly
+                      placeholder="DD/MM/AAAA" required readonly (click)="fechaAprobacion.open()"
                       [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
                     <mat-datepicker #fechaAprobacion></mat-datepicker>
                   </mat-form-field>
