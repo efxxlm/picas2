@@ -49,7 +49,7 @@ namespace asivamosffie.services
                            .ThenInclude(r => r.InstitucionEducativa)
                     .Include(r => r.ContratacionProyecto)
                        .ThenInclude(r => r.Proyecto)
-                           .ThenInclude(r => r.LocalizacionIdMunicipio)
+                  
 
                     .Include(r => r.SeguimientoDiario)
                            .ThenInclude(r => r.SeguimientoDiarioObservaciones)
@@ -200,7 +200,10 @@ namespace asivamosffie.services
                 .ToListAsync();
 
             List<dynamic> ListBitaCora = new List<dynamic>();
-          //  List<Dominio> TipoIntervencion = _context.TipoDominio.Where(r=> r.)
+
+            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
+            
+
             foreach (var item in ListseguimientoSemanal)
             {
                 ListBitaCora.Add(new {
