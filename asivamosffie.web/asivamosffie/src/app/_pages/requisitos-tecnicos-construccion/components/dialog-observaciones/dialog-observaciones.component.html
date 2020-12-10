@@ -7,15 +7,16 @@
     Observaciones
   </h1>
 
-  <p class="p mt-05em">
+  <p class="p mt-05em font-weight-bold">
     {{ data.planPrograma }}
   </p>
 
   <form autocomplete="off" [formGroup]="formObservacion">
 
     <div class="d-flex align-items-center">
-      <div class="text-area-quill">
-        <label for="observaciones" class="text-area-quill--label size-label colorMainColor">
+      <div class="text-area-quill" [class.color-secondaryColor]="formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched">
+        <label for="observaciones" class="text-area-quill--label size-label colorMainColor"
+        [class.color-secondaryColor]="formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched">
           Observaciones
         </label>
         <quill-editor class="quill-editor-style miles"
@@ -38,6 +39,7 @@
               color="accent"
               class="btn-dialog"
               type="submit"
+              [disabled]="formObservacion.invalid"
               (click)="guardar()">
               Realizar observación
       </button>

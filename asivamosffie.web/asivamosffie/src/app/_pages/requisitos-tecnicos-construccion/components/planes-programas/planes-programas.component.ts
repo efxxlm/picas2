@@ -14,6 +14,8 @@ import { Proyecto } from 'src/app/core/_services/project/project.service';
 })
 export class PlanesProgramasComponent implements OnInit {
 
+  estaEditando = false;
+
   @Input() planesProgramas: any;
   @Input() proyecto: Proyecto;
 
@@ -21,7 +23,7 @@ export class PlanesProgramasComponent implements OnInit {
   @ViewChild( MatSort, { static: true } ) sort : MatSort;
   dataPlanesProgramas: any[] = [];
   dataSource                 = new MatTableDataSource();
-  displayedColumns: string[] = [ 
+  displayedColumns: string[] = [
     'planesProgramas',
     'recibioRequisito',
     'fechaRadicado',
@@ -55,6 +57,7 @@ export class PlanesProgramasComponent implements OnInit {
   ngOnInit(): void {
     if ( this.planesProgramas ) {
       this.getDataPlanesProgramas();
+      this.estaEditando = true;
     } else {
       this.getDataPlanes();
     }

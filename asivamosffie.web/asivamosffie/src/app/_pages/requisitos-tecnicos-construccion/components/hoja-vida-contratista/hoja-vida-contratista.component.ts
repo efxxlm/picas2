@@ -61,7 +61,7 @@ export class HojaVidaContratistaComponent implements OnInit {
 
   crearFormulario() {
     this.formContratista = this.fb.group({
-      numeroPerfiles: [ '' ],
+      numeroPerfiles: [null, Validators.required],
       perfiles: this.fb.array([])
     });
   }
@@ -85,18 +85,18 @@ export class HojaVidaContratistaComponent implements OnInit {
             this.perfiles.push(
               this.fb.group(
                 {
-                  estadoSemaforo              : [ 'sin-diligenciar' ],
-                  construccionPerfilId            : [ 0 ],
-                  perfilCodigo                : [ null ],
-                  cantidadHvRequeridas        : [ '' ],
-                  cantidadHvRecibidas         : [ '' ],
-                  cantidadHvAprobadas         : [ '' ],
-                  fechaAprobacion             : [ null ],
-                  observacion                 : [ null ],
-                  observacionSupervisor       : [ null ],
-                  fechaObservacion            : [ null ],
+                  estadoSemaforo              : [ 'sin-diligenciar', Validators.required ],
+                  construccionPerfilId            : [0, Validators.required],
+                  perfilCodigo                : [null, Validators.required],
+                  cantidadHvRequeridas        : [null, Validators.required],
+                  cantidadHvRecibidas         : [null, Validators.required],
+                  cantidadHvAprobadas         : [null, Validators.required],
+                  fechaAprobacion             : [null, Validators.required],
+                  observacion                 : [null, Validators.required],
+                  observacionSupervisor       : [null, Validators.required],
+                  fechaObservacion            : [null, Validators.required],
                   contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                  rutaSoporte                 : [ '' ]
+                  rutaSoporte                 : [null, Validators.required]
                 }
               )
             );
@@ -108,18 +108,18 @@ export class HojaVidaContratistaComponent implements OnInit {
             this.perfiles.push(
               this.fb.group(
                 {
-                    estadoSemaforo              : [ 'sin-diligenciar' ],
-                    construccionPerfilId            : [ 0 ],
-                    perfilCodigo                : [ null ],
-                    cantidadHvRequeridas        : [ '' ],
-                    cantidadHvRecibidas         : [ '' ],
-                    cantidadHvAprobadas         : [ '' ],
-                    fechaAprobacion             : [ null ],
-                    observacion                 : [ null ],
-                    observacionSupervisor       : [ null ],
-                    fechaObservacion            : [ null ],
+                    estadoSemaforo              : [ 'sin-diligenciar', Validators.required ],
+                    construccionPerfilId            : [0, Validators.required],
+                    perfilCodigo                : [null, Validators.required],
+                    cantidadHvRequeridas        : [null, Validators.required],
+                    cantidadHvRecibidas         : [null, Validators.required],
+                    cantidadHvAprobadas         : [null, Validators.required],
+                    fechaAprobacion             : [null, Validators.required],
+                    observacion                 : [null, Validators.required],
+                    observacionSupervisor       : [null, Validators.required],
+                    fechaObservacion            : [null, Validators.required],
                     contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                    rutaSoporte                 : [ '' ]
+                    rutaSoporte                 : [null, Validators.required]
                 }
               )
             );
@@ -148,18 +148,18 @@ export class HojaVidaContratistaComponent implements OnInit {
               this.perfiles.push(
                 this.fb.group(
                   {
-                    estadoSemaforo              : [ 'sin-diligenciar' ],
-                    construccionPerfilId            : [ 0 ],
-                    perfilCodigo                : [ null ],
-                    cantidadHvRequeridas        : [ '' ],
-                    cantidadHvRecibidas         : [ '' ],
-                    cantidadHvAprobadas         : [ '' ],
-                    fechaAprobacion             : [ null ],
-                    observacion                 : [ null ],
-                    observacionSupervisor       : [ null ],
-                    fechaObservacion            : [ null ],
+                    estadoSemaforo              : [ 'sin-diligenciar', Validators.required ],
+                    construccionPerfilId            : [0, Validators.required],
+                    perfilCodigo                : [null, Validators.required],
+                    cantidadHvRequeridas        : [null, Validators.required],
+                    cantidadHvRecibidas         : [null, Validators.required],
+                    cantidadHvAprobadas         : [null, Validators.required],
+                    fechaAprobacion             : [null, Validators.required],
+                    observacion                 : [null, Validators.required],
+                    observacionSupervisor       : [null, Validators.required],
+                    fechaObservacion            : [null, Validators.required],
                     contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
-                    rutaSoporte                 : [ '' ]
+                    rutaSoporte                 : [null, Validators.required]
                   }
                 )
               );

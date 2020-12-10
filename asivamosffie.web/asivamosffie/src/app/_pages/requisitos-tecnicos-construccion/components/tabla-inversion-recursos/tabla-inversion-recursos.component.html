@@ -7,29 +7,29 @@
       <img src="assets/img/icon/lupa.svg" alt="Buscar">
     </button>
   </div>
-  
+
   <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
       <ng-container matColumnDef="fechaCreacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de cargue </th>
         <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaCreacion | date: 'dd/MM/yyyy' }} </b> </td>
       </ng-container>
-  
+
       <ng-container matColumnDef="cantidadRegistros">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número total de registros </th>
         <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadRegistros }} </td>
       </ng-container>
-  
+
       <ng-container matColumnDef="cantidadRegistrosValidos">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de registros validos </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de registros válidos </th>
         <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadRegistrosValidos }} </td>
       </ng-container>
-  
+
       <ng-container matColumnDef="cantidadRegistrosInvalidos">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de registros inválidos </th>
         <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadRegistrosInvalidos }} </td>
       </ng-container>
-  
+
       <ng-container matColumnDef="estadoCargue">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del cargue </th>
         <td mat-cell *matCellDef="let element" align="center">
@@ -40,41 +40,41 @@
           </section>
         </td>
       </ng-container>
-  
+
       <ng-container matColumnDef="gestion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Gestión </th>
         <td mat-cell *matCellDef="let element">
-  
+
           <button mat-raised-button
-                  color="accent" 
+                  color="accent"
                   class="btn-table"
                   (click)="descargar( element.archivoCargueId )">
                   Ver detalle
           </button>
-  
+
           <button mat-raised-button
-                  color="accent" 
+                  color="accent"
                   class="btn-table expansion-style--title btn-color h-2em"
                   [ngClass]="getSemaforo( element.observaciones ? element.observaciones : null )"
                   (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.fechaCreacion, element.observaciones ? element.observaciones : null )">
                   Observaciones
           </button>
-  
+
           <button mat-raised-button
-                  color="accent" 
+                  color="accent"
                   class="btn-table"
                   *ngIf="element.estadoCargue=='Validos'"
                   (click)="deleteArchivoCargue( element.archivoCargueId )">
                   Eliminar
           </button>
-  
+
         </td>
       </ng-container>
-    
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
-    
+
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
   </div>
   <div align="center" *ngIf="observacionDevolucionFlujoInversion">

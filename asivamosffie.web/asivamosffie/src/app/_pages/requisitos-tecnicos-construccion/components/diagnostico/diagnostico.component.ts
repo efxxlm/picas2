@@ -23,7 +23,7 @@ export class DiagnosticoComponent implements OnInit {
 
 
   solicitudesModificacion: any[] = [
-    
+
   ];
 
   constructor( private fb: FormBuilder,
@@ -59,15 +59,15 @@ export class DiagnosticoComponent implements OnInit {
 
   crearFormulario() {
     this.formDiagnostico = this.fb.group({
-      esInformeDiagnostico: [ null ],
-      rutaInforme: [ '' ],
-      costoDirecto: [ null ],
-      administracion: [ null ],
-      imprevistos: [ null ],
-      utilidad: [ null ],
-      valorTotalFaseConstruccion: [ null ],
-      requiereModificacionContractual: [ null ],
-      numeroSolicitudModificacion: [ null ]
+      esInformeDiagnostico: [null, Validators.required],
+      rutaInforme: [null, Validators.required],
+      costoDirecto: [null, Validators.required],
+      administracion: [null, Validators.required],
+      imprevistos: [null, Validators.required],
+      utilidad: [null, Validators.required],
+      valorTotalFaseConstruccion: [null, Validators.required],
+      requiereModificacionContractual: [null, Validators.required],
+      numeroSolicitudModificacion: [null, Validators.required]
     });
   }
 
