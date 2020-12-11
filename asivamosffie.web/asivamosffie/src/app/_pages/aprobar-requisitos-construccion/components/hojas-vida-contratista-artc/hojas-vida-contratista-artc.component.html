@@ -109,17 +109,17 @@
     </form>
 </div>
 <div align="center" *ngIf="this.observacionesCompleted==true">
-    <mat-card class="border mt-1em" *ngIf="perfil.tieneObservacionesSupervisor !== undefined && perfil.tieneObservacionesSupervisor === true">
+    <mat-card class="border mt-1em">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
                 Validación de la supervisión
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p style="margin-left: 2em;"><b> {{ perfil.observacionSupervisor.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-            <p *ngIf="perfil.tieneObservacionesSupervisor === true" style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p *ngIf="perfil.tieneObservacionesSupervisor === false" style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> No</p>
-            <section *ngIf="perfil.observacionSupervisor.observacion !== undefined" [innerHTML]="perfil.observacionSupervisor.observacion" style="margin-left: 2em;"></section>
+            <p *ngIf="perfil.observacionDevolucion !== undefined" style="margin-left: 2em;"><b> {{ perfil.observacionDevolucion.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p *ngIf="perfil.observacionDevolucion !== undefined" style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <p *ngIf="perfil.observacionDevolucion === undefined" style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> No</p>
+            <section *ngIf="perfil.observacionDevolucion !== undefined" [innerHTML]="perfil.observacionDevolucion.observacion" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
     <!--Tabla para historial de observaciones-->
