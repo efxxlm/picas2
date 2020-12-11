@@ -1365,16 +1365,16 @@ namespace asivamosffie.services
                 cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, true);
                 cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, true);
 
-                if (cc.TieneObservacionesDiagnosticoApoyo == null ||
-                     (cc.TieneObservacionesDiagnosticoApoyo == true && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
-                     cc.TieneObservacionesFlujoInversionApoyo == null ||
-                     (cc.TieneObservacionesFlujoInversionApoyo == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
-                     cc.TieneObservacionesManejoAnticipoApoyo == null ||
-                     (cc.TieneObservacionesManejoAnticipoApoyo == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo != null ? cc.ObservacionManejoAnticipoApoyo.Observaciones : null)) ||
-                     cc.TieneObservacionesPlanesProgramasApoyo == null ||
-                     (cc.TieneObservacionesPlanesProgramasApoyo == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo != null ? cc.ObservacionPlanesProgramasApoyo.Observaciones : null)) ||
-                     cc.TieneObservacionesProgramacionObraApoyo == null ||
-                     (cc.TieneObservacionesProgramacionObraApoyo == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo != null ? cc.ObservacionProgramacionObraApoyo.Observaciones : null))
+                if ( ( TieneFasePreconstruccion( cc.ContratoId) && cc.TieneObservacionesDiagnosticoApoyo == null ) ||
+                     ( ( TieneFasePreconstruccion( cc.ContratoId) && cc.TieneObservacionesDiagnosticoApoyo == true ) && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
+                     cc.TieneObservacionesFlujoInversionSupervisor == null ||
+                     (cc.TieneObservacionesFlujoInversionSupervisor == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
+                     cc.TieneObservacionesManejoAnticipoSupervisor == null ||
+                     (cc.TieneObservacionesManejoAnticipoSupervisor == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo != null ? cc.ObservacionManejoAnticipoApoyo.Observaciones : null)) ||
+                     cc.TieneObservacionesPlanesProgramasSupervisor == null ||
+                     (cc.TieneObservacionesPlanesProgramasSupervisor == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo != null ? cc.ObservacionPlanesProgramasApoyo.Observaciones : null)) ||
+                     cc.TieneObservacionesProgramacionObraSupervisor == null ||
+                     (cc.TieneObservacionesProgramacionObraSupervisor == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo != null ? cc.ObservacionProgramacionObraApoyo.Observaciones : null))
                      )
                 {
                     esCompleto = false;
