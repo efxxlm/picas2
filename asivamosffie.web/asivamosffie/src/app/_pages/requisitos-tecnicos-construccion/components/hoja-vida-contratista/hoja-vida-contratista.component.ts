@@ -249,7 +249,6 @@ export class HojaVidaContratistaComponent implements OnInit {
   }
 
   disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
-    console.log( cantidadHvAprobadas, cantidadHvRequeridas )
     if ( cantidadHvAprobadas != null && cantidadHvRequeridas != null){
       if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
         this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();

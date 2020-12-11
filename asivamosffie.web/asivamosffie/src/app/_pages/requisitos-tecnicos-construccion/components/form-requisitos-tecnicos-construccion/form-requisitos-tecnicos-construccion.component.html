@@ -59,7 +59,9 @@
 
           <app-diagnostico 
                           [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]" 
-                          (diagnostico)="getDiagnostico( i, $event )">
+                          [proyecto]="contratacion.proyecto" 
+                          (diagnostico)="getDiagnostico( i, $event )"
+                          >
           </app-diagnostico>
 
         </mat-expansion-panel>

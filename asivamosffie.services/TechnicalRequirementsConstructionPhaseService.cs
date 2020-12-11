@@ -265,6 +265,8 @@ namespace asivamosffie.services
                          .ThenInclude(r => r.Contratista)
                     .FirstOrDefaultAsync();
 
+                
+
                 contrato.ContratoConstruccion = _context.ContratoConstruccion.Where(cc => cc.ContratoId == pContratoId)
                                                                                 .Include(r => r.ConstruccionPerfil)
                                                                                     .ThenInclude(r => r.ConstruccionPerfilObservacion)
@@ -340,7 +342,13 @@ namespace asivamosffie.services
                     ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
                     ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                     //verifico que fases tiene
-                    var componentes = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId && !(bool)x.Eliminado).ToList();
+                    var componentes = _context.ComponenteAportante
+                                                    .Where(
+                                                            x => x.ContratacionProyectoAportante.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId && 
+                                                            !(bool)x.Eliminado
+                                                          )
+                                                    .Include( r => r.ComponenteUso )
+                                                    .ToList();
                     bool construccion = false;
                     bool preconstruccion = false;
                     if (componentes.Where(x => x.FaseCodigo == ConstanCodigoFaseContrato.Construccion).Count() > 0)
@@ -353,6 +361,13 @@ namespace asivamosffie.services
                     }
                     ContratacionProyecto.faseConstruccionNotMapped = construccion;
                     ContratacionProyecto.fasePreConstruccionNotMapped = preconstruccion;
+
+                    ContratacionProyecto.Proyecto.ValorFaseConstruccion = 0;
+                    componentes.Where(x => x.FaseCodigo == ConstanCodigoFaseContrato.Construccion).ToList().ForEach( ca => {
+                        ca.ComponenteUso.ToList().ForEach( cu => {
+                            ContratacionProyecto.Proyecto.ValorFaseConstruccion += cu.ValorUso;
+                        });
+                    });
 
 
                 }
