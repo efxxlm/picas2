@@ -42,9 +42,9 @@
         </div>
         <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="addressForm.value.tieneObservaciones == true">
             <div class="text-area-quill"
-            [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid">
-                <label  class="text-area-quill--label align-left-label"
-                        [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid)">
+            [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched">
+                <label class="text-area-quill--label size-label colorMainColor left-1-7"
+                        [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
                         Observaciones a las hojas de vida del contratista de interventoría
                 </label>
                 <quill-editor   class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"

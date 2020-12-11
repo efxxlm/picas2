@@ -35,8 +35,10 @@
         </div>
 
         <div class="d-flex align-items-center animatedDown" *ngIf="addressForm.value.tieneObservaciones == true">
-            <div class="text-area-quill">
-                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched">
+                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7"
+                [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
                     Observaciones al manejo del anticipo
                 </label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
@@ -66,7 +68,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>¿Tiene observaciones al manejo del anticipo?:</b> 
+            <p><b>¿Tiene observaciones al manejo del anticipo?:</b>
                 {{ contratacion.tieneObservacionesManejoAnticipoApoyo == true ? 'Si' : 'No' }}</p>
             <p>{{ contratacion.observacionManejoAnticipoApoyo ? contratacion.observacionManejoAnticipoApoyo.observaciones : '' }}</p>
         </mat-card-content>
