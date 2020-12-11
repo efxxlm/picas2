@@ -34,8 +34,8 @@ export class ContractualControversyService implements OnInit{
   CreateEditNuevaActualizacionTramite(controversiaActuacion: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditNuevaActualizacionTramite`, controversiaActuacion);
   }
-  GetListGrillaTipoSolicitudControversiaContractual(pControversiaContractualId:number){
-    return this.http.get<GetListGrillaTipoSolicitudControversiaContractual>(`${environment.apiUrl}/ContractualControversy/GetListGrillaTipoSolicitudControversiaContractual?pControversiaContractualId=${pControversiaContractualId}`);
+  GetListGrillaTipoSolicitudControversiaContractual(){
+    return this.http.get<GetListGrillaTipoSolicitudControversiaContractual>(`${environment.apiUrl}/ContractualControversy/GetListGrillaTipoSolicitudControversiaContractual`);
   }
   GetListGrillaControversiaActuacion(Id:number, esActuacionReclamacion:boolean){
     return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuacion?Id=${Id}&esActuacionReclamacion=${esActuacionReclamacion}`);
