@@ -68,6 +68,13 @@ namespace asivamosffie.model.Models
         public string EstadoVerificacionConstruccionCodigo { get; set; }
         public bool? RegistroCompleto1 { get; set; }
         public bool? EstaDevuelto { get; set; }
+        public DateTime? FechaAprobacionRequisitosInterventor { get; set; }
+        public DateTime? FechaAprobacionRequisitosApoyo { get; set; }
+        public DateTime? FechaAprobacionRequisitosSupervisor { get; set; }
+        public DateTime? FechaAprobacionRequisitosConstruccionInterventor { get; set; }
+        public DateTime? FechaAprobacionRequisitosConstruccionApoyo { get; set; }
+        public DateTime? FechaAprobacionRequisitosConstruccionSupervisor { get; set; }
+        public bool? RegistroCompletoConstruccion { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
