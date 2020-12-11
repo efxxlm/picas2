@@ -1560,7 +1560,10 @@ namespace asivamosffie.services
             //lstContratos = await _context.Contrato.Where(r => r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados.ToString() && !(bool)r.Eliminado).ToListAsync();
             lstContratos = await _context.Contrato.Where(
                 r => r.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_aprobados_por_supervisor.ToString() 
-                && !(bool)r.Eliminado).ToListAsync();
+                && !(bool)r.Eliminado)
+                .Include( r => r.Contratacion )
+                .ToListAsync();
+
             Contratacion contratacion;
 
             Dominio EstadoActaFase2Contrato=null;
@@ -1601,18 +1604,19 @@ namespace asivamosffie.services
                     bTieneObservacionesSupervisor = false;
 
                 string proponenteCodigo = "";
+                string nombreTipoContrato = "";
 
-                if (strTipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
-                    proponenteCodigo = "Obra";
-                else if (strTipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
-                    proponenteCodigo = "Interventoria";
+                if (item.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
+                    nombreTipoContrato = "Obra";
+                else if (item.Contratacion.TipoSolicitudCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
+                    nombreTipoContrato = "Interventoria";
 
                 
                 actaInicio.EstadoVerificacion = strEstadoVerificacion;
                 
                 actaInicio.ContratoId = item.ContratoId;
                 actaInicio.NumeroContratoObra = item.NumeroContrato;
-                actaInicio.TipoContrato = strTipoContratoCodigo;
+                actaInicio.TipoContrato = nombreTipoContrato;
                 actaInicio.ProponenteCodigo = proponenteCodigo;
                 actaInicio.TieneObservacionesSupervisor = bTieneObservacionesSupervisor;
                 //actaInicio.FechaAprobacionRequisitos= item.FechaAprobacionRequisitos.ToString("dd/MM/yyyy");
