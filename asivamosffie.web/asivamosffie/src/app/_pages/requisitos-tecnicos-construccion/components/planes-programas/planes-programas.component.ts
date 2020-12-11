@@ -82,10 +82,10 @@ export class PlanesProgramasComponent implements OnInit {
   };
 
   getSemaforo ( observacion: string ) {
-    if ( observacion !== null ) {
-      return 'completo';
-    } else {
+    if ( observacion === null || observacion === undefined || observacion.length === 0  ) {
       return 'sin-diligenciar';
+    } else {
+      return 'completo';
     }
   }
 

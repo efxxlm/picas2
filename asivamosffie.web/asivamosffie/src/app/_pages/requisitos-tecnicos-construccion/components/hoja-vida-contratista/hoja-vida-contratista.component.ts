@@ -249,13 +249,20 @@ export class HojaVidaContratistaComponent implements OnInit {
   }
 
   disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
-    if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
-    } else {
+    console.log( cantidadHvAprobadas, cantidadHvRequeridas )
+    if ( cantidadHvAprobadas != null && cantidadHvRequeridas != null){
+      if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
+      } else {
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      }
+      if ( cantidadHvRequeridas.length === 0 ) {
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue(null);
+      }
+    }else{
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
-    }
-    if ( cantidadHvRequeridas.length === 0 ) {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue(null);
     }
   }
 
