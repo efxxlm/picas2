@@ -2302,6 +2302,17 @@ namespace asivamosffie.services
                             temp.UsuarioCreacion = pUsuarioCreo;
                             temp.ContratoConstruccionId = pContratoConstruccionId;
 
+                            List<FlujoInversion> listaFlujo = _context.FlujoInversion.Where( r => r.ContratoConstruccionId == pContratoConstruccionId ).ToList();
+
+                            if ( listaFlujo.Count() > 1 ) {
+                                worksheet.Cells[1, 1].AddComment("se debe eliminar una carga de flujo de inversión asociada a este Proyecto", "Admin");
+                                worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                                CantidadResgistrosValidos--;
+                            }
+
+                            
                             // #1
                             //Tipo Actividad
                             if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))
