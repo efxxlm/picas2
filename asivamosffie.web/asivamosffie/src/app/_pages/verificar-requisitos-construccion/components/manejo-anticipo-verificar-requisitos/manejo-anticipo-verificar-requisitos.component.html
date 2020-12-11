@@ -58,6 +58,20 @@
         </div>
     </form>
 </div>
+<div align="center" *ngIf="this.observacionesCompleted===true">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                observaciones al manejo del anticipo
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><b>¿Tiene observaciones al manejo del anticipo?:</b> 
+                {{ contratacion.tieneObservacionesManejoAnticipoApoyo == true ? 'Si' : 'No' }}</p>
+            <p>{{ contratacion.observacionManejoAnticipoApoyo ? contratacion.observacionManejoAnticipoApoyo.observaciones : '' }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
 <div align="center" *ngIf="contratacion.observacionDevolucionManejoAnticipo">
     <mat-card class="border" style="margin-top: 20px;">
         <mat-card-header class="header-card">
