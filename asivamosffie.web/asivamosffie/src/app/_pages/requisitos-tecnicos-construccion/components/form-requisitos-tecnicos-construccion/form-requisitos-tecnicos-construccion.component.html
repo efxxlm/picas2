@@ -111,6 +111,7 @@
                                         [contratoId]="contrato.contratoId"
                                         [proyectoId]="contratacion.proyectoId"
                                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
+                                        (actualizarRegistros)="getContrato()"
                                         (perfilesCompletados)="estadoSemaforo( i, $event )">
             </app-hoja-vida-contratista>
           </section>
@@ -119,7 +120,8 @@
                                         [contratoId]="contrato.contratoId"
                                         [proyectoId]="contratacion.proyectoId"
                                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
-                                        (perfilesCompletados)="estadoSemaforo( i, $event )">
+                                        (perfilesCompletados)="estadoSemaforo( i, $event )"
+                                        (actualizarRegistros)="getContrato()">
             </app-hoja-vida-contratista>
           </section>
           

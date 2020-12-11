@@ -19,8 +19,11 @@ export class HojaVidaContratistaComponent implements OnInit {
   @Input() perfilProyecto: any[] = [];
   @Input() contratoId: number;
   @Input() proyectoId: number;
+
   @Output() enviarPerfilesContrato = new EventEmitter();
   @Output() perfilesCompletados = new EventEmitter();
+  @Output() actualizarRegistros = new EventEmitter();
+
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
   perfilesCompletos = 0;
   editorStyle = {
@@ -331,6 +334,8 @@ export class HojaVidaContratistaComponent implements OnInit {
                 this.formContratista.patchValue({
                   numeroPerfiles: `${ this.perfiles.length }`
                 });
+                this.actualizarRegistros.emit( true );
+                
               },
               err => this.openDialog( '', err.message )
             );

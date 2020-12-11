@@ -2057,7 +2057,55 @@ namespace asivamosffie.services
                 perfil.FechaModificacion = DateTime.Now;
                 perfil.Eliminado = true;
 
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( perfil.ContratoConstruccionId );
+
+                Contrato contrato = _context.Contrato
+                                                .Where(c => c.ContratoId == contratoConstruccion.ContratoId)
+                                                .Include(r => r.Contratacion)
+                                                .FirstOrDefault();
+
+                if (contrato.Contratacion.TipoSolicitudCodigo == "1")
+                {// contrato de obra
+                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+
+                    VerificarRegistroCompletoContratoObra(contratoConstruccion.ContratoId);
+                }
+
+                if (contrato.Contratacion.TipoSolicitudCodigo == "2")
+                { // contrato de interventoria
+                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_aprobados)
+                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
+
+                    List<ContratoConstruccion> listaConstruccion = _context.ContratoConstruccion
+                                                                        .Where(cp => cp.ContratoId == contratoConstruccion.ContratoId)
+                                                                        .Include(r => r.ConstruccionPerfil)
+                                                                        .ToList();
+
+                    string estadoTempContrato = contrato.EstadoVerificacionConstruccionCodigo;
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_verificados;
+
+                    listaConstruccion.ForEach(c =>
+                    {
+
+                        c.RegistroCompleto = true;
+                        c.ConstruccionPerfil.ToList().ForEach(cp =>
+                        {
+                            if (cp.RegistroCompleto != true)
+                            {
+                                c.RegistroCompleto = false;
+                                contrato.EstadoVerificacionConstruccionCodigo = estadoTempContrato;
+                            }
+                        });
+
+                    });
+
+                    VerificarRegistroCompletoContratoInterventoria(contratoConstruccion.ContratoId);
+                }
+
                 _context.SaveChanges();
+
+
 
                 return
                     new Respuesta
