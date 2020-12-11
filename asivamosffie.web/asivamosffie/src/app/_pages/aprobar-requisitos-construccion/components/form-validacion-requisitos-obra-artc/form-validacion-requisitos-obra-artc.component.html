@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1" *ngIf="contrato['estadoVerificacionConstruccionCodigo'] === estadoConstruccion.enviadoAlSupervisor">
-      Verificar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
+      Validar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
     </h1>
     <h1 class="title-menu--h1" *ngIf="contrato['estadoVerificacionConstruccionCodigo'] === estadoConstruccion.enProcesoValidacionReqTecnicos || contrato['estadoVerificacionConstruccionCodigo'] === estadoConstruccion.conReqTecnicosValidados">
       Ver detalle/Editar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción

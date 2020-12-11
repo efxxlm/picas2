@@ -2183,8 +2183,13 @@ namespace asivamosffie.services
 
                 ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
 
+                
+
                 if (pEsFlujoInvserion)
                 {
+                    List<FlujoInversion> listaFlujoInversion = _context.FlujoInversion.Where( f => f.ContratoConstruccionId == pContratoConstruccionId ).ToList();
+                    _context.FlujoInversion.RemoveRange( listaFlujoInversion );
+
                     contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
                     contratoConstruccion.RegistroCompletoFlujoInversion = false;
                 }
@@ -2195,6 +2200,7 @@ namespace asivamosffie.services
                 }
 
                 _context.SaveChanges();
+                VerificarRegistroCompletoContratoObra(contratoConstruccion.ContratoId);
 
                 return
                     new Respuesta
