@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,7 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormActuacionReclamacionComponent implements OnInit {
   @Input() isEditable;
- 
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -22,15 +25,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     definitvoAseguradora: [null, Validators.required],
     urlSoporte: [null, Validators.required]
   });
-  estadoAvanceTramiteArray = [
-    { name: 'Aprobación de Comunicación de Inicio de TAI', value: '1' },
-  ];
-  actuacionAdelantadaArray = [
-    { name: 'Actuación 1', value: '1' },
-  ];
-  proximaActuacionRequeridaArray = [
-    { name: 'Otro', value: '1' },
-  ];
+  estadoAvanceTramiteArrayDom: Dominio[] = [];
   editorStyle = {
     height: '50px'
   };
@@ -42,17 +37,33 @@ export class FormActuacionReclamacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor( private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
     if(this.isEditable==true){
-      this.addressForm.get('estadoAvanceTramite').setValue('1');
-      this.addressForm.get('fechaActuacionAdelantada').setValue('10/10/2020');
-      this.addressForm.get('actuacionAdelantada').setValue('Prueba');
-      this.addressForm.get('proximaActuacionRequerida').setValue('Cuando sea necesario');
-      this.addressForm.get('diasVencimientoTerminos').setValue('3');
-      this.addressForm.get('definitvoAseguradora').setValue(true);
+      if (this.isEditable == true) {
+        this.services.GetControversiaActuacionById(1).subscribe((data:any)=>{
+          const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
+          this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+          this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacion);
+          this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantadaCodigo);
+          this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacionCodigo);
+          this.addressForm.get('cualOtro').setValue(data.actuacionAdelantadaOtro);
+          this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
+          this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
+          this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
+          this.addressForm.get('participacionInterventorContrato').setValue(data.esRequiereInterventor);
+          this.addressForm.get('participacionSupervisorContrato').setValue(data.esRequiereSupervisor);
+          this.addressForm.get('participacionFiduciaria').setValue(data.esRequiereFiduciaria);
+          this.addressForm.get('requiereComiteTecnico').setValue(data.esRequiereComite);
+          this.addressForm.get('observaciones').setValue(data.observaciones);
+          this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+        });
+      }
     }
+    this.common.listaEstadosAvanceTramite().subscribe(rep => {
+      this.estadoAvanceTramiteArrayDom = rep;
+    });
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -79,7 +90,78 @@ export class FormActuacionReclamacionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    let actuacionTaiArray;
+    if (this.isEditable == true) {
+      actuacionTaiArray = {
+        "ControversiaContractualId": this.controversiaID,
+        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
+        "ActuacionAdelantadaOtro": "",
+        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "Observaciones": this.addressForm.value.observaciones,
+        "ResumenPropuestaFiduciaria": "",
+        "RutaSoporte": this.addressForm.value.urlSoporte,
+        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "FechaCreacion": "2020-3-3",
+        "UsuarioCreacion": "US CRE w",
+        "UsuarioModificacion": "US MODIF w",
+        "EsCompleto": true,
+        "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
+        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
+        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
+        "EsRequiereContratista":this.addressForm.value.participacionContratista,
+        "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
+        "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
+        "EsRequiereJuridico": "",
+        "EsRequiereFiduciaria": this.addressForm.value.participacionFiduciaria,
+        "EsRequiereComite": this.addressForm.value.requiereComiteTecnico,
+        "EsRequiereAseguradora": "",
+        "EsRequiereComiteReclamacion": "",
+        "EsprocesoResultadoDefinitivo": "",
+        "EsRequiereMesaTrabajo": "",
+        "Eliminado": false,
+        "ControversiaActuacionId": 7
+      }
+    }
+    else {
+      actuacionTaiArray = {
+        "ControversiaContractualId": this.controversiaID,
+        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
+        "ActuacionAdelantadaOtro": "",
+        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
+        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "Observaciones": this.addressForm.value.observaciones,
+        "ResumenPropuestaFiduciaria": "ResumenPropuestaFiduciaria w",
+        "RutaSoporte": this.addressForm.value.urlSoporte,
+        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "FechaCreacion": "2020-3-3",
+        "UsuarioCreacion": "US CRE w",
+        "UsuarioModificacion": "US MODIF w",
+        "EsCompleto": true,
+        "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
+        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
+        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
+        "EsRequiereContratista":this.addressForm.value.participacionContratista,
+        "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
+        "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
+        "EsRequiereJuridico": "",
+        "EsRequiereFiduciaria": this.addressForm.value.participacionFiduciaria,
+        "EsRequiereComite": this.addressForm.value.requiereComiteTecnico,
+        "EsRequiereAseguradora": "",
+        "EsRequiereComiteReclamacion": "",
+        "EsprocesoResultadoDefinitivo": "",
+        "EsRequiereMesaTrabajo": "",
+        "Eliminado": false
+      }
+    }
+    this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
+      if(data.isSuccessful==true){
+        this.openDialog("",data.message);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);
+      }
+      else{
+        this.openDialog("",data.message);
+      }
+    });
   }
 }

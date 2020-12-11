@@ -10,15 +10,51 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
 export class ActualizarReclamacionAsegCcComponent implements OnInit {
   idControversia: any;
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  public numReclamacion = localStorage.getItem("codReclamacion");
   tipoControversia: string;
+  solicitud: any;
+  numContrato: any;
+  fechaSolicitud: any;
+  fechaSolicitudTramite: any;
+  valorContrato: any;
+  nomContratista: any;
+  tipoIdentificacion: any;
+  numeroIdentificacion: any;
+  tipoIntervencion: any;
+  plazo: any;
+  fechaFinContrato: any;
+  fechaInicioContrato: any;
   constructor(private activatedRoute: ActivatedRoute, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
       this.idControversia = param.id;
     });
+    this.loadService();
   }
   loadService(){
+    this.services.GetControversiaContractualById(this.controversiaID).subscribe((data:any)=>{
+      this.solicitud = data.numeroSolicitud;
+      this.numContrato = data.contrato.numeroContrato;
+      this.fechaSolicitud = data.fechaSolicitud;
+      this.fechaSolicitudTramite = data.contrato.fechaTramite;
+      switch(data.tipoControversiaCodigo){
+        case '1':
+          this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';
+          break;
+      }
+      this.valorContrato = data.contrato.valor;
+      this.services.GetVistaContratoContratista(data.contratoId).subscribe((data1:any)=>{
+        //Datos del contrato
+        this.nomContratista = data1.nombreContratista;
+        this.tipoIdentificacion = data1.tipoDocumentoContratista;
+        this.numeroIdentificacion = data1.numeroIdentificacion;
+        this.tipoIntervencion = data1.tipoIntervencion;
+        this.plazo = data1.plazoFormat;
+        this.fechaInicioContrato = data1.fechaInicioContrato;
+        this.fechaFinContrato = data1.fechaFinContrato;
+      });
+    })
 
   }
 }

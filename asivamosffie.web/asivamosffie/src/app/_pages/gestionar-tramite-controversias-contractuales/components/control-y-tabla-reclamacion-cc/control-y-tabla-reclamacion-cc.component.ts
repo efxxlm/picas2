@@ -23,33 +23,6 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     'estadoReclamacion',
     'gestion'
   ];
-  /*
-  dataTable: any[] = [
-    {
-      fechaActualizacion: '10/08/2020',
-      actuacion: "Actuacion 1",
-      numActuacion: "ACT Controversia 0001",
-      numReclamacion: "---",
-      estadoReclamacion: 'Sin registro',
-      id: 1
-    },
-    {
-      fechaActualizacion: '10/08/2020',
-      actuacion: "Actuacion 2",
-      numActuacion: "ACT Controversia 0002",
-      numReclamacion: "REC 002",
-      estadoReclamacion: 'Enviado a comité técnico',
-      id: 2
-    },
-    {
-      fechaActualizacion: '10/08/2020',
-      actuacion: "Actuacion 3",
-      numActuacion: "ACT Controversia 0003",
-      numReclamacion: "REC 003",
-      estadoReclamacion: 'Aprobada por comité técnico',
-      id: 3
-    }
-  ]; */
   dataTable: any[] = [];
   constructor(private router: Router, private services: ContractualControversyService) { }
 
@@ -66,8 +39,9 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-  actualizarReclamacionAseguradora(id){
+  actualizarReclamacionAseguradora(id,numReclamacion){
     localStorage.setItem("reclamacionID",id);
+    localStorage.setItem("codReclamacion",numReclamacion);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);
   }
   registrarReclamacionAseguradora(id){

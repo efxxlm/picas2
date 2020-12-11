@@ -5,17 +5,17 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Actualizar reclamación ante aseguradora REC_0001
+        Actualizar reclamación ante aseguradora {{this.numReclamacion}}
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>CO00001</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación anticipada por incumplimiento (TAI)</b></span>
+        <span>Solicitud: <b>{{this.solicitud}}</b> Número del contrato: <b>{{this.numContrato}}</b> Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
     </p>
     <div>
         <mat-card class="shipping-card mainGris">
             <mat-card-content style="text-align: left;">
-                <p><strong>Fecha de solicitud:</strong> 05/08/2020</p>
-                <p><strong>Fecha de la solicitud del trámite:</strong> 07/08/2020</p>
-                <p><strong>Número del contrato:</strong> C223456789</p>
+                <p><strong>Fecha de solicitud:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}</p>
+                <p><strong>Fecha de la solicitud del trámite:</strong> {{this.fechaSolicitudTramite | date:'dd/MM/yyyy'}}</p>
+                <p><strong>Número del contrato:</strong> {{this.numContrato}}</p>
                 <p><strong>Tipo de Controversia:</strong> {{this.tipoControversia}}</p>
             </mat-card-content>
         </mat-card>
@@ -26,14 +26,14 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><strong>Nombre del contratista:</strong> Constructora Colpatria SAS</p>
-                <p><strong>Tipo de identificación:</strong> NIT</p>
-                <p><strong>Número de identificación:</strong> 900.879.989</p>
-                <p><strong>Tipo de intervención:</strong> Remodelación</p>
-                <p><strong>Valor del contrato:</strong> $ 56.000.000</p>
-                <p><strong>Plazo:</strong> 12 meses / 10 días</p>
-                <p><strong>Fecha de inicio de contrato:</strong> 18/07/2020</p>
-                <p><strong>Fecha de finalización de contrato:</strong> 28/07/2021</p>
+                <p><strong>Nombre del contratista:</strong> {{this.nomContratista}}</p>
+                <p><strong>Tipo de identificación:</strong> {{this.tipoIdentificacion}}</p>
+                <p><strong>Número de identificación:</strong> {{this.numeroIdentificacion}}</p>
+                <p><strong>Tipo de intervención:</strong> {{this.tipoIntervencion}}</p>
+                <p><strong>Valor del contrato:</strong> {{this.valorContrato  | currency }}</p>
+                <p><strong>Plazo:</strong> {{this.plazo}}</p>
+                <p><strong>Fecha de inicio de contrato:</strong> {{this.fechaInicioContrato}}</p>
+                <p><strong>Fecha de finalización de contrato:</strong> {{this.fechaFinContrato}}</p>
             </mat-card-content>
         </mat-card>
         <app-control-y-tabla-actuacion-reclamacion></app-control-y-tabla-actuacion-reclamacion>
