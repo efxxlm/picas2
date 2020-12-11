@@ -107,29 +107,41 @@ export class GestionAmbientalComponent implements OnInit {
         // console.log( this.formGestionAmbiental.value );
 
         const pSeguimientoSemanal = this.seguimientoSemanal;
-        const seguimientoSemanalGestionObra = [
-            {
-                segumientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
-                seguimientoSemanalGestionObraId: 0,
-                seguimientoSemanalGestionObraAmbiental: [
-                    {
-                        seguimientoSemanalGestionObraAmbientalId: 0,
-                        seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'actividadRelacionada' ).value,
-                        manejoMaterialesInsumo:
-                            {
-                                ManejoMaterialesInsumosId: 0,
-                                manejoMaterialesInsumosProveedor:
-                                    this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'proveedores' ).value,
-                                estanProtegidosDemarcadosMateriales: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'estanProtegidosDemarcadosMateriales' ).value,
-                                requiereObservacion:
-                                    this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'requiereObservacion' ).value,
-                                observacion: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'observacion' ).value,
-                                url: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'url' ).value
-                            }
-                    }
-                ]
-            }
-        ];
+        let seguimientoSemanalGestionObra;
+        if ( this.formGestionAmbiental.get( 'tipoActividad' ).value.codigo === this.tipoActividadesCodigo.manejoMaterialInsumo ) {
+            const manejoMaterial =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
+                                    this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental
+                                    : [];
+            seguimientoSemanalGestionObra = [
+                {
+                    segumientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
+                    seguimientoSemanalGestionObraId:    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
+                                                        this.seguimientoSemanal.seguimientoSemanalGestionObra[0]
+                                                        .seguimientoSemanalGestionObraId
+                                                        : 0,
+                    seguimientoSemanalGestionObraAmbiental: [
+                        {
+                            seguimientoSemanalGestionObraAmbientalId:
+                                manejoMaterial.length > 0 ? this.seguimientoSemanal.seguimientoSemanalGestionObra[0]
+                                .seguimientoSemanalGestionObraAmbiental[0].seguimientoSemanalGestionObraAmbientalId
+                                : 0,
+                            seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'actividadRelacionada' ).value,
+                            manejoMaterialesInsumo:
+                                {
+                                    ManejoMaterialesInsumosId: 0,
+                                    manejoMaterialesInsumosProveedor:
+                                        this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'proveedores' ).value,
+                                    estanProtegidosDemarcadosMateriales: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'estanProtegidosDemarcadosMateriales' ).value,
+                                    requiereObservacion:
+                                        this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'requiereObservacion' ).value,
+                                    observacion: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'observacion' ).value,
+                                    url: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'url' ).value
+                                }
+                        }
+                    ]
+                }
+            ];
+        }
         pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
         console.log( pSeguimientoSemanal );
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
@@ -137,10 +149,7 @@ export class GestionAmbientalComponent implements OnInit {
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                 },
-                err => {
-                    this.openDialog( '', `<b>${ err.message }</b>` );
-                    console.log( err );
-                }
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
     }
 
