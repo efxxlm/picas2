@@ -1,7 +1,10 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
   <div class="d-flex mt-1em inline-flex" style="justify-content: center;">
-    <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el
-        proyecto?</b></label>
+    <label class="mr-label" class="label-left">
+      <b>
+        ¿Cuantos perfiles diferentes se requieren del interventor para ejecutar el proyecto?
+      </b>
+    </label>
     <div class="col d-flex">
       <mat-form-field class="w-38">
         <input matInput type="number" formControlName="numeroPerfiles" #cantidadPerfiles maxlength="3" min="1" max="999"
