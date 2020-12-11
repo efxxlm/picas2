@@ -7,11 +7,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { QuillModule } from 'ngx-quill';
 import { RegistrarActuacionControvContrcRoutingModule } from './registrar-actuacion-controv-contrc-routing.module';
 import { TablaControversiasRaccComponent } from './components/tabla-controversias-racc/tabla-controversias-racc.component';
+import { ActualizarTramiteRaccComponent } from './components/actualizar-tramite-racc/actualizar-tramite-racc.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarActuacionControvContrcComponent, TablaControversiasRaccComponent],
+  declarations: [RegistrarActuacionControvContrcComponent, TablaControversiasRaccComponent, ActualizarTramiteRaccComponent],
   imports: [
     CommonModule,
     MaterialModule,
