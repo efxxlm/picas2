@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -8,7 +8,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './form-registrar-novedad.component.html',
   styleUrls: ['./form-registrar-novedad.component.scss']
 })
-export class FormRegistrarNovedadComponent {
+export class FormRegistrarNovedadComponent implements OnInit {
   addressForm = this.fb.group({
     fechaSolicitudNovedad: [null, Validators.required],
     instanciaPresentoSolicitud: [null, Validators.required],
@@ -16,6 +16,13 @@ export class FormRegistrarNovedadComponent {
     tipoNovedad: [null, Validators.required],
     motivosNovedad: [null, Validators.required],
     resumenJustificacionNovedad: [null, Validators.required],
+    plazoSolicitado: this.fb.array([
+      this.fb.group({
+        fechaInicio: [null, Validators.required],
+        fechaFinal: [null, Validators.required],
+        documentacion: [null, Validators.required]
+      })
+    ]),
     clausula: this.fb.array([
       this.fb.group({
         clausulaModificar: [null, Validators.required],
@@ -29,6 +36,10 @@ export class FormRegistrarNovedadComponent {
       Validators.required, Validators.minLength(5), Validators.maxLength(20)])
     ]
   });
+
+  get plazoSolicitadoField() {
+    return this.addressForm.get('plazoSolicitado') as FormArray;
+  }
 
   get clausulaField() {
     return this.addressForm.get('clausula') as FormArray;
@@ -97,6 +108,13 @@ export class FormRegistrarNovedadComponent {
     public dialog: MatDialog,
   ) { }
 
+  ngOnInit(): void {
+    this.addressForm.valueChanges
+      .subscribe(value => {
+        console.log(value);
+      });
+  }
+
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -121,6 +139,18 @@ export class FormRegistrarNovedadComponent {
     return this.fb.group({
       clausulaModificar: [null, Validators.required],
       ajusteSolicitadoClausula: [null, Validators.required]
+    });
+  }
+
+  agregarPlazoSolicitado() {
+    this.plazoSolicitadoField.push(this.crearPlazoSolicitado());
+  }
+
+  private crearPlazoSolicitado() {
+    return this.fb.group({
+      fechaInicio: [null, Validators.required],
+      fechaFinal: [null, Validators.required],
+      documentacion: [null, Validators.required]
     });
   }
 

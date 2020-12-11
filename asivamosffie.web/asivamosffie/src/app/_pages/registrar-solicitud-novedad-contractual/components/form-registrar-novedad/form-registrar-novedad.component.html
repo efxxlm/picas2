@@ -48,7 +48,9 @@
           </div>
         </div>
       </div>
-      <div class="row animatedDown" *ngIf="addressForm.get('instanciaPresentoSolicitud').value !== null && addressForm.get('instanciaPresentoSolicitud').value !== 'noAplica'">
+      <div class="row animatedDown" *ngIf="
+      addressForm.get('instanciaPresentoSolicitud').value !== null &&
+      addressForm.get('instanciaPresentoSolicitud').value !== 'noAplica'">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -140,6 +142,79 @@
           </div>
         </div>
       </div>
+      <mat-card-title class="header-card--text sub-text">
+        Plazo solicitado
+      </mat-card-title>
+      <div formArrayName="plazoSolicitado" *ngFor="let plazoSolicitado of plazoSolicitadoField.controls; let i = index">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaInicio" [class.color-secondaryColor]="
+                  plazoSolicitado.get('fechaInicio').invalid && plazoSolicitado.get('fechaInicio').touched ||
+                  plazoSolicitado.get('fechaInicio').invalid && estaEditando">
+                  Fecha de inicio de la suspensión
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="pickerPlazoInicio" formControlName="fechaInicio" readonly
+                    (click)="pickerPlazoInicio.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #pickerPlazoInicio></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerPlazoInicio.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaFinal" [class.color-secondaryColor]="
+                  plazoSolicitado.get('fechaFinal').invalid && plazoSolicitado.get('fechaFinal').touched ||
+                  plazoSolicitado.get('fechaFinal').invalid && estaEditando">
+                  Fecha final de la suspensión
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="example-full-width">
+                  <input matInput [matDatepicker]="pickerPlazoFin" formControlName="fechaFinal"
+                    readonly (click)="pickerPlazoFin.open()" placeholder="DD/MM/AAAA" required>
+                  <mat-datepicker #pickerPlazoFin></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerPlazoFin.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="documentacion" [class.color-secondaryColor]="
+                plazoSolicitado.get('documentacion').invalid && plazoSolicitado.get('documentacion').touched ||
+                plazoSolicitado.get('documentacion').invalid && estaEditando">
+                  ¿Cuenta con la documentación soporte suficiente?
+                </label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="documentacion">
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div formArrayName="clausula" *ngFor="let clausula of clausulaField.controls; let i = index">
         <div [formGroupName]="i">
           <div class="mb-05em">
@@ -198,11 +273,13 @@
           </div>
         </div>
         <div class="text-right">
-          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarClausula(i)" *ngIf="clausulaField.controls.length > 0">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarClausula(i)"
+            *ngIf="clausulaField.controls.length > 1">
             <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
             Eliminar tema
           </button>
-          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarClausula()" *ngIf="i + 1 === clausulaField.controls.length">
+          <button mat-button color="warn" type="button" class="btn-eliminar" (click)="agregarClausula()"
+            *ngIf="i + 1 === clausulaField.controls.length">
             <img src="assets/img/icon/mas.svg" alt="Agregar otra claúsula">
             Agregar otra claúsula
           </button>

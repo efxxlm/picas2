@@ -68,4 +68,16 @@ export class TablaSolicitudNovedadContractualComponent implements AfterViewInit 
     }
   }
 
+  aprobarSolicitud(id: string) {
+    console.log(`Aprobar solicitud ${id}`);
+  }
+
+  rechazarSolicitud(id: string) {
+    console.log(`Aprobar solicitud ${id}`);
+  }
+
+  eliminarSolicitud(id: string) {
+    console.log(`Aprobar solicitud ${id}`);
+  }
+
 }

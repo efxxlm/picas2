@@ -14,6 +14,7 @@ import { FormRegistrarNovedadComponent } from './components/form-registrar-noved
 import { FormSoporteSolicitudComponent } from './components/form-soporte-solicitud/form-soporte-solicitud.component';
 import { TablaSolicitudNovedadContractualComponent } from './components/tabla-solicitud-novedad-contractual/tabla-solicitud-novedad-contractual.component';
 import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.component';
+import { TablaProyectosRegistrarNovedadComponent } from './components/tabla-proyectos-registrar-novedad/tabla-proyectos-registrar-novedad.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { VerDetalleComponent } from './components/ver-detalle/ver-detalle.compon
     FormRegistrarNovedadComponent,
     FormSoporteSolicitudComponent,
     TablaSolicitudNovedadContractualComponent,
-    VerDetalleComponent
+    VerDetalleComponent,
+    TablaProyectosRegistrarNovedadComponent
   ],
   imports: [
     CommonModule,

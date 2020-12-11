@@ -39,11 +39,9 @@
     <ng-container matColumnDef="estadoRegistro">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado del registro</th>
       <td mat-cell *matCellDef="let element">
-        <span class="info-text d-block m-0"
-        [class.sin-diligenciar]="element.estadoRegistro === 'Sin diligenciar'"
-        [class.en-proceso]="element.estadoRegistro === 'En proceso'"
-        [class.completo]="element.estadoRegistro === 'Completo'"
-        ></span>
+        <span class="info-text d-block m-0" [class.sin-diligenciar]="element.estadoRegistro === 'Sin diligenciar'"
+          [class.en-proceso]="element.estadoRegistro === 'En proceso'"
+          [class.completo]="element.estadoRegistro === 'Completo'"></span>
         {{element.estadoRegistro}}
       </td>
     </ng-container>
@@ -52,26 +50,26 @@
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
       <td mat-cell *matCellDef="let element">
-        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table"
           [routerLink]="[ 'verDetalle', element.id ]">
           Ver detalle
         </a>
-        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          [routerLink]="[ 'qwerty', element.id ]">
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          (click)="aprobarSolicitud(element.id)">
           Aprobar solicitud
-        </a>
-        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          [routerLink]="[ 'qwerty', element.id ]">
+        </button>
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          (click)="rechazarSolicitud(element.id)">
           Rechazar solicitud
-        </a>
-        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+        </button>
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table"
           [routerLink]="[ 'qwerty', element.id ]">
           Ver detalle/Editar
         </a>
-        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
-          [routerLink]="[ 'qwerty', element.id ]">
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          (click)="eliminarSolicitud(element.id)">
           Eliminar
-        </a>
+        </button>
       </td>
     </ng-container>
 

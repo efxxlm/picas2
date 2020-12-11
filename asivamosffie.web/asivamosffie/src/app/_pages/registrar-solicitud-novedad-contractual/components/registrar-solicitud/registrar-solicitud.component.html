@@ -50,6 +50,10 @@
     </div>
   </div>
 
+  <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === 'Proyecto'">
+    <app-tabla-proyectos-registrar-novedad></app-tabla-proyectos-registrar-novedad>
+  </div>
+
   <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
@@ -77,40 +81,54 @@
       </p>
       <p>
         <strong>Tipo de intervención:</strong>
-        <span >
-          Remodelación
-        </span>
+        Remodelación
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        <span >
-          $ 130.000.000
-        </span>
+        $ 130.000.000
       </p>
       <p>
         <strong>Plazo:</strong>
-        <span >
-          24 meses / 25 días
-        </span>
+        24 meses / 25 días
       </p>
       <p>
         <strong>Fecha de inicio de contrato:</strong>
-        <span >
-          25/06/2020
-        </span>
+        25/06/2020
       </p>
       <p>
         <strong>Fecha de finalización de contrato:</strong>
-        <span >
-          20/07/2022
-        </span>
+        20/07/2022
       </p>
+
+      <div class="animatedDown" *ngIf="novedadAplicada.value === 'Proyecto'">
+        <h2 class="card-subTitle">Proyecto asociado</h2>
+        <p>
+          <strong>Llave MEN:</strong>
+          LJ776554
+        </p>
+        <p>
+          <strong>Departamento:</strong>
+          Atlántico
+        </p>
+        <p>
+          <strong>Municipio:</strong>
+          Galapa
+        </p>
+        <p>
+          <strong>Institución educativa:</strong>
+          I.E. María Villa Campo
+        </p>
+        <p>
+          <strong>Sede:</strong>
+          Única sede
+        </p>
+      </div>
 
     </mat-card-content>
   </mat-card>
 
-  <!-- <app-expansion-panel class="animatedDown" -->
-  <app-expansion-panel class="animatedDown" *ngIf="novedadAplicada.value"
-  ></app-expansion-panel>
+  <div class="animatedDown" *ngIf="novedadAplicada.value">
+    <app-expansion-panel></app-expansion-panel>
+  </div>
 
 </section>
