@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-actualizar-tramite-racc',
@@ -6,10 +9,38 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./actualizar-tramite-racc.component.scss']
 })
 export class ActualizarTramiteRaccComponent implements OnInit {
-
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  displayedColumns: string[] = [
+    'fechaActualizacion',
+    'actuacion',
+    'numeroActuacion',
+    'estadoRegistro',
+    'estadoActuacion',
+    'gestion',
+  ];
+  dataTable: any[] = [
+    {
+      fechaActualizacion: '17/08/2020',
+      actuacion: 'Actuación 1',
+      numeroActuacion: 'ACT_derivada0001',
+      estadoRegistro: 'Completo',
+      estadoActuacion: 'Cumplida',
+      gestion: 1,
+    }
+  ]
   constructor() { }
-
   ngOnInit(): void {
-  }
+    this.dataSource = new MatTableDataSource(this.dataTable);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+  };
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  };
 
 }
