@@ -82,6 +82,10 @@
     }
   }
 
+  &.invalid .quill-editor-style.card .ql-container.ql-snow {
+    border-color: $secondaryColor;
+  }
+
   &.card {
     width: 100%;
     .ql-container.ql-snow {

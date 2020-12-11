@@ -137,10 +137,15 @@
               <div class="col-md-12">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left"><b>Observaciones</b></label>
+                    <label class="label-left"
+                    [ngClass]="{'color-secondaryColor' : perfil.get('observaciones').invalid && perfil.get('observaciones').touched || perfil.get('observaciones').invalid && estaEditando}">
+                      Observaciones</label>
                   </div>
                   <div class="col d-flex">
                     <quill-editor class="quill-editor-style w-65 card position-relative"
+                                  [class.invalid]="
+                                  perfil.get('observaciones').invalid && perfil.get('observaciones').touched ||
+                                  perfil.get('observaciones').invalid && estaEditando"
                                   [styles]="editorStyle"
                                   [modules]="config"
                                   (onContentChanged)="maxLength($event, 1000)"
