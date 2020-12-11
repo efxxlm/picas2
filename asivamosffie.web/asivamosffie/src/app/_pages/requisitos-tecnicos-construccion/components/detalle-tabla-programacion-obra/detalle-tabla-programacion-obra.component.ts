@@ -45,6 +45,9 @@ export class DetalleTablaProgramacionObraComponent implements OnInit {
     if ( this.contratoConstruccionId !== 0 ) {
       this.faseUnoConstruccionSvc.getLoadProgrammingGrid( this.contratoConstruccionId )
       .subscribe( ( response: any[] ) => {
+
+        response = response.filter( p => p.estadoCargue == 'Válidos' )
+
         this.dataSource                        = new MatTableDataSource( response );
         this.dataSource.paginator              = this.paginator;
         this.dataSource.sort                   = this.sort;

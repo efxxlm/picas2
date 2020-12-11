@@ -59,7 +59,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
       this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnosticoApoyo ? this.construccion.observacionDiagnosticoApoyo.observaciones : null)
       //en edición el setvalue 0 genera la creacion de registros
       //this.addressForm.get('construccionObservacionId').setValue(0);
-      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoApoyo.construccionObservacionId);
+      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoApoyo?this.construccion.observacionDiagnosticoApoyo.construccionObservacionId:null);
 
       //this.validarSemaforo();
     }
