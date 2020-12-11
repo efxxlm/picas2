@@ -7,14 +7,14 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./ver-detalleeditar-actuacion-reclm.component.scss']
 })
 export class VerDetalleeditarActuacionReclmComponent implements OnInit {
-
+  
   idControversia: any;
-
+  idReclamacionActuacion:any;
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idControversia = param.id;
+      this.idReclamacionActuacion = param.id;
     });
   }
 

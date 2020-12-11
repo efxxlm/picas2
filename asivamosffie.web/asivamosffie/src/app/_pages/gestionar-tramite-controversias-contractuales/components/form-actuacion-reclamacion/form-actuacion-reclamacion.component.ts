@@ -13,7 +13,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormActuacionReclamacionComponent implements OnInit {
   @Input() isEditable;
+  @Input() idReclamacionActuacion;
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  public reclamacionID = parseInt(localStorage.getItem("reclamacionID"));
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -37,12 +39,12 @@ export class FormActuacionReclamacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor( private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
+  constructor(private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
-    if(this.isEditable==true){
+    if (this.isEditable == true) {
       if (this.isEditable == true) {
-        this.services.GetControversiaActuacionById(1).subscribe((data:any)=>{
+        this.services.GetControversiaActuacionById(1).subscribe((data: any) => {
           const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
           this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
           this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacion);
@@ -93,74 +95,54 @@ export class FormActuacionReclamacionComponent implements OnInit {
     let actuacionTaiArray;
     if (this.isEditable == true) {
       actuacionTaiArray = {
-        "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ControversiaActuacionId": this.reclamacionID,
+        "SeguimientoCodigo": true,
+        "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
+        "ProximaActuacion": this.addressForm.value.proximaActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
-        "ResumenPropuestaFiduciaria": "",
-        "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        "FechaCreacion": "2020-3-3",
-        "UsuarioCreacion": "US CRE w",
-        "UsuarioModificacion": "US MODIF w",
-        "EsCompleto": true,
+        "EstadoDerivadaCodigo": "1",
+        "RutaSoporte":  this.addressForm.value.urlSoporte,
+        "FechaCreacion": "2020-01-01",
+        "UsuarioCreacion": "us cre",
+        "UsuarioModificacion": "us modif",
+        "EsResultadoDefinitivo": this.addressForm.value.definitvoAseguradora,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
-        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
-        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
-        "EsRequiereContratista":this.addressForm.value.participacionContratista,
-        "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
-        "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
-        "EsRequiereJuridico": "",
-        "EsRequiereFiduciaria": this.addressForm.value.participacionFiduciaria,
-        "EsRequiereComite": this.addressForm.value.requiereComiteTecnico,
-        "EsRequiereAseguradora": "",
-        "EsRequiereComiteReclamacion": "",
-        "EsprocesoResultadoDefinitivo": "",
-        "EsRequiereMesaTrabajo": "",
         "Eliminado": false,
-        "ControversiaActuacionId": 7
+        "FechaModificacion": "2020-01-01",
+        "FechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
+        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
+        "ActuacionSeguimientoId": this.idReclamacionActuacion
       }
     }
     else {
       actuacionTaiArray = {
-        "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
+        "ControversiaActuacionId": this.reclamacionID,
+        "SeguimientoCodigo": true,
+        "EstadoReclamacionCodigo":  this.addressForm.value.estadoAvanceTramite.codigo,
+        "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
+        "ProximaActuacion": this.addressForm.value.proximaActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
-        "ResumenPropuestaFiduciaria": "ResumenPropuestaFiduciaria w",
+        "EstadoDerivadaCodigo": "1",
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        "FechaCreacion": "2020-3-3",
-        "UsuarioCreacion": "US CRE w",
-        "UsuarioModificacion": "US MODIF w",
-        "EsCompleto": true,
+        "FechaCreacion": "2020-01-01",
+        "UsuarioCreacion": "us cre",
+        "UsuarioModificacion": "us modif",
+        "EsResultadoDefinitivo": this.addressForm.value.definitvoAseguradora,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
-        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
-        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
-        "EsRequiereContratista":this.addressForm.value.participacionContratista,
-        "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
-        "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
-        "EsRequiereJuridico": "",
-        "EsRequiereFiduciaria": this.addressForm.value.participacionFiduciaria,
-        "EsRequiereComite": this.addressForm.value.requiereComiteTecnico,
-        "EsRequiereAseguradora": "",
-        "EsRequiereComiteReclamacion": "",
-        "EsprocesoResultadoDefinitivo": "",
-        "EsRequiereMesaTrabajo": "",
-        "Eliminado": false
+        "Eliminado": false,
+        "FechaModificacion": "",
+        "FechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
+        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos
       }
     }
-    this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
-      if(data.isSuccessful==true){
-        this.openDialog("",data.message);
+    this.services.CreateEditarActuacionSeguimiento(actuacionTaiArray).subscribe((data: any) => {
+      if (data.isSuccessful == true) {
+        this.openDialog("", data.message);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);
       }
-      else{
-        this.openDialog("",data.message);
+      else {
+        this.openDialog("", data.message);
       }
     });
   }
