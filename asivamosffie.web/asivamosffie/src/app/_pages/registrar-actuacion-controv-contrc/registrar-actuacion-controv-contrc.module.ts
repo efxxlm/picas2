@@ -8,11 +8,12 @@ import { QuillModule } from 'ngx-quill';
 import { RegistrarActuacionControvContrcRoutingModule } from './registrar-actuacion-controv-contrc-routing.module';
 import { TablaControversiasRaccComponent } from './components/tabla-controversias-racc/tabla-controversias-racc.component';
 import { ActualizarTramiteRaccComponent } from './components/actualizar-tramite-racc/actualizar-tramite-racc.component';
+import { RegistrarAvanceActuaDerivadasComponent } from './components/registrar-avance-actua-derivadas/registrar-avance-actua-derivadas.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarActuacionControvContrcComponent, TablaControversiasRaccComponent, ActualizarTramiteRaccComponent],
+  declarations: [RegistrarActuacionControvContrcComponent, TablaControversiasRaccComponent, ActualizarTramiteRaccComponent, RegistrarAvanceActuaDerivadasComponent],
   imports: [
     CommonModule,
     MaterialModule,
