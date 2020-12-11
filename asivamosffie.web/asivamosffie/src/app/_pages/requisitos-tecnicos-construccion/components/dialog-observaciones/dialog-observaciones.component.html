@@ -40,7 +40,8 @@
               class="btn-dialog"
               type="submit"
               [disabled]="formObservacion.invalid"
-              (click)="guardar()">
+              (click)="guardar()"
+              *ngIf="data.ocultarBoton != true">
               Realizar observación
       </button>
     </div>
