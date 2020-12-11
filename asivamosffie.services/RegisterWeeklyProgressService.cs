@@ -374,9 +374,13 @@ namespace asivamosffie.services
                         ManejoMaterialesInsumosProveedor.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor);
                     }
                 }
+
+                pSeguimientoSemanalGestionObra.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
                 _context.SeguimientoSemanalGestionObra.Add(pSeguimientoSemanalGestionObra);
             }
         }
+
+  
 
         private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
         {
@@ -396,17 +400,22 @@ namespace asivamosffie.services
         #endregion
 
         #region Validar Registros Completos
-        private bool? ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor manejoMaterialesInsumosProveedor)
+
+        private bool ValidarRegistroCompletoSeguimientoSemanalGestionObra(SeguimientoSemanalGestionObra pSeguimientoSemanalGestionObra)
+        {
+            return false;
+        }
+        private bool ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor manejoMaterialesInsumosProveedor)
         {
             return false;
         }
 
-        private bool? ValidarRegistroCompletoManejoMaterialesInsumo(ManejoMaterialesInsumos manejoMaterialesInsumo)
+        private bool ValidarRegistroCompletoManejoMaterialesInsumo(ManejoMaterialesInsumos manejoMaterialesInsumo)
         {
             return false;
         }
 
-        private bool? ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental seguimientoSemanalGestionObraAmbiental)
+        private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental seguimientoSemanalGestionObraAmbiental)
         {
             return false;
         }
