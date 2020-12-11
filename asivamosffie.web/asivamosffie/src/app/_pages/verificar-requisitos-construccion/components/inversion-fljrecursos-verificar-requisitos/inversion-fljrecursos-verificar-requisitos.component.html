@@ -45,7 +45,21 @@
         </div>
     </form>
 </div>
-<div align="center" *ngIf="observacionesCompleted === true">
+<div align="center" *ngIf="this.observacionesCompleted===true">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                Observaciones al flujo de inversión de recurso
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><b>¿Tiene observaciones al flujo de inversión de recursos?:</b> 
+                {{ contratoConstruccion.tieneObservacionesFlujoInversionApoyo == true ? 'Si' : 'No' }}</p>
+            <p>{{ contratoConstruccion.observacionFlujoInversionApoyo ? contratoConstruccion.observacionFlujoInversionApoyo.observaciones : '' }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div align="center" *ngIf="contratoConstruccion.observacionDevolucionFlujoInversion">
     <mat-card class="border" style="margin-top: 20px;">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
@@ -53,27 +67,9 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p style="margin-left: 2em;"
-                *ngIf="contratoConstruccion.observacionFlujoInversionApoyo !== undefined && contratoConstruccion.observacionDevolucionFlujoInversion === undefined">
-                <b>{{ contratoConstruccion.observacionFlujoInversionApoyo.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-            <p style="margin-left: 2em;"
-                *ngIf="contratoConstruccion.observacionFlujoInversionApoyo !== undefined && contratoConstruccion.observacionDevolucionFlujoInversion !== undefined">
-                <b>{{ contratoConstruccion.observacionDevolucionFlujoInversion.fechaCreacion | date: "dd/MM/yyyy" }}</b>
-            </p>
-            <p style="margin-left: 2em;" *ngIf="contratoConstruccion.tieneObservacionesFlujoInversionApoyo === true">
-                <b>¿Tiene observaciones al diagnóstico?:</b> Si</p>
-            <p style="margin-left: 2em;" *ngIf="contratoConstruccion.tieneObservacionesFlujoInversionApoyo === false">
-                <b>¿Tiene observaciones al diagnóstico?:</b> No</p>
-            <section *ngIf=" contratoConstruccion.observacionFlujoInversionApoyo !== undefined
-                                && contratoConstruccion.observacionDevolucionFlujoInversion === undefined
-                                && contratoConstruccion.tieneObservacionesFlujoInversionApoyo === true"
-                [innerHTML]="contratoConstruccion.observacionFlujoInversionApoyo.observaciones"
-                style="margin-left: 2em;"></section>
-            <section *ngIf=" contratoConstruccion.observacionFlujoInversionApoyo !== undefined
-                                && contratoConstruccion.observacionDevolucionFlujoInversion !== undefined
-                                && contratoConstruccion.tieneObservacionesFlujoInversionApoyo === true"
-                [innerHTML]="contratoConstruccion.observacionDevolucionFlujoInversion.observaciones"
-                style="margin-left: 2em;"></section>
+            <p><b>{{ contratoConstruccion.observacionDevolucionFlujoInversion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p><b>¿Tiene observaciones?:</b> Sí</p>
+            <p>{{ contratoConstruccion.observacionDevolucionFlujoInversion.observaciones }}</p>
         </mat-card-content>
     </mat-card>
 </div>
