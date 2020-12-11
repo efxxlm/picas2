@@ -68,6 +68,9 @@
         Ficha_DRP=52,
         DRP_TABLA_FUENTES = 53,
         DRP_TABLA_USOS = 54,
-        DDP_Cabecera_Proyecto=55
+        DDP_Cabecera_Proyecto=55,
+
+            Controversia_Contractual = 59,
+        Ficha_Estudio_Defensa_Judicial = 60
     }
 }

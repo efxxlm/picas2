@@ -12,7 +12,7 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
 
     tablaRegistro              = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
-    @ViewChild( MatSort, { static: true } ) sort          : MatSort;
+    @ViewChild( MatSort, { static: true } ) sort: MatSort;
     displayedColumns: string[]  = [
       'llaveMen',
       'numeroContrato',
@@ -36,15 +36,15 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
         }
     ];
 
-    constructor() { };
+    constructor() { }
 
     ngOnInit(): void {
         this.tablaRegistro = new MatTableDataSource( this.dataTable );
-    };
+    }
 
-    applyFilter ( event: Event ) {
+    applyFilter( event: Event ) {
       const filterValue      = (event.target as HTMLInputElement).value;
       this.tablaRegistro.filter = filterValue.trim().toLowerCase();
-    };
+    }
 
-};
+}

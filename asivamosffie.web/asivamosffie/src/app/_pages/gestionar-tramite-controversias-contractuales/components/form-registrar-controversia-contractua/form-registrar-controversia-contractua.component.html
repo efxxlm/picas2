@@ -16,16 +16,19 @@
                     </div>
                     <div class="col d-flex">
                         <mat-form-field class="full-width">
-                          <input matInput #nombre type="text" maxlength="100" required
+                          <input matInput #contrato type="text" maxlength="100" required
                             [matAutocomplete]="auto">
                           <mat-autocomplete #auto="matAutocomplete">
-                            <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of contratosArray  | async"
-                            [value]="contr.value">
-                              {{nombres}}
+                            <mat-option (click)="seleccionAutocomplete(contr.contratoId)" *ngFor="let contr of contratosArray"
+                            [value]="contr.numeroContrato">
+                              {{contr.numeroContrato}}
                             </mat-option>
                           </mat-autocomplete>
                           <input type="hidden" formControlName="contrato">
                         </mat-form-field>
+                        <button mat-button color="primary" class="busqueda--img">
+                            <img src="assets/img/icon/lupa.svg" alt="Buscar">
+                        </button>
                       </div>
                     <!--
                     <div class="col">
@@ -49,14 +52,14 @@
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
-                    <p><strong>Nombre del contratista:</strong> Constructora Colpatria SAS</p>
-                    <p><strong>Tipo de identificación:</strong> NIT</p>
-                    <p><strong>Número de identificación:</strong> 900.879.989</p>
-                    <p><strong>Tipo de intervención:</strong> Remodelación</p>
-                    <p><strong>Valor del contrato:</strong> $ 56.000.000</p>
-                    <p><strong>Plazo:</strong> 12 meses / 10 días</p>
-                    <p><strong>Fecha de inicio de contrato:</strong> 18/07/2020</p>
-                    <p><strong>Fecha de finalización de contrato:</strong> 28/07/2021</p>
+                    <p><strong>Nombre del contratista:</strong> {{this.nombreContratista}}</p>
+                    <p><strong>Tipo de identificación:</strong> {{this.tipoIdentificacion}}</p>
+                    <p><strong>Número de identificación:</strong> {{this.numIdentificacion}}</p>
+                    <p><strong>Tipo de intervención:</strong> {{this.tipoIntervencion}}</p>
+                    <p><strong>Valor del contrato:</strong> $ {{this.valorContrato}}</p>
+                    <p><strong>Plazo:</strong> {{this.plazoContrato}}</p>
+                    <p><strong>Fecha de inicio de contrato:</strong> {{this.fechaInicioContrato}}</p>
+                    <p><strong>Fecha de finalización de contrato:</strong> {{this.fechaFinalizacionContrato}}</p>
                 </mat-card-content>
             </mat-card>
             <div class="text-center">
@@ -73,7 +76,7 @@
                             Registrar controversias
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-registrar-controvrs-accord [isEditable]="false"></app-form-registrar-controvrs-accord>
+                    <app-form-registrar-controvrs-accord [isEditable]="false" [contratoId]="this.contratoId"></app-form-registrar-controvrs-accord>
                 </mat-expansion-panel>
             </mat-accordion>
             <mat-accordion>

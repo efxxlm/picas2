@@ -157,6 +157,8 @@ public const string Inicio_de_sesion = "1";
         public const string Cambiar_estado_Controversia_Actuacion = "136";
         public const string  Cambiar_estado_Controversia_Contractual = "137";
         public const string  Notificacion_Controversia_Contractual= "140";
+        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";
+        public const string  Crear_Editar_Controversia_Motivo= "153";        	
 
         //4.2.2 Gestionar procesos de Defensa Judicial
         public const string Crear_Edit_Contrato_Observacion = "141";
@@ -188,6 +190,9 @@ public const string Inicio_de_sesion = "1";
         public const string Cambiar_Estado_Verificacion_Construccion = "157";
 
         
+        public const string Crear_Editar_Defensa_Judicial = "156";
+        public const string Eliminar_Defensa_Judicial = "159";    
+
 
     }
 }
