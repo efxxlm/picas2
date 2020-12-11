@@ -84,7 +84,7 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   openDialogObservacion(planPrograma: string, observacion: string, id: number) {
     const dialogObservacion = this.dialog.open(DialogObservacionesComponent, {
       width: '60em',
-      data: { planPrograma, observacion }
+      data: { planPrograma, observacion, ocultarBoton: true }
     });
 
     dialogObservacion.afterClosed().subscribe(resp => {
