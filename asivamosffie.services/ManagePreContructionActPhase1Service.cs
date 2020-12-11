@@ -304,14 +304,14 @@ namespace asivamosffie.services
             Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
 
             Plantilla plantilla = await _context.Plantilla
-                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Constuccion)
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)
                 .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
 
             Usuario Supervisor = contrato.UsuarioInterventoria;
 
             //Registros Proyectos 
             string PlantillaRegistrosProyectos = _context.Plantilla
-                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registros_Tabla_proyectos).ToString()).FirstOrDefault().Contenido;
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registro_Proyectos_Acta).ToString()).FirstOrDefault().Contenido;
             string RegistrosProyectos = string.Empty;
 
             List<Dominio> ListTipointervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
@@ -394,7 +394,7 @@ namespace asivamosffie.services
             Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
 
             Plantilla plantilla = await _context.Plantilla
-                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Construccion)
                 .ToString()).Include(r => r.Encabezado).FirstOrDefaultAsync();
 
 
@@ -402,7 +402,7 @@ namespace asivamosffie.services
 
             //Registros Proyectos 
             string PlantillaRegistrosProyectos = _context.Plantilla
-                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registros_Tabla_proyectos).ToString()).FirstOrDefault().Contenido;
+                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Registro_Proyectos_Acta).ToString()).FirstOrDefault().Contenido;
             string RegistrosProyectos = string.Empty;
 
             List<Dominio> ListTipointervencion = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_de_Intervencion);
