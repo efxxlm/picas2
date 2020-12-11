@@ -202,10 +202,15 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> LoadActa(Contrato pContrato, IFormFile pFile, string pDirectorioBase, string pDirectorioActaContrato)
+        public async Task<Respuesta> LoadActa(Contrato pContrato, IFormFile pFile, string pDirectorioBase, string pDirectorioActaContrato, AppSettingsService appSettingsService)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cargar_Acta_Subscrita, (int)EnumeratorTipoDominio.Acciones);
-            Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId).Include(r => r.ContratoObservacion).FirstOrDefaultAsync();
+            Contrato ContratoOld = await _context.Contrato.Where(r => r.ContratoId == pContrato.ContratoId)
+                .Include(r => r.ContratoObservacion)
+                .Include(x=> x.Contratacion)
+                .ThenInclude(x=>x.Contratista)
+                .ThenInclude(x=>x.ProcesoSeleccionProponente)
+                .FirstOrDefaultAsync();
 
             string strFilePatch = string.Empty;
             try
@@ -225,6 +230,16 @@ namespace asivamosffie.services
 
 
                 _context.SaveChanges();
+
+                //deboenviarcorreoal contratista
+                Template TemplateMail = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarActaCargada319);
+                string template = TemplateMail.Contenido
+                                .Replace("_LinkF_", appSettingsService.DominioFront)
+                                .Replace("[NUMERO_CONTRATO]", ContratoOld.NumeroContrato);
+                    Helpers.Helpers.EnviarCorreo(ContratoOld.Contratacion.Contratista.ProcesoSeleccionProponente.EmailProponente,
+                    "Acta suscrita cargada", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort,false, ContratoOld.RutaActaFase1);
+                
+
                 return
                      new Respuesta
                      {
@@ -250,7 +265,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> CambiarEstadoActa(int pContratoId, string pCodigoEstadoActa, string pUsuarioModificacion)
+        public async Task<Respuesta> CambiarEstadoActa(int pContratoId, string pCodigoEstadoActa, string pUsuarioModificacion, AppSettingsService appSettingsService)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Acta_Contrato, (int)EnumeratorTipoDominio.Acciones);
 
@@ -261,6 +276,18 @@ namespace asivamosffie.services
                 contratoOld.UsuarioModificacion = pUsuarioModificacion;
                 contratoOld.EstadoActa = pCodigoEstadoActa;
                 _context.SaveChanges();
+                //jflorez 2020 122 10 envionotificacioncambiar por constante
+                if(pCodigoEstadoActa=="17")
+                {
+
+                    var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor).Include(y => y.Usuario).ToList();
+                    foreach(var usuario in usuarios)
+                    {
+                        this.sendMailNotificarAInterventor(contratoOld, usuario.Usuario.Email, appSettingsService);
+                    }
+                    
+
+                }
 
                 return
                     new Respuesta
@@ -286,6 +313,16 @@ namespace asivamosffie.services
             }
         }
 
+        private void sendMailNotificarAInterventor(Contrato prmContrato,string prmMail, AppSettingsService appSettingsService)
+        {
+            //deboenviarcorreoal contratista
+            Template TemplateMail = _context.Template.Find((int)enumeratorTemplate.Notificarinterventor);
+            string template = TemplateMail.Contenido
+                            .Replace("_LinkF_", appSettingsService.DominioFront)
+                            .Replace("[NUMERO_CONTRATO]", prmContrato.NumeroContrato);
+            Helpers.Helpers.EnviarCorreo(prmMail,
+            "Acta Notificada", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
+        }
         public async Task<byte[]> GetActaByIdPerfil(int PIdPerfil, int pContratoId, int pUserId, AppSettingsService pAppSettingsService)
         {
             Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include(r => r.Contratacion).FirstOrDefault();
@@ -644,7 +681,7 @@ namespace asivamosffie.services
                    .ThenInclude(r => r.DisponibilidadPresupuestal)
                 .ToList();
                   
-            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Tecnica).Include(y => y.Usuario);
+            var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarActaParaFirmar319);
             foreach (var contrato in contratos)
             {

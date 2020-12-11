@@ -84,9 +84,13 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
     this.service.GetListContratoObservacionByContratoId(id).subscribe(data=>{
       this.dataElements = data;
       for(let i=0; i<this.dataElements.length;i++){ 
-        this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
-        this.observacionesUltimas = this.dataElements[i].observaciones;
-        this.contratoObservacionId = this.dataElements[i].contratoObservacionId;
+        //jflorez, aqui debe tener en cuentasoloobservaciones delsupervisor
+        if(this.dataElements[i].esSupervision == true)
+        {
+          this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
+          this.observacionesUltimas = this.dataElements[i].observaciones;
+          this.contratoObservacionId = this.dataElements[i].contratoObservacionId;
+        }
       }
       if(localStorage.getItem("editable")=="true"){
         this.addressForm.get('tieneObservaciones').setValue(this.tieneObservacionesBool);
