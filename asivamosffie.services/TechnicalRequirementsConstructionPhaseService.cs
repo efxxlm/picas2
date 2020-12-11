@@ -1454,17 +1454,41 @@ namespace asivamosffie.services
 
             if (
                     pConstruccion.PlanLicenciaVigente == null ||
+                    pConstruccion.PlanLicenciaVigente == false ||
+
                     pConstruccion.PlanCambioConstructorLicencia == null ||
+                    pConstruccion.PlanCambioConstructorLicencia == false ||
+
                     pConstruccion.PlanActaApropiacion == null ||
+                    pConstruccion.PlanActaApropiacion == false ||
+
                     pConstruccion.PlanResiduosDemolicion == null ||
+                    pConstruccion.PlanResiduosDemolicion == false ||
+
                     pConstruccion.PlanManejoTransito == null ||
+                    pConstruccion.PlanManejoTransito == false ||
+
                     pConstruccion.PlanManejoAmbiental == null ||
+                    pConstruccion.PlanManejoAmbiental == false ||
+
                     pConstruccion.PlanAseguramientoCalidad == null ||
+                    pConstruccion.PlanAseguramientoCalidad == false ||
+
                     pConstruccion.PlanProgramaSeguridad == null ||
+                    pConstruccion.PlanProgramaSeguridad == false ||
+
                     pConstruccion.PlanProgramaSalud == null ||
+                    pConstruccion.PlanProgramaSalud == false ||
+
                     pConstruccion.PlanInventarioArboreo == null ||
+                    pConstruccion.PlanInventarioArboreo == 1 ||
+
                     pConstruccion.PlanAprovechamientoForestal == null ||
+                    pConstruccion.PlanAprovechamientoForestal == 1 ||
+
                     pConstruccion.PlanManejoAguasLluvias == null ||
+                    pConstruccion.PlanManejoAguasLluvias == 1 ||
+
                     string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
             )
             {
