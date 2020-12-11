@@ -123,7 +123,7 @@ namespace asivamosffie.api.Controllers
         [Route("GetActaByIdPerfil")]
         public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pPerfilId, int pContratoId)
         {
-            int pUserId =1;
+            int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
             return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId , pUserId , ToAppSettingsService(_settings)), "application/pdf");
         }
 
