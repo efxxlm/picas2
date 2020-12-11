@@ -195,6 +195,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
         .then(m => m.FasePreconstruccionModule)
       },
+      {
+        path: 'registrarActuacionesControversiasContractuales',
+        loadChildren: () => import('./_pages/registrar-actuacion-controv-contrc/registrar-actuacion-controv-contrc.module')
+        .then(m => m.RegistrarActuacionControvContrcModule)
+      },
     ]
 
   },

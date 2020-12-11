@@ -6,11 +6,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { QuillModule } from 'ngx-quill';
 import { RegistrarActuacionControvContrcRoutingModule } from './registrar-actuacion-controv-contrc-routing.module';
+import { TablaControversiasRaccComponent } from './components/tabla-controversias-racc/tabla-controversias-racc.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarActuacionControvContrcComponent],
+  declarations: [RegistrarActuacionControvContrcComponent, TablaControversiasRaccComponent],
   imports: [
     CommonModule,
     MaterialModule,

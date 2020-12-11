@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./registrar-actuacion-controv-contrc.component.scss']
 })
 export class RegistrarActuacionControvContrcComponent implements OnInit {
-
+  verAyuda = false;
   constructor() { }
 
   ngOnInit(): void {
