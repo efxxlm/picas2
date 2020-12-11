@@ -2149,7 +2149,7 @@ namespace asivamosffie.services
                         FechaGeneracionDRP2 = strFechaGeneracionDRP,
                         //FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy"),
                         FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString(),
-                        FechaAprobacionRequisitosSupervisor = contrato.FechaAprobacionRequisitosSupervisor != null ? Convert.ToDateTime(contrato.FechaAprobacionRequisitosSupervisor).ToString("dd/MM/yyyy") : contrato.FechaAprobacionRequisitosSupervisor.ToString(),
+                        FechaAprobacionRequisitosSupervisor = contrato.FechaAprobacionRequisitosConstruccionSupervisor != null ? Convert.ToDateTime(contrato.FechaAprobacionRequisitosConstruccionSupervisor).ToString("dd/MM/yyyy") : contrato.FechaAprobacionRequisitosConstruccionSupervisor.ToString(),
 
                         Objeto = strObjetoDisponibilidadPresupuestal,
                         ValorInicialContrato = strValor,
