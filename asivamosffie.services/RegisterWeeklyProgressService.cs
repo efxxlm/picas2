@@ -270,17 +270,23 @@ namespace asivamosffie.services
             {
                 SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
 
-                SaveUpdateAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.FlujoInversion, pSeguimientoSemanal.UsuarioCreacion);
+                if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
+                    SaveUpdateAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.FlujoInversion, pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                if (pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.Count() > 0)
+                    SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateGestionObra(pSeguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                if (pSeguimientoSemanal.SeguimientoSemanalGestionObra.Count() > 0)
+                    SaveUpdateGestionObra(pSeguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateReporteActividades(pSeguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                if (pSeguimientoSemanal.SeguimientoSemanalReporteActividad.Count() > 0)
+                    SaveUpdateReporteActividades(pSeguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateRegistroFotografico(pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                if (pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.Count() > 0)
+                    SaveUpdateRegistroFotografico(pSeguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
+                if (pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.Count() > 0)
+                    SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
                 await _context.SaveChangesAsync();
 
@@ -380,7 +386,7 @@ namespace asivamosffie.services
             }
         }
 
-  
+
 
         private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
         {
