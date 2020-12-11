@@ -13,6 +13,9 @@ export class ContractualControversyService implements OnInit{
   ngOnInit(): void {
 
   }
+  GetPlantillaControversiaContractual(pContratoId: number){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetPlantillaControversiaContractual?pContratoId=${pContratoId}`);
+  }
   CreateEditarControversiaTAI(controversiaContractual: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarControversiaTAI`, controversiaContractual);
   }
@@ -31,14 +34,14 @@ export class ContractualControversyService implements OnInit{
   CreateEditNuevaActualizacionTramite(controversiaActuacion: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditNuevaActualizacionTramite`, controversiaActuacion);
   }
-  GetListGrillaTipoSolicitudControversiaContractual(){
-    return this.http.get<GetListGrillaTipoSolicitudControversiaContractual>(`${environment.apiUrl}/ContractualControversy/GetListGrillaTipoSolicitudControversiaContractual`);
+  GetListGrillaTipoSolicitudControversiaContractual(pControversiaContractualId:number){
+    return this.http.get<GetListGrillaTipoSolicitudControversiaContractual>(`${environment.apiUrl}/ContractualControversy/GetListGrillaTipoSolicitudControversiaContractual?pControversiaContractualId=${pControversiaContractualId}`);
   }
-  GetListGrillaControversiaActuacion(pControversiaContractualId:number){
-    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuacion?pControversiaContractualId=${pControversiaContractualId}`);
+  GetListGrillaControversiaActuacion(pControversiaContractualId:number, esActuacionReclamacion:boolean){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuacion?pControversiaContractualId=${pControversiaContractualId}&esActuacionReclamacion=${esActuacionReclamacion}`);
   }
-  GetListGrillaActuacionSeguimiento(pControversiaContractualId: number){
-    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaActuacionSeguimiento?pControversiaContractualId=${pControversiaContractualId}`);
+  GetListGrillaActuacionSeguimiento(pControversiaActuacionId: number){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaActuacionSeguimiento?pControversiaActuacionId=${pControversiaActuacionId}`);
   }
   GetVistaContratoContratista(pContratoId: number){
     return this.http.get<GetVistaContratoContratista>(`${environment.apiUrl}/ContractualControversy/GetVistaContratoContratista?pContratoId=${pContratoId}`);

@@ -28,7 +28,7 @@ export class ControlYTablaActuacionesNoTaiComponent implements OnInit {
    }
 
    ngOnInit(): void {
-    this.services.GetListGrillaControversiaActuacion(this.controversiaID).subscribe(data=>{
+    this.services.GetListGrillaControversiaActuacion(this.controversiaID,false).subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;
