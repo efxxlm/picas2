@@ -24,6 +24,7 @@ export class TablaInversionRecursosComponent implements OnInit {
   @Input() contratoId: number;
 
   @Output() tieneRegistros = new EventEmitter();
+  @Output() realizoObservacion = new EventEmitter();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 
@@ -106,6 +107,7 @@ export class TablaInversionRecursosComponent implements OnInit {
           this.openDialog( '', response.message );
           this.dataSource = new MatTableDataSource();
           this.getData();
+          this.realizoObservacion.emit( true );
         },
         err => this.openDialog( '', err.message )
       )

@@ -42,6 +42,7 @@
                                       [proyectoId]="proyectoId"
                                       [contratoId]="contrato.contratoId"
                                       (tieneRegistros)="tieneRegistrosInversion = $event"
+                                      (realizoObservacion)="esObservacion( $event )"
                                       [observacionDevolucionFlujoInversion]="observacionDevolucionFlujoInversion"
                                       *ngIf="tieneRegistrosInversion">
         </app-tabla-inversion-recursos>

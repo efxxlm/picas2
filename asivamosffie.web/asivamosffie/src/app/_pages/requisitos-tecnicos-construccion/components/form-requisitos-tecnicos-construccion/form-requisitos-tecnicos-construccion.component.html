@@ -192,7 +192,8 @@
                                                     [contrato]="contrato" 
                                                     [proyectoId]="contratacion.proyecto.proyectoId"
                                                     [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion : undefined"
-                                                    (terminoCarga)="getCargaMasiva( $event )">
+                                                    (terminoCarga)="getCargaMasiva( $event )"
+                                                    (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion> 
           </section>
 

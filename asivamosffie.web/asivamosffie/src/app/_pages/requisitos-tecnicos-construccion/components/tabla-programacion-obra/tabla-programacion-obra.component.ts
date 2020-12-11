@@ -103,8 +103,9 @@ export class TablaProgramacionObraComponent implements OnInit {
       .subscribe(
         response => {
           this.openDialog( '', response.message );
-          this.dataSource = new MatTableDataSource();
-          this.getData();
+          //this.dataSource = new MatTableDataSource();
+          //this.getData();
+          this.realizoObservacion.emit( true );
         },
         err => this.openDialog( '', err.message )
       )
