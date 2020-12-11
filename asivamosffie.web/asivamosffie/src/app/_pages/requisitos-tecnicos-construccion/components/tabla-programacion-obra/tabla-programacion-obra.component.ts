@@ -87,7 +87,7 @@ export class TablaProgramacionObraComponent implements OnInit {
   addObservaciones( pArchivoCargueId: number, estadoCargue: string, fechaCreacion, observaciones?: string  ){
     const dialogCargarProgramacion = this.dialog.open( DialogObservacionesProgramacionComponent, {
       width: '75em',
-      data: { pArchivoCargueId, observaciones, estadoCargue, fechaCreacion }
+      data: { pArchivoCargueId, observaciones, estadoCargue, fechaCreacion, esFlujoInversion: false }
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe( response => {
