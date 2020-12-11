@@ -19,6 +19,7 @@ namespace asivamosffie.model.APIModels
         public string NumeroActuacionReclamacion { get; set; }
         public string EstadoActuacionReclamacionCodigo { get; set; }
         public string EstadoActuacionReclamacion { get; set; }
+        public int ActuacionSeguimientoId { get; set; }
     }
 }
 

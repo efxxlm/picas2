@@ -9,6 +9,9 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public string NumeroActuacionFormat { get; set; }
-         
+
+        [NotMapped]
+        public int ActuacionSeguimientoId { get; set; }
+
     }
 }
