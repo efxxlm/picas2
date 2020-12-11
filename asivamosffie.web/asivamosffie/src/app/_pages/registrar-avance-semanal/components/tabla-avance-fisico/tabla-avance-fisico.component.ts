@@ -26,9 +26,9 @@ export class TablaAvanceFisicoComponent implements OnInit {
         {
             semanaNumero: 1,
             periodoReporte: '04/07/2020 - 11/07/2020',
-            programacionSemana: '2%',
+            programacionSemana: '2',
             capitulo: 'Preliminares',
-            programacionCapitulo: '2%',
+            programacionCapitulo: '2',
             avanceFisicoCapitulo: null,
             avanceFisicoSemana: ''
         }
@@ -41,8 +41,8 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     valuePending( value: string, registro: any ) {
-        if ( Number( value ) > 100 ) {
-            registro.avanceFisicoSemana = '100';
+        if ( Number( value ) > Number( registro.programacionCapitulo ) ) {
+            registro.avanceFisicoSemana = `${ registro.programacionCapitulo }`;
         } else if ( Number( value ) < 0 ) {
             registro.avanceFisicoSemana = '0';
         }

@@ -31,7 +31,7 @@
   
         <ng-container matColumnDef="programacionSemana">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Programación de la semana </th>
-          <td mat-cell *matCellDef="let element" align="center"> {{ element.programacionSemana }} </td>
+          <td mat-cell *matCellDef="let element" align="center"> {{ element.programacionSemana }}% </td>
         </ng-container>
   
         <ng-container matColumnDef="capitulo">
@@ -41,7 +41,7 @@
   
         <ng-container matColumnDef="programacionCapitulo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Programación por capítulo </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.programacionCapitulo }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.programacionCapitulo }}% </td>
         </ng-container>
   
         <ng-container matColumnDef="avanceFisicoCapitulo">

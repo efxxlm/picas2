@@ -52,8 +52,8 @@ export class ManejoMaterialInsumoComponent implements OnInit {
         this.proveedores.push(
             this.fb.group({
                 proveedor: [ '' ],
-                requirePermisosAmbientales: [ null ],
-                campoUrl: [ '' ]
+                requierePermisosAmbientalesMineros: [ null ],
+                urlRegistroFotografico: [ '' ]
             })
         );
     }
