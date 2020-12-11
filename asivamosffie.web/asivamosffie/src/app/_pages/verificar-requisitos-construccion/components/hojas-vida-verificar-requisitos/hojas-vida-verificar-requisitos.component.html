@@ -74,9 +74,9 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left" >
-            <p><b>{{ perfil.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>{{ perfil.observacionDevolucion.observacion }}</p>
+            <p style="margin-left: 2em;"><b>{{ perfil.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <section [innerHTML]="perfil.observacionDevolucion.observacion" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
   </div>
