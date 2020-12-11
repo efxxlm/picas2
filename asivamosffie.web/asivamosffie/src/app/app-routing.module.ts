@@ -190,28 +190,6 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule )
       },
-	  {
-
-        path: 'generarActaInicioConstruccion',
-        loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
-        .then(m => m.GestionarActaInicioFdosConstrModule)
-    },
-      {
-        path: 'aprobarRequisitosTecnicosConstruccion',
-        loadChildren: () => import( './_pages/aprobar-requisitos-construccion/aprobar-requisitos-construccion.module' )
-          .then( module => module.AprobarRequisitosConstruccionModule )
- 
-      },
-      { 
-        path: 'verificarRequisitosTecnicosConstruccion',
-        loadChildren: () => import( './_pages/verificar-requisitos-construccion/verificar-requisitos-construccion.module' )
-          .then( module => module.VerificarRequisitosConstruccionModule )
-      },
-      {
-        path: 'requisitosTecnicosConstruccion',
-        loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
-          .then( module => module.RequisitosTecnicosConstruccionModule )
-      },
       {
         path: 'preconstruccion',
         loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
