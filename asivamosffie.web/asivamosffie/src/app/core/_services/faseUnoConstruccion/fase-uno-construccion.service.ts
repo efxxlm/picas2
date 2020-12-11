@@ -55,7 +55,13 @@ export class FaseUnoConstruccionService {
 
   createEditObservacionesCarga ( pArchivoCargueId: number, pObservacion: string ) {
     console.log( pArchivoCargueId, pObservacion );
-    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionesCarga?pArchivoCargueId=${ pArchivoCargueId }&pObservacion=${ pObservacion }`, '' );
+
+    let archivo = {
+      archivoCargueId: pArchivoCargueId,
+      observaciones: pObservacion
+    }
+
+    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditObservacionesCarga`, archivo );
   }
 
   createEditObservacionDiagnostico( contratoConstruccion ){ 

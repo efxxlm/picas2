@@ -2167,9 +2167,10 @@ namespace asivamosffie.services
                                                                         .Include(r => r.Proyecto)
                                                                         .FirstOrDefault();
 
-            DateTime? fechaInicioContrato = contratoConstruccion?.Contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp.Value;
-            DateTime fechaFinalContrato = fechaInicioContrato.Value.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
-            fechaFinalContrato = fechaFinalContrato.AddDays(contratoConstruccion.Proyecto.PlazoDiasObra.Value);
+            Proyecto proyectoTemp = CalcularFechaInicioContrato( pContratoConstruccionId );
+
+            DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
+            DateTime fechaFinalContrato = proyectoTemp.FechaFinEtapaObra;
 
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;

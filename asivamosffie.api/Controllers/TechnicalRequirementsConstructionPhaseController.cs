@@ -366,12 +366,12 @@ namespace asivamosffie.api.Controllers
 
         [Route("CreateEditObservacionesCarga")]
         [HttpPost]
-        public async Task<IActionResult> CreateEditObservacionesCarga([FromQuery] int pArchivoCargueId, string pObservacion)
+        public async Task<IActionResult> CreateEditObservacionesCarga([FromBody] ArchivoCargue pArchivo)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionesCarga(pArchivoCargueId, pObservacion, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _technicalRequirementsConstructionPhaseService.CreateEditObservacionesCarga(pArchivo.ArchivoCargueId, pArchivo.Observaciones, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
