@@ -20,7 +20,7 @@ export class PlanesProgramasComponent implements OnInit {
   @Input() proyecto: Proyecto;
 
   @Output() planesProgramasForm = new EventEmitter();
-  @ViewChild( MatSort, { static: true } ) sort : MatSort;
+  @ViewChild( MatSort, { static: true } ) sort: MatSort;
   dataPlanesProgramas: any[] = [];
   dataSource                 = new MatTableDataSource();
   displayedColumns: string[] = [
@@ -38,24 +38,25 @@ export class PlanesProgramasComponent implements OnInit {
   booleanosRequisitos: any[] = [
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
-  ]
+  ];
   requisitosNoSeRequire: any[] = [
     { value: 2, viewValue: 'Si' },
     { value: 1, viewValue: 'No' },
     { value: 3, viewValue: 'No se requiere' }
-  ]
+  ];
   require: any;
   booleanosObservacion: any[] = [
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
-  ]
+  ];
   urlSoporte: string;
 
-  constructor ( private dialog: MatDialog ) {
+  constructor( private dialog: MatDialog ) {
   }
 
   ngOnInit(): void {
     if ( this.planesProgramas ) {
+      console.log( this.planesProgramas );
       this.getDataPlanesProgramas();
       this.estaEditando = true;
     } else {
@@ -73,7 +74,7 @@ export class PlanesProgramasComponent implements OnInit {
 
     dialogObservacion.afterClosed().subscribe( resp => {
       this.dataPlanesProgramas.forEach( data => {
-        if ( data.id === id ) {
+        if ( resp !== null && data.id === id ) {
           data.observaciones = resp.data;
           return;
         }
