@@ -3,11 +3,12 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-registrar-avance-actua-derivadas',
-  templateUrl: './registrar-avance-actua-derivadas.component.html',
-  styleUrls: ['./registrar-avance-actua-derivadas.component.scss']
+  selector: 'app-verdetalleedit-avance-actua-derivadas',
+  templateUrl: './verdetalleedit-avance-actua-derivadas.component.html',
+  styleUrls: ['./verdetalleedit-avance-actua-derivadas.component.scss']
 })
-export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
+export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
+
   addressForm = this.fb.group({
     fechaActuacionDerivada: [null, Validators.required],
     descripcionActuacionAdelantada: [null, Validators.required],
@@ -54,4 +55,5 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
   onSubmit() {
 
   }
+
 }

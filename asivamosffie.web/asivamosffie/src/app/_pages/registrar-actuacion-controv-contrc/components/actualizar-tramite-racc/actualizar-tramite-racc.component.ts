@@ -29,7 +29,15 @@ export class ActualizarTramiteRaccComponent implements OnInit {
       estadoRegistro: 'Completo',
       estadoActuacion: 'Cumplida',
       gestion: 1,
-    }
+    },
+    {
+      fechaActualizacion: '17/08/2020',
+      actuacion: 'Actuación 1',
+      numeroActuacion: 'ACT_derivada0002',
+      estadoRegistro: 'Completo',
+      estadoActuacion: 'Finalizada',
+      gestion: 2,
+    },
   ]
   constructor(private router: Router) { }
   ngOnInit(): void {
@@ -45,5 +53,17 @@ export class ActualizarTramiteRaccComponent implements OnInit {
   };
   irARegistro(){
     this.router.navigate(['/registrarActuacionesControversiasContractuales/registrarActuacionDerivada']);
+  }
+  verDetalleEditarActuacionDerivada(id){
+    this.router.navigate(['/registrarActuacionesControversiasContractuales/verDetalleEditarActuacionDerivada',id]);
+  }
+  finalizarActuacionDerivada(id){
+
+  }
+  eliminarActuacionDerivada(id){
+
+  }
+  verDetalleActuacionDerivada(id){
+    this.router.navigate(['/registrarActuacionesControversiasContractuales/verDetalleActuacionDerivada',id]);
   }
 }

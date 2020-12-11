@@ -55,12 +55,26 @@
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                    <!--
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacion == 'En proceso de registro'"
-                        (click)="this.finalizarActuacion(element.gestion)">
+                        *ngIf="element.estadoActuacion == 'Cumplida'"
+                        (click)="this.finalizarActuacionDerivada(element.gestion)">
                         Finalizar actuación
-                    </button>-->
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActuacion == 'Cumplida' || element.estadoActuacion == 'Incumplida'"
+                        (click)="this.verDetalleEditarActuacionDerivada(element.gestion)">
+                        Ver detalle/Editar
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActuacion == 'Cumplida' || element.estadoActuacion == 'Incumplida'"
+                        (click)="this.eliminarActuacionDerivada(element.gestion)">
+                        Eliminar
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActuacion == 'Finalizada'"
+                        (click)="this.verDetalleActuacionDerivada(element.gestion)">
+                        Ver detalle
+                    </button>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
