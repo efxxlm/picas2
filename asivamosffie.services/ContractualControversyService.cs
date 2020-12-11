@@ -2157,6 +2157,21 @@ namespace asivamosffie.services
                         strEstadoAvanceTramiteCodigo = EstadoAvanceCodigo.Codigo;
 
                     }
+                    
+
+                    string EstadoActuacionReclamacionCodigoTmp = "";
+                    string EstadoActuacionReclamacionTmp = "";
+
+                    //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
+                    Dominio EstadoActuacionReclamacion;
+
+                    EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Reclamacion);
+                    if (EstadoActuacionReclamacion != null)
+                    {
+                        EstadoActuacionReclamacionTmp = EstadoActuacionReclamacion.Nombre;
+                        EstadoActuacionReclamacionCodigoTmp = EstadoActuacionReclamacion.Codigo;
+
+                    }
 
                     //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     //if (EstadoSolicitudCodigoContratoPoliza != null)
@@ -2182,6 +2197,8 @@ namespace asivamosffie.services
 
                         ProximaActuacionCodigo= strProximaActuacionCodigo,
                         ProximaActuacionNombre=strProximaActuacionNombre,
+                        EstadoActuacionReclamacionCodigo= controversia.EstadoActuacionReclamacionCodigo,
+                        EstadoActuacionReclamacion = EstadoActuacionReclamacionTmp,
 
                         //ControversiaContractualId = controversia.ControversiaContractualId,
                         //NumeroSolicitud = controversia.NumeroSolicitud,
