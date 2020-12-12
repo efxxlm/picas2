@@ -15,10 +15,11 @@
                                             [modules]="config"
                                             (onContentChanged)="maxLength($event, 2000)"
                                             formControlName="observacionTecnica"
+                                            #obsTecnica
                                             required>
                             </quill-editor>
                             <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionTecnica').value !== null" style="margin-top: 3.5em;">
-                                {{2000 - (textoLimpio(formActividadesRealizadas.get('observacionTecnica').value))}}
+                                {{2000 - textoLimpio( obsTecnica.quillEditor, 2000 )}}
                             </span>
                             <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionTecnica').value === null" style="margin-top: 3.5em;">
                                 2000
@@ -39,10 +40,11 @@
                                             [modules]="config"
                                             (onContentChanged)="maxLength($event, 2000)"
                                             formControlName="observacionLegal"
+                                            #obsLegales
                                             required>
                             </quill-editor>
                             <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionLegal').value !== null" style="margin-top: 3.5em;">
-                                {{2000 - (textoLimpio(formActividadesRealizadas.get('observacionTecnica').value))}}
+                                {{2000 - textoLimpio( obsLegales.quillEditor, 2000 )}}
                             </span>
                             <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionLegal').value === null" style="margin-top: 3.5em;">
                                 2000
@@ -63,10 +65,11 @@
                                             [modules]="config"
                                             (onContentChanged)="maxLength($event, 2000)"
                                             formControlName="observacionAdministrativa"
+                                            #obsAdministrativa
                                             required>
                             </quill-editor>
                             <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionAdministrativa').value !== null" style="margin-top: 3.5em;">
-                                {{2000 - (textoLimpio(formActividadesRealizadas.get('observacionAdministrativa').value))}}
+                                {{2000 - textoLimpio( obsAdministrativa.quillEditor, 2000 )}}
                             </span>
                             <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionAdministrativa').value === null" style="margin-top: 3.5em;">
                                 2000

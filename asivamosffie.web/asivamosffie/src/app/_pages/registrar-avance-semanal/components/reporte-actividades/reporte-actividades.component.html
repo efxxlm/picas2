@@ -15,17 +15,23 @@
                             </mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-        
-                            <quill-editor align="left" class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-                                (onContentChanged)="maxLength($event, 2000)" formControlName="observaciones">
+
+                            <quill-editor   align="left"
+                                            class="quill-editor-style ml-1em"
+                                            [styles]="editorStyle"
+                                            [modules]="config"
+                                            (onContentChanged)="maxLength($event, 2000)"
+                                            formControlName="observaciones"
+                                            #obsResumenGeneral
+                                            required>
                             </quill-editor>
-        
+
                         </mat-card-content>
                     </mat-card>
-                    <span class="contador miles mb-2em" *ngIf="formResumenGeneral.value.observaciones !== null">
-                        {{2000 - textoLimpio(formResumenGeneral.get('observaciones').value)}}
+                    <span class="contador miles" *ngIf="formResumenGeneral.value.observaciones !== null">
+                        {{2000 - textoLimpio( obsResumenGeneral.quillEditor, 2000 )}}
                     </span>
-                    <span class="contador miles mb-2em" *ngIf="formResumenGeneral.value.observaciones === null">
+                    <span class="contador miles" *ngIf="formResumenGeneral.value.observaciones === null">
                         2000
                     </span>
                 </div>

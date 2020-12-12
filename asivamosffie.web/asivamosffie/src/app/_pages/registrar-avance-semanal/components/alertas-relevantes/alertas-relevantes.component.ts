@@ -16,12 +16,12 @@ export class AlertasRelevantesComponent implements OnInit {
         height: '45px'
     };
     config = {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-      ]
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
+        ]
     };
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },
@@ -45,16 +45,17 @@ export class AlertasRelevantesComponent implements OnInit {
         });
     }
 
-    textoLimpio(texto: string) {
-        if ( texto ){
-            const textolimpio = texto.replace(/<[^>]*>/g, '');
-            return textolimpio.length;
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
         }
     }
 
-    maxLength(e: any, n: number) {
-        if (e.editor.getLength() > n) {
-          e.editor.deleteText(n, e.editor.getLength());
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
         }
     }
 

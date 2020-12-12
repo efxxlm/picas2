@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class GestionCalidadComponent implements OnInit {
 
     @Input() esVerDetalle = false;
+    @Input() seguimientoSemanal: any;
     formGestionCalidad: FormGroup;
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },
@@ -31,6 +32,7 @@ export class GestionCalidadComponent implements OnInit {
         [{ align: [] }],
       ]
     };
+    seRealizoPeticion = false;
 
     get ensayosLaboratorio() {
         return this.formGestionCalidad.get( 'ensayosLaboratorio' ) as FormArray;
@@ -56,11 +58,27 @@ export class GestionCalidadComponent implements OnInit {
         });
     }
 
+    valuePending( value: string ) {
+        if ( value.length > 0 ) {
+            if ( Number( value ) <= 0 ) {
+                this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '1' );
+            }
+            if ( Number( value ) > 10 ) {
+                this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '10' );
+            }
+        }
+    }
+
+    validateNumber( value: string, index: number, campoForm: string ) {
+        if ( isNaN( Number( value ) ) === true ) {
+            this.ensayosLaboratorio.at( index ).get( campoForm ).setValue( '' );
+        }
+    }
+
     getCantidadEnsayos() {
         this.formGestionCalidad.get( 'cantidadEnsayos' ).valueChanges
             .subscribe(
                 value => {
-                    console.log( Number( value ) );
                     if ( Number( value ) < 0 ) {
                         this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '0' );
                     }
@@ -90,16 +108,17 @@ export class GestionCalidadComponent implements OnInit {
         }
     }
 
-    textoLimpio(texto: string) {
-        if ( texto ){
-            const textolimpio = texto.replace(/<[^>]*>/g, '');
-            return textolimpio.length;
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
         }
     }
 
-    maxLength(e: any, n: number) {
-        if (e.editor.getLength() > n) {
-          e.editor.deleteText(n, e.editor.getLength());
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
         }
     }
 
@@ -133,10 +152,6 @@ export class GestionCalidadComponent implements OnInit {
           } );
     }
 
-    btnEnabled( ensayo: FormGroup ) {
-        console.log( ensayo );
-    }
-
     getRegistrarResultados() {
         this.routes.navigate( [ `${ this.routes.url }/registroResultadosEnsayo`, 5 ] );
     }
@@ -147,6 +162,7 @@ export class GestionCalidadComponent implements OnInit {
 
     guardar() {
         console.log( this.formGestionCalidad.value );
+        this.seRealizoPeticion = true;
     }
 
 }

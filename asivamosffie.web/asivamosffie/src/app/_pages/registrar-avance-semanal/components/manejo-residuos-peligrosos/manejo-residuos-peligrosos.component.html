@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="formManejoResiduosPeligrosos.get( 'requiereObservacion' ). value === true">
         <div class="col-md-12">
           <div>
             <div class="pr-1">
@@ -53,10 +53,11 @@
                                 [modules]="config"
                                 (onContentChanged)="maxLength($event, 400)"
                                 formControlName="obsManejoResiduosPeligrosos"
+                                #obsResiduosPeligrosos
                                 required>
                 </quill-editor>
                 <span class="contador miles" *ngIf="formManejoResiduosPeligrosos.get('obsManejoResiduosPeligrosos').value !== null" style="margin-top: 3.5em;">
-                    {{400 - (textoLimpio(formManejoResiduosPeligrosos.get('obsManejoResiduosPeligrosos').value))}}
+                    {{400 - textoLimpio( obsResiduosPeligrosos.quillEditor, 400 )}}
                 </span>
                 <span class="contador miles" *ngIf="formManejoResiduosPeligrosos.get('obsManejoResiduosPeligrosos').value === null" style="margin-top: 3.5em;">
                     400

@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="formManejoResiduosConstruccion.get( 'requiereObservacionSobreManejo' ).value === true">
         <div class="col-md-12">
           <div>
             <div class="pr-1">
@@ -53,10 +53,11 @@
                                 [modules]="config"
                                 (onContentChanged)="maxLength($event, 400)"
                                 formControlName="observacionManejoResiduos"
+                                #obsResiduosConstruccion
                                 required>
                 </quill-editor>
                 <span class="contador miles" *ngIf="formManejoResiduosConstruccion.get('observacionManejoResiduos').value !== null" style="margin-top: 3.5em;">
-                    {{400 - (textoLimpio(formManejoResiduosConstruccion.get('observacionManejoResiduos').value))}}
+                    {{400 - textoLimpio( obsResiduosConstruccion.quillEditor, 400 )}}
                 </span>
                 <span class="contador miles" *ngIf="formManejoResiduosConstruccion.get('observacionManejoResiduos').value === null" style="margin-top: 3.5em;">
                     400
@@ -187,7 +188,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="formManejoResiduosConstruccion.get( 'seReutilizaronLosResiduos' ).value === true">
         <div class="col-md-12">
             <div class="row">
                 <div class="pr-1">
@@ -196,7 +197,12 @@
                 <div class="col d-flex">
                     <section style="width: 100%;">
                         <mat-form-field>
-                            <input matInput type="text" maxlength="3" formControlName="cantidad" required>
+                            <input  matInput
+                                    type="text"
+                                    maxlength="3"
+                                    formControlName="cantidad"
+                                    (ngModelChange)="validateNumber( $event, 'cantidad' )"
+                                    required>
                         </mat-form-field>
                     </section>
                     <span class="contador">{{3 - formManejoResiduosConstruccion.get( 'cantidad' ).value.length}}</span>

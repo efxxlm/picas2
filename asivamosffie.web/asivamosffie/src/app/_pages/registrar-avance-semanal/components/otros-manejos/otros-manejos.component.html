@@ -12,7 +12,7 @@
                             formControlName="fechaActividad"
                             placeholder="DD/MM/AAAA"
                             (click)="pickerfechaActividad.open()"
-                            readonly 
+                            readonly
                             required>
                     <mat-datepicker #pickerfechaActividad></mat-datepicker>
                 </mat-form-field>
@@ -42,10 +42,11 @@
                                 [modules]="config"
                                 (onContentChanged)="maxLength($event, 500)"
                                 formControlName="observacionActividad"
+                                #obsOtrosManejos
                                 required>
                 </quill-editor>
                 <span class="contador miles" *ngIf="formOtrosManejos.get('observacionActividad').value !== null" style="margin-top: 3.5em;">
-                    {{500 - (textoLimpio(formOtrosManejos.get('observacionActividad').value))}}
+                    {{500 - textoLimpio( obsOtrosManejos.quillEditor, 500 )}}
                 </span>
                 <span class="contador miles" *ngIf="formOtrosManejos.get('observacionActividad').value === null" style="margin-top: 3.5em;">
                     500

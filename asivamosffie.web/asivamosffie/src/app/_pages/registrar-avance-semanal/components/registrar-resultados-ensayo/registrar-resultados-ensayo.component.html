@@ -67,10 +67,11 @@
                                                             [modules]="config"
                                                             (onContentChanged)="maxLength($event, 400)"
                                                             formControlName="observaciones"
+                                                            #obsResultado
                                                             required>
                                             </quill-editor>
                                             <span class="contador miles" *ngIf="formMuestra.get('observaciones').value !== null" style="margin-top: 3.5em;">
-                                                {{400 - (textoLimpio(formMuestra.get('observaciones').value))}}
+                                                {{400 - textoLimpio( obsResultado.quillEditor, 400 )}}
                                             </span>
                                             <span class="contador miles" *ngIf="formMuestra.get('observaciones').value === null" style="margin-top: 3.5em;">
                                                 400
@@ -86,7 +87,8 @@
                         <button mat-button
                                 color="warn"
                                 class="btn-guardar"
-                                type="submit">
+                                type="submit"
+                                [disabled]="formMuestra.dirty === false">
                                 <img  src="assets/img/icon/guardar.svg">
                         </button>
                     </div>

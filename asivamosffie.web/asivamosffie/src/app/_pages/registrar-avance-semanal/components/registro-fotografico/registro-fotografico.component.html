@@ -29,7 +29,7 @@
                               <label class="label-left">URL con soporte</label>
                             </div>
                             <div class="col d-flex">
-                                <mat-form-field style="width: 100%;">
+                                <mat-form-field style="width: 97.5%;">
                                     <input  matInput
                                             type="text"
                                             formControlName="urlSoporte"
@@ -59,10 +59,11 @@
                                                 [modules]="config"
                                                 (onContentChanged)="maxLength($event, 2000)"
                                                 formControlName="observaciones"
+                                                #obsDescripcion
                                                 required>
                                 </quill-editor>
                                 <span class="contador miles" *ngIf="formRegistroFotografico.get('observaciones').value !== null" style="margin-top: 3.5em;">
-                                    {{2000 - (textoLimpio(formRegistroFotografico.get('observaciones').value))}}
+                                    {{2000 - textoLimpio( obsDescripcion.quillEditor, 2000 )}}
                                 </span>
                                 <span class="contador miles" *ngIf="formRegistroFotografico.get('observaciones').value === null" style="margin-top: 3.5em;">
                                     2000

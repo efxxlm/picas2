@@ -23,7 +23,7 @@
                           </div>
                         </div>
                     </div>
-                    <div class="row" style="margin-bottom: 1em;">
+                    <div class="row" style="margin-bottom: 1em;" *ngIf="formAlertasRelevantes.get( 'seIdentificaronAlertas' ).value === true">
                         <div class="col-md-12">
                           <div>
                             <div class="pr-1">
@@ -35,10 +35,11 @@
                                                 [modules]="config"
                                                 (onContentChanged)="maxLength($event, 2000)"
                                                 formControlName="observaciones"
+                                                #obsAlertasRelevantes
                                                 required>
                                 </quill-editor>
                                 <span class="contador miles" *ngIf="formAlertasRelevantes.get('observaciones').value !== null" style="margin-top: 3.5em;">
-                                    {{2000 - (textoLimpio(formAlertasRelevantes.get('observaciones').value))}}
+                                    {{2000 - textoLimpio( obsAlertasRelevantes.quillEditor, 2000 )}}
                                 </span>
                                 <span class="contador miles" *ngIf="formAlertasRelevantes.get('observaciones').value === null" style="margin-top: 3.5em;">
                                     2000

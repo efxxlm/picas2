@@ -152,10 +152,11 @@
                                 [modules]="config"
                                 (onContentChanged)="maxLength($event, 400)"
                                 formControlName="observacion"
+                                #obsMaterialInsumo
                                 required>
                 </quill-editor>
                 <span class="contador miles" *ngIf="formManejoMaterialInsumo.get('observacion').value !== null" style="margin-top: 3.5em;">
-                    {{400 - (textoLimpio(formManejoMaterialInsumo.get('observacion').value))}}
+                    {{400 - textoLimpio( obsMaterialInsumo.quillEditor, 400 )}}
                 </span>
                 <span class="contador miles" *ngIf="formManejoMaterialInsumo.get('observacion').value === null" style="margin-top: 3.5em;">
                     400

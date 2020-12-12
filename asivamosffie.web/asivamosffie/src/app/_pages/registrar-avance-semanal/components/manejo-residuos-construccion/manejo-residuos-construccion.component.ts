@@ -35,16 +35,23 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
     ngOnInit(): void {
     }
 
-    textoLimpio(texto: string) {
-        if ( texto ){
-            const textolimpio = texto.replace(/<[^>]*>/g, '');
-            return textolimpio.length;
+    validateNumber( value: string, campoForm: string ) {
+        if ( isNaN( Number( value ) ) === true ) {
+            this.formManejoResiduosConstruccion.get( campoForm ).setValue( '' );
         }
     }
 
     maxLength(e: any, n: number) {
         if (e.editor.getLength() > n) {
-          e.editor.deleteText(n, e.editor.getLength());
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
+
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
         }
     }
 
