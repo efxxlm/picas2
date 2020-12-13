@@ -51,22 +51,23 @@ export class GestionAmbientalComponent implements OnInit {
             this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
                 this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
         }
+        if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
+                && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental.length > 0 )
+        {
+            const gestionObraAmbiental = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0];
+            if ( gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
+                this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).setValue( gestionObraAmbiental.seEjecutoGestionAmbiental );
+            }
+        }
     }
 
     crearFormulario() {
         this.formGestionAmbiental = this.fb.group({
-            actividadRelacionada: [ null ],
+            seEjecutoGestionAmbiental: [ null ],
             tipoActividad: [ null ],
             manejoMaterialInsumo: this.fb.group({
                 manejoMaterialesInsumosId: [ 0 ],
-                proveedores: this.fb.array( [
-                    this.fb.group({
-                        proveedor: [ '' ],
-                        requierePermisosAmbientalesMineros: [ null ],
-                        urlRegistroFotografico: [ '' ],
-                        manejoMaterialesInsumosProveedorId: [ 0 ]
-                    })
-                ] ),
+                proveedores: this.fb.array( [] ),
                 estanProtegidosDemarcadosMateriales: [ null ],
                 requiereObservacion: [ null ],
                 observacion: [ null ],
@@ -118,7 +119,27 @@ export class GestionAmbientalComponent implements OnInit {
 
         const pSeguimientoSemanal = this.seguimientoSemanal;
         let seguimientoSemanalGestionObra;
-        if ( this.formGestionAmbiental.get( 'tipoActividad' ).value.codigo === this.tipoActividadesCodigo.manejoMaterialInsumo ) {
+        if ( this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === false ) {
+            const manejoMaterial =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
+            this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental
+            : [];
+            seguimientoSemanalGestionObra = [
+                {
+                    seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
+                    seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                    seguimientoSemanalGestionObraAmbiental: [
+                        {
+                            seguimientoSemanalGestionObraAmbientalId:   manejoMaterial.length > 0 ?
+                                                                        manejoMaterial[0].seguimientoSemanalGestionObraAmbientalId : 0,
+                            seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value
+                        }
+                    ]
+                }
+            ];
+        }
+        if (    this.formGestionAmbiental.get( 'tipoActividad' ).value !== null
+                && this.formGestionAmbiental.get( 'tipoActividad' ).value.codigo === this.tipoActividadesCodigo.manejoMaterialInsumo )
+        {
             const manejoMaterial =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
                                     this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental
                                     : [];
@@ -130,7 +151,7 @@ export class GestionAmbientalComponent implements OnInit {
                         {
                             seguimientoSemanalGestionObraAmbientalId:   manejoMaterial.length > 0 ?
                                                                         manejoMaterial[0].seguimientoSemanalGestionObraAmbientalId : 0,
-                            seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'actividadRelacionada' ).value,
+                            seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value,
                             manejoMaterialesInsumo:
                                 {
                                     ManejoMaterialesInsumosId: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'manejoMaterialesInsumosId' ).value,

@@ -32,4 +32,8 @@ export class RegistrarAvanceSemanalService {
     return this.http.post<Respuesta>( `${ this.urlApi }/SaveUpdateSeguimientoSemanal`, pSeguimientoSemanal );
   }
 
+  deleteManejoMaterialesInsumosProveedor( ManejoMaterialesInsumosProveedorId: number ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/DeleteManejoMaterialesInsumosProveedor?ManejoMaterialesInsumosProveedorId=${ ManejoMaterialesInsumosProveedorId }`, '' );
+  }
+
 }

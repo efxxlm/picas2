@@ -1,5 +1,8 @@
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-manejo-material-insumo',
@@ -32,27 +35,30 @@ export class ManejoMaterialInsumoComponent implements OnInit {
     }
 
     constructor(
-        private fb: FormBuilder ) { }
+        private fb: FormBuilder,
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private dialog: MatDialog ) { }
 
     ngOnInit(): void {
         if ( this.materialInsumo !== undefined && this.materialInsumo.length > 0 ) {
             this.manejoMaterialInsumo = this.materialInsumo[0].manejoMaterialesInsumo;
             console.log( this.manejoMaterialInsumo );
-            const manejoProveedor = [];
+            this.proveedores.clear();
             for ( const proveedor of this.manejoMaterialInsumo.manejoMaterialesInsumosProveedor ) {
-                manejoProveedor.push(
+                this.proveedores.push( this.fb.group(
                     {
                         proveedor: proveedor.proveedor !== undefined ? proveedor.proveedor : '',
                         requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros ?
                                                             proveedor.requierePermisosAmbientalesMineros : null,
                         urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : '',
-                        manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId
+                        manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId,
+                        manejoMaterialesInsumosId: proveedor.manejoMaterialesInsumosId
                     }
-                );
+                ) );
             }
-            this.formManejoMaterialInsumo.setValue( {
+            console.log( this.proveedores.value );
+            this.formManejoMaterialInsumo.patchValue( {
                 manejoMaterialesInsumosId: this.manejoMaterialInsumo.manejoMaterialesInsumosId,
-                proveedores: manejoProveedor,
                 estanProtegidosDemarcadosMateriales:    this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales !== undefined
                                                         ? this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales : null,
                 requiereObservacion:    this.manejoMaterialInsumo.requiereObservacion !== undefined
@@ -61,12 +67,38 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                 url: this.manejoMaterialInsumo.url !== undefined ? this.manejoMaterialInsumo.url : null
             } );
         }
+        if ( this.manejoMaterialInsumo !== undefined && this.materialInsumo.length === 0 ) {
+            this.proveedores.push(
+                this.fb.group({
+                    proveedor: [ '' ],
+                    requierePermisosAmbientalesMineros: [ null ],
+                    urlRegistroFotografico: [ '' ],
+                    manejoMaterialesInsumosProveedorId: [ 0 ],
+                    manejoMaterialesInsumosId: [ 0 ]
+                })
+            );
+        }
     }
 
     maxLength(e: any, n: number) {
         if (e.editor.getLength() > n) {
             e.editor.deleteText(n - 1, e.editor.getLength());
         }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    openDialogTrueFalse(modalTitle: string, modalText: string) {
+      const dialogRef = this.dialog.open( ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle, modalText, siNoBoton: true }
+      });
+      return dialogRef.afterClosed();
     }
 
     textoLimpio( evento: any, n: number ) {
@@ -83,13 +115,38 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                 proveedor: [ '' ],
                 requierePermisosAmbientalesMineros: [ null ],
                 urlRegistroFotografico: [ '' ],
-                manejoMaterialesInsumosProveedorId: [ 0 ]
+                manejoMaterialesInsumosProveedorId: [ 0 ],
+                manejoMaterialesInsumosId: [ this.formManejoMaterialInsumo.get( 'manejoMaterialesInsumosId' ).value ]
             })
         );
     }
 
     deleteProveedor( index: number ) {
-        this.proveedores.removeAt( index );
+        if ( this.proveedores.at( index ).get( 'manejoMaterialesInsumosProveedorId' ).value === 0 ) {
+            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+                .subscribe(
+                    value => {
+                        if ( value === true ) {
+                            this.proveedores.removeAt( index );
+                            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                        }
+                    }
+                );
+        } else {
+            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+                .subscribe(
+                    value => {
+                        if ( value === true ) {
+                            this.avanceSemanalSvc.deleteManejoMaterialesInsumosProveedor( this.proveedores.at( index ).get( 'manejoMaterialesInsumosProveedorId' ).value )
+                                .subscribe(
+                                    response => {
+                                        this.openDialog( '', `<b>${ response.message }</b>` );
+                                    }
+                                );
+                        }
+                    }
+                );
+        }
     }
 
 }

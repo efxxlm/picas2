@@ -1,4 +1,4 @@
-<form autocomplete="off" [formGroup]="formManejoMaterialInsumo" *ngIf="formManejoMaterialInsumo !== undefined">
+<form autocomplete="off" [formGroup]="formManejoMaterialInsumo" *ngIf="proveedores.length > 0">
     <section *ngFor="let proveedor of proveedores.controls; index as i" [formGroup]="proveedor">
         <div class="row">
             <div class="col-md-12">
@@ -80,7 +80,7 @@
                                 type="button"
                                 class="btn-eliminar"
                                 (click)="deleteProveedor( i )"
-                                *ngIf="proveedores.length > 1 && i > 0">
+                                *ngIf="proveedores.length > 1">
                                 <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                                 Eliminar proveedor
                         </button>
