@@ -156,7 +156,7 @@
 
         // 4.1.12
         public const string Crear_Editar_Seguimiento_Semanal = "160";
-       
-        	
+
+        public const string Eliminar_Manejo_Materiales_Insumo_Proveedor = "161";
     }
 }

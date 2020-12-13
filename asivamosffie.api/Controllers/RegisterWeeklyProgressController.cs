@@ -41,15 +41,15 @@ namespace asivamosffie.api.Controllers
             {
                 throw ex;
             }
-        } 
-         
+        }
+
         [Route("GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId")]
         [HttpGet]
-        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId([FromQuery] int pContratacionProyectoId , int pSeguimientoSemanalId)
+        public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId([FromQuery] int pContratacionProyectoId, int pSeguimientoSemanalId)
         {
             try
             {
-                return await _registerWeeklyProgressService.GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(pContratacionProyectoId , pSeguimientoSemanalId);
+                return await _registerWeeklyProgressService.GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(pContratacionProyectoId, pSeguimientoSemanalId);
             }
 
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [Route("GetListSeguimientoSemanalByContratacionProyectoId")]
         [HttpGet]
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId([FromQuery] int pContratacionProyectoId)
@@ -73,10 +73,9 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
         [HttpPost]
         [Route("SaveUpdateSeguimientoSemanal")]
-        public async Task<IActionResult> SaveUpdateSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
+        public async Task<IActionResult> SaveUpdateSeguimientoSemanal([FromBody] SeguimientoSemanal pSeguimientoSemanal)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -93,6 +92,22 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("DeleteManejoMaterialesInsumosProveedor")]
+        public async Task<IActionResult> DeleteManejoMaterialesInsumosProveedor([FromQuery] int ManejoMaterialesInsumosProveedorId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerWeeklyProgressService.DeleteManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedorId, HttpContext.User.FindFirst("User").Value);
 
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
     }
 }
