@@ -366,18 +366,23 @@ namespace asivamosffie.services
                     SeguimientoSemanalGestionObraAmbiental.Eliminado = false;
                     SeguimientoSemanalGestionObraAmbiental.FechaCreacion = DateTime.Now;
                     SeguimientoSemanalGestionObraAmbiental.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
-                    //Manejo Materiales Insumo
-                    SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.UsuarioCreacion = pUsuarioCreacion;
-                    SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Eliminado = false;
-                    SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.FechaCreacion = DateTime.Now;
-                    SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo);
 
-                    foreach (var ManejoMaterialesInsumosProveedor in SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor)
+                    _context.SeguimientoSemanalGestionObraAmbiental.Add(SeguimientoSemanalGestionObraAmbiental);
+                    //Manejo Materiales Insumo
+                    if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null)
                     {
-                        ManejoMaterialesInsumosProveedor.UsuarioCreacion = pUsuarioCreacion;
-                        ManejoMaterialesInsumosProveedor.Eliminado = false;
-                        ManejoMaterialesInsumosProveedor.FechaCreacion = DateTime.Now;
-                        ManejoMaterialesInsumosProveedor.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor);
+                        SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.UsuarioCreacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Eliminado = false;
+                        SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.FechaCreacion = DateTime.Now;
+                        SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo);
+                        
+                        foreach (var ManejoMaterialesInsumosProveedor in SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor)
+                        {
+                            ManejoMaterialesInsumosProveedor.UsuarioCreacion = pUsuarioCreacion;
+                            ManejoMaterialesInsumosProveedor.Eliminado = false;
+                            ManejoMaterialesInsumosProveedor.FechaCreacion = DateTime.Now;
+                            ManejoMaterialesInsumosProveedor.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor);
+                        }
                     }
                 }
 
