@@ -51,6 +51,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                 );
             }
             this.formManejoMaterialInsumo.setValue( {
+                manejoMaterialesInsumosId: this.manejoMaterialInsumo.manejoMaterialesInsumosId,
                 proveedores: manejoProveedor,
                 estanProtegidosDemarcadosMateriales:    this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales !== undefined
                                                         ? this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales : null,
@@ -81,7 +82,8 @@ export class ManejoMaterialInsumoComponent implements OnInit {
             this.fb.group({
                 proveedor: [ '' ],
                 requierePermisosAmbientalesMineros: [ null ],
-                urlRegistroFotografico: [ '' ]
+                urlRegistroFotografico: [ '' ],
+                manejoMaterialesInsumosProveedorId: [ 0 ]
             })
         );
     }

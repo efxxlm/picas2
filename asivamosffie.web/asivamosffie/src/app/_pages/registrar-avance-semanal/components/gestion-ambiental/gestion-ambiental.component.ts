@@ -58,6 +58,7 @@ export class GestionAmbientalComponent implements OnInit {
             actividadRelacionada: [ null ],
             tipoActividad: [ null ],
             manejoMaterialInsumo: this.fb.group({
+                manejoMaterialesInsumosId: [ 0 ],
                 proveedores: this.fb.array( [
                     this.fb.group({
                         proveedor: [ '' ],
@@ -132,13 +133,15 @@ export class GestionAmbientalComponent implements OnInit {
                             seEjecutoGestionAmbiental: this.formGestionAmbiental.get( 'actividadRelacionada' ).value,
                             manejoMaterialesInsumo:
                                 {
-                                    ManejoMaterialesInsumosId: 0,
+                                    ManejoMaterialesInsumosId: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'manejoMaterialesInsumosId' ).value,
                                     manejoMaterialesInsumosProveedor:
                                         this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'proveedores' ).value,
                                     estanProtegidosDemarcadosMateriales: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'estanProtegidosDemarcadosMateriales' ).value,
                                     requiereObservacion:
                                         this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'requiereObservacion' ).value,
-                                    observacion: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'observacion' ).value,
+                                    observacion:
+                                        this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'requiereObservacion' ).value === true
+                                        ? this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'observacion' ).value : null,
                                     url: this.formGestionAmbiental.get( 'manejoMaterialInsumo' ).get( 'url' ).value
                                 }
                         }
