@@ -9,6 +9,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ManejoMaterialInsumoComponent implements OnInit {
 
     @Input() formManejoMaterialInsumo: FormGroup;
+    @Input() materialInsumo: any;
+    manejoMaterialInsumo: any;
     editorStyle = {
         height: '45px'
     };
@@ -33,6 +35,31 @@ export class ManejoMaterialInsumoComponent implements OnInit {
         private fb: FormBuilder ) { }
 
     ngOnInit(): void {
+        if ( this.materialInsumo !== undefined && this.materialInsumo.length > 0 ) {
+            this.manejoMaterialInsumo = this.materialInsumo[0].manejoMaterialesInsumo;
+            console.log( this.manejoMaterialInsumo );
+            const manejoProveedor = [];
+            for ( const proveedor of this.manejoMaterialInsumo.manejoMaterialesInsumosProveedor ) {
+                manejoProveedor.push(
+                    {
+                        proveedor: proveedor.proveedor !== undefined ? proveedor.proveedor : '',
+                        requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros ?
+                                                            proveedor.requierePermisosAmbientalesMineros : null,
+                        urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : '',
+                        manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId
+                    }
+                );
+            }
+            this.formManejoMaterialInsumo.setValue( {
+                proveedores: manejoProveedor,
+                estanProtegidosDemarcadosMateriales:    this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales !== undefined
+                                                        ? this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales : null,
+                requiereObservacion:    this.manejoMaterialInsumo.requiereObservacion !== undefined
+                                        ? this.manejoMaterialInsumo.requiereObservacion : null,
+                observacion: this.manejoMaterialInsumo.observacion !== undefined ? this.manejoMaterialInsumo.observacion : null,
+                url: this.manejoMaterialInsumo.url !== undefined ? this.manejoMaterialInsumo.url : null
+            } );
+        }
     }
 
     maxLength(e: any, n: number) {

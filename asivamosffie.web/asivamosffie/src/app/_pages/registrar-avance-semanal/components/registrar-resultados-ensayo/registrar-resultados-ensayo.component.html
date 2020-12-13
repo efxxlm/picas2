@@ -38,7 +38,36 @@
                     <div align="left">
                         <mat-card>
                             <mat-card-content>
-                                <div class="row" style="margin-left: .1em;">
+                                <div class="row" style="width: 99%;">
+                                    <div class="col-md-12">
+                                      <div class="row">
+                                        <div class="pr-1">
+                                          <label class="label-left">Fecha de entrega de resultados</label>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <mat-form-field>
+                                                <input  matInput
+                                                        [matDatepicker]="pickerfechaMuestra"
+                                                        formControlName="fechaMuestra"
+                                                        placeholder="DD/MM/AAAA"
+                                                        (click)="pickerfechaMuestra.open()"
+                                                        readonly required>
+                                                <mat-datepicker #pickerfechaMuestra></mat-datepicker>
+                                            </mat-form-field>
+                                            <button mat-button
+                                                    color="primary"
+                                                    type="button"
+                                                    (click)="pickerfechaMuestra.open()"
+                                                    class="btn-calendario">
+                                                    <img  class="mr-bottom-1"
+                                                          src="assets/img/icon/calendarioCirculo.svg"
+                                                          alt="Abrir Calendario">
+                                            </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-1em" style="margin-left: .1em;">
                                     <div class="col-md-12">
                                       <div class="row">
                                         <div class="pr-1">
@@ -55,13 +84,13 @@
                                       </div>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-bottom: 1em;">
+                                <div class="row mt-1em" style="margin-bottom: 1em;">
                                     <div class="col-md-12">
                                       <div>
                                         <div class="pr-1">
                                           <label class="label-left">Observaciones frente a los resultados</label>
                                         </div>
-                                        <div class="col d-flex">
+                                        <div class="col d-flex" style="width: 99%;">
                                             <quill-editor   class="quill-editor-style card-80em position-relative"
                                                             [styles]="editorStyle"
                                                             [modules]="config"

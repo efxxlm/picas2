@@ -48,6 +48,7 @@
                   </div>
                   <!-- Manejo de materiales e insumos -->
                   <app-manejo-material-insumo [formManejoMaterialInsumo]="formGestionAmbiental.get( 'manejoMaterialInsumo' )"
+                                              [materialInsumo]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
                                               *ngIf=" formGestionAmbiental.get( 'tipoActividad' ).value !== null
                                                       && formGestionAmbiental.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoMaterialInsumo"
                                               class="mt-1em">

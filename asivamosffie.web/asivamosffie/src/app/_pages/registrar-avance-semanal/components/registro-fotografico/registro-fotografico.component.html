@@ -79,7 +79,8 @@
             <button mat-button
                     color="warn"
                     class="btn-guardar"
-                    type="submit">
+                    type="submit"
+                    [disabled]="formRegistroFotografico.dirty === false">
                     <img  src="assets/img/icon/guardar.svg">
             </button>
         </div>

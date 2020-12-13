@@ -55,7 +55,8 @@
             <button mat-button
                     color="warn"
                     class="btn-guardar"
-                    type="submit">
+                    type="submit"
+                    [disabled]="formAlertasRelevantes.dirty === false">
                     <img  src="assets/img/icon/guardar.svg">
             </button>
         </div>

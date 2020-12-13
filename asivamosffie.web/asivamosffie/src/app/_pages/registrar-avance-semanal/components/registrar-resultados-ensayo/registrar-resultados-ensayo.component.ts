@@ -41,6 +41,7 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
 
     crearFormulario() {
         this.formMuestra = this.fb.group({
+            fechaMuestra: [ null ],
             nombreMuestra: [ '' ],
             observaciones: [ null ]
         });

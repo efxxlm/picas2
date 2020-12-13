@@ -85,7 +85,8 @@
         <button mat-button
                 color="warn"
                 class="btn-guardar"
-                type="submit">
+                type="submit"
+                [disabled]="formActividadesRealizadas.dirty === false">
                 <img  src="assets/img/icon/guardar.svg">
         </button>
     </div>

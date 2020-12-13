@@ -9,6 +9,9 @@
 .h-2em {
     height: 2em;
 };
+.h-3em {
+    height: 3em;
+}
 
 .size-table {
     display: inline-block;
@@ -24,4 +27,8 @@
 
 .padding-0em {
     padding: 0em 0em !important;
+}
+
+.flex-table {
+    display: flex !important;
 }

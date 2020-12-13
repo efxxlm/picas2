@@ -18,6 +18,11 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
       .subscribe(
         seguimiento => {
           this.seguimientoSemanal = seguimiento;
+          const flujoInversiontemporal = [];
+          for ( let i = 0; i < 4; i++ ) {
+            flujoInversiontemporal.push( this.seguimientoSemanal.flujoInversion[i] );
+          }
+          this.seguimientoSemanal.flujoInversion = flujoInversiontemporal;
           console.log( this.seguimientoSemanal );
         }
       );
