@@ -2583,6 +2583,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UrlSoporteGestion).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2648,6 +2649,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UrlRegistroFotografico).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
