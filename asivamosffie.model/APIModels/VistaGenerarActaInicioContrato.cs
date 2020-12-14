@@ -57,6 +57,7 @@ namespace asivamosffie.model.APIModels
 
         public Int32? ContratacionId { get; set; }
         public string FechaAprobacionRequisitosSupervisor { get; set; }
+        public DateTime? FechaAprobacionRequisitosSupervisorDate { get; set; }
         public string ProponenteCodigo { get; set; }
         public string ProponenteNombre { get; set; }
         public int PlazoActualContratoMeses { get; set; }

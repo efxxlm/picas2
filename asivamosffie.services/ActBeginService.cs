@@ -2150,6 +2150,7 @@ namespace asivamosffie.services
                         //FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion.ToString("dd/MM/yyyy"),
                         FechaAprobacionGarantiaPoliza = contratoPoliza.FechaAprobacion != null ? Convert.ToDateTime(contratoPoliza.FechaAprobacion).ToString("dd/MM/yyyy") : contratoPoliza.FechaAprobacion.ToString(),
                         FechaAprobacionRequisitosSupervisor = contrato.FechaAprobacionRequisitosConstruccionSupervisor != null ? Convert.ToDateTime(contrato.FechaAprobacionRequisitosConstruccionSupervisor).ToString("dd/MM/yyyy") : contrato.FechaAprobacionRequisitosConstruccionSupervisor.ToString(),
+                        FechaAprobacionRequisitosSupervisorDate = contrato.FechaAprobacionRequisitosConstruccionSupervisor,
 
                         Objeto = strObjetoDisponibilidadPresupuestal,
                         ValorInicialContrato = strValor,

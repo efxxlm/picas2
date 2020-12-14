@@ -130,7 +130,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     this.services.GetVistaGenerarActaInicio(id).subscribe((data:any) => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
-      this.fechaAprobacionSupervisor = data.fechaAprobacionRequisitosSupervisor;
+      this.fechaAprobacionSupervisor = data.fechaAprobacionRequisitosSupervisorDate;
       /*Cuadro 1*/
       this.vigenciaContrato = data.vigenciaContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
