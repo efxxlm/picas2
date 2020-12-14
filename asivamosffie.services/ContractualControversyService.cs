@@ -250,6 +250,18 @@ namespace asivamosffie.services
             return controversiaActuacion;
         }
 
+        public async Task<ActuacionSeguimiento> GetActuacionSeguimientoById(int id)
+        {
+            //ActuacionSeguimiento actuacionSeguimiento
+            ActuacionSeguimiento actuacionSeguimiento = null;
+            actuacionSeguimiento = await _context.ActuacionSeguimiento.FindAsync(id);
+
+            actuacionSeguimiento.NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000");
+            //    NumeroActuacionFormat = "ACT controversia " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
+            
+            return actuacionSeguimiento;
+        }
+
         public async Task<List<ControversiaMotivo>> GetMotivosSolicitudByControversiaContractualId(int id)
         {
 

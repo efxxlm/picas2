@@ -9,5 +9,8 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string NumeroActuacionFormat { get; set; }
 
+        [NotMapped]
+        public string NumeroReclamacion { get; set; }
+
     }
 }

@@ -231,8 +231,18 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _contractualControversy.GetControversiaContractualById(pControversiaContractualId);
             return respuesta;
         }
-                
+
         
+        [Route("GetActuacionSeguimientoById")]
+        [HttpGet]
+
+        public async Task<ActuacionSeguimiento> GetActuacionSeguimientoById(int id)
+        {
+            var respuesta = await _contractualControversy.GetActuacionSeguimientoById(id);
+            return respuesta;
+        }
+
+
         [Route("GetMotivosSolicitudByControversiaId")]
         [HttpGet]
         public async Task<List<ControversiaMotivo>> GetMotivosSolicitudByControversiaId(int id)

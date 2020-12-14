@@ -26,5 +26,6 @@ namespace asivamosffie.model.Models
         public bool RegistroCompleto { get; set; }
 
         public virtual ControversiaActuacion ControversiaActuacion { get; set; }
+        
     }
 }
