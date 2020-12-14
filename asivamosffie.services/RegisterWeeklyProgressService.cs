@@ -602,6 +602,49 @@ namespace asivamosffie.services
                     }
                 }
 
+                //Gestion Seguridad Salud
+                foreach (var SeguimientoSemanalGestionObraSeguridadSalud in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraSeguridadSalud)
+                {
+                    SeguimientoSemanalGestionObraSeguridadSalud.UsuarioCreacion = pUsuarioCreacion;
+                    SeguimientoSemanalGestionObraSeguridadSalud.Eliminado = false;
+                    SeguimientoSemanalGestionObraSeguridadSalud.FechaCreacion = DateTime.Now;
+                    SeguimientoSemanalGestionObraSeguridadSalud.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud);
+
+                    _context.SeguimientoSemanalGestionObraSeguridadSalud.Add(SeguimientoSemanalGestionObraSeguridadSalud);
+
+                    foreach (var SeguridadSaludCausaAccidente in SeguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente)
+                    {
+                        SeguridadSaludCausaAccidente.UsuarioCreacion = pUsuarioCreacion;
+                        SeguridadSaludCausaAccidente.Eliminado = false;
+                        SeguridadSaludCausaAccidente.FechaCreacion = DateTime.Now;
+
+                        _context.SeguridadSaludCausaAccidente.Add(SeguridadSaludCausaAccidente);
+
+                    }
+                }
+
+                //Gestion Obra Social
+                foreach (var SeguimientoSemanalGestionObraSocial in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraSocial)
+                {
+                    SeguimientoSemanalGestionObraSocial.UsuarioCreacion = pUsuarioCreacion;
+                    SeguimientoSemanalGestionObraSocial.Eliminado = false;
+                    SeguimientoSemanalGestionObraSocial.FechaCreacion = DateTime.Now;
+                    SeguimientoSemanalGestionObraSocial.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraSocial(SeguimientoSemanalGestionObraSocial);
+
+                    _context.SeguimientoSemanalGestionObraSocial.Add(SeguimientoSemanalGestionObraSocial);
+                }
+
+                //Gestion Alerta
+                foreach (var SeguimientoSemanalGestionObraAlerta in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAlerta)
+                {
+                    SeguimientoSemanalGestionObraAlerta.UsuarioCreacion = pUsuarioCreacion;
+                    SeguimientoSemanalGestionObraAlerta.Eliminado = false;
+                    SeguimientoSemanalGestionObraAlerta.FechaCreacion = DateTime.Now;
+                    SeguimientoSemanalGestionObraAlerta.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAlerta(SeguimientoSemanalGestionObraAlerta);
+
+                    _context.SeguimientoSemanalGestionObraAlerta.Add(SeguimientoSemanalGestionObraAlerta);
+                }
+
 
                 pSeguimientoSemanalGestionObra.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
                 _context.SeguimientoSemanalGestionObra.Add(pSeguimientoSemanalGestionObra);
@@ -614,7 +657,6 @@ namespace asivamosffie.services
                 //Auditoria
                 seguimientoSemanalGestionObraOld.UsuarioModificacion = pUsuarioCreacion;
                 seguimientoSemanalGestionObraOld.FechaModificacion = DateTime.Now;
-
 
                 //Gestion Ambiental
                 foreach (var SeguimientoSemanalGestionObraAmbiental in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
@@ -873,17 +915,131 @@ namespace asivamosffie.services
                                 ensayoLaboratorioMuestraOld.RegistroCompleto = ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra);
                                 ensayoLaboratorioMuestraOld.UsuarioModificacion = pUsuarioCreacion;
                                 ensayoLaboratorioMuestraOld.FechaModificacion = DateTime.Now;
-                                
+
                                 ensayoLaboratorioMuestraOld.FechaEntregaResultado = EnsayoLaboratorioMuestra.FechaEntregaResultado;
                                 ensayoLaboratorioMuestraOld.NombreMuestra = EnsayoLaboratorioMuestra.NombreMuestra;
-                                ensayoLaboratorioMuestraOld.Observacion = EnsayoLaboratorioMuestra.Observacion; 
-                            }  
+                                ensayoLaboratorioMuestraOld.Observacion = EnsayoLaboratorioMuestra.Observacion;
+                            }
                         }
+                    }
+                }
+
+                //Gestion Seguridad Salud
+                foreach (var SeguimientoSemanalGestionObraSeguridadSalud in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraSeguridadSalud)
+                {
+                    if (SeguimientoSemanalGestionObraSeguridadSalud.SeguimientoSemanalGestionObraSeguridadSaludId == 0)
+                    {
+                        SeguimientoSemanalGestionObraSeguridadSalud.UsuarioCreacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraSeguridadSalud.Eliminado = false;
+                        SeguimientoSemanalGestionObraSeguridadSalud.FechaCreacion = DateTime.Now;
+                        SeguimientoSemanalGestionObraSeguridadSalud.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud);
+
+                        _context.SeguimientoSemanalGestionObraSeguridadSalud.Add(SeguimientoSemanalGestionObraSeguridadSalud);
+
+                        foreach (var SeguridadSaludCausaAccidente in SeguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente)
+                        {
+                            SeguridadSaludCausaAccidente.UsuarioCreacion = pUsuarioCreacion;
+                            SeguridadSaludCausaAccidente.Eliminado = false;
+                            SeguridadSaludCausaAccidente.FechaCreacion = DateTime.Now;
+
+                            _context.SeguridadSaludCausaAccidente.Add(SeguridadSaludCausaAccidente);
+                        }
+                    }
+                    else
+                    {
+                        SeguimientoSemanalGestionObraSeguridadSalud SeguimientoSemanalGestionObraSeguridadSaludOld = _context.SeguimientoSemanalGestionObraSeguridadSalud.Find(SeguimientoSemanalGestionObraSeguridadSalud.SeguimientoSemanalGestionObraSeguridadSaludId);
+
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud);
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.UsuarioModificacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.FechaModificacion = DateTime.Now;
+
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.SeRealizoCapacitacion = SeguimientoSemanalGestionObraSeguridadSalud.SeRealizoCapacitacion;
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.TemaCapacitacion = SeguimientoSemanalGestionObraSeguridadSalud.TemaCapacitacion;
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.SeRealizoRevisionElementosProteccion = SeguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionElementosProteccion;
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.CumpleRevisionElementosProyeccion = SeguimientoSemanalGestionObraSeguridadSalud.CumpleRevisionElementosProyeccion;
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.SeRealizoRevisionSenalizacion = SeguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionSenalizacion;
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.CumpleRevisionSenalizacion = SeguimientoSemanalGestionObraSeguridadSalud.CumpleRevisionSenalizacion;
+                        SeguimientoSemanalGestionObraSeguridadSaludOld.UrlSoporteGestion = SeguimientoSemanalGestionObraSeguridadSalud.UrlSoporteGestion;
+                    }
+                }
+
+                //Gestion Obra Social
+                foreach (var SeguimientoSemanalGestionObraSocial in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraSocial)
+                {
+                    if (SeguimientoSemanalGestionObraSocial.SeguimientoSemanalGestionObraId == 0)
+                    {
+                        SeguimientoSemanalGestionObraSocial.UsuarioCreacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraSocial.Eliminado = false;
+                        SeguimientoSemanalGestionObraSocial.FechaCreacion = DateTime.Now;
+                        SeguimientoSemanalGestionObraSocial.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraSocial(SeguimientoSemanalGestionObraSocial);
+
+                        _context.SeguimientoSemanalGestionObraSocial.Add(SeguimientoSemanalGestionObraSocial);
+                    }
+                    else
+                    {
+                        SeguimientoSemanalGestionObraSocial SeguimientoSemanalGestionObraSocialOld = _context.SeguimientoSemanalGestionObraSocial.Find(SeguimientoSemanalGestionObraSocial.SeguimientoSemanalGestionObraId);
+
+                        SeguimientoSemanalGestionObraSocialOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraSocial(SeguimientoSemanalGestionObraSocial);
+                        SeguimientoSemanalGestionObraSocialOld.UsuarioModificacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraSocialOld.FechaModificacion = DateTime.Now;
+
+                        SeguimientoSemanalGestionObraSocialOld.SeRealizaronReuniones = SeguimientoSemanalGestionObraSocial.SeRealizaronReuniones;
+                        SeguimientoSemanalGestionObraSocialOld.TemaComunidad = SeguimientoSemanalGestionObraSocial.TemaComunidad;
+                        SeguimientoSemanalGestionObraSocialOld.Conclusion = SeguimientoSemanalGestionObraSocial.Conclusion;
+                        SeguimientoSemanalGestionObraSocialOld.CantidadEmpleosDirectos = SeguimientoSemanalGestionObraSocial.CantidadEmpleosDirectos;
+                        SeguimientoSemanalGestionObraSocialOld.CantidadEmpletosIndirectos = SeguimientoSemanalGestionObraSocial.CantidadEmpletosIndirectos;
+                        SeguimientoSemanalGestionObraSocialOld.CantidadTotalEmpleos = SeguimientoSemanalGestionObraSocial.CantidadTotalEmpleos;
+                        SeguimientoSemanalGestionObraSocialOld.UrlSoporteGestion = SeguimientoSemanalGestionObraSocial.UrlSoporteGestion;
+                    }
+                }
+
+                //Gestion Alerta
+                foreach (var SeguimientoSemanalGestionObraAlerta in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAlerta)
+                {
+                    if (SeguimientoSemanalGestionObraAlerta.SeguimientoSemanalGestionObraAlertaId == 0)
+                    {
+                        SeguimientoSemanalGestionObraAlerta.UsuarioCreacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraAlerta.Eliminado = false;
+                        SeguimientoSemanalGestionObraAlerta.FechaCreacion = DateTime.Now;
+                        SeguimientoSemanalGestionObraAlerta.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAlerta(SeguimientoSemanalGestionObraAlerta);
+
+                        _context.SeguimientoSemanalGestionObraAlerta.Add(SeguimientoSemanalGestionObraAlerta);
+                    }
+                    else
+                    {
+                        SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlertaOld = _context.SeguimientoSemanalGestionObraAlerta.Find(SeguimientoSemanalGestionObraAlerta.SeguimientoSemanalGestionObraAlertaId);
+                        seguimientoSemanalGestionObraAlertaOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAlerta(SeguimientoSemanalGestionObraAlerta);
+                        seguimientoSemanalGestionObraAlertaOld.UsuarioModificacion = pUsuarioCreacion;
+                        seguimientoSemanalGestionObraAlertaOld.FechaModificacion = DateTime.Now;
+                        seguimientoSemanalGestionObraAlertaOld.Eliminado = false;
+
+                        seguimientoSemanalGestionObraAlertaOld.SeIdentificaronAlertas = SeguimientoSemanalGestionObraAlerta.SeIdentificaronAlertas;
+                        seguimientoSemanalGestionObraAlertaOld.Alerta = SeguimientoSemanalGestionObraAlerta.Alerta; 
                     }
                 }
 
                 seguimientoSemanalGestionObraOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
             }
+        }
+
+        private bool? ValidarRegistroCompletoSeguimientoSemanalGestionObraAlerta(SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlerta)
+        {
+            return false;
+        }
+
+        private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSocial(SeguimientoSemanalGestionObraSocial seguimientoSemanalGestionObraSocial)
+        {
+            return false;
+        }
+
+        private object ValidarRegistroCompletoSeguridadSaludCausaAccidente(SeguridadSaludCausaAccidente seguridadSaludCausaAccidente)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud seguimientoSemanalGestionObraSeguridadSalud)
+        {
+            return false;
         }
 
         private bool ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra ensayoLaboratorioMuestra)
