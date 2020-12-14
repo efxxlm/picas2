@@ -2063,7 +2063,7 @@ namespace asivamosffie.services
                 {
                     strNumeroDRP1 = disponibilidadPresupuestal.NumeroDrp;
                     //strFechaGeneracionDRP = disponibilidadPresupuestal.FechaDdp.ToString("dd/MM/yyyy");
-                    strFechaGeneracionDRP = disponibilidadPresupuestal.FechaDdp != null ? Convert.ToDateTime(disponibilidadPresupuestal.FechaDdp).ToString("dd/MM/yyyy") : disponibilidadPresupuestal.FechaDdp.ToString();
+                    strFechaGeneracionDRP = disponibilidadPresupuestal.FechaDrp != null ? Convert.ToDateTime(disponibilidadPresupuestal.FechaDrp).ToString("dd/MM/yyyy") : disponibilidadPresupuestal.FechaDrp.ToString();
 
                     strObjetoDisponibilidadPresupuestal = disponibilidadPresupuestal.Objeto;
 

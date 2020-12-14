@@ -143,7 +143,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
       this.observacionOConsideracionesEspeciales = data.objeto;
       this.numeroIdentificacionRepresentanteContratistaInterventoria = data.numeroIdentificacionRepresentanteContratistaInterventoria;
-      this.valorInicialContrato = data.valorInicialContrato;
+      //this.valorInicialContrato = data.valorInicialContrato;
+      this.valorInicialContrato = data.valorActualContrato;
       this.valorActualContrato = data.valorActualContrato;
       this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
       this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
