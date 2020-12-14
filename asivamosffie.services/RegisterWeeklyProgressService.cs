@@ -58,9 +58,10 @@ namespace asivamosffie.services
                    .Include(r => r.SeguimientoDiario)
                           .ThenInclude(r => r.SeguimientoDiarioObservaciones)
 
-                   .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                   .Include(r => r.FlujoInversion)
-                       .ThenInclude(r => r.Programacion)
+                   //.Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                   //.Include(r => r.FlujoInversion)
+                   //    .ThenInclude(r => r.Programacion)
+
                    .Include(r => r.SeguimientoSemanalAvanceFisico)
 
                    //Gestion Obra 
@@ -154,10 +155,11 @@ namespace asivamosffie.services
                  .Include(r => r.SeguimientoDiario)
                         .ThenInclude(r => r.SeguimientoDiarioObservaciones)
 
-                 //mAP SUMA DEL AVANCE POR CAPITULO DESDE SEMANA ACTUAL MIRAR TABLA ? 
-                 .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                 .Include(r => r.FlujoInversion)
-                       .ThenInclude(r => r.Programacion)
+  
+                 //.Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                 //.Include(r => r.FlujoInversion)
+                 //      .ThenInclude(r => r.Programacion)
+
                  .Include(r => r.SeguimientoSemanalAvanceFisico)
 
                  //Gestion Obra 
@@ -598,12 +600,13 @@ namespace asivamosffie.services
                         {
                             SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.UsuarioCreacion = pUsuarioCreacion;
                             SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.Eliminado = false;
-                            //SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.FechaCreacion = DateTime.Now;
+                            SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.FechaCreacion = DateTime.Now;
                             SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
 
                             _context.ManejoResiduosConstruccionDemolicion.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
                             _context.SaveChanges();
                             SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosConstruccionDemolicionId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
+
                         }
                         else
                         {
@@ -627,6 +630,7 @@ namespace asivamosffie.services
 
                             if (ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionGestorId == 0)
                             {
+                                ManejoResiduosConstruccionDemolicionGestor.ManejoResiduosConstruccionDemolicionId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId;
                                 ManejoResiduosConstruccionDemolicionGestor.UsuarioCreacion = pUsuarioCreacion;
                                 ManejoResiduosConstruccionDemolicionGestor.Eliminado = false;
                                 ManejoResiduosConstruccionDemolicionGestor.FechaCreacion = DateTime.Now;
@@ -646,6 +650,7 @@ namespace asivamosffie.services
                                 ManejoResiduosConstruccionDemolicionGestorOld.Url = ManejoResiduosConstruccionDemolicionGestor.Url;
                             }
                         }
+                  
                     }
 
                     //Manejo Residuo Peligrosos Especiales

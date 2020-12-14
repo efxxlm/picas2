@@ -156,8 +156,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -2603,7 +2601,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Observacion).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2623,7 +2620,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Url).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
-                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
