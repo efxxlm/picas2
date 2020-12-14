@@ -109,5 +109,23 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+         
+        [HttpPost]
+        [Route("DeleteResiduosConstruccionDemolicionGestor")]
+        public async Task<IActionResult> DeleteResiduosConstruccionDemolicionGestor([FromQuery] int ResiduosConstruccionDemolicionGestorId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerWeeklyProgressService.DeleteResiduosConstruccionDemolicionGestor(ResiduosConstruccionDemolicionGestorId, HttpContext.User.FindFirst("User").Value);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
     }
 }
