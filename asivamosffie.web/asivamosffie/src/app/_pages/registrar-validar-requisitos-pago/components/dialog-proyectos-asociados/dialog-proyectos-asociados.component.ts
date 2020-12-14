@@ -36,7 +36,6 @@ export class DialogProyectosAsociadosComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   };
 
   applyFilter(event: Event) {

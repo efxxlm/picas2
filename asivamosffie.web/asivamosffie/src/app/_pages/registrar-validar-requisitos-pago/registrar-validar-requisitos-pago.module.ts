@@ -9,11 +9,12 @@ import { RegistrarNuevaSolicitudPagoComponent } from './components/registrar-nue
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DialogProyectosAsociadosComponent } from './components/dialog-proyectos-asociados/dialog-proyectos-asociados.component';
 import { FormCargarFormaDePagoComponent } from './components/form-cargar-forma-de-pago/form-cargar-forma-de-pago.component';
+import { FormRegistrarSolicitudDePagoComponent } from './components/form-registrar-solicitud-de-pago/form-registrar-solicitud-de-pago.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,
