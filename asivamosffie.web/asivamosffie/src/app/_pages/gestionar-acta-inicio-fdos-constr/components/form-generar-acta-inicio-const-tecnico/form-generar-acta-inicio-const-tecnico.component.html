@@ -21,11 +21,11 @@
             <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{this.fechaAprobacionGarantiaPoliza}}</p>
             <p><strong>Objeto:</strong></p>
             <div [innerHtml]="this.objeto"></div>
-            <p><strong>Valor inicial del contrato: </strong>{{this.valorInicialContrato | currency:'':'symbol':'3.0'}}</p>
-            <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato | currency:'':'symbol':'3.0'}}</p>
-            <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion | currency:'':'symbol':'3.0'}}
+            <p><strong>Valor inicial del contrato: </strong>{{this.valorInicialContrato}}</p>
+            <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato}}</p>
+            <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion}}
             </p>
-            <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra | currency:'':'symbol':'3.0'}}</p>
+            <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra}}</p>
             <div *ngIf="this.valorProponente=='1'">
                 <p><strong>Número de identificación del representante legal del contratista de inteventoría:
                 </strong></p>
