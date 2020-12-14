@@ -5,18 +5,21 @@ import { RegistrarValidarRequisitosPagoRoutingModule } from './registrar-validar
 import { MaterialModule } from 'src/app/material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
+import { RegistrarNuevaSolicitudPagoComponent } from './components/registrar-nueva-solicitud-pago/registrar-nueva-solicitud-pago.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
+    MatAutocompleteModule
   ]
 })
 export class RegistrarValidarRequisitosPagoModule { }

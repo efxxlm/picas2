@@ -47,4 +47,7 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
+  registrarNuevaSolicitud(){
+    this.router.navigate(['registrarValidarRequisitosPago/registrarNuevaSolicitudPago'])
+  }
 }

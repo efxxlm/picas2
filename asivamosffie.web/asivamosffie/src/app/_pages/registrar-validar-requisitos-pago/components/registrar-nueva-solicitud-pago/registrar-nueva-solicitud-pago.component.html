@@ -1,0 +1,196 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Registrar nueva solicitud de pago
+    </h1>
+</section>
+<section class="container text-center">
+    <form [formGroup]="addressForm" novalidate>
+        <div class="row" style="margin-top: 2em; justify-content: center;">
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left" for="tipoSolicitud">Tipo de solicitud</label>
+                    </div>
+                    <div class="col">
+                        <mat-form-field class="select-width">
+                            <mat-select formControlName="tipoSolicitud" required>
+                                <mat-option *ngFor="let contr of tiposSolicitudArray" [value]="contr.value">
+                                    {{ contr.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="this.addressForm.value.tipoSolicitud=='1'">
+            <mat-card class="shipping-card ">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text">
+                        Contratos de obra
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="modalidadContrato">Modalidad del contrato</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="modalidadContrato" required>
+                                            <mat-option *ngFor="let contr of modalidadContratoArray"
+                                                [value]="contr.value">
+                                                {{ contr.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="this.addressForm.value.modalidadContrato!=null">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="numeroContrato">Modalidad del contrato</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #numeroContrato type="text" maxlength="100" required
+                                            [matAutocomplete]="auto">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option (click)="seleccionAutocomplete(contr.value)"
+                                                *ngFor="let contr of contratosArray" [value]="contr.name">
+                                                {{contr.name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <input type="hidden" formControlName="numeroContrato">
+                                    </mat-form-field>
+                                    <button mat-button color="primary" class="busqueda--img">
+                                        <img src="assets/img/icon/lupa.svg" alt="Buscar">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div *ngIf="this.addressForm.value.tipoSolicitud=='2'">
+            <mat-card class="shipping-card">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text">
+                        Contratos de interventoría
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="modalidadContrato">Modalidad del contrato</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="modalidadContrato" required>
+                                            <mat-option *ngFor="let contr of modalidadContratoArray"
+                                                [value]="contr.value">
+                                                {{ contr.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="this.addressForm.value.modalidadContrato!=null">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="numeroContrato">Modalidad del contrato</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #numeroContrato type="text" maxlength="100" required
+                                            [matAutocomplete]="auto">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option (click)="seleccionAutocomplete(contr.value)"
+                                                *ngFor="let contr of contratosArray" [value]="contr.name">
+                                                {{contr.name}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <input type="hidden" formControlName="numeroContrato">
+                                    </mat-form-field>
+                                    <button mat-button color="primary" class="busqueda--img">
+                                        <img src="assets/img/icon/lupa.svg" alt="Buscar">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div *ngIf="this.addressForm.value.numeroContrato!=null">
+            <mat-card class="shipping-card var-main-gris">
+                <mat-card-header class="header-card">
+                    <mat-card-title class="header-card--text textoGris">
+                        N801801
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content style="text-align: left;">
+                    <div class="chartGen">
+                        <div class="chart1">
+                            <p><strong>Nombre de entidad contratista:</strong> Interventores S.A</p>
+                            <p><strong>Fecha de inicio del contrato:</strong> 26/09/2020</p>
+                            <p><strong>Plazo fase 1 - Preconstruccion: Meses:</strong> 02 <strong>Días:</strong> 00</p>
+                        </div>
+                        <div class="chart2">
+                            <p><strong>Plazo: Meses:</strong> 06 <strong>Días:</strong> 13</p>
+                            <p><strong>Fecha fin del contrato:</strong> 14/11/2021</p>
+                            <p><strong>Plazo fase 2 - Construccion: Meses:</strong> 05 <strong>Días:</strong> 28</p>
+                        </div>
+                    </div>
+                    <h2 class="card-subTitle">DRP</h2>
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                            <ng-container matColumnDef="drp">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
+                                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.drp }}</b> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="numDrp">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.numDrp }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="valor">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="saldo">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="text-center">
+                <p class="info-container">
+                    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+                    <span class="info-text en-proceso">En proceso</span>
+                    <span class="info-text completo">Completo</span>
+                </p>
+            </div>
+        </div>
+    </form>
+</section>
