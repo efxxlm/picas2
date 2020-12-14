@@ -7,11 +7,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { RegistrarNuevaSolicitudPagoComponent } from './components/registrar-nueva-solicitud-pago/registrar-nueva-solicitud-pago.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { DialogProyectosAsociadosComponent } from './components/dialog-proyectos-asociados/dialog-proyectos-asociados.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,

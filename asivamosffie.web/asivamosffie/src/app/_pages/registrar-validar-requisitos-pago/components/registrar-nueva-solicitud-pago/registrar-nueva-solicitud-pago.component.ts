@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DialogProyectosAsociadosComponent } from '../dialog-proyectos-asociados/dialog-proyectos-asociados.component';
 
 @Component({
   selector: 'app-registrar-nueva-solicitud-pago',
@@ -73,5 +74,13 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
   seleccionAutocomplete(id:any){
     this.addressForm.value.numeroContrato = id;
     this.contratoId = id;
+  }
+  openProyectosAsociados(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '865px';
+    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
+    const dialogRef = this.dialog.open(DialogProyectosAsociadosComponent, dialogConfig);
+    //dialogRef.afterClosed().subscribe(value => {});
   }
 }
