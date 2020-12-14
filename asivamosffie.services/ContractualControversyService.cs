@@ -2194,6 +2194,10 @@ namespace asivamosffie.services
 
                     }
 
+                    int ActuacionSeguimientoIdTmp =0;
+
+                    if(lstActuacionSeguimientoId.Count()>0)
+                     ActuacionSeguimientoIdTmp = lstActuacionSeguimientoId[0];
                     //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     //if (EstadoSolicitudCodigoContratoPoliza != null)
                     //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
@@ -2218,11 +2222,11 @@ namespace asivamosffie.services
 
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
                         ProximaActuacionNombre = strProximaActuacionNombre,
-                        EstadoActuacionReclamacionCodigo = controversia.EstadoActuacionReclamacionCodigo,
+                        EstadoActuacionReclamacionCodigo = (controversia.EstadoActuacionReclamacionCodigo!=null)? controversia.EstadoActuacionReclamacionCodigo :"",
                         EstadoActuacionReclamacion = EstadoActuacionReclamacionTmp,
 
                         
-                        ActuacionSeguimientoId = lstActuacionSeguimientoId[0],
+                        ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
                         //ActuacionSeguimientoId =controversia.ActuacionSeguimientoId,
                         //ControversiaContractualId = controversia.ControversiaContractualId,
                         //NumeroSolicitud = controversia.NumeroSolicitud,
@@ -2236,7 +2240,8 @@ namespace asivamosffie.services
 
                     };
 
-                    lstActuacionSeguimientoId.RemoveAt(0);
+                    if (lstActuacionSeguimientoId.Count() > 0)
+                        lstActuacionSeguimientoId.RemoveAt(0);
                     //if (!(bool)proyecto.RegistroCompleto)
                     //{
                     //    proyectoGrilla.EstadoRegistro = "INCOMPLETO";
