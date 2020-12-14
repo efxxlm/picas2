@@ -196,6 +196,60 @@
                     <span class="info-text completo">Completo</span>
                 </p>
             </div>
+            <div *ngIf="this.addressForm.value.tipoSolicitud=='1'||this.addressForm.value.tipoSolicitud=='2'">
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion-style">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                                Cargar forma de pago
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <app-form-cargar-forma-de-pago></app-form-cargar-forma-de-pago>
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion-style">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                                Registrar solicitud de pago
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        */*/*/*/*/
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion-style">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                                Validar lista de chequeo
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        */*/*/*/*/
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>  
+            <div *ngIf="this.addressForm.value.tipoSolicitud=='3'||this.addressForm.value.tipoSolicitud=='4'">
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion-style">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                                Lista de chequeo
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        */*/*/*/*/
+                    </mat-expansion-panel>
+                </mat-accordion>
+                <mat-accordion>
+                    <mat-expansion-panel class="expansion-style">
+                        <mat-expansion-panel-header class="expansion-style--header">
+                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                                Soporte
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        */*/*/*/*/
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
         </div>
     </form>
 </section>
