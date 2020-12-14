@@ -1338,7 +1338,7 @@ namespace asivamosffie.services
                         //construccionObservacion.EsSupervision = pEsSupervisor;
                         //construccionObservacion.EsActa = pEsActa;
 
-                        //construccionObservacion.UsuarioCreacion = construccionObservacion.UsuarioCreacion;
+                        construccionObservacion.UsuarioCreacion = construccionObservacion.UsuarioCreacion;
                         //construccionObservacion.UsuarioModificacion = construccionObservacion.UsuarioModificacion;
                         //construccionObservacion.EsActa = construccionObservacion.UsuarioModificacion;
                         //construccionObservacion.UsuarioCreacion = pUsuarioModificacion;

@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        {{this.title}} acta de inicio contrato C326326 fase 2 - Construcción
+        {{this.title}} acta de inicio contrato {{this.contratoCode}} fase 2 - Construcción
     </h1>
     <p class="info-sub-title">
         <span>Fecha de aprobación de requisitos: <b>{{this.fechaAprobacionSupervisor}}</b></span>
@@ -34,6 +34,11 @@
                     </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
                 <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
                 <p><strong>Nombre entidad contratista de obra: </strong>{{this.nombreEntidadContratistaObra}}</p>
+                <p><strong>Número de identificación Supervisor:
+                </strong> {{this.contrato.usuarioInterventoria.numeroIdentificacion }}</p>
+            <p><strong>Nombre Supervisor:
+                </strong>{{this.contrato.usuarioInterventoria.nombres}} {{ this.contrato.usuarioInterventoria.apellidos }}
+            </p>
             </div>
             <div *ngIf="this.valorProponente=='2'">
                 <p><strong>Número de identificación del representante legal del contratista de inteventoría:
