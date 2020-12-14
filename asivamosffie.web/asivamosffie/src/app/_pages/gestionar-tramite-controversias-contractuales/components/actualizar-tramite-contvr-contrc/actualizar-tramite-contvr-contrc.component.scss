@@ -53,6 +53,25 @@
     border-top-width: 1px;
     border-top-style: solid;
 }
+.tabs {
+  &--actions {
+      text-align: center;
+      margin-bottom: 3em;
+  }
+
+  &--btn {
+      padding: .5em 2em;
+      width: 25%;
+      box-shadow: none;
+      border: solid 1px #fff;
+
+      &.active {
+          background-color: #0A244F;
+          z-index: 1;
+          color: #fff;
+      }
+  }
+}
 .botones button{
   line-height: 1.2;
   min-height: 33px;
