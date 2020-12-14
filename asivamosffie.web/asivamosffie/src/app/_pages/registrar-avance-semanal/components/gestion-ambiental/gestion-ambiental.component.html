@@ -57,6 +57,7 @@
 
                   <!-- Manejo de residuos de construcción y demolición -->
                   <app-manejo-residuos-construccion [formManejoResiduosConstruccion]="formGestionAmbiental.get( 'manejoResiduosConstruccion' )"
+                                                    [residuosConstruccion]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
                                                     *ngIf=" formGestionAmbiental.get( 'tipoActividad' ).value !== null
                                                             && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
                                                             && formGestionAmbiental.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosConstruccion"
@@ -65,6 +66,7 @@
 
                   <!-- Manejo de residuos peligrosos y especiales -->
                   <app-manejo-residuos-peligrosos [formManejoResiduosPeligrosos]="formGestionAmbiental.get( 'manejoResiduosPeligrosos' )"
+                                                  [residuosPeligrosos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
                                                   *ngIf=" formGestionAmbiental.get( 'tipoActividad' ).value !== null
                                                           && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
                                                           && formGestionAmbiental.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosPeligrosos"
@@ -73,6 +75,7 @@
 
                   <!-- Otros manejos -->
                   <app-otros-manejos  [formOtrosManejos]="formGestionAmbiental.get( 'otra' )"
+                                      [otrosManejos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
                                       *ngIf=" formGestionAmbiental.get( 'tipoActividad' ).value !== null
                                               && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
                                               && formGestionAmbiental.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.otra"

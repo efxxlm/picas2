@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-manejo-residuos-construccion',
@@ -9,6 +11,8 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 export class ManejoResiduosConstruccionComponent implements OnInit {
 
     @Input() formManejoResiduosConstruccion: FormGroup;
+    @Input() residuosConstruccion: any;
+    manejoResiduosConstruccion: any;
     editorStyle = {
         height: '45px'
     };
@@ -26,13 +30,75 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
     ];
 
     get gestorResiduos() {
-        return this.formManejoResiduosConstruccion.get( 'gestorResiduos' ) as FormArray;
+        return this.formManejoResiduosConstruccion.get( 'manejoResiduosConstruccionDemolicionGestor' ) as FormArray;
     }
 
     constructor(
-        private fb: FormBuilder ) { }
+        private fb: FormBuilder,
+        private dialog: MatDialog ) { }
 
     ngOnInit(): void {
+        if ( this.residuosConstruccion !== undefined && this.residuosConstruccion.length > 0 ) {
+            this.manejoResiduosConstruccion = this.residuosConstruccion[0].manejoResiduosConstruccionDemolicion;
+            console.log( this.manejoResiduosConstruccion );
+            this.gestorResiduos.clear();
+            if ( this.manejoResiduosConstruccion === undefined ) {
+                this.gestorResiduos.push(
+                    this.fb.group(
+                        {
+                            manejoResiduosConstruccionDemolicionGestorId: [ 0 ],
+                            manejoResiduosConstruccionDemolicionId: [ 0 ],
+                            nombreGestorResiduos: [ '' ],
+                            tienePermisoAmbiental: [ null ],
+                            url: [ '' ]
+                        }
+                    )
+                );
+            } else {
+                for ( const gestor of this.manejoResiduosConstruccion.manejoResiduosConstruccionDemolicionGestor ) {
+                    this.gestorResiduos.push(
+                        this.fb.group(
+                            {
+                                manejoResiduosConstruccionDemolicionGestorId: gestor.manejoResiduosConstruccionDemolicionGestorId,
+                                manejoResiduosConstruccionDemolicionId: gestor.manejoResiduosConstruccionDemolicionId,
+                                nombreGestorResiduos: gestor.nombreGestorResiduos !== undefined ? gestor.nombreGestorResiduos : '',
+                                tienePermisoAmbiental: gestor.tienePermisoAmbiental !== undefined ? gestor.tienePermisoAmbiental : null,
+                                url: gestor.url !== undefined ? gestor.url : ''
+                            }
+                        )
+                    );
+                }
+                this.formManejoResiduosConstruccion.patchValue(
+                    {
+                        manejoResiduosConstruccionDemolicionId: this.manejoResiduosConstruccion.manejoResiduosConstruccionDemolicionId,
+                        estaCuantificadoRCD:    this.manejoResiduosConstruccion.estaCuantificadoRCD !== undefined
+                                                ? this.manejoResiduosConstruccion.estaCuantificadoRCD : null,
+                        requiereObservacion:    this.manejoResiduosConstruccion.requiereObservacion !== undefined
+                                                ? this.manejoResiduosConstruccion.requiereObservacion : null,
+                        observacion:    this.manejoResiduosConstruccion.observacion !== undefined
+                                        ? this.manejoResiduosConstruccion.observacion : null,
+                        seReutilizadorResiduos: this.manejoResiduosConstruccion.seReutilizadorResiduos !== undefined
+                                                ? this.manejoResiduosConstruccion.seReutilizadorResiduos : null,
+                        cantidadToneladas:  this.manejoResiduosConstruccion.cantidadToneladas !== undefined
+                                            ? this.manejoResiduosConstruccion.cantidadToneladas : ''
+
+                    }
+                );
+            }
+        }
+        if ( this.residuosConstruccion !== undefined && this.residuosConstruccion.length === 0 ) {
+            this.gestorResiduos.push(
+                this.fb.group(
+                    {
+                        manejoResiduosConstruccionDemolicionGestorId: [ 0 ],
+                        manejoResiduosConstruccionDemolicionId: [ 0 ],
+                        nombreGestorResiduos: [ '' ],
+                        tienePermisoAmbiental: [ null ],
+                        url: [ '' ]
+                    }
+                )
+            );
+        }
     }
 
     validateNumber( value: string, campoForm: string ) {
@@ -55,20 +121,57 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
         }
     }
 
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open( ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    openDialogTrueFalse(modalTitle: string, modalText: string) {
+      const dialogRef = this.dialog.open( ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle, modalText, siNoBoton: true }
+      });
+      return dialogRef.afterClosed();
+    }
+
     addGestor() {
         this.gestorResiduos.push(
             this.fb.group(
                 {
-                    gestorResiduosConstruccion: [ '' ],
-                    presentaPermisoAmbientalValido: [ null ],
-                    urlSoporte: [ '' ]
+                    manejoResiduosConstruccionDemolicionGestorId: [ 0 ],
+                    manejoResiduosConstruccionDemolicionId: [ 0 ],
+                    nombreGestorResiduos: [ '' ],
+                    tienePermisoAmbiental: [ null ],
+                    url: [ '' ]
                 }
             )
         );
     }
 
     deleteGestor( index: number ) {
-        this.gestorResiduos.removeAt( index );
+        if ( this.gestorResiduos.at( index ).get( 'manejoResiduosConstruccionDemolicionGestorId' ).value === 0 ) {
+            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+                .subscribe(
+                    value => {
+                        if ( value === true ) {
+                            this.gestorResiduos.removeAt( index );
+                            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                        }
+                    }
+                );
+        } else {
+            // Servicio por integrar
+            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
+                .subscribe(
+                    value => {
+                        if ( value === true ) {
+                            this.openDialog( '', '<b>Servicio por integrar.</b>' );
+                        }
+                    }
+                );
+        }
     }
 
 }

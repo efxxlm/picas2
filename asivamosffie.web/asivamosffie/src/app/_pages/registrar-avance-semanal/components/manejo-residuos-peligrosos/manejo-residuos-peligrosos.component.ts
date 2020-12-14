@@ -9,6 +9,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class ManejoResiduosPeligrososComponent implements OnInit {
 
     @Input() formManejoResiduosPeligrosos: FormGroup;
+    @Input() residuosPeligrosos: any;
+    manejoResiduosPeligrosos: any;
     editorStyle = {
         height: '45px'
     };
@@ -28,6 +30,25 @@ export class ManejoResiduosPeligrososComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
+        if ( this.residuosPeligrosos !== undefined && this.residuosPeligrosos.length > 0 ) {
+            this.manejoResiduosPeligrosos = this.residuosPeligrosos[0].manejoResiduosPeligrososEspeciales;
+            console.log( this.manejoResiduosPeligrosos );
+            if ( this.manejoResiduosPeligrosos !== undefined ) {
+                this.formManejoResiduosPeligrosos.setValue(
+                    {
+                        manejoResiduosPeligrososEspecialesId: this.manejoResiduosPeligrosos.manejoResiduosPeligrososEspecialesId,
+                        estanClasificados:  this.manejoResiduosPeligrosos.estanClasificados !== undefined
+                                            ? this.manejoResiduosPeligrosos.estanClasificados : null,
+                        requiereObservacion:    this.manejoResiduosPeligrosos.requiereObservacion !== undefined
+                                                ? this.manejoResiduosPeligrosos.requiereObservacion : null,
+                        observacion:    this.manejoResiduosPeligrosos.observacion !== undefined
+                                        ? this.manejoResiduosPeligrosos.observacion : null,
+                        urlRegistroFotografico: this.manejoResiduosPeligrosos.urlRegistroFotografico !== undefined
+                                                ? this.manejoResiduosPeligrosos.urlRegistroFotografico : ''
+                    }
+                );
+            }
+        }
     }
 
     maxLength(e: any, n: number) {

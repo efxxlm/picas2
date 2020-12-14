@@ -8,7 +8,7 @@
             <div class="col d-flex">
                 <section style="width: 100%;">
                     <mat-form-field appearance="fill">
-                      <mat-select class="padding-left" formControlName="esRcdCuantificado" required>
+                      <mat-select class="padding-left" formControlName="estaCuantificadoRCD" required>
                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
                           {{requisito.viewValue}}
                         </mat-option>
@@ -29,7 +29,7 @@
             <div class="col d-flex">
                 <section style="width: 100%;">
                     <mat-form-field appearance="fill">
-                      <mat-select class="padding-left" formControlName="requiereObservacionSobreManejo" required>
+                      <mat-select class="padding-left" formControlName="requiereObservacion" required>
                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
                           {{requisito.viewValue}}
                         </mat-option>
@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="formManejoResiduosConstruccion.get( 'requiereObservacionSobreManejo' ).value === true">
+    <div class="row" *ngIf="formManejoResiduosConstruccion.get( 'requiereObservacion' ).value === true">
         <div class="col-md-12">
           <div>
             <div class="pr-1">
@@ -52,14 +52,14 @@
                                 [styles]="editorStyle"
                                 [modules]="config"
                                 (onContentChanged)="maxLength($event, 400)"
-                                formControlName="observacionManejoResiduos"
+                                formControlName="observacion"
                                 #obsResiduosConstruccion
                                 required>
                 </quill-editor>
-                <span class="contador miles" *ngIf="formManejoResiduosConstruccion.get('observacionManejoResiduos').value !== null" style="margin-top: 3.5em;">
+                <span class="contador miles" *ngIf="formManejoResiduosConstruccion.get('observacion').value !== null" style="margin-top: 3.5em;">
                     {{400 - textoLimpio( obsResiduosConstruccion.quillEditor, 400 )}}
                 </span>
-                <span class="contador miles" *ngIf="formManejoResiduosConstruccion.get('observacionManejoResiduos').value === null" style="margin-top: 3.5em;">
+                <span class="contador miles" *ngIf="formManejoResiduosConstruccion.get('observacion').value === null" style="margin-top: 3.5em;">
                     400
                 </span>
             </div>
@@ -85,10 +85,10 @@
                     <div class="col d-flex">
                         <section style="width: 100%;">
                             <mat-form-field>
-                                <input matInput type="text" maxlength="50" formControlName="gestorResiduosConstruccion" required>
+                                <input matInput type="text" maxlength="50" formControlName="nombreGestorResiduos" required>
                             </mat-form-field>
                         </section>
-                        <span class="contador">{{50 - residuo.get( 'gestorResiduosConstruccion' ).value.length}}</span>
+                        <span class="contador">{{50 - residuo.get( 'nombreGestorResiduos' ).value.length}}</span>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                 <div class="col d-flex">
                     <section style="width: 100%;">
                         <mat-form-field appearance="fill">
-                          <mat-select class="padding-left" formControlName="presentaPermisoAmbientalValido" required>
+                          <mat-select class="padding-left" formControlName="tienePermisoAmbiental" required>
                             <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
                               {{requisito.viewValue}}
                             </mat-option>
@@ -125,7 +125,7 @@
                     <mat-form-field style="width: 98%;">
                         <input  matInput
                                 type="text"
-                                formControlName="urlSoporte">
+                                formControlName="url">
                     </mat-form-field>
                 </div>
                 <div class="d-flex justify-content-center size-text-descriptivo">
@@ -148,7 +148,7 @@
                                 type="button"
                                 class="btn-eliminar"
                                 (click)="deleteGestor( i )"
-                                *ngIf="gestorResiduos.length > 1 && i > 0">
+                                *ngIf="gestorResiduos.length > 1">
                                 <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
                                 Eliminar gestor de residuos
                         </button>
@@ -176,7 +176,7 @@
             <div class="col d-flex" style="width: 15%;">
                 <section style="width: 100%;">
                     <mat-form-field appearance="fill">
-                      <mat-select class="padding-left" formControlName="seReutilizaronLosResiduos" required>
+                      <mat-select class="padding-left" formControlName="seReutilizadorResiduos" required>
                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
                           {{requisito.viewValue}}
                         </mat-option>
@@ -188,7 +188,7 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="formManejoResiduosConstruccion.get( 'seReutilizaronLosResiduos' ).value === true">
+    <div class="row" *ngIf="formManejoResiduosConstruccion.get( 'seReutilizadorResiduos' ).value === true">
         <div class="col-md-12">
             <div class="row">
                 <div class="pr-1">
@@ -200,12 +200,12 @@
                             <input  matInput
                                     type="text"
                                     maxlength="3"
-                                    formControlName="cantidad"
-                                    (ngModelChange)="validateNumber( $event, 'cantidad' )"
+                                    formControlName="cantidadToneladas"
+                                    (ngModelChange)="validateNumber( $event, 'cantidadToneladas' )"
                                     required>
                         </mat-form-field>
                     </section>
-                    <span class="contador">{{3 - formManejoResiduosConstruccion.get( 'cantidad' ).value.length}}</span>
+                    <span class="contador">{{3 - formManejoResiduosConstruccion.get( 'cantidadToneladas' ).value.length}}</span>
                 </div>
             </div>
         </div>

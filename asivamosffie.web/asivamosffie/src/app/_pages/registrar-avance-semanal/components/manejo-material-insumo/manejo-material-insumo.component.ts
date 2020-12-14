@@ -44,28 +44,39 @@ export class ManejoMaterialInsumoComponent implements OnInit {
             this.manejoMaterialInsumo = this.materialInsumo[0].manejoMaterialesInsumo;
             console.log( this.manejoMaterialInsumo );
             this.proveedores.clear();
-            for ( const proveedor of this.manejoMaterialInsumo.manejoMaterialesInsumosProveedor ) {
-                this.proveedores.push( this.fb.group(
-                    {
-                        proveedor: proveedor.proveedor !== undefined ? proveedor.proveedor : '',
-                        requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros ?
-                                                            proveedor.requierePermisosAmbientalesMineros : null,
-                        urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : '',
-                        manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId,
-                        manejoMaterialesInsumosId: proveedor.manejoMaterialesInsumosId
-                    }
-                ) );
+            if ( this.manejoMaterialInsumo === undefined ) {
+                this.proveedores.push(
+                    this.fb.group({
+                        proveedor: [ '' ],
+                        requierePermisosAmbientalesMineros: [ null ],
+                        urlRegistroFotografico: [ '' ],
+                        manejoMaterialesInsumosProveedorId: [ 0 ],
+                        manejoMaterialesInsumosId: [ 0 ]
+                    })
+                );
+            } else {
+                for ( const proveedor of this.manejoMaterialInsumo.manejoMaterialesInsumosProveedor ) {
+                    this.proveedores.push( this.fb.group(
+                        {
+                            proveedor: proveedor.proveedor !== undefined ? proveedor.proveedor : '',
+                            requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros ?
+                                                                proveedor.requierePermisosAmbientalesMineros : null,
+                            urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : '',
+                            manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId,
+                            manejoMaterialesInsumosId: proveedor.manejoMaterialesInsumosId
+                        }
+                    ) );
+                }
+                this.formManejoMaterialInsumo.patchValue( {
+                    manejoMaterialesInsumosId: this.manejoMaterialInsumo.manejoMaterialesInsumosId,
+                    estanProtegidosDemarcadosMateriales:    this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales !== undefined
+                                                            ? this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales : null,
+                    requiereObservacion:    this.manejoMaterialInsumo.requiereObservacion !== undefined
+                                            ? this.manejoMaterialInsumo.requiereObservacion : null,
+                    observacion: this.manejoMaterialInsumo.observacion !== undefined ? this.manejoMaterialInsumo.observacion : null,
+                    url: this.manejoMaterialInsumo.url !== undefined ? this.manejoMaterialInsumo.url : null
+                } );
             }
-            console.log( this.proveedores.value );
-            this.formManejoMaterialInsumo.patchValue( {
-                manejoMaterialesInsumosId: this.manejoMaterialInsumo.manejoMaterialesInsumosId,
-                estanProtegidosDemarcadosMateriales:    this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales !== undefined
-                                                        ? this.manejoMaterialInsumo.estanProtegidosDemarcadosMateriales : null,
-                requiereObservacion:    this.manejoMaterialInsumo.requiereObservacion !== undefined
-                                        ? this.manejoMaterialInsumo.requiereObservacion : null,
-                observacion: this.manejoMaterialInsumo.observacion !== undefined ? this.manejoMaterialInsumo.observacion : null,
-                url: this.manejoMaterialInsumo.url !== undefined ? this.manejoMaterialInsumo.url : null
-            } );
         }
         if ( this.manejoMaterialInsumo !== undefined && this.materialInsumo.length === 0 ) {
             this.proveedores.push(

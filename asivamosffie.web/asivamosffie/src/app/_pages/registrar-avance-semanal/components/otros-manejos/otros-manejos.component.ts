@@ -9,6 +9,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export class OtrosManejosComponent implements OnInit {
 
     @Input() formOtrosManejos: FormGroup;
+    @Input() otrosManejos: any;
+    otros: any;
     editorStyle = {
         height: '45px'
     };
@@ -24,6 +26,20 @@ export class OtrosManejosComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
+        if ( this.otrosManejos !== undefined && this.otrosManejos.length > 0 ) {
+            this.otros = this.otrosManejos[0].manejoOtro;
+            console.log( this.otros );
+            if ( this.otros !== undefined ) {
+                this.formOtrosManejos.setValue(
+                    {
+                        manejoOtroId: this.otros.manejoOtroId,
+                        fechaActividad: this.otros.fechaActividad !== undefined ? this.otros.fechaActividad : null,
+                        actividad: this.otros.actividad !== undefined ? this.otros.actividad : null,
+                        urlSoporteGestion: this.otros.urlSoporteGestion !== undefined ? this.otros.urlSoporteGestion : ''
+                    }
+                );
+            }
+        }
     }
 
     maxLength(e: any, n: number) {
