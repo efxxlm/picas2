@@ -14,7 +14,7 @@ export class ContractualControversyService implements OnInit{
 
   }
   GetPlantillaControversiaContractual(pContratoId: number){
-    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetPlantillaControversiaContractual?pContratoId=${pContratoId}`);
+    return this.http.get(`${environment.apiUrl}/ContractualControversy/GetPlantillaControversiaContractual?pContratoId=${pContratoId}`,{ responseType: "blob" });
   }
   CreateEditarControversiaTAI(controversiaContractual: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarControversiaTAI`, controversiaContractual);

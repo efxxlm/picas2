@@ -78,5 +78,16 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   verDetalleButton(id) {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleControversia', id]);
   }
-
+  descargarProcesoControversia(id){
+    this.services.GetPlantillaControversiaContractual(id).subscribe((esPdf:any)=>{
+      const documento = `Prueba.pdf`; // Valor de prueba
+      const text = documento,
+      blob = new Blob([esPdf], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
+  }
 }
