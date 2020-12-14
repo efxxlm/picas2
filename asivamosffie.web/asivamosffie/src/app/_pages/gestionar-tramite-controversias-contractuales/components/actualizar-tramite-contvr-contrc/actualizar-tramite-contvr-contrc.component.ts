@@ -13,6 +13,8 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
   public fechaSolicitud;
   public codigoSolicitud;
   public numeroContrato;
+  opcion1 = false;
+  opcion2 = false;
   constructor(private services: ContractualControversyService) { }
 
   ngOnInit(): void {
