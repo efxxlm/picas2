@@ -1814,7 +1814,7 @@ namespace asivamosffie.services
         }
 
         //public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId )
-        public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId)
+        public async Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId, int pUserId)
         {
             VistaGenerarActaInicioContrato actaInicioConsolidado = new VistaGenerarActaInicioContrato();
 
@@ -1826,11 +1826,11 @@ namespace asivamosffie.services
             
             //DOM 14 1   Obra            
             pTipoContrato = 1;
-            actaInicioObra = await getDataActaInicioAsync(pContratoId, pTipoContrato);
+            actaInicioObra = await getDataActaInicioAsync(pContratoId, pTipoContrato, pUserId);
             
             //DOM 14 2   Interventoría
             pTipoContrato = 2;
-            actaInicioInterventoria = await getDataActaInicioAsync(pContratoId, pTipoContrato);
+            actaInicioInterventoria = await getDataActaInicioAsync(pContratoId, pTipoContrato, pUserId);
 
             actaInicioConsolidado = await GetDataConsolidadoActaInicioAsync(actaInicioObra, actaInicioInterventoria);
             
@@ -1893,7 +1893,7 @@ namespace asivamosffie.services
 
         }
 
-        private async Task<VistaGenerarActaInicioContrato> getDataActaInicioAsync(int pContratoId, int pTipoContrato)
+        private async Task<VistaGenerarActaInicioContrato> getDataActaInicioAsync(int pContratoId, int pTipoContrato, int pUserId = 0)
         {
             //VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato();
             VistaGenerarActaInicioContrato actaInicio ;
@@ -1948,6 +1948,7 @@ namespace asivamosffie.services
                     //strContratoObservacion = contrato.Observaciones;
 
                     contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                    contrato.UsuarioInterventoria = _context.Usuario.Find(pUserId);
                     Supervisor = contrato.UsuarioInterventoria;
 
                 }
@@ -2200,6 +2201,7 @@ namespace asivamosffie.services
                         //RegistroCompleto = contrato.RegistroCompleto
 
                         //,EstadoRegistro = "COMPLETO"
+                        Contrato = contrato,
                     };
 
                 //if (!(bool)proyecto.RegistroCompleto)

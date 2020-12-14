@@ -57,6 +57,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   public plazoActualContratoDias;
   public plazoEjecucionPreConstruccionMeses;
   public plazoEjecucionPreConstruccionDias;
+  public contrato;
 
   fechaSesionString: string;
   fechaSesion: Date;
@@ -154,6 +155,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.plazoActualContratoDias = data.plazoActualContratoDias;
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
+      this.contrato = data.contrato;
       /*Campo de texto editable*/
       if(this.editable == true){
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase2DateTime);

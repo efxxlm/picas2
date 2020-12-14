@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using asivamosffie.model.Models;
 
 namespace asivamosffie.model.APIModels
 {
@@ -64,5 +65,7 @@ namespace asivamosffie.model.APIModels
         public int PlazoActualContratoDias { get; set; }
         public string RutaActaSuscrita { get; set; }
         public string NumeroIdentificacionSupervisor { get; set; }
+
+        public Contrato Contrato { get; set; }
     }
 }

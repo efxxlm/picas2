@@ -15,7 +15,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId);
 
-        Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId);
+        Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId, int pUserId);
 
         Task GetDocumentoNoCargadoValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
 

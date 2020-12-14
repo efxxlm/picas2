@@ -27,6 +27,15 @@
             </p>
             <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra | currency:'COP':'symbol-narrow':'.0-0'}}</p>
             <div *ngIf="this.valorProponente=='1'">
+                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                </strong></p>
+            <p><strong>Nombre del representante legal del contratista de interventoría:
+                </strong> </p>
+            <p><strong>Número de identificación del contratista de interventoría:
+                </strong> {{this.contrato.usuarioInterventoria.numeroIdentificacion }}</p>
+            <p><strong>Nombre de la entidad contratista de interventoría:
+                </strong>{{this.contrato.usuarioInterventoria.nombres}} {{ this.contrato.usuarioInterventoria.apellidos }}
+            </p>
                 <p><strong>Número de identificación del representante legal del contratista de obra:
                     </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria}}</p>
                 <p><strong>Nombre del representante legal del contratista de obra:

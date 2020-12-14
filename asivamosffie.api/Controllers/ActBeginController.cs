@@ -34,7 +34,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _ActBegin.GetListVistaGenerarActaInicio(pContratoId);
+                int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+                return await _ActBegin.GetListVistaGenerarActaInicio(pContratoId, pUserId);
             }
             catch (Exception ex)
             {
