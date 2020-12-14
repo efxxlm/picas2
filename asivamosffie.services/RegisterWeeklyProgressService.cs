@@ -120,15 +120,25 @@ namespace asivamosffie.services
                     FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaInicio - FlujoInversion.Programacion.FechaFin).TotalDays;
                 }
 
+           
+               //Eliminar del get Las tablas eliminadas Logicamente
                 foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
                 {
                     foreach (var SeguimientoSemanalGestionObraAmbiental in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
-                    {
+                    {    
+                        //No incluir los ManejoMaterialesInsumosProveedor eliminados
                         if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Count() > 0)
                             SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Where(r => !(bool)r.Eliminado).ToList();
+                        //No incluir los Manejo Residuos Construccion Demolicion Gestor eliminados
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
+                            SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Where(r => !(bool)r.Eliminado).ToList();
+
                     }
                 }
-                 
+
+
+
+
                 Localizacion Municipio = ListLocalizacion.Where(r => r.LocalizacionId == seguimientoSemanal.ContratacionProyecto.Proyecto.LocalizacionIdMunicipio).FirstOrDefault();
                 InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == seguimientoSemanal.ContratacionProyecto.Proyecto.SedeId).FirstOrDefault();
                 InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
@@ -155,7 +165,7 @@ namespace asivamosffie.services
                  .Include(r => r.SeguimientoDiario)
                         .ThenInclude(r => r.SeguimientoDiarioObservaciones)
 
-  
+
                  //.Include(r => r.SeguimientoSemanalAvanceFinanciero)
                  //.Include(r => r.FlujoInversion)
                  //      .ThenInclude(r => r.Programacion)
@@ -338,7 +348,7 @@ namespace asivamosffie.services
             try
             {
                 ManejoMaterialesInsumosProveedor manejoMaterialesInsumosProveedorDelete = _context.ManejoMaterialesInsumosProveedor.Find(ManejoMaterialesInsumosProveedorId);
- 
+
                 if (manejoMaterialesInsumosProveedorDelete == null)
                 {
                     return new Respuesta
@@ -407,7 +417,7 @@ namespace asivamosffie.services
                 if (pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.Count() > 0)
                     SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
-                
+
                 await _context.SaveChangesAsync();
 
                 return new Respuesta
@@ -626,7 +636,7 @@ namespace asivamosffie.services
                                 ManejoMaterialesInsumosProveedor.FechaCreacion = DateTime.Now;
                                 ManejoMaterialesInsumosProveedor.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor);
 
-                                _context.ManejoMaterialesInsumosProveedor.Add(ManejoMaterialesInsumosProveedor); 
+                                _context.ManejoMaterialesInsumosProveedor.Add(ManejoMaterialesInsumosProveedor);
                             }
                             else
                             {
@@ -699,7 +709,7 @@ namespace asivamosffie.services
                                 ManejoResiduosConstruccionDemolicionGestorOld.Url = ManejoResiduosConstruccionDemolicionGestor.Url;
                             }
                         }
-                  
+
                     }
 
                     //Manejo Residuo Peligrosos Especiales
@@ -712,11 +722,11 @@ namespace asivamosffie.services
                             SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.FechaCreacion = DateTime.Now;
                             SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.RegistroCompleto = ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales);
 
-                            _context.ManejoResiduosPeligrososEspeciales.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales); 
+                            _context.ManejoResiduosPeligrososEspeciales.Add(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales);
                             _context.SaveChanges();
-  
+
                             SeguimientoSemanalGestionObraAmbientalOld.ManejoResiduosPeligrososEspecialesId = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.ManejoResiduosPeligrososEspecialesId;
-                         }
+                        }
                         else
                         {
                             ManejoResiduosPeligrososEspeciales ManejoResiduosPeligrososEspecialesOld = _context.ManejoResiduosPeligrososEspeciales.Find(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.ManejoResiduosPeligrososEspecialesId);
@@ -741,7 +751,7 @@ namespace asivamosffie.services
                             SeguimientoSemanalGestionObraAmbiental.ManejoOtro.Eliminado = false;
                             SeguimientoSemanalGestionObraAmbiental.ManejoOtro.FechaCreacion = DateTime.Now;
                             SeguimientoSemanalGestionObraAmbiental.ManejoOtro.RegistroCompleto = ValidarRegistroCompletoManejoOtro(SeguimientoSemanalGestionObraAmbiental.ManejoOtro);
-                            
+
                             _context.ManejoOtro.Add(SeguimientoSemanalGestionObraAmbiental.ManejoOtro);
                             _context.SaveChanges();
                             SeguimientoSemanalGestionObraAmbientalOld.ManejoOtroId = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.ManejoOtroId;
