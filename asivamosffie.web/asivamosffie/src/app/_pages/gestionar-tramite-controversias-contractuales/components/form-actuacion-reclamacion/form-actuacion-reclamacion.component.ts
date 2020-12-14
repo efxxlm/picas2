@@ -43,25 +43,18 @@ export class FormActuacionReclamacionComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isEditable == true) {
-      if (this.isEditable == true) {
-        this.services.GetControversiaActuacionById(1).subscribe((data: any) => {
-          const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
-          this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
-          this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacion);
-          this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantadaCodigo);
-          this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacionCodigo);
-          this.addressForm.get('cualOtro').setValue(data.actuacionAdelantadaOtro);
-          this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento.toString());
-          this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
-          this.addressForm.get('participacionContratista').setValue(data.esRequiereContratista);
-          this.addressForm.get('participacionInterventorContrato').setValue(data.esRequiereInterventor);
-          this.addressForm.get('participacionSupervisorContrato').setValue(data.esRequiereSupervisor);
-          this.addressForm.get('participacionFiduciaria').setValue(data.esRequiereFiduciaria);
-          this.addressForm.get('requiereComiteTecnico').setValue(data.esRequiereComite);
-          this.addressForm.get('observaciones').setValue(data.observaciones);
-          this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
-        });
-      }
+      this.services.GetActuacionSeguimientoById(this.idReclamacionActuacion).subscribe((data: any) => {
+        const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoReclamacionCodigo);
+        this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacionAdelantada);
+        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada);
+        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacion);
+        this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento);
+        this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
+        this.addressForm.get('definitvoAseguradora').setValue(data.esResultadoDefinitivo);
+        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+      });
     }
     this.common.listaEstadosAvanceTramite().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
@@ -102,7 +95,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
         "ProximaActuacion": this.addressForm.value.proximaActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
         "EstadoDerivadaCodigo": "1",
-        "RutaSoporte":  this.addressForm.value.urlSoporte,
+        "RutaSoporte": this.addressForm.value.urlSoporte,
         "FechaCreacion": "2020-01-01",
         "UsuarioCreacion": "us cre",
         "UsuarioModificacion": "us modif",
@@ -119,7 +112,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
       actuacionTaiArray = {
         "ControversiaActuacionId": this.reclamacionID,
         "SeguimientoCodigo": true,
-        "EstadoReclamacionCodigo":  this.addressForm.value.estadoAvanceTramite.codigo,
+        "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
         "ProximaActuacion": this.addressForm.value.proximaActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-verdetalle-reclamacion-actuacion-cc',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerdetalleReclamacionActuacionCcComponent implements OnInit {
 
-  constructor() { }
+  constructor(private services: ContractualControversyService) { }
 
   ngOnInit(): void {
   }
