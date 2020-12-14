@@ -42,9 +42,13 @@ export class FormActuacionReclamacionComponent implements OnInit {
   constructor(private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
+    this.common.listaEstadosAvanceTramite().subscribe(rep => {
+      this.estadoAvanceTramiteArrayDom = rep;
+    });
     if (this.isEditable == true) {
       this.services.GetActuacionSeguimientoById(this.idReclamacionActuacion).subscribe((data: any) => {
         const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoReclamacionCodigo);
+        console.log( this.estadoAvanceTramiteArrayDom.filter(t => t.codigo === data.estadoReclamacionCodigo));
         this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
         this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacionAdelantada);
         this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada);
@@ -56,9 +60,6 @@ export class FormActuacionReclamacionComponent implements OnInit {
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
       });
     }
-    this.common.listaEstadosAvanceTramite().subscribe(rep => {
-      this.estadoAvanceTramiteArrayDom = rep;
-    });
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
