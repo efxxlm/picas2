@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-control-y-tabla-actuacion-mt',
@@ -10,6 +11,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./control-y-tabla-actuacion-mt.component.scss']
 })
 export class ControlYTablaActuacionMtComponent implements OnInit {
+
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -21,31 +23,18 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
     'estadoActuacion',
     'gestion',
   ];
-  dataTable: any[] = [
-    {
-      fechaActualizacion: '20/08/2020',
-      actuacion: 'Actuación 1',
-      numeroActuacion: 'ACT_MT 0001',
-      estadoRegistro: '1',
-      estadoActuacion: '1',
-      id: 1
-    },
-    {
-      fechaActualizacion: '21/08/2020',
-      actuacion: 'Actuación 2',
-      numeroActuacion: 'ACT_MT 0002',
-      estadoRegistro: '2',
-      estadoActuacion: '2',
-      id: 2
-    }
-  ]; 
-  constructor(private router: Router) { }
+  dataTable: any[] = [];  
+  public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
+  constructor(private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.services.GetListGrillaControversiaActuacion(this.reclamacionId,true).subscribe((data:any)=>{
+      this.dataTable = data;
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    });
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
