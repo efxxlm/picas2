@@ -47,7 +47,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   plazoEjecucionConstrM: number;
   plazoEjecucionConstrD: number;
   observacionID: any;
-  contrato?: Contrato;
+  contrato?: any;
 
   fechaSesionString: string;
   fechaSesion: Date;
