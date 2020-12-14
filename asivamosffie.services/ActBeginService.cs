@@ -43,9 +43,8 @@ namespace asivamosffie.services
         {
             Respuesta _response = new Respuesta();
 
-            //            ConObervacionesActa - Contrato
             Contrato contrato;
-            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
+
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
             int idAccionCrearActaInicio = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Tiene_Observaciones_Acta_Inicio_Fase2, (int)EnumeratorTipoDominio.Acciones);
@@ -55,7 +54,6 @@ namespace asivamosffie.services
                 contrato.FechaModificacion = DateTime.Now;
                 contrato.UsuarioModificacion = pUsuarioModificacion;
                 contrato.ConObervacionesActa = true;
-                //contrato.Observaciones = pObservacionesActa;
 
                 ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
 
@@ -72,26 +70,14 @@ namespace asivamosffie.services
                 construccionObservacion.EsSupervision = pEsSupervisor;
                 construccionObservacion.EsActa = pEsActa;
 
-                //construccionObservacion.UsuarioCreacion = construccionObservacion.UsuarioCreacion;
-                //construccionObservacion.UsuarioModificacion = construccionObservacion.UsuarioModificacion;
-                //construccionObservacion.EsActa = construccionObservacion.UsuarioModificacion;
                 construccionObservacion.UsuarioCreacion = pUsuarioModificacion;
                 construccionObservacion.FechaCreacion = DateTime.Now;
 
                 ContratoConstruccion contratoConstruccion = null;
                 contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
                 construccionObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
-                //ContratoObservacion contratoObservacion=new ContratoObservacion();
-                //contratoObservacion.Observaciones = pObservacionesActa;
-                //contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
-                //contratoObservacion.FechaCreacion = DateTime.Now;
-                //contratoObservacion.EsActa = true;
-                //contratoObservacion.EsActaFase2 = true;
-                //contratoObservacion.ContratoId = pContratoId;
 
-                //_context.ContratoObservacion.Add(contratoObservacion);
                 _context.ConstruccionObservacion.Add(construccionObservacion);
-                //await _context.SaveChangesAsync();
 
                 //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
                 //DOM 60  1   Sin acta generada
@@ -120,15 +106,12 @@ namespace asivamosffie.services
                 return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.ErrorInterno, Message = ex.InnerException.ToString().Substring(0, 500) };
             }
         }
-        //_context.Add(contratoPoliza);
 
         public async Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
         {
             Respuesta _response = new Respuesta();
 
-            //            ConObervacionesActa - Contrato
             Contrato contrato;
-            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
             ContratoObservacion contratoObservacion = new ContratoObservacion();
@@ -139,7 +122,6 @@ namespace asivamosffie.services
             {
                 contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                 contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
-                //contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_preliminar_generada).ToString();                                                  
 
                 if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Obra).ToString())
                     contrato.EstadoActaFase2 = "14"; //14  Con acta preliminar generada
@@ -148,8 +130,6 @@ namespace asivamosffie.services
 
                 contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
                 contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
-                //contrato.ContratoObservacion = pObservacionesConsideracionesEspeciales;
-                //contrato.Observaciones = Helpers.Helpers.CleanStringInput( pObservacionesConsideracionesEspeciales);
 
                 ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
 
@@ -158,7 +138,6 @@ namespace asivamosffie.services
                 construccionObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacionesConsideracionesEspeciales);
 
                 if (pEsSupervisor)
-                    //if (construccionObservacion.EsSupervision)
                     construccionObservacion.TipoObservacionConstruccion = "7";
                 else
                     construccionObservacion.TipoObservacionConstruccion = "6";
@@ -173,30 +152,14 @@ namespace asivamosffie.services
                 contratoConstruccion = _context.ContratoConstruccion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
                 construccionObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
 
-                //_context.ContratoObservacion.Update(contratoObservacion);
                 _context.ConstruccionObservacion.Add(construccionObservacion);
 
                 _context.Contrato.Update(contrato);
-                //contrato.FechaModificacion = DateTime.Now;
-                //contrato.UsuarioModificacion = pUsuarioModificacion;
-                //contrato.ConObervacionesActa = true;
-                //contrato.Observaciones = pObservacionesConsideracionesEspeciales;
-
-                //contratoObservacion.Observaciones=pObservacionesConsideracionesEspeciales;
-                //contratoObservacion.ContratoId = contrato.ContratoId;
-                //contratoObservacion.EsActaFase2 = true;
-                //contratoObservacion.EsActa = true;
-
-                //contratoObservacion.FechaCreacion = DateTime.Now;
-                //contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
 
                 //      CAMBIAR ESTADO “Sin acta generada” a “Con acta generada”.
                 //DOM 60  1   Sin acta generada
                 //DOM 60  3   Con acta generada
                 //contrato.EstadoActa = "3";                
-
-                //_context.Add(contratoObservacion);
-                //await _context.SaveChangesAsync();
 
                 //            Plazo de ejecución fase 1 – Preconstrucción: Meses: 4 Días: 3 - PlazoFase1PreMeses - PlazoFase1PreDias - contrato
 
@@ -227,56 +190,21 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
+        public async Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion,
+                                                             string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, 
+                                                             bool pEsSupervisor, bool pEsActa)
         {
             Respuesta _response = new Respuesta();
 
             int idAccionCrearContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Plazo_Ejecucion_Fase_2, (int)EnumeratorTipoDominio.Acciones);
 
-            //try
-            //{
-            //    Respuesta respuesta = new Respuesta();
-            //    string pUsuarioModifico = HttpContext.User.FindFirst("User").Value;
-            //    respuesta = await _Cofinancing.EliminarCofinanciacionByCofinanciacionId(pCofinancicacionId, pUsuarioModifico);
-
-            //    return Ok(respuesta);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return BadRequest(ex.ToString());
-            //}
-
-
             try
             {
-                //if (contratoObservacion != null)
-                //{
-
-                //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-
-                //_context.Add(contratoPoliza);
-
-                //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
-
-                //contratoObservacion.Observaciones = contratoObservacion.Observaciones;
                 Contrato contrato = null;
                 contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
                 if (contrato != null)
                 {
-                    //contrato.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
-
-                    //ContratoObservacion contratoObservacion = new ContratoObservacion();
-                    //contratoObservacion = await GetContratoObservacionByIdContratoId(pContratoId);
-
-                    //contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
-                    //contratoObservacion.UsuarioCreacion = pUsuarioModificacion;
-                    //contratoObservacion.FechaCreacion = DateTime.Now;
-                    //contratoObservacion.EsActa = true;
-                    //contratoObservacion.EsActaFase2 = true;
-                    //contratoObservacion.ContratoId = pContratoId;
-
                     ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
 
                     //                6   Acta de inicio interventor
@@ -306,7 +234,7 @@ namespace asivamosffie.services
                     contrato.UsuarioCreacion = pUsuarioModificacion;
                     contrato.FechaModificacion = DateTime.Now;
 
-                    contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
+                    contrato.FechaActaInicioFase2 = pFechaActaInicioFase1;
                     contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
 
                     contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
@@ -318,22 +246,6 @@ namespace asivamosffie.services
                     _context.SaveChanges();
 
                 }
-                //contratoObservacion.Observaciones = Helpers.Helpers.CleanStringInput(contratoObservacion.Observaciones);
-                //contratoObservacion.Observaciones = Helpers.Helpers.ConvertToUpercase(contratoObservacion.Observaciones).ToString();
-
-                //contratoObservacion.ContratoId = contratoObservacion.ContratoId;}
-                //if(contratoObservacion.EsActaFase2==null)
-                //contratoObservacion.EsActaFase2 = true;
-
-                //if (contratoObservacion.EsActa == null)
-                //    contratoObservacion.EsActa = true;
-
-                //contratoObservacion.FechaCreacion = DateTime.Now;
-                //contratoObservacion.UsuarioModificacion = contratoObservacion.UsuarioModificacion;                                       
-
-                //_context.ContratoPoliza.Add(contratoPoliza);
-                //_context.ContratoObservacion.Update(contratoObservacion);
-                //await _context.SaveChangesAsync();
 
                 return
                     new Respuesta
@@ -452,7 +364,6 @@ namespace asivamosffie.services
 
             Contrato contrato;
 
-            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
             try
@@ -624,7 +535,6 @@ namespace asivamosffie.services
 
             Contrato contrato;
 
-            //contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId && r.Estado == true).FirstOrDefault();
             contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
 
             try
@@ -634,37 +544,8 @@ namespace asivamosffie.services
                 contrato.UsuarioModificacion = pUsuarioModificacion;
                 contrato.FechaModificacion = DateTime.Now;
 
-                //Auditoria
-                //contratacionOld.FechaModificacion = DateTime.Now;
-                //contratacionOld.UsuarioModificacion = pContratacion.UsuarioCreacion;
-                //Registros
-                //contratacionOld.RutaMinuta = strFilePatch;
-                //contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
-                //contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
-
-                //contrato.EstadoActaFase2 = ((int)EnumeratorEstadoActa.Con_acta_suscrita_y_cargada).ToString();
-
-                //contratacionOld.RegistroCompleto = ValidarCamposContratacion(contratacionOld);
                 _context.Contrato.Update(contrato);
                 _context.SaveChanges();
-
-                //                notificación de alerta al interventor, al apoyo a la
-                //supervisión y al supervisor
-
-                //notificación al interventor y al apoyo a la supervisión.
-
-
-                //}
-
-
-                //}
-                //catch (Exception ex)
-                //{
-
-                //    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesActaInicio.ErrorEnviarCorreo };
-                //    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), lstMails, "Gestión Acta Inicio Fase II") + ": " + ex.ToString() + ex.InnerException;
-                //    return respuesta;
-                //}
 
                 return
                  new Respuesta
@@ -727,30 +608,13 @@ namespace asivamosffie.services
                 //error correo
                 respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesActaInicio.ErrorEnviarCorreo };
 
-                //Task<Respuesta> result = EnviarCorreoGestionActaIncio(correo, settings.MailServer,
-                //settings.MailPort, settings.Password, settings.Sender,
-                //actaInicio,  pIdTemplate );
-
                 bool blEnvioCorreo = false;
-                //Respuesta respuesta = new Respuesta();
 
-                //Si no llega Email
-                //if (string.IsNullOrEmpty(pUsuario.Email))
-                //{
-                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesUsuarios.EmailObligatorio };
-                //}
-
-                //Guardar Usuario                
-
-                //Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.MsjSupervisorGestionPoliza);
                 Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
 
                 string template = TemplateRecoveryPassword.Contenido;
 
                 int tipoContrato = 0;
-
-                //Contrato contrato = null;
-                //contrato = _context.Contrato.Where(r => r.NumeroContrato == actaInicio.NumeroContrato).FirstOrDefault();
 
                 //tipoContrato = 2;
                 tipoContrato = ConstanCodigoTipoContratacion.Interventoria;
@@ -758,10 +622,8 @@ namespace asivamosffie.services
                 template = template.Replace("_Numero_Contrato_", actaInicio.NumeroContrato);
                 template = template.Replace("_Fecha_Aprobacion_Poliza_", actaInicio.FechaAprobacionGarantiaPoliza);
 
-                //if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Interventoria)
                 if (Convert.ToInt32(contratacion.TipoSolicitudCodigo) == ConstanCodigoTipoContratacion.Interventoria)
                     template = template.Replace("_Obra_O_Interventoria_", "interventoría");
-                //else if (Convert.ToInt32(contrato.TipoContratoCodigo) == ConstanCodigoTipoContratacion.Obra)
                 else if (Convert.ToInt32(contratacion.TipoSolicitudCodigo) == ConstanCodigoTipoContratacion.Obra)
                     template = template.Replace("_Obra_O_Interventoria_", "obra");
 
@@ -769,13 +631,6 @@ namespace asivamosffie.services
 
                 template = template.Replace("_Fecha_Acta_Inicio_", actaInicio.FechaActaInicio);
                 template = template.Replace("_Fecha_Prevista_Terminacion_", actaInicio.FechaPrevistaTerminacion);
-
-                //datos basicos generales, aplican para los 4 mensajes
-
-                //correo, _settings.Value.MailServer,
-                //_settings.Value.MailPort, _settings.Value.Password, _settings.Value.Sender,
-                //actaInicio, pIdTemplate
-                //correo = "cdaza@ivolucion.com";
 
                 string lstCorreos = "";
 
@@ -795,8 +650,6 @@ namespace asivamosffie.services
 
                     foreach (var usuario in lstUsuarios)
                     {
-                        //lstCorreos = lstCorreos += usuario.Email + ";";
-                        //lstCorreos = lstCorreos += usuario.Email;
                         blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Acta Inicio Fase II", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
                     }
                 }
@@ -807,46 +660,13 @@ namespace asivamosffie.services
                 else
                     respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantGestionarActaInicioFase2.ErrorEnviarCorreo };
 
-                //}
-                //}
-                //else
-                //{
-                //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
-
-                //}
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), correo, "Acta Inicio Fase II");
                 return respuesta;
 
-                //}
-                //catch (Exception ex)
-                //{
-
-                //    respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesActaInicio.ErrorEnviarCorreo };
-                //    respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), lstMails, "Gestión Acta Inicio Fase II") + ": " + ex.ToString() + ex.InnerException;
-                //    return respuesta;
-                //}
 
                 //ok correo
-
                 respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesActaInicio.CorreoEnviado };
 
-
-
-                //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
-
-                //if (blEnvioCorreo)
-                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
-
-                //else
-                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
-
-                //}
-                //}
-                //else
-                //{
-                //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
-
-                //}
                 respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificación_Acta_Inicio_Fase_II), correo, "Acta Inicio Fase II");
                 return respuesta;
 
