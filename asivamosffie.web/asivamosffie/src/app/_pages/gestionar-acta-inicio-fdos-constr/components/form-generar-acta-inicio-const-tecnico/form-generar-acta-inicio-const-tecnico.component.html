@@ -130,22 +130,22 @@
                                 <mat-form-field class="w-8em">
                                     <input matInput maxlength="2" min="1" max="99" required (keypress)="number($event)"
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
-                                        formControlName="mesPlazoEjFase2">
+                                        formControlName="mesPlazoEjFase2" #mesPlazoEjFase2>
                                 </mat-form-field>
-                                <span class="contador"
-                                    *ngIf="addressForm.value.mesPlazoEjFase2 !== null">{{2 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase2').value.toString().length:0)}}</span>
-                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2==null">2</span>
+                                <span class="contador">
+                                    {{2 - mesPlazoEjFase2.value.length}}
+                                </span>
                                 <label class="label-left sub-label" for="diasPlazoEjFase2">
                                     Días
                                 </label>
                                 <mat-form-field class="w-8em">
                                     <input matInput maxlength="2" min="1" max="31" required (keypress)="number($event)"
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
-                                        formControlName="diasPlazoEjFase2">
+                                        formControlName="diasPlazoEjFase2" #diasPlazoEjFase2>
                                 </mat-form-field>
-                                <span class="contador"
-                                    *ngIf="addressForm.value.diasPlazoEjFase2 !== null">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase2').value.toString().length:0)}}</span>
-                                <span class="contador" *ngIf="addressForm.value.diasPlazoEjFase2 == null">2</span>
+                                <span class="contador">
+                                    {{2 - diasPlazoEjFase2.value.length}}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -158,17 +158,17 @@
                             (onContentChanged)="maxLength($event, 500)" formControlName="observacionesEspeciales">
                         </quill-editor>
                     </div>
-                    <span class="contador auxMarg" *ngIf="addressForm.value.observacionesEspeciales !== null">
-                        {{500 - textoLimpio(addressForm.get('observacionesEspeciales').value)}}
+                    <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
+                        {{500 - (textoLimpio(addressForm.get('observacionesEspeciales').value)>500?500:textoLimpio(addressForm.get('observacionesEspeciales').value))}}
                     </span>
-                    <span class="contador auxMarg" *ngIf="addressForm.value.observacionesEspeciales === null">
+                    <span class="contador auxMarg" *ngIf="!addressForm.get('observacionesEspeciales').value">
                         500
                     </span>
                 </div>
             </mat-card-content>
         </mat-card>
-        <div class="text-center">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
+        <div class="text-center mb-2em">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
                 <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </div>
