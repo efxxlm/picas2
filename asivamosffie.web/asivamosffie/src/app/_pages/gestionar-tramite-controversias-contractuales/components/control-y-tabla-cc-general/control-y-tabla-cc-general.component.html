@@ -75,7 +75,8 @@
                         Eliminar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoControversiaCodigo=='11'">
+                        *ngIf="element.estadoControversiaCodigo=='11'"
+                        (click)="this.descargarProcesoControversia(element.controversiaContractualId)">
                         Descargar proceso de controversia
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
