@@ -52,8 +52,10 @@
                 </strong>{{this.fechaActaInicioConstruccion | date: 'dd/MM/yyyy' }}</p>
             <p><strong>Fecha prevista de terminación: </strong>{{this.fechaPrevistaTerminacion | date: 'dd/MM/yyyy' }}</p>
             <p *ngIf="false"><strong>Plazo actual del contrato: Meses:</strong> {{this.plazoActualContratoMeses}} <strong>Días:
-            </strong>{{this.plazoActualContratoDias}}</p>
-            <p *ngIf="this.plazoEjecucionPreConstruccionMeses!=undefined && this.plazoEjecucionPreConstruccionDias!=undefined"><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> {{this.plazoEjecucionPreConstruccionMeses}} <strong>Días:
+                </strong>{{this.plazoActualContratoDias}}</p>
+            <p *ngIf="this.plazoEjecucionPreConstruccionMeses!=undefined && this.plazoEjecucionPreConstruccionDias!=undefined">
+                <strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong>
+                {{this.plazoEjecucionPreConstruccionMeses}} <strong>Días:
                 </strong>{{this.plazoEjecucionPreConstruccionDias}}</p>
             <p><strong>Plazo de ejecución fase 2 – Construcción: Meses:</strong> {{this.plazoEjecucionConstrM}} <strong>Días:
                 </strong>{{this.plazoEjecucionConstrD}}</p>
@@ -87,10 +89,8 @@
     <button mat-raised-button color="accent" (click)="this.generarActaSuscrita()">Descargar acta de inicio</button>
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
         <div class="row mtop">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <label class="label-left">¿Tiene observaciones al acta de inicio?</label>
-            </div>
-            <div class="col-md-2">
                 <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
                     formControlName="tieneObservaciones">
                     <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
@@ -99,21 +99,23 @@
                 <span class="required-form-group">*</span>
             </div>
         </div>
-        <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
-            <div class="text-area-quill izqTitle">
-                <label for="observaciones" class="text-area-quill--label">Observaciones al acta de inicio</label>
-                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+        <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
+            <div class="text-area-quill" [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched">
+                <label class="text-area-quill--label align-left-label left-1-7" for="observaciones"
+                [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
+                    Observaciones al acta de inicio
+                </label>
+                <quill-editor class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
                     (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
             </div>
-            <span class="contador" *ngIf="addressForm.get('observaciones').value">
-                {{1000 - addressForm.get('observaciones').value.length}}
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+                {{1000 - (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
             </span>
-            <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
+            <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
                 1000
             </span>
         </div>
-        <button mat-button color="warn" class="btn-guardar"
-            type="submit">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
             <img src="assets/img/icon/guardar.svg" alt="Guardar">
         </button>
     </form>

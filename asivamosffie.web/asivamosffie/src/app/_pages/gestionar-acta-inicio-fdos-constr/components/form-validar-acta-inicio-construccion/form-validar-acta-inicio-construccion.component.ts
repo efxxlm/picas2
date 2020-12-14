@@ -188,6 +188,27 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     }
   }
 
+  textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
+  }
+
   generarActaSuscrita() {
     this.services.GetPlantillaActaInicio(this.contratoId).subscribe(resp => {
       const documento = `Prueba.pdf`; // Valor de prueba
@@ -298,7 +319,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       });
     }
     console.log(this.addressForm.value);
-    //this.openDialog('La información ha sido guardada exitosamente.', "");
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
 }
