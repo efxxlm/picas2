@@ -30,12 +30,12 @@ namespace asivamosffie.services.Interfaces
         //¿Tiene observaciones al acta de inicio? Sí No  ?????
         //ConObervacionesActa  - Contrato
 
-        //Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor);
-        Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor);
+        
+        Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor);
 
         Task<Respuesta> CambiarEstadoVerificacionActa(int pContratoId, string pNuevoCodigoEstadoVerificacionActa, string pUsuarioModifica);
 
-        Task<Respuesta> InsertEditContratoObservacion(ConstruccionObservacion construccionObservacion);
+        Task<Respuesta> InsertEditContratoObservacion(Contrato pContrato);
 
 
         Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria

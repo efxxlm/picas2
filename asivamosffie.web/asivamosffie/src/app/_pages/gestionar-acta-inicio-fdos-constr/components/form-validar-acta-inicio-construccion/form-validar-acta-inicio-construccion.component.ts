@@ -48,6 +48,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   plazoEjecucionConstrD: number;
   observacionID: any;
   contrato?: any;
+  contratoObservacionId?: any;
 
   fechaSesionString: string;
   fechaSesion: Date;
@@ -133,13 +134,15 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
 
       this.contrato = data.contrato;
+      this.addressForm.get('tieneObservaciones').setValue(data.contrato.conObervacionesActaFase2);
+      
     });
     this.contratoId = id;
   }
   loadDataObservaciones(id) {
     if (localStorage.getItem("editable") == "true") {
       this.services.GetContratoObservacionByIdContratoId(id, true).subscribe(data0 => {
-        this.addressForm.get('tieneObservaciones').setValue(data0.esActa);
+        //this.addressForm.get('tieneObservaciones').setValue(data0.esActa);
         this.addressForm.get('observaciones').setValue(data0.observaciones);
         this.loadData2(data0);
         this.fechaCreacion = data0.fechaCreacion;
@@ -152,8 +155,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     }
   }
   loadData2(data) {
-    this.construccionObservacionId = data.construccionObservacionId;
-    this.contratoConstruccionId = data.contratoConstruccionId;
+    this.contratoObservacionId = data.contratoObservacionId;
     this.esActa = data.esActa;
     this.esSupervision = data.esSupervision;
     this.fechaCreacion = data.fechaCreacion;
@@ -228,18 +230,21 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   onSubmit() {
     this.fechaSesion = new Date(this.fechaCreacion);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
-    const contratoObs: ConstruccionObservacion = {
-      ContratoConstruccionId: this.contratoConstruccionId,
-      TipoObservacionConstruccion: "",
-      Observaciones: this.addressForm.value.observaciones,
-      //UsuarioModificacion: "usr3",
-      //FechaCreacion: this.fechaSesionString,
-      //UsuarioCreacion: "usr3",
-      EsSupervision: true,
-      EsActa: true,
-      //FechaModificacion: this.fechaSesionString
-    };
+    
+    const objetoContrato = {
+      conObervacionesActaFase2: this.addressForm.value.tieneObservaciones,
+      contratoId: this.contratoId,
 
+      contratoObservacion: [{
+
+        contratoId : this.contratoId,
+        observaciones: this.addressForm.value.observaciones,
+        esActaFase2: true,
+        contratoObservacionId: this.contratoObservacionId,
+
+      }]
+    }
+        
     if (localStorage.getItem("editable") == "false") {
       this.services.CreateTieneObservacionesActaInicio(this.contratoId, this.addressForm.value.observaciones, "usr3", true, this.addressForm.value.tieneObservaciones).subscribe(resp => {
         if (resp.code == "200") {
@@ -282,7 +287,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       });
     }
     else {
-      this.services.CreateEditContratoObservacion(contratoObs).subscribe(resp => {
+      this.services.CreateEditContratoObservacion(objetoContrato).subscribe(resp => {
         if (resp.code == "200") {
           if (this.addressForm.value.tieneObservaciones == true) {
             if (localStorage.getItem("origin") == "interventoria") {

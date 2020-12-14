@@ -46,7 +46,7 @@ export class ActBeginService {
   GetContratoByIdContratoId(pContratoId: number){
     return this.http.get<GetContratoByIdContratoId>(`${environment.apiUrl}/actBegin/GetContratoByIdContratoId?pContratoId=${pContratoId}`);
   }
-  CreateEditContratoObservacion(contratoObs:ConstruccionObservacion){
+  CreateEditContratoObservacion(contratoObs: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateEditContratoObservacion`, contratoObs);
   }
   EnviarCorreoSupervisorContratista(pContratoId: number, pPerfilId: number){
@@ -110,14 +110,14 @@ export interface ContratoObservacion{
   contratoObservacionId: number;
   contratoId: number;
   observaciones: string;
-  fechaCreacion: any;
-  usuarioCreacion: any;
+  fechaCreacion?: any;
+  usuarioCreacion?: any;
   
   //opcionales
-  esActa: boolean;
-  fechaModificacion: any;
-  usuarioModificacion: any;
-  esActaFase2: boolean;
+  esActa?: boolean;
+  fechaModificacion?: any;
+  usuarioModificacion?: any;
+  esActaFase2?: boolean;
 }
 export interface ConstruccionObservacion{
 //ConstruccionObservacionId: number;
