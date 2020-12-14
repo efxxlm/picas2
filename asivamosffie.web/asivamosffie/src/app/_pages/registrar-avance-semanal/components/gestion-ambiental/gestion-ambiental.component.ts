@@ -221,7 +221,11 @@ export class GestionAmbientalComponent implements OnInit {
                             manejoMaterialesInsumo: manejoMaterialInsumo(),
                             manejoResiduosConstruccionDemolicion: manejoResiduosConstruccionDemolicion(),
                             manejoResiduosPeligrososEspeciales: manejoResiduosPeligrososEspeciales(),
-                            manejoOtro: manejoOtro()
+                            manejoOtro: manejoOtro(),
+                            tieneManejoMaterialesInsumo: manejoMaterialInsumo() !== null ? true : false,
+                            tieneManejoResiduosPeligrososEspeciales: manejoResiduosConstruccionDemolicion() !== null ? true : false,
+                            tieneManejoResiduosConstruccionDemolicion: manejoResiduosPeligrososEspeciales() !== null ? true : false,
+                            tieneManejoOtro: manejoOtro() !== null ? true : false
                         }
                     ]
                 }
