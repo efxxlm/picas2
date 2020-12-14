@@ -124,10 +124,10 @@ export interface ConstruccionObservacion{
  ContratoConstruccionId: number;
  TipoObservacionConstruccion: string;
  Observaciones: string;
- UsuarioModificacion: string;
- FechaCreacion:any;
- UsuarioCreacion: string;
+ UsuarioModificacion?: string;
+ FechaCreacion?:any;
+ UsuarioCreacion?: string;
  EsSupervision:boolean;
  EsActa:boolean;
-FechaModificacion:any;
+FechaModificacion?:any;
 }

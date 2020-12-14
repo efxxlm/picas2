@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActBeginService, ConstruccionObservacion, ContratoObservacion } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-form-validar-acta-inicio-construccion',
@@ -46,6 +47,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   plazoEjecucionConstrM: number;
   plazoEjecucionConstrD: number;
   observacionID: any;
+  contrato?: Contrato;
 
   fechaSesionString: string;
   fechaSesion: Date;
@@ -129,6 +131,8 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
+
+      this.contrato = data.contrato;
     });
     this.contratoId = id;
   }
@@ -207,12 +211,12 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       ContratoConstruccionId: this.contratoConstruccionId,
       TipoObservacionConstruccion: "",
       Observaciones: this.addressForm.value.observaciones,
-      UsuarioModificacion: "usr3",
-      FechaCreacion: this.fechaSesionString,
-      UsuarioCreacion: "usr3",
+      //UsuarioModificacion: "usr3",
+      //FechaCreacion: this.fechaSesionString,
+      //UsuarioCreacion: "usr3",
       EsSupervision: true,
       EsActa: true,
-      FechaModificacion: this.fechaSesionString
+      //FechaModificacion: this.fechaSesionString
     };
 
     if (localStorage.getItem("editable") == "false") {
