@@ -90,7 +90,7 @@ export class TablaActasDeInicioDeInterventoriaComponent implements OnInit {
   }
   cambiarEstadoInterventor(id, tieneObs) {
     if (localStorage.getItem("origin") == "interventoria") {
-        this.service.CambiarEstadoActa(id, "5").subscribe(data => {
+        this.service.CambiarEstadoActa(id, "4").subscribe(data => {
           this.router.navigateByUrl('/', { skipLocationChange: true }).then(
             () => this.router.navigate(['/generarActaInicioFaseIPreconstruccion'])
           );
