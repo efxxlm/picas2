@@ -279,7 +279,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     console.log(plazoDias, dias, plazoMeses, meses )
 
     if (plazoDias != dias || plazoMeses != meses) {
-      this.openDialog( '', ' Debe verificar la información ingresada en el campo Plazo de ejecución fase 2 – Construcción, dado que no coincide con la información inicial registrada para el contrato ' )
+      this.openDialog( '', ' Debe verificar la información ingresada en el campo <b>Plazo de ejecución fase 2</b> – Construcción, dado que no coincide con la información inicial registrada para el contrato ' )
       return false;
     }
 
