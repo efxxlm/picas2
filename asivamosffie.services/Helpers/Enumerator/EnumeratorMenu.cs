@@ -42,6 +42,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Gestionar_procesos_Defensa_Judicial = 52,
 
+         Registrar_actuaciones_controversias_contractuales=57,
+
     }
 
     public enum enumeratorAccion

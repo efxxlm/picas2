@@ -805,4 +805,45 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Redireccion
 
     }
+
+    public class ConstantMessagesContractualNovelty
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+        public const string Error = "500";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        //public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+        public const string CorreoEnviado = "101";
+
+        public const string ErrorEnviarCorreo = "107";
+        public const string ErrorGuardarCambios = "109";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+        public const string EliminacionCancelada = "202";
+        public const string EliminacionExitosa = "201";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+
+
+        #endregion Mensajes Redireccion
+
+    }
 }

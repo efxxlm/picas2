@@ -2590,6 +2590,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UrlSoporteGestion).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2609,6 +2610,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Observacion).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2628,6 +2630,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.Url).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2653,6 +2656,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UrlRegistroFotografico).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
@@ -2825,9 +2829,13 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaConcepto).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaFinSuspension).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaInicioSuspension).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaSesionInstancia).HasColumnType("datetime");
 
@@ -2859,6 +2867,10 @@ namespace asivamosffie.model.Models
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion).HasMaxLength(400);
+
+                entity.Property(e => e.UsuarioModificacion).HasMaxLength(400);
             });
 
             modelBuilder.Entity<Perfil>(entity =>

@@ -7,7 +7,7 @@ namespace asivamosffie.model.Models
     {
         public int SeguimientoSemanalGestionObraAmbientalId { get; set; }
         public int SeguimientoSemanalGestionObraId { get; set; }
-        public bool? SeEjectutoGestionAmbiental { get; set; }
+        public bool? SeEjecutoGestionAmbiental { get; set; }
         public int? ManejoMaterialesInsumoId { get; set; }
         public int? ManejoResiduosPeligrososEspecialesId { get; set; }
         public int? ManejoResiduosConstruccionDemolicionId { get; set; }
@@ -18,6 +18,10 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
+        public bool TieneManejoMaterialesInsumo { get; set; }
+        public bool TieneManejoResiduosPeligrososEspeciales { get; set; }
+        public bool TieneManejoResiduosConstruccionDemolicion { get; set; }
+        public bool TieneManejoOtro { get; set; }
 
         public virtual ManejoMaterialesInsumos ManejoMaterialesInsumo { get; set; }
         public virtual ManejoOtro ManejoOtro { get; set; }

@@ -1026,6 +1026,45 @@ namespace asivamosffie.services
 
         }
 
+        //seguimiento = reclamacion
+        public async Task<Respuesta> CambiarEstadoActuacionReclamacion(int pActuacionSeguimientoId, string pEstadoActuacionCodigo, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ActuacionSeguimiento actuacionSeguimientoOld;
+
+                actuacionSeguimientoOld = _context.ActuacionSeguimiento.Find(pActuacionSeguimientoId);
+                actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
+                actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
+                //actuacionSeguimientoOld.EstadoReclamacionCodigo = pEstadoReclamacionCodigo;
+
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, pUsuarioModifica, "CAMBIAR ESTADO ACTUACION SEGUIMIENTO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
+
+        }
+
         public async Task<Respuesta> ActualizarRutaSoporteControversiaActuacion(int pControversiaActuacionId, string pRutaSoporte, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Controversia_Actuacion, (int)EnumeratorTipoDominio.Acciones);
