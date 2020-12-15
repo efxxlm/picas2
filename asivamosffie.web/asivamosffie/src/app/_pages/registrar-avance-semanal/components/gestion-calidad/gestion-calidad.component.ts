@@ -230,15 +230,35 @@ export class GestionCalidadComponent implements OnInit {
         return dialogRef.afterClosed();
     }
 
-    eliminarEnsayo( numeroPerfil: number ) {
+    eliminarEnsayo( gestionObraCalidadEnsayoLaboratorioId: number, numeroEnsayo: number ) {
         this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
           .subscribe( value => {
             if ( value === true ) {
-              this.ensayosLaboratorio.removeAt( numeroPerfil );
-              this.formGestionCalidad.patchValue({
-                cantidadEnsayos: `${ this.ensayosLaboratorio.length }`
-              });
-              this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                if ( gestionObraCalidadEnsayoLaboratorioId === 0 ) {
+                    console.log( 'Condicion 1', gestionObraCalidadEnsayoLaboratorioId );
+                    this.ensayosLaboratorio.removeAt( numeroEnsayo );
+                    this.formGestionCalidad.patchValue({
+                        cantidadEnsayos: `${ this.ensayosLaboratorio.length }`
+                    });
+                    this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                } else {
+                    console.log( 'Condicion 2', gestionObraCalidadEnsayoLaboratorioId );
+                    this.avanceSemanalSvc.deleteGestionObraCalidadEnsayoLaboratorio( gestionObraCalidadEnsayoLaboratorioId )
+                        .subscribe(
+                            response => {
+                                this.openDialog( '', `<b>${ response.message }</b>` );
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/registrarAvanceSemanal/registroSeguimientoSemanal',
+                                                    this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            },
+                            err => this.openDialog( '', `<b>${ err.message }</b>` )
+                        );
+                }
             }
           } );
     }

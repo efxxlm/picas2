@@ -245,7 +245,7 @@
                                 color="warn"
                                 type="button"
                                 class="btn-eliminar"
-                                (click)="eliminarEnsayo( i )">
+                                (click)="eliminarEnsayo( ensayo.get( 'gestionObraCalidadEnsayoLaboratorioId' ).value, i )">
                           <img src="assets/img/icon/menos.svg">
                           Eliminar ensayo de laboratorio
                         </button>
@@ -280,7 +280,7 @@
           <p><b>URL con soporte de la gestión de calidad</b>: 09/07/2020</p>
           <div class="d-flex justify-content-center mt-1em">
             <div style="width: 20%;">
-                <button mat-raised-button color="accent" type="button" class="btn-table" (click)="getRegistrarResultados()">
+                <button mat-raised-button color="accent" type="button" class="btn-table" (click)="getRegistrarResultados( 0 )">
                   Registrar resultados
                 </button>
             </div>

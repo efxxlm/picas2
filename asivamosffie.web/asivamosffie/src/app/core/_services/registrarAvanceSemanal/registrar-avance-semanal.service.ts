@@ -48,4 +48,8 @@ export class RegistrarAvanceSemanalService {
     return this.http.post<Respuesta>( `${ this.urlApi }/DeleteResiduosConstruccionDemolicionGestor?ResiduosConstruccionDemolicionGestorId=${ ResiduosConstruccionDemolicionGestorId }`, '' );
   }
 
+  deleteGestionObraCalidadEnsayoLaboratorio( gestionObraCalidadEnsayoLaboratorioId: number ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/DeleteGestionObraCalidadEnsayoLaboratorio?GestionObraCalidadEnsayoLaboratorioId=${ gestionObraCalidadEnsayoLaboratorioId }`, '' );
+  }
+
 }

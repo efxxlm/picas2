@@ -52,8 +52,9 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
                 response => {
                     this.ensayoLaboratorio = response;
                     console.log( this.ensayoLaboratorio );
-                    if ( this.ensayoLaboratorio.numeroMuestras.length > 0 ) {
-                        for ( const muestra of this.ensayoLaboratorio.numeroMuestras ) {
+                    if ( this.ensayoLaboratorio.ensayoLaboratorioMuestra.length > 0 ) {
+                        this.muestras.clear();
+                        for ( const muestra of this.ensayoLaboratorio.ensayoLaboratorioMuestra ) {
                             this.muestras.push(
                                 this.fb.group(
                                     {
@@ -68,6 +69,7 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
                             );
                         }
                     } else {
+                        this.muestras.clear();
                         for ( let i = 0; i < this.ensayoLaboratorio.numeroMuestras; i++ ) {
                             this.muestras.push(
                                 this.fb.group(
