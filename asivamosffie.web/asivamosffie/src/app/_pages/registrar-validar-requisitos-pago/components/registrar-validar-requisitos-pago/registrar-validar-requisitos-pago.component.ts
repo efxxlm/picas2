@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DialogDevolverSolicitudComponent } from '../dialog-devolver-solicitud/dialog-devolver-solicitud.component';
 
 @Component({
   selector: 'app-registrar-validar-requisitos-pago',
@@ -34,7 +36,7 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,  public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTable);
@@ -49,5 +51,13 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
   };
   registrarNuevaSolicitud(){
     this.router.navigate(['registrarValidarRequisitosPago/registrarNuevaSolicitudPago'])
+  }
+  devolverSolictud(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '865px';
+    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
+    const dialogRef = this.dialog.open(DialogDevolverSolicitudComponent, dialogConfig);
+    //dialogRef.afterClosed().subscribe(value => {});
   }
 }
