@@ -156,6 +156,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -3471,6 +3473,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.EstadoObraProyecto)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoProgramacionCodigo)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -4101,11 +4107,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalRegistroFotografico>(entity =>
             {
-                entity.HasKey(e => e.SeguimientoSemanalRegistroFotografico1)
-                    .HasName("PK__Seguimie__4163B7CD6A86F5F1");
-
-                entity.Property(e => e.SeguimientoSemanalRegistroFotografico1).HasColumnName("SeguimientoSemanalRegistroFotografico");
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -5231,7 +5232,7 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_RegistrarAvanceSemanal");
 
                 entity.Property(e => e.EstadoObra)
-                    .HasMaxLength(30)
+                    .HasMaxLength(12)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoObraCodigo)

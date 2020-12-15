@@ -31,6 +31,8 @@ namespace asivamosffie.services
         }
 
         #region Get
+        //public async Task<List<EnsayoLaboratorioMuestra>> 
+
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
             return await _context.VRegistrarAvanceSemanal.ToListAsync();
@@ -1095,7 +1097,7 @@ namespace asivamosffie.services
 
         private void SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico pSeguimientoSemanalRegistroFotografico, string pUsuarioCreacion)
         {
-            throw new NotImplementedException();
+         // if(pSeguimientoSemanalRegistroFotografico.)
         }
          
         private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
