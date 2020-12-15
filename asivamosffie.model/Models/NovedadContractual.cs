@@ -24,5 +24,11 @@ namespace asivamosffie.model.Models
         public string ClausulaModificar { get; set; }
         public string AjusteClausula { get; set; }
         public int SolicitudId { get; set; }
+        public DateTime? FechaCreacion { get; set; }
+        public string UsuarioCreacion { get; set; }
+        public bool? Eliminado { get; set; }
+        public bool? RegistroCompleto { get; set; }
+        public DateTime? FechaModificacion { get; set; }
+        public string UsuarioModificacion { get; set; }
     }
 }
