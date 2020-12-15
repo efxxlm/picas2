@@ -107,7 +107,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   verDetalleEditar(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "true");
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
   }
   verDetalle(id) {
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion', id]);
