@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -35,7 +36,8 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private dialog: MatDialog ) { }
+        private dialog: MatDialog,
+        private avanceSemanalSvc: RegistrarAvanceSemanalService ) { }
 
     ngOnInit(): void {
         if ( this.residuosConstruccion !== undefined && this.residuosConstruccion.length > 0 ) {
@@ -71,8 +73,8 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
                 this.formManejoResiduosConstruccion.patchValue(
                     {
                         manejoResiduosConstruccionDemolicionId: this.manejoResiduosConstruccion.manejoResiduosConstruccionDemolicionId,
-                        estaCuantificadoRCD:    this.manejoResiduosConstruccion.estaCuantificadoRCD !== undefined
-                                                ? this.manejoResiduosConstruccion.estaCuantificadoRCD : null,
+                        estaCuantificadoRCD:    this.manejoResiduosConstruccion.estaCuantificadoRcd !== undefined
+                                                ? this.manejoResiduosConstruccion.estaCuantificadoRcd : null,
                         requiereObservacion:    this.manejoResiduosConstruccion.requiereObservacion !== undefined
                                                 ? this.manejoResiduosConstruccion.requiereObservacion : null,
                         observacion:    this.manejoResiduosConstruccion.observacion !== undefined
@@ -80,7 +82,7 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
                         seReutilizadorResiduos: this.manejoResiduosConstruccion.seReutilizadorResiduos !== undefined
                                                 ? this.manejoResiduosConstruccion.seReutilizadorResiduos : null,
                         cantidadToneladas:  this.manejoResiduosConstruccion.cantidadToneladas !== undefined
-                                            ? this.manejoResiduosConstruccion.cantidadToneladas : ''
+                                            ? String( this.manejoResiduosConstruccion.cantidadToneladas ) : ''
 
                     }
                 );
@@ -167,7 +169,14 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
                 .subscribe(
                     value => {
                         if ( value === true ) {
-                            this.openDialog( '', '<b>Servicio por integrar.</b>' );
+                            this.avanceSemanalSvc.deleteResiduosConstruccionDemolicionGestor( this.gestorResiduos.at( index ).get( 'manejoResiduosConstruccionDemolicionGestorId' ).value )
+                                .subscribe(
+                                    response => {
+                                        this.gestorResiduos.removeAt( index );
+                                        this.openDialog( '', `<b>${ response.message }</b>` );
+                                    },
+                                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                                );
                         }
                     }
                 );

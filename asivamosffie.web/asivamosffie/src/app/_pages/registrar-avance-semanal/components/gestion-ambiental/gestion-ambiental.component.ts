@@ -245,7 +245,7 @@ export class GestionAmbientalComponent implements OnInit {
                                         '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
                                     ]
                                 )
-                      );
+                    );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

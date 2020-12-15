@@ -1,3 +1,5 @@
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
@@ -14,13 +16,14 @@ export class GestionCalidadComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     formGestionCalidad: FormGroup;
+    seRealizoPeticion = false;
+    seguimientoSemanalId: number;
+    seguimientoSemanalGestionObraId: number;
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },
         { value: false, viewValue: 'No' }
     ];
-    tipoEnsayos: any[] = [
-        { codigo: 1, viewValue: 'Muestra de tierra' }
-    ];
+    tipoEnsayos: any[] = [];
     editorStyle = {
         height: '45px'
     };
@@ -32,7 +35,6 @@ export class GestionCalidadComponent implements OnInit {
         [{ align: [] }],
       ]
     };
-    seRealizoPeticion = false;
 
     get ensayosLaboratorio() {
         return this.formGestionCalidad.get( 'ensayosLaboratorio' ) as FormArray;
@@ -41,18 +43,27 @@ export class GestionCalidadComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
-        private routes: Router )
+        private routes: Router,
+        private commonSvc: CommonService,
+        private avanceSemanalSvc: RegistrarAvanceSemanalService )
     {
+        this.commonSvc.listaTipoEnsayos()
+            .subscribe(
+                tipo => {
+                    this.tipoEnsayos = tipo;
+                    console.log( this.tipoEnsayos );
+                }
+            );
         this.crearFormulario();
-        this.getCantidadEnsayos();
     }
 
     ngOnInit(): void {
+        this.getGestionCalidad();
     }
 
     crearFormulario() {
         this.formGestionCalidad = this.fb.group({
-            esEnsayosLaboratorio: [ null ],
+            seRealizaronEnsayosLaboratorio: [ null ],
             cantidadEnsayos: [ '' ],
             ensayosLaboratorio: this.fb.array( [] )
         });
@@ -75,8 +86,30 @@ export class GestionCalidadComponent implements OnInit {
         }
     }
 
-    getCantidadEnsayos() {
-        this.formGestionCalidad.get( 'cantidadEnsayos' ).valueChanges
+    getGestionCalidad() {
+        let gestionObraCalidad: any;
+        if ( this.seguimientoSemanal !== undefined ) {
+            this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
+            this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
+            this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
+        }
+        if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
+                && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad.length > 0 )
+        {
+            gestionObraCalidad = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
+            if ( gestionObraCalidad.seRealizaronEnsayosLaboratorio !== undefined ) {
+                this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' )
+                    .setValue( gestionObraCalidad.seRealizaronEnsayosLaboratorio );
+                this.formGestionCalidad.markAsDirty();
+            }
+        }
+        this.getCantidadEnsayos( gestionObraCalidad );
+    }
+
+    getCantidadEnsayos( gestionObraCalidad: any ) {
+        console.log( gestionObraCalidad, 'linea 108' );
+        if ( gestionObraCalidad === undefined ) {
+            this.formGestionCalidad.get( 'cantidadEnsayos' ).valueChanges
             .subscribe(
                 value => {
                     if ( Number( value ) < 0 ) {
@@ -100,6 +133,9 @@ export class GestionCalidadComponent implements OnInit {
                     }
                 }
             );
+        } else {
+
+        }
     }
 
     convertToNumber( cantidadEnsayos: string ) {
@@ -162,7 +198,43 @@ export class GestionCalidadComponent implements OnInit {
 
     guardar() {
         console.log( this.formGestionCalidad.value );
+        const pSeguimientoSemanal = this.seguimientoSemanal;
         this.seRealizoPeticion = true;
+        const gestionCalidad =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
+        this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad
+        : [];
+        const seguimientoSemanalGestionObra = [
+            {
+                seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
+                seguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                seguimientoSemanalGestionObraCalidad: [
+                    {
+                        SeguimientoSemanalGestionObraCalidadId: gestionCalidad.length > 0 ?
+                                                                gestionCalidad[0].SeguimientoSemanalGestionObraCalidadId : 0,
+                        SeguimientoSemanalGestionObraId: this.seguimientoSemanalGestionObraId,
+                        SeRealizaronEnsayosLaboratorio: this.formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value
+                    }
+                ]
+            }
+        ];
+
+        pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+        console.log( pSeguimientoSemanal );
+        this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    console.log( this.routes.url );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

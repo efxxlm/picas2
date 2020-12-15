@@ -14,7 +14,7 @@
                             <div class="col d-flex">
                                 <section style="width: 90%;">
                                     <mat-form-field class="w-50" appearance="fill">
-                                      <mat-select class="padding-left" formControlName="esEnsayosLaboratorio" required>
+                                      <mat-select class="padding-left" formControlName="seRealizaronEnsayosLaboratorio" required>
                                         <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
                                           {{requisito.viewValue}}
                                         </mat-option>
@@ -25,7 +25,7 @@
                           </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="formGestionCalidad.get( 'esEnsayosLaboratorio' ).value === true">
+                    <div class="row" *ngIf="formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === true">
                         <div class="col-md-12">
                           <div class="row">
                             <div class="pr-1">
@@ -72,7 +72,7 @@
                                                 <mat-form-field class="w-50" appearance="fill">
                                                   <mat-select class="padding-left" formControlName="tipoEnsayo" required>
                                                     <mat-option *ngFor="let requisito of tipoEnsayos" [value]="requisito">
-                                                      {{requisito.viewValue}}
+                                                      {{requisito.nombre}}
                                                     </mat-option>
                                                   </mat-select>
                                                 </mat-form-field>

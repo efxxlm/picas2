@@ -36,4 +36,8 @@ export class RegistrarAvanceSemanalService {
     return this.http.post<Respuesta>( `${ this.urlApi }/DeleteManejoMaterialesInsumosProveedor?ManejoMaterialesInsumosProveedorId=${ ManejoMaterialesInsumosProveedorId }`, '' );
   }
 
+  deleteResiduosConstruccionDemolicionGestor( ResiduosConstruccionDemolicionGestorId: number ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/DeleteResiduosConstruccionDemolicionGestor?ResiduosConstruccionDemolicionGestorId=${ ResiduosConstruccionDemolicionGestorId }`, '' );
+  }
+
 }

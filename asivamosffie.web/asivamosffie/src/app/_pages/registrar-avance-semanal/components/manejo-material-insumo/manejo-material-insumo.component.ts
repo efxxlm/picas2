@@ -151,8 +151,10 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                             this.avanceSemanalSvc.deleteManejoMaterialesInsumosProveedor( this.proveedores.at( index ).get( 'manejoMaterialesInsumosProveedorId' ).value )
                                 .subscribe(
                                     response => {
+                                        this.proveedores.removeAt( index );
                                         this.openDialog( '', `<b>${ response.message }</b>` );
-                                    }
+                                    },
+                                    err => this.openDialog( '', `<b>${ err.message }</b>` )
                                 );
                         }
                     }
