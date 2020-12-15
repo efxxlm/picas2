@@ -1130,7 +1130,31 @@ namespace asivamosffie.services
 
         private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
         {
-            throw new NotImplementedException();
+            if (pSeguimientoSemanalRegistrarComiteObra.SeguimientoSemanalRegistrarComiteObraId == 0) {
+
+                pSeguimientoSemanalRegistrarComiteObra.UsuarioCreacion = pUsuarioCreacion;
+                pSeguimientoSemanalRegistrarComiteObra.Eliminado = false;
+                pSeguimientoSemanalRegistrarComiteObra.FechaCreacion = DateTime.Now;
+
+                pSeguimientoSemanalRegistrarComiteObra.RegistroCompleto =
+                       pSeguimientoSemanalRegistrarComiteObra.FechaComite.HasValue
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite)
+                    ? true : false;
+
+                _context.SeguimientoSemanalRegistrarComiteObra.Add(pSeguimientoSemanalRegistrarComiteObra);
+
+            }
+            else {
+                SeguimientoSemanalRegistrarComiteObra SeguimientoSemanalRegistrarComiteObraOld = _context.SeguimientoSemanalRegistrarComiteObra.Find(pSeguimientoSemanalRegistrarComiteObra.SeguimientoSemanalRegistrarComiteObraId);
+                SeguimientoSemanalRegistrarComiteObraOld.UsuarioModificacion = pUsuarioCreacion;
+                SeguimientoSemanalRegistrarComiteObraOld.FechaModificacion = DateTime.Now;
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompleto = pSeguimientoSemanalRegistrarComiteObra.FechaComite.HasValue
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite)
+                    ? true : false;
+
+                SeguimientoSemanalRegistrarComiteObraOld.FechaComite = pSeguimientoSemanalRegistrarComiteObra.FechaComite;
+                SeguimientoSemanalRegistrarComiteObraOld.UrlSoporteComite = pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite; 
+            }
         }
 
         #endregion
