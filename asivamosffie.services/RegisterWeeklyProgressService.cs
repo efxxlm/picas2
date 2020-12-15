@@ -31,9 +31,18 @@ namespace asivamosffie.services
         }
 
         #region Get
-        public async Task<List<EnsayoLaboratorioMuestra>> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId)
+        public async Task<GestionObraCalidadEnsayoLaboratorio> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId)
         {
-            return await _context.EnsayoLaboratorioMuestra.Where(r => r.GestionObraCalidadEnsayoLaboratorioId == pGestionObraCalidadEnsayoLaboratorioId && !(bool)r.Eliminado).ToListAsync();
+            GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorio = await _context.GestionObraCalidadEnsayoLaboratorio
+               .Where(r => r.GestionObraCalidadEnsayoLaboratorioId == pGestionObraCalidadEnsayoLaboratorioId)
+               .Include(r => r.EnsayoLaboratorioMuestra)
+               .FirstOrDefaultAsync();
+
+            List<Dominio> ListTipoEnsayo = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipos_De_Ensayos_De_Laboratorio).ToList();
+
+            GestionObraCalidadEnsayoLaboratorio.TipoEnsayoCodigo = !string.IsNullOrEmpty(GestionObraCalidadEnsayoLaboratorio.TipoEnsayoCodigo) ? ListTipoEnsayo.Where(r => r.Codigo == GestionObraCalidadEnsayoLaboratorio.TipoEnsayoCodigo).FirstOrDefault().Nombre : " ";
+
+            return GestionObraCalidadEnsayoLaboratorio;
         }
 
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
@@ -132,10 +141,10 @@ namespace asivamosffie.services
                     foreach (var SeguimientoSemanalGestionObraAmbiental in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
                     {
                         //No incluir los ManejoMaterialesInsumosProveedor eliminados
-                        if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Count() > 0)
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null || SeguimientoSemanalGestionObraAmbiental?.ManejoMaterialesInsumo?.ManejoMaterialesInsumosProveedor.Count() > 0)
                             SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Where(r => !(bool)r.Eliminado).ToList();
                         //No incluir los Manejo Residuos Construccion Demolicion Gestor eliminados
-                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null || SeguimientoSemanalGestionObraAmbiental?.ManejoResiduosConstruccionDemolicion?.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
                             SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Where(r => !(bool)r.Eliminado).ToList();
                     }
                 }
@@ -234,10 +243,10 @@ namespace asivamosffie.services
                     foreach (var SeguimientoSemanalGestionObraAmbiental in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
                     {
                         //No incluir los ManejoMaterialesInsumosProveedor eliminados
-                        if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Count() > 0)
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null || SeguimientoSemanalGestionObraAmbiental?.ManejoMaterialesInsumo?.ManejoMaterialesInsumosProveedor.Count() > 0)
                             SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor.Where(r => !(bool)r.Eliminado).ToList();
                         //No incluir los Manejo Residuos Construccion Demolicion Gestor eliminados
-                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
+                        if (SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion != null || SeguimientoSemanalGestionObraAmbiental?.ManejoResiduosConstruccionDemolicion?.ManejoResiduosConstruccionDemolicionGestor.Count() > 0)
                             SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor = SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor.Where(r => !(bool)r.Eliminado).ToList();
                     }
                 }
@@ -726,7 +735,6 @@ namespace asivamosffie.services
             //Update
             else
             {
-
                 SeguimientoSemanalGestionObra seguimientoSemanalGestionObraOld = _context.SeguimientoSemanalGestionObra.Find(pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraId);
                 //Auditoria
                 seguimientoSemanalGestionObraOld.UsuarioModificacion = pUsuarioCreacion;
@@ -923,15 +931,11 @@ namespace asivamosffie.services
                 //Gestion Calidad
                 foreach (var SeguimientoSemanalGestionObraCalidad in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraCalidad)
                 {
-
-
                     //Ensayo Laboratorio
                     foreach (var GestionObraCalidadEnsayoLaboratorio in SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
                     {
-
                         if (GestionObraCalidadEnsayoLaboratorio.GestionObraCalidadEnsayoLaboratorioId == 0)
                         {
-
                             GestionObraCalidadEnsayoLaboratorio.UsuarioCreacion = pUsuarioCreacion;
                             GestionObraCalidadEnsayoLaboratorio.Eliminado = false;
                             GestionObraCalidadEnsayoLaboratorio.FechaCreacion = DateTime.Now;
@@ -948,7 +952,7 @@ namespace asivamosffie.services
 
                             gestionObraCalidadEnsayoLaboratorioOld.TipoEnsayoCodigo = GestionObraCalidadEnsayoLaboratorio.TipoEnsayoCodigo;
                             gestionObraCalidadEnsayoLaboratorioOld.NumeroMuestras = GestionObraCalidadEnsayoLaboratorio.NumeroMuestras;
-                            gestionObraCalidadEnsayoLaboratorioOld.FechaTomaMuestras = GestionObraCalidadEnsayoLaboratorio.FechaCreacion;
+                            gestionObraCalidadEnsayoLaboratorioOld.FechaTomaMuestras = GestionObraCalidadEnsayoLaboratorio.FechaTomaMuestras;
                             gestionObraCalidadEnsayoLaboratorioOld.FechaEntregaResultados = GestionObraCalidadEnsayoLaboratorio.FechaEntregaResultados;
                             gestionObraCalidadEnsayoLaboratorioOld.RealizoControlMedicion = GestionObraCalidadEnsayoLaboratorio.RealizoControlMedicion;
                             gestionObraCalidadEnsayoLaboratorioOld.Observacion = GestionObraCalidadEnsayoLaboratorio.Observacion;
@@ -995,7 +999,6 @@ namespace asivamosffie.services
                         seguimientoSemanalGestionObraCalidadOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad);
 
                         seguimientoSemanalGestionObraCalidadOld.SeRealizaronEnsayosLaboratorio = SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio;
-
                     }
                 }
 
@@ -1123,7 +1126,6 @@ namespace asivamosffie.services
                     (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente &&
                     (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato ? true : false;
 
-
                 _context.SeguimientoSemanalReporteActividad.Add(pSeguimientoSemanalReporteActividad);
             }
             else
@@ -1157,7 +1159,6 @@ namespace asivamosffie.services
                         (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividad &&
                         (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente &&
                         (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato ? true : false;
-
             }
         }
 
@@ -1195,7 +1196,6 @@ namespace asivamosffie.services
         {
             if (pSeguimientoSemanalRegistrarComiteObra.SeguimientoSemanalRegistrarComiteObraId == 0)
             {
-
                 pSeguimientoSemanalRegistrarComiteObra.UsuarioCreacion = pUsuarioCreacion;
                 pSeguimientoSemanalRegistrarComiteObra.Eliminado = false;
                 pSeguimientoSemanalRegistrarComiteObra.FechaCreacion = DateTime.Now;
@@ -1206,7 +1206,6 @@ namespace asivamosffie.services
                     ? true : false;
 
                 _context.SeguimientoSemanalRegistrarComiteObra.Add(pSeguimientoSemanalRegistrarComiteObra);
-
             }
             else
             {

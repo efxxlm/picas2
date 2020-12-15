@@ -30,7 +30,7 @@ namespace asivamosffie.api.Controllers
     
         [Route("GetEnsayoLaboratorioMuestras")]
         [HttpGet]
-        public async Task<ActionResult<List<EnsayoLaboratorioMuestra>>> GetEnsayoLaboratorioMuestras([FromQuery] int pGestionObraCalidadEnsayoLaboratorioId)
+        public async Task<ActionResult<GestionObraCalidadEnsayoLaboratorio>> GetEnsayoLaboratorioMuestras([FromQuery] int pGestionObraCalidadEnsayoLaboratorioId)
         {
             try
             {

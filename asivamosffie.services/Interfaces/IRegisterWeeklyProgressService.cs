@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<Respuesta> CreateEditEnsayoLaboratorioMuestra(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio);
 
-        Task<List<EnsayoLaboratorioMuestra>> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId);
+        Task<GestionObraCalidadEnsayoLaboratorio> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId);
 
         Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal();
 
