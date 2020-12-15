@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterWeeklyProgressService
     {
+        Task<Respuesta> CreateEditEnsayoLaboratorioMuestra(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio);
+
         Task<List<EnsayoLaboratorioMuestra>> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId);
 
         Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal();

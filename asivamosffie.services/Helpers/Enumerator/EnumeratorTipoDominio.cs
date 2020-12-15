@@ -141,8 +141,12 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_controversia_contractual_TAI = 90,
 
         Estado_avance_reclamacion = 91,
-         
-        Tipo_Actividad = 109
+
+        Tipo_Actividad = 109,
+
+        Estado_Obra_Avance_Semanal = 111,
+
+        Estado_Reporte_Semanal = 112,
 
 
     }

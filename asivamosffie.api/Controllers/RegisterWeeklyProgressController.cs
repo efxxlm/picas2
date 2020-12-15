@@ -85,7 +85,26 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+         
+        [HttpPost]
+        [Route("CreateEditEnsayoLaboratorioMuestra")]
+        public async Task<IActionResult> CreateEditEnsayoLaboratorioMuestra([FromBody] GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _registerWeeklyProgressService.CreateEditEnsayoLaboratorioMuestra(pGestionObraCalidadEnsayoLaboratorio);
 
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+         
         [HttpPost]
         [Route("SaveUpdateSeguimientoSemanal")]
         public async Task<IActionResult> SaveUpdateSeguimientoSemanal([FromBody] SeguimientoSemanal pSeguimientoSemanal)

@@ -160,5 +160,7 @@
         public const string Eliminar_Manejo_Materiales_Insumo_Proveedor = "161";
 
         public const string Eliminar_Residuos_Construccion_Demolicion_Gestor = "162";
+
+        public const string Crear_Editar_Ensayo_Laboratorio_Muestra = "166";
     }
 }

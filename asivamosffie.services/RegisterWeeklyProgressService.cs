@@ -296,6 +296,68 @@ namespace asivamosffie.services
         #endregion
 
         #region Save Edit
+        public async Task<Respuesta> CreateEditEnsayoLaboratorioMuestra(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Ensayo_Laboratorio_Muestra, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                foreach (var EnsayoLaboratorioMuestra in pGestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
+                {
+                    if (EnsayoLaboratorioMuestra.EnsayoLaboratorioMuestraId == 0)
+                    {
+                        EnsayoLaboratorioMuestra.UsuarioCreacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
+                        EnsayoLaboratorioMuestra.FechaCreacion = DateTime.Now;
+                        EnsayoLaboratorioMuestra.Eliminado =
+                               !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
+                            && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
+                            && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
+                            ? true : false;
+                        EnsayoLaboratorioMuestra.RegistroCompleto = false;
+                        _context.EnsayoLaboratorioMuestra.Add(EnsayoLaboratorioMuestra);
+
+                    }
+                    else
+                    {
+                        EnsayoLaboratorioMuestra EnsayoLaboratorioMuestraOld = _context.EnsayoLaboratorioMuestra.Find(EnsayoLaboratorioMuestra.EnsayoLaboratorioMuestraId);
+                        EnsayoLaboratorioMuestraOld.FechaEntregaResultado = EnsayoLaboratorioMuestra.FechaEntregaResultado;
+                        EnsayoLaboratorioMuestraOld.NombreMuestra = EnsayoLaboratorioMuestra.NombreMuestra;
+                        EnsayoLaboratorioMuestraOld.Observacion = EnsayoLaboratorioMuestra.Observacion;
+                        EnsayoLaboratorioMuestraOld.RegistroCompleto =
+                               !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
+                            && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
+                            && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
+                            ? true : false;
+                        ;
+                        EnsayoLaboratorioMuestraOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
+                        EnsayoLaboratorioMuestraOld.FechaModificacion = DateTime.Now;
+                    }
+                }
+
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstantSesionComiteTecnico.Error, idAccion, pGestionObraCalidadEnsayoLaboratorio.UsuarioModificacion, pGestionObraCalidadEnsayoLaboratorio.FechaModificacion.HasValue ? "EDITAR ENSAYO LABORATORIO MUESTRA" : "CREAR ENSAYO LABORATORIO MUESTRA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantSesionComiteTecnico.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstantSesionComiteTecnico.Error, idAccion, pGestionObraCalidadEnsayoLaboratorio.UsuarioModificacion, ex.InnerException.ToString())
+                };
+            }
+
+
+        }
+
         public async Task<Respuesta> DeleteResiduosConstruccionDemolicionGestor(int ResiduosConstruccionDemolicionGestorId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Residuos_Construccion_Demolicion_Gestor, (int)EnumeratorTipoDominio.Acciones);
@@ -861,25 +923,7 @@ namespace asivamosffie.services
                 //Gestion Calidad
                 foreach (var SeguimientoSemanalGestionObraCalidad in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraCalidad)
                 {
-                    if (SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId == 0)
-                    {
-                        SeguimientoSemanalGestionObraCalidad.UsuarioCreacion = pUsuarioCreacion;
-                        SeguimientoSemanalGestionObraCalidad.Eliminado = false;
-                        SeguimientoSemanalGestionObraCalidad.FechaCreacion = DateTime.Now;
-                        SeguimientoSemanalGestionObraCalidad.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad);
 
-                        _context.SeguimientoSemanalGestionObraCalidad.Add(SeguimientoSemanalGestionObraCalidad);
-                    }
-                    else
-                    {
-                        SeguimientoSemanalGestionObraCalidad seguimientoSemanalGestionObraCalidadOld = _context.SeguimientoSemanalGestionObraCalidad.Find(SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId);
-                        seguimientoSemanalGestionObraCalidadOld.UsuarioModificacion = pUsuarioCreacion;
-                        seguimientoSemanalGestionObraCalidadOld.FechaModificacion = DateTime.Now;
-                        seguimientoSemanalGestionObraCalidadOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad);
-
-                        seguimientoSemanalGestionObraCalidadOld.SeRealizaronEnsayosLaboratorio = SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio;
-
-                    }
 
                     //Ensayo Laboratorio
                     foreach (var GestionObraCalidadEnsayoLaboratorio in SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
@@ -933,6 +977,25 @@ namespace asivamosffie.services
                                 ensayoLaboratorioMuestraOld.Observacion = EnsayoLaboratorioMuestra.Observacion;
                             }
                         }
+                    }
+                    if (SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId == 0)
+                    {
+                        SeguimientoSemanalGestionObraCalidad.UsuarioCreacion = pUsuarioCreacion;
+                        SeguimientoSemanalGestionObraCalidad.Eliminado = false;
+                        SeguimientoSemanalGestionObraCalidad.FechaCreacion = DateTime.Now;
+                        SeguimientoSemanalGestionObraCalidad.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad);
+
+                        _context.SeguimientoSemanalGestionObraCalidad.Add(SeguimientoSemanalGestionObraCalidad);
+                    }
+                    else
+                    {
+                        SeguimientoSemanalGestionObraCalidad seguimientoSemanalGestionObraCalidadOld = _context.SeguimientoSemanalGestionObraCalidad.Find(SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObraCalidadId);
+                        seguimientoSemanalGestionObraCalidadOld.UsuarioModificacion = pUsuarioCreacion;
+                        seguimientoSemanalGestionObraCalidadOld.FechaModificacion = DateTime.Now;
+                        seguimientoSemanalGestionObraCalidadOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad);
+
+                        seguimientoSemanalGestionObraCalidadOld.SeRealizaronEnsayosLaboratorio = SeguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio;
+
                     }
                 }
 
@@ -1117,20 +1180,21 @@ namespace asivamosffie.services
             else
             {
                 SeguimientoSemanalRegistroFotografico seguimientoSemanalRegistroFotograficoOld = _context.SeguimientoSemanalRegistroFotografico.Find();
-                seguimientoSemanalRegistroFotograficoOld.UsuarioModificacion= pUsuarioCreacion;
+                seguimientoSemanalRegistroFotograficoOld.UsuarioModificacion = pUsuarioCreacion;
                 seguimientoSemanalRegistroFotograficoOld.FechaModificacion = DateTime.Now;
                 seguimientoSemanalRegistroFotograficoOld.RegistroCompleto =
                        !string.IsNullOrEmpty(pSeguimientoSemanalRegistroFotografico.UrlSoporteFotografico)
-                    && !string.IsNullOrEmpty(pSeguimientoSemanalRegistroFotografico.Descripcion) ? true : false; 
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalRegistroFotografico.Descripcion) ? true : false;
 
                 seguimientoSemanalRegistroFotograficoOld.UrlSoporteFotografico = pSeguimientoSemanalRegistroFotografico.UrlSoporteFotografico;
-                seguimientoSemanalRegistroFotograficoOld.Descripcion = pSeguimientoSemanalRegistroFotografico.Descripcion; 
+                seguimientoSemanalRegistroFotograficoOld.Descripcion = pSeguimientoSemanalRegistroFotografico.Descripcion;
             }
         }
 
         private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
         {
-            if (pSeguimientoSemanalRegistrarComiteObra.SeguimientoSemanalRegistrarComiteObraId == 0) {
+            if (pSeguimientoSemanalRegistrarComiteObra.SeguimientoSemanalRegistrarComiteObraId == 0)
+            {
 
                 pSeguimientoSemanalRegistrarComiteObra.UsuarioCreacion = pUsuarioCreacion;
                 pSeguimientoSemanalRegistrarComiteObra.Eliminado = false;
@@ -1144,7 +1208,8 @@ namespace asivamosffie.services
                 _context.SeguimientoSemanalRegistrarComiteObra.Add(pSeguimientoSemanalRegistrarComiteObra);
 
             }
-            else {
+            else
+            {
                 SeguimientoSemanalRegistrarComiteObra SeguimientoSemanalRegistrarComiteObraOld = _context.SeguimientoSemanalRegistrarComiteObra.Find(pSeguimientoSemanalRegistrarComiteObra.SeguimientoSemanalRegistrarComiteObraId);
                 SeguimientoSemanalRegistrarComiteObraOld.UsuarioModificacion = pUsuarioCreacion;
                 SeguimientoSemanalRegistrarComiteObraOld.FechaModificacion = DateTime.Now;
@@ -1153,7 +1218,7 @@ namespace asivamosffie.services
                     ? true : false;
 
                 SeguimientoSemanalRegistrarComiteObraOld.FechaComite = pSeguimientoSemanalRegistrarComiteObra.FechaComite;
-                SeguimientoSemanalRegistrarComiteObraOld.UrlSoporteComite = pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite; 
+                SeguimientoSemanalRegistrarComiteObraOld.UrlSoporteComite = pSeguimientoSemanalRegistrarComiteObra.UrlSoporteComite;
             }
         }
 
@@ -1189,12 +1254,36 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoGestionObraCalidadEnsayoLaboratorio(GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorio)
         {
-            return false;
+            if (
+                 string.IsNullOrEmpty(gestionObraCalidadEnsayoLaboratorio.TipoEnsayoCodigo)
+              || string.IsNullOrEmpty(gestionObraCalidadEnsayoLaboratorio.NumeroMuestras.ToString())
+              || !gestionObraCalidadEnsayoLaboratorio.FechaTomaMuestras.HasValue
+              || !gestionObraCalidadEnsayoLaboratorio.FechaEntregaResultados.HasValue
+              || !gestionObraCalidadEnsayoLaboratorio.RealizoControlMedicion.HasValue
+                )
+            { return false; }
+            return true;
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad seguimientoSemanalGestionObraCalidad)
         {
-            return false;
+            if (!seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue
+                || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0
+                )
+            {
+                return false;
+            }
+
+
+            foreach (var GestionObraCalidadEnsayoLaboratorio in seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio)
+            {
+                if (!GestionObraCalidadEnsayoLaboratorio.RegistroCompleto.HasValue || !(bool)GestionObraCalidadEnsayoLaboratorio.RegistroCompleto)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental pSeguimientoSemanalGestionObraAmbiental)
