@@ -1146,9 +1146,15 @@ namespace asivamosffie.services
 
                                 _context.SeguridadSaludCausaAccidente.Add(SeguridadSaludCausaAccidente);
                             }
-                            else {
-                                SeguridadSaludCausaAccidente seguridadSaludCausaAccidenteOld = _context.SeguridadSaludCausaAccidente.Find();
-                                seguridadSaludCausaAccidenteOld.Eliminado = SeguridadSaludCausaAccidente.Eliminado;  
+                            else
+                            {
+                                SeguridadSaludCausaAccidente seguridadSaludCausaAccidenteOld = _context.SeguridadSaludCausaAccidente.Find(SeguridadSaludCausaAccidente.SeguridadSaludCausaAccidentesId); 
+                                if (SeguridadSaludCausaAccidente.Eliminado == true)
+                                {
+                                    seguridadSaludCausaAccidenteOld.Eliminado = SeguridadSaludCausaAccidente.Eliminado;
+                                    _context.Remove(seguridadSaludCausaAccidenteOld);
+                                }
+
                             }
                         }
                     }
