@@ -29,6 +29,109 @@
     </table>
     <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
 </div>
-<form>
-
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text">
+                Registro
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="fechaSolicitud">Fecha de solicitud</label>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="fechaSolicitud" [matDatepicker]="pickerFechaRevision"
+                                    [min]="minDate" readonly (click)="pickerFechaRevision.open()" required
+                                    placeholder="DD/MM/AAAA">
+                                <mat-datepicker #pickerFechaRevision></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
+                                class="btn-calendario">
+                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label for="numeroRadicado" class="label-left">Número de radicado</label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #numeroRadicado type="text" maxlength="10"
+                                    formControlName="numeroRadicado" required>
+                            </mat-form-field>
+                            <span class="contador">{{10 - numeroRadicado.value.length}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="faseContrato">Pólizas y seguros requeridos</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="faseContrato" multiple required>
+                                    <mat-option *ngFor="let faseContrato of fasesArray" [value]="faseContrato.value">
+                                        {{ faseContrato.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+    </div>
 </form>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Fase 1 - Preconstrucción
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Criterios de pago incluidos en la factura
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-form-criterios-pago></app-form-criterios-pago>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Detalle factura para proyectos asociados
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                hola probando
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Datos de la factura
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                hola probando
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-expansion-panel>
+</mat-accordion>

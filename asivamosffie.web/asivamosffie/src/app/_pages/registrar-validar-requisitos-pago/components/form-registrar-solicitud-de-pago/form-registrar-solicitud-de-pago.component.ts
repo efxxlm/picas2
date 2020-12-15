@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -38,7 +39,16 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
       porcentajePorPagar: '100%',
     }
   ];
-  constructor() { }
+  addressForm = this.fb.group({
+    fechaSolicitud: [null, Validators.required],
+    numeroRadicado: [null, Validators.required],
+    faseContrato: [null, Validators.required]
+  });
+  fasesArray = [
+    { name: 'Fase 1 - Preconstrucción', value: '1' },
+    { name: 'Fase 2 - Construcción', value: '2' }
+  ];
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTable);
@@ -50,5 +60,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
+  onSubmit() {
 
+  }
 }
