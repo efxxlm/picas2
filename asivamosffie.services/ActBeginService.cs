@@ -240,6 +240,8 @@ namespace asivamosffie.services
                     contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                     contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
 
+                    contrato.EstadoActaFase2 = "14"; //Con acta preliminar generada 
+
                     ValidarFechasNulas(ref contrato);
 
                     _context.Contrato.Update(contrato);
