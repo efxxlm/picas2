@@ -340,7 +340,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
           this.services.EditarContratoObservacion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2", this.fechaSesionString, this.fechaSesionString2, false, true).subscribe(resp => {
             if (resp.code == "200") {
               this.realizoPeticion = true;
-              this.openDialog("", 'La información ha sido guardada exitosamente.');
+              this.openDialog("", '<b>La información ha sido guardada exitosamente.</b>');
               this.router.navigate(['/generarActaInicioConstruccion']);
             }
             else {
