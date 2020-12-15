@@ -19,11 +19,10 @@ namespace asivamosffie.model.Models
         public int? CantidadProyectosRequisitosPendientes { get; set; }
         public int? TieneFasePreconstruccion { get; set; }
         public int? TieneFaseConstruccion { get; set; }
+        public int? TieneObservaciones { get; set; }
         public string EstadoCodigo { get; set; }
         public string EstadoNombre { get; set; }
         public bool? ExisteRegistro { get; set; }
         public bool? EstaDevuelto { get; set; }
-        public int? TieneObservaciones { get; set; }       
-
     }
 }

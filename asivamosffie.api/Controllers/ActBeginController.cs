@@ -46,7 +46,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratoObservacionByIdContratoId")]
         [HttpGet]        
-        public async Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
+        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
         {
             var respuesta = await _ActBegin.GetContratoObservacionByIdContratoId(pContratoId,  pEsSupervisor);
             return respuesta;
@@ -63,22 +63,14 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateEditContratoObservacion")]        
-        public async Task<IActionResult> InsertEditContratoObservacion( ConstruccionObservacion construccionObservacion)
+        public async Task<IActionResult> InsertEditContratoObservacion( Contrato pContrato )
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                if (construccionObservacion.ConstruccionObservacionId == 0)
-                {
-                    construccionObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                }
-                else
-                {
-                    construccionObservacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                }                    
+                pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                     
-                respuesta = await _ActBegin.InsertEditContratoObservacion(construccionObservacion);
+                respuesta = await _ActBegin.InsertEditContratoObservacion( pContrato );
                 return Ok(respuesta);
             }
             catch (Exception ex)
