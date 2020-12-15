@@ -52,6 +52,14 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
+        [Route("GetContratoObservacionByIdContratoIdUltimaArchivada")]
+        [HttpGet]        
+        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoIdUltimaArchivada(int pContratoId, bool pEsSupervisor)
+        {
+            var respuesta = await _ActBegin.GetContratoObservacionByIdContratoIdUltimaArchivada(pContratoId,  pEsSupervisor);
+            return respuesta;
+        }
+
         [Route("GetContratoByIdContratoId")]
         [HttpGet]        
         public async Task<Contrato> GetContratoByIdContratoId(int pContratoId)

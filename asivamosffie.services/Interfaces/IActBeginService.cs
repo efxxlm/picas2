@@ -30,6 +30,7 @@ namespace asivamosffie.services.Interfaces
         //¿Tiene observaciones al acta de inicio? Sí No  ?????
         //ConObervacionesActa  - Contrato
 
+        Task<ContratoObservacion> GetContratoObservacionByIdContratoIdUltimaArchivada(int pContratoId, bool pEsSupervisor);
         
         Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor);
 

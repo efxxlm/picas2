@@ -201,7 +201,7 @@ namespace asivamosffie.services
             try
             {
                 Contrato contrato = null;
-                contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+                contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include( r => r.Contratacion ).FirstOrDefault();
 
                 if (contrato != null)
                 {
@@ -240,7 +240,10 @@ namespace asivamosffie.services
                     contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                     contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
 
-                    contrato.EstadoActaFase2 = "14"; //Con acta preliminar generada 
+                    if ( contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                    {
+                        contrato.EstadoActaFase2 = "14"; //Con acta preliminar generada 
+                    }
 
                     ValidarFechasNulas(ref contrato);
 
@@ -1102,7 +1105,8 @@ namespace asivamosffie.services
                                                         .Where(
                                                                 r => r.ContratoId == pContratoId &&
                                                                 r.EsSupervision == pEsSupervisor &&
-                                                                r.EsActaFase2 == true
+                                                                r.EsActaFase2 == true &&
+                                                                r.Archivado != true
                                                                )
                                                         .OrderByDescending(r => r.ContratoObservacionId)
                                                         ?.FirstOrDefault();
@@ -1111,6 +1115,31 @@ namespace asivamosffie.services
             }
             return contratoObservacion;
 
+        }
+
+        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoIdUltimaArchivada(int pContratoId, bool pEsSupervisor)
+        {
+            ContratoObservacion contratoObservacion = new ContratoObservacion();
+            List<ContratoObservacion> lstContratoObservacion = new List<ContratoObservacion>();
+
+            Contrato contrato = _context.Contrato.Find(pContratoId);
+
+            if (contrato != null)
+            {
+                //contratoObservacion.ContratoConstruccionId = contratoConstruccion.ContratoConstruccionId;
+
+                contratoObservacion = _context.ContratoObservacion
+                                                        .Where(
+                                                                r => r.ContratoId == pContratoId &&
+                                                                r.EsSupervision == pEsSupervisor &&
+                                                                r.EsActaFase2 == true &&
+                                                                r.Archivado == true
+                                                               )
+                                                        .OrderByDescending(r => r.ContratoObservacionId)
+                                                        ?.FirstOrDefault();
+
+            }
+            return contratoObservacion;
         }
 
         public async Task<Contrato> GetContratoByIdContratoId(int pContratoId)
@@ -1692,7 +1721,7 @@ namespace asivamosffie.services
             {
                 //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
                 //Contrato contrato = _context.Contrato.Where(r => !(bool)r.Eliminado && r.ContratoId == pContratoId && r.TipoContratoCodigo == pTipoContrato.ToString()).FirstOrDefault();
-                Contrato contrato = _context.Contrato.Where(r => !(bool)r.Eliminado && r.ContratoId == pContratoId && r.Contratacion.TipoSolicitudCodigo == pTipoContrato.ToString()).FirstOrDefault();
+                Contrato contrato = _context.Contrato.Where(r => !(bool)r.Eliminado && r.ContratoId == pContratoId && r.Contratacion.TipoSolicitudCodigo == pTipoContrato.ToString()).Include(r => r.ContratoConstruccion).ThenInclude( r => r.ConstruccionObservacion).FirstOrDefault();
                 //cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
                 string strFechaPrevistaTerminacion = "";
                 string strFechaActaInicio = "";
@@ -1726,11 +1755,17 @@ namespace asivamosffie.services
                     strFechaPrevistaTerminacion = contrato.FechaTerminacionFase2 != null ? Convert.ToDateTime(contrato.FechaTerminacionFase2).ToString("dd/MM/yyyy") : contrato.FechaTerminacionFase2.ToString();
 
                     //contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
-                    ContratoObservacion contratoObservacion = await GetContratoObservacionByIdContratoId(contrato.ContratoId, false);
+                    //ContratoObservacion contratoObservacion = await GetContratoObservacionByIdContratoId(contrato.ContratoId, false);
 
-                    if (contratoObservacion != null)
+                    ConstruccionObservacion  construccionObservacion  = contrato.ContratoConstruccion?
+                                                                                    .FirstOrDefault()?.ConstruccionObservacion?
+                                                                                    .Where( r => r.TipoObservacionConstruccion =="6" )
+                                                                                    .OrderByDescending( r => r.ConstruccionObservacionId )
+                                                                                    ?.FirstOrDefault();     
+
+                    if (construccionObservacion != null)
                     {
-                        strContratoObservacion = contratoObservacion.Observaciones;
+                        strContratoObservacion = construccionObservacion.Observaciones;
                     }
 
                     //strContratoObservacion = contrato.Observaciones;
