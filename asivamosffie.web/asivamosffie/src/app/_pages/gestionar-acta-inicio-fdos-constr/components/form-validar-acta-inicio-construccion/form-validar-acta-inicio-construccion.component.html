@@ -23,7 +23,7 @@
             <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{this.fechaAprobacionGarantiaPoliza}}</p>
             <p><strong>Objeto:</strong></p>
             <div [innerHtml]="this.objeto"></div>
-            <p><strong>Valor inicial del contrato: </strong>{{this.valorInicialContrato}}</p>
+            <p><strong>Valor inicial del contrato: </strong>{{this.valorActualContrato}}</p>
             <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato}}</p>
             <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion}}</p>
             <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra}}</p>
@@ -110,8 +110,8 @@
                 [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
                     Observaciones al acta de inicio
                 </label>
-                <quill-editor class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
+                <quill-editor class="quill-editor-style ml-1em position-relative" [styles]="editorStyle" [modules]="config"
+                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required></quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
                 {{1000 - (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
@@ -120,8 +120,10 @@
                 1000
             </span>
         </div>
-        <button mat-button color="warn" class="btn-guardar" type="submit">
-            <img src="assets/img/icon/guardar.svg" alt="Guardar">
-        </button>
+        <div class="mb-2em">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+        </div>
     </form>
 </section>
