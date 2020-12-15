@@ -371,13 +371,13 @@ namespace asivamosffie.services
                         ;
                         EnsayoLaboratorioMuestraOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                         EnsayoLaboratorioMuestraOld.FechaModificacion = DateTime.Now;
-                    }         
+                    }
                 }
                 GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld = _context.GestionObraCalidadEnsayoLaboratorio.Find(pGestionObraCalidadEnsayoLaboratorio.GestionObraCalidadEnsayoLaboratorioId);
                 gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoMuestras = ValidarRegistroCompletoMuestasLaboratorio(pGestionObraCalidadEnsayoLaboratorio);
                 gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
-                 
+
                 _context.SaveChanges();
 
 
@@ -411,8 +411,8 @@ namespace asivamosffie.services
 
             try
             {
-                GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorioOld =await _context.GestionObraCalidadEnsayoLaboratorio
-                    .Where(r=> r.GestionObraCalidadEnsayoLaboratorioId == GestionObraCalidadEnsayoLaboratorioId).Include(r=> r.EnsayoLaboratorioMuestra).FirstOrDefaultAsync();
+                GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorioOld = await _context.GestionObraCalidadEnsayoLaboratorio
+                    .Where(r => r.GestionObraCalidadEnsayoLaboratorioId == GestionObraCalidadEnsayoLaboratorioId).Include(r => r.EnsayoLaboratorioMuestra).FirstOrDefaultAsync();
 
                 if (GestionObraCalidadEnsayoLaboratorioOld == null)
                 {
@@ -660,7 +660,32 @@ namespace asivamosffie.services
 
         private void SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero pSeguimientoSemanalAvanceFinanciero, string pUsuarioCreacion)
         {
-            throw new NotImplementedException();
+            pSeguimientoSemanalAvanceFinanciero.RegistroCompleto =
+                       !pSeguimientoSemanalAvanceFinanciero.RequiereObservacion.HasValue
+                    || !pSeguimientoSemanalAvanceFinanciero.GenerarAlerta.HasValue
+                    || (pSeguimientoSemanalAvanceFinanciero.RequiereObservacion.HasValue
+                    && (bool)pSeguimientoSemanalAvanceFinanciero.RequiereObservacion && string.IsNullOrEmpty(pSeguimientoSemanalAvanceFinanciero.Observacion)) 
+                    ? false : true;
+
+            if (pSeguimientoSemanalAvanceFinanciero.SeguimientoSemanalAvanceFinancieroId == 0)
+            { 
+                pSeguimientoSemanalAvanceFinanciero.UsuarioCreacion = pUsuarioCreacion;
+                pSeguimientoSemanalAvanceFinanciero.FechaCreacion = DateTime.Now;
+                pSeguimientoSemanalAvanceFinanciero.Eliminado = false;
+            }
+            else
+            { 
+                SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinancieroOld = _context.SeguimientoSemanalAvanceFinanciero.Find(pSeguimientoSemanalAvanceFinanciero.SeguimientoSemanalAvanceFinancieroId);
+               
+                seguimientoSemanalAvanceFinancieroOld.UsuarioModificacion = pUsuarioCreacion;
+                seguimientoSemanalAvanceFinancieroOld.FechaModificacion = DateTime.Now;
+                seguimientoSemanalAvanceFinancieroOld.RegistroCompleto = pSeguimientoSemanalAvanceFinanciero.RegistroCompleto;
+
+                seguimientoSemanalAvanceFinancieroOld.RequiereObservacion = pSeguimientoSemanalAvanceFinanciero.RequiereObservacion;
+                seguimientoSemanalAvanceFinancieroOld.Observacion = pSeguimientoSemanalAvanceFinanciero.Observacion;
+                seguimientoSemanalAvanceFinancieroOld.GenerarAlerta = pSeguimientoSemanalAvanceFinanciero.GenerarAlerta;
+
+            }
         }
 
         private void SaveUpdateGestionObra(SeguimientoSemanalGestionObra pSeguimientoSemanalGestionObra, string pUsuarioCreacion)
@@ -780,8 +805,8 @@ namespace asivamosffie.services
                             EnsayoLaboratorioMuestra.RegistroCompleto = ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra);
 
                             _context.EnsayoLaboratorioMuestra.Add(EnsayoLaboratorioMuestra);
-                        } 
-                    } 
+                        }
+                    }
                 }
 
                 //Gestion Seguridad Salud
@@ -1197,7 +1222,7 @@ namespace asivamosffie.services
                 seguimientoSemanalGestionObraOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
             }
         }
-         
+
         private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
         {
             if (pSeguimientoSemanalReporteActividad.SeguimientoSemanalReporteActividadId == 0)
