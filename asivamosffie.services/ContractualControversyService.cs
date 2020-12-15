@@ -376,6 +376,7 @@ namespace asivamosffie.services
             Contratista contratista = null;
 
             NovedadContractual novedadContractual = null;   //sin rel?????
+             novedadContractual = new NovedadContractual();   //sin rel?????
 
             DisponibilidadPresupuestal disponibilidadPresupuestal = null;
 
@@ -408,11 +409,12 @@ namespace asivamosffie.services
 
             }
 
-            controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == 16 && r.Eliminado == false
-            && r.Eliminado == false).FirstOrDefault();
-
-            // controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == contrato.ContratoId && r.Eliminado == false
+            // 11 12 (13) (15) (16)
+            //controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == 16 && r.Eliminado == false
             //&& r.Eliminado == false).FirstOrDefault();
+
+            controversiaContractual = _context.ControversiaContractual.Where(r => r.ContratoId == contrato.ContratoId && r.Eliminado == false
+           && r.Eliminado == false).FirstOrDefault();
 
             string strEstadoCodigoControversia = "sin definir";
             string strTipoControversiaCodigo = "sin definir";
@@ -551,9 +553,13 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace("Facturacion_programada_acumulada_", "PENDIENTE");
             strContenido = strContenido.Replace("_Facturacion_ejecutada_acumulada_", "PENDIENTE");
 
+            DateTime? fechaNull = null;
+            fechaNull = controversiaContractual != null ? controversiaContractual.FechaComitePreTecnico : null;
+            
             strContenido = strContenido.Replace(">>>>>SECCION_TAI>>>>>>>>", "");
             strContenido = strContenido.Replace("_Motivos_solicitud_", controversiaMotivoSolicitudNombre);
-            strContenido = strContenido.Replace("_Fecha_Comite_Pre_Tecnico_", controversiaContractual.FechaComitePreTecnico != null ? Convert.ToDateTime(controversiaContractual.FechaComitePreTecnico).ToString("dd/MM/yyyy") : controversiaContractual.FechaComitePreTecnico.ToString());
+            //strContenido = strContenido.Replace("_Fecha_Comite_Pre_Tecnico_", controversiaContractual.FechaComitePreTecnico != null ? Convert.ToDateTime(controversiaContractual.FechaComitePreTecnico).ToString("dd/MM/yyyy") : controversiaContractual.FechaComitePreTecnico.ToString());
+            strContenido = strContenido.Replace("_Fecha_Comite_Pre_Tecnico_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy"));
 
             strContenido = strContenido.Replace("_Conclusion_Comite_pretecnico_", controversiaContractual.ConclusionComitePreTecnico);
             strContenido = strContenido.Replace("_URL_soportes_solicitud_", controversiaContractual.RutaSoporte);
@@ -584,9 +590,14 @@ namespace asivamosffie.services
             strContenido = strContenido.Replace(">>>>> SECCION_SUSPENSION_PRORROGA_REINICIO >>>>>>>>", "");
             strContenido = strContenido.Replace("_Plazo_solicitado_", Convert.ToInt32(novedadContractual.PlazoAdicionalMeses).ToString());
             //strContenido = strContenido.Replace("_Plazo_solicitado_", novedadContractual.PlazoAdicionalDias);
-            strContenido = strContenido.Replace("_Fecha_Inicio_", novedadContractual.FechaInicioSuspension != null ? Convert.ToDateTime(novedadContractual.FechaInicioSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaInicioSuspension.ToString());
 
-            strContenido = strContenido.Replace("_Fecha_Fin_", novedadContractual.FechaFinSuspension != null ? Convert.ToDateTime(novedadContractual.FechaFinSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaFinSuspension.ToString());
+            fechaNull = novedadContractual != null ? novedadContractual.FechaInicioSuspension : null;            
+            //strContenido = strContenido.Replace("_Fecha_Inicio_", novedadContractual.FechaInicioSuspension != null ? Convert.ToDateTime(novedadContractual.FechaInicioSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaInicioSuspension.ToString());
+            strContenido = strContenido.Replace("_Fecha_Inicio_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy"));
+
+            fechaNull = novedadContractual != null ? novedadContractual.FechaFinSuspension : null;
+            //strContenido = strContenido.Replace("_Fecha_Fin_", novedadContractual.FechaFinSuspension != null ? Convert.ToDateTime(novedadContractual.FechaFinSuspension).ToString("dd/MM/yyyy") : novedadContractual.FechaFinSuspension.ToString());
+            strContenido = strContenido.Replace("_Fecha_Fin_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy"));
             //ContratacionProyecto ComiteTecnicoProyecto  ComiteTecnico
             strContenido = strContenido.Replace("_Numero_Comite_Tecnico_", "PENDIENTE");
             strContenido = strContenido.Replace("_Numero_Comite_Fiduciario_", "PENDIENTE");
@@ -725,13 +736,17 @@ namespace asivamosffie.services
                 }
 
             }
+            //DateTime? fechaNull = null;
+            fechaNull = actuacionSeguimiento != null ? actuacionSeguimiento.FechaActuacionAdelantada : null;
+            //FechaFirmaContrato = fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy");
 
             //Historial de Actuaciones
             strContenido = strContenido.Replace(">>>>> SECCION_LISTA_ACTUACIONES >>>>>>>>", "");
             //(LISTA ACTUACIONES....)
             strContenido = strContenido.Replace("Actuación 1", "");
             strContenido = strContenido.Replace("_Estado_avance_tramite_", EstadoAvanceTramiteCodigoNombre);
-            strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
+            //strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento?.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
+            strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy")); 
 
             strContenido = strContenido.Replace("_Actuacion_adelantada_", ActuacionAdelantadaCodigoNombre);
             strContenido = strContenido.Replace("_Actuacion_adelantada_", controversiaActuacion.ActuacionAdelantadaOtro);
@@ -767,10 +782,13 @@ namespace asivamosffie.services
 
             }
 
+
+
             //Resumen de la propuesta de reclamación ante la aseguradora:
             strContenido = strContenido.Replace("Actuación de la reclamación 1", "");
             strContenido = strContenido.Replace("_Estado_avance_reclamacion_", strEstadoReclamacion);
-            strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
+            //strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaActuacionAdelantada).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaActuacionAdelantada.ToString());
+            strContenido = strContenido.Replace("_Fecha_actuacion_adelantada_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy")); 
             strContenido = strContenido.Replace("_Actuacion_adelantada_", actuacionSeguimiento.ActuacionAdelantada);
             strContenido = strContenido.Replace("_Proxima_actuacion_requerida_", actuacionSeguimiento.ProximaActuacion);
             strContenido = strContenido.Replace("_Observaciones_", actuacionSeguimiento.Observaciones);
