@@ -26,7 +26,7 @@
     <p><b>¿Se requirió modificación contractual?</b>: {{construccion.requiereModificacionContractual === true ? 'Si' : 'No'}}</p>
 </div>
 <div align="left">
-    <mat-card class="border">
+    <mat-card class="border" *ngIf="construccion.requiereModificacionContractual === true">
         <mat-card-content>
             <p><b>Número de solicitud de la modificación</b>: {{construccion.numeroSolicitudModificacion}}</p>
         </mat-card-content>

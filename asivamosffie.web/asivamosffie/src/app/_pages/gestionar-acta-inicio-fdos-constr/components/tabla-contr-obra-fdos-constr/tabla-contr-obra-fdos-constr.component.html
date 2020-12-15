@@ -41,7 +41,9 @@
                         *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Descargar Acta</button>-->
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"
-                        (click)="this.enviarRevision(element.contratoId,element.estadoActa)">Enviar notificación al interventor</button>
+                        (click)="this.enviarRevision(element.contratoId,element.estadoActa)">
+                        Enviar al interventor
+                      </button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"
                         (click)="this.verDetalleEditar(element.contratoId)">Ver detalle/Editar</button>

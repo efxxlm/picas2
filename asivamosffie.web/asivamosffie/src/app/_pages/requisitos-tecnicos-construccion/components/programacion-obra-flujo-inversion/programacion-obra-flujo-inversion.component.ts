@@ -1,6 +1,9 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { DialogCargarProgramacionComponent } from '../dialog-cargar-programacion/dialog-cargar-programacion.component';
 import { MatDialog } from '@angular/material/dialog';
+import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
+import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
+import { Proyecto } from 'src/app/core/_services/project/project.service';
 
 @Component({
   selector: 'app-programacion-obra-flujo-inversion',
@@ -11,6 +14,8 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
 
   @Input() esFlujoInversion: boolean;
   @Input() contratoConstruccionId: number;
+  @Input() contrato: Contrato;
+  @Input() proyectoId: number;
   @Input() observacionDevolucionProgramacionObra: number;
   @Input() observacionDevolucionFlujoInversion: number;
   @Input() archivoCargueIdProgramacionObra: number;
@@ -20,7 +25,11 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   tieneRegistrosObra = true;
   tieneRegistrosInversion = true;
 
-  constructor( private dialog: MatDialog ) { }
+  constructor( 
+                private dialog: MatDialog ,
+                private faseUnoConstruccionService: FaseUnoConstruccionService,
+             ) 
+  { }
 
   ngOnInit(): void {
   }
@@ -28,7 +37,8 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   cargarProgramacion() {
     const dialogCargarProgramacion = this.dialog.open( DialogCargarProgramacionComponent, {
       width: '75em',
-      data: { esFlujoInversion: this.esFlujoInversion, contratoConstruccionId: this.contratoConstruccionId }
+      data: { esFlujoInversion: this.esFlujoInversion, contratoConstruccionId: this.contratoConstruccionId,
+              contratoId: this.contrato.contratoId, proyectoId: this.proyectoId }
     });
 
     dialogCargarProgramacion.afterClosed().subscribe( response => {
@@ -41,6 +51,23 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
     if ( realizoObservacion === true ) {
       this.realizoObservacion.emit( realizoObservacion );
     }
+  }
+
+  descargarDRPBoton(){    
+    console.log( this.contrato )    
+    this.faseUnoConstruccionService.GenerateDRP( this.contrato.contratoId )
+      .subscribe((listas:any) => {
+        console.log(listas);
+        const documento = `DRP ${ this.contrato.numeroContrato }.pdf`;
+          const text = documento,
+            blob = new Blob([listas], { type: 'application/pdf' }),
+            anchor = document.createElement('a');
+          anchor.download = documento;
+          anchor.href = window.URL.createObjectURL(blob);
+          anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+          anchor.click();
+    });
+  
   }
 
 }

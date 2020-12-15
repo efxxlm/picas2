@@ -2,23 +2,23 @@
     width: 99%;
     margin-top: 1em;
   }
-  
+
   .mt-1em {
     margin-top: .8em;
   }
-  
+
   .padding-left {
     padding-left: .7em
   }
-  
+
   .mr-min {
     margin-right: .7em;
   }
-  
+
   .w-30 {
     width: 30%;
   }
-  
+
   .w-31 {
     width: 31%;
   }
@@ -28,3 +28,21 @@
   .colorTitle{
     color: rgba(0,0,0,.54) !important;
   }
+
+.inline-flex {
+  display: block;
+  @media only screen and (min-width: 48em) {
+    display: inline-flex;
+  }
+}
+
+@media only screen and (max-width: 48em) {
+.fuerzo-ancho-total {
+    width: 100%;
+  }
+}
+@media only screen and (min-width: 48em) {
+  .margen-url {
+    margin-left: 8em;
+  }
+}

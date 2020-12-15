@@ -14,6 +14,11 @@ export class FormValidacionRequisitosInterventoriaArtcComponent implements OnIni
   contrato: Contrato;
   perfilesCv: Dominio[] = [];
   observacionSupervisor = '3';
+  estadoConstruccion = {
+    enviadoAlSupervisor: '6',
+    enProcesoValidacionReqTecnicos: '7',
+    conReqTecnicosValidados: '8'
+  };
 
   constructor(
     private faseUnoConstruccionService: FaseUnoConstruccionService,

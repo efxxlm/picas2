@@ -16,14 +16,14 @@
         <mat-card-content>
             <p><strong>Vigencia del contrato: </strong>{{this.vigenciaContrato}}</p>
             <p><strong>Fecha de firma del contrato: </strong>{{this.fechaFirmaContrato}}</p>
-            <p><strong>Número del DRP 1. </strong>{{this.numeroDRP1}}</p>
-            <p><strong>Fecha de generación de DRP 1. </strong>{{this.fechaGeneracionDRP1}}</p>
-            <p *ngIf="this.numeroDRP2!=undefined"><strong>Número del DRP 2. </strong>{{this.numeroDRP2}}</p>
-            <p *ngIf="this.fechaGeneracionDRP2!=undefined"><strong>Fecha de generación de DRP 2. </strong>{{this.fechaGeneracionDRP2}}</p>
+            <p><strong>Número del DRP. </strong>{{this.numeroDRP1}}</p>
+            <p><strong>Fecha de generación de DRP. </strong>{{this.fechaGeneracionDRP1}}</p>
+            <!-- <p *ngIf="this.numeroDRP2!=undefined"><strong>Número del DRP 2. </strong>{{this.numeroDRP2}}</p> -->
+            <!-- <p *ngIf="this.fechaGeneracionDRP2!=undefined"><strong>Fecha de generación de DRP 2. </strong>{{this.fechaGeneracionDRP2}}</p> -->
             <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{this.fechaAprobacionGarantiaPoliza}}</p>
             <p><strong>Objeto:</strong></p>
             <div [innerHtml]="this.objeto"></div>
-            <p><strong>Valor inicial del contrato: </strong>{{this.valorInicialContrato}}</p>
+            <p><strong>Valor inicial del contrato: </strong>{{this.valorActualContrato}}</p>
             <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato}}</p>
             <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion}}</p>
             <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra}}</p>
@@ -44,6 +44,7 @@
                 <p><strong>Nombre de la entidad contratista de interventoría:
                     </strong>{{this.nombreEntidadContratistaObra}}</p>
             </div>
+            <p><strong>Plazo inicial del contrato: meses {{this.plazoActualContratoMeses}} días {{this.plazoActualContratoDias}} </strong>
         </mat-card-content>
     </mat-card>
     <mat-card class="shipping-card mainGris">
@@ -51,7 +52,7 @@
             <p><strong>Fecha del acta de inicio de la fase 2 - Construcción:
                 </strong>{{this.fechaActaInicioConstruccion | date: 'dd/MM/yyyy' }}</p>
             <p><strong>Fecha prevista de terminación: </strong>{{this.fechaPrevistaTerminacion | date: 'dd/MM/yyyy' }}</p>
-            <p><strong>Plazo actual del contrato: Meses:</strong> {{this.plazoActualContratoMeses}} <strong>Días:
+            <p  *ngIf="false"><strong>Plazo actual del contrato: Meses:</strong> {{this.plazoActualContratoMeses}} <strong>Días:
             </strong>{{this.plazoActualContratoDias}}</p>
             <p *ngIf="this.plazoEjecucionPreConstruccionMeses!=undefined && this.plazoEjecucionPreConstruccionDias!=undefined"><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> {{this.plazoEjecucionPreConstruccionMeses}} <strong>Días:
                 </strong>{{this.plazoEjecucionPreConstruccionDias}}</p>
@@ -60,7 +61,7 @@
             <p><strong>Observaciones o consideraciones especiales: </strong></p>
             <p *ngIf="this.obsConEspeciales=='' || this.obsConEspeciales==null || this.obsConEspeciales==undefined">-----</p>
             <div *ngIf="this.obsConEspeciales!=='' || this.obsConEspeciales!==null || this.obsConEspeciales!==undefined">
-                <div [innerHtml]="this.obsConEspeciales"></div> 
+                <div [innerHtml]="this.obsConEspeciales"></div>
             </div>
         </mat-card-content>
     </mat-card>
@@ -73,11 +74,11 @@
             </mat-card-header>
             <mat-card-content>
                 <p><strong>{{this.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></p>
-                <div [innerHtml]="this.observacionesSupervisor"></div> 
+                <div [innerHtml]="this.observacionesSupervisor"></div>
             </mat-card-content>
         </mat-card>
     </div>
 </section>
-<section class="container text-center" *ngIf="this.botonDescargar==true">
+<section class="container text-center mb-2em" *ngIf="this.botonDescargar==true">
     <button mat-raised-button color="accent" (click)="this.descargarActaSuscrita(this.rutaActaSuscrita)">Descargar acta suscrita</button>
 </section>

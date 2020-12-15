@@ -95,14 +95,13 @@ export class ProgramacionObraArtcComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  textoLimpio(texto: string) {
-    if ( texto !== undefined ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
     } else {
       return 0;
     }
@@ -138,7 +137,7 @@ export class ProgramacionObraArtcComponent implements OnInit {
           construccionObservacionId: this.addressForm.value.construccionObservacionId,
           contratoConstruccionId: this.contratoConstruccionId,
           tipoObservacionConstruccion: TiposObservacionConstruccion.ProgramacionObra,
-          esSupervision: false,
+          esSupervision: true,
           esActa: false,
           observaciones: this.addressForm.value.observaciones
         }

@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public bool? EsActaFase1 { get; set; }
         public bool? EsActaFase2 { get; set; }
         public bool? EsSupervision { get; set; }
+        public bool? Archivado { get; set; }
 
         public virtual Contrato Contrato { get; set; }
     }

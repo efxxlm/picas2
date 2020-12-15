@@ -16,6 +16,7 @@ namespace asivamosffie.api.Controllers
     {
         private readonly IManagePreContructionActPhase1Service _managePreContruction;
         private readonly IOptions<AppSettings> _settings;
+        private readonly PublicController _publicController;
 
         public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings) {
             _managePreContruction = managePreContructionActPhase1Service;
@@ -77,7 +78,9 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managePreContruction.LoadActa( pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato);
+                respuesta = await _managePreContruction.LoadActa( pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato,
+                    ToAppSettingsService(_settings)
+                    );
                 return respuesta;
 
             }
@@ -96,7 +99,7 @@ namespace asivamosffie.api.Controllers
             try
             {  
                 respuesta = await _managePreContruction.CambiarEstadoActa(pContratoId, pEstadoContrato,
-               HttpContext.User.FindFirst("User").Value);
+               HttpContext.User.FindFirst("User").Value, ToAppSettingsService(_settings));
                 return respuesta;
 
             }
@@ -106,13 +109,24 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
-
+       
+        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService
+            {
+                MailPort = appSettings.Value.MailPort,
+                MailServer = appSettings.Value.MailServer,
+                Password = appSettings.Value.Password,
+                Sender = appSettings.Value.Sender
+            };
+            return appSettingsService;
+        }
         [HttpGet]
         [Route("GetActaByIdPerfil")]
         public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pPerfilId, int pContratoId)
         {
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId , pUserId), "application/pdf");
+            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId , pUserId , ToAppSettingsService(_settings)), "application/pdf");
         }
 
         [HttpGet]

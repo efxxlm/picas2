@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class HojasVidaInterventoriaArtcComponent implements OnInit {
 
   @Input() observacionesCompleted;
+  @Input() observacionDevolucion;
   @Input() observacionesPerfil;
   @Input() tieneObservacion;
   @Input() fechaModificacion;
@@ -54,13 +55,16 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+      return evento.getLength() > n ? n : evento.getLength();
+    } else {
+      return 0;
+    }
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -83,6 +87,7 @@ export class HojasVidaInterventoriaArtcComponent implements OnInit {
           esSupervision: true,
           esActa: false,
           observacion:  this.addressForm.get( 'observaciones' ).value !== null
+                        || this.addressForm.get( 'observaciones' ).value !== undefined
                         && this.addressForm.get( 'tieneObservaciones' ).value === true ?
                         this.addressForm.get( 'observaciones' ).value : null
         }

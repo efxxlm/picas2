@@ -20,5 +20,6 @@ namespace asivamosffie.model.Models
         public Boolean faseConstruccionNotMapped { get; set; }
         [NotMapped]
         public Boolean fasePreConstruccionNotMapped { get; set; }
+        
     }
 }

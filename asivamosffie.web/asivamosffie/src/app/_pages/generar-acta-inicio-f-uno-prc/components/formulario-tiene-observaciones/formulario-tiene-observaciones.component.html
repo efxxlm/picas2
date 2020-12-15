@@ -19,10 +19,10 @@
                 <label for="observaciones" class="text-area-quill--label"
                     style="color: #174193; font-size: 16px;">Observaciones al acta de inicio</label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
+                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observacionesInicio></quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-                {{1000 - textoLimpio(addressForm.get('observaciones').value)}}
+                {{1000 - (textoLimpio(observacionesInicio.quillEditor,1000))}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value === '' || addressForm.get('observaciones').value === null">
                 1000

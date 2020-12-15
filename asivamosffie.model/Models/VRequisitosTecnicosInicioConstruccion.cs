@@ -20,6 +20,7 @@ namespace asivamosffie.model.Models
         public int? TieneFaseConstruccion { get; set; }
         public string EstadoCodigo { get; set; }
         public string EstadoNombre { get; set; }
+        public string EstadoNombreVerificacion { get; set; }
         public bool? ExisteRegistro { get; set; }
         public bool? EstaDevuelto { get; set; }
     }

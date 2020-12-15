@@ -56,7 +56,11 @@ export class FormVerificacionRequisitosComponent implements OnInit {
           {
             semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'completo';
-            if ( contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo === true )
+            if (  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoApoyo === true && 
+                  (contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoApoyo === undefined && 
+                  contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoApoyo.observaciones === undefined) 
+                   
+               )
               contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
           };
 
@@ -69,7 +73,10 @@ export class FormVerificacionRequisitosComponent implements OnInit {
           {
             semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'completo';
-            if ( contratacion.proyecto.contratoConstruccion[0].observacionPlanesProgramasApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasApoyo === true )
+            if ( 
+                  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesPlanesProgramasApoyo === true &&
+                  ( contratacion.proyecto.contratoConstruccion[0].observacionPlanesProgramasApoyo === undefined || contratacion.proyecto.contratoConstruccion[0].observacionPlanesProgramasApoyo.observaciones === undefined )
+               )
               contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'en-proceso';
           };
 
@@ -82,7 +89,10 @@ export class FormVerificacionRequisitosComponent implements OnInit {
           {
             semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'completo';
-            if ( contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipoApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === true )
+            if ( 
+                  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesManejoAnticipoApoyo === true &&    
+                  (contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipoApoyo === undefined || contratacion.proyecto.contratoConstruccion[0].observacionManejoAnticipoApoyo.observaciones === undefined)
+               )
               contratacion.proyecto.contratoConstruccion[0].semaforoManejo = 'en-proceso';
           };
 
@@ -98,7 +108,10 @@ export class FormVerificacionRequisitosComponent implements OnInit {
             ) 
             {
               perfil.semaforoPerfil = 'completo';
-              if ( perfil.observacionApoyo === undefined && perfil.tieneObservacionesApoyo === true )
+              if ( 
+                    perfil.tieneObservacionesApoyo === true && 
+                    ( perfil.observacionApoyo === undefined || perfil.observacionApoyo.observacion === undefined )
+                 )
                 perfil.semaforoPerfil = 'en-proceso';
             };
             if ( perfil.semaforoPerfil === 'sin-diligenciar' ) {
@@ -130,7 +143,10 @@ export class FormVerificacionRequisitosComponent implements OnInit {
           {
             semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'completo';
-            if ( contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObraApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === true )
+            if ( 
+                  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesProgramacionObraApoyo === true &&
+                  (contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObraApoyo === undefined || contratacion.proyecto.contratoConstruccion[0].observacionProgramacionObraApoyo.observaciones === undefined )
+               )
               contratacion.proyecto.contratoConstruccion[0].semaforoProgramacion = 'en-proceso';
           };
 
@@ -143,7 +159,10 @@ export class FormVerificacionRequisitosComponent implements OnInit {
           {
             semaforoGeneralconteo++;
             contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'completo';
-            if ( contratacion.proyecto.contratoConstruccion[0].observacionFlujoInversionApoyo === undefined && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === true )
+            if ( 
+              contratacion.proyecto.contratoConstruccion[0].tieneObservacionesFlujoInversionApoyo === true &&
+              (contratacion.proyecto.contratoConstruccion[0].observacionFlujoInversionApoyo === undefined || contratacion.proyecto.contratoConstruccion[0].observacionFlujoInversionApoyo.observaciones === undefined )
+               )
               contratacion.proyecto.contratoConstruccion[0].semaforoFlujo = 'en-proceso';
           };
 

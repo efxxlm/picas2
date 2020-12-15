@@ -100,6 +100,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
 
   ngOnInit(): void {
     this.services.GetListGrillaActaInicio(8).subscribe((data:any)=>{
+      console.log( data );
       for(let actas of data){
         if(actas.tipoContrato == 'Obra' && (actas.estadoActaCodigo!='13' && actas.estadoActaCodigo!='14')){
           this.dataTable.push(actas);

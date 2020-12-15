@@ -89,13 +89,14 @@
             <p><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> {{this.mesesFase1}} <strong>Días:
                 </strong>{{this.diasFase1}}</p>
             <div *ngIf="this.valorFDos!=0">
-                <p><strong>Plazo de ejecución fase 2 – Construcción:</strong> {{this.mesesFase2}} <strong>Días:
+                <p><strong>Plazo de ejecución fase 2 – Construcción: Meses:</strong> {{this.mesesFase2}} <strong>Días:
                     </strong>{{this.diasFase2}}</p>
             </div>
             <p><strong>Observaciones o consideraciones especiales: </strong></p>
             <div [innerHtml]="this.observacionesUltimas"></div>
         </mat-card-content>
     </mat-card>
+    <!--
     <div *ngIf="this.opcion==2 && this.tieneObservacionesBool==false">
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
@@ -109,7 +110,8 @@
             </mat-card-content>
         </mat-card>
     </div>
-    <div *ngIf="this.observacionesUltimasSup!=null">
+    -->
+    <div *ngIf="this.observacionesUltimasSup!=null && this.tieneObservacionesBool2==true">
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">
@@ -129,6 +131,6 @@
         </mat-card>
     </div>
 </section>
-<section class="container text-center" *ngIf="this.rutaDocumento!=null" style="padding-bottom: 2em;">
+<section class="container text-center mb-2em" *ngIf="this.rutaDocumento!=null">
     <button mat-raised-button color="accent" (click)="this.generarActaSuscrita(this.rutaDocumento)">Descargar acta suscrita</button>
 </section>

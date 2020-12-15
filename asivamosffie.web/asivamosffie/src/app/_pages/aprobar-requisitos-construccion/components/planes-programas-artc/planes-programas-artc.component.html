@@ -124,12 +124,17 @@
                         [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid)">
                         Observaciones a los planes y programas
                 </label>
-                <quill-editor   class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+                <quill-editor   class="quill-editor-style ml-1em"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)"
+                                formControlName="observaciones"
+                                #obsPlanesProgramas
+                                required>
                 </quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{1000 - textoLimpio(addressForm.get('observaciones').value )}}
+              {{1000 - textoLimpio( obsPlanesProgramas.quillEditor, 1000 )}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
               1000
@@ -143,17 +148,17 @@
     </form>
 </div>
 <div style="margin-top: 3em;" align="center" *ngIf="this.observacionesCompleted==true">
-    <mat-card class="border" *ngIf="planesProgramas.tieneObservacionesPlanesProgramasSupervisor !== undefined && planesProgramas.tieneObservacionesPlanesProgramasSupervisor === true">
+    <mat-card class="border">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
                 Validación de la supervisión
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b> {{ planesProgramas.observacionPlanesProgramasSupervisor.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-            <p *ngIf="planesProgramas.tieneObservacionesPlanesProgramasSupervisor === true"><b>¿Tiene observaciones a los planes y programas?:</b> Sí</p>
-            <p *ngIf="planesProgramas.tieneObservacionesPlanesProgramasSupervisor === false"><b>¿Tiene observaciones a los planes y programas?:</b> No</p>
-            <section *ngIf="planesProgramas.observacionPlanesProgramasSupervisor.observaciones !== undefined" [innerHTML]="planesProgramas.observacionPlanesProgramasSupervisor.observaciones"></section>
+            <p *ngIf="planesProgramas.observacionDevolucionPlanesProgramas !== undefined" style="margin-left: 2em;"><b> {{ planesProgramas.observacionDevolucionPlanesProgramas.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p *ngIf="planesProgramas.observacionDevolucionPlanesProgramas !== undefined" style="margin-left: 2em;"><b>¿Tiene observaciones a los planes y programas?:</b> Sí</p>
+            <p *ngIf="planesProgramas.observacionDevolucionPlanesProgramas === undefined" style="margin-left: 2em;"><b>¿Tiene observaciones a los planes y programas?:</b> No</p>
+            <section *ngIf="planesProgramas.observacionDevolucionPlanesProgramas !== undefined" [innerHTML]="planesProgramas.observacionDevolucionPlanesProgramas.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
     <!--Tabla para historial de observaciones-->

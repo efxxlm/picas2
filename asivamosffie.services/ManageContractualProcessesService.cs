@@ -557,7 +557,8 @@ namespace asivamosffie.services
             {
                 List<ComiteTecnico> ListComiteTecnicos = _context.ComiteTecnico
                     .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ToList();
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                    .Include(r=> r.SesionComiteSolicitudComiteTecnico).ToList();
 
                 ////ListComiteTecnicos = ListComiteTecnicos.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada).ToList();
 
@@ -671,7 +672,7 @@ namespace asivamosffie.services
                      .FirstOrDefaultAsync();
 
                 List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
-                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && !(bool)r.Eliminado)
                      .Include(r => r.ComiteTecnico)
                      .Include(r => r.ComiteTecnicoFiduciario)
                      .ToList();

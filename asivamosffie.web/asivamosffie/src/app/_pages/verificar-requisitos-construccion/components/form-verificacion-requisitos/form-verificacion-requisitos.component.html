@@ -24,7 +24,13 @@
     <mat-accordion *ngFor="let contratacion of contrato.contratacion.contratacionProyecto; index as i">
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header w-45">
-          <mat-panel-title class="expansion-style--title {{ contrato.contratacion.contratacionProyecto[i].proyecto.semaforoGeneral }}" >
+          <mat-panel-title class="expansion-style--title 
+          {{ 
+            contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0].registroCompletoVerificacion !== undefined ? 
+              contrato.contratacion.contratacionProyecto[i].proyecto.contratoConstruccion[0].registroCompletoVerificacion === true ?
+                'completo' : 'en-proceso' : 'sin-diligenciar'
+            
+          }}" >
             {{ contratacion.proyecto.llaveMen }} -
             {{ contratacion.proyecto[ 'institucionEducativa' ].nombre }} -
             {{ contratacion.proyecto[ 'sede' ].nombre }}

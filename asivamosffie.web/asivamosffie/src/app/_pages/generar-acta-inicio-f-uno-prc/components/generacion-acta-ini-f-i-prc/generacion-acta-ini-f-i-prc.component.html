@@ -204,7 +204,7 @@
                     <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
                         {{500 - textoLimpio(addressForm.get('observacionesEspeciales').value)}}
                     </span>
-                    <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null">
+                    <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value === null || addressForm.get('observacionesEspeciales').value === ''">
                         500
                     </span>
                 </div>

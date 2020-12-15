@@ -100,9 +100,9 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left" >
-            <p><b>{{ construccion.observacionDevolucionDiagnostico.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>{{ construccion.observacionDevolucionDiagnostico.observaciones }}</p>
+            <p style="margin-left: 2em;"><b>{{ construccion.observacionDevolucionDiagnostico.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <section [innerHTML]="construccion.observacionDevolucionDiagnostico.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
 </div>

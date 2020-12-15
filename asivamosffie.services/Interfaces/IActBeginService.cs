@@ -15,7 +15,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId);
 
-        Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId);
+        Task<VistaGenerarActaInicioContrato> GetListVistaGenerarActaInicio(int pContratoId, int pUserId);
 
         Task GetDocumentoNoCargadoValue(string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
 
@@ -30,19 +30,20 @@ namespace asivamosffie.services.Interfaces
         //¿Tiene observaciones al acta de inicio? Sí No  ?????
         //ConObervacionesActa  - Contrato
 
-        //Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor);
-        Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor);
+        Task<ContratoObservacion> GetContratoObservacionByIdContratoIdUltimaArchivada(int pContratoId, bool pEsSupervisor);
+        
+        Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor);
 
         Task<Respuesta> CambiarEstadoVerificacionActa(int pContratoId, string pNuevoCodigoEstadoVerificacionActa, string pUsuarioModifica);
 
-        Task<Respuesta> InsertEditContratoObservacion(ConstruccionObservacion construccionObservacion);
+        Task<Respuesta> InsertEditContratoObservacion(Contrato pContrato);
 
 
         Task<Respuesta> GuardarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria
             /* archivo pdf */ , IFormFile pFile, string pDirectorioBase, string pDirectorioActaInicio, string pUsuarioModificacion,  AppSettingsService _appSettingsService
             );
 
-        Task<Respuesta> EditarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria , string pUsuarioModificacion);
+        Task<Respuesta> EditarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria , string pUsuarioModificacion, IFormFile pFile, string pFilePatch);
 
         Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa);
 

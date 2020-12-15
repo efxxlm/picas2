@@ -22,6 +22,7 @@
   width: 100%;
   margin-bottom: 1.5em;
   position: relative;
+  max-width: calc(100% - 7.3em);
 
   &.color-secondaryColor {
     border-color: $secondaryColor;
@@ -80,6 +81,10 @@
         border-radius: 5px;
       }
     }
+  }
+
+  &.invalid .quill-editor-style.card .ql-container.ql-snow {
+    border-color: $secondaryColor;
   }
 
   &.card {

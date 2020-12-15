@@ -38,8 +38,10 @@ namespace asivamosffie.services.Helpers.Enumerator
         AlertaSupervisor317_2dias = 39, 
         AlertaPolizas317_4dias = 40,
         Alertas2DiasObraInterventoria318 = 41,
-        ConActaSinDocumento319 = 43,
-
+        ConActaSinDocumento319 = 43, 
         VerificacionRequisitosTecnicosConstruccionFase2=44,
+        EnviarActaParaFirmar319 = 45,
+        EnviarActaCargada319 = 46,
+        Notificarinterventor=48,
     }
 }

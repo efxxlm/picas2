@@ -100,14 +100,14 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   validarActaParaInicio(id) {
-    localStorage.setItem("origin", "interventoria");
+    localStorage.setItem("origin", "interventoria"); 
     localStorage.setItem("editable", "false");
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
   }
   verDetalleEditar(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "true");
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
   }
   verDetalle(id) {
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion', id]);

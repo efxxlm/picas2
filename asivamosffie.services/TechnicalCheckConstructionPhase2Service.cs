@@ -36,7 +36,13 @@ namespace asivamosffie.services
         public async Task<List<VRequisitosTecnicosConstruccionAprobar>> GetContractsGrid(string pUsuarioId, string pTipoContrato)
         {
             if (pTipoContrato == ConstanCodigoTipoContratacion.Obra.ToString()) 
-                return await _context.VRequisitosTecnicosConstruccionAprobar.Where(r => r.TipoContratoCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && r.TieneFaseConstruccion > 0 && ( r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10")).ToListAsync();
+                return await _context.VRequisitosTecnicosConstruccionAprobar
+                                        .Where(
+                                                r => r.TipoContratoCodigo == ConstanCodigoTipoContratacion.Obra.ToString() && 
+                                                r.TieneFaseConstruccion > 0 && 
+                                                ( r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10")
+                                              )
+                                        .ToListAsync();
             else
                 return await _context.VRequisitosTecnicosConstruccionAprobar.Where(r => r.TipoContratoCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString() && r.TieneFaseConstruccion > 0  && ( r.EstadoCodigo == "6" || r.EstadoCodigo == "7" || r.EstadoCodigo == "8" || r.EstadoCodigo == "9" || r.EstadoCodigo == "10" || r.EstadoCodigo == "11")).ToListAsync();
              
