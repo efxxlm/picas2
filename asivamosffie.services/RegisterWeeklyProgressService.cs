@@ -41,6 +41,8 @@ namespace asivamosffie.services
                       .ThenInclude(r => r.SeguimientoSemanal)
                           .ThenInclude(r => r.ContratacionProyecto)
                                .ThenInclude(r => r.Proyecto)
+               .Include(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r=> r.GestionObraCalidadEnsayoLaboratorio)
                .FirstOrDefaultAsync();
 
             if (GestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra != null && GestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra.Count() > 0)
@@ -50,6 +52,8 @@ namespace asivamosffie.services
             GestionObraCalidadEnsayoLaboratorio.TipoEnsayoCodigo = !string.IsNullOrEmpty(GestionObraCalidadEnsayoLaboratorio.TipoEnsayoCodigo) ? ListTipoEnsayo.Where(r => r.Codigo == GestionObraCalidadEnsayoLaboratorio.TipoEnsayoCodigo).FirstOrDefault().Nombre : " ";
             GestionObraCalidadEnsayoLaboratorio.LlaveMen = GestionObraCalidadEnsayoLaboratorio.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanal.ContratacionProyecto.Proyecto.LlaveMen;
             int NumeroLaboratorio = 1;
+
+        
 
             foreach (var item in GestionObraCalidadEnsayoLaboratorio.SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).OrderBy(r => r.GestionObraCalidadEnsayoLaboratorioId))
             {
