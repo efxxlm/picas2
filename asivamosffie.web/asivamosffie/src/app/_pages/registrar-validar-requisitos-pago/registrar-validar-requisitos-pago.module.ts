@@ -13,11 +13,13 @@ import { FormRegistrarSolicitudDePagoComponent } from './components/form-registr
 import { FormCriteriosPagoComponent } from './components/form-criterios-pago/form-criterios-pago.component';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { DetalleFacturaProyectosAsociadosComponent } from './components/detalle-factura-proyectos-asociados/detalle-factura-proyectos-asociados.component';
+import { FormDatosFacturaComponent } from './components/form-datos-factura/form-datos-factura.component';
+import { FormDescuentosDireccionTecnicaComponent } from './components/form-descuentos-direccion-tecnica/form-descuentos-direccion-tecnica.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,

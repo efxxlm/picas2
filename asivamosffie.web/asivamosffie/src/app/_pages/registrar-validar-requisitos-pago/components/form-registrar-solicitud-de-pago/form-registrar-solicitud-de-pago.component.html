@@ -130,9 +130,19 @@
                         Datos de la factura
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                hola probando
+                <app-form-datos-factura></app-form-datos-factura>
             </mat-expansion-panel>
             Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la sección anterior
         </mat-accordion>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Descuentos Dirección Técnica
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-form-descuentos-direccion-tecnica></app-form-descuentos-direccion-tecnica>
     </mat-expansion-panel>
 </mat-accordion>
