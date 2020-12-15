@@ -42,7 +42,7 @@ namespace asivamosffie.services
                           .ThenInclude(r => r.ContratacionProyecto)
                                .ThenInclude(r => r.Proyecto)
                .Include(r => r.SeguimientoSemanalGestionObraCalidad)
-                             .ThenInclude(r=> r.GestionObraCalidadEnsayoLaboratorio)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
                .FirstOrDefaultAsync();
 
             if (GestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra != null && GestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra.Count() > 0)
@@ -53,7 +53,7 @@ namespace asivamosffie.services
             GestionObraCalidadEnsayoLaboratorio.LlaveMen = GestionObraCalidadEnsayoLaboratorio.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanal.ContratacionProyecto.Proyecto.LlaveMen;
             int NumeroLaboratorio = 1;
 
-        
+
 
             foreach (var item in GestionObraCalidadEnsayoLaboratorio.SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).OrderBy(r => r.GestionObraCalidadEnsayoLaboratorioId))
             {
@@ -336,12 +336,12 @@ namespace asivamosffie.services
                     {
                         EnsayoLaboratorioMuestra.UsuarioCreacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                         EnsayoLaboratorioMuestra.FechaCreacion = DateTime.Now;
-                        EnsayoLaboratorioMuestra.Eliminado =
-                               !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
+                        EnsayoLaboratorioMuestra.Eliminado = false;
+
+                        EnsayoLaboratorioMuestra.RegistroCompleto = !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
                             && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
                             && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
                             ? true : false;
-                        EnsayoLaboratorioMuestra.RegistroCompleto = false;
                         _context.EnsayoLaboratorioMuestra.Add(EnsayoLaboratorioMuestra);
 
                     }
@@ -362,13 +362,16 @@ namespace asivamosffie.services
                     }
                 }
 
+                _context.SaveChanges();
+
+
                 return new Respuesta
                 {
-                    IsSuccessful = false,
-                    IsException = true,
+                    IsSuccessful = true,
+                    IsException = false,
                     IsValidation = false,
-                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pGestionObraCalidadEnsayoLaboratorio.UsuarioModificacion, pGestionObraCalidadEnsayoLaboratorio.FechaModificacion.HasValue ? "EDITAR ENSAYO LABORATORIO MUESTRA" : "CREAR ENSAYO LABORATORIO MUESTRA")
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pGestionObraCalidadEnsayoLaboratorio.UsuarioModificacion, pGestionObraCalidadEnsayoLaboratorio.FechaModificacion.HasValue ? "EDITAR ENSAYO LABORATORIO MUESTRA" : "CREAR ENSAYO LABORATORIO MUESTRA")
                 };
             }
             catch (Exception ex)
