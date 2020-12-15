@@ -70,8 +70,8 @@
                                         <div class="col d-flex">
                                             <section style="width: 97%;">
                                                 <mat-form-field class="w-50" appearance="fill">
-                                                  <mat-select class="padding-left" formControlName="tipoEnsayo" required>
-                                                    <mat-option *ngFor="let requisito of tipoEnsayos" [value]="requisito">
+                                                  <mat-select class="padding-left" formControlName="tipoEnsayoCodigo" required>
+                                                    <mat-option *ngFor="let requisito of tipoEnsayos" [value]="requisito.codigo">
                                                       {{requisito.nombre}}
                                                     </mat-option>
                                                   </mat-select>
@@ -113,7 +113,7 @@
                                             <mat-form-field>
                                                 <input  matInput
                                                         [matDatepicker]="pickerfechaToma"
-                                                        formControlName="fechaToma"
+                                                        formControlName="fechaTomaMuestras"
                                                         placeholder="DD/MM/AAAA"
                                                         (click)="pickerfechaToma.open()"
                                                         readonly required>
@@ -142,7 +142,7 @@
                                             <mat-form-field>
                                                 <input  matInput
                                                         [matDatepicker]="pickerProyectadaEntrega"
-                                                        formControlName="fechaProyectadaEntrega"
+                                                        formControlName="fechaEntregaResultados"
                                                         placeholder="DD/MM/AAAA"
                                                         (click)="pickerProyectadaEntrega.open()"
                                                         readonly required>
@@ -170,7 +170,7 @@
                                         <div class="col d-flex">
                                             <section style="width: 95%;">
                                                 <mat-form-field class="w-50" appearance="fill">
-                                                  <mat-select class="padding-left" formControlName="seRealizoControl" required>
+                                                  <mat-select class="padding-left" formControlName="realizoControlMedicion" required>
                                                     <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
                                                       {{requisito.viewValue}}
                                                     </mat-option>
@@ -181,7 +181,7 @@
                                       </div>
                                     </div>
                                 </div>
-                                <div class="row" *ngIf="ensayo.get( 'seRealizoControl' ).value === true">
+                                <div class="row" *ngIf="ensayo.get( 'realizoControlMedicion' ).value === true">
                                     <div class="col-md-12">
                                       <div>
                                         <div class="pr-1">
@@ -192,14 +192,14 @@
                                                             [styles]="editorStyle"
                                                             [modules]="config"
                                                             (onContentChanged)="maxLength($event, 400)"
-                                                            formControlName="observaciones"
+                                                            formControlName="observacion"
                                                             #obsEnsayo
                                                             required>
                                             </quill-editor>
-                                            <span class="contador miles" *ngIf="ensayo.get('observaciones').value !== null" style="margin-top: 3.5em;">
+                                            <span class="contador miles" *ngIf="ensayo.get('observacion').value !== null" style="margin-top: 3.5em;">
                                                 {{400 - textoLimpio( obsEnsayo.quillEditor, 400 )}}
                                             </span>
-                                            <span class="contador miles" *ngIf="ensayo.get('observaciones').value === null" style="margin-top: 3.5em;">
+                                            <span class="contador miles" *ngIf="ensayo.get('observacion').value === null" style="margin-top: 3.5em;">
                                                 400
                                             </span>
                                         </div>
@@ -216,7 +216,7 @@
                                             <mat-form-field style="width: 96%;">
                                                 <input  matInput
                                                         type="text"
-                                                        formControlName="urlSoporte">
+                                                        formControlName="urlSoporteGestion">
                                             </mat-form-field>
                                         </div>
                                         <div class="d-flex justify-content-center size-text-descriptivo">
@@ -229,11 +229,11 @@
                                       </div>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-center mt-1em" *ngIf="seRealizoPeticion === true">
+                                <div class="d-flex justify-content-center mt-1em" *ngIf="ensayo.get( 'registroCompleto' ).value === true">
                                   <button mat-raised-button
                                           color="accent"
                                           class="btn-table expansion-style--title btn-color h-2em w-20 sin-diligenciar"
-                                          (click)="getRegistrarResultados()">
+                                          (click)="getRegistrarResultados( ensayo.get( 'gestionObraCalidadEnsayoLaboratorioId' ).value )">
                                           <small class="mr-1em btn-color-text">Registrar resultados</small>
                                   </button>
                                 </div>

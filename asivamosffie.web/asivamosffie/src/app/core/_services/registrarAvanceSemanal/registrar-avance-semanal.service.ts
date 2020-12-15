@@ -24,12 +24,20 @@ export class RegistrarAvanceSemanalService {
     );
   }
 
+  getEnsayoLaboratorioMuestras( pGestionObraCalidadEnsayoLaboratorioId: number ) {
+    return this.http.get<any[]>( `${ this.urlApi }/GetEnsayoLaboratorioMuestras?pGestionObraCalidadEnsayoLaboratorioId=${ pGestionObraCalidadEnsayoLaboratorioId }` );
+  }
+
   getListSeguimientoSemanalByContratacionProyectoId( pContratacionProyectoId: number ) {
     return this.http.get( `${ this.urlApi }/GetListSeguimientoSemanalByContratacionProyectoId?pContratacionProyectoId=${ pContratacionProyectoId }` );
   }
 
   saveUpdateSeguimientoSemanal( pSeguimientoSemanal: any ) {
     return this.http.post<Respuesta>( `${ this.urlApi }/SaveUpdateSeguimientoSemanal`, pSeguimientoSemanal );
+  }
+
+  createEditEnsayoLaboratorioMuestra( pGestionObraCalidadEnsayoLaboratorio: any ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditEnsayoLaboratorioMuestra`, pGestionObraCalidadEnsayoLaboratorio );
   }
 
   deleteManejoMaterialesInsumosProveedor( ManejoMaterialesInsumosProveedorId: number ) {

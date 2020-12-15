@@ -11,6 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class GestionSocialComponent implements OnInit {
 
     @Input() esVerDetalle = false;
+    @Input() seguimientoSemanal: any;
     formGestionSocial: FormGroup;
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },
