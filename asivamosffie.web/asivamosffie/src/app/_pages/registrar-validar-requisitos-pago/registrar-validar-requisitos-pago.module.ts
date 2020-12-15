@@ -21,11 +21,13 @@ import { DialogObservacionesItemListchequeoComponent } from './components/dialog
 import { DialogDevolverSolicitudComponent } from './components/dialog-devolver-solicitud/dialog-devolver-solicitud.component';
 import { VerdetalleEditarSolicitudPagoComponent } from './components/verdetalle-editar-solicitud-pago/verdetalle-editar-solicitud-pago.component';
 import { VerdetalleSolicitudPagoComponent } from './components/verdetalle-solicitud-pago/verdetalle-solicitud-pago.component';
+import { TablaDetalleSolicitudPagoComponent } from './components/tabla-detalle-solicitud-pago/tabla-detalle-solicitud-pago.component';
+import { TablaDetalleValidarListachequeoComponent } from './components/tabla-detalle-validar-listachequeo/tabla-detalle-validar-listachequeo.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent, TablaDetalleSolicitudPagoComponent, TablaDetalleValidarListachequeoComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,
