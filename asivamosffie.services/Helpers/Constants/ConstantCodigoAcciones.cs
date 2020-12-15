@@ -162,5 +162,7 @@
         public const string Eliminar_Residuos_Construccion_Demolicion_Gestor = "162";
 
         public const string Crear_Editar_Ensayo_Laboratorio_Muestra = "166";
+
+        public const string Eliminar_Gestion_Obra_Calidad_Ensayo_Laboratorio = "167";
     }
 }

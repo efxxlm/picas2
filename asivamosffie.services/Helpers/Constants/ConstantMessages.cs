@@ -228,8 +228,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-
-
+     
     public class ConstantMessagesFuentesFinanciacion
     {
 
@@ -486,6 +485,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
+
     public class ConstantSesionComiteTecnico
     {
 
@@ -560,6 +560,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
+   
     public class ConstantMessagesGenerateBudget
     {
 
@@ -582,14 +583,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-
-    
-
-    
-
-
-
-
+     
     public class ConstantGestionarProcesosContractuales
     {
 
@@ -612,8 +606,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-    
-
+     
     public class ConstantMessagesProcesoSeleccion
     {
         #region Mensajes Error
@@ -674,11 +667,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-
-
-
-    
-
+     
     public class ConstantMessagesContratoPoliza
     {
 
@@ -805,4 +794,28 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Redireccion
 
     }
+
+
+    public class ConstanMessagesRegisterWeeklyProgress {
+        #region Mensajes Informativos
+
+        public const string NoEliminarLaboratorio = "100";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200"; 
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500"; 
+        #endregion
+    }
+
 }

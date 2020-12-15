@@ -159,5 +159,24 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+         
+        [HttpPost]
+        [Route("DeleteGestionObraCalidadEnsayoLaboratorio")]
+        public async Task<IActionResult> DeleteGestionObraCalidadEnsayoLaboratorio([FromQuery] int GestionObraCalidadEnsayoLaboratorioId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _registerWeeklyProgressService.DeleteGestionObraCalidadEnsayoLaboratorio(GestionObraCalidadEnsayoLaboratorioId, HttpContext.User.FindFirst("User").Value);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }
