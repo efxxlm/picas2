@@ -1,0 +1,53 @@
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="llaveMen">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.llaveMen }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="tipoIntervencion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
+        </ng-container>
+        <ng-container matColumnDef="departamento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Departamento </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.departamento }} </td>
+        </ng-container>
+        <ng-container matColumnDef="municipio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Municipio </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.municipio }} </td>
+        </ng-container>
+        <ng-container matColumnDef="institucionEducativa">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+        </ng-container>
+        <ng-container matColumnDef="sede">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+</div>
+<div style="margin-top: 1em;">
+    <mat-card class="shipping-card var-main-gris">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text">
+                LL457326
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
+            <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
+            <br>
+            <p><strong>Criterio:</strong> Estudios y diseños interventoria hasta 90%, Criterio 3</p>
+            <br>
+            <h1><b>Estudios y diseños interventoria hasta 90%</b></h1>
+            <p><strong>Valor facturado para el proyecto en el criterio:</strong> $8.000.000</p>
+            <br>
+            <h1><b>Criterio 3</b></h1>
+            <p><strong>Valor facturado para el proyecto en el criterio:</strong> $7.000.000</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+
