@@ -664,19 +664,19 @@ namespace asivamosffie.services
                        !pSeguimientoSemanalAvanceFinanciero.RequiereObservacion.HasValue
                     || !pSeguimientoSemanalAvanceFinanciero.GenerarAlerta.HasValue
                     || (pSeguimientoSemanalAvanceFinanciero.RequiereObservacion.HasValue
-                    && (bool)pSeguimientoSemanalAvanceFinanciero.RequiereObservacion && string.IsNullOrEmpty(pSeguimientoSemanalAvanceFinanciero.Observacion)) 
+                    && (bool)pSeguimientoSemanalAvanceFinanciero.RequiereObservacion && string.IsNullOrEmpty(pSeguimientoSemanalAvanceFinanciero.Observacion))
                     ? false : true;
 
             if (pSeguimientoSemanalAvanceFinanciero.SeguimientoSemanalAvanceFinancieroId == 0)
-            { 
+            {
                 pSeguimientoSemanalAvanceFinanciero.UsuarioCreacion = pUsuarioCreacion;
                 pSeguimientoSemanalAvanceFinanciero.FechaCreacion = DateTime.Now;
                 pSeguimientoSemanalAvanceFinanciero.Eliminado = false;
             }
             else
-            { 
+            {
                 SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinancieroOld = _context.SeguimientoSemanalAvanceFinanciero.Find(pSeguimientoSemanalAvanceFinanciero.SeguimientoSemanalAvanceFinancieroId);
-               
+
                 seguimientoSemanalAvanceFinancieroOld.UsuarioModificacion = pUsuarioCreacion;
                 seguimientoSemanalAvanceFinancieroOld.FechaModificacion = DateTime.Now;
                 seguimientoSemanalAvanceFinancieroOld.RegistroCompleto = pSeguimientoSemanalAvanceFinanciero.RegistroCompleto;
@@ -1139,11 +1139,17 @@ namespace asivamosffie.services
 
                         foreach (var SeguridadSaludCausaAccidente in SeguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente)
                         {
-                            SeguridadSaludCausaAccidente.UsuarioCreacion = pUsuarioCreacion;
-                            SeguridadSaludCausaAccidente.Eliminado = false;
-                            SeguridadSaludCausaAccidente.FechaCreacion = DateTime.Now;
+                            if (SeguridadSaludCausaAccidente.SeguridadSaludCausaAccidentesId == 0)
+                            {
+                                SeguridadSaludCausaAccidente.UsuarioCreacion = pUsuarioCreacion;
+                                SeguridadSaludCausaAccidente.FechaCreacion = DateTime.Now;
 
-                            _context.SeguridadSaludCausaAccidente.Add(SeguridadSaludCausaAccidente);
+                                _context.SeguridadSaludCausaAccidente.Add(SeguridadSaludCausaAccidente);
+                            }
+                            else {
+                                SeguridadSaludCausaAccidente seguridadSaludCausaAccidenteOld = _context.SeguridadSaludCausaAccidente.Find();
+                                seguridadSaludCausaAccidenteOld.Eliminado = SeguridadSaludCausaAccidente.Eliminado;  
+                            }
                         }
                     }
                     else
