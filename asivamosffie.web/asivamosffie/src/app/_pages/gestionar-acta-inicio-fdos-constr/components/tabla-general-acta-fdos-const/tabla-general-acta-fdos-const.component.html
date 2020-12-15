@@ -85,7 +85,7 @@
                                                 color="accent" 
                                                 class="btn-table"
                                                 (click)="this.verDetalleEditarActaFDos(element.contratoId,element.tipoContrato)"
-                                                *ngIf="(element.estadoActa=='Con acta preliminar generada'&& element.tipoContrato=='Obra'  && (element.estadoActaCodigo=='14' )) || element.estadoActa=='Enviada por el supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2')"> 
+                                                *ngIf="( ( element.estadoActa=='Con acta preliminar generada' || element.estadoActa=='Enviada por el Supervisor' )&& element.tipoContrato=='Obra'  && (element.estadoActaCodigo=='14' || element.estadoActaCodigo=='17' || element.estadoActaCodigo=='18'  )) || element.estadoActa=='Enviada por el supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2')"> 
                     Ver detalle /
                     Editar
                     </button>
