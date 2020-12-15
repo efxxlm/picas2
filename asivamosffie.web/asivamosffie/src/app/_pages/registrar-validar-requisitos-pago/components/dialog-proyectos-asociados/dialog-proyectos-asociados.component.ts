@@ -30,7 +30,7 @@ export class DialogProyectosAsociadosComponent implements OnInit {
       sede: 'Única sede',
     }
   ];
-  constructor(public matDialogRef: MatDialogRef<DialogProyectosAsociadosComponent>, @Inject(MAT_DIALOG_DATA) public data: any,) { }
+  constructor(public matDialogRef: MatDialogRef<DialogProyectosAsociadosComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTable);

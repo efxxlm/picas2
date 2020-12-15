@@ -15,11 +15,14 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { DetalleFacturaProyectosAsociadosComponent } from './components/detalle-factura-proyectos-asociados/detalle-factura-proyectos-asociados.component';
 import { FormDatosFacturaComponent } from './components/form-datos-factura/form-datos-factura.component';
 import { FormDescuentosDireccionTecnicaComponent } from './components/form-descuentos-direccion-tecnica/form-descuentos-direccion-tecnica.component';
+import { FormSoporteSolicitudUrlComponent } from './components/form-soporte-solicitud-url/form-soporte-solicitud-url.component';
+import { ValidarListaChequeoComponent } from './components/validar-lista-chequeo/validar-lista-chequeo.component';
+import { DialogObservacionesItemListchequeoComponent } from './components/dialog-observaciones-item-listchequeo/dialog-observaciones-item-listchequeo.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,
