@@ -31,7 +31,10 @@ namespace asivamosffie.services
         }
 
         #region Get
-        //public async Task<List<EnsayoLaboratorioMuestra>> 
+        public async Task<List<EnsayoLaboratorioMuestra>> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId)
+        {
+            return await _context.EnsayoLaboratorioMuestra.Where(r => r.GestionObraCalidadEnsayoLaboratorioId == pGestionObraCalidadEnsayoLaboratorioId && !(bool)r.Eliminado).ToListAsync();
+        }
 
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
@@ -1091,15 +1094,40 @@ namespace asivamosffie.services
                         (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividad &&
                         (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente &&
                         (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato ? true : false;
-      
+
             }
         }
 
         private void SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico pSeguimientoSemanalRegistroFotografico, string pUsuarioCreacion)
         {
-         // if(pSeguimientoSemanalRegistroFotografico.)
+            if (pSeguimientoSemanalRegistroFotografico.SeguimientoSemanalRegistroFotograficoId == 0)
+            {
+                //Auditoria
+                pSeguimientoSemanalRegistroFotografico.UsuarioCreacion = pUsuarioCreacion;
+                pSeguimientoSemanalRegistroFotografico.Eliminado = false;
+                pSeguimientoSemanalRegistroFotografico.FechaCreacion = DateTime.Now;
+
+                pSeguimientoSemanalRegistroFotografico.RegistroCompleto =
+                       !string.IsNullOrEmpty(pSeguimientoSemanalRegistroFotografico.UrlSoporteFotografico)
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalRegistroFotografico.Descripcion) ? true : false;
+
+                _context.SeguimientoSemanalRegistroFotografico.Add(pSeguimientoSemanalRegistroFotografico);
+
+            }
+            else
+            {
+                SeguimientoSemanalRegistroFotografico seguimientoSemanalRegistroFotograficoOld = _context.SeguimientoSemanalRegistroFotografico.Find();
+                seguimientoSemanalRegistroFotograficoOld.UsuarioModificacion= pUsuarioCreacion;
+                seguimientoSemanalRegistroFotograficoOld.FechaModificacion = DateTime.Now;
+                seguimientoSemanalRegistroFotograficoOld.RegistroCompleto =
+                       !string.IsNullOrEmpty(pSeguimientoSemanalRegistroFotografico.UrlSoporteFotografico)
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalRegistroFotografico.Descripcion) ? true : false; 
+
+                seguimientoSemanalRegistroFotograficoOld.UrlSoporteFotografico = pSeguimientoSemanalRegistroFotografico.UrlSoporteFotografico;
+                seguimientoSemanalRegistroFotograficoOld.Descripcion = pSeguimientoSemanalRegistroFotografico.Descripcion; 
+            }
         }
-         
+
         private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
         {
             throw new NotImplementedException();

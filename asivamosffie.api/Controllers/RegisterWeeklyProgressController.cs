@@ -27,7 +27,20 @@ namespace asivamosffie.api.Controllers
             _registerWeeklyProgressService = registerWeeklyProgressService;
             _settings = settings;
         }
-
+    
+        [Route("GetEnsayoLaboratorioMuestras")]
+        [HttpGet]
+        public async Task<ActionResult<List<EnsayoLaboratorioMuestra>>> GetEnsayoLaboratorioMuestras([FromQuery] int pGestionObraCalidadEnsayoLaboratorioId)
+        {
+            try
+            {
+                return await _registerWeeklyProgressService.GetEnsayoLaboratorioMuestras(pGestionObraCalidadEnsayoLaboratorioId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [Route("GetVRegistrarAvanceSemanal")]
         [HttpGet]
