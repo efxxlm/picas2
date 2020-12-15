@@ -411,7 +411,8 @@ namespace asivamosffie.services
 
             try
             {
-                GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorioOld = _context.GestionObraCalidadEnsayoLaboratorio.Find(GestionObraCalidadEnsayoLaboratorioId);
+                GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorioOld =await _context.GestionObraCalidadEnsayoLaboratorio
+                    .Where(r=> r.GestionObraCalidadEnsayoLaboratorioId == GestionObraCalidadEnsayoLaboratorioId).Include(r=> r.EnsayoLaboratorioMuestra).FirstOrDefaultAsync();
 
                 if (GestionObraCalidadEnsayoLaboratorioOld == null)
                 {
