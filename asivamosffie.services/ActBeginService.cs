@@ -59,7 +59,7 @@ namespace asivamosffie.services
 
                 //                6   Acta de inicio interventor
                 //7   Acta de inicio supervisor
-                construccionObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacionesActa);
+                construccionObservacion.Observaciones = pObservacionesActa;
 
                 if (pEsSupervisor)
                     //if (construccionObservacion.EsSupervision)
@@ -135,7 +135,7 @@ namespace asivamosffie.services
 
                 //                6   Acta de inicio interventor
                 //7   Acta de inicio supervisor
-                construccionObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacionesConsideracionesEspeciales);
+                construccionObservacion.Observaciones = pObservacionesConsideracionesEspeciales;
 
                 if (pEsSupervisor)
                     construccionObservacion.TipoObservacionConstruccion = "7";
@@ -209,7 +209,7 @@ namespace asivamosffie.services
 
                     //                6   Acta de inicio interventor
                     //7   Acta de inicio supervisor
-                    construccionObservacion.Observaciones = Helpers.Helpers.CleanStringInput(pObservacion);
+                    construccionObservacion.Observaciones = pObservacion;
 
                     if (pEsSupervisor)
                         //if (construccionObservacion.EsSupervision)
