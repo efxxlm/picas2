@@ -51,7 +51,7 @@
                         <button mat-raised-button 
                                                     color="accent" 
                                                     class="btn-table"
-                                                    *ngIf="element.estadoActa=='Con acta generada' || element.estadoActa=='Con validacion del supervisor'"
+                                                    *ngIf="element.estadoActa=='Con acta preliminar generada' || element.estadoActa=='Con validacion del supervisor'"
                                                     (click)="this.enviarActaParaFirma(element.contratoId)">
                         Enviar acta para firma
                         </button>
