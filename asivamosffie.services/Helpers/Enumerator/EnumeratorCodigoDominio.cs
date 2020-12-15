@@ -7,6 +7,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         public const string OrdeELegibilidad = "2";
         public const string ProgramacionObra = "3";
         public const string FlujoInversion = "4";
+        public const string ActaSuscritaContrato = "5";
 
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
@@ -210,7 +211,8 @@ namespace asivamosffie.api.Controllers
                 pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.EditarCargarActaSuscritaContrato( pContratoId,  pFechaFirmaContratista,  pFechaFirmaActaContratistaInterventoria                     
              ,  pUsuarioModificacion
-             //, _appSettingsService
+             ,pFile
+             ,Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryActaSuscritaContrato)
              );
                 return Ok(respuesta);
             }

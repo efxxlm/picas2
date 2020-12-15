@@ -529,7 +529,7 @@ namespace asivamosffie.services
 
 
         public async Task<Respuesta> EditarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria,
-            string pUsuarioModificacion
+            string pUsuarioModificacion, IFormFile pFile, string pFilePatch
            //, AppSettingsService _appSettingsService
            )
         {
@@ -537,6 +537,8 @@ namespace asivamosffie.services
             //Fecha de la firma del documento por parte del contratista de interventoría -FechaFirmaActaContratistaInterventoria - contrato
 
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_Cargar_Acta_Suscrita_Contrato_Fase_2, (int)EnumeratorTipoDominio.Acciones);
+
+            ArchivoCargue archivoCarge = await _documentService.getSaveFile(pFile, pFilePatch, Int32.Parse(OrigenArchivoCargue.ActaSuscritaContrato), pContratoId);
 
             Contrato contrato;
 
@@ -548,6 +550,7 @@ namespace asivamosffie.services
                 contrato.FechaFirmaActaContratistaInterventoriaFase2 = pFechaFirmaActaContratistaInterventoria;
                 contrato.UsuarioModificacion = pUsuarioModificacion;
                 contrato.FechaModificacion = DateTime.Now;
+                contrato.RutaActaSuscrita = contrato.RutaActaSuscrita = pFilePatch + "//" + archivoCarge.Nombre + ".pdf";
 
                 _context.Contrato.Update(contrato);
                 _context.SaveChanges();
