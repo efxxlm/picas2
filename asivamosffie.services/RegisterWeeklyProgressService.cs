@@ -474,6 +474,14 @@ namespace asivamosffie.services
                 pSeguimientoSemanalAvanceFisico.FechaModificacion = DateTime.Now;
             }
 
+            //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
+
+            ///Validar Estado De obra 
+            /////Programación acumulada de la obra: 2% == Avance acumulado ejecutado de la obra: 1%  = normal
+            /////Programación acumulada de la obra: 2% < Avance acumulado ejecutado de la obra: 1%  = avanzada
+            /////Programación acumulada de la obra: 2% > Avance acumulado ejecutado de la obra: 1%  = retrazado
+            /////Programación acumulada de la obra: 2% > Avance acumulado ejecutado de la obra: 1%  = critico
+            ///
         }
 
         private void SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero pSeguimientoSemanalAvanceFinanciero, string pUsuarioCreacion)
@@ -644,8 +652,7 @@ namespace asivamosffie.services
 
                     _context.SeguimientoSemanalGestionObraAlerta.Add(SeguimientoSemanalGestionObraAlerta);
                 }
-
-
+                 
                 pSeguimientoSemanalGestionObra.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
                 _context.SeguimientoSemanalGestionObra.Add(pSeguimientoSemanalGestionObra);
             }
@@ -1022,7 +1029,7 @@ namespace asivamosffie.services
             }
         }
 
-        private bool? ValidarRegistroCompletoSeguimientoSemanalGestionObraAlerta(SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlerta)
+        private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAlerta(SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlerta)
         {
             return false;
         }
@@ -1031,12 +1038,7 @@ namespace asivamosffie.services
         {
             return false;
         }
-
-        private object ValidarRegistroCompletoSeguridadSaludCausaAccidente(SeguridadSaludCausaAccidente seguridadSaludCausaAccidente)
-        {
-            throw new NotImplementedException();
-        }
-
+         
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud seguimientoSemanalGestionObraSeguridadSalud)
         {
             return false;
