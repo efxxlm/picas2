@@ -265,14 +265,14 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("EditarContratoObservacion")]        
-        public async Task<IActionResult> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
+        public async Task<IActionResult> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa, [FromBody] ConstruccionObservacion pConstruccionObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.EditarContratoObservacion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacion,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2,  pEsSupervisor,  pEsActa);
+                respuesta = await _ActBegin.EditarContratoObservacion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pConstruccionObservacion.Observaciones,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2,  pEsSupervisor,  pEsActa);
                 return Ok(respuesta);
             }
             catch (Exception ex)
