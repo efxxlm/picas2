@@ -652,7 +652,7 @@ namespace asivamosffie.services
 
                     _context.SeguimientoSemanalGestionObraAlerta.Add(SeguimientoSemanalGestionObraAlerta);
                 }
-                 
+
                 pSeguimientoSemanalGestionObra.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
                 _context.SeguimientoSemanalGestionObra.Add(pSeguimientoSemanalGestionObra);
             }
@@ -1021,7 +1021,7 @@ namespace asivamosffie.services
                         seguimientoSemanalGestionObraAlertaOld.Eliminado = false;
 
                         seguimientoSemanalGestionObraAlertaOld.SeIdentificaronAlertas = SeguimientoSemanalGestionObraAlerta.SeIdentificaronAlertas;
-                        seguimientoSemanalGestionObraAlertaOld.Alerta = SeguimientoSemanalGestionObraAlerta.Alerta; 
+                        seguimientoSemanalGestionObraAlertaOld.Alerta = SeguimientoSemanalGestionObraAlerta.Alerta;
                     }
                 }
 
@@ -1029,6 +1029,90 @@ namespace asivamosffie.services
             }
         }
 
+        private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
+        {
+            if (pSeguimientoSemanalReporteActividad.SeguimientoSemanalReporteActividadId == 0)
+            {
+                //Auditoria
+                pSeguimientoSemanalReporteActividad.UsuarioCreacion = pUsuarioCreacion;
+                pSeguimientoSemanalReporteActividad.Eliminado = false;
+                pSeguimientoSemanalReporteActividad.FechaCreacion = DateTime.Now;
+
+                pSeguimientoSemanalReporteActividad.RegistroCompletoActividad =
+                       !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadTecnica)
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadLegal)
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadAdministrativaFinanciera) ? true : false;
+
+                pSeguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente =
+                       !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadTecnicaSiguiente)
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadLegalSiguiente)
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadAdministrativaFinancieraSiguiente) ? true : false;
+
+                pSeguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato = !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ResumenEstadoContrato) ? true : false;
+
+                pSeguimientoSemanalReporteActividad.RegistroCompleto =
+                    (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividad &&
+                    (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente &&
+                    (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato ? true : false;
+
+
+                _context.SeguimientoSemanalReporteActividad.Add(pSeguimientoSemanalReporteActividad);
+            }
+            else
+            {
+                SeguimientoSemanalReporteActividad seguimientoSemanalReporteActividadOld = _context.SeguimientoSemanalReporteActividad.Find(pSeguimientoSemanalReporteActividad.SeguimientoSemanalReporteActividadId);
+                seguimientoSemanalReporteActividadOld.UsuarioModificacion = pUsuarioCreacion;
+                seguimientoSemanalReporteActividadOld.FechaModificacion = DateTime.Now;
+
+                seguimientoSemanalReporteActividadOld.ResumenEstadoContrato = pSeguimientoSemanalReporteActividad.ResumenEstadoContrato;
+                seguimientoSemanalReporteActividadOld.ActividadTecnica = pSeguimientoSemanalReporteActividad.ActividadTecnica;
+                seguimientoSemanalReporteActividadOld.ActividadLegal = pSeguimientoSemanalReporteActividad.ActividadLegal;
+                seguimientoSemanalReporteActividadOld.ActividadAdministrativaFinanciera = pSeguimientoSemanalReporteActividad.ActividadAdministrativaFinanciera;
+                seguimientoSemanalReporteActividadOld.ActividadTecnicaSiguiente = pSeguimientoSemanalReporteActividad.ActividadTecnicaSiguiente;
+                seguimientoSemanalReporteActividadOld.ActividadLegalSiguiente = pSeguimientoSemanalReporteActividad.ActividadLegalSiguiente;
+                seguimientoSemanalReporteActividadOld.ActividadAdministrativaFinancieraSiguiente = pSeguimientoSemanalReporteActividad.ActividadAdministrativaFinancieraSiguiente;
+
+                seguimientoSemanalReporteActividadOld.RegistroCompletoActividad =
+                         !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadTecnica)
+                      && !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadLegal)
+                      && !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadAdministrativaFinanciera) ? true : false;
+
+                seguimientoSemanalReporteActividadOld.RegistroCompletoActividadSiguiente =
+                       !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadTecnicaSiguiente)
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadLegalSiguiente)
+                    && !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ActividadAdministrativaFinancieraSiguiente) ? true : false;
+
+                seguimientoSemanalReporteActividadOld.RegistroCompletoEstadoContrato =
+                    !string.IsNullOrEmpty(pSeguimientoSemanalReporteActividad.ResumenEstadoContrato) ? true : false;
+
+                seguimientoSemanalReporteActividadOld.RegistroCompleto =
+                        (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividad &&
+                        (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoActividadSiguiente &&
+                        (bool)pSeguimientoSemanalReporteActividad.RegistroCompletoEstadoContrato ? true : false;
+      
+            }
+        }
+
+        private void SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico pSeguimientoSemanalRegistroFotografico, string pUsuarioCreacion)
+        {
+            throw new NotImplementedException();
+        }
+         
+        private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Validar Registros Completos
+
+        private bool ValidarRegistroCompletoSeguimientoSemanalGestionObra(SeguimientoSemanalGestionObra pSeguimientoSemanalGestionObra)
+        {
+            return false;
+        }
+
+        #region Gestion Obra Ambiental
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAlerta(SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlerta)
         {
             return false;
@@ -1038,7 +1122,7 @@ namespace asivamosffie.services
         {
             return false;
         }
-         
+
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud seguimientoSemanalGestionObraSeguridadSalud)
         {
             return false;
@@ -1058,32 +1142,6 @@ namespace asivamosffie.services
         {
             return false;
         }
-
-        private void SaveUpdateReporteActividades(SeguimientoSemanalReporteActividad pSeguimientoSemanalReporteActividad, string pUsuarioCreacion)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SaveUpdateRegistroFotografico(SeguimientoSemanalRegistroFotografico pSeguimientoSemanalRegistroFotografico, string pUsuarioCreacion)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SaveUpdateComiteObra(SeguimientoSemanalRegistrarComiteObra pSeguimientoSemanalRegistrarComiteObra, string pUsuarioCreacion)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
-        #region Validar Registros Completos
-
-        private bool ValidarRegistroCompletoSeguimientoSemanalGestionObra(SeguimientoSemanalGestionObra pSeguimientoSemanalGestionObra)
-        {
-            return false;
-        }
-
-        #region Gestion Obra Ambiental
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental pSeguimientoSemanalGestionObraAmbiental)
         {
