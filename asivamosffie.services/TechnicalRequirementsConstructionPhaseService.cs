@@ -1298,7 +1298,7 @@ namespace asivamosffie.services
 
             if (
                 pConstruccion.EsInformeDiagnostico == null ||
-                string.IsNullOrEmpty(pConstruccion.RutaInforme) ||
+                ( pConstruccion.EsInformeDiagnostico == true && string.IsNullOrEmpty(pConstruccion.RutaInforme) ) ||
                 pConstruccion.CostoDirecto == null ||
                 pConstruccion.Administracion == null ||
                 pConstruccion.Imprevistos == null ||
