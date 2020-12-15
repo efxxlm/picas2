@@ -157,6 +157,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -5245,10 +5246,10 @@ namespace asivamosffie.model.Models
                 entity.ToView("V_RegistrarAvanceSemanal");
 
                 entity.Property(e => e.EstadoObra)
-                    .HasMaxLength(12)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoObraCodigo)
+                entity.Property(e => e.EstadoObraProyecto)
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
