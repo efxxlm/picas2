@@ -46,10 +46,20 @@ export class FormDescripcionActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  numReclamacion: any;
 
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService,private router: Router) { }
 
   ngOnInit(): void {
+    this.common.listaEstadosAvanceTramite().subscribe(rep => {
+      this.estadoAvanceTramiteArrayDom = rep;
+    });
+    this.common.listaActuacionAdelantada().subscribe(rep1=>{
+      this.actuacionAdelantadaArrayDom = rep1;
+    });
+    this.common.listaProximaActuacionRequerida().subscribe(rep2 => {
+      this.proximaActuacionRequeridaArrayDom = rep2;
+    });
     if (this.isEditable == true) {
       this.services.GetControversiaActuacionById(this.idActuacionFromEdit).subscribe((data:any)=>{
         const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoAvanceTramiteCodigo);
@@ -69,17 +79,9 @@ export class FormDescripcionActuacionComponent implements OnInit {
         this.addressForm.get('requiereComiteTecnico').setValue(data.esRequiereComite);
         this.addressForm.get('observaciones').setValue(data.observaciones);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+        this.numReclamacion = data.numeroReclamacion;
       });
     }
-    this.common.listaEstadosAvanceTramite().subscribe(rep => {
-      this.estadoAvanceTramiteArrayDom = rep;
-    });
-    this.common.listaActuacionAdelantada().subscribe(rep1=>{
-      this.actuacionAdelantadaArrayDom = rep1;
-    });
-    this.common.listaProximaActuacionRequerida().subscribe(rep2 => {
-      this.proximaActuacionRequeridaArrayDom = rep2;
-    });
   }
 
   validateNumberKeypress(event: KeyboardEvent) {

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
 @Component({
   selector: 'app-form-registrar-controvrs-accord',
   templateUrl: './form-registrar-controvrs-accord.component.html',
@@ -27,7 +28,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     motivosRechazo: ['', Validators.required],
     requeridoComite: [null, Validators.required],
     fechaRadicadoSAC: ['', Validators.required],
-    numeroRadicadoSAC: ['', Validators.required],
+    numeroRadicadoSAC: [0, Validators.required],
     resumenJustificacionSolicitud: ['', Validators.required]
   });
   tipoControversiaArrayDom: Dominio[] = [];
@@ -74,6 +75,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.addressForm.get('conclusionComitePretecnico').setValue(resp.conclusionComitePreTecnico);
         this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
         this.addressForm.get('requeridoComite').setValue(resp.esRequiereComite);
+        this.addressForm.get('fechaRadicadoSAC').setValue(resp.esRequiereComite);
+        this.addressForm.get('numeroRadicadoSAC').setValue(resp.esRequiereComite);
         if (resp.esProcede == false) {
           this.addressForm.get('motivosRechazo').setValue(resp.motivoJustificacionRechazo);
         }
@@ -139,8 +142,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '2':
-        if (this.addressForm.value.tipoControversia.codigo == '2' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
-          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+        if (this.addressForm.value.tipoControversia.codigo == '2' && this.addressForm.value.fechaRadicadoSAC != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
         }
@@ -150,8 +153,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '3':
-        if (this.addressForm.value.tipoControversia.codigo == '3' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
-          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+        if (this.addressForm.value.tipoControversia.codigo == '3' && this.addressForm.value.fechaRadicadoSAC != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
         }
@@ -161,8 +164,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         }
         break;
       case '4':
-        if (this.addressForm.value.tipoControversia.codigo == '4' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
-          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+        if (this.addressForm.value.tipoControversia.codigo == '4' && this.addressForm.value.fechaRadicadoSAC != null && this.addressForm.value.motivosSolicitud != null
+          && this.addressForm.value.numeroRadicadoSAC != null && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
         }
@@ -173,7 +176,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         break;
       case '5':
         if (this.addressForm.value.tipoControversia.codigo == '5' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
-          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
         }
@@ -184,7 +187,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         break;
       case '6':
         if (this.addressForm.value.tipoControversia.codigo == '6' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
-          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
         }
@@ -195,7 +198,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         break;
       case '7':
         if (this.addressForm.value.tipoControversia.codigo == '7' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null
-          && this.addressForm.value.fechaComitePretecnico != null && this.addressForm.value.conclusionComitePretecnico != null && this.addressForm.value.procedeSolicitud != null) {
+          && this.addressForm.value.resumenJustificacionSolicitud != null) {
           this.estadoSemaforo.emit('completo');
           this.estaCompleto = true;
         }

@@ -48,7 +48,7 @@
                         Finalizar actuación
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacion=='En proceso de registro'"
-                    (click)="this.verDetalleEditarActuacion(element.actuacionSeguimientoId)">
+                    (click)="this.verDetalleEditarActuacion(element.actuacionSeguimientoId,element.numeroActuacionReclamacion)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacion=='En proceso de registro'"

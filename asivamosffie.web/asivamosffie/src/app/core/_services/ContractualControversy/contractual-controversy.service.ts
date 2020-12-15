@@ -76,6 +76,9 @@ export class ContractualControversyService implements OnInit{
   CambiarEstadoControversiaActuacion(pControversiaActuacionId:number, pNuevoCodigoEstadoAvance:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoControversiaActuacion?pControversiaActuacionId=${pControversiaActuacionId}&pNuevoCodigoEstadoAvance=${pNuevoCodigoEstadoAvance}`, null);
   }
+  GetActuacionSeguimientoById(Id:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetActuacionSeguimientoById?Id=${Id}`);
+  }
 }
 
 export interface GetListGrillaTipoSolicitudControversiaContractual{

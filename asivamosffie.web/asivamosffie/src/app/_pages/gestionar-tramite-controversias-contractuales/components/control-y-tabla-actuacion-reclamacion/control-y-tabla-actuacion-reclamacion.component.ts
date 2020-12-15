@@ -41,9 +41,12 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   enviarComiteTecnicoTramAct(id){
-
+    this.services.CambiarEstadoActuacionSeguimiento(id,"2").subscribe((resp:any)=>{
+      this.ngOnInit();
+    });
   }
-  verDetalleEditarActuacion(id){
+  verDetalleEditarActuacion(id,actR){
+    localStorage.setItem('actuacionReclamacion',actR);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarActuacionReclamacion',id]);
   }
   eliminarActuacion(id){

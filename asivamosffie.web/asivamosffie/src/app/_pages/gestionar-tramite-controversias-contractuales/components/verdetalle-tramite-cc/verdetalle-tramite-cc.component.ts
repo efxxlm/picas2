@@ -30,6 +30,7 @@ export class VerdetalleTramiteCcComponent implements OnInit {
   vaParaComite: string;
   motivosRechazo: any;
   soporteSolicitud: any;
+  codAux: any;
   constructor(private activatedRoute: ActivatedRoute,
     private services: ContractualControversyService,
     private polizaService: PolizaGarantiaService) { }
@@ -61,9 +62,28 @@ export class VerdetalleTramiteCcComponent implements OnInit {
   }
   loadDetailsControversy(id){
     this.services.GetControversiaContractualById(id).subscribe((resp: any) => {
+      this.codAux = resp.tipoControversiaCodigo;
       switch(resp.tipoControversiaCodigo){
         case '1':
           this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';
+        break;
+        case '2':
+          this.tipoControversia = 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratista';
+        break;
+        case '3':
+          this.tipoControversia = 'Arreglo Directo (AD) a solicitud del contratista';
+        break;
+        case '4':
+          this.tipoControversia = 'Otras controversias contractuales (OCC) a solicitud del contratista';
+        break;
+        case '5':
+          this.tipoControversia = 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratante';
+        break;
+        case '6':
+          this.tipoControversia = 'Arreglo Directo (AD) a solicitud del contratante';
+        break;
+        case '7':
+          this.tipoControversia = 'Otras controversias contractuales (OCC) a solicitud del contratante';
         break;
       };
       this.fechaSolicitud = resp.fechaSolicitud;
