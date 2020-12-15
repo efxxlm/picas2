@@ -19,11 +19,13 @@ import { FormSoporteSolicitudUrlComponent } from './components/form-soporte-soli
 import { ValidarListaChequeoComponent } from './components/validar-lista-chequeo/validar-lista-chequeo.component';
 import { DialogObservacionesItemListchequeoComponent } from './components/dialog-observaciones-item-listchequeo/dialog-observaciones-item-listchequeo.component';
 import { DialogDevolverSolicitudComponent } from './components/dialog-devolver-solicitud/dialog-devolver-solicitud.component';
+import { VerdetalleEditarSolicitudPagoComponent } from './components/verdetalle-editar-solicitud-pago/verdetalle-editar-solicitud-pago.component';
+import { VerdetalleSolicitudPagoComponent } from './components/verdetalle-solicitud-pago/verdetalle-solicitud-pago.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,

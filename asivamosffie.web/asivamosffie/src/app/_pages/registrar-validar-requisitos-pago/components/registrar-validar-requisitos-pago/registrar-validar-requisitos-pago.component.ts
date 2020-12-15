@@ -60,4 +60,7 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogDevolverSolicitudComponent, dialogConfig);
     //dialogRef.afterClosed().subscribe(value => {});
   }
+  verDetalleEditar(id){
+    this.router.navigate(['registrarValidarRequisitosPago/verDetalleEditar',id])
+  }
 }
