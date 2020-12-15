@@ -32,6 +32,6 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 }

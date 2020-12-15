@@ -78,7 +78,7 @@ export class DialogObservacionesFlujoRecursosComponent implements OnInit {
   };
   guardar() {
     this.dialogRef.close({ data: this.formObservacion.get('observaciones').value });
-    this.openDialog("","La información ha sido guardada exitosamente");
+    this.openDialog("","<b>La información ha sido guardada exitosamente</b>");
   }
 
 }
