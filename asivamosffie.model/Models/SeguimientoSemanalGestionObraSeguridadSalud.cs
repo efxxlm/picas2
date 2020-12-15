@@ -25,7 +25,8 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
-        public int CantidadAccidentes { get; set; }
+        public int? CantidadAccidentes { get; set; }
+
         public virtual SeguimientoSemanalGestionObra SeguimientoSemanalGestionObra { get; set; }
         public virtual ICollection<SeguridadSaludCausaAccidente> SeguridadSaludCausaAccidente { get; set; }
     }
