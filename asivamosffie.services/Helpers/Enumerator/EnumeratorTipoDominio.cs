@@ -142,6 +142,12 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_avance_reclamacion = 91,
 
+        Causa_Baja_Disponibilidad_Material = 95,
+
+        Causa_Baja_Disponibilidad_Equipo = 96,
+
+        Causa_Baja_Disponibilidad_Productividad = 97,
+
         Tipo_Actividad = 109,
 
         Estado_Obra_Avance_Semanal = 111,
