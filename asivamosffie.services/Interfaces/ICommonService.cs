@@ -15,6 +15,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<string> EnumeradorContratacion();
 
+        Task<string> EnumeradorComiteObra();
 
         Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil);
   
