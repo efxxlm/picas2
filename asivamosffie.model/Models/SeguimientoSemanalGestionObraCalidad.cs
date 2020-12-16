@@ -20,6 +20,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
 
+        public virtual SeguimientoSemanalGestionObra SeguimientoSemanalGestionObra { get; set; }
         public virtual ICollection<GestionObraCalidadEnsayoLaboratorio> GestionObraCalidadEnsayoLaboratorio { get; set; }
     }
 }
