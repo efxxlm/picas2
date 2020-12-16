@@ -23,11 +23,15 @@ import { VerdetalleEditarSolicitudPagoComponent } from './components/verdetalle-
 import { VerdetalleSolicitudPagoComponent } from './components/verdetalle-solicitud-pago/verdetalle-solicitud-pago.component';
 import { TablaDetalleSolicitudPagoComponent } from './components/tabla-detalle-solicitud-pago/tabla-detalle-solicitud-pago.component';
 import { TablaDetalleValidarListachequeoComponent } from './components/tabla-detalle-validar-listachequeo/tabla-detalle-validar-listachequeo.component';
+import { FormAmortizacionAnticipoComponent } from './components/form-amortizacion-anticipo/form-amortizacion-anticipo.component';
+import { DialogSubsanacionComponent } from './components/dialog-subsanacion/dialog-subsanacion.component';
+import { FormSolicitudExpensasComponent } from './components/form-solicitud-expensas/form-solicitud-expensas.component';
+import { FormSolicitudOtrosCostosserviciosComponent } from './components/form-solicitud-otros-costosservicios/form-solicitud-otros-costosservicios.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent, TablaDetalleSolicitudPagoComponent, TablaDetalleValidarListachequeoComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent, TablaDetalleSolicitudPagoComponent, TablaDetalleValidarListachequeoComponent, FormAmortizacionAnticipoComponent, DialogSubsanacionComponent, FormSolicitudExpensasComponent, FormSolicitudOtrosCostosserviciosComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,

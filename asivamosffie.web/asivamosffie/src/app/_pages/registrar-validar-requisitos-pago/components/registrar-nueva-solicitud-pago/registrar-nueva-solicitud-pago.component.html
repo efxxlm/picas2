@@ -228,28 +228,30 @@
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>  
-            <div *ngIf="this.addressForm.value.tipoSolicitud=='3'||this.addressForm.value.tipoSolicitud=='4'">
-                <mat-accordion>
-                    <mat-expansion-panel class="expansion-style">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                                Lista de chequeo
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        */*/*/*/*/
-                    </mat-expansion-panel>
-                </mat-accordion>
-                <mat-accordion>
-                    <mat-expansion-panel class="expansion-style">
-                        <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                                Soporte
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        */*/*/*/*/
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
+        </div>
+        <div *ngIf="this.addressForm.value.tipoSolicitud=='3'||this.addressForm.value.tipoSolicitud=='4'">
+            <app-form-solicitud-expensas *ngIf="this.addressForm.value.tipoSolicitud=='3'"></app-form-solicitud-expensas>
+            <app-form-solicitud-otros-costosservicios *ngIf="this.addressForm.value.tipoSolicitud=='4'"></app-form-solicitud-otros-costosservicios>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Lista de chequeo
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    */*/*/*/*/
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Soporte
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-soporte-solicitud-url></app-form-soporte-solicitud-url>
+                </mat-expansion-panel>
+            </mat-accordion>
         </div>
     </form>
 </section>

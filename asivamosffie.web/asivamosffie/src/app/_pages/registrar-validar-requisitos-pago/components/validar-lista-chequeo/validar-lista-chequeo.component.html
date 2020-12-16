@@ -21,11 +21,12 @@
                 </ng-container>
                 <ng-container matColumnDef="revTecnica">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Revisión técnica </th>
-                    <td mat-cell *matCellDef="let element" align="center"> 
+                    <td mat-cell *matCellDef="let element" align="center">
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select required>
-                                    <mat-option *ngFor="let revision of booleanosRevisionTecnica" [value]="revision.viewValue">
+                                    <mat-option *ngFor="let revision of booleanosRevisionTecnica"
+                                        [value]="revision.viewValue">
                                         {{ revision.viewValue }}
                                     </mat-option>
                                 </mat-select>
@@ -35,8 +36,11 @@
                 </ng-container>
                 <ng-container matColumnDef="observaciones">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
-                    <td mat-cell *matCellDef="let element" align="center"> 
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.callObservaciones()">Observaciones</button>
+                    <td mat-cell *matCellDef="let element" align="center">
+                        <button mat-raised-button color="accent" class="btn-table" *ngIf="element.item==1"
+                            (click)="this.callObservaciones()">Observaciones</button>
+                        <button mat-raised-button color="accent" class="btn-table" *ngIf="element.item==2"
+                            (click)="this.callSubsanacion()">Observaciones</button>
                     </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

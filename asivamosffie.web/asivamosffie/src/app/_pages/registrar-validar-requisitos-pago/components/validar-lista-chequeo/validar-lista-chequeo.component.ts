@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogObservacionesItemListchequeoComponent } from '../dialog-observaciones-item-listchequeo/dialog-observaciones-item-listchequeo.component';
+import { DialogSubsanacionComponent } from '../dialog-subsanacion/dialog-subsanacion.component';
 
 @Component({
   selector: 'app-validar-lista-chequeo',
@@ -56,6 +57,14 @@ export class ValidarListaChequeoComponent implements OnInit {
     dialogConfig.width = '865px';
     //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
     const dialogRef = this.dialog.open(DialogObservacionesItemListchequeoComponent, dialogConfig);
+    //dialogRef.afterClosed().subscribe(value => {});
+  }
+  callSubsanacion(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '865px';
+    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
+    const dialogRef = this.dialog.open(DialogSubsanacionComponent, dialogConfig);
     //dialogRef.afterClosed().subscribe(value => {});
   }
 }
