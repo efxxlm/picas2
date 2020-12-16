@@ -1,24 +1,25 @@
-<div class="container">
+<div class="container" >
   <div class="text-right">
     <a routerLink="../../" mat-button color="primary" class="btn-regresar">
       <img src="assets/img/icon/regresar.svg" alt="Regresar">
     </a>
   </div>
-  <div class="text-center">
+  <div class="text-center" *ngIf="proyecto">
     <h1 class="title-menu--h1">
-      Registrar seguimiento diario LJ776554
+      Registrar seguimiento diario {{ proyecto.llaveMen }}
     </h1>
     <p class="colorMainColor mt-05em">
-      <span class="mx-1em">Remodelación</span>
-      <span class="mx-1em">Atlántico</span>
-      <span class="mx-1em">Baranoa</span>
-      <span class="mx-1em">María</span>
-      <span class="mx-1em">Inmaculada</span>
-      <span class="mx-1em">Sede 2</span>
+      <span class="mx-1em">{{ proyecto.fechaRegistroProyecto | date: 'dd/MM/yyyy' }}</span>      
+      <span class="mx-1em">{{ proyecto.tipoIntervencion }}</span>
+      <span class="mx-1em">{{ proyecto.departamento }}</span>
+      <span class="mx-1em">{{ proyecto.municipio }}</span>
+      <span class="mx-1em">{{ proyecto.institucionEducativa }}</span>
+      <!-- <span class="mx-1em">Inmaculada</span> -->
+      <span class="mx-1em">{{ proyecto.sede }}</span>
     </p>
   </div>
 
-  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="proyecto">
     <mat-card class="shipping-card">
       <mat-card-content>
         <div class="row">
@@ -32,8 +33,14 @@
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput [matDatepicker]="picker" placeholder="DD/MM/AAAA" formControlName="fechaSeguimiento"
-                    required [min]="minDate" readonly (click)="picker.open()">
+                  <input matInput 
+                    [matDatepicker]="picker" 
+                    [matDatepickerFilter]="filtroCalendario"
+                    placeholder="DD/MM/AAAA" 
+                    formControlName="fechaSeguimiento"
+                    required 
+                    readonly 
+                    (click)="picker.open()">
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
                 <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
@@ -68,7 +75,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -90,7 +97,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -112,7 +119,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === 'insuficiente'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -192,8 +199,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="disponibilidadMaterial">
-                    <mat-option *ngFor="let selectValue of materialArray" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of materialArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -201,20 +208,20 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === 'media' || addressForm.get('disponibilidadMaterial').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" for="causaMaterial"
                   [class.color-secondaryColor]="addressForm.get('causaMaterial').invalid && addressForm.get('causaMaterial').touched">
-                  Causa
+                  Causa de baja disponibilidad
                 </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="causaMaterial">
-                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadMaterial" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadMaterial" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -222,7 +229,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === 'media' || addressForm.get('disponibilidadMaterial').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -302,8 +309,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="disponibilidadEquipo">
-                    <mat-option *ngFor="let selectValue of equipolArray" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of equipolArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -311,20 +318,20 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === 'parcial' || addressForm.get('disponibilidadEquipo').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
                 <label class="label-left" for="causaEquipo"
                   [class.color-secondaryColor]="addressForm.get('causaEquipo').invalid && addressForm.get('causaEquipo').touched">
-                  Causa
+                  Causa de baja disponibilidad
                 </label>
               </div>
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="causaEquipo">
-                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadEquipo" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadEquipo" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -332,7 +339,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === 'parcial' || addressForm.get('disponibilidadEquipo').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -412,8 +419,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="Productividad">
-                    <mat-option *ngFor="let selectValue of productividadArray" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of productividadArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -421,7 +428,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">
@@ -433,8 +440,8 @@
               <div class="col">
                 <mat-form-field class="select-width">
                   <mat-select required formControlName="causaProductividad">
-                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadProductividad" [value]="selectValue.value">
-                      {{ selectValue.name }}
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadProductividad" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -442,7 +449,7 @@
             </div>
           </div>
         </div>
-        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === 'baja'">
+        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === '3'">
           <div class="col-md-8">
             <div class="row">
               <div class="pr-1">

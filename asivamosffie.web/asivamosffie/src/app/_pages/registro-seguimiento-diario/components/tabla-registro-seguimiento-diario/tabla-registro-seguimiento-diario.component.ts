@@ -6,26 +6,8 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DatePipe } from '@angular/common';
-
-export interface SeguimientoDiario {
-  id: string;
-  llaveMEN: string;
-  tipoInterventor: string;
-  institucionEducativa: string;
-  Sede: string;
-  fechaUltimoReporte: string;
-}
-
-const ELEMENT_DATA: SeguimientoDiario[] = [
-  {
-    id: '1',
-    llaveMEN: 'LJ776554',
-    tipoInterventor: 'Remodelación',
-    institucionEducativa: 'I.E. María Villa Campo',
-    Sede: 'Única sede',
-    fechaUltimoReporte: 'Sin registro'
-  }
-];
+import { Router } from '@angular/router';
+import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 
 @Component({
   selector: 'app-tabla-registro-seguimiento-diario',
@@ -34,29 +16,43 @@ const ELEMENT_DATA: SeguimientoDiario[] = [
 })
 export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
   displayedColumns: string[] = [
-    'llaveMEN',
-    'tipoInterventor',
+    'numeroContrato',
+    'llaveMen',
+    'tipoIntervencion',
     'institucionEducativa',
     'sede',
-    'fechaUltimoReporte',
-    'id'
+    'fechaUltimoSeguimientoDiario',
+    'seguimientoDiarioId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+    private followUpDailyService: FollowUpDailyService,
+    private router: Router,
+    public dialog: MatDialog,
+  ) 
+  { }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+
+    this.followUpDailyService.gridRegisterDailyFollowUp()
+      .subscribe(respuesta => {
+        this.dataSource = new MatTableDataSource(respuesta);
+
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = function (page, pageSize, length) {
+          return (page + 1).toString() + " de " + length.toString();
+        };
+        this.paginator._intl.previousPageLabel = 'Anterior';
+
+      });
+
   }
 
   applyFilter(event: Event) {
@@ -67,4 +63,54 @@ export class TablaRegistroSeguimientoDiarioComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  Editar( proyecto ){
+    this.router.navigate( [ '/registroSeguimientoDiario/registrarSeguimiento', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
+  }
+
+  RegistrarNuevo( proyecto ){
+    this.router.navigate( [ '/registroSeguimientoDiario/registrarSeguimiento', 0 ], { state: { proyecto } } )
+  }
+
+  VerDetalle( proyecto ){
+    this.router.navigate( [ '/registroSeguimientoDiario/verDetalle', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result===true) {
+        this.EliminarRegistro(e);
+      }
+    });
+  }
+
+  EliminarRegistro( id ){
+    this.followUpDailyService.deleteDailyFollowUp( id )
+      .subscribe(respuesta => {
+        this.openDialog('', `<b>${respuesta.message}</b>`);
+        this.ngAfterViewInit();
+      });
+  }
+
+  Enviar( id ){
+    this.followUpDailyService.sendToSupervisionSupport( id )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message )
+        if ( respuesta.code == "200" )
+          this.ngAfterViewInit();
+
+      })
+  }
+
 }

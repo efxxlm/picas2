@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
+import { SeguimientoDiario } from 'src/app/_interfaces/DailyFollowUp';
 
 @Component({
   selector: 'app-ver-detalle-registro',
@@ -7,9 +10,36 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerDetalleRegistroComponent implements OnInit {
 
-  constructor() { }
+  seguimientoId?: number;
+  seguimiento?: SeguimientoDiario;
+  proyecto: any;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private dailyFollowUpService: FollowUpDailyService,
+  ) 
+  { 
+    if (this.router.getCurrentNavigation().extras.state)
+      this.proyecto = this.router.getCurrentNavigation().extras.state.proyecto;
+  }
 
   ngOnInit(): void {
+    this.route.params.subscribe((params: Params) => {
+      this.seguimientoId = params.id;
+      console.log(this.seguimientoId, this.router.getCurrentNavigation());
+      if (this.seguimientoId > 0){
+        this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
+          .subscribe( respuesta => {
+            this.seguimiento = respuesta
+          
+      });
+      }
+    });
+  }
+
+  volver(){
+    this.router.navigate(['/registroSeguimientoDiario/verBitacora', this.seguimiento.contratacionProyectoId]);
   }
 
 }

@@ -113,5 +113,15 @@
         public const string Eliminar_Compromiso_Tema = "134";        
 
         public const string Cambiar_estado_Gestion_Poliza = "135";
+
+        public const string Create_Edit_Seguimiento_Diario = "149";
+
+        public const string Eliminar_Seguimiento_Diario = "151";
+
+        public const string Enviar_Seguimiento_Diario_A_Apoyo = "152";
+
+        public const string Create_Edit_Observacion_Seguimiento_Diario = "154";
+
+        public const string Enviar_Seguimiento_Diario_A_Supervision = "155";
     }
 }
