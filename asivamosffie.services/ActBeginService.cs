@@ -128,7 +128,7 @@ namespace asivamosffie.services
                 else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
                     contrato.EstadoActaFase2 = "2";       //2   Con acta preliminar generada
 
-                contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
+                contrato.FechaActaInicioFase2 = pFechaActaInicioFase1;
                 contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
 
                 ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
