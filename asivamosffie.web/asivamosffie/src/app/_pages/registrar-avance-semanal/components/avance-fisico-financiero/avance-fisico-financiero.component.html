@@ -15,7 +15,7 @@
                 <p> <b>Disponiblidad personal: Insuficiente</b> </p>
             </div>
 
-            <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario"></app-tabla-avance-resumen-alertas>
+            <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-avance-resumen-alertas>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
@@ -25,7 +25,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico></app-tabla-avance-fisico>
+            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoDiario"></app-tabla-avance-fisico>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

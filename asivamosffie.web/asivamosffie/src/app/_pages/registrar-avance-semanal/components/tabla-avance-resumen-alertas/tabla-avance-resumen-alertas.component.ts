@@ -28,16 +28,23 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
 
     ngOnInit(): void {
         if ( this.seguimientoDiario !== undefined && this.seguimientoDiario.length > 0 ) {
-            const dataSeguimientoDiario = [
-            ];
+            const dataSeguimientoDiario = [];
+            const seguimientoDiario = [];
             let sumaTotal = 0;
             for ( const seguimiento of this.seguimientoDiario ) {
-                sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
+                if (    seguimiento.cantidadPersonalProgramado !== undefined
+                        && seguimiento.cantidadPersonalTrabajando !== undefined
+                        && seguimiento.numeroHorasRetrasoPersonal !== undefined )
+                {
+                    seguimientoDiario.push( seguimiento );
+                    sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
+                }
             }
+
             dataSeguimientoDiario.push(
                 {
                     totalHorasRetraso: sumaTotal,
-                    resumenAlertas: [ ...this.seguimientoDiario ]
+                    resumenAlertas: seguimientoDiario
                 }
             );
             console.log( dataSeguimientoDiario );

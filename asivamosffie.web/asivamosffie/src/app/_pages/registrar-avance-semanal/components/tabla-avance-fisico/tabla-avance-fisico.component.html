@@ -36,36 +36,46 @@
   
         <ng-container matColumnDef="capitulo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Capítulo </th>
-          <td mat-cell *matCellDef="let element" align="center"> {{ element.capitulo }} </td>
+          <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let capitulo of element.avancePorCapitulo">
+              {{ capitulo.capitulo }}
+            </div>
+          </td>
         </ng-container>
   
         <ng-container matColumnDef="programacionCapitulo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Programación por capítulo </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.programacionCapitulo }}% </td>
+            <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let programacionCapitulo of element.avancePorCapitulo">
+                {{ programacionCapitulo.programacionCapitulo }}%
+              </div>
+            </td>
         </ng-container>
   
         <ng-container matColumnDef="avanceFisicoCapitulo">
             <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 14%;"> Avance físico por capítulo </th>
-            <td mat-cell *matCellDef="let element" align="center">
+            <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let avanceFisicoCapitulo of element.avancePorCapitulo">
                 <section class="d-flex justify-content-center">
-                    <mat-form-field style="width: 3em;">
-                        <input  matInput
-                                type="text"
-                                maxlength="3"
-                                [(ngModel)]="element.avanceFisicoSemana"
-                                required
-                                style="width: 2em;"
-                                (ngModelChange)="valuePending( $event, element )">
-                    </mat-form-field>
-                    <span style="margin: .5em;">%</span>
-                    <span class="contador">{{3 - element.avanceFisicoSemana.length}}</span>
-                </section>
+                  <mat-form-field style="width: 3em;">
+                      <input  matInput
+                              type="text"
+                              maxlength="3"
+                              [(ngModel)]="avanceFisicoCapitulo.avanceFisicoCapitulo"
+                              required
+                              style="width: 2em;"
+                              (ngModelChange)="valuePending( $event, avanceFisicoCapitulo )">
+                  </mat-form-field>
+                  <span style="margin: .5em;">%</span>
+                  <span class="contador">{{3 - avanceFisicoCapitulo.avanceFisicoCapitulo.length}}</span>
+              </section>
+              </div>
             </td>
         </ng-container>
 
         <ng-container matColumnDef="avanceFisicoSemana">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Avance físico de la semana </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.avanceFisicoSemana.length > 0 ? element.avanceFisicoSemana+'%' : '' }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.avanceFisicoSemana > 0 ? element.avanceFisicoSemana+'%' : '' }} </td>
         </ng-container>
     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -76,6 +86,7 @@
                 color="warn"
                 class="btn-guardar"
                 type="button"
+                [disabled]="seRealizoCambio === false"
                 (click)="guardar()">
                 <img  src="assets/img/icon/guardar.svg">
         </button>
