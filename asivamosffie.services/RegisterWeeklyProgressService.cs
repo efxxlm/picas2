@@ -190,7 +190,7 @@ namespace asivamosffie.services
 
                     List<FlujoInversion> ListProgramacion = _context.FlujoInversion
                       .Include(r => r.Programacion)
-                      .Where(r => r.Programacion.TipoActividadCodigo == "C").ToList();
+                      .Where(r => r.Programacion.TipoActividadCodigo == "C" && r.Programacion.AvanceFisicoCapitulo.HasValue).ToList();
 
                     foreach (var idSeguimientoSemanal in ListSeguimientoSemanalId)
                     {
@@ -335,8 +335,8 @@ namespace asivamosffie.services
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<FlujoInversion> ListProgramacion = _context.FlujoInversion
-                      .Include(r => r.Programacion)
-                      .Where(r => r.Programacion.TipoActividadCodigo == "C").ToList();
+                       .Include(r => r.Programacion)
+                       .Where(r => r.Programacion.TipoActividadCodigo == "C" && r.Programacion.AvanceFisicoCapitulo.HasValue).ToList();
 
                     foreach (var idSeguimientoSemanal in ListSeguimientoSemanalId)
                     {
