@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -30,7 +31,11 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
       sede: 'Única sede',
     }
   ];
-  constructor() { }
+
+  addressForm = this.fb.group({
+    numeroFactura: [null, Validators.required]
+  });
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTable);

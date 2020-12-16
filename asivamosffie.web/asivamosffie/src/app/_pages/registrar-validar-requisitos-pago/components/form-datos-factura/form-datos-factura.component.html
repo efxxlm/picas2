@@ -1,53 +1,140 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-    <mat-card class="shipping-card">
-        <mat-card-header class="header-card">
-            <mat-card-title class="header-card--text">
-                Datos
-            </mat-card-title>
-        </mat-card-header>
-        <mat-card-content style="text-align: left;">
-            <h2 class="card-subTitle">Descripción de la factura</h2>
-            <div class="row">
-                <div class="col-md-8">
-                  <div class="row">
-                    <div class="pr-1">
-                      <label for="numeroFactura" class="label-left">Número de factura</label>
-                    </div>
-                    <div class="col d-flex">
-                      <mat-form-field class="full-width">
-                        <input matInput #numeroFactura type="text" maxlength="10" formControlName="numeroFactura"
-                          required>
-                      </mat-form-field>
-                      <span class="contador">{{10 - numeroFactura.value.length}}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            <div class="row">
-                <div class="col-md-8">
-                  <div class="row">
-                    <div class="pr-1">
-                      <label class="label-left" for="fechaFactura">Fecha de factura</label>
-                    </div>
-                    <div class="col d-flex align-items-center">
-                      <mat-form-field class="example-full-width">
-                        <input matInput formControlName="fechaFactura" [matDatepicker]="pickerPoliza" 
-                          readonly (click)="pickerPoliza.open()" required placeholder="DD/MM/AAAA">
-                        <mat-datepicker #pickerPoliza></mat-datepicker>
-                      </mat-form-field>
-                      <button mat-button color="primary" type="button" (click)="pickerPoliza.open()" class="btn-calendario">
-                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <p><strong>Valor facturado: </strong>$15.000.000</p>
-        </mat-card-content>
-    </mat-card>
-    <div class="text-center mb-2em">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
-            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+  <mat-card class="shipping-card">
+    <mat-card-header class="header-card">
+      <mat-card-title class="header-card--text">
+        Datos
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="text-align: left;">
+      <h2 class="card-subTitle">Descripción de la factura</h2>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label for="numeroFactura" class="label-left">Número de factura</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #numeroFactura type="text" maxlength="10" formControlName="numeroFactura" required>
+              </mat-form-field>
+              <span class="contador">{{10 - numeroFactura.value.length}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="fechaFactura">Fecha de factura</label>
+            </div>
+            <div class="col d-flex align-items-center">
+              <mat-form-field class="example-full-width">
+                <input matInput formControlName="fechaFactura" [matDatepicker]="pickerPoliza" readonly
+                  (click)="pickerPoliza.open()" required placeholder="DD/MM/AAAA">
+                <mat-datepicker #pickerPoliza></mat-datepicker>
+              </mat-form-field>
+              <button mat-button color="primary" type="button" (click)="pickerPoliza.open()" class="btn-calendario">
+                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p><strong>Valor facturado: </strong>$15.000.000</p>
+      <h2 class="card-subTitle">Descuentos dirección técnica asociados a la factura</h2>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="aplicaDescuento">¿Aplican descuentos?</label>
+            </div>
+            <div class="col">
+              <mat-radio-group class="radioInput" formControlName="aplicaDescuento" required>
+                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-button [value]="false">No</mat-radio-button>
+              </mat-radio-group>
+              <span class="required-form-group" style="margin-left: 1px;">*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px; margin-top: 1em;"
+        *ngIf="this.addressForm.value.aplicaDescuento==true">
+        Descuento 1
+      </mat-card-title>
+      <div class="row" *ngIf="this.addressForm.value.aplicaDescuento==true">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
+            </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select formControlName="tipoDescuento" required>
+                  <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento.value">
+                    {{ tipoDescuento.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="this.addressForm.value.aplicaDescuento==true">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="valorDescuento">
+                Valor del descuento
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #valorDescuento currencyMask maxlength="20" required formControlName="valorDescuento"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+              </mat-form-field>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{20 - valorDescuento.value.length}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-right" *ngIf="this.addressForm.value.aplicaDescuento==true">
+        <button mat-button color="warn" type="button" class="btn-eliminar">
+          <img src="assets/img/icon/mas.svg" alt="agregar">
+          Agregar otro descuento
         </button>
-    </div>
+      </div>
+      <br>
+      <div class="row" *ngIf="this.addressForm.value.aplicaDescuento==true">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="valorAPagarDespues">
+                Valor a pagar después de descuentos
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #valorAPagarDespues currencyMask maxlength="20" required
+                  formControlName="valorAPagarDespues" (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                  [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+              </mat-form-field>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{20 - valorAPagarDespues.value.length}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center mb-2em">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    </button>
+  </div>
 </form>
