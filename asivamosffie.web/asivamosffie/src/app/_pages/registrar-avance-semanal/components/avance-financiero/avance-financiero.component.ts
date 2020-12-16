@@ -1,3 +1,5 @@
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
+import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,7 +13,11 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class AvanceFinancieroComponent implements OnInit {
 
     @Input() esVerDetalle = false;
+    @Input() seguimientoSemanal: any;
     formAvanceFinanciero: FormGroup;
+    seguimientoSemanalId: number;
+    seguimientoSemanalAvanceFinancieroId: number;
+    avanceFinanciero: any;
     editorStyle = {
         height: '45px'
     };
@@ -30,19 +36,43 @@ export class AvanceFinancieroComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private routes: Router,
+        private avanceSemanalSvc: RegistrarAvanceSemanalService )
     {
         this.crearFormulario();
     }
 
     ngOnInit(): void {
+        if ( this.seguimientoSemanal !== undefined ) {
+            this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
+            this.seguimientoSemanalAvanceFinancieroId =  this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ?
+            this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0].seguimientoSemanalAvanceFinancieroId : 0;
+
+            console.log( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length );
+
+            if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
+                this.avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
+                console.log( this.avanceFinanciero );
+                this.formAvanceFinanciero.setValue(
+                    {
+                        requiereObservacion:    this.avanceFinanciero.requiereObservacion !== undefined ?
+                                                this.avanceFinanciero.requiereObservacion : null,
+                        observacion:    this.avanceFinanciero.observacion !== undefined ?
+                                        this.avanceFinanciero.observacion : null,
+                        generarAlerta:  this.avanceFinanciero.generarAlerta !== undefined ?
+                                        this.avanceFinanciero.generarAlerta : null
+                    }
+                );
+            }
+        }
     }
 
     crearFormulario() {
         this.formAvanceFinanciero = this.fb.group({
-            requiereObsAlAvance: [ null ],
-            observacionAvance: [ null ],
-            alertaSobreAvance: [ null ]
+            requiereObservacion: [ null ],
+            observacion: [ null ],
+            generarAlerta: [ null ]
         });
     }
 
@@ -67,7 +97,35 @@ export class AvanceFinancieroComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formAvanceFinanciero.value );
+        const pSeguimientoSemanal = this.seguimientoSemanal;
+        const seguimientoSemanalAvanceFinanciero = [
+            {
+                seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
+                seguimientoSemanalAvanceFinancieroId: this.seguimientoSemanalAvanceFinancieroId,
+                requiereObservacion:    this.formAvanceFinanciero.get( 'requiereObservacion' ).value !== null ?
+                                        this.formAvanceFinanciero.get( 'requiereObservacion' ).value : null,
+                observacion:    this.formAvanceFinanciero.get( 'observacion' ).value !== null ?
+                                this.formAvanceFinanciero.get( 'observacion' ).value : null,
+                generarAlerta:  this.formAvanceFinanciero.get( 'generarAlerta' ).value !== null ?
+                                this.formAvanceFinanciero.get( 'generarAlerta' ).value : null
+            }
+        ];
+        pSeguimientoSemanal.seguimientoSemanalAvanceFinanciero = seguimientoSemanalAvanceFinanciero;
+        console.log( pSeguimientoSemanal );
+        this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

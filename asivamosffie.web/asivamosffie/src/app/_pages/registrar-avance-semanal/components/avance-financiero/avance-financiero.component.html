@@ -16,7 +16,7 @@
                             <div class="col d-flex">
                                 <section style="width: 100%;">
                                     <mat-form-field appearance="fill">
-                                      <mat-select class="padding-left" formControlName="requiereObsAlAvance" required>
+                                      <mat-select class="padding-left" formControlName="requiereObservacion" required>
                                         <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
                                           {{requisito.viewValue}}
                                         </mat-option>
@@ -28,7 +28,7 @@
                         </div>
                     </div>
 
-                    <div class="row" style="margin-bottom: 1em;">
+                    <div class="row" style="margin-bottom: 1em;" *ngIf="formAvanceFinanciero.get( 'requiereObservacion' ).value === true">
                         <div class="col-md-12">
                           <div>
                             <div class="pr-1">
@@ -39,13 +39,13 @@
                                                 [styles]="editorStyle"
                                                 [modules]="config"
                                                 (onContentChanged)="maxLength($event, 400)"
-                                                formControlName="observacionAvance"
+                                                formControlName="observacion"
                                                 required>
                                 </quill-editor>
-                                <span class="contador miles" *ngIf="formAvanceFinanciero.get('observacionAvance').value !== null" style="margin-top: 3.5em;">
-                                    {{400 - (textoLimpio(formAvanceFinanciero.get('observacionAvance').value))}}
+                                <span class="contador miles" *ngIf="formAvanceFinanciero.get('observacion').value !== null" style="margin-top: 3.5em;">
+                                    {{400 - (textoLimpio(formAvanceFinanciero.get('observacion').value))}}
                                 </span>
-                                <span class="contador miles" *ngIf="formAvanceFinanciero.get('observacionAvance').value === null" style="margin-top: 3.5em;">
+                                <span class="contador miles" *ngIf="formAvanceFinanciero.get('observacion').value === null" style="margin-top: 3.5em;">
                                     400
                                 </span>
                             </div>
@@ -62,7 +62,7 @@
                             <div class="col d-flex">
                                 <section style="width: 100%;">
                                     <mat-form-field appearance="fill">
-                                      <mat-select class="padding-left" formControlName="alertaSobreAvance" required>
+                                      <mat-select class="padding-left" formControlName="generarAlerta" required>
                                         <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
                                           {{requisito.viewValue}}
                                         </mat-option>
