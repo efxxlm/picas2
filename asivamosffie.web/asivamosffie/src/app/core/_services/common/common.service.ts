@@ -11,7 +11,7 @@ import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstrucc
   providedIn: 'root'
 })
 export class CommonService {
-    
+
   constructor(private http: HttpClient) { }
 
   public loadProfiles() {
@@ -31,7 +31,7 @@ export class CommonService {
   listaTipoAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
-  
+
 
   listaNombreAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=4`);
@@ -78,7 +78,7 @@ export class CommonService {
   listaDocumentoAcrditacion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=15`);
   }
-  
+
   listaInfraestructuraIntervenir() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=5`);
   }
@@ -94,7 +94,7 @@ export class CommonService {
   listaVigencias() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/ListVigenciaAporte`);
   }
-  
+
   listaAportanteByTipoAportanteId(pTipoAportanteID:number){
     return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
   }
@@ -106,11 +106,11 @@ export class CommonService {
   listMunicipiosByIdMunicipio(idMunicipio:string){
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/ListMunicipiosByIdMunicipio?idMunicipio=${idMunicipio}`);
   }
-  
+
   listDepartamentoByIdMunicipio(idMunicipio:string){
     return this.http.get<Localizacion[]>(`${environment.apiUrl}/Common/listDepartamentoByIdMunicipio?idMunicipio=${idMunicipio}`);
   }
-  
+
   listaTipoAlcance(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=9`);
   }
@@ -141,7 +141,7 @@ export class CommonService {
   listaTipoDisponibilidadPresupuestal(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=36`);
   }
-  
+
   listaTipoDisponibilidadPresupuestalNotCode(minCode:string){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominioNotCode?pIdDominio=36&pMinCode=${minCode}`);
   }
@@ -198,7 +198,7 @@ export class CommonService {
   listaTipoTema(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=42`);
   }
-  
+
   listaEstadoProyecto(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
   }
@@ -213,6 +213,9 @@ export class CommonService {
 
   listaCausaAccidente() {
     return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=75` );
+  }
+  listaEstadoRevision(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
   }
 
   public listaUsuarios(){
@@ -231,7 +234,7 @@ export class CommonService {
 
         for (let i = 0; i < 5; i++)
         {
-          lista = lista.concat(response[i])  
+          lista = lista.concat(response[i])
         }
 
         resolve(lista);
@@ -250,16 +253,16 @@ export class CommonService {
       this.listaInfraestructuraIntervenir(),
       this.listaCoordinaciones(),
       this.listaConvocatoria()
-    
-      ]);  
+
+      ]);
   }
   forkDepartamentoMunicipio(idMunicipio:string){
     return forkJoin([
       this.listMunicipiosByIdMunicipio(idMunicipio),
       this.listDepartamentoByIdMunicipio(idMunicipio)
-      ]);  
+      ]);
     }
-    
+
   listaFuenteRecursos(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=18`);
   }
@@ -289,7 +292,14 @@ export class CommonService {
 
     return vigencias;
   }
+
+  public getFileById(id: number) {
+    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesById?pArchivoCargueId=${id}`, { responseType: "blob" });
+    return retorno;
+  }
 }
+
+
 
 export interface Dominio{
   descripcion?: string;

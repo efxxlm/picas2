@@ -17,19 +17,28 @@ namespace asivamosffie.services.Helpers.Enumerator
         CargueMasivoOrdenes = 22,
         CronogramaSeguimiento = 23,
         RegistrarComiteTecnico = 24,
+
+        Gestionar_Procesos_Contractuales = 31,
+
+        Preconstruccion_Fase_1 = 37,
+
+        Registrar_Requisitos_Tecnicos_Construccion = 41, 
+
+        DisponibilidadPresupuestal = 30,
         SesionComiteTema = 26,
         GenerarDisponibilidadPresupuestal = 28,
-        RegistrarSesionComiteFiduciario = 29,
-        DisponibilidadPresupuestal = 30,
-        Gestionar_Procesos_Contractuales = 31,
+        RegistrarSesionComiteFiduciario = 29,        
+        
         GestionarGarantias = 35,
-        Generar_Registro_Presupuestal = 36,
-        Preconstruccion_Fase_1 = 37,   
+        Generar_Registro_Presupuestal = 36,        
         Registrar_contratos_modificaciones_contractuales = 46, 
      	Registrar_Programacion_Personal_Obra = 48,
         Gestionar_controversias_contractuales=47, 
         Gestionar_procesos_Defensa_Judicial = 52,
         Registrar_Avance_Semanal = 55,
+        Gestionar_acta_inicio_fase_2 = 42,
+        Verificar_Requisitos_Tecnicos_Construccion = 45,
+        
     }
 
     public enum enumeratorAccion

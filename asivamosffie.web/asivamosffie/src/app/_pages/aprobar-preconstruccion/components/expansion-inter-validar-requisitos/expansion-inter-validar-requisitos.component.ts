@@ -21,6 +21,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
   cantidadPerfiles: FormControl;
   perfilesCv: Dominio[] = [];
   fechaPoliza: string;
+  totalGuardados = 0;
   addressForm = this.fb.group({
     tieneObservacion: [null, Validators.required],
     observacion: [null, Validators.required]
@@ -37,12 +38,13 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
     ]
   };
 
-  constructor ( private fb: FormBuilder,
-                private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
-                private dialog: MatDialog,
-                private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService,
-                private commonSvc: CommonService,
-                private activatedRoute: ActivatedRoute ) 
+  constructor(
+    private fb: FormBuilder,
+    private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+    private dialog: MatDialog,
+    private faseUnoAprobarPreconstruccionSvc: FaseUnoAprobarPreconstruccionService,
+    private commonSvc: CommonService,
+    private activatedRoute: ActivatedRoute )
   {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
   }
@@ -50,7 +52,7 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getContratacionByContratoId ( pContratoId: number ) {
+  getContratacionByContratoId( pContratoId: number ) {
     this.commonSvc.listaPerfil()
       .subscribe(
         response => {
@@ -60,71 +62,92 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
           .subscribe( contrato => {
             this.contrato = contrato;
             const observacionTipo3 = [];
-            for ( let contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
-      
+            for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
+
               let sinDiligenciar = 0;
               let completo = 0;
 
-              for ( let perfil of contratacionProyecto.proyecto.contratoPerfil ) {
+              for ( const perfil of contratacionProyecto.proyecto.contratoPerfil ) {
+                // tslint:disable-next-line: no-string-literal
                 perfil[ 'tieneObservaciones' ] = null;
+                // tslint:disable-next-line: no-string-literal
                 perfil[ 'verificarObservacion' ] = '';
 
                 const tipoPerfil = this.perfilesCv.filter( value => value.codigo === perfil.perfilCodigo );
+                // tslint:disable-next-line: no-string-literal
                 perfil[ 'nombre' ] = tipoPerfil[0].nombre;
-
+                // tslint:disable-next-line: no-string-literal
                 if ( perfil[ 'tieneObservacionSupervisor' ] === undefined ) {
+                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'estadoSemaforo' ] = 'sin-diligenciar';
                   sinDiligenciar++;
-                };
+                }
+                // tslint:disable-next-line: no-string-literal
                 if ( perfil[ 'tieneObservacionSupervisor' ] === false ) {
+                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'estadoSemaforo' ] = 'completo';
+                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'tieneObservaciones' ] = false;
                   completo++;
-                };
+                }
 
-                for ( let observacionApoyo of perfil.contratoPerfilObservacion ) {              
+                for ( const observacionApoyo of perfil.contratoPerfilObservacion ) {
                   if ( observacionApoyo.tipoObservacionCodigo === '3' ) {
                     observacionTipo3.push( observacionApoyo );
-                  };
-                };
+                  }
+                }
 
                 if ( observacionTipo3.length > 0 ) {
-                  if ( perfil[ 'tieneObservacionSupervisor' ] === true && observacionTipo3[ observacionTipo3.length -1 ].observacion === undefined ) {
+                  // tslint:disable-next-line: no-string-literal
+                  if (  perfil[ 'tieneObservacionSupervisor' ] === true
+                        && observacionTipo3[ observacionTipo3.length - 1 ].observacion === undefined ) {
+                          // tslint:disable-next-line: no-string-literal
                     perfil[ 'estadoSemaforo' ] = 'en-proceso';
+                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
-                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length -1 ].contratoPerfilObservacionId;
-                  };
-                  if ( perfil[ 'tieneObservacionSupervisor' ] === true && observacionTipo3[ observacionTipo3.length -1 ].observacion !== undefined ) {
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
+                  }
+                  // tslint:disable-next-line: no-string-literal
+                  if (  perfil[ 'tieneObservacionSupervisor' ] === true
+                        && observacionTipo3[ observacionTipo3.length - 1 ].observacion !== undefined ) {
+                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'estadoSemaforo' ] = 'completo';
+                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
-                    perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length -1 ].observacion;
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo3[ observacionTipo3.length - 1 ].contratoPerfilObservacionId;
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'verificarObservacion' ] = observacionTipo3[ observacionTipo3.length - 1 ].observacion;
                     completo++;
-                  };
-                };
-              };
+                  }
+                }
+              }
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {
+                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'sin-diligenciar';
-                return;
-              };
+              }
               if ( completo === contratacionProyecto.proyecto.contratoPerfil.length ) {
+                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'completo';
-                return;
-              };
-              if ( ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length ) || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
+              }
+              if (  ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length )
+                    || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
+                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'en-proceso';
-                return;
-              };
-            };
-      
+              }
+            }
+
             console.log( this.contrato );
           } );
         }
       );
-  };
+  }
 
   // evalua tecla a tecla
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
+    // tslint:disable-next-line: deprecation
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
@@ -138,40 +161,40 @@ export class ExpansionInterValidarRequisitosComponent implements OnInit {
   textoLimpio(texto: string) {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
-    };
-  };
+      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    }
+  }
 
   textoLimpioObservacion(texto: string) {
     if ( texto ){
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio;
-    };
-  };
+    }
+  }
 
-  innerObservacion ( observacion: string ) {
+  innerObservacion( observacion: string ) {
     if ( observacion !== undefined ) {
       const observacionHtml = observacion.replace( '"', '' );
       return observacionHtml;
-    };
-  };
+    }
+  }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
   onSubmit( perfil: ContratoPerfil ) {
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
-      observacion: perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
+      observacion: perfil[ 'verificarObservacion' ] === null || perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
       tieneObservacionSupervisor: perfil[ 'tieneObservaciones' ]
     };
     if ( perfil[ 'contratoPerfilObservacionId' ] !== null ) {
       observacionPerfil[ 'contratoPerfilObservacionId' ] = perfil[ 'contratoPerfilObservacionId' ];
-    };
+    }
     console.log( observacionPerfil );
     this.faseUnoAprobarPreconstruccionSvc.aprobarCrearContratoPerfilObservacion( observacionPerfil )
       .subscribe(

@@ -191,7 +191,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         if ( disponibilidad.tipoSolicitudEspecialCodigo === this.tipoSolicitudCodigos.solicitudExpensas ) {
           this.addressForm.get( 'disponibilidadPresupuestalId' ).setValue(disponibilidad.disponibilidadPresupuestalId);
           this.addressForm.get( 'tipo' ).setValue( this.tipoSeleccionado );
-          this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto );
+          this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto?disponibilidad.objeto:"" );
           this.addressForm.get( 'numeroRadicado' ).setValue( disponibilidad.numeroRadicadoSolicitud );
           this.addressForm.get( 'cartaAutorizacionET' ).setValue( disponibilidad.cuentaCartaAutorizacion );
   
@@ -222,7 +222,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         if ( disponibilidad.tipoSolicitudEspecialCodigo === this.tipoSolicitudCodigos.solicitudOtrosCostos ) {
           this.addressForm.get( 'disponibilidadPresupuestalId' ).setValue( disponibilidad.disponibilidadPresupuestalId );
           this.addressForm.get( 'tipo' ).setValue( this.tipoSeleccionado );
-          this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto );
+          this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto?disponibilidad.objeto:"" );
           this.addressForm.get('numeroRadicado').setValue( disponibilidad.numeroRadicadoSolicitud );
           this.addressForm.get( 'numeroContrato' ).setValue( disponibilidad.numeroContrato );
           this.myFilter.setValue( disponibilidad.numeroContrato );
@@ -364,7 +364,9 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
         switch (tipoDDP.codigo) {
           case "1": //expensas
-
+          console.log(this.proyecto);
+          if(this.proyecto && this.proyecto.proyectoId)
+          {
             let disponibilidad: DisponibilidadPresupuestal = {
               disponibilidadPresupuestalId: this.addressForm.get('disponibilidadPresupuestalId').value,
               tipoSolicitudCodigo: "2", //especial
@@ -388,6 +390,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 },
                 err => this.openDialog( '', err.message )
               );
+          }
+            
 
             break;
           case "2":

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-actualizar-reclamacion-aseg-cc',
@@ -10,8 +12,19 @@ export class ActualizarReclamacionAsegCcComponent implements OnInit {
 
   constructor() { }
 
+  idControversia: any;
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  tipoControversia: string;
+  constructor(private activatedRoute: ActivatedRoute, private services: ContractualControversyService) { }
+
   ngOnInit(): void {
     this.tipoControversia="Terminación anticipada por incumplimiento (TAI)";
-  }
 
+    this.activatedRoute.params.subscribe(param => {
+      this.idControversia = param.id;
+    });
+  }
+  loadService(){
+
+  }
 }

@@ -10,10 +10,15 @@ using System.Threading.Tasks;
 namespace asivamosffie.services.Interfaces
 {
     public interface IManagePreContructionActPhase1Service
-    { 
+    {
+
+        Task<Respuesta> CreateEditObservacionesActa(ContratoObservacion pcontratoObservacion);
+
+        Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId );
+
         Task<dynamic> GetListContrato();
 
-        Task<Contrato> GetContratoByContratoId(int pContratoId);
+        Task<Contrato> GetContratoByContratoId(int pContratoId, int? pUserId);
 
         Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId);
 
@@ -23,6 +28,8 @@ namespace asivamosffie.services.Interfaces
          
         Task<Respuesta> CambiarEstadoActa(int pContratoId, string pEstadoContrato, string pUsuarioModificacion);
 
-        Task<byte[]> GetActaByIdPerfil(int pPerfilId, int pContratoId);
+        Task<byte[]> GetActaByIdPerfil(int pPerfilId, int pContratoId ,int pUserId, AppSettingsService pAppSettingsService);
+
+        Task GetListContratoConActaSinDocumento(AppSettingsService appSettingsService);
     }
 }

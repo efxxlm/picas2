@@ -5,7 +5,7 @@ namespace asivamosffie.services.Helpers.Constant
     {
         #region Mensajes Informativos
 
- 
+
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
@@ -47,7 +47,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string DirecCambioContrasena = "301";
 
         #endregion Mensajes Redireccion
-         
+
     }
 
     public class ConstantMessagesContrasena
@@ -450,6 +450,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
 
         #endregion Mensajes Exitoso
 
@@ -703,8 +704,8 @@ namespace asivamosffie.services.Helpers.Constant
     {
 
         #region Mensajes Informativos
-
-
+        public const string CanceladoCorrrectamente = "201";
+        public const string DevueltoCorrrectamente = "202";
         #endregion Mensajes Informativos
 
         #region Mensajes Exitoso
@@ -722,13 +723,14 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion
     }
 
+
     public class ConstantMessagesContractualControversy
     {
         #region Mensajes Error
 
 
         public const string ErrorInterno = "501";
-        
+
         public const string Error = "500";
 
         #endregion Mensajes Informativos
@@ -745,23 +747,14 @@ namespace asivamosffie.services.Helpers.Constant
         public const string ErrorEnviarCorreo = "107";
         public const string ErrorGuardarCambios = "109";
 
-        #endregion Mensajes Informativos
-
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
-        public const string EliminacionCancelada = "202";
         public const string EliminacionExitosa = "201";
 
         #endregion Mensajes Exitoso
-
-        #region Mensajes Redireccion
-
-
-
-        #endregion Mensajes Redireccion
-
     }
+
 
     public class ConstantMessagesJudicialDefense
     {
@@ -774,10 +767,10 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Informativos
 
         #region Mensajes Informativos                
-        
+
         public const string CreadoCorrrectamente = "103";
         public const string RecursoNoEncontrado = "104";
-        
+
         public const string ErrorEnviarCorreo = "107";
         public const string ErrorGuardarCambios = "109";
 
@@ -785,7 +778,8 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region Mensajes Exitoso
 
-        public const string OperacionExitosa = "200";               
+        public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
 
         #endregion Mensajes Exitoso
 
@@ -793,6 +787,96 @@ namespace asivamosffie.services.Helpers.Constant
 
         #endregion Mensajes Redireccion
 
+        #endregion
+
+    }
+
+    public class GeneralCodes
+    {
+
+        #region Mensajes Informativos
+
+        public const string NoExitenArchivos = "100";
+        public const string CamposVacios = "101";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        #endregion
+    }
+
+    public class ConstantMessagesActaInicio
+    {
+
+        #region Mensajes Informativos
+
+        public const string RecursoNoEncontrado = "104";
+        public const string CorreoEnviado = "101";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+        public const string CreadoCorrectamente = "103";
+        public const string EditadoCorrrectamente = "102";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Error
+
+        public const string Error = "500";
+        public const string ErrorEnviarCorreo = "107";
+        public const string ErrorInterno = "501";
+
+
+        #endregion
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+    }
+
+    public class ConstantGestionarActaInicioFase2
+    {
+
+        #region Mensajes Informativos
+
+        public const string CorreoEnviado = "101";
+        public const string EditadoCorrectamente = "102";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        public const string ErrorInterno = "501";
+        public const string ErrorEnviarCorreo = "107";
+
+
+        #endregion
     }
 
 

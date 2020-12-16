@@ -23,8 +23,7 @@
       <p>
         <strong>Objeto:</strong>
       </p>
-      <p>
-        {{this.objeto}}
+      <p [innerHtml]="this.objeto">
       </p>
       <p>
         <strong>Nombre del contratista:</strong>
@@ -211,7 +210,10 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div [innerHtml]="this.observaciones"></div>
+    <!--jflorez, quito esto pues ya tiene la tabla
+    <div [innerHtml]="this.observaciones"></div>-->  
+      <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
     </mat-card-content>
   </mat-card>
+  
 </section>

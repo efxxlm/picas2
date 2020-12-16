@@ -183,7 +183,7 @@
                                             type="text"
                                             maxlength="10"
                                             formControlName="numeroContrato">-->
-                                        <input matInput #nombre2 type="text" maxlength="1000" [formControl]="myFilter" required
+                                        <input matInput #nombre2 type="text" maxlength="10" [formControl]="myFilter" required
                                             [matAutocomplete]="auto2">
                                         <mat-autocomplete #auto2="matAutocomplete">
                                         <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredContrato  | async"

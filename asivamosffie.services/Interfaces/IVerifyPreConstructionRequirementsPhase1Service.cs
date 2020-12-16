@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IVerifyPreConstructionRequirementsPhase1Service
     {
+        Task<List<VRegistrarFase1>> GetListContratacionInterventoria2();
+             
         Task<dynamic> GetListContratacion();
 
         Task<dynamic> GetListContratacionInterventoria();

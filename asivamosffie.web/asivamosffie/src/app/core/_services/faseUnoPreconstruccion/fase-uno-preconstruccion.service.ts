@@ -12,69 +12,69 @@ import { Dominio } from '../common/common.service';
 })
 export class FaseUnoPreconstruccionService {
 
-  private url_api: string = `${ environment.apiUrl }/RegisterPreContructionPhase1`;
+  private urlApi = `${ environment.apiUrl }/RegisterPreContructionPhase1`;
 
-  constructor ( private http: HttpClient ) {};
+  constructor( private http: HttpClient ) {}
 
-  getListContratacion () {
-    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.url_api }/GetListContratacion` );
-  };
+  getListContratacion() {
+    return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.urlApi }/GetListContratacion` );
+  }
 
-  getContratacionByContratoId ( pContratoId: string ) {
-    return this.http.get<Contrato>( `${ this.url_api }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
-  };
+  getContratacionByContratoId( pContratoId: string ) {
+    return this.http.get<Contrato>( `${ this.urlApi }/GetContratoByContratoId?pContratoId=${ pContratoId }` );
+  }
 
-  createEditContratoPerfil ( pContrato: Contrato ) {
-    return this.http.post<Respuesta>( `${ this.url_api }/CreateEditContratoPerfil`, pContrato );
-  };
+  createEditContratoPerfil( pContrato: Contrato ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditContratoPerfil`, pContrato );
+  }
 
-  deleteContratoPerfil ( contratoPerfilId: number ) {
-    return this.http.delete<Respuesta>( `${ this.url_api }/DeleteContratoPerfil?ContratoPerfilId=${ contratoPerfilId }` );
-  };
+  deleteContratoPerfil( contratoPerfilId: number ) {
+    return this.http.delete<Respuesta>( `${ this.urlApi }/DeleteContratoPerfil?ContratoPerfilId=${ contratoPerfilId }` );
+  }
 
-  deleteContratoPerfilNumeroRadicado ( contratoPerfilNumeroRadicadoId: number ) {
-    return this.http.post<Respuesta>( `${ this.url_api }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' )
-  };
-  changeStateContrato ( pContratoId: number, pEstadoVerificacionContratoCodigo: string ) {
-    return this.http.post<Respuesta>( `${ this.url_api }/ChangeStateContrato?pContratoId=${ pContratoId }&pEstadoVerificacionContratoCodigo=${ pEstadoVerificacionContratoCodigo }`, '' );
-  };
-  //Estados de preconstrucción
-  listaEstadosVerificacionContrato () {
-    let estadosPreconstruccion: estadosPreconstruccion = {};
+  deleteContratoPerfilNumeroRadicado( contratoPerfilNumeroRadicadoId: number ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/DeleteContratoPerfilNumeroRadicado?ContratoPerfilNumeroRadicadoId=${ contratoPerfilNumeroRadicadoId }`, '' );
+  }
+  changeStateContrato( pContratoId: number, pEstadoVerificacionContratoCodigo: string ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/ChangeStateContrato?pContratoId=${ pContratoId }&pEstadoVerificacionContratoCodigo=${ pEstadoVerificacionContratoCodigo }`, '' );
+  }
+  // Estados de preconstrucción
+  listaEstadosVerificacionContrato() {
+    const estadoPreconstruccion: estadosPreconstruccion = {};
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=53`)
       .pipe(
         map(
           estados => {
             estados.forEach( value => {
               if ( value.codigo === '1' ) {
-                estadosPreconstruccion.sinAprobacionReqTecnicos = {
+                estadoPreconstruccion.sinAprobacionReqTecnicos = {
                   codigo: value.codigo,
                   nombre: value.nombre
                 };
-              };
+              }
               if ( value.codigo === '2' ) {
-                estadosPreconstruccion.enProcesoAprobacionReqTecnicos = {
+                estadoPreconstruccion.enProcesoAprobacionReqTecnicos = {
                   codigo: value.codigo,
                   nombre: value.nombre
                 };
-              };
+              }
               if ( value.codigo === '3' ) {
-                estadosPreconstruccion.conReqTecnicosAprobados = {
+                estadoPreconstruccion.conReqTecnicosAprobados = {
                   codigo: value.codigo,
                   nombre: value.nombre
                 };
-              };
+              }
               if ( value.codigo === '10' ) {
-                estadosPreconstruccion.enviadoAlInterventor = {
+                estadoPreconstruccion.enviadoAlInterventor = {
                   codigo: value.codigo,
                   nombre: value[ 'descripcion' ]
                 };
-              };
+              }
             } );
-            return estadosPreconstruccion;
+            return estadoPreconstruccion;
           }
         )
       );
-  };
+  }
 
-};
+}

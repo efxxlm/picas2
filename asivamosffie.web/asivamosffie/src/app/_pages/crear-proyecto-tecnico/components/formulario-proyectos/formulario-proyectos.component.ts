@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Listados, Proyecto, ProjectService } from 'src/app/core/_services/project/project.service';
 import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
@@ -44,6 +44,52 @@ export class FormularioProyectosComponent implements OnInit {
   ) {
     this.maxDate = new Date();
   }
+
+  noGuardado=true;
+  
+  ngOnDestroy(): void {
+    console.log("destroy"+this.proyecto.llaveMen);
+
+    if (this.noGuardado==true && (this.proyecto.fechaSesionJunta!=null ||  
+      this.proyecto.numeroActaJunta!=null ||  
+      this.proyecto.tipoIntervencionCodigo!=null ||  
+      this.proyecto.llaveMen!=''||
+      this.proyecto.localizacionIdMunicipio!=null ||  
+      this.proyecto.institucionEducativaId !=null||
+      this.proyecto.sedeId!=null || 
+      this.proyecto.convocatoriaId!=null ||  
+      this.proyecto.cantPrediosPostulados!=null ||  
+      this.proyecto.tipoPredioCodigo!= ''||
+      this.proyecto.predioPrincipalId!=null ||  
+      this.proyecto.valorObra!=null ||  
+      this.proyecto.valorInterventoria!=null ||  
+      this.proyecto.valorTotal!=null ||  
+      this.proyecto.estadoProyectoCodigo!=''||
+      this.proyecto.eliminado!=null ||  
+      this.proyecto.fechaCreacion!=null || 
+      this.proyecto.fechaModificacion!=null ||  
+      this.proyecto.usuarioModificacion!=''||
+      this.proyecto.institucionEducativaSede!=null ||  
+      this.proyecto.localizacionIdMunicipioNavigation!=null ||  
+      this.proyecto.plazoDiasInterventoria!=null ||  
+      this.proyecto.plazoMesesInterventoria!=null ||  
+      this.proyecto.plazoMesesObra!=null ||  
+      this.proyecto.plazoDiasObra!=null ||  
+      this.proyecto.coordinacionResponsableCodigo!=null)
+      ) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   listadoTipoIntervencion: Dominio[];
   listadoregion: Localizacion[];
@@ -119,6 +165,7 @@ export class FormularioProyectosComponent implements OnInit {
       if(respuesta.code=="200")
       {
         this.openDialog('', `<b>${respuesta.message}</b>`);
+        this.noGuardado=false;
         this.router.navigate(['/crearProyecto']); 
       }
       else

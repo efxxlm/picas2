@@ -1,0 +1,191 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/generarActaInicioConstruccion" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        {{this.title}} acta de inicio contrato {{this.contratoCode}} fase 2 - Construcción
+    </h1>
+    <p class="info-sub-title">
+        <span>Fecha de aprobación de requeisitos por el supervisor: <b>{{this.fechaAprobacionSupervisor}}</b></span>
+    </p>
+</section>
+<section class="container">
+    <mat-card class="shipping-card mainGris">
+        <mat-card-content>
+            <p><strong>Vigencia del contrato: </strong>{{this.vigenciaContrato}}</p>
+            <p><strong>Fecha de firma del contrato: </strong>{{this.fechaFirmaContrato}}</p>
+            <p><strong>Número del DRP 1. </strong>{{this.numeroDRP1}}</p>
+            <p><strong>Fecha de generación de DRP 1. </strong>{{this.fechaGeneracionDRP1}}</p>
+            <p><strong>Número del DRP 2. </strong>{{this.numeroDRP2}}</p>
+            <p><strong>Fecha de generación de DRP 2. </strong>{{this.fechaGeneracionDRP2}}</p>
+            <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{this.fechaAprobacionGarantiaPoliza}}</p>
+            <p><strong>Objeto:</strong></p>
+            <div [innerHtml]="this.objeto"></div>
+            <p><strong>Valor inicial del contrato: </strong>{{this.valorInicialContrato}}</p>
+            <p><strong>Valor actual del contrato: </strong>{{this.valorActualContrato}}</p>
+            <p><strong>Valor fase 1 - Preconstrucción (Estudios y diseños): </strong>{{this.valorFase1Preconstruccion}}
+            </p>
+            <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra}}</p>
+            <div *ngIf="this.valorProponente=='1'">
+                <p><strong>Número de identificación del representante legal del contratista de obra:
+                    </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria}}</p>
+                <p><strong>Nombre del representante legal del contratista de obra:
+                    </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
+                <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
+                <p><strong>Nombre entidad contratista de obra: </strong>{{this.nombreEntidadContratistaObra}}</p>
+            </div>
+            <div *ngIf="this.valorProponente=='2'">
+                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                    </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria}}</p>
+                <p><strong>Nombre del representante legal del contratista de interventoría:
+                    </strong>{{this.nombreEntidadContratistaSupervisorInterventoria}}</p>
+                <p><strong>Número de identificación del contratista de interventoría: </strong>870.876.977-4</p>
+                <p><strong>Nombre de la entidad contratista de interventoría:
+                    </strong>{{this.nombreEntidadContratistaObra}}</p>
+            </div>
+
+        </mat-card-content>
+    </mat-card>
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaActaInicioFDosConstruccion">Fecha del acta de inicio
+                                    de la fase 2 - Construcción</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [matDatepicker]="picker" required
+                                        [min]="this.fechaAprobacionSupervisor" readonly (click)="picker.open()"
+                                        formControlName="fechaActaInicioFDosConstruccion" placeholder="DD/MM/AAAA"
+                                        (dateInput)="generarFechaRestante()">
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="picker.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaPrevistaTerminacion">Fecha prevista de
+                                    terminación</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
+                                        formControlName="fechaPrevistaTerminacion" placeholder="DD/MM/AAAA">
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 padd0">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left">Plazo actual del contrato:</label>
+                            </div>
+                            <div class="col d-flex d-flex-row" style="margin-top: .5em;">
+                                <p><strong>Meses: </strong>{{this.plazoActualContratoMeses}} <strong>Días:
+                                    </strong>{{this.plazoActualContratoDias}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 padd0">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left">Plazo de ejecución fase 1 – Preconstrucción:</label>
+                            </div>
+                            <div class="col d-flex d-flex-row" style="margin-top: .5em;">
+                                <p><strong>Meses: </strong>{{this.plazoEjecucionPreConstruccionMeses}} <strong>Días:
+                                    </strong>{{this.plazoEjecucionPreConstruccionDias}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-9 padd0">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left">Plazo de ejecución fase 2 – Construcción:</label>
+                            </div>
+                            <div class="col d-flex d-flex-row">
+                                <label class="label-left sub-label" for="mesPlazoEjFase2">
+                                    Meses
+                                </label>
+                                <mat-form-field class="w-8em">
+                                    <input matInput maxlength="2" min="1" max="99" required (keypress)="number($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
+                                        formControlName="mesPlazoEjFase2">
+                                </mat-form-field>
+                                <span class="contador"
+                                    *ngIf="addressForm.value.mesPlazoEjFase2 !== null">{{2 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase2').value.toString().length:0)}}</span>
+                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2==null">2</span>
+                                <label class="label-left sub-label" for="diasPlazoEjFase2">
+                                    Días
+                                </label>
+                                <mat-form-field class="w-8em">
+                                    <input matInput maxlength="2" min="1" max="31" required (keypress)="number($event)"
+                                        onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
+                                        formControlName="diasPlazoEjFase2">
+                                </mat-form-field>
+                                <span class="contador"
+                                    *ngIf="addressForm.value.diasPlazoEjFase2 !== null">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase2').value.toString().length:0)}}</span>
+                                <span class="contador" *ngIf="addressForm.value.diasPlazoEjFase2 == null">2</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-start">
+                    <div class="text-area-quill noDecorated">
+                        <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones
+                            especiales</label>
+                        <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                            (onContentChanged)="maxLength($event, 500)" formControlName="observacionesEspeciales">
+                        </quill-editor>
+                    </div>
+                    <span class="contador auxMarg" *ngIf="addressForm.value.observacionesEspeciales !== null">
+                        {{500 - textoLimpio(addressForm.get('observacionesEspeciales').value)}}
+                    </span>
+                    <span class="contador auxMarg" *ngIf="addressForm.value.observacionesEspeciales === null">
+                        500
+                    </span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <div class="text-center">
+            <button mat-button color="warn" class="btn-guardar" type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+        </div>
+    </form>
+
+    <div *ngIf="this.observacionesActaFase2!=undefined || this.observacionesActaFase2!=null ">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Observaciones al acta de inicio
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <p><strong>{{this.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></p>
+                <div [innerHtml]="this.observacionesActaFase2"></div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+</section>

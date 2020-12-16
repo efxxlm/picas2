@@ -11,21 +11,21 @@
 		<h1 class="title-menu--h1" *ngIf="estado === estadosPreconstruccion.enProcesoAprobacionReqTecnicos || estado === estadosPreconstruccion.enviadoAlInterventor">
 			Ver detalle/Editar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
 		</h1>
-		<p class="text-primary" style="margin-top: 1em;">
+		<p class="colorMainColor" style="margin-top: 1em;">
 			<span class="mx-2em">
-				Fecha de aprobacion de póliza:
 				<b>
-					{{ fechaPoliza | date: 'dd/MM/yyyy' }}
+					Fecha de aprobacion de póliza:
 				</b>
+				{{ fechaPoliza | date: 'dd/MM/yyyy' }}
 			</span>
-			<span class="mx-2em">
-				Proyectos asociados:
+			<span class="ml-2em">
 				<b>
-					{{ contrato.contratacion.contratacionProyecto.length }}
+					Proyectos asociados:
 				</b>
+				{{ contrato.contratacion.contratacionProyecto.length }}
 			</span>
 		</p>
-		<p class="info-container">
+		<p class="info-container" style="margin-top: 2em;">
 			<span class="info-text sin-diligenciar">Sin diligenciar</span>
 			<span class="info-text en-proceso">En proceso</span>
 			<span class="info-text completo">Completo</span>
@@ -72,6 +72,7 @@
 			<app-form-perfil 	[perfilProyecto]="contratacion.proyecto.contratoPerfil"
 												[contratoId]="contrato.contratoId"
 												[proyectoId]="contratacion.proyectoId"
+												(perfilEliminado)="getContrato( $event )"
 												(enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
 												(perfilesCompletados)="estadoSemaforo( i, $event )">
 			</app-form-perfil>

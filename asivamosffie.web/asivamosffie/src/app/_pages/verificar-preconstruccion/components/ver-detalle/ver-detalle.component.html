@@ -8,23 +8,17 @@
       <h1 class="title-menu--h1">
           Ver detalle requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
       </h1>
-      <p class="text-primary">
+      <p class="colorMainColor" style="margin-top: 1em;">
           <span class="mx-2em">
-              Fecha de aprobacion de póliza:
-              <b>
-                {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
-              </b>
+              <b>Fecha de aprobacion de póliza:</b> {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
           </span>
-          <span class="mx-2em">
-              Proyectos asociados:
-              <b>
-                {{ contrato.contratacion.contratacionProyecto.length }}
-              </b>
+          <span style="margin-left: 2em;">
+              <b>Proyectos asociados:</b> {{ contrato.contratacion.contratacionProyecto.length }}
           </span>
       </p>
   </div>
 
-  <mat-accordion *ngFor="let contratoProyecto of contrato.contratacion.contratacionProyecto">
+  <mat-accordion *ngFor="let contratoProyecto of contrato.contratacion.contratacionProyecto" style="margin-top: 2em;">
       <mat-expansion-panel class="expansion-style">
           <mat-expansion-panel-header class="expansion-style--header">
               <mat-panel-title class="expansion-style--title">
@@ -107,7 +101,7 @@
                       </mat-card-content>
                   </mat-card>
 
-                  <div class="row justify-content-center mb-2em" *ngIf="contrato.tipoContratoCodigo === '1'">
+                  <div class="row justify-content-center mb-2em" *ngIf="perfil[ 'observacionApoyo' ] !== undefined">
                     <div class="pr-1">
                       <strong>
                         ¿Tiene observaciones a las hojas de vida de este perfil?
@@ -117,18 +111,16 @@
                     <div *ngIf="perfil[ 'tieneObservacionApoyo' ] === false"><span>No</span></div>
                   </div>
                     
-                  <section *ngFor="let observaciones of perfil.contratoPerfilObservacion">
-                    <mat-card class="shipping-card var-main-gris" *ngIf="observaciones.tipoObservacionCodigo === '2' && perfil['tieneObservacionApoyo'] === true">
+                  <section *ngIf="perfil[ 'observacionApoyo' ] !== undefined && perfil['tieneObservacionApoyo'] === true">
+                    <mat-card class="shipping-card var-main-gris">
                       <mat-card-header class="header-card">
                         <mat-card-title class="header-card--text">
                           Verificación del apoyo a la supervisión
                         </mat-card-title>
                       </mat-card-header>
                       <mat-card-content>
-                        <b style="margin-bottom: .5em;">
-                          {{ observaciones.fechaCreacion | date: 'dd/MM/yyyy' }}
-                        </b>
-                        <section [innerHTML]="innerObservacion( observaciones.observacion )"></section>
+                        <p style="margin-left: 2em;"><b> {{ perfil['observacionApoyo'].fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+                        <section [innerHTML]="innerObservacion( perfil['observacionApoyo'].observacion )" style="margin-left: 2em;"></section>
                       </mat-card-content>
                     </mat-card>
                   </section>
