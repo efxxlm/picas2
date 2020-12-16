@@ -909,6 +909,13 @@ namespace asivamosffie.services
                         EstadoControversia = "PENDIENTE",
                         RegistroCompletoNombre = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
 
+                        //cu 4.4.1
+                        //Actuacion = "Actuación " + actuacionSeguimiento.ActuacionSeguimientoId.ToString()
+                        Actuacion = "PENDIENTE",
+                        FechaActuacion = "PENDIENTE",
+                        EstadoActuacion= "PENDIENTE",
+
+
 
                     };
 
