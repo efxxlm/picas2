@@ -34,14 +34,14 @@
                                                 [styles]="editorStyle"
                                                 [modules]="config"
                                                 (onContentChanged)="maxLength($event, 2000)"
-                                                formControlName="observaciones"
+                                                formControlName="alerta"
                                                 #obsAlertasRelevantes
                                                 required>
                                 </quill-editor>
-                                <span class="contador miles" *ngIf="formAlertasRelevantes.get('observaciones').value !== null" style="margin-top: 3.5em;">
+                                <span class="contador miles" *ngIf="formAlertasRelevantes.get('alerta').value !== null" style="margin-top: 3.5em;">
                                     {{2000 - textoLimpio( obsAlertasRelevantes.quillEditor, 2000 )}}
                                 </span>
-                                <span class="contador miles" *ngIf="formAlertasRelevantes.get('observaciones').value === null" style="margin-top: 3.5em;">
+                                <span class="contador miles" *ngIf="formAlertasRelevantes.get('alerta').value === null" style="margin-top: 3.5em;">
                                     2000
                                 </span>
                             </div>

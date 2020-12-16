@@ -1,4 +1,4 @@
-<section class="text-center" *ngIf="esVerDetalle === false">
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -21,7 +21,7 @@
                                             [styles]="editorStyle"
                                             [modules]="config"
                                             (onContentChanged)="maxLength($event, 2000)"
-                                            formControlName="observaciones"
+                                            formControlName="resumenEstadoContrato"
                                             #obsResumenGeneral
                                             required>
                             </quill-editor>
@@ -40,7 +40,7 @@
                             color="warn"
                             class="btn-guardar"
                             type="submit"
-                            [disabled]="formResumenGeneral.dirty === false">
+                            [disabled]="formResumenGeneral.get( 'resumenEstadoContrato' ).dirty === false">
                             <img  src="assets/img/icon/guardar.svg">
                     </button>
                 </div>
@@ -55,7 +55,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="false"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="false" [reporteActividad]="reporteActividad" (reporteDeActividades)="guardar( $event )"></app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
@@ -65,7 +65,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="true"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="true" [reporteActividad]="reporteActividad" (reporteDeActividades)="guardar( $event )"></app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
     </mat-accordion>
 </section>
