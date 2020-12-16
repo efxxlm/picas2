@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonService, InstanciasSeguimientoTecnico, TiposNovedadModificacionContractual } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -16,11 +17,12 @@ export class FormRegistrarNovedadComponent implements OnInit {
     tipoNovedad: [null, Validators.required],
     motivosNovedad: [null, Validators.required],
     resumenJustificacionNovedad: [null, Validators.required],
+    documentacion: [null, Validators.required],
     plazoSolicitado: this.fb.array([
       this.fb.group({
         fechaInicio: [null, Validators.required],
         fechaFinal: [null, Validators.required],
-        documentacion: [null, Validators.required]
+        
       })
     ]),
     clausula: this.fb.array([
@@ -37,6 +39,9 @@ export class FormRegistrarNovedadComponent implements OnInit {
     ]
   });
 
+  instanciaSeguimientoTecnico = InstanciasSeguimientoTecnico;
+  tiposNovedadModificacionContractual=TiposNovedadModificacionContractual;
+
   get plazoSolicitadoField() {
     return this.addressForm.get('plazoSolicitado') as FormArray;
   }
@@ -46,18 +51,8 @@ export class FormRegistrarNovedadComponent implements OnInit {
   }
 
   estaEditando = false;
-
-  instanciaPresentoSolicitudArray = [
-    { name: 'Comité de obra', value: '1' },
-    { name: 'No aplica', value: 'noAplica' }
-  ];
-  tipoNovedadArray = [
-    { name: 'Suspensión', value: '1' },
-    { name: 'Prórroga a las Suspensión', value: '2' },
-    { name: 'Adición', value: '3' },
-    { name: 'Prórroga', value: '4' },
-    { name: 'Modificación de Condiciones Contractuales', value: '5' }
-  ];
+  instanciaPresentoSolicitudArray = [];
+  tipoNovedadArray = [];
   motivosNovedadArray = [
     { name: 'Alabama', value: 'AL' },
     { name: 'Alaska', value: 'AK' },
@@ -106,6 +101,7 @@ export class FormRegistrarNovedadComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public dialog: MatDialog,
+    public commonServices: CommonService
   ) { }
 
   ngOnInit(): void {
@@ -113,8 +109,14 @@ export class FormRegistrarNovedadComponent implements OnInit {
       .subscribe(value => {
         console.log(value);
       });
+      this.commonServices.listaInstanciasdeSeguimientoTecnico().subscribe(response=>{
+        this.instanciaPresentoSolicitudArray=response;
+      });
+      this.commonServices.listaTipoNovedadModificacionContractual().subscribe(response=>{
+        this.tipoNovedadArray=response;
+      });
   }
-
+ 
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',

@@ -1,3 +1,4 @@
+{{tiposNovedadModificacionContractual.Suspension}}---
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
     <mat-card-content>
@@ -27,6 +28,26 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="documentacionSuficiente" [class.color-secondaryColor]="
+              addressForm.get('documentacionSuficiente').invalid && addressForm.get('documentacionSuficiente').touched ||
+              addressForm.get('documentacionSuficiente').invalid && estaEditando">
+                ¿Cuenta con la documentación soporte suficiente?
+              </label>
+            </div>
+            <div class="col">
+              <mat-radio-group class="radioInput" formControlName="documentacionSuficiente" required>
+                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-button [value]="false">No</mat-radio-button>
+              </mat-radio-group>
+              <span class="required-form-group">*</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-md-12">
           <div class="row">
             <div class="pr-1">
@@ -39,8 +60,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required formControlName="instanciaPresentoSolicitud">
-                  <mat-option *ngFor="let instancia of instanciaPresentoSolicitudArray" [value]="instancia.value">
-                    {{ instancia.name }}
+                  <mat-option *ngFor="let instancia of instanciaPresentoSolicitudArray" [value]="instancia.codigo">
+                    {{ instancia.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -50,7 +71,7 @@
       </div>
       <div class="row animatedDown" *ngIf="
       addressForm.get('instanciaPresentoSolicitud').value !== null &&
-      addressForm.get('instanciaPresentoSolicitud').value !== 'noAplica'">
+      addressForm.get('instanciaPresentoSolicitud').value !== InstanciasSeguimientoTecnico.NoAplica">
         <div class="col-md-8">
           <div class="row">
             <div class="pr-1">
@@ -87,8 +108,8 @@
             <div class="col">
               <mat-form-field class="select-width">
                 <mat-select required formControlName="tipoNovedad" #tipoNovedad multiple>
-                  <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad.value">
-                    {{ tnovedad.name }}
+                  <mat-option *ngFor="let tnovedad of tipoNovedadArray" [value]="tnovedad.codigo">
+                    {{ tnovedad.nombre }}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -142,10 +163,16 @@
           </div>
         </div>
       </div>
-      <mat-card-title class="header-card--text sub-text">
-        Plazo solicitado
-      </mat-card-title>
-      <div formArrayName="plazoSolicitado" *ngFor="let plazoSolicitado of plazoSolicitadoField.controls; let i = index">
+      <mat-card-title class="header-card--text sub-text" *ngIf="addressForm.get('tipoNovedad').value!=null && 
+        (addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.Suspension || 
+        addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.ProrrogaSuspension)">
+        Plazo solicitado {{addressForm.get('tipoNovedad').value!=null}}
+      </mat-card-title>      
+      <div formArrayName="plazoSolicitado" *ngIf="addressForm.get('tipoNovedad').value!=null && 
+      (addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.Suspension || 
+      addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.ProrrogaSuspension)"
+      >
+      <div *ngFor="let plazoSolicitado of plazoSolicitadoField.controls; let i = index">
         <div class="row">
           <div class="col-md-8">
             <div class="row">
@@ -194,27 +221,9 @@
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-8">
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left" for="documentacion" [class.color-secondaryColor]="
-                plazoSolicitado.get('documentacion').invalid && plazoSolicitado.get('documentacion').touched ||
-                plazoSolicitado.get('documentacion').invalid && estaEditando">
-                  ¿Cuenta con la documentación soporte suficiente?
-                </label>
-              </div>
-              <div class="col">
-                <mat-radio-group class="radioInput" formControlName="documentacion">
-                  <mat-radio-button [value]="true">Sí</mat-radio-button>
-                  <mat-radio-button [value]="false">No</mat-radio-button>
-                </mat-radio-group>
-                <span class="required-form-group">*</span>
-              </div>
-            </div>
-          </div>
-        </div>
+        
       </div>
+    </div>
       <div formArrayName="clausula" *ngFor="let clausula of clausulaField.controls; let i = index">
         <div [formGroupName]="i">
           <div class="mb-05em">
@@ -285,26 +294,7 @@
           </button>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="row">
-            <div class="pr-1">
-              <label class="label-left" for="documentacionSuficiente" [class.color-secondaryColor]="
-              addressForm.get('documentacionSuficiente').invalid && addressForm.get('documentacionSuficiente').touched ||
-              addressForm.get('documentacionSuficiente').invalid && estaEditando">
-                ¿Cuenta con la documentación soporte suficiente?
-              </label>
-            </div>
-            <div class="col">
-              <mat-radio-group class="radioInput" formControlName="documentacionSuficiente" required>
-                <mat-radio-button [value]="true">Sí</mat-radio-button>
-                <mat-radio-button [value]="false">No</mat-radio-button>
-              </mat-radio-group>
-              <span class="required-form-group">*</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      
       <div class="mb-05em">
         <div>
           <label class="label-left" for="conceptoTecnico" [class.color-secondaryColor]="
@@ -372,6 +362,26 @@
                 matTooltipClass="info-tooltip">
                 {{20 - numeroRadicadoSolicitud.value.length}}
               </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="documentacion" [class.color-secondaryColor]="
+              addressForm.get('documentacion').invalid && addressForm.get('documentacion').touched ||
+              addressForm.get('documentacion').invalid && estaEditando">
+                ¿Cuenta con la documentación soporte suficiente?
+              </label>
+            </div>
+            <div class="col">
+              <mat-radio-group class="radioInput" formControlName="documentacion">
+                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                <mat-radio-button [value]="false">No</mat-radio-button>
+              </mat-radio-group>
+              <span class="required-form-group">*</span>
             </div>
           </div>
         </div>

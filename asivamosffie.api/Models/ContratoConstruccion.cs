@@ -125,6 +125,7 @@ namespace asivamosffie.api.Models
         public bool? RegistroCompletoProgramacionObra { get; set; }
         public int? ObservacionFlujoInversionSupervisorId { get; set; }
         public bool? RegistroCompletoFlujoInversion { get; set; }
+        public bool? RegistroCompletoValidacion { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }

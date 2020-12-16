@@ -5,7 +5,7 @@ namespace asivamosffie.api.Models
 {
     public partial class SeguimientoSemanalRegistroFotografico
     {
-        public int SeguimientoSemanalRegistroFotografico1 { get; set; }
+        public int SeguimientoSemanalRegistroFotograficoId { get; set; }
         public int SeguimientoSemanalId { get; set; }
         public string UrlSoporteFotografico { get; set; }
         public string Descripcion { get; set; }

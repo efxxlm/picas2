@@ -219,7 +219,7 @@ namespace asivamosffie.services
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
                                     contratoPerfilObservacionOld.Eliminado = false;
-                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion.ToUpper();
+                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion==null? null:ContratoPerfilObservacion.Observacion.ToUpper();
                                 }
                                 else
                                 {

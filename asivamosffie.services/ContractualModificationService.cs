@@ -11,6 +11,7 @@ using asivamosffie.services.Interfaces;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Helpers.Constant;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace asivamosffie.services
 {
@@ -164,6 +165,29 @@ namespace asivamosffie.services
                     ex.InnerException.ToString().Substring(0, 500))
                 };
             }
+        }
+
+        /*autor: jflorez
+           descripción: trae listado de contratos asignados al usuario logeado para el autocompletar
+           impacto: CU 4.1.3*/
+        public async Task<ActionResult<List<Contrato>>> GetListContract(int userID)
+        {
+            var contratos= _context.Contrato.Where(x =>//x.UsuarioInterventoria==userID
+            !(bool)x.Eliminado
+            ).Include(x=>x.Contratacion).ToList();
+            foreach(var contrato in contratos)
+            {
+                var contratista = _context.Contratista.Find(contrato.Contratacion.ContratistaId);
+                if (contratista != null)
+                {
+                    contratista.Contratacion = null;//para bajar el peso del consumo
+                    contratista.TipoIdentificacionNotMapped = contratista.TipoIdentificacionCodigo==null?"":_context.Dominio.Where(x => x.Codigo == contratista.TipoIdentificacionCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento).FirstOrDefault().Nombre;
+                    contrato.Contratacion.Contratista = contratista;
+                    //contrato.TipoIntervencion no se de donde sale, preguntar, porque si es del proyecto, cuando sea multiproyecto cual traigo?
+                }
+
+            }
+            return contratos;
         }
     }
 }

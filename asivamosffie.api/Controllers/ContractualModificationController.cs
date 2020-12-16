@@ -21,6 +21,27 @@ namespace asivamosffie.api.Controllers
             _contractualModification = contractualModification;
         }
 
+        /*autor: jflorez
+           descripción: trae listado de contratos asignados al usuario logeado para el autocompletar
+           impacto: CU 4.1.3*/
+        [HttpGet]
+        [Route("GetListContract")]
+        public async Task<ActionResult<List<Contrato>>> GetListContract()
+        {
+            try
+            {
+                int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+                return await _contractualModification.GetListContract(pUserId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /*autor: jflorez
+           descripción: guarda
+           impacto: CU 4.1.3*/
         [HttpPost]
         [Route("CreateEditarModification")]
         public async Task<IActionResult> CreateEditarModification(NovedadContractual novedadContractual)
@@ -29,10 +50,13 @@ namespace asivamosffie.api.Controllers
             try
             {
                 if (novedadContractual.NovedadContractualId == 0)
-                   // novedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                {
+                    novedadContractual.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                }
                 else
-                   //novedadContractual.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _contractualModification.CreateEditarModification(novedadContractual);
+                {
+                    respuesta = await _contractualModification.CreateEditarModification(novedadContractual);
+                }
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -42,7 +66,9 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
+        /*autor: jflorez
+           descripción: grilla de novedades
+           impacto: CU 4.1.3*/
         [HttpGet]
         [Route("GetListGrillaNovedadContractual")]
         public async Task<ActionResult<List<NovedadContractual>>> GetListGrillaNovedadContractual()
@@ -57,7 +83,9 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-
+        /*autor: jflorez
+           descripción: elimina
+           impacto: CU 4.1.3*/
         [HttpDelete]
         [Route("EliminarNovedadContractual")]
         public async Task<IActionResult> EliminarNovedadContractual([FromQuery] int pNovedaContractual)

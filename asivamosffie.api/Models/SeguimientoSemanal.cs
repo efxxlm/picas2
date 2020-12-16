@@ -7,6 +7,7 @@ namespace asivamosffie.api.Models
     {
         public SeguimientoSemanal()
         {
+            FlujoInversion = new HashSet<FlujoInversion>();
             SeguimientoDiario = new HashSet<SeguimientoDiario>();
             SeguimientoSemanalAvanceFinanciero = new HashSet<SeguimientoSemanalAvanceFinanciero>();
             SeguimientoSemanalAvanceFisico = new HashSet<SeguimientoSemanalAvanceFisico>();
@@ -28,8 +29,10 @@ namespace asivamosffie.api.Models
         public DateTime? FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public string EstadoObraCodigo { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
+        public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }
         public virtual ICollection<SeguimientoDiario> SeguimientoDiario { get; set; }
         public virtual ICollection<SeguimientoSemanalAvanceFinanciero> SeguimientoSemanalAvanceFinanciero { get; set; }
         public virtual ICollection<SeguimientoSemanalAvanceFisico> SeguimientoSemanalAvanceFisico { get; set; }

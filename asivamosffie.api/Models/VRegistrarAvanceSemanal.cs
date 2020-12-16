@@ -12,6 +12,8 @@ namespace asivamosffie.api.Models
         public string TipoIntervencion { get; set; }
         public string InstitucionEducativa { get; set; }
         public string Sede { get; set; }
+        public string EstadoObraCodigo { get; set; }
         public string FechaUltimoReporte { get; set; }
+        public string EstadoObra { get; set; }
     }
 }

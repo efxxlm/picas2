@@ -21,7 +21,9 @@
             <input #buscar type="text" aria-label="Number" matInput [formControl]="numeroContrato"
               [matAutocomplete]="auto" required>
             <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-              <mat-option class="autocomplete" *ngFor="let option of filteredOptions | async" [value]="option">
+              <mat-option class="autocomplete"
+              (click)="seleccionAutocomplete(option)"
+               *ngFor="let option of filteredOptions | async" [value]="option">
                 {{option}}
               </mat-option>
             </mat-autocomplete>
@@ -31,7 +33,7 @@
       </div>
     </div>
   </div>
-  <div class="row justify-content-center animatedDown" *ngIf="numeroContrato.value">
+  <div class="row justify-content-center animatedDown" *ngIf="numeroContratoSeleccionado">
     <div class="col-md-8">
       <div class="row">
         <div class="pr-1">
@@ -39,7 +41,7 @@
         </div>
         <div class="col">
           <mat-form-field class="select-width">
-            <mat-select required [formControl]="novedadAplicada">
+            <mat-select required [formControl]="novedadAplicada" (selectionChange)="changeNovedadAplicada()">
               <mat-option *ngFor="let novedad of novedadesArray" [value]="novedad.value">
                 {{ novedad.name }}
               </mat-option>
@@ -50,11 +52,11 @@
     </div>
   </div>
 
-  <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === 'Proyecto'">
+  <div class="pt-3em animatedDown" *ngIf="novedadAplicada.value === '0' && proyectos.length>0">
     <app-tabla-proyectos-registrar-novedad></app-tabla-proyectos-registrar-novedad>
   </div>
 
-  <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value">
+  <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value && contrato ">
     <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Datos del contrato
@@ -65,39 +67,39 @@
         <strong>
           Nombre del contratista:
         </strong>
-        Constructora Colpatria SAS
+        {{contrato?.contratacion.contratista.nombre}}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
         <span>
-          NIT
+          {{contrato?.contratacion.contratista.tipoIdentificacionNotMapped}}
         </span>
       </p>
       <p>
         <strong>
           Número de identificación
         </strong>
-        900.879.989
+        {{contrato?.contratacion.contratista.numeroIdentificacion}}
       </p>
       <p>
         <strong>Tipo de intervención:</strong>
-        Remodelación
+        NPI Preguntar
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        $ 130.000.000
+        {{contrato?.valor|currency:'':'symbol':'3.0'}}
       </p>
       <p>
         <strong>Plazo:</strong>
-        24 meses / 25 días
+        {{contrato?.plazoFase1PreMeses}} meses / {{contrato?.plazoFase1PreDias}} días
       </p>
       <p>
         <strong>Fecha de inicio de contrato:</strong>
-        25/06/2020
+        {{contrato?.fechaActaInicioFase1| date:'dd/MM/yyyy'}}
       </p>
       <p>
         <strong>Fecha de finalización de contrato:</strong>
-        20/07/2022
+        {{contrato?.fechaTerminacion| date:'dd/MM/yyyy'}}
       </p>
 
       <div class="animatedDown" *ngIf="novedadAplicada.value === 'Proyecto'">
@@ -127,7 +129,7 @@
     </mat-card-content>
   </mat-card>
 
-  <div class="animatedDown" *ngIf="novedadAplicada.value">
+  <div class="animatedDown" *ngIf="novedadAplicada.value && contrato">
     <app-expansion-panel></app-expansion-panel>
   </div>
 

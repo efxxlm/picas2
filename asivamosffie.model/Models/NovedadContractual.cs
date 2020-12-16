@@ -30,5 +30,6 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public bool? EsAplicadaAcontrato { get; set; }
     }
 }
