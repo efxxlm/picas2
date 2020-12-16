@@ -104,7 +104,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.dataTable);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
   textoLimpio (texto: string) {
     if ( texto ){

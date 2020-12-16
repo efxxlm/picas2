@@ -31,7 +31,7 @@
                                             [matAutocomplete]="auto">
                                         <mat-autocomplete #auto="matAutocomplete">
                                             <mat-option (click)="seleccionAutocomplete(nombres.name)"
-                                                *ngFor="let nombres of contratosArray" [value]="nombres.value">
+                                                *ngFor="let nombres of contratosArray" [value]="nombres.name">
                                                 {{nombres.name}}
                                             </mat-option>
                                         </mat-autocomplete>
