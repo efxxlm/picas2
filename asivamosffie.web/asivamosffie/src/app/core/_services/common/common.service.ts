@@ -211,6 +211,10 @@ export class CommonService {
     return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=74` );
   }
 
+  listaCausaAccidente() {
+    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=75` );
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

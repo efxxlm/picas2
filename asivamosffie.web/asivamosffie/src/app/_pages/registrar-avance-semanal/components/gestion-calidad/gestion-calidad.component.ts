@@ -284,9 +284,6 @@ export class GestionCalidadComponent implements OnInit {
         } );
         const pSeguimientoSemanal = this.seguimientoSemanal;
         this.seRealizoPeticion = true;
-        const gestionCalidad =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
-        this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad
-        : [];
         const seguimientoSemanalGestionObra = [
             {
                 seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
