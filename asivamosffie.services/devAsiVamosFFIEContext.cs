@@ -4170,7 +4170,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.CausaAccidenteCodigo)
                     .IsRequired()
-                    .HasMaxLength(10);
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
