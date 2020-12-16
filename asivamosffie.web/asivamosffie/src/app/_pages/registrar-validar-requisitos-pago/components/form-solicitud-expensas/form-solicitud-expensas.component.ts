@@ -8,12 +8,31 @@ import { Validators, FormBuilder } from '@angular/forms';
 })
 export class FormSolicitudExpensasComponent implements OnInit {
   addressForm = this.fb.group({
-    porcentajeAmortizacion: [null, Validators.required],
-    valorAmortizacion: [null, Validators.required]
+    llaveMen: [null, Validators.required],
+    numeroRadicadoSAC: [null, Validators.required],
+    numeroFactura: [null, Validators.required],
+    valorFacturado: [null, Validators.required],
+    tipoPago: [null, Validators.required],
+    conceptoPagoCriterio: [null, Validators.required],
+    valorFacturadoConcepto: [null, Validators.required]
   });
+  contratoId: any;
+  llavesMenArray = [
+    { name: 'N801801', value: '1' }
+  ];
+  tipoPagoArray = [
+    { name: 'Costo variable', value: '1' }
+  ];
+  conceptoPagoCriterioArray = [
+    { name: 'Derribar arbol de 45 mtrs', value: '1' }
+  ];
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
+  }
+  seleccionAutocomplete(id:any){
+    this.addressForm.value.llaveMen = id;
+    this.contratoId = id;
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;

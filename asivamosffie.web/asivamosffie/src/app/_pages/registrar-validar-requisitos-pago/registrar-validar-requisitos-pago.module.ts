@@ -27,11 +27,12 @@ import { FormAmortizacionAnticipoComponent } from './components/form-amortizacio
 import { DialogSubsanacionComponent } from './components/dialog-subsanacion/dialog-subsanacion.component';
 import { FormSolicitudExpensasComponent } from './components/form-solicitud-expensas/form-solicitud-expensas.component';
 import { FormSolicitudOtrosCostosserviciosComponent } from './components/form-solicitud-otros-costosservicios/form-solicitud-otros-costosservicios.component';
+import { FormListachequeoExpensasComponent } from './components/form-listachequeo-expensas/form-listachequeo-expensas.component';
 
 
 
 @NgModule({
-  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent, TablaDetalleSolicitudPagoComponent, TablaDetalleValidarListachequeoComponent, FormAmortizacionAnticipoComponent, DialogSubsanacionComponent, FormSolicitudExpensasComponent, FormSolicitudOtrosCostosserviciosComponent],
+  declarations: [RegistrarValidarRequisitosPagoComponent, RegistrarNuevaSolicitudPagoComponent, DialogProyectosAsociadosComponent, FormCargarFormaDePagoComponent, FormRegistrarSolicitudDePagoComponent, FormCriteriosPagoComponent, DetalleFacturaProyectosAsociadosComponent, FormDatosFacturaComponent, FormDescuentosDireccionTecnicaComponent, FormSoporteSolicitudUrlComponent, ValidarListaChequeoComponent, DialogObservacionesItemListchequeoComponent, DialogDevolverSolicitudComponent, VerdetalleEditarSolicitudPagoComponent, VerdetalleSolicitudPagoComponent, TablaDetalleSolicitudPagoComponent, TablaDetalleValidarListachequeoComponent, FormAmortizacionAnticipoComponent, DialogSubsanacionComponent, FormSolicitudExpensasComponent, FormSolicitudOtrosCostosserviciosComponent, FormListachequeoExpensasComponent],
   imports: [
     CommonModule,
     RegistrarValidarRequisitosPagoRoutingModule,

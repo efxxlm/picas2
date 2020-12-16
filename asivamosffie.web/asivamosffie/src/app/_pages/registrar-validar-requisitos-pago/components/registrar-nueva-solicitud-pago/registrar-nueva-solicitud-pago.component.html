@@ -232,6 +232,13 @@
         <div *ngIf="this.addressForm.value.tipoSolicitud=='3'||this.addressForm.value.tipoSolicitud=='4'">
             <app-form-solicitud-expensas *ngIf="this.addressForm.value.tipoSolicitud=='3'"></app-form-solicitud-expensas>
             <app-form-solicitud-otros-costosservicios *ngIf="this.addressForm.value.tipoSolicitud=='4'"></app-form-solicitud-otros-costosservicios>
+            <div class="text-center">
+                <p class="info-container">
+                    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+                    <span class="info-text en-proceso">En proceso</span>
+                    <span class="info-text completo">Completo</span>
+                </p>
+            </div>
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">

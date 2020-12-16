@@ -1,1 +1,111 @@
-<p>form-solicitud-otros-costosservicios works!</p>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text">
+                Otros costos y servicios
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <div class="row" style="height: 45px;">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="numeroContrato">Número de contrato</label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #numeroContrato type="text" maxlength="100" required [matAutocomplete]="auto">
+                                <mat-autocomplete #auto="matAutocomplete">
+                                    <mat-option (click)="seleccionAutocomplete(contr.value)"
+                                        *ngFor="let contr of contratosArray" [value]="contr.name">
+                                        {{contr.name}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                                <input type="hidden" formControlName="numeroContrato">
+                            </mat-form-field>
+                            <button mat-button color="primary" class="busqueda--img">
+                                <img src="assets/img/icon/lupa.svg" alt="Buscar" style="width: 20px; height: 20px;">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label for="numeroRadicadoSAC" class="label-left">Número de radicado SAC</label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #numeroRadicadoSAC type="text" maxlength="20"
+                                    formControlName="numeroRadicadoSAC" required>
+                            </mat-form-field>
+                            <span class="contador">{{20 - numeroRadicadoSAC.value.length}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label for="numeroFactura" class="label-left">Número de factura</label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #numeroFactura type="text" maxlength="20"
+                                    formControlName="numeroFactura" required>
+                            </mat-form-field>
+                            <span class="contador">{{20 - numeroFactura.value.length}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="valorFacturado">
+                                Valor facturado
+                            </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #valorFacturado currencyMask maxlength="20" required
+                                    formControlName="valorFacturado" (keypress)="validateNumberKeypress($event)"
+                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                            </mat-form-field>
+                            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                                matTooltipClass="info-tooltip">{{20 - valorFacturado.value.length}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="tipoPago">Tipo de pago</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="tipoPago" required>
+                                    <mat-option *ngFor="let tipoPago of tipoPagoArray" [value]="tipoPago.value">
+                                        {{ tipoPago.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+    </div>
+</form>
