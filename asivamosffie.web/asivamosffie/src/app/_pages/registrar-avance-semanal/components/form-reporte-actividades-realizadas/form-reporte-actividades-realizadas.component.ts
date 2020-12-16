@@ -34,6 +34,29 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        if ( this.reporteActividad !== undefined ) {
+            this.formActividadesRealizadas.setValue(
+                {
+                    actividadTecnica:   this.reporteActividad.actividadTecnica !== undefined ?
+                                        this.reporteActividad.actividadTecnica : null,
+                    actividadLegal: this.reporteActividad.actividadLegal !== undefined ?
+                                    this.reporteActividad.actividadLegal : null,
+                    actividadAdministrativaFinanciera:  this.reporteActividad.actividadAdministrativaFinanciera !== undefined ?
+                                                        this.reporteActividad.actividadAdministrativaFinanciera : null
+                }
+            );
+            this.formActividadesRealizadasSiguienteSemana.setValue(
+                {
+                    actividadTecnicaSiguiente:  this.reporteActividad.actividadTecnicaSiguiente !== undefined ?
+                                                this.reporteActividad.actividadTecnicaSiguiente : null,
+                    actividadLegalSiguiente:    this.reporteActividad.actividadLegalSiguiente !== undefined ?
+                                                this.reporteActividad.actividadLegalSiguiente : null,
+                    actividadAdministrativaFinancieraSiguiente:
+                        this.reporteActividad.actividadAdministrativaFinancieraSiguiente !== undefined ?
+                        this.reporteActividad.actividadAdministrativaFinancieraSiguiente : null
+                }
+            );
+        }
     }
 
     crearFormulario() {

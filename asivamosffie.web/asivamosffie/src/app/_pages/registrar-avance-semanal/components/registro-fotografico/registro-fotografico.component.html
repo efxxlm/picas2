@@ -1,5 +1,5 @@
-<section class="text-center" *ngIf="esVerDetalle === false">
-    <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
 
     <form autocomplete="off" [formGroup]="formRegistroFotografico" (ngSubmit)="guardar()">
         <div align="left">
@@ -32,7 +32,7 @@
                                 <mat-form-field style="width: 97.5%;">
                                     <input  matInput
                                             type="text"
-                                            formControlName="urlSoporte"
+                                            formControlName="urlSoporteFotografico"
                                             required>
                                 </mat-form-field>
                             </div>
@@ -58,14 +58,14 @@
                                                 [styles]="editorStyle"
                                                 [modules]="config"
                                                 (onContentChanged)="maxLength($event, 2000)"
-                                                formControlName="observaciones"
+                                                formControlName="descripcion"
                                                 #obsDescripcion
                                                 required>
                                 </quill-editor>
-                                <span class="contador miles" *ngIf="formRegistroFotografico.get('observaciones').value !== null" style="margin-top: 3.5em;">
+                                <span class="contador miles" *ngIf="formRegistroFotografico.get('descripcion').value !== null" style="margin-top: 3.5em;">
                                     {{2000 - textoLimpio( obsDescripcion.quillEditor, 2000 )}}
                                 </span>
-                                <span class="contador miles" *ngIf="formRegistroFotografico.get('observaciones').value === null" style="margin-top: 3.5em;">
+                                <span class="contador miles" *ngIf="formRegistroFotografico.get('descripcion').value === null" style="margin-top: 3.5em;">
                                     2000
                                 </span>
                             </div>
