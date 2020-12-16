@@ -1249,7 +1249,7 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraSocialOld.TemaComunidad = SeguimientoSemanalGestionObraSocial.TemaComunidad;
                         SeguimientoSemanalGestionObraSocialOld.Conclusion = SeguimientoSemanalGestionObraSocial.Conclusion;
                         SeguimientoSemanalGestionObraSocialOld.CantidadEmpleosDirectos = SeguimientoSemanalGestionObraSocial.CantidadEmpleosDirectos;
-                        SeguimientoSemanalGestionObraSocialOld.CantidadEmpletosIndirectos = SeguimientoSemanalGestionObraSocial.CantidadEmpletosIndirectos;
+                        SeguimientoSemanalGestionObraSocialOld.CantidadEmpleosIndirectos = SeguimientoSemanalGestionObraSocial.CantidadEmpleosIndirectos;
                         SeguimientoSemanalGestionObraSocialOld.CantidadTotalEmpleos = SeguimientoSemanalGestionObraSocial.CantidadTotalEmpleos;
                         SeguimientoSemanalGestionObraSocialOld.UrlSoporteGestion = SeguimientoSemanalGestionObraSocial.UrlSoporteGestion;
                     }
