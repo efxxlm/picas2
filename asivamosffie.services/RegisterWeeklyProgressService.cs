@@ -78,7 +78,7 @@ namespace asivamosffie.services
             if (pContratacionProyectoId > 0)
             {
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
-                  
+
                    .Include(r => r.ContratacionProyecto)
                       .ThenInclude(r => r.Contratacion)
                           .ThenInclude(r => r.Contrato)
@@ -1177,25 +1177,18 @@ namespace asivamosffie.services
 
                         _context.SeguimientoSemanalGestionObraSeguridadSalud.Add(SeguimientoSemanalGestionObraSeguridadSalud);
 
+                        List<SeguridadSaludCausaAccidente> seguridadSaludCausaAccidentesDelete = _context.SeguridadSaludCausaAccidente.Where(r => r.SeguimientoSemanalGestionObraSeguridadSaludId == r.SeguimientoSemanalGestionObraSeguridadSalud.SeguimientoSemanalGestionObraSeguridadSaludId).ToList();
+
+                        if (seguridadSaludCausaAccidentesDelete.Count() > 0)
+                        { 
+                            _context.SeguridadSaludCausaAccidente.RemoveRange(seguridadSaludCausaAccidentesDelete);
+                        }
+
                         foreach (var SeguridadSaludCausaAccidente in SeguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente)
-                        {
-                            if (SeguridadSaludCausaAccidente.SeguridadSaludCausaAccidentesId == 0)
-                            {
-                                SeguridadSaludCausaAccidente.UsuarioCreacion = pUsuarioCreacion;
-                                SeguridadSaludCausaAccidente.FechaCreacion = DateTime.Now;
-
-                                _context.SeguridadSaludCausaAccidente.Add(SeguridadSaludCausaAccidente);
-                            }
-                            else
-                            {
-                                SeguridadSaludCausaAccidente seguridadSaludCausaAccidenteOld = _context.SeguridadSaludCausaAccidente.Find(SeguridadSaludCausaAccidente.SeguridadSaludCausaAccidentesId);
-                                if (SeguridadSaludCausaAccidente.Eliminado == true)
-                                {
-                                    seguridadSaludCausaAccidenteOld.Eliminado = SeguridadSaludCausaAccidente.Eliminado;
-                                    _context.Remove(seguridadSaludCausaAccidenteOld);
-                                }
-
-                            }
+                        { 
+                            SeguridadSaludCausaAccidente.UsuarioCreacion = pUsuarioCreacion;
+                            SeguridadSaludCausaAccidente.FechaCreacion = DateTime.Now; 
+                            _context.SeguridadSaludCausaAccidente.Add(SeguridadSaludCausaAccidente); 
                         }
                     }
                     else
@@ -1214,6 +1207,21 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraSeguridadSaludOld.CumpleRevisionSenalizacion = SeguimientoSemanalGestionObraSeguridadSalud.CumpleRevisionSenalizacion;
                         SeguimientoSemanalGestionObraSeguridadSaludOld.UrlSoporteGestion = SeguimientoSemanalGestionObraSeguridadSalud.UrlSoporteGestion;
                         SeguimientoSemanalGestionObraSeguridadSaludOld.CantidadAccidentes = SeguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes;
+
+
+                        List<SeguridadSaludCausaAccidente> seguridadSaludCausaAccidentesDelete = _context.SeguridadSaludCausaAccidente.Where(r => r.SeguimientoSemanalGestionObraSeguridadSaludId == r.SeguimientoSemanalGestionObraSeguridadSalud.SeguimientoSemanalGestionObraSeguridadSaludId).ToList();
+
+                        if (seguridadSaludCausaAccidentesDelete.Count() > 0)
+                        {
+                            _context.SeguridadSaludCausaAccidente.RemoveRange(seguridadSaludCausaAccidentesDelete);
+                        }
+
+                        foreach (var SeguridadSaludCausaAccidente in SeguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente)
+                        {
+                            SeguridadSaludCausaAccidente.UsuarioCreacion = pUsuarioCreacion;
+                            SeguridadSaludCausaAccidente.FechaCreacion = DateTime.Now;
+                            _context.SeguridadSaludCausaAccidente.Add(SeguridadSaludCausaAccidente);
+                        }
                     }
                 }
 
