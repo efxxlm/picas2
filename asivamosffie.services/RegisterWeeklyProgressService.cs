@@ -185,12 +185,13 @@ namespace asivamosffie.services
                         FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
                     }
 
+
                     List<dynamic> AvanceAcumulado = new List<dynamic>();
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<FlujoInversion> ListProgramacion = _context.FlujoInversion
-                      .Include(r => r.Programacion)
-                      .Where(r => r.Programacion.TipoActividadCodigo == "C" && r.Programacion.AvanceFisicoCapitulo.HasValue).ToList();
+                       .Include(r => r.Programacion)
+                       .Where(r => r.Programacion.TipoActividadCodigo == "C" && r.Programacion.AvanceFisicoCapitulo.HasValue).ToList();
 
                     foreach (var idSeguimientoSemanal in ListSeguimientoSemanalId)
                     {
@@ -200,7 +201,8 @@ namespace asivamosffie.services
                                 AvanceAcumulado.Add(new
                                 {
                                     item.Programacion.Actividad,
-                                    item.Programacion.AvanceFisicoCapitulo
+                                    item.Programacion.AvanceFisicoCapitulo,
+                                    AvanceAcumulado = 666
                                 });
                         }
                     }
@@ -346,7 +348,8 @@ namespace asivamosffie.services
                                 AvanceAcumulado.Add(new
                                 {
                                     item.Programacion.Actividad,
-                                    item.Programacion.AvanceFisicoCapitulo
+                                    item.Programacion.AvanceFisicoCapitulo,
+                                    AvanceAcumulado  = 666
                                 });
                         }
                     }
