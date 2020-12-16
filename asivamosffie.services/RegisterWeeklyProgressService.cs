@@ -678,11 +678,8 @@ namespace asivamosffie.services
 
                 await _context.SaveChangesAsync();
 
-                SeguimientoSemanal seguimientoSemanalRetorno = await GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(0, pSeguimientoSemanal.SeguimientoSemanalId);
-
-                seguimientoSemanalRetorno.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalRetorno);
-
-                _context.SaveChanges();
+           
+             
                 return new Respuesta
                 {
 
@@ -765,6 +762,8 @@ namespace asivamosffie.services
                 pSeguimientoSemanalAvanceFinanciero.UsuarioCreacion = pUsuarioCreacion;
                 pSeguimientoSemanalAvanceFinanciero.FechaCreacion = DateTime.Now;
                 pSeguimientoSemanalAvanceFinanciero.Eliminado = false;
+
+                _context.SeguimientoSemanalAvanceFinanciero.Add(pSeguimientoSemanalAvanceFinanciero);
             }
             else
             {
