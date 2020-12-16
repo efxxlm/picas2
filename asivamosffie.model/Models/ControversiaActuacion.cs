@@ -42,6 +42,7 @@ namespace asivamosffie.model.Models
         public string EstadoActuacionReclamacionCodigo { get; set; }
 
         public virtual ControversiaContractual ControversiaContractual { get; set; }
+        public virtual SeguimientoActuacionDerivada SeguimientoActuacionDerivada { get; set; }
         public virtual ICollection<ActuacionSeguimiento> ActuacionSeguimiento { get; set; }
     }
 }

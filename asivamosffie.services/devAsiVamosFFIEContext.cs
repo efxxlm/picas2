@@ -107,6 +107,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ProyectoRequisitoTecnico> ProyectoRequisitoTecnico { get; set; }
         public virtual DbSet<RegistroPresupuestal> RegistroPresupuestal { get; set; }
         public virtual DbSet<RequisitoTecnicoRadicado> RequisitoTecnicoRadicado { get; set; }
+        public virtual DbSet<SeguimientoActuacionDerivada> SeguimientoActuacionDerivada { get; set; }
         public virtual DbSet<SeguimientoDiario> SeguimientoDiario { get; set; }
         public virtual DbSet<SeguimientoDiarioObservaciones> SeguimientoDiarioObservaciones { get; set; }
         public virtual DbSet<SeguimientoSemanal> SeguimientoSemanal { get; set; }
@@ -155,7 +156,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -3770,6 +3770,54 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_RequisitoTecnicoRadicado_ProyectoRequisitoTecnico");
             });
 
+            modelBuilder.Entity<SeguimientoActuacionDerivada>(entity =>
+            {
+                entity.HasKey(e => e.ControversiaActuacionId);
+
+                entity.Property(e => e.ControversiaActuacionId).ValueGeneratedNever();
+
+                entity.Property(e => e.DescripciondeActuacionAdelantada)
+                    .HasMaxLength(1500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.EstadoActuacionDerivadaCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaActuacionDerivada).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.Observaciones)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RutaSoporte)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SeguimientoActuacionDerivadaId).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ControversiaActuacion)
+                    .WithOne(p => p.SeguimientoActuacionDerivada)
+                    .HasForeignKey<SeguimientoActuacionDerivada>(d => d.ControversiaActuacionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SeguimientoActuacionDerivada_ControversiaActuacion");
+            });
+
             modelBuilder.Entity<SeguimientoDiario>(entity =>
             {
                 entity.Property(e => e.CausaIndisponibilidadEquipoCodigo).HasMaxLength(2);
@@ -3896,6 +3944,8 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalAvanceFisico>(entity =>
             {
+                entity.Property(e => e.AvanceFisicoSemanal).HasColumnType("decimal(18, 3)");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");

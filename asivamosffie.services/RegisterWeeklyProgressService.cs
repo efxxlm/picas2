@@ -744,12 +744,14 @@ namespace asivamosffie.services
                 pSeguimientoSemanalAvanceFisico.FechaCreacion = DateTime.Now;
                 pSeguimientoSemanalAvanceFisico.Eliminado = false;
             }
-            {
-                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find();
-
+            else{
+                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoId);
+                 
                 seguimientoSemanalAvanceFisicoOld.RegistroCompleto = RegistroCompleto;
                 pSeguimientoSemanalAvanceFisico.UsuarioModificacion = usuarioCreacion;
                 pSeguimientoSemanalAvanceFisico.FechaModificacion = DateTime.Now;
+
+                seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanalAvanceFisico.AvanceFisicoSemanal;
             }
 
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
