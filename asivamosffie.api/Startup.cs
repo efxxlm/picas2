@@ -145,7 +145,7 @@ namespace asivamosffie.api
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
-            //services.AddTransient<IContractualControversy, ContractualControversyService>();
+            services.AddTransient<IContractualControversy, ContractualControversyService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
