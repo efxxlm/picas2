@@ -743,6 +743,8 @@ namespace asivamosffie.services
                 pSeguimientoSemanalAvanceFisico.UsuarioCreacion = usuarioCreacion;
                 pSeguimientoSemanalAvanceFisico.FechaCreacion = DateTime.Now;
                 pSeguimientoSemanalAvanceFisico.Eliminado = false;
+                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanalAvanceFisico);
+
             }
             else{
                 SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoId);
