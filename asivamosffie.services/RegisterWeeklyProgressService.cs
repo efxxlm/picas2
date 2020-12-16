@@ -97,40 +97,40 @@ namespace asivamosffie.services
 
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
 
-                       //Gestion Obra 
-                       //Gestion Obra Ambiental
-                       //.Include(r => r.SeguimientoSemanalGestionObra)
-                       //   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                       //       .ThenInclude(r => r.ManejoMaterialesInsumo)
-                       //            .ThenInclude(r => r.ManejoMaterialesInsumosProveedor)
+                        //Gestion Obra 
+                        //Gestion Obra Ambiental
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                               .ThenInclude(r => r.ManejoMaterialesInsumo)
+                                    .ThenInclude(r => r.ManejoMaterialesInsumosProveedor)
 
-                       //.Include(r => r.SeguimientoSemanalGestionObra)
-                       //   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                       //       .ThenInclude(r => r.ManejoResiduosConstruccionDemolicion)
-                       //           .ThenInclude(r => r.ManejoResiduosConstruccionDemolicionGestor)
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                               .ThenInclude(r => r.ManejoResiduosConstruccionDemolicion)
+                                   .ThenInclude(r => r.ManejoResiduosConstruccionDemolicionGestor)
 
-                       //.Include(r => r.SeguimientoSemanalGestionObra)
-                       //   .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                       //       .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                               .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
 
-                       // .Include(r => r.SeguimientoSemanalGestionObra)
-                       //    .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                       //        .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                                .ThenInclude(r => r.ManejoResiduosPeligrososEspeciales)
 
-                       // .Include(r => r.SeguimientoSemanalGestionObra)
-                       //    .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
-                       //        .ThenInclude(r => r.ManejoOtro)
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                                .ThenInclude(r => r.ManejoOtro)
 
-                       // //Gestion Obra Calidad
-                       // .Include(r => r.SeguimientoSemanalGestionObra)
-                       //    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                       //        .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
-                       //            .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+                        // Gestion Obra Calidad
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                    .ThenInclude(r => r.EnsayoLaboratorioMuestra)
 
-                       // //Gestion Obra Calidad
-                       // .Include(r => r.SeguimientoSemanalGestionObra)
-                       //    .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
-                       //        .ThenInclude(r => r.SeguridadSaludCausaAccidente)
+                      //   Gestion Obra Calidad
+                         .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
+                                .ThenInclude(r => r.SeguridadSaludCausaAccidente)
 
                         //Gestion Obra Social
                         .Include(r => r.SeguimientoSemanalGestionObra)
@@ -1235,7 +1235,7 @@ namespace asivamosffie.services
                 //Gestion Obra Social
                 foreach (var SeguimientoSemanalGestionObraSocial in pSeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraSocial)
                 {
-                    if (SeguimientoSemanalGestionObraSocial.SeguimientoSemanalGestionObraId == 0)
+                    if (SeguimientoSemanalGestionObraSocial.SeguimientoSemanalGestionObraSocialId == 0)
                     {
                         SeguimientoSemanalGestionObraSocial.UsuarioCreacion = pUsuarioCreacion;
                         SeguimientoSemanalGestionObraSocial.Eliminado = false;
