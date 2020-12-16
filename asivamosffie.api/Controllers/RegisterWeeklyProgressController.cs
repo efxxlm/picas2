@@ -108,20 +108,9 @@ namespace asivamosffie.api.Controllers
         [HttpPost]
         [Route("SaveUpdateSeguimientoSemanal")]
         public async Task<IActionResult> SaveUpdateSeguimientoSemanal([FromBody] SeguimientoSemanal pSeguimientoSemanal)
-        {
-            Respuesta respuesta = new Respuesta();
-            try
-            {
-                pSeguimientoSemanal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _registerWeeklyProgressService.SaveUpdateSeguimientoSemanal(pSeguimientoSemanal);
-
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                respuesta.Data = ex.ToString();
-                return BadRequest(respuesta);
-            }
+        { 
+                pSeguimientoSemanal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
+                return Ok( await _registerWeeklyProgressService.SaveUpdateSeguimientoSemanal(pSeguimientoSemanal)); 
         }
 
         [HttpPost]
