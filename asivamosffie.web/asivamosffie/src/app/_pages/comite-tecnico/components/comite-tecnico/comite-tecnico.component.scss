@@ -6,11 +6,9 @@
 
     &--btn {
         padding: .5em 2em;
+        width: 25%;
         box-shadow: none;
         border: solid 1px #fff;
-        @media only screen and (min-width: 64em) {
-          width: 25%;
-        }
 
         &.active {
             background-color: #0A244F;

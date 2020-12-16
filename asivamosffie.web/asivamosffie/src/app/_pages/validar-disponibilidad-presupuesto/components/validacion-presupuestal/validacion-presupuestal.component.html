@@ -130,12 +130,12 @@
                     </p>
                     <p>
                         <strong>Valor del aportante al proyecto:</strong>
-                        {{aportante.valorAportanteAlProyecto| currency:'':'symbol':'3.0' }}
+                        $ {{aportante.valorAportanteAlProyecto}}
                     </p>
                     <p *ngIf="detailavailabilityBudget?.urlConSoporte">
-                        <strong>URL con soporte:</strong>
+                        <strong>Url con soporte:</strong>
                         {{detailavailabilityBudget?.urlConSoporte}}
-                    </p>
+                    </p>                    
                 </div>
             </div>
         </mat-card-content>

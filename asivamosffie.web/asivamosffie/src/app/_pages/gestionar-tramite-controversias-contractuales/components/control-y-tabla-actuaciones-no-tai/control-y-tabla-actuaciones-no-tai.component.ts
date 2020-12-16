@@ -39,18 +39,15 @@ export class ControlYTablaActuacionesNoTaiComponent implements OnInit {
       estadoActuacion: '2',
       id: 2
     }
-  ];
+  ];  
   constructor(private router: Router) {
    }
 
-   ngOnInit(): void {
-    this.services.GetListGrillaControversiaActuacion(this.controversiaID,false).subscribe(data=>{
-      this.dataTable = data;
-      this.dataSource = new MatTableDataSource(this.dataTable);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    });
+  ngOnInit(): void {
+    this.dataSource = new MatTableDataSource(this.dataTable);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

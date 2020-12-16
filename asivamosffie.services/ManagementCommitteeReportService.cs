@@ -506,46 +506,10 @@ namespace asivamosffie.services
                     {
                         SesionComentario.ValidacionVoto = true;
                     }
-                    //valido si el comite tiene relacionado un proceso de selección, solo para fiduciario
-                    if(comiteTecnico.TipoTemaFiduciarioCodigo!=null)
-                    {
-                        var pSesionComite = _context.SesionComiteSolicitud.Where(x => x.ComiteTecnicoFiduciarioId == comiteTecnico.ComiteTecnicoId).ToList();
-                        foreach (var pses in pSesionComite)
-                        {
-                            if (pses.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
-                            {
-                                //obtengo el proponente y lo convierto en contratista
-                                var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion).ToList();
-                                foreach (var p in proponentes)
-                                {
-                                    Contratista contratista = new Contratista();
-                                    //verifico que no exista
-                                    var existecotraticsta = _context.Contratista.Where(x => x.NumeroIdentificacion == p.NumeroIdentificacion).FirstOrDefault();
-                                    if(existecotraticsta==null)
-                                    {
-                                        contratista.TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1"; //Nit - cedula
-                                        contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
-                                        contratista.Nombre = p.NombreProponente;
-                                        contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
-                                        contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
-                                        contratista.NumeroInvitacion = p.ProcesoSeleccion.NumeroProceso;
-                                        contratista.TipoProponenteCodigo = p.TipoProponenteCodigo;
-                                        contratista.Activo = true;
-                                        contratista.FechaCreacion = DateTime.Now;
-                                        contratista.UsuarioCreacion = pUser.Email.ToUpper();
-                                        contratista.ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId;
-
-                                        _context.Contratista.Add(contratista);
-                                    }                                        
-                                }
-                            }
-                        }
-                    }                    
                 }
                 _context.SaveChanges();
                 return new Respuesta
                 {
-            
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,

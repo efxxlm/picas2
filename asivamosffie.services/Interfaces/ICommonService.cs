@@ -9,10 +9,6 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICommonService
     {
-        Task<DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular);
-
-        Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular);        
-
         Task<string> EnumeradorComiteTecnico();
 
         Task<string> EnumeradorComiteFiduciario();

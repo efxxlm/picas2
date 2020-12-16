@@ -12,26 +12,24 @@ import { map } from 'rxjs/operators';
 })
 export class FaseUnoAprobarPreconstruccionService {
 
-  private apiUrl = `${ environment.apiUrl }`;
-  private paramUrl( parametro: string ) {
-    return `${ this.apiUrl }${ parametro }`;
-  }
+  private api_url: string = `${ environment.apiUrl }`;
+  private paramUrl ( parametro: string ) {
+    return `${ this.api_url }${ parametro }`;
+  };
 
-  constructor( private http: HttpClient ) { }
+  constructor ( private http: HttpClient ) { }
 
-  getListContratacion() {
+  getListContratacion () {
     return this.http.get<GrillaFaseUnoPreconstruccion[]>( `${ this.paramUrl( '/ApprovePreConstructionPhase1/GetListContratacion' ) }` );
-  }
+  };
 
-  aprobarCrearContratoPerfilObservacion( pContratoPerfilObservacion: ObservacionPerfil ) {
-    return this.http.post<Respuesta>(
-      `${ this.paramUrl( '/ApprovePreConstructionPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion
-    );
-  }
+  aprobarCrearContratoPerfilObservacion ( pContratoPerfilObservacion: ObservacionPerfil ) {
+    return this.http.post<Respuesta>( `${ this.paramUrl( '/ApprovePreConstructionPhase1/CrearContratoPerfilObservacion' ) }`, pContratoPerfilObservacion );
+  };
 
-  // Estados verificar preconstrucción
-  listaEstadosAprobarContrato( tipoContrato: string ) {
-    const estadoPreconstruccion: estadosPreconstruccion = {};
+  //Estados verificar preconstrucción
+  listaEstadosAprobarContrato ( tipoContrato: string ) {
+    let estadosPreconstruccion: estadosPreconstruccion = {};
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=53`)
       .pipe(
         map(
@@ -39,76 +37,76 @@ export class FaseUnoAprobarPreconstruccionService {
             if ( tipoContrato === 'obra' ) {
               estados.forEach( value => {
                 if ( value.codigo === '6' ) {
-                  estadoPreconstruccion.enviadoAlSupervisor = {
+                  estadosPreconstruccion.enviadoAlSupervisor = {
                     codigo: value.codigo,
                     nombre: value[ 'descripcion' ]
                   };
-                }
+                };
                 if ( value.codigo === '7' ) {
-                  estadoPreconstruccion.enProcesoValidacionReqTecnicos = {
+                  estadosPreconstruccion.enProcesoValidacionReqTecnicos = {
                     codigo: value.codigo,
                     nombre: value.nombre
                   };
-                }
+                };
                 if ( value.codigo === '8' ) {
-                  estadoPreconstruccion.conReqTecnicosValidados = {
+                  estadosPreconstruccion.conReqTecnicosValidados = {
                     codigo: value.codigo,
                     nombre: value.nombre
                   };
-                }
+                };
                 if ( value.codigo === '9' ) {
-                  estadoPreconstruccion.conReqTecnicosAprobadosPorSupervisor = {
+                  estadosPreconstruccion.conReqTecnicosAprobadosPorSupervisor = {
                     codigo: value.codigo,
                     nombre: value.nombre
                   };
-                }
+                };
                 if ( value.codigo === '10' ) {
-                 estadoPreconstruccion.enviadoAlInterventor = {
+                 estadosPreconstruccion.enviadoAlInterventor = {
                    codigo: value.codigo,
                    nombre: value.nombre
                  };
-                }
+                };
               } );
-              return estadoPreconstruccion;
-            }
+              return estadosPreconstruccion;
+            };
             if ( tipoContrato === 'interventoria' ) {
               estados.forEach( value => {
                 if ( value.codigo === '6' ) {
-                  estadoPreconstruccion.enviadoAlSupervisor = {
+                  estadosPreconstruccion.enviadoAlSupervisor = {
                     codigo: value.codigo,
                     nombre: value[ 'descripcion' ]
                   };
-                }
+                };
                 if ( value.codigo === '7' ) {
-                  estadoPreconstruccion.enProcesoValidacionReqTecnicos = {
+                  estadosPreconstruccion.enProcesoValidacionReqTecnicos = {
                     codigo: value.codigo,
                     nombre: value.nombre
                   };
-                }
+                };
                 if ( value.codigo === '8' ) {
-                  estadoPreconstruccion.conReqTecnicosValidados = {
+                  estadosPreconstruccion.conReqTecnicosValidados = {
                     codigo: value.codigo,
                     nombre: value.nombre
                   };
-                }
+                };
                 if ( value.codigo === '9' ) {
-                  estadoPreconstruccion.conReqTecnicosAprobadosPorSupervisor = {
+                  estadosPreconstruccion.conReqTecnicosAprobadosPorSupervisor = {
                     codigo: value.codigo,
                     nombre: value.nombre
                   };
-                }
+                };
                 if ( value.codigo === '11' ) {
-                  estadoPreconstruccion.enviadoAlApoyo = {
+                  estadosPreconstruccion.enviadoAlApoyo = {
                     codigo: value.codigo,
                     nombre: value.nombre
                   };
-                }
+                };
               } );
-              return estadoPreconstruccion;
-            }
+              return estadosPreconstruccion;
+            };
           }
         )
       );
-  }
+  };
 
 }

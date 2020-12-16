@@ -27,21 +27,19 @@
 
         <ng-container matColumnDef="estadoPoliza">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element"> <span class="info-text info-text__table"  [ngClass]="{'sin-diligenciar' : element.registroCompletoPolizaNombre=='Incompleto', 'completo' : element.registroCompletoPolizaNombre=='Completo'}"></span>
-                {{element.registroCompletoPolizaNombre}} </td>
+            <td mat-cell *matCellDef="let element"> <span class="info-text info-text__table"  [ngClass]="{'sin-diligenciar' : element.registroCompletoNombre=='Incompleto', 'completo' : element.registroCompletoNombre=='Completo'}"></span>
+                {{element.registroCompletoNombre}} </td>
         </ng-container>
 
         <ng-container matColumnDef="contratoId">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
-                <button mat-raised-button color="accent" class="btn-table"  *ngIf="element.registroCompletoPolizaNombre=='Completo'"
+                <button mat-raised-button color="accent" class="btn-table"  *ngIf="element.registroCompletoNombre=='Completo'"
                 (click)="this.aprobarPoliza(element.contratoId)">
                     Aprobar
                 </button>
                 <a [routerLink]="['enRevision', element.contratoId]" mat-raised-button color="accent"
-                    class="btn-table" *ngIf="element.registroCompletoPolizaNombre=='Incompleto'">Ver detalle / editar </a>
-                <a [routerLink]="['verDetalle', element.contratoId]" mat-raised-button color="accent"
-                    class="btn-table" *ngIf="element.registroCompletoPolizaNombre=='Completo'">Ver detalle </a>
+                    class="btn-table">Ver detalle / editar </a>
             </td>
         </ng-container>
 

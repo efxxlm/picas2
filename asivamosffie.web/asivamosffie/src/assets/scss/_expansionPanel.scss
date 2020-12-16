@@ -15,7 +15,7 @@
 .completo {
   --color-info: #06B935;
   &::before,
-
+  
   &::after {
     background-color: #06B935;
   }
@@ -34,10 +34,6 @@
 .info-text {
     display: inline-block;
     margin-right: 2em;
-
-    &:last-child {
-      margin-right: 0;
-    }
 
     &.tabla {
         display: block;
@@ -152,17 +148,6 @@ span.mat-expansion-indicator::after {
 div.mat-expansion-panel-body {
     padding-left: 0;
     padding-right: 0;
-}
-
-@media only screen and (max-width: 48em) {
-  mat-expansion-panel-header.mat-expansion-panel-header {
-    padding: 0;
-
-    > .mat-content {
-      max-width: calc(100vw - 2em);
-      text-align: center;
-    }
-  }
 }
 
 .en-alertaLibre::before {

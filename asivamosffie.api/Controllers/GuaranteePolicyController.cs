@@ -53,9 +53,8 @@ namespace asivamosffie.api.Controllers
                     polizaObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 else
                     polizaObservacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                asivamosffie.model.APIModels.AppSettingsService _appSettingsService ;
-                _appSettingsService = toAppSettingsService(_settings);
-                respuesta = await _guaranteePolicy.InsertEditPolizaObservacion(polizaObservacion, _appSettingsService);
+
+                respuesta = await _guaranteePolicy.InsertEditPolizaObservacion(polizaObservacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -209,16 +208,9 @@ namespace asivamosffie.api.Controllers
         {
             var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoPolizaId(pContratoPolizaId);
             return respuesta;
-        }        
-
-        [Route("ConsultarRegistroCompletoCumple")]
-        [HttpGet]        
-        public async Task<bool> ConsultarRegistroCompletoCumple(int pContratoPolizaId)
-        {
-            var respuesta = await _guaranteePolicy.ConsultarRegistroCompletoCumple(pContratoPolizaId);
-            return respuesta;
         }
 
+        
         [Route("GetContratoPolizaByIdContratoId")]
         [HttpGet]
         //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoId)

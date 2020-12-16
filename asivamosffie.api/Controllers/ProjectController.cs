@@ -67,8 +67,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
- 
-
         [Route("SetValidateMassiveLoadProjects")]
         [HttpPost]
         public async Task<IActionResult> SetValidateCargueMasivoProyectos(IFormFile file)

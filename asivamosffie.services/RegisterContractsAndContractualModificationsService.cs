@@ -142,7 +142,17 @@ namespace asivamosffie.services
                     .Include(r => r.ComiteTecnicoFiduciario)
                     .ToList();
 
-          
+                if (contratacion.Contratista != null)
+                {
+                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
+                    {
+                        bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
+                        if (allDigits)
+                        {
+                            contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
+                        }
+                    }
+                }
                 foreach (var Contrato in contratacion.Contrato)
                 {
 
@@ -151,17 +161,9 @@ namespace asivamosffie.services
                         Contrato.FechaTramite = DateTime.Now;
                         Contrato.TipoContratoCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Opcion_Por_Contratar).FirstOrDefault().Nombre;
                     }
-                } 
-                _context.SaveChanges();
-
-
-                if (contratacion.Contratista != null)
-                {
-                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
-                    {
-                        contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
-                    }
                 }
+
+                _context.SaveChanges();
                 return contratacion;
             }
             catch (Exception ex)
@@ -192,7 +194,7 @@ namespace asivamosffie.services
                 //Contrato  
                 //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
                 //    contratoOld.RutaDocumento = pContrato.RutaDocumento;
-
+                 
                 contratacionOld.FechaTramite = DateTime.Now;
 
 
@@ -355,7 +357,7 @@ namespace asivamosffie.services
                || string.IsNullOrEmpty(contratoOld.RutaDocumento)
                //|| string.IsNullOrEmpty(contratoOld.Objeto)
                || string.IsNullOrEmpty(contratoOld.Valor.ToString())
-                //|| string.IsNullOrEmpty(contratoOld.Plazo.ToString())
+               //|| string.IsNullOrEmpty(contratoOld.Plazo.ToString())
                 || string.IsNullOrEmpty(contratoOld.CantidadPerfiles.ToString())
                 || string.IsNullOrEmpty(contratoOld.EstadoVerificacionCodigo.ToString())
                 //|| string.IsNullOrEmpty(contratoOld.EstadoFase1Diagnostico.ToString())

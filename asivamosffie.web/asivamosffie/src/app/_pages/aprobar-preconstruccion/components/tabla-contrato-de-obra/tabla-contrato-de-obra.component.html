@@ -11,7 +11,7 @@
 <table mat-table [dataSource]="dataSource" matSort class="tabla text-center mat-elevation-z8">
 
     <ng-container matColumnDef="fechaAprobacion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de verificación de requisitos </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación de póliza </th>
         <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacion | date: 'dd/MM/yyyy'}}</b> </td>
     </ng-container>
 
@@ -26,7 +26,7 @@
     </ng-container>
 
     <ng-container matColumnDef="cantidadProyectosRequisitosAprobados">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de proyectos con requisitos validados </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad de proyectos con requisitos aprobados </th>
         <td mat-cell *matCellDef="let element"> {{element.cantidadProyectosRequisitosAprobados}} </td>
     </ng-container>
 
@@ -36,10 +36,23 @@
     </ng-container>
 
     <ng-container matColumnDef="estadoNombre">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la validación </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de requisitos </th>
         <td mat-cell *matCellDef="let element">
-            <section *ngIf="element.estadoCodigo !== estadosPreconstruccionObra.enviadoAlSupervisor.codigo"> {{ element.estadoNombre }} </section>
-            <section *ngIf="element.estadoCodigo === estadosPreconstruccionObra.enviadoAlSupervisor.codigo"> {{ estadosPreconstruccionObra.enviadoAlSupervisor.nombre }} </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.enviadoAlSupervisor.codigo">
+                {{ estadosPreconstruccionObra.enviadoAlSupervisor.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.codigo">
+                {{ estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosValidados.codigo">
+                {{ estadosPreconstruccionObra.conReqTecnicosValidados.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo">
+                {{ estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.nombre }}
+            </section>
+            <section *ngIf="estadosPreconstruccionObra !== undefined && element.estadoCodigo === estadosPreconstruccionObra.enviadoAlInterventor.codigo">
+                {{ estadosPreconstruccionObra.enviadoAlInterventor.nombre }}
+            </section>
         </td>
     </ng-container>
 
@@ -65,9 +78,8 @@
                 mat-raised-button
                 color="accent"
                 class="btn-table"
-                *ngIf=" element.estadoCodigo !== estadosPreconstruccionObra.enviadoAlSupervisor.codigo
-                        && element.estadoCodigo !== estadosPreconstruccionObra.enProcesoValidacionReqTecnicos.codigo
-                        && element.estadoCodigo !== estadosPreconstruccionObra.conReqTecnicosValidados.codigo">
+                *ngIf=" element.estadoCodigo === estadosPreconstruccionObra.enviadoAlInterventor.codigo
+                        || element.estadoCodigo === estadosPreconstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo">
                 Ver detalle
             </a>
             <a  (click)="enviarInterventor( element.contratoId )"

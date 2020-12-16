@@ -5,7 +5,7 @@
     </a>
   </div>
   <h1 class="title-menu--h1">
-    Gestionar póliza contrato {{this.numContrato}}
+    Ver detalle/Editar contrato {{this.numContrato}}
   </h1>
   <p class="info-sub-title">
     <span>Fecha de firma del contrato <b>{{this.fechaFirmaContrato}}</b></span>
@@ -24,7 +24,8 @@
       <p>
         <strong>Objeto:</strong>
       </p>
-      <p [innerHtml]="this.objeto">
+      <p>
+        {{this.objeto}}
       </p>
       <p>
         <strong>Nombre del contratista:</strong>
@@ -40,7 +41,7 @@
       </p>
       <p>
         <strong>Valor del contrato:</strong>
-        {{this.valorContrato | currency:'':'symbol':'3.0'}}
+        ${{this.valorContrato}}
       </p>
       <p>
         <strong>Plazo:</strong>
@@ -53,7 +54,7 @@
       <mat-card-content>
         <div class="row">
           <div class="pr-1">
-            <label for="nombre" class="label-left">Nombre de la aseguradora</label>
+            <label for="nombre" class="label-left">Nombre del grupo</label>
           </div>
           <div class="col d-flex">
             <mat-form-field class="full-width">
@@ -101,7 +102,7 @@
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="fecha" [matDatepicker]="pickerFecha"  readonly
+                  <input matInput formControlName="fecha" [matDatepicker]="pickerFecha" [min]="minDate" readonly
                     (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
                   <mat-datepicker #pickerFecha></mat-datepicker>
                 </mat-form-field>
@@ -120,7 +121,7 @@
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="vigenciaPoliza" [matDatepicker]="pickerPoliza" 
+                  <input matInput formControlName="vigenciaPoliza" [matDatepicker]="pickerPoliza" [min]="minDate"
                     readonly (click)="pickerPoliza.open()" required placeholder="DD/MM/AAAA">
                   <mat-datepicker #pickerPoliza></mat-datepicker>
                 </mat-form-field>
@@ -139,7 +140,7 @@
               </div>
               <div class="col d-flex align-items-center">
                 <mat-form-field class="example-full-width">
-                  <input matInput formControlName="vigenciaAmparo" [matDatepicker]="pickerAmparo" 
+                  <input matInput formControlName="vigenciaAmparo" [matDatepicker]="pickerAmparo" [min]="minDate"
                     readonly (click)="pickerAmparo.open()" required placeholder="DD/MM/AAAA">
                   <mat-datepicker #pickerAmparo></mat-datepicker>
                 </mat-form-field>
@@ -160,13 +161,12 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #valorAmparo currencyMask maxlength="20" required formControlName="valorAmparo"
+                  <input matInput #valorAmparo maxlength="20" type="number" required formControlName="valorAmparo"
                     (keypress)="validateNumberKeypress($event)"
-                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
                 <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
-                  matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
+                matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@
           </div>
         </div>
         <div *ngIf="this.obj1==true">
-          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
             Buen manejo y correcta inversión del anticipo
           </mat-card-title>
           <div class="row">
@@ -203,14 +203,14 @@
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
+                  <span class="required-form-group">*</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div *ngIf="this.obj2==true">
-          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
             Garantía de estabilidad y calidad de la obra
           </mat-card-title>
           <div class="row">
@@ -225,14 +225,14 @@
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
+                  <span class="required-form-group">*</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div *ngIf="this.obj3==true">
-          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
             Póliza de cumplimiento
           </mat-card-title>
           <div class="row">
@@ -247,14 +247,14 @@
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
+                  <span class="required-form-group">*</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div *ngIf="this.obj4==true">
-          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;">
+          <mat-card-title class="header-card--text alineacion-titulos2 mt-1em">
             Pólizas y seguros
           </mat-card-title>
           <div class="row">
@@ -269,130 +269,167 @@
                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                     <mat-radio-button [value]="false">No</mat-radio-button>
                   </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
+                  <span class="required-form-group">*</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div
-          *ngIf="addressForm.get('polizasYSegurosCompleto').value!=null || addressForm.get('polizaYCoumplimiento').value!=null || addressForm.get('estabilidadYCalidad').value!=null || addressForm.get('buenManejoCorrectaInversionAnticipo').value!=null">
-          <h2 class="card-subTitle">Lista de chequeo</h2>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="cumpleAsegurado">
-                    ¿Cumple con los datos del Asegurado/ Beneficiario?
-                  </label>
-                </div>
-                <div class="col">
-                  <mat-radio-group class="radioInput" formControlName="cumpleAsegurado" required>
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
-                </div>
+        <h2 class="card-subTitle">Lista de chequeo</h2>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="cumpleAsegurado">
+                  ¿Cumple con los datos del Asegurado/ Beneficiario?
+                </label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="cumpleAsegurado" required>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="cumpleBeneficiario">
-                    ¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?
-                  </label>
-                </div>
-                <div class="col">
-                  <mat-radio-group class="radioInput" formControlName="cumpleBeneficiario" required>
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
-                </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="cumpleBeneficiario">
+                  ¿Cumple con los datos del Beneficiario cuando se trate de garantía bancaria?
+                </label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="cumpleBeneficiario" required>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="cumpleAfianzado">
-                    ¿Cumple con los datos del Tomador / Afianzado?
-                  </label>
-                </div>
-                <div class="col">
-                  <mat-radio-group class="radioInput" formControlName="cumpleAfianzado" required>
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
-                </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="cumpleAfianzado">
+                  ¿Cumple con los datos del Tomador / Afianzado?
+                </label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="cumpleAfianzado" required>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="reciboDePago">
-                    ¿Se incluye el recibo de pago con los datos requeridos?
-                  </label>
-                </div>
-                <div class="col">
-                  <mat-radio-group class="radioInput" formControlName="reciboDePago" required>
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
-                </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="reciboDePago">
+                  ¿Se incluye el recibo de pago con los datos requeridos?
+                </label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="reciboDePago" required>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-8">
-              <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="condicionesGenerales">
-                    ¿Se incluyen las condiciones generales de la póliza/ o su clausulado?
-                  </label>
-                </div>
-                <div class="col">
-                  <mat-radio-group class="radioInput" formControlName="condicionesGenerales" required>
-                    <mat-radio-button [value]="true">Sí</mat-radio-button>
-                    <mat-radio-button [value]="false">No</mat-radio-button>
-                  </mat-radio-group>
-                  <span class="required-form-group" style="margin-left: 1px;">*</span>
-                </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="condicionesGenerales">
+                  ¿Se incluyen las condiciones generales de la póliza/ o su clausulado?
+                </label>
+              </div>
+              <div class="col">
+                <mat-radio-group class="radioInput" formControlName="condicionesGenerales" required>
+                  <mat-radio-button [value]="true">Sí</mat-radio-button>
+                  <mat-radio-button [value]="false">No</mat-radio-button>
+                </mat-radio-group>
+                <span class="required-form-group">*</span>
               </div>
             </div>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
-    <div
-      *ngIf="addressForm.get('condicionesGenerales').value!=null && addressForm.get('reciboDePago').value!=null && addressForm.get('cumpleAfianzado').value!=null && addressForm.get('cumpleBeneficiario').value!=null && addressForm.get('cumpleAsegurado').value!=null">
-      <mat-card class="shipping-card">
-        <mat-card-header class="header-card" style="margin-left: -27px;">
-          <mat-card-title class="header-card--text">
-            Revisión
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
+
+    <mat-card class="shipping-card">
+      <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text">
+          Revisión
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="fechaRevision">Fecha de la revisión</label>
+              </div>
+              <div class="col d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                  <input matInput formControlName="fechaRevision" [matDatepicker]="pickerFechaRevision" [min]="minDate"
+                    readonly (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA">
+                  <mat-datepicker #pickerFechaRevision></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
+                  class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="estadoRevision">Estado de la revisión</label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select formControlName="estadoRevision" required>
+                    <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
+                      {{ estadoRevision.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.value == '2'">
+          <h2 class="card-subTitle">Aprobación</h2>
           <div class="row">
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="fechaRevision">Fecha de la revisión</label>
+                  <label class="label-left" for="fecha">Fecha de aprobacion</label>
                 </div>
                 <div class="col d-flex align-items-center">
                   <mat-form-field class="example-full-width">
-                    <input matInput formControlName="fechaRevision" [matDatepicker]="pickerFechaRevision"
-                      [min]="minDate" readonly (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA">
-                    <mat-datepicker #pickerFechaRevision></mat-datepicker>
+                    <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22" [min]="minDate"
+                      readonly (click)="pickerFecha22.open()" required placeholder="DD/MM/AAAA">
+                    <mat-datepicker #pickerFecha22></mat-datepicker>
                   </mat-form-field>
-                  <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
+                  <button mat-button color="primary" type="button" (click)="pickerFecha22.open()"
                     class="btn-calendario">
                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                   </button>
@@ -404,13 +441,13 @@
             <div class="col-md-8">
               <div class="row">
                 <div class="pr-1">
-                  <label class="label-left" for="estadoRevision">Estado de la revisión</label>
+                  <label class="label-left" for="responsableAprob">Responsable de aprobación</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="estadoRevision" required>
-                      <mat-option *ngFor="let estadoRevision of estadoArray" [value]="estadoRevision">
-                        {{ estadoRevision.name }}
+                    <mat-select formControlName="responsableAprob" required>
+                      <mat-option *ngFor="let responsableAprob of aprobadosArray" [value]="responsableAprob">
+                        {{ responsableAprob.name }}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
@@ -418,68 +455,24 @@
               </div>
             </div>
           </div>
-          <div
-            *ngIf="addressForm.controls.estadoRevision.value && addressForm.controls.estadoRevision.value.value == '2'">
-            <h2 class="card-subTitle">Aprobación</h2>
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label class="label-left" for="fecha">Fecha de aprobación</label>
-                  </div>
-                  <div class="col d-flex align-items-center">
-                    <mat-form-field class="example-full-width">
-                      <input matInput formControlName="fechaAprob" [matDatepicker]="pickerFecha22" [min]="minDate"
-                        readonly (click)="pickerFecha22.open()" required placeholder="DD/MM/AAAA">
-                      <mat-datepicker #pickerFecha22></mat-datepicker>
-                    </mat-form-field>
-                    <button mat-button color="primary" type="button" (click)="pickerFecha22.open()"
-                      class="btn-calendario">
-                      <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label class="label-left" for="responsableAprob">Responsable de aprobación</label>
-                  </div>
-                  <div class="col">
-                    <mat-form-field class="select-width">
-                      <mat-select formControlName="responsableAprob" required>
-                        <mat-option *ngFor="let responsableAprob of listaUsuarios" [value]="responsableAprob">
-                          {{ responsableAprob.nombres }} {{responsableAprob.apellidos}}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <div class="d-flex align-items-center">
-        <div class="text-area-quill">
-          <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
-          <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-            (onContentChanged)="maxLength($event, 2000)" formControlName="observacionesGenerales">
-          </quill-editor>
         </div>
-        <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
-          {{2000 - (textoLimpio(addressForm.controls.observacionesGenerales.value)>2000?2000:textoLimpio(addressForm.controls.observacionesGenerales.value))}}
-        </span>
-        <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value">
-          2000
-        </span>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="d-flex align-items-center">
+      <div class="text-area-quill">
+        <label for="alcanceParticular" class="text-area-quill--label">Observaciones generales</label>
+        <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+          (onContentChanged)="maxLength($event, 2000)" formControlName="observacionesGenerales">
+        </quill-editor>
       </div>
+      <span class="contador miles" *ngIf="addressForm.controls.observacionesGenerales.value">
+        {{2000 - (textoLimpio(addressForm.controls.observacionesGenerales.value)>2000?2000:textoLimpio(addressForm.controls.observacionesGenerales.value))}}
+      </span>
+      <span class="contador miles" *ngIf="!addressForm.controls.observacionesGenerales.value">
+        2000
+      </span>
     </div>
-
-
-
 
     <div class="text-center mb-2em">
       <button mat-button color="warn" class="btn-guardar" type="submit">

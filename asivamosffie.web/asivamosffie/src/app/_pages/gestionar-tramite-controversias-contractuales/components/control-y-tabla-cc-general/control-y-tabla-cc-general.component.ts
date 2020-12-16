@@ -23,9 +23,9 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   ];
   public dataTable;
   constructor(private router: Router, private services: ContractualControversyService) {
-  }
-  ngOnInit(): void {
-    this.services.GetListGrillaTipoSolicitudControversiaContractual(1).subscribe(data => {
+   }
+   ngOnInit(): void {
+    this.services.GetListGrillaTipoSolicitudControversiaContractual().subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.sort = this.sort;

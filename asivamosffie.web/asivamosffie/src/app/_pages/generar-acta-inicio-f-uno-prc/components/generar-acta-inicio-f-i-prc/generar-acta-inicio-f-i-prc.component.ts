@@ -10,8 +10,6 @@ export class GenerarActaInicioFaseunoPreconstruccionComponent implements OnInit 
   public rolAsignado;
   public ocpion;
   public selTab;
-  contratoObra = false;
-  contratoInterventoria = false;
   constructor() { }
 
   ngOnInit(): void {
@@ -19,7 +17,7 @@ export class GenerarActaInicioFaseunoPreconstruccionComponent implements OnInit 
   }
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
-    if (this.rolAsignado == 11) {
+    if (this.rolAsignado == 2) {
       this.ocpion = 1;
     }
     else {

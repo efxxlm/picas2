@@ -19,10 +19,6 @@ strong {
   font-weight: lighter;
 }
 
-.color-fontColor {
-  color: $fontColor;
-}
-
 .colorMainColor {
   color: $mainColor;
 }
@@ -32,11 +28,6 @@ strong {
 }
 
 .container {
-  @media only screen and (max-width: 48em) {
-    margin-right: .5em;
-    margin-left: .5em;
-  }
-
   @media only screen and (min-width: 48em) {
     width: 46rem;
   }
@@ -67,10 +58,6 @@ strong {
   padding: 0;
   border-radius: 2em;
   margin-top: 1em;
-
-  @media only screen and (max-width: 48em) {
-    margin-bottom: .5em;
-  }
 
   img {
     height: 2em;
@@ -114,16 +101,8 @@ strong {
   }
 }
 
-.m-0 {
-  margin: 0 !important;
-}
-
 .mb-0 {
   margin-bottom: 0 !important;
-}
-
-.mt-05em {
-  margin-top: 0.5em !important;
 }
 
 .mt-1em {
@@ -140,10 +119,6 @@ strong {
 
 .mr-0 {
   margin-right: 0 !important;
-}
-
-.ml-05 {
-  margin-left: 0.5em !important;
 }
 
 .pl-0 {
@@ -251,12 +226,6 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 
-.cursivayeso {
-  font-size: 0.8rem;
-  color: var(--fontColor);
-  font-style: italic;
-}
-
 .d-block {
   display: block;
 }
@@ -294,14 +263,4 @@ input[type="number"]::-webkit-outer-spin-button {
   animation-name: animatedSelect;
   animation-duration: .2s;
   animation-fill-mode: forwards;
-}
-
-@media only screen and (max-width: 63em) {
-  .col-md-4,
-  .col-md-6,
-  .col-md-8,
-  .col-md-12 {
-    flex-basis: 100%;
-    max-width: 100%;
-  }
 }

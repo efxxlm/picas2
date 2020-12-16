@@ -2,7 +2,7 @@
 {
     public class ConstantCodigoAcciones
     {
-public const string Inicio_de_sesion = "1";
+        public const string Inicio_de_sesion = "1";
         public const string Cambio_de_contrasena = "2";
         public const string Solicitud_de_contrasena = "3";
         public const string CrearActualizarCofinanciacion = "4";
@@ -41,7 +41,6 @@ public const string Inicio_de_sesion = "1";
         public const string Crear_Editar_Disponibilidad_Presupuestal = "32";
 
         public const string Crear_Editar_Cronograma_Seguimiento = "37";
-        public const string Crear_Editar_Contrato_Perfil = "82";
 
         //gestion polizas y garantias
         public const string Crear_Contrato_Poliza = "85";
@@ -102,17 +101,6 @@ public const string Inicio_de_sesion = "1";
         public const string Votacion_Solicitud_Participante = "80";
         public const string Registrar_Tramite_Contrato = "78";
 
-        //Acta inicio contrato Fase 2     
-        public const string Editar_Plazo_Ejecucion_Fase_2 = "108";
-        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";        
-        public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
-        public const string Notificación_Acta_Inicio_Fase_II = "111";
-        public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
-        public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
-        public const string Crear_Editar_Contrato_Observacion = "122";
-
-        
-
         public const string Crear_Cronograma_monitoreo = "114";
 
         public const string Eliminar_Compromisos_Solicitud = "125";
@@ -128,6 +116,8 @@ public const string Inicio_de_sesion = "1";
         public const string Eliminar_Compromiso_Tema = "134";
 
         public const string Cambiar_estado_Gestion_Poliza = "135";
+
+        public const string Crear_Editar_Contrato_Perfil = "82";
 
         public const string Eliminar_Contrato_Perfil = "83";
 
@@ -160,40 +150,12 @@ public const string Inicio_de_sesion = "1";
         public const string  Cambiar_estado_Actuacion_Seguimiento= "150";        	
 
         //4.2.2 Gestionar procesos de Defensa Judicial
-        public const string Crear_Edit_Contrato_Observacion = "141";
         public const string  Crear_Editar_Ficha_Estudio= "145";
         public const string  Crear_Editar_Demandado_Convocado= "146";
         public const string  Cambiar_Estado_Proceso= "147";
 
         // 4.1.12
         public const string Crear_Editar_Seguimiento_Semanal = "160";
-         
-        public const string Crear_Editar_Contrato_Construccion = "101";
-        public const string Crear_Editar_Construccion_Perfil = "102";
-        public const string Eliminar_Construccion_Perfil = "104";
-        public const string Eliminar_Construccion_Perfil_Numero_Radicado = "105";
-        public const string Validar_Excel_Programacion_Obra = "106";
-        public const string Load_Data_Programacion_Obra = "107";
-        public const string Load_Data_Flujo_Inversion = "108";
-        public const string Validar_Excel_Flujo_Inversion = "109";
-        public const string Crear_Editar_Observacion_Archivo = "112";
-        public const string Eliminar_Archivo_Cargue = "113";
-        public const string Crear_Editar_Observacion_Construccion = "115";
-        public const string Crear_Editar_Observacion_Construccion_Diagnostico = "116";
-        public const string Crear_Editar_Observacion_Construccion_PlanesProgramas = "117";
-        public const string Crear_Editar_Observacion_Construccion_ManejoAnticipo = "118";
-        public const string Crear_Editar_Observacion_Construccion_ProgramacionObra = "119";
-        public const string Crear_Editar_Observacion_Construccion_FlujoInversion = "120";
-        public const string Enviar_Al_Supervisor = "123";
-        public const string Cambiar_Estado_Contrato_Construccion ="142";
-        public const string Crear_Editar_Observacion_Perfil = "143";
-        public const string Aprobar_Inicio_Construccion = "144";
-
-        public const string Cambiar_Estado_Verificacion_Construccion = "157";
-
-        
-        public const string Crear_Editar_Defensa_Judicial = "156";
-        public const string Eliminar_Defensa_Judicial = "159";    
 
         public const string Eliminar_Manejo_Materiales_Insumo_Proveedor = "161";
 

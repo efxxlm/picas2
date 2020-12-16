@@ -23,12 +23,6 @@ namespace asivamosffie.api.Controllers
         {
             common = prmCommon;
             _settings = settings;
-        }  
-        [HttpGet]
-        [Route("CalculardiasLaborales")]
-        public Task<DateTime> CalculardiasLaborales([FromQuery]int pDias, DateTime pFechaCalcular)
-        {
-            return common.CalculardiasLaborales(pDias, pFechaCalcular);
         }
          
         [HttpGet]

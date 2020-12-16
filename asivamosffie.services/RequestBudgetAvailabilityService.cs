@@ -1036,11 +1036,7 @@ namespace asivamosffie.services
                     List<GrillaFuentesFinanciacion> fuentes = new List<GrillaFuentesFinanciacion>();
 
                     List<AportanteFuenteFinanciacion> aportantefuente = new List<AportanteFuenteFinanciacion>();
-                    foreach(var apor in _context.AportanteFuenteFinanciacion.
-                        Include(x=>x.FuenteFinanciacion)
-                        .ThenInclude(x=>x.Aportante).Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId
-                        && !(bool)x.FuenteFinanciacion.Eliminado
-                         && !(bool)x.Eliminado).ToList())
+                    foreach(var apor in _context.AportanteFuenteFinanciacion.Include(x=>x.FuenteFinanciacion).ThenInclude(x=>x.Aportante).Where(x => x.ProyectoAdministrativoAportanteId == proy.ProyectoAdministrativoAportanteId).ToList())
                     {
                         apor.FuenteFinanciacionString = _context.Dominio.Where(x => x.Codigo == apor.FuenteFinanciacion.FuenteRecursosCodigo 
                             && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
@@ -1855,31 +1851,23 @@ namespace asivamosffie.services
                 }
                 var contrato = _context.Contrato.Where(x => x.Contratacion.ContratacionId == detailDP.ContratacionId);
                 var fechaContrato = "";
-                
                 if (contrato.Any())
                 {
                     var fechafi = contrato.Select(x => x.FechaFirmaContrato).FirstOrDefault();
                     fechaContrato = Convert.ToDateTime(fechafi).ToString("dd/MM/yyyy");
-                    
                 }
-
-                string nombreEntidad = "";
+                
+                
                 string contratoNumero = !contrato.Any()?"":contrato.Select(x => x.NumeroContrato).FirstOrDefault().ToString();
-                if (contrato.Any())
-                {
-                    var contratacion = _context.Contratacion.Find(contrato.FirstOrDefault().ContratacionId);
-                    var contratista = _context.Contratista.Find(contratacion.ContratistaId);
-                    nombreEntidad = contratista==null ? "" : contratista.Nombre;
-                }
-
-                   
+                var contratista = _context.Contratista.Where(x => x.Contratacion.FirstOrDefault().ContratacionId == detailDP.ContratacionId);
+                string nombreEntidad = !contratista.Any()?"": contratista.Select(x => x.Nombre).FirstOrDefault().ToString();
                 var observaciones = _context.DisponibilidadPresupuestalObservacion.Where(x=>x.DisponibilidadPresupuestalId==detailDP.DisponibilidadPresupuestalId).ToList();
                 string observacionString = !observaciones.Any() ? "" : string.Join("<br><br>", observaciones.Select(x => x.Observacion));
                 var aportant = aportantes.Distinct();
                 var tiporubro = detailDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                     //si no viene el campo puede ser contratación
-                    detailDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :
-                    ConstanStringTipoSolicitudContratacion.contratacion;
+                    detailDP.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
+                    "Contratación";
                 DetailValidarDisponibilidadPresupuesal detailDisponibilidadPresupuesal = new DetailValidarDisponibilidadPresupuesal
                 {
                     //TODO:Traer estos campos { Tipo de modificacion, Valor despues de la modificacion, Plazo despues de la modificacion, Detalle de la modificacion) => se toma del caso de uso de novedades contractuales
@@ -1904,8 +1892,8 @@ namespace asivamosffie.services
                     CuentaCarta = detailDP.CuentaCartaAutorizacion,
                     TipoSolicitudEspecial = detailDP.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(detailDP.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
                     //si no viene el campo puede ser contratación
-                    detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? ConstanStringTipoSolicitudContratacion.proyectoAdministrativo :                    
-                    ConstanStringTipoSolicitudContratacion.contratacion,
+                    detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :                    
+                    "Contratación",
                     ContratoNumero= contratoNumero,
                     NombreEntidad =nombreEntidad,
                     UrlConSoporte=detailDP.UrlSoporte,

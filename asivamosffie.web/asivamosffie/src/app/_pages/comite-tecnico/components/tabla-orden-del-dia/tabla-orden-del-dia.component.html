@@ -46,6 +46,7 @@
                     class="btn-table"
                     (click)="openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>',element.id)"
                     *ngIf="estadosComite.sinConvocatoria == element.estadoComiteCodigo ||
+                           estadosComite.convocada       == element.estadoComiteCodigo ||
                            estadosComite.aplazada        == element.estadoComiteCodigo " >
                     Eliminar
                 </button>

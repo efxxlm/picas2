@@ -16,9 +16,5 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string TieneAlgunRegistro { get; set; }
-        [NotMapped]
-        public Boolean faseConstruccionNotMapped { get; set; }
-        [NotMapped]
-        public Boolean fasePreConstruccionNotMapped { get; set; }
     }
 }
