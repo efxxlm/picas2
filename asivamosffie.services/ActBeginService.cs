@@ -128,7 +128,7 @@ namespace asivamosffie.services
                 else if (contrato.TipoContratoCodigo == ((int)ConstanCodigoTipoContratacion.Interventoria).ToString())
                     contrato.EstadoActaFase2 = "2";       //2   Con acta preliminar generada
 
-                contrato.FechaActaInicioFase1 = pFechaActaInicioFase1;
+                contrato.FechaActaInicioFase2 = pFechaActaInicioFase1;
                 contrato.FechaTerminacionFase2 = pFechaTerminacionFase2;
 
                 ConstruccionObservacion construccionObservacion = new ConstruccionObservacion();
@@ -191,7 +191,7 @@ namespace asivamosffie.services
 
 
         public async Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion,
-                                                             string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, 
+                                                             string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2,
                                                              bool pEsSupervisor, bool pEsActa)
         {
             Respuesta _response = new Respuesta();
@@ -201,7 +201,7 @@ namespace asivamosffie.services
             try
             {
                 Contrato contrato = null;
-                contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include( r => r.Contratacion ).FirstOrDefault();
+                contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include(r => r.Contratacion).FirstOrDefault();
 
                 if (contrato != null)
                 {
@@ -240,7 +240,7 @@ namespace asivamosffie.services
                     contrato.PlazoFase2ConstruccionDias = pPlazoFase2PreDias;
                     contrato.PlazoFase2ConstruccionMeses = pPlazoFase2PreMeses;
 
-                    if ( contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
+                    if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
                     {
                         contrato.EstadoActaFase2 = "14"; //Con acta preliminar generada 
                     }
@@ -1166,85 +1166,76 @@ namespace asivamosffie.services
 
             contrato.ConObervacionesActaFase2 = pContrato.ConObervacionesActaFase2;
 
-
-
             string strCrearEditar = "";
             try
             {
-            //     if (contrato.ConObervacionesActaFase2 == true)
-            //     {
-
-            //     }
-            //     else
-            //     {
-            //         ContratoObservacion contratoObservacion = await GetContratoObservacionByIdContratoId(pContrato.ContratoId, true);
-            //         if (contratoObservacion != null){
-            //             contratoObservacion = _context.Find( contratoObservacion.ContratoObservacionId );
-            //             co
-
-            //         }
-                        
-            //    }
-                if (pContrato != null && pContrato.ContratoObservacion.Count() > 0)
+                if (contrato.ConObervacionesActaFase2 == true)
                 {
-                    pContrato.ContratoObservacion.ToList().ForEach(pContratoObservacion =>
+                    if (pContrato != null && pContrato.ContratoObservacion.Count() > 0)
                     {
-                        if (pContratoObservacion.ContratoObservacionId == 0)
+                        pContrato.ContratoObservacion.ToList().ForEach(pContratoObservacion =>
                         {
-                            //Auditoria
-                            strCrearEditar = "REGISTRAR CONTRATO OBSERVACION";
-
-                            pContratoObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
-                            pContratoObservacion.FechaCreacion = DateTime.Now;
-
-                            pContratoObservacion.EsSupervision = true;
-
-                            _context.ContratoObservacion.Add(pContratoObservacion);
-
-                        }
-                        else
-                        {
-                            strCrearEditar = "EDIT CONTRATO OBSERVACION";
-
-                            ContratoObservacion contratoObservacion = _context.ContratoObservacion.Find(pContratoObservacion.ContratoObservacionId);
-
-                            if (contratoObservacion != null)
+                            if (pContratoObservacion.ContratoObservacionId == 0)
                             {
-
                                 //Auditoria
-                                contratoObservacion.UsuarioModificacion = pContrato.UsuarioCreacion;
-                                contratoObservacion.FechaModificacion = DateTime.Now;
+                                strCrearEditar = "REGISTRAR CONTRATO OBSERVACION";
 
-                                contratoObservacion.Observaciones = pContratoObservacion.Observaciones;
+                                pContratoObservacion.UsuarioCreacion = pContrato.UsuarioCreacion;
+                                pContratoObservacion.FechaCreacion = DateTime.Now;
+
+                                pContratoObservacion.EsSupervision = true;
+
+                                _context.ContratoObservacion.Add(pContratoObservacion);
 
                             }
-                        }
-                    });
+                            else
+                            {
+                                strCrearEditar = "EDIT CONTRATO OBSERVACION";
 
-                    await _context.SaveChangesAsync();
+                                ContratoObservacion contratoObservacion = _context.ContratoObservacion.Find(pContratoObservacion.ContratoObservacionId);
+
+                                if (contratoObservacion != null)
+                                {
+
+                                    //Auditoria
+                                    contratoObservacion.UsuarioModificacion = pContrato.UsuarioCreacion;
+                                    contratoObservacion.FechaModificacion = DateTime.Now;
+
+                                    contratoObservacion.Observaciones = pContratoObservacion.Observaciones;
+
+                                }
+                            }
+                        });
 
 
-                    return
-                        new Respuesta
-                        {
-                            IsSuccessful = true,
-                            IsException = false,
-                            IsValidation = false,
-                            Code = ConstantMessagesActaInicio.OperacionExitosa,
-                            Message =
-                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
-                                                        ConstantMessagesActaInicio.OperacionExitosa,
-                                                        idAccionCrearContratoPoliza,
-                                                        pContrato.UsuarioCreacion,
-                                                        strCrearEditar
-                                                    )
-                        };
 
+
+                    }
+                    else
+                    {
+                        return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.RecursoNoEncontrado };
+                    }
                 }
-                else
-                {
-                    return _response = new Respuesta { IsSuccessful = false, IsValidation = false, Data = null, Code = ConstantMessagesActaInicio.RecursoNoEncontrado };
-                }
+
+                await _context.SaveChangesAsync();
+
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = ConstantMessagesActaInicio.OperacionExitosa,
+                        Message =
+                        await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_acta_inicio_fase_2,
+                                                    ConstantMessagesActaInicio.OperacionExitosa,
+                                                    idAccionCrearContratoPoliza,
+                                                    pContrato.UsuarioCreacion,
+                                                    strCrearEditar
+                                                )
+                    };
+
+
 
             }
             catch (Exception ex)
@@ -1724,7 +1715,7 @@ namespace asivamosffie.services
             {
                 //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
                 //Contrato contrato = _context.Contrato.Where(r => !(bool)r.Eliminado && r.ContratoId == pContratoId && r.TipoContratoCodigo == pTipoContrato.ToString()).FirstOrDefault();
-                Contrato contrato = _context.Contrato.Where(r => !(bool)r.Eliminado && r.ContratoId == pContratoId && r.Contratacion.TipoSolicitudCodigo == pTipoContrato.ToString()).Include(r => r.ContratoConstruccion).ThenInclude( r => r.ConstruccionObservacion).FirstOrDefault();
+                Contrato contrato = _context.Contrato.Where(r => !(bool)r.Eliminado && r.ContratoId == pContratoId && r.Contratacion.TipoSolicitudCodigo == pTipoContrato.ToString()).Include(r => r.ContratoConstruccion).ThenInclude(r => r.ConstruccionObservacion).FirstOrDefault();
                 //cofinanciacion = _context.Cofinanciacion.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == idCofinanciacion).FirstOrDefault();
                 string strFechaPrevistaTerminacion = "";
                 string strFechaActaInicio = "";
@@ -1760,11 +1751,11 @@ namespace asivamosffie.services
                     //contratoObservacion = _context.ContratoObservacion.Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
                     //ContratoObservacion contratoObservacion = await GetContratoObservacionByIdContratoId(contrato.ContratoId, false);
 
-                    ConstruccionObservacion  construccionObservacion  = contrato.ContratoConstruccion?
+                    ConstruccionObservacion construccionObservacion = contrato.ContratoConstruccion?
                                                                                     .FirstOrDefault()?.ConstruccionObservacion?
-                                                                                    .Where( r => r.TipoObservacionConstruccion =="6" )
-                                                                                    .OrderByDescending( r => r.ConstruccionObservacionId )
-                                                                                    ?.FirstOrDefault();     
+                                                                                    .Where(r => r.TipoObservacionConstruccion == "6")
+                                                                                    .OrderByDescending(r => r.ConstruccionObservacionId)
+                                                                                    ?.FirstOrDefault();
 
                     if (construccionObservacion != null)
                     {
