@@ -158,6 +158,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -837,6 +838,10 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ContratacionProyecto>(entity =>
             {
+                entity.Property(e => e.EstadoObraCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.EstadoRequisitosVerificacionCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
@@ -1010,6 +1015,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaAprobacionRequisitosInterventor).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaAprobacionRequisitosSupervisor).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCambioEstadoFase2).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
@@ -3477,10 +3484,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoObraProyecto)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.EstadoProgramacionCodigo)
                     .HasMaxLength(50)
                     .IsUnicode(false);
@@ -3774,10 +3777,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoActuacionDerivada>(entity =>
             {
-                entity.HasKey(e => e.ControversiaActuacionId);
-
-                entity.Property(e => e.ControversiaActuacionId).ValueGeneratedNever();
-
                 entity.Property(e => e.DescripciondeActuacionAdelantada)
                     .HasMaxLength(1500)
                     .IsUnicode(false);
@@ -3802,8 +3801,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SeguimientoActuacionDerivadaId).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -3814,8 +3811,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.ControversiaActuacion)
-                    .WithOne(p => p.SeguimientoActuacionDerivada)
-                    .HasForeignKey<SeguimientoActuacionDerivada>(d => d.ControversiaActuacionId)
+                    .WithMany(p => p.SeguimientoActuacionDerivada)
+                    .HasForeignKey(d => d.ControversiaActuacionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SeguimientoActuacionDerivada_ControversiaActuacion");
             });
@@ -5304,7 +5301,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoObraProyecto)
+                entity.Property(e => e.EstadoObraCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
