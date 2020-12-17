@@ -53,8 +53,6 @@ namespace asivamosffie.services
             GestionObraCalidadEnsayoLaboratorio.LlaveMen = GestionObraCalidadEnsayoLaboratorio.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanal.ContratacionProyecto.Proyecto.LlaveMen;
             int NumeroLaboratorio = 1;
 
-
-
             foreach (var item in GestionObraCalidadEnsayoLaboratorio.SeguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Where(r => !(bool)r.Eliminado).OrderBy(r => r.GestionObraCalidadEnsayoLaboratorioId))
             {
                 if (item.GestionObraCalidadEnsayoLaboratorioId == GestionObraCalidadEnsayoLaboratorio.GestionObraCalidadEnsayoLaboratorioId)
@@ -184,14 +182,13 @@ namespace asivamosffie.services
                         FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
                     }
 
-
-
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
+
                     seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
 
-                    var ListProgramacionGroupByActividad = ListProgramacion
+                    seguimientoSemanal.AvanceAcumulado = ListProgramacion
                         .GroupBy(r => r.Actividad)
                         .Select(r => new
                         {
@@ -199,11 +196,6 @@ namespace asivamosffie.services
                             AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
                             AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                         });
-
-
-
-
-                    seguimientoSemanal.AvanceAcumulado = ListProgramacionGroupByActividad;
 
                     //Eliminar del get Las tablas eliminadas Logicamente
                     foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
@@ -351,7 +343,7 @@ namespace asivamosffie.services
                     List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
                     seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
 
-                    var ListProgramacionGroupByActividad = ListProgramacion
+                    seguimientoSemanal.AvanceAcumulado = ListProgramacion
                         .GroupBy(r => r.Actividad)
                         .Select(r => new
                         {
@@ -360,10 +352,6 @@ namespace asivamosffie.services
                             AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                         });
 
-
-
-
-                    seguimientoSemanal.AvanceAcumulado = ListProgramacionGroupByActividad;
 
                     //Eliminar del get Las tablas eliminadas Logicamente
                     foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
@@ -457,7 +445,7 @@ namespace asivamosffie.services
                         EnsayoLaboratorioMuestra.UsuarioCreacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                         EnsayoLaboratorioMuestra.FechaCreacion = DateTime.Now;
                         EnsayoLaboratorioMuestra.Eliminado = false;
-                        EnsayoLaboratorioMuestra.RegistroCompleto = 
+                        EnsayoLaboratorioMuestra.RegistroCompleto =
                                !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
                             && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
                             && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
@@ -479,7 +467,7 @@ namespace asivamosffie.services
                                !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
                             && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
                             && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
-                            ? true : false;  
+                            ? true : false;
                         if (EnsayoLaboratorioMuestraOld.RegistroCompleto == false)
                             RegistroCompletoMuestras = false;
                     }
@@ -689,7 +677,7 @@ namespace asivamosffie.services
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
 
                 if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
-                    SaveUpdateAvanceFisico(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault(), pSeguimientoSemanal.FlujoInversion, pSeguimientoSemanal.UsuarioCreacion);
+                    SaveUpdateAvanceFisico(pSeguimientoSemanal, pSeguimientoSemanal.UsuarioCreacion);
 
                 if (pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.Count() > 0)
                     SaveUpdateAvanceFinanciero(pSeguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
@@ -734,11 +722,11 @@ namespace asivamosffie.services
             }
         }
 
-        private void SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico pSeguimientoSemanalAvanceFisico, ICollection<FlujoInversion> pListFlujoInversion, string usuarioCreacion)
+        private void SaveUpdateAvanceFisico(SeguimientoSemanal pSeguimientoSemanal, string usuarioCreacion)
         {
             bool RegistroCompleto = true;
 
-            foreach (var FlujoInversion in pListFlujoInversion)
+            foreach (var FlujoInversion in pSeguimientoSemanal.FlujoInversion)
             {
                 Programacion programacionOld = _context.Programacion.Where(r => r.ProgramacionId == FlujoInversion.ProgramacionId).FirstOrDefault();
                 programacionOld.AvanceFisicoCapitulo = FlujoInversion.Programacion.AvanceFisicoCapitulo;
@@ -750,41 +738,76 @@ namespace asivamosffie.services
                 }
             }
 
-            if (pSeguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoId == 0)
+            if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId == 0)
             {
-                pSeguimientoSemanalAvanceFisico.RegistroCompleto = RegistroCompleto;
-                pSeguimientoSemanalAvanceFisico.UsuarioCreacion = usuarioCreacion;
-                pSeguimientoSemanalAvanceFisico.FechaCreacion = DateTime.Now;
-                pSeguimientoSemanalAvanceFisico.Eliminado = false;
-                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanalAvanceFisico);
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = RegistroCompleto;
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion = usuarioCreacion;
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().FechaCreacion = DateTime.Now;
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().Eliminado = false;
+                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
 
             }
             else
             {
-                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanalAvanceFisico.SeguimientoSemanalAvanceFisicoId);
+                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId);
 
                 seguimientoSemanalAvanceFisicoOld.RegistroCompleto = RegistroCompleto;
                 seguimientoSemanalAvanceFisicoOld.UsuarioModificacion = usuarioCreacion;
                 seguimientoSemanalAvanceFisicoOld.FechaModificacion = DateTime.Now;
 
-                seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanalAvanceFisico.ProgramacionSemanal;
-                seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanalAvanceFisico.AvanceFisicoSemanal;
+                seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
+                seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
             }
 
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
-
             ///Validar Estado De obra 
-            /////Programación acumulada de la obra: == Avance acumulado ejecutado de la obra:   = normal
-            /////Programación acumulada de la obra: <  Avance acumulado ejecutado de la obra:   = avanzada
-            /////Programación acumulada de la obra: >  Avance acumulado ejecutado de la obra:   = retrazado
+        //Actualizar estado obra
+            List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + pSeguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
 
-            //Plazo de ejecucion total del proyecto en dias !!! 120
-            //primer tercio  => avance del proyecto no debe ser menor al 20%
-            //segunto tercio  => avance del proyecto no debe ser menor al 60%
+            decimal? ProgramacionAcumuladaObra = ListProgramacion.Sum(r => r.ProgramacionCapitulo);
+            decimal? ProgramacionEjecutadaObra = ListProgramacion.Sum(r => r.AvanceFisicoCapitulo);
 
-            /////Programación acumulada de la obra: >  Avance acumulado ejecutado de la obra:   = critico
+            ContratacionProyecto contratacionProyectoValidarEstadoObra = _context.ContratacionProyecto.Find(pSeguimientoSemanal.ContratacionProyectoId);
+            contratacionProyectoValidarEstadoObra.UsuarioModificacion = usuarioCreacion;
+            contratacionProyectoValidarEstadoObra.FechaModificacion = DateTime.Now;
 
 
+            int CantidadDeSeguimientosSemanales = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId).ToList().Count();
+            decimal PrimerTercio = decimal.Round(CantidadDeSeguimientosSemanales / 3);
+            decimal SegundoTercio = PrimerTercio * 2;
+
+            if (ProgramacionAcumuladaObra.HasValue && ProgramacionEjecutadaObra.HasValue)
+            {
+                /////Programación acumulada de la obra: == Avance acumulado ejecutado de la obra:   = normal
+                if (ProgramacionAcumuladaObra == ProgramacionEjecutadaObra) 
+                    contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_normal;
+       
+                /////Programación acumulada de la obra: <  Avance acumulado ejecutado de la obra:   = avanzada
+                if (ProgramacionAcumuladaObra > ProgramacionEjecutadaObra) 
+                    contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_avanzada;
+            
+
+                /////Programación acumulada de la obra: >  Avance acumulado ejecutado de la obra:   = retrazado
+                if (ProgramacionAcumuladaObra < ProgramacionEjecutadaObra) 
+                    contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_retrazada;
+              
+                //primer tercio  => avance del proyecto no debe ser menor al 20%   = critico
+                if (pSeguimientoSemanal.NumeroSemana >= PrimerTercio && pSeguimientoSemanal.NumeroSemana < SegundoTercio) 
+                    if (ProgramacionEjecutadaObra < 20)
+                        contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
+
+                //segunto tercio  => avance del proyecto no debe ser menor al 60%   critico
+                if (pSeguimientoSemanal.NumeroSemana >= SegundoTercio) 
+                    if (ProgramacionEjecutadaObra < 60)
+                        contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
+           
+
+
+            }
+            else
+            {
+                contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.En_ejecucion;
+            }
 
         }
 
