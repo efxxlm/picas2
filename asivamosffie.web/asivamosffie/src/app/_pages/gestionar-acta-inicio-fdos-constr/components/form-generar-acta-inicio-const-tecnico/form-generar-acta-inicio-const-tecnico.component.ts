@@ -279,7 +279,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     console.log(plazoDias, dias, plazoMeses, meses )
 
     if (plazoDias != dias || plazoMeses != meses) {
-      this.openDialog( '', ' Debe verificar la información ingresada en el campo <b>Plazo de ejecución fase 2 – Construcción</b>, dado que no coincide con la información inicial registrada para el contrato ' )
+      this.openDialog( '', 'Debe verificar la información ingresada en el campo <b>Plazo de ejecución fase 2 – Construcción</b>, dado que no coincide con la información inicial registrada para el contrato ' )
       return false;
     }
 
@@ -330,7 +330,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
 
               }
               else {
-                this.openDialog2(data1.message, "");
+                this.openDialog2('', `<b>${data1.message}</b>`);
               }
             });
 
@@ -344,7 +344,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
               this.router.navigate(['/generarActaInicioConstruccion']);
             }
             else {
-              this.openDialog("", resp.message);
+              this.openDialog("", `<b>${resp.message}</b>`);
             }
           })
         }

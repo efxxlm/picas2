@@ -293,14 +293,14 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
               if (localStorage.getItem("origin") == "obra") {
                 this.service.CambiarEstadoActa(this.idContrato, "14").subscribe(data0 => {
                   this.realizoPeticion = true;
-                  this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+                  this.openDialog2('', '<b>La información ha sido guardada exitosamente.</b>');
                   this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
                 });
               }
               else {
                 this.service.CambiarEstadoActa(this.idContrato, "2").subscribe(data0 => {
                   this.realizoPeticion = true;
-                  this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+                  this.openDialog2('', '<b>La información ha sido guardada exitosamente.</b>');
                   this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
                 });
               }

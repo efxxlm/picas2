@@ -126,7 +126,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.elementsObservacion = data;
       for (let i = 0; i < data.length; i++) {
         if (data[i].esSupervision == false) {
-          
+
           this.esActa = data[i].esActa;
           this.conObervacionesActa = data[i].esActaFase1;
           this.observacionesActaFase1 = data[i].observaciones;
@@ -370,19 +370,19 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         if (data.code == "200") {
           if (localStorage.getItem("origin") == "obra") {
             this.service.CambiarEstadoActa(this.idContrato, "14").subscribe(data0 => {
-              this.openDialog('', data.message);
+              this.openDialog2('', `<b>${data.message}</b>`);
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
           }
           else {
             this.service.CambiarEstadoActa(this.idContrato, "2").subscribe(data1 => {
-              this.openDialog('', data.message);
+              this.openDialog2('', `<b>${data.message}</b>`);
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
           }
         }
         else {
-          this.openDialog('', data.message);
+          this.openDialog2('', `<b>${data.message}</b>`);
         }
       });
       this.realizoPeticion = true;
