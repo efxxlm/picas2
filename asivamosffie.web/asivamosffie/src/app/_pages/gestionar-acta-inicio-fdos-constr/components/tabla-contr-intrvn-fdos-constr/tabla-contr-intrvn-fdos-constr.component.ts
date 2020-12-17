@@ -134,14 +134,15 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     }
   }
   enviarActaParaFirma(id) {
-    if (localStorage.getItem("origin") == "interventoria") {
+    //console.log(localStorage.getItem("origin"))
+    //if (localStorage.getItem("origin") == "interventoria") {
       this.services.CambiarEstadoActa(id, "6", "usr2").subscribe(data => {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
       this.descargarActaDesdeTabla(id);
-    }
+    //}
   }
   enviarInterventorBtn(id){
     if (localStorage.getItem("origin") == "interventoria") {
