@@ -791,6 +791,72 @@ namespace asivamosffie.services.Helpers.Constant
 
     }
 
+    public class ConstantMessagesDerivativeAction
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+        public const string Error = "500";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        //public const string CamposIncompletos = "101";
+                
+        public const string RecursoNoEncontrado = "104";
+        public const string CorreoEnviado = "101";
+
+        public const string ErrorEnviarCorreo = "107";
+        public const string ErrorGuardarCambios = "109";
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
+
+        #endregion Mensajes Exitoso
+    }
+
+
+    //public class ConstantMessagesJudicialDefense
+    //{
+    //    #region Mensajes Error
+
+    //    public const string ErrorInterno = "501";
+
+    //    public const string Error = "500";
+
+    //    #endregion Mensajes Informativos
+
+    //    #region Mensajes Informativos                
+
+    //    public const string CreadoCorrrectamente = "103";
+    //    public const string RecursoNoEncontrado = "104";
+
+    //    public const string ErrorEnviarCorreo = "107";
+    //    public const string ErrorGuardarCambios = "109";
+
+    //    #endregion Mensajes Informativos
+
+    //    #region Mensajes Exitoso
+
+    //    public const string OperacionExitosa = "200";
+    //    public const string EliminacionExitosa = "201";
+
+    //    #endregion Mensajes Exitoso
+
+    //    #region Mensajes Redireccion
+
+    //    #endregion Mensajes Redireccion
+
+    //    #endregion
+
+    //}
+
     public class GeneralCodes
     {
 
@@ -882,3 +948,4 @@ namespace asivamosffie.services.Helpers.Constant
 
 
 }
+#endregion
