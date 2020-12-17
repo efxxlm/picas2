@@ -1,5 +1,6 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,5 +21,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EliminarDefensaJudicial(int pDefensaJudicialId, string pUsuarioModifica);
         Task<List<ProyectoGrilla>> GetListProyects( int pProyectoId);
         Task<List<GrillaProcesoDefensaJudicial>> ListGrillaProcesosDefensaJudicial();
+        Task<List<Contrato>> GetListContract();
+        Task<List<ProyectoGrilla>> GetListProyectsByContract(int pContratoId);
     }
 }

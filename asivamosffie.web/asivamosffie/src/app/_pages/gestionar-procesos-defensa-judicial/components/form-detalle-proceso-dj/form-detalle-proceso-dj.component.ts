@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -19,12 +20,8 @@ export class FormDetalleProcesoDjComponent implements OnInit {
     requeridoParticipacionSupervisor: [null, Validators.required]
   });
   departamentoArray = [
-    { name: 'Antioquia', value: '1' },
-    { name: 'Atlantico', value: '2' },
   ];
   municipioArray = [
-    { name: 'Soledad', value: '1' },
-    { name: 'Amalfi', value: '2' },
   ];
   tipoAccionArray = [
     { name: 'Reparacion Directa', value: '1' },
@@ -45,9 +42,12 @@ export class FormDetalleProcesoDjComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(private fb: FormBuilder,public dialog: MatDialog) { }
+  constructor(private fb: FormBuilder,public dialog: MatDialog, public commonService:CommonService) { }
 
   ngOnInit(): void {
+    this.commonService.listaDepartamentos().subscribe(response=>{
+      this.departamentoArray=response;
+    });
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -76,5 +76,12 @@ export class FormDetalleProcesoDjComponent implements OnInit {
   onSubmit() {
     console.log(this.addressForm.value);
     this.openDialog('', 'La información ha sido guardada exitosamente.');
+  }
+
+  onChangeMun()
+  {
+    this.commonService.listaMunicipiosByIdDepartamento(this.addressForm.get("departamentoInicio").value).subscribe(response=>{
+      this.municipioArray=response;
+    });
   }
 }

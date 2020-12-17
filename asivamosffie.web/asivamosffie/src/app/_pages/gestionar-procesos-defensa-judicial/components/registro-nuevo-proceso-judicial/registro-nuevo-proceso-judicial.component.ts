@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonService } from 'src/app/core/_services/common/common.service';
 
 @Component({
   selector: 'app-registro-nuevo-proceso-judicial',
@@ -12,13 +13,16 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     legitimacionActiva: [null, Validators.required],
     tipoProceso: [null, Validators.required],
   });
-  tipoProcesoArray = [
-    { name: 'Laboral', value: '1' },
-    { name: 'Civil', value: '2' }
-  ];
-  constructor(private fb: FormBuilder, public dialog: MatDialog) { }
+  tipoProcesoArray = [];
+  constructor(private fb: FormBuilder, public dialog: MatDialog, public commonServices: CommonService) { }
 
   ngOnInit(): void {
+    this.commonServices.listaProcesosJudiciales().subscribe(
+      response=>{
+        this.tipoProcesoArray=response;
+      }
+    );
+
   }
 
 }

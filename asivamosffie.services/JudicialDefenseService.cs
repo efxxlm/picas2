@@ -1235,5 +1235,48 @@ namespace asivamosffie.services
             return ListDefensaJudicialGrilla.ToList();
 
         }
+
+        /*autor: jflorez
+          descripción: trae listado de contratos
+          impacto: CU 4.2.2*/
+        public async Task<List<Contrato>> GetListContract()
+        {
+            var contratos = _context.Contrato.Where(x =>//x.UsuarioInterventoria==userID
+             !(bool)x.Eliminado
+            ).ToList();
+            
+            return contratos;
+        }
+
+
+        public async Task<List<ProyectoGrilla>> GetListProyectsByContract(int pContratoId)
+        {
+            List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
+            var contrato = _context.Contrato.Find(pContratoId);
+            var proyecto = _context.Contratacion.Where(x => x.ContratacionId == contrato.ContratacionId).
+                Include(x=>x.ContratacionProyecto).
+                    ThenInclude(y=>y.Proyecto).
+                    ThenInclude(y=>y.InstitucionEducativa).
+                Include(x => x.ContratacionProyecto).
+                    ThenInclude(y => y.Proyecto).
+                    ThenInclude(y => y.Sede).
+                Include(x=>x.Contratista).FirstOrDefault();
+            foreach (var item in proyecto.ContratacionProyecto)
+            {
+                ListProyectoGrilla.Add(new ProyectoGrilla {
+                    NombreContratista=proyecto.Contratista.Nombre,
+                    TieneObra=proyecto.TipoSolicitudCodigo== ConstanCodigoTipoContratacion.Obra.ToString(),
+                    TieneInterventoria= proyecto.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString(),
+                    ProyectoId=item.ProyectoId,
+                    ContratacionProyectoId= item.ContratacionProyectoId,
+                    InstitucionEducativa=item.Proyecto.InstitucionEducativa.Nombre,
+                    Sede=item.Proyecto.Sede.Nombre,
+                    CodigoDane=item.Proyecto.InstitucionEducativa.CodigoDane,
+                    SedeCodigo=item.Proyecto.Sede.CodigoDane
+                });
+                
+            }
+            return ListProyectoGrilla;
+        }
     }
 }

@@ -36,8 +36,8 @@
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="tipoProceso" required>
                                         <mat-option *ngFor="let tipoProceso of tipoProcesoArray"
-                                            [value]="tipoProceso.value">
-                                            {{ tipoProceso.name }}
+                                            [value]="tipoProceso.codigo">
+                                            {{ tipoProceso.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
