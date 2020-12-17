@@ -316,21 +316,21 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
                 if (localStorage.getItem("origin") == "interventoria") {
                   this.services.CambiarEstadoActa(this.idContrato, "2", "usr2").subscribe(resp => {
                     this.realizoPeticion = true;
-                    this.openDialog("", '<b>La información ha sido guardada exitosamente.</b>');
+                    this.openDialog2("", '<b>La información ha sido guardada exitosamente.</b>');
                     this.router.navigate(['/generarActaInicioConstruccion']);
                   });
                 }
                 else {
                   this.services.CambiarEstadoActa(this.idContrato, "14", "usr2").subscribe(resp => {
                     this.realizoPeticion = true;
-                    this.openDialog("", '<b>La información ha sido guardada exitosamente.</b>');
+                    this.openDialog2("", '<b>La información ha sido guardada exitosamente.</b>');
                     this.router.navigate(['/generarActaInicioConstruccion']);
                   });
                 }
 
               }
               else {
-                this.openDialog(data1.message, "");
+                this.openDialog2(data1.message, "");
               }
             });
 
@@ -340,7 +340,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
           this.services.EditarContratoObservacion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.addressForm.value.observacionesEspeciales, "usr2", this.fechaSesionString, this.fechaSesionString2, false, true).subscribe(resp => {
             if (resp.code == "200") {
               this.realizoPeticion = true;
-              this.openDialog("", '<b>La información ha sido guardada exitosamente.</b>');
+              this.openDialog2("", '<b>La información ha sido guardada exitosamente.</b>');
               this.router.navigate(['/generarActaInicioConstruccion']);
             }
             else {
@@ -361,7 +361,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       // console.log(this.addressForm.value);
 
     } else {
-      this.openDialog('', '<b>El formulario está incompleto</b>');
+      this.openDialog2('', '<b>El formulario está incompleto</b>');
     }
   }
 

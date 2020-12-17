@@ -110,7 +110,7 @@
                 [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
                     Observaciones al acta de inicio
                 </label>
-                <quill-editor class="quill-editor-style ml-1em position-relative" [styles]="editorStyle" [modules]="config"
+                <quill-editor class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
                     (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required></quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
