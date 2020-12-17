@@ -10,6 +10,14 @@ export class VerDetalleComponent implements OnInit {
 
   detalleId: string;
 
+  listaObservaciones = [
+    {
+      fecha: '20/10/2020',
+      responsable: 'Supervisor',
+      historial: 'No es posible acceder a la ruta de soporte, verificar la URL.'
+    }
+  ]
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,

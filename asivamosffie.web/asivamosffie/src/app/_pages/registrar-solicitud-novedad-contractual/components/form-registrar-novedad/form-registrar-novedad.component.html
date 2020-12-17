@@ -163,13 +163,13 @@
           </div>
         </div>
       </div>
-      <mat-card-title class="header-card--text sub-text" *ngIf="addressForm.get('tipoNovedad').value!=null && 
-        (addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.Suspension || 
+      <mat-card-title class="header-card--text sub-text" *ngIf="addressForm.get('tipoNovedad').value!=null &&
+        (addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.Suspension ||
         addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.ProrrogaSuspension)">
         Plazo solicitado {{addressForm.get('tipoNovedad').value!=null}}
-      </mat-card-title>      
-      <div formArrayName="plazoSolicitado" *ngIf="addressForm.get('tipoNovedad').value!=null && 
-      (addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.Suspension || 
+      </mat-card-title>
+      <div formArrayName="plazoSolicitado" *ngIf="addressForm.get('tipoNovedad').value!=null &&
+      (addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.Suspension ||
       addressForm.get('tipoNovedad').value==tiposNovedadModificacionContractual.ProrrogaSuspension)"
       >
       <div *ngFor="let plazoSolicitado of plazoSolicitadoField.controls; let i = index">
@@ -221,7 +221,7 @@
             </div>
           </div>
         </div>
-        
+
       </div>
     </div>
       <div formArrayName="clausula" *ngFor="let clausula of clausulaField.controls; let i = index">
@@ -294,7 +294,7 @@
           </button>
         </div>
       </div>
-      
+
       <div class="mb-05em">
         <div>
           <label class="label-left" for="conceptoTecnico" [class.color-secondaryColor]="

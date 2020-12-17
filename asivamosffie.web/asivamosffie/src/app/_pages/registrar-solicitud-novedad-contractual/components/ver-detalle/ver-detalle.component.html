@@ -217,5 +217,58 @@
     </mat-expansion-panel>
   </mat-accordion>
 
+  <div *ngIf="true">
+    <mat-card class="shipping-card var-main-gris">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          Observaciones del supervisor
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <p>
+          <strong>
+            20/10/2020
+          </strong>
+        </p>
+        <p>
+          No es posible acceder a la ruta de soporte, verificar la URL.
+        </p>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="true">
+    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
+      <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Fecha de revisión
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Responsable de la observación
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Historial de observaciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let observacion of listaObservaciones">
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ observacion.fecha }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ observacion.responsable }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ observacion.historial }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 
 </section>
