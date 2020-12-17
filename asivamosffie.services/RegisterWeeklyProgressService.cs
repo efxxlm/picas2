@@ -185,7 +185,7 @@ namespace asivamosffie.services
                     }
 
 
- 
+
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
@@ -195,9 +195,9 @@ namespace asivamosffie.services
                         .GroupBy(r => r.Actividad)
                         .Select(r => new
                         {
-                            Actividad = r.Key, 
-                            AvanceFisicoCapitulo = Math.Truncate((decimal)r.Sum(r=> r.AvanceFisicoCapitulo))+"%",
-                            AvanceAcumulado = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100))+"%"
+                            Actividad = r.Key,
+                            AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
+                            AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                         });
 
 
@@ -356,8 +356,8 @@ namespace asivamosffie.services
                         .Select(r => new
                         {
                             Actividad = r.Key,
-                            AvanceFisicoCapitulo = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
-                            AvanceAcumulado = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
+                            AvanceAcumulado = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
+                            AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                         });
 
 
@@ -448,6 +448,8 @@ namespace asivamosffie.services
 
             try
             {
+                bool RegistroCompletoMuestras = true;
+
                 foreach (var EnsayoLaboratorioMuestra in pGestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
                 {
                     if (EnsayoLaboratorioMuestra.EnsayoLaboratorioMuestraId == 0)
@@ -455,13 +457,15 @@ namespace asivamosffie.services
                         EnsayoLaboratorioMuestra.UsuarioCreacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                         EnsayoLaboratorioMuestra.FechaCreacion = DateTime.Now;
                         EnsayoLaboratorioMuestra.Eliminado = false;
-
-                        EnsayoLaboratorioMuestra.RegistroCompleto = !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
+                        EnsayoLaboratorioMuestra.RegistroCompleto = 
+                               !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
                             && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
                             && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
                             ? true : false;
                         _context.EnsayoLaboratorioMuestra.Add(EnsayoLaboratorioMuestra);
 
+                        if (EnsayoLaboratorioMuestra.RegistroCompleto == false)
+                            RegistroCompletoMuestras = false;
                     }
                     else
                     {
@@ -469,18 +473,19 @@ namespace asivamosffie.services
                         EnsayoLaboratorioMuestraOld.FechaEntregaResultado = EnsayoLaboratorioMuestra.FechaEntregaResultado;
                         EnsayoLaboratorioMuestraOld.NombreMuestra = EnsayoLaboratorioMuestra.NombreMuestra;
                         EnsayoLaboratorioMuestraOld.Observacion = EnsayoLaboratorioMuestra.Observacion;
+                        EnsayoLaboratorioMuestraOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
+                        EnsayoLaboratorioMuestraOld.FechaModificacion = DateTime.Now;
                         EnsayoLaboratorioMuestraOld.RegistroCompleto =
                                !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.NombreMuestra)
                             && !string.IsNullOrEmpty(EnsayoLaboratorioMuestra.Observacion)
                             && EnsayoLaboratorioMuestra.FechaEntregaResultado.HasValue
-                            ? true : false;
-                        ;
-                        EnsayoLaboratorioMuestraOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
-                        EnsayoLaboratorioMuestraOld.FechaModificacion = DateTime.Now;
+                            ? true : false;  
+                        if (EnsayoLaboratorioMuestraOld.RegistroCompleto == false)
+                            RegistroCompletoMuestras = false;
                     }
                 }
                 GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld = _context.GestionObraCalidadEnsayoLaboratorio.Find(pGestionObraCalidadEnsayoLaboratorio.GestionObraCalidadEnsayoLaboratorioId);
-                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoMuestras = ValidarRegistroCompletoMuestasLaboratorio(pGestionObraCalidadEnsayoLaboratorio);
+                gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
                 gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
 
@@ -727,11 +732,6 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pSeguimientoSemanal.UsuarioCreacion, ex.InnerException.ToString())
                 };
             }
-        }
-
-        private bool ValidarRegistroCompletoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanalRetorno)
-        {
-            return false;
         }
 
         private void SaveUpdateAvanceFisico(SeguimientoSemanalAvanceFisico pSeguimientoSemanalAvanceFisico, ICollection<FlujoInversion> pListFlujoInversion, string usuarioCreacion)
@@ -1501,6 +1501,11 @@ namespace asivamosffie.services
 
         #region Validar Registros Completos
 
+        private bool ValidarRegistroCompletoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanalRetorno)
+        {
+            return false;
+        }
+
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObra(SeguimientoSemanalGestionObra pSeguimientoSemanalGestionObra)
         {
             return false;
@@ -1537,6 +1542,10 @@ namespace asivamosffie.services
             return true;
         }
 
+        #region Validar Obra Calidad
+
+
+        #endregion
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud seguimientoSemanalGestionObraSeguridadSalud)
         {
             return false;
