@@ -47,7 +47,6 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
                     resumenAlertas: seguimientoDiario
                 }
             );
-            console.log( dataSeguimientoDiario );
             this.tablaAvanceResumen = new MatTableDataSource( dataSeguimientoDiario );
         }
     }

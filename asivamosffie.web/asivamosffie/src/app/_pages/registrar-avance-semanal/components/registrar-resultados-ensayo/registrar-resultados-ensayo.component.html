@@ -30,7 +30,7 @@
             <mat-accordion formArrayName="muestras" *ngFor="let muestra of muestras.controls; index as i">
                 <mat-expansion-panel class="expansion-style" [formGroup]="muestra">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="muestra.get( 'semaforoMuestra' ).value">
                             Muestra {{ i + 1 }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>

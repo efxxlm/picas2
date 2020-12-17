@@ -55,9 +55,25 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
                     if ( this.ensayoLaboratorio.ensayoLaboratorioMuestra.length > 0 ) {
                         this.muestras.clear();
                         for ( const muestra of this.ensayoLaboratorio.ensayoLaboratorioMuestra ) {
+                            let semaforoMuestra: string;
+
+                            if ( muestra.registroCompleto === true ) {
+                                semaforoMuestra = 'completo';
+                            }
+                            if (    muestra.registroCompleto === false
+                                    && (    muestra.fechaEntregaResultado !== undefined
+                                            || (    muestra.nombreMuestra !== undefined
+                                                    && muestra.nombreMuestra.length > 0 )
+                                            || (    muestra.observacion !== undefined
+                                                    && muestra.observacion.length > 0 ) ) )
+                            {
+                                semaforoMuestra = 'en-proceso';
+                            }
+
                             this.muestras.push(
                                 this.fb.group(
                                     {
+                                        semaforoMuestra: semaforoMuestra !== undefined ? semaforoMuestra : 'sin-diligenciar',
                                         ensayoLaboratorioMuestraId: muestra.ensayoLaboratorioMuestraId,
                                         gestionObraCalidadEnsayoLaboratorioId: muestra.gestionObraCalidadEnsayoLaboratorioId,
                                         fechaEntregaResultado:  muestra.fechaEntregaResultado !== undefined
@@ -74,6 +90,7 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
                             this.muestras.push(
                                 this.fb.group(
                                     {
+                                        semaforoMuestra: [ 'sin-diligenciar' ],
                                         ensayoLaboratorioMuestraId: 0,
                                         gestionObraCalidadEnsayoLaboratorioId: this.ensayoLaboratorio.gestionObraCalidadEnsayoLaboratorioId,
                                         fechaEntregaResultado: [null],

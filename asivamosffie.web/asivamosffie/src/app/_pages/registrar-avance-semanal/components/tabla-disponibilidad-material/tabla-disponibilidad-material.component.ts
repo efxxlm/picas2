@@ -45,7 +45,6 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
                     resumenAlertas: seguimientoDiario
                 }
             );
-            console.log( this.dataSeguimientoDiario );
             this.tablaDisponibilidad = new MatTableDataSource( this.dataSeguimientoDiario );
         }
     }

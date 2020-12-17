@@ -53,7 +53,7 @@
             <mat-accordion formArrayName="ensayosLaboratorio" *ngFor="let ensayo of ensayosLaboratorio.controls; index as i">
                 <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="ensayo">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="ensayo.get( 'semaforoEnsayo' ).value">
                             Ensayo de laboratorio {{ i+1 }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -232,7 +232,8 @@
                                 <div class="d-flex justify-content-center mt-1em" *ngIf="ensayo.get( 'registroCompleto' ).value === true">
                                   <button mat-raised-button
                                           color="accent"
-                                          class="btn-table expansion-style--title btn-color h-2em w-20 sin-diligenciar"
+                                          class="btn-table expansion-style--title btn-color h-2em w-20"
+                                          [ngClass]="semaforoBtnRegistrar( ensayo.get( 'registroCompletoMuestras' ).value )"
                                           (click)="getRegistrarResultados( ensayo.get( 'gestionObraCalidadEnsayoLaboratorioId' ).value )">
                                           <small class="mr-1em btn-color-text">Registrar resultados</small>
                                   </button>

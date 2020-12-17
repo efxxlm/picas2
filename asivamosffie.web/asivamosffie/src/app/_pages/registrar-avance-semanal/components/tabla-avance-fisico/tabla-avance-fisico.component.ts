@@ -95,7 +95,6 @@ export class TablaAvanceFisicoComponent implements OnInit {
                         }
                     );
                 }
-                console.log( totalDuracion / this.seguimientoDiario.cantidadTotalDiasActividades * 100 );
                 this.avanceFisico = [
                     {
                         semanaNumero: this.seguimientoDiario.numeroSemana,
@@ -123,7 +122,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
             registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
         }
         if ( Number( value ) < 0 ) {
-            registro.avanceFisicoCapitulo = '0';
+            registro.avanceFisicoCapitulo = '';
         }
         for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
             let avanceValue;
