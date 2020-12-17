@@ -1,4 +1,4 @@
-<section class="container" *ngIf="seguimientoSemanal !== undefined">
+<section class="container mb-2em" *ngIf="seguimientoSemanal !== undefined">
     <div class="text-right">
         <a routerLink="/registrarAvanceSemanal" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -70,27 +70,27 @@
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionObra">
                         Gestión de la obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal"></app-gestion-de-obra>
+                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )"></app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoReporteActividad">
                         Reporte de actividades
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal"></app-reporte-actividades>
+                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" (estadoSemaforoReporte)="valuePendingSemaforo( $event, 'reporteActividad' )"></app-reporte-actividades>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoRegistroFotografico">
                         Registro fotográfico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -100,7 +100,7 @@
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoComiteObra">
                         Comité de obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>

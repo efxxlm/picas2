@@ -1,7 +1,7 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -14,6 +14,7 @@ export class ReporteActividadesComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Output() estadoSemaforoReporte = new EventEmitter();
     formResumenGeneral: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
@@ -44,6 +45,9 @@ export class ReporteActividadesComponent implements OnInit {
 
     ngOnInit(): void {
         if ( this.seguimientoSemanal !== undefined ) {
+            let sinDiligenciar = 0;
+            let completo = 0;
+            const totalAcordeones = 3;
             this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
             this.seguimientoSemanalReporteActividadId =  this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ?
             this.seguimientoSemanal.seguimientoSemanalReporteActividad[0].seguimientoSemanalReporteActividadId : 0;
@@ -60,12 +64,28 @@ export class ReporteActividadesComponent implements OnInit {
                 if ( this.reporteActividad.registroCompletoEstadoContrato === true ) {
                     this.semaforoReporte = 'completo';
                 }
+
+                if ( this.semaforoReporte === 'sin-diligenciar' ) {
+                    sinDiligenciar++;
+                }
+
+                if ( this.semaforoReporte === 'completo' ) {
+                    completo++;
+                }
                 // Semaforo actividad
                 if ( this.reporteActividad.actividadTecnica !== undefined && this.reporteActividad.registroCompletoActividad === false ) {
                     this.semaforoActividad = 'en-proceso';
                 }
                 if ( this.reporteActividad.registroCompletoActividad === true ) {
                     this.semaforoActividad = 'completo';
+                }
+
+                if ( this.semaforoActividad === 'sin-diligenciar' ) {
+                    sinDiligenciar++;
+                }
+
+                if ( this.semaforoActividad === 'completo' ) {
+                    completo++;
                 }
                 // Semaforo actividad siguiente
                 if (    this.reporteActividad.actividadTecnicaSiguiente !== undefined
@@ -75,6 +95,23 @@ export class ReporteActividadesComponent implements OnInit {
                 if ( this.reporteActividad.registroCompletoActividadSiguiente === true ) {
                     this.semaforoActividadSiguiente = 'completo';
                 }
+
+                if ( this.semaforoActividadSiguiente === 'sin-diligenciar' ) {
+                    sinDiligenciar++;
+                }
+
+                if ( this.semaforoActividadSiguiente === 'completo' ) {
+                    completo++;
+                }
+            }
+            if ( totalAcordeones === completo ) {
+                this.estadoSemaforoReporte.emit( 'completo' );
+            }
+            if ( totalAcordeones === sinDiligenciar ) {
+                this.estadoSemaforoReporte.emit( 'sin-diligenciar' );
+            }
+            if ( totalAcordeones > completo ) {
+                this.estadoSemaforoReporte.emit( 'en-proceso' );
             }
         }
     }
