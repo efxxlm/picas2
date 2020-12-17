@@ -53,3 +53,19 @@
     width: 34%;
     border-bottom: 0em;
 }
+
+.border-right-fff {
+    border-right: solid 1px #fff !important;
+}
+
+.border-bottom-fff {
+    border-bottom: solid 1px #fff !important;
+}
+
+.table-form th.mat-header-cell {
+    padding: .5em !important;
+}
+
+tr.mat-header-row {
+    height: 15px;
+}
