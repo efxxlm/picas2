@@ -77,7 +77,7 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
   openProyectosAsociados(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
+    dialogConfig.width = '1020px';
     //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
     const dialogRef = this.dialog.open(DialogProyectosAsociadosComponent, dialogConfig);
     //dialogRef.afterClosed().subscribe(value => {});

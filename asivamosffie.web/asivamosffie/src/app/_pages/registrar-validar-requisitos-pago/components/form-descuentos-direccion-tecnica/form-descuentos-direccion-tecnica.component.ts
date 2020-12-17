@@ -25,7 +25,7 @@ export class FormDescuentosDireccionTecnicaComponent implements OnInit {
           this.fb.group(
             {
               tipoDescuento: [ null ],
-              valorDescuento: [ null ]
+              valorDescuento: [ '' ]
             }
           ) 
         )

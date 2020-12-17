@@ -18,7 +18,7 @@
                     </div>
                     <div class="col">
                         <mat-form-field class="select-width">
-                            <mat-select formControlName="tipoSolicitud" required>
+                            <mat-select formControlName="tipoSolicitud" required style="top: 20px;">
                                 <mat-option *ngFor="let contr of tiposSolicitudArray" [value]="contr.value">
                                     {{ contr.name }}
                                 </mat-option>
@@ -59,7 +59,7 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="numeroContrato">Modalidad del contrato</label>
+                                    <label class="label-left" for="numeroContrato">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
@@ -114,7 +114,7 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="numeroContrato">Modalidad del contrato</label>
+                                    <label class="label-left" for="numeroContrato">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">

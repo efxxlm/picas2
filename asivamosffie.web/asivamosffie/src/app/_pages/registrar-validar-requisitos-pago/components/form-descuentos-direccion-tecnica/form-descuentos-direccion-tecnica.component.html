@@ -32,10 +32,12 @@
                         <label for="valorAPagarDespues" class="label-left">Valor a pagar después de descuentos</label>
                     </div>
                     <div class="col d-flex">
-                        <mat-form-field class="full-width">
-                            <input matInput #valorAPagarDespues type="text" maxlength="10"
-                                formControlName="valorAPagarDespues" required>
-                        </mat-form-field>
+                      <mat-form-field class="full-width">
+                        <input matInput #valorAPagarDespues currencyMask maxlength="10" required formControlName="valorAPagarDespues"
+                          (keypress)="validateNumberKeypress($event)"
+                          onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                          [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                      </mat-form-field>
                     </div>
                 </div>
             </div>

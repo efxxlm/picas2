@@ -46,8 +46,7 @@
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="example-full-width">
                                 <input matInput formControlName="fechaSolicitud" [matDatepicker]="pickerFechaRevision"
-                                    readonly (click)="pickerFechaRevision.open()" required
-                                    placeholder="DD/MM/AAAA">
+                                    readonly (click)="pickerFechaRevision.open()" required placeholder="DD/MM/AAAA">
                                 <mat-datepicker #pickerFechaRevision></mat-datepicker>
                             </mat-form-field>
                             <button mat-button color="primary" type="button" (click)="pickerFechaRevision.open()"
@@ -78,7 +77,7 @@
                 <div class="col-md-8">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="faseContrato">Pólizas y seguros requeridos</label>
+                            <label class="label-left" for="faseContrato">Fase del contrato</label>
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
@@ -116,6 +115,7 @@
                 </mat-expansion-panel-header>
                 <app-form-criterios-pago></app-form-criterios-pago>
             </mat-expansion-panel>
+            <!--
             <mat-expansion-panel class="expansion-style sub-expansion-black">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title sin-diligenciar">
@@ -124,6 +124,7 @@
                 </mat-expansion-panel-header>
                 <app-form-amortizacion-anticipo></app-form-amortizacion-anticipo>
             </mat-expansion-panel>
+        -->
             <mat-expansion-panel class="expansion-style sub-expansion-black">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title sin-diligenciar">
@@ -140,7 +141,12 @@
                 </mat-expansion-panel-header>
                 <app-form-datos-factura></app-form-datos-factura>
             </mat-expansion-panel>
-            Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la sección anterior
+            <div style="margin-top: 1em;">
+                <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+                    Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
+                    sección anterior
+                </div>
+            </div>
         </mat-accordion>
     </mat-expansion-panel>
 </mat-accordion>
@@ -158,7 +164,7 @@
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title sin-diligenciar">
-               Soporte de la solicitud
+                Soporte de la solicitud
             </mat-panel-title>
         </mat-expansion-panel-header>
         <app-form-soporte-solicitud-url></app-form-soporte-solicitud-url>
