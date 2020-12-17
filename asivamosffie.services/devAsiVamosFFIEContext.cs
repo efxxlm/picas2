@@ -3427,6 +3427,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaInicio).HasColumnType("datetime");
 
+                entity.Property(e => e.ProgramacionCapitulo).HasColumnType("decimal(18, 3)");
+
                 entity.Property(e => e.TipoActividadCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -3780,10 +3782,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoActuacionDerivada>(entity =>
             {
-                entity.HasKey(e => e.ControversiaActuacionId);
-
-                entity.Property(e => e.ControversiaActuacionId).ValueGeneratedNever();
-
                 entity.Property(e => e.DescripciondeActuacionAdelantada)
                     .HasMaxLength(1500)
                     .IsUnicode(false);
@@ -3808,8 +3806,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.SeguimientoActuacionDerivadaId).ValueGeneratedOnAdd();
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -3820,8 +3816,8 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.HasOne(d => d.ControversiaActuacion)
-                    .WithOne(p => p.SeguimientoActuacionDerivada)
-                    .HasForeignKey<SeguimientoActuacionDerivada>(d => d.ControversiaActuacionId)
+                    .WithMany(p => p.SeguimientoActuacionDerivada)
+                    .HasForeignKey(d => d.ControversiaActuacionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SeguimientoActuacionDerivada_ControversiaActuacion");
             });
@@ -3952,9 +3948,13 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalAvanceFisico>(entity =>
             {
+                entity.Property(e => e.AvanceFisicoSemanal).HasColumnType("decimal(18, 3)");
+
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.ProgramacionSemanal).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()

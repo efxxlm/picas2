@@ -105,6 +105,9 @@ namespace asivamosffie.services
 
                             //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
                             //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
+                            seguimientoActuacionDerivadaOld.EsRequiereFiduciaria = seguimientoActuacionDerivada.EsRequiereFiduciaria;
+                            seguimientoActuacionDerivadaOld.EstadoActuacionDerivadaCodigo = seguimientoActuacionDerivada.EstadoActuacionDerivadaCodigo;
+                            seguimientoActuacionDerivadaOld.RutaSoporte = seguimientoActuacionDerivada.RutaSoporte;
 
                             //LimpiarEntradasContratoPoliza(ref contratoPoliza);
                             seguimientoActuacionDerivadaOld.FechaModificacion = DateTime.Now;
