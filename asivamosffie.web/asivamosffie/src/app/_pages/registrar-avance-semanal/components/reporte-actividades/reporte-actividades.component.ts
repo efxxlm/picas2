@@ -18,6 +18,9 @@ export class ReporteActividadesComponent implements OnInit {
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
     reporteActividad: any;
+    semaforoReporte = 'sin-diligenciar';
+    semaforoActividad = 'sin-diligenciar';
+    semaforoActividadSiguiente = 'sin-diligenciar';
     editorStyle = {
         height: '45px'
     };
@@ -53,6 +56,25 @@ export class ReporteActividadesComponent implements OnInit {
                                                 this.reporteActividad.resumenEstadoContrato : null
                     }
                 );
+                // Semaforo reporte
+                if ( this.reporteActividad.registroCompletoEstadoContrato === true ) {
+                    this.semaforoReporte = 'completo';
+                }
+                // Semaforo actividad
+                if ( this.reporteActividad.actividadTecnica !== undefined && this.reporteActividad.registroCompletoActividad === false ) {
+                    this.semaforoActividad = 'en-proceso';
+                }
+                if ( this.reporteActividad.registroCompletoActividad === true ) {
+                    this.semaforoActividad = 'completo';
+                }
+                // Semaforo actividad siguiente
+                if (    this.reporteActividad.actividadTecnicaSiguiente !== undefined
+                        && this.reporteActividad.registroCompletoActividadSiguiente === false ) {
+                    this.semaforoActividadSiguiente = 'en-proceso';
+                }
+                if ( this.reporteActividad.registroCompletoActividadSiguiente === true ) {
+                    this.semaforoActividadSiguiente = 'completo';
+                }
             }
         }
     }
