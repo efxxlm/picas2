@@ -53,6 +53,15 @@ export class TablaAvanceFisicoComponent implements OnInit {
         this.getDataTable();
     }
 
+    verifyInteger( value: number, esAvanceCapitulo: boolean ) {
+        const esEntero = Number.isInteger( value );
+        if ( esEntero === true ) {
+            return value;
+        } else {
+            return esAvanceCapitulo === true ? value.toFixed( 1 ) : value.toFixed( 2 );
+        }
+    }
+
     getDataTable() {
         if ( this.seguimientoDiario !== undefined ) {
             this.seguimientoSemanalId = this.seguimientoDiario.seguimientoSemanalId;
@@ -68,15 +77,18 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     totalDuracion += flujo.programacion.duracion;
                 }
                 for ( const flujo of flujoInversion ) {
-                    flujo.programacion.avanceFisicoCapitulo =   flujo.programacion.avanceFisicoCapitulo !== undefined ?
-                                                                flujo.programacion.avanceFisicoCapitulo : null;
+
+                    flujo.programacion.avanceFisicoCapitulo = flujo.programacion.avanceFisicoCapitulo !== undefined ?
+                        String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), false ) )
+                        : '';
                     avancePorCapitulo.push(
                         {
                             programacionId: flujo.programacion.programacionId,
                             capitulo: flujo.programacion.actividad,
-                            programacionCapitulo: flujo.programacion.duracion / totalRangoDias * 100,
+                            programacionCapitulo:   this.verifyInteger( flujo.programacion.duracion / totalRangoDias * 100, false ),
                             avanceFisicoCapitulo:   flujo.programacion.avanceFisicoCapitulo !== undefined ?
-                                                    String( flujo.programacion.avanceFisicoCapitulo ) : ''
+                                                    String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) )
+                                                    : ''
                         }
                     );
                 }
@@ -85,7 +97,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     {
                         semanaNumero: this.seguimientoDiario.numeroSemana,
                         periodoReporte: `${ this.datePipe.transform( this.seguimientoDiario.fechaInicio, 'dd/MM/yyyy' ) } - ${ this.datePipe.transform( this.seguimientoDiario.fechaFin, 'dd/MM/yyyy' ) }`,
-                        programacionSemana: totalDuracion / totalRangoDias * 100,
+                        programacionSemana: this.verifyInteger( totalDuracion / totalRangoDias * 100, false ),
                         avancePorCapitulo,
                         avanceFisicoSemana: this.seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ?
                                             this.seguimientoDiario.seguimientoSemanalAvanceFisico[0].avanceFisicoSemanal : 0
@@ -99,20 +111,25 @@ export class TablaAvanceFisicoComponent implements OnInit {
     valuePending( value: string, registro: any ) {
         this.seRealizoCambio = true;
         this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] = 0;
+        let totalAvanceFisicoSemana = 0;
         if ( Number( value ) > 100 ) {
-            registro.avanceFisicoCapitulo = `${ registro.programacionCapitulo }`;
+            registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
         }
         if ( Number( value ) > Number( registro.programacionCapitulo ) ) {
-            registro.avanceFisicoCapitulo = `${ registro.programacionCapitulo }`;
+            registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
         }
         if ( Number( value ) < 0 ) {
             registro.avanceFisicoCapitulo = '0';
         }
         for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
-            this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] += capitulo.avanceFisicoCapitulo.length > 0
-                                                                    ? Number( capitulo.avanceFisicoCapitulo ) : 0;
+            let avanceValue;
+            if ( capitulo.avanceFisicoCapitulo.length > 0 ) {
+                avanceValue = this.verifyInteger( Number( capitulo.avanceFisicoCapitulo ), false );
+            }
+            totalAvanceFisicoSemana += Number( avanceValue );
         }
-        console.log( this.tablaAvanceFisico.data[0] );
+        console.log( totalAvanceFisicoSemana );
+        this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] =  this.verifyInteger( totalAvanceFisicoSemana, false );
     }
 
     openDialog(modalTitle: string, modalText: string) {
