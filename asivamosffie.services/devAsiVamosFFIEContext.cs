@@ -3419,6 +3419,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaInicio).HasColumnType("datetime");
 
+                entity.Property(e => e.ProgramacionCapitulo).HasColumnType("decimal(18, 3)");
+
                 entity.Property(e => e.TipoActividadCodigo)
                     .IsRequired()
                     .HasMaxLength(100)
@@ -3949,6 +3951,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.ProgramacionSemanal).HasColumnType("decimal(18, 3)");
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()

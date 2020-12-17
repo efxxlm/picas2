@@ -13,5 +13,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string ComiteObraGenerado { get; set; }
+
+        [NotMapped]
+        public int CantidadTotalDiasActividades { get; set; }
     }
 }
