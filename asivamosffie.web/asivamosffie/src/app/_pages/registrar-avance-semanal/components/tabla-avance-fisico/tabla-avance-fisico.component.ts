@@ -56,7 +56,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     verifyInteger( value: number, esAvanceCapitulo: boolean ) {
         const esEntero = Number.isInteger( value );
         if ( value === 0 ) {
-            return '';
+            return 0;
         }
         if ( esEntero === true && value > 0 ) {
             return value;
@@ -78,8 +78,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                     totalDuracion += flujo.programacion.duracion;
                 }
                 for ( const flujo of flujoInversion ) {
-
-                    flujo.programacion.avanceFisicoCapitulo = flujo.programacion.avanceFisicoCapitulo !== undefined ?
+                    flujo.programacion.avanceFisicoCapitulo =   flujo.programacion.avanceFisicoCapitulo !== undefined ?
                         String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), false ) )
                         : '';
                     avancePorCapitulo.push(
@@ -89,7 +88,8 @@ export class TablaAvanceFisicoComponent implements OnInit {
                             programacionCapitulo:   this.verifyInteger( flujo.programacion.duracion /
                                                                         this.seguimientoDiario.cantidadTotalDiasActividades * 100,
                                                                         false ),
-                            avanceFisicoCapitulo:   flujo.programacion.avanceFisicoCapitulo !== undefined ?
+                            avanceFisicoCapitulo:   flujo.programacion.avanceFisicoCapitulo !== undefined
+                                                    && flujo.programacion.avanceFisicoCapitulo.length > 0 ?
                                                     String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) )
                                                     : ''
                         }
@@ -185,7 +185,12 @@ export class TablaAvanceFisicoComponent implements OnInit {
         for (const flujoInversion of this.seguimientoDiario.flujoInversion ) {
             this.tablaAvanceFisico.data[0][ 'avancePorCapitulo' ].filter( value => {
                 if ( flujoInversion.programacion.programacionId === value.programacionId ) {
-                    flujoInversion.programacion.avanceFisicoCapitulo = Number( value.avanceFisicoCapitulo );
+                    console.log( );
+                    if (  value.avanceFisicoCapitulo.length === 0 ) {
+                        flujoInversion.programacion.avanceFisicoCapitulo = null;
+                    } else {
+                        flujoInversion.programacion.avanceFisicoCapitulo = Number( value.avanceFisicoCapitulo );
+                    }
                     flujoInversion.programacion.programacionCapitulo = Number( value.programacionCapitulo );
                 }
             } );
