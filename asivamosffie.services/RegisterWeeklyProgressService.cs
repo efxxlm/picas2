@@ -185,25 +185,25 @@ namespace asivamosffie.services
                     }
 
 
-                    List<dynamic> AvanceAcumulado = new List<dynamic>();
+ 
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
-
                     seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
 
-                    foreach (var item in ListProgramacion)
-                    {
-                        AvanceAcumulado.Add(new
+                    var ListProgramacionGroupByActividad = ListProgramacion
+                        .GroupBy(r => r.Actividad)
+                        .Select(r => new
                         {
-                            item.Actividad,
-                            item.AvanceFisicoCapitulo,
-                            AvanceAcumulado = 666
+                            Actividad = r.Key, 
+                            AvanceFisicoCapitulo = Math.Truncate((decimal)r.Sum(r=> r.AvanceFisicoCapitulo))+"%",
+                            AvanceAcumulado = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100))+"%"
                         });
-                    }
 
 
-                    seguimientoSemanal.AvanceAcumulado = AvanceAcumulado;
+
+
+                    seguimientoSemanal.AvanceAcumulado = ListProgramacionGroupByActividad;
 
                     //Eliminar del get Las tablas eliminadas Logicamente
                     foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
@@ -240,7 +240,7 @@ namespace asivamosffie.services
                 {
                     SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
 
-                       .Include(r => r.ContratacionProyecto)
+                      .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
                               .ThenInclude(r => r.Contrato)
                        .Include(r => r.ContratacionProyecto)
@@ -284,8 +284,25 @@ namespace asivamosffie.services
 
                        .FirstOrDefaultAsync();
 
-                    ///incluir Gestion Obra
-                    /// 
+
+                    List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
+
+                    List<Dominio> CausaBajaDisponibilidadEquipo = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Equipo).ToList();
+
+                    List<Dominio> CausaBajaDisponibilidadProductividad = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Productividad).ToList();
+
+                    foreach (var SeguimientoDiario in seguimientoSemanal.SeguimientoDiario)
+                    {
+                        SeguimientoDiario.CausaIndisponibilidadMaterialCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadMaterialCodigo) ? CausaBajaDisponibilidadMaterial.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadMaterialCodigo).FirstOrDefault().Nombre : "---";
+
+                        SeguimientoDiario.CausaIndisponibilidadEquipoCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadEquipoCodigo) ? CausaBajaDisponibilidadEquipo.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadEquipoCodigo).FirstOrDefault().Nombre : "---";
+
+                        SeguimientoDiario.CausaIndisponibilidadProductividadCodigo = !string.IsNullOrEmpty(SeguimientoDiario.CausaIndisponibilidadProductividadCodigo) ? CausaBajaDisponibilidadProductividad.Where(r => r.Codigo == SeguimientoDiario.CausaIndisponibilidadProductividadCodigo).FirstOrDefault().Nombre : "---";
+                    }
+
+                    //Crear Comite Obra numerador
+
+                    seguimientoSemanal.ComiteObraGenerado = await _commonService.EnumeradorComiteObra();
 
                     int? ManejoMaterialesInsumoId, ManejoResiduosConstruccionDemolicionId, ManejoResiduosPeligrososEspecialesId, ManejoOtroId = null;
 
@@ -320,8 +337,6 @@ namespace asivamosffie.services
                         }
                     }
 
-
-
                     seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
 
                     foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
@@ -329,25 +344,26 @@ namespace asivamosffie.services
                         FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
                     }
 
-                    List<dynamic> AvanceAcumulado = new List<dynamic>();
+
+
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
-
                     seguimientoSemanal.CantidadTotalDiasActividades = ListProgramacion.Sum(r => r.Duracion);
 
-                    foreach (var item in ListProgramacion)
-                    {
-                        AvanceAcumulado.Add(new
+                    var ListProgramacionGroupByActividad = ListProgramacion
+                        .GroupBy(r => r.Actividad)
+                        .Select(r => new
                         {
-                            item.Actividad,
-                            item.AvanceFisicoCapitulo,
-                            AvanceAcumulado = 666
+                            Actividad = r.Key,
+                            AvanceFisicoCapitulo = Math.Truncate((decimal)r.Sum(r => r.AvanceFisicoCapitulo)) + "%",
+                            AvanceAcumulado = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                         });
-                    }
 
 
-                    seguimientoSemanal.AvanceAcumulado = AvanceAcumulado;
+
+
+                    seguimientoSemanal.AvanceAcumulado = ListProgramacionGroupByActividad;
 
                     //Eliminar del get Las tablas eliminadas Logicamente
                     foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)

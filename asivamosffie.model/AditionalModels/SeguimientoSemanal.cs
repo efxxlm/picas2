@@ -9,7 +9,7 @@ namespace asivamosffie.model.Models
     {
          
         [NotMapped]
-        public virtual List<dynamic> AvanceAcumulado { get; set; }     
+        public dynamic AvanceAcumulado { get; set; }     
 
         [NotMapped]
         public string ComiteObraGenerado { get; set; }
