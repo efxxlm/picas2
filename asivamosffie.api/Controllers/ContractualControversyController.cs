@@ -177,13 +177,13 @@ namespace asivamosffie.api.Controllers
             return respuesta;
         }
 
-        [Route("GetControversiaActuacionById")]
-        [HttpGet]
-        public async Task<ControversiaActuacion> GetControversiaActuacionById(int pControversiaActuacionId)
-        {
-            var respuesta = await _contractualControversy.GetControversiaActuacionById(pControversiaActuacionId);
-            return respuesta;
-        }
+        //[Route("GetControversiaActuacionById")]
+        //[HttpGet]
+        //public async Task<ControversiaActuacion> GetControversiaActuacionById(int pControversiaActuacionId)
+        //{
+        //    var respuesta = await _contractualControversy.GetControversiaActuacionById(pControversiaActuacionId);
+        //    return respuesta;
+        //}
 
         [Route("GetListContratos")]
         [HttpGet]

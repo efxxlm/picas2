@@ -141,6 +141,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_avance_reclamacion = 91,
 
         Estados_acta_Interventoria_319 = 107,
+        Estado_Actuacion_Derivada_4_4_1 = 114,
+
+         
 
 
 

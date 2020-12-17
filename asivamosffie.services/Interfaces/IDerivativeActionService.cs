@@ -12,7 +12,16 @@ namespace asivamosffie.services.Interfaces
     {
         
         Task<Respuesta> CreateEditarSeguimientoActuacionDerivada(SeguimientoActuacionDerivada seguimientoActuacionDerivada);
+        Task<List<GrillaTipoActuacionDerivada>> ListGrillaTipoActuacionDerivada();
 
-    
+        Task<SeguimientoActuacionDerivada> GetSeguimientoActuacionDerivadaById(int id);
+
+        Task<Respuesta> CambiarEstadoControversiaActuacionDerivada(int pActuacionDerivadaId, string pCodigoEstado, string pUsuarioModifica);
+
+        Task<Respuesta> EliminarControversiaActuacionDerivada(int pId, string pUsuario);
+
+        //Task<List<GrillaTipoActuacionDerivada>> ListGrillaTipoActuacionDerivada2();
+
+
     }
 }
