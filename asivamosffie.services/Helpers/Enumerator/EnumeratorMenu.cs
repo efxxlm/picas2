@@ -46,7 +46,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Gestionar_acta_inicio_fase_2 = 42,
         Verificar_Requisitos_Tecnicos_Construccion = 45,
 
-        
+         Registrar_solicitud_novedad_contractual= 50,      
+
     }
 
     public enum enumeratorAccion
