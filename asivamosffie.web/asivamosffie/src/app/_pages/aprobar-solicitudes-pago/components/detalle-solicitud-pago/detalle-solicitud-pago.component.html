@@ -121,7 +121,31 @@
                         Datos de la factura
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-obs-datos-factura></app-obs-datos-factura>
+                <mat-card class="shipping-card var-main-gris">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text textoGris">
+                            Datos
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <h2 class="card-subTitle">Descripción de la factura</h2>
+                        <p><strong>Número de factura:</strong> FAC00456</p>
+                        <p><strong>Fecha de factura:</strong> 05/10/2020</p>
+                        <p><strong>Valor facturado:</strong> $15.000.000</p>
+                    </mat-card-content>
+                </mat-card>
+                <mat-card class="shipping-card var-main-gris">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text textoGris">
+                            Observación de la supervisión
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><b>07/10/2020</b></p>
+                        <p><b>¿Desde la supervisión tiene observaciones a los datos de la factura?:</b> Sí</p>
+                        <p>La factura debe ser la FAC00450</p>
+                    </mat-card-content>
+                </mat-card>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-expansion-panel>
@@ -133,7 +157,31 @@
                 Descuentos Dirección Técnica
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-obs-descuentos-dir-tecnica></app-obs-descuentos-dir-tecnica>
+        <p style="text-align: center;"><strong>¿Aplican descuentos?:</strong> Sí</p>
+        <p style="text-align: center;"><strong>¿Cuántos descuentos se aplican sobre la factura?:</strong> 1</p>
+        <p style="text-align: center;"><strong>Valor a pagar después de descuentos:</strong> $14.940.000</p>
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Descuento 1
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>Tipo de descuento:</strong> 4 x 1.000</p>
+                <p><strong>Valor del descuento:</strong> $60.000</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Observación de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><b>07/10/2020</b></p>
+                <p><b>¿Desde la supervisión tiene observaciones a los descuentos de la Dirección Técnica?:</b> No</p>
+            </mat-card-content>
+        </mat-card>
     </mat-expansion-panel>
 </mat-accordion>
 <mat-accordion>
@@ -143,6 +191,26 @@
                 Soporte de la solicitud
             </mat-panel-title>
         </mat-expansion-panel-header>
-       <app-obs-soporte-solicitud></app-obs-soporte-solicitud>
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Soporte de la solicitud de pago
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>URL con soporte:</strong> https://drive.google.com/drive/registrofactura/solicituddepago0001</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Observación de la supervisión
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><b>07/10/2020</b></p>
+                <p><b>¿Desde la supervisión tiene observaciones a los descuentos de la Dirección Técnica?:</b> No</p>
+            </mat-card-content>
+        </mat-card>
     </mat-expansion-panel>
 </mat-accordion>

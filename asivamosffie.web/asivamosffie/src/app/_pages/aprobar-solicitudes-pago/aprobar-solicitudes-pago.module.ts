@@ -21,11 +21,12 @@ import { TablaHistorialObservacionesSolpagoComponent } from './components/tabla-
 import { VerDetalleAprobarSolicitudComponent } from './components/ver-detalle-aprobar-solicitud/ver-detalle-aprobar-solicitud.component';
 import { DetalleSolicitudPagoComponent } from './components/detalle-solicitud-pago/detalle-solicitud-pago.component';
 import { ViewDetllFactProcAsociadosComponent } from './components/view-detll-fact-proc-asociados/view-detll-fact-proc-asociados.component';
+import { DetalleValidarListchequeoComponent } from './components/detalle-validar-listchequeo/detalle-validar-listchequeo.component';
 
 
 
 @NgModule({
-  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent, FormEditAprobarSolicitudComponent, TablaHistorialObservacionesSolpagoComponent, VerDetalleAprobarSolicitudComponent, DetalleSolicitudPagoComponent, ViewDetllFactProcAsociadosComponent],
+  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent, FormEditAprobarSolicitudComponent, TablaHistorialObservacionesSolpagoComponent, VerDetalleAprobarSolicitudComponent, DetalleSolicitudPagoComponent, ViewDetllFactProcAsociadosComponent, DetalleValidarListchequeoComponent],
   imports: [
     CommonModule,
     AprobarSolicitudesPagoRoutingModule,
