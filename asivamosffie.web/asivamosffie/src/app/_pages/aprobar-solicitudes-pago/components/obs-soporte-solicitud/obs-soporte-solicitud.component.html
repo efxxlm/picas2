@@ -1,0 +1,42 @@
+<mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text textoGris">
+            Soporte de la solicitud de pago
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="text-align: left;">
+        <p><strong>URL con soporte:</strong> https://drive.google.com/drive/registrofactura/solicituddepago0001</p>
+    </mat-card-content>
+</mat-card>
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <div class="row mtop justCenter">
+        <div class="col-md-7">
+            <label class="label-left">¿Desde la supervisión tiene observaciones a el soporte de la solicitud?</label>
+        </div>
+        <div class="col-md-2">
+            <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                formControlName="tieneObservaciones">
+                <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+            <span class="required-form-group">*</span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+        <div class="text-area-quill izqTitle">
+            <label for="observaciones" class="text-area-quill--label">Observaciones a a el soporte de la solicitud</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
+        </div>
+        <span class="contador" *ngIf="addressForm.get('observaciones').value">
+            {{1000 - addressForm.get('observaciones').value.length}}
+        </span>
+        <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
+            1000
+        </span>
+    </div>
+    <button mat-button color="warn" class="btn-guardar"
+        type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+</form>

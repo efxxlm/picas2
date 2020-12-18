@@ -13,11 +13,14 @@ import { ObsRegistrarSolicitudPagoComponent } from './components/obs-registrar-s
 import { ObsCriterioPagosComponent } from './components/obs-criterio-pagos/obs-criterio-pagos.component';
 import { ObsDetllFactProcAsociadosComponent } from './components/obs-detll-fact-proc-asociados/obs-detll-fact-proc-asociados.component';
 import { ObsDatosFacturaComponent } from './components/obs-datos-factura/obs-datos-factura.component';
+import { ObsDescuentosDirTecnicaComponent } from './components/obs-descuentos-dir-tecnica/obs-descuentos-dir-tecnica.component';
+import { ObsSoporteSolicitudComponent } from './components/obs-soporte-solicitud/obs-soporte-solicitud.component';
+import { ObsValidListachequeoComponent } from './components/obs-valid-listachequeo/obs-valid-listachequeo.component';
 
 
 
 @NgModule({
-  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent],
+  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent, ObsDescuentosDirTecnicaComponent, ObsSoporteSolicitudComponent, ObsValidListachequeoComponent],
   imports: [
     CommonModule,
     AprobarSolicitudesPagoRoutingModule,
