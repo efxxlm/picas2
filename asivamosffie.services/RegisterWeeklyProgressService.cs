@@ -177,10 +177,10 @@ namespace asivamosffie.services
 
                     seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
 
-                    foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
-                    {
-                        FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
-                    }
+                    //foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
+                    //{
+                    //    FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
+                    //}
 
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
@@ -197,7 +197,7 @@ namespace asivamosffie.services
                             AvanceFisicoCapitulo = Math.Truncate((((decimal)r.Sum(r => r.Duracion) / seguimientoSemanal.CantidadTotalDiasActividades) * 100)) + "%"
                         });
 
-                    //Eliminar del get Las tablas eliminadas Logicamente
+                    //Eliminar Las tablas eliminadas Logicamente
                     foreach (var SeguimientoSemanalGestionObra in seguimientoSemanal.SeguimientoSemanalGestionObra)
                     {
                         foreach (var SeguimientoSemanalGestionObraAmbiental in SeguimientoSemanalGestionObra.SeguimientoSemanalGestionObraAmbiental)
@@ -226,6 +226,7 @@ namespace asivamosffie.services
                     seguimientoSemanal.ContratacionProyecto.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                     seguimientoSemanal.ContratacionProyecto.Proyecto.Sede = Sede;
                     seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa = institucionEducativa;
+
                     return seguimientoSemanal;
                 }
                 else
@@ -382,6 +383,7 @@ namespace asivamosffie.services
                     seguimientoSemanal.ContratacionProyecto.Proyecto.DepartamentoObj = ListLocalizacion.Where(r => r.LocalizacionId == Municipio.IdPadre).FirstOrDefault();
                     seguimientoSemanal.ContratacionProyecto.Proyecto.Sede = Sede;
                     seguimientoSemanal.ContratacionProyecto.Proyecto.InstitucionEducativa = institucionEducativa;
+
                     return seguimientoSemanal;
                 }
             }
@@ -672,9 +674,7 @@ namespace asivamosffie.services
 
             try
             {
-                SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
-                seguimientoSemanalMod.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
-                seguimientoSemanalMod.FechaModificacion = DateTime.Now;
+
 
                 if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
                     SaveUpdateAvanceFisico(pSeguimientoSemanal, pSeguimientoSemanal.UsuarioCreacion);
@@ -695,8 +695,16 @@ namespace asivamosffie.services
                     SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
 
 
+
                 await _context.SaveChangesAsync();
 
+                SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
+                seguimientoSemanalMod.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
+                seguimientoSemanalMod.FechaModificacion = DateTime.Now;
+                seguimientoSemanalMod.EnviarSupervisor = ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalMod);
+
+                _context.Update(seguimientoSemanalMod);
+                _context.SaveChanges();
 
 
                 return new Respuesta
@@ -779,28 +787,28 @@ namespace asivamosffie.services
             if (ProgramacionAcumuladaObra.HasValue && ProgramacionEjecutadaObra.HasValue)
             {
                 /////Programación acumulada de la obra: == Avance acumulado ejecutado de la obra:   = normal
-                if (ProgramacionAcumuladaObra == ProgramacionEjecutadaObra) 
+                if (ProgramacionAcumuladaObra == ProgramacionEjecutadaObra)
                     contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_normal;
-       
+
                 /////Programación acumulada de la obra: <  Avance acumulado ejecutado de la obra:   = avanzada
-                if (ProgramacionAcumuladaObra > ProgramacionEjecutadaObra) 
+                if (ProgramacionAcumuladaObra > ProgramacionEjecutadaObra)
                     contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_avanzada;
-            
+
 
                 /////Programación acumulada de la obra: >  Avance acumulado ejecutado de la obra:   = retrazado
-                if (ProgramacionAcumuladaObra < ProgramacionEjecutadaObra) 
+                if (ProgramacionAcumuladaObra < ProgramacionEjecutadaObra)
                     contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_retrazada;
-              
+
                 //primer tercio  => avance del proyecto no debe ser menor al 20%   = critico
-                if (pSeguimientoSemanal.NumeroSemana >= PrimerTercio && pSeguimientoSemanal.NumeroSemana < SegundoTercio) 
+                if (pSeguimientoSemanal.NumeroSemana >= PrimerTercio && pSeguimientoSemanal.NumeroSemana < SegundoTercio)
                     if (ProgramacionEjecutadaObra < 20)
                         contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
 
                 //segunto tercio  => avance del proyecto no debe ser menor al 60%   critico
-                if (pSeguimientoSemanal.NumeroSemana >= SegundoTercio) 
+                if (pSeguimientoSemanal.NumeroSemana >= SegundoTercio)
                     if (ProgramacionEjecutadaObra < 60)
                         contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
-           
+
 
 
             }
@@ -930,6 +938,8 @@ namespace asivamosffie.services
                         _context.ManejoOtro.Add(SeguimientoSemanalGestionObraAmbiental.ManejoOtro);
                     }
 
+
+                    SeguimientoSemanalGestionObraAmbiental.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
                 }
 
                 //Gestion Calidad
@@ -957,7 +967,7 @@ namespace asivamosffie.services
                             EnsayoLaboratorioMuestra.UsuarioCreacion = pUsuarioCreacion;
                             EnsayoLaboratorioMuestra.Eliminado = false;
                             EnsayoLaboratorioMuestra.FechaCreacion = DateTime.Now;
-                            EnsayoLaboratorioMuestra.RegistroCompleto = ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra);
+                            //  EnsayoLaboratorioMuestra.RegistroCompleto = ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra);
 
                             _context.EnsayoLaboratorioMuestra.Add(EnsayoLaboratorioMuestra);
                         }
@@ -1204,6 +1214,8 @@ namespace asivamosffie.services
                             manejoOtroOld.UrlSoporteGestion = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UrlSoporteGestion;
                         }
                     }
+
+
                 }
 
                 //Gestion Calidad
@@ -1243,14 +1255,14 @@ namespace asivamosffie.services
                                 EnsayoLaboratorioMuestra.UsuarioCreacion = pUsuarioCreacion;
                                 EnsayoLaboratorioMuestra.Eliminado = false;
                                 EnsayoLaboratorioMuestra.FechaCreacion = DateTime.Now;
-                                EnsayoLaboratorioMuestra.RegistroCompleto = ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra);
+                                // EnsayoLaboratorioMuestra.RegistroCompleto = ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra);
 
                                 _context.EnsayoLaboratorioMuestra.Add(EnsayoLaboratorioMuestra);
                             }
                             else
                             {
                                 EnsayoLaboratorioMuestra ensayoLaboratorioMuestraOld = _context.EnsayoLaboratorioMuestra.Find(EnsayoLaboratorioMuestra.EnsayoLaboratorioMuestraId);
-                                ensayoLaboratorioMuestraOld.RegistroCompleto = ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra);
+                                //  ensayoLaboratorioMuestraOld.RegistroCompleto = ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra);
                                 ensayoLaboratorioMuestraOld.UsuarioModificacion = pUsuarioCreacion;
                                 ensayoLaboratorioMuestraOld.FechaModificacion = DateTime.Now;
 
@@ -1524,20 +1536,92 @@ namespace asivamosffie.services
 
         #region Validar Registros Completos
 
-        private bool ValidarRegistroCompletoSeguimientoSemanal(SeguimientoSemanal seguimientoSemanalRetorno)
+        private bool ValidarRegistroCompletoSeguimientoSemanal(SeguimientoSemanal pSeguimientoSemanal)
         {
-            return false;
+            try
+            {
+                //Financiero solo se valida cada 5 semanas 
+                if (pSeguimientoSemanal.NumeroSemana % 5 == 0)
+                {
+                    if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFinanciero.Count() == 0)
+                        return false;
+                    if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFinanciero?.FirstOrDefault().RegistroCompleto == false)
+                        return false;
+                }
+
+                if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico.Count() == 0)
+                    return false;
+                if (pSeguimientoSemanal?.SeguimientoSemanalAvanceFisico?.FirstOrDefault().RegistroCompleto == false)
+                    return false;
+
+                if (pSeguimientoSemanal?.SeguimientoSemanalGestionObra.Count() == 0)
+                    return false;
+                if (pSeguimientoSemanal?.SeguimientoSemanalGestionObra?.FirstOrDefault().RegistroCompleto == false)
+                    return false;
+
+                if (pSeguimientoSemanal?.SeguimientoSemanalReporteActividad?.Count() == 0)
+                    return false;
+                if (pSeguimientoSemanal?.SeguimientoSemanalReporteActividad?.FirstOrDefault().RegistroCompleto == false)
+                    return false;
+
+                if (pSeguimientoSemanal?.SeguimientoSemanalRegistroFotografico?.Count() == 0)
+                    return false;
+                if (pSeguimientoSemanal?.SeguimientoSemanalRegistroFotografico?.FirstOrDefault().RegistroCompleto == false)
+                    return false;
+
+                if (pSeguimientoSemanal?.SeguimientoSemanalRegistrarComiteObra?.Count() == 0)
+                    return false;
+                if (pSeguimientoSemanal?.SeguimientoSemanalRegistrarComiteObra?.FirstOrDefault().RegistroCompleto == false)
+                    return false;
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObra(SeguimientoSemanalGestionObra pSeguimientoSemanalGestionObra)
         {
-            return false;
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraAmbiental.Count() == 0)
+                return false;
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().RegistroCompleto == false)
+                return false;
+
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraCalidad.Count() > 0)
+                return false;
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraCalidad.FirstOrDefault().RegistroCompleto == false)
+                return false;
+
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSeguridadSalud.Count() > 0)
+                return false;
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSeguridadSalud?.FirstOrDefault().RegistroCompleto == false)
+                return false;
+
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSocial.Count() > 0)
+                return false;
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSocial?.FirstOrDefault().RegistroCompleto == false)
+                return false;
+
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraAlerta?.Count() > 0)
+                return false;
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraAlerta?.FirstOrDefault().RegistroCompleto == false)
+                return false;
+
+            return true;
         }
 
         #region Gestion Obra Ambiental
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAlerta(SeguimientoSemanalGestionObraAlerta seguimientoSemanalGestionObraAlerta)
         {
-            return false;
+            if (!seguimientoSemanalGestionObraAlerta.SeIdentificaronAlertas.HasValue)
+                return false;
+
+            if (seguimientoSemanalGestionObraAlerta.SeIdentificaronAlertas == true && string.IsNullOrEmpty(seguimientoSemanalGestionObraAlerta.Alerta))
+                return false;
+
+            return true;
         }
         private bool ValidarRegistroCompletoMuestasLaboratorio(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
         {
@@ -1571,13 +1655,25 @@ namespace asivamosffie.services
         #endregion
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud seguimientoSemanalGestionObraSeguridadSalud)
         {
-            return false;
+
+            if (!seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes.HasValue
+                || seguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente.Count() == 0
+                || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoCapacitacion.HasValue
+                || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionElementosProteccion.HasValue
+                || !seguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionSenalizacion.HasValue
+                )
+                return false;
+
+            if ((seguimientoSemanalGestionObraSeguridadSalud.SeRealizoCapacitacion == true && string.IsNullOrEmpty(seguimientoSemanalGestionObraSeguridadSalud.TemaCapacitacion))
+                || (seguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionElementosProteccion == true && !seguimientoSemanalGestionObraSeguridadSalud.CumpleRevisionElementosProyeccion.HasValue)
+                || (seguimientoSemanalGestionObraSeguridadSalud.SeRealizoRevisionSenalizacion == true && !seguimientoSemanalGestionObraSeguridadSalud.CumpleRevisionSenalizacion.HasValue)
+               )
+                return false;
+
+            return true;
         }
 
-        private bool ValidarRegistroCompletoGestionEnsayoLaboratorioMuestra(EnsayoLaboratorioMuestra ensayoLaboratorioMuestra)
-        {
-            return false;
-        }
+
 
         private bool ValidarRegistroCompletoGestionObraCalidadEnsayoLaboratorio(GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorio)
         {
@@ -1614,8 +1710,32 @@ namespace asivamosffie.services
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental pSeguimientoSemanalGestionObraAmbiental)
-        {
-            return false;
+        { 
+            if (   !pSeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo.HasValue
+                && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion.HasValue
+                && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales.HasValue
+                && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro.HasValue
+                )
+                return false;
+
+            if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo == true)
+                if (pSeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RegistroCompleto == false)
+                    return false;
+
+            if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion == true)
+                if (pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RegistroCompleto == false)
+                    return false;
+
+            if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales == true)
+                if (pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.RegistroCompleto == false)
+                    return false;
+
+            if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro == true)
+                if (pSeguimientoSemanalGestionObraAmbiental.ManejoOtro.RegistroCompleto == false)
+                    return false;
+
+
+            return true;
         }
 
         private bool ValidarRegistroCompletoManejoMaterialesInsumo(ManejoMaterialesInsumos pManejoMaterialesInsumo)
