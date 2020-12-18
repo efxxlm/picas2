@@ -192,8 +192,9 @@ public const string Inicio_de_sesion = "1";
         //CU 4_4_1
         public const string Crear_seguimiento_actuacion_derivada = "168";
         public const string Cambiar_estado_actuacion_derivada = "169";
-        public const string Eliminar_Controversia_Actuacion_Derivada = "170";    
-        
+        public const string Eliminar_Controversia_Actuacion_Derivada = "170";
+        public const string  Notificacion_Actuacion_Derivada= "171";     
+                      
             
     }
 }

@@ -41,5 +41,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         ConActaSinDocumento319 = 43, 
         VerificacionRequisitosTecnicosConstruccionFase2=44,
         EnviarActaParaFirmar319 = 45,
+
+        AlertaJuridicaDerivadaCumplida4_4_1= 51	,
     }
 }
