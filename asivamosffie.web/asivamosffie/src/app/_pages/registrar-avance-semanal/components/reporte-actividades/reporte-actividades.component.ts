@@ -103,15 +103,17 @@ export class ReporteActividadesComponent implements OnInit {
                 if ( this.semaforoActividadSiguiente === 'completo' ) {
                     completo++;
                 }
-            }
-            if ( totalAcordeones === completo ) {
-                this.estadoSemaforoReporte.emit( 'completo' );
-            }
-            if ( totalAcordeones === sinDiligenciar ) {
+                if ( totalAcordeones === completo ) {
+                    this.estadoSemaforoReporte.emit( 'completo' );
+                }
+                if ( totalAcordeones === sinDiligenciar ) {
+                    this.estadoSemaforoReporte.emit( 'sin-diligenciar' );
+                }
+                if ( totalAcordeones > completo && completo > 0 ) {
+                    this.estadoSemaforoReporte.emit( 'en-proceso' );
+                }
+            } else {
                 this.estadoSemaforoReporte.emit( 'sin-diligenciar' );
-            }
-            if ( totalAcordeones > completo ) {
-                this.estadoSemaforoReporte.emit( 'en-proceso' );
             }
         }
     }

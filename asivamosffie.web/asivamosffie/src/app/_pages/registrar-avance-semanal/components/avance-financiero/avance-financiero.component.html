@@ -1,5 +1,5 @@
-<section class="text-center" *ngIf="esVerDetalle === false">
-    <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
 
     <app-tabla-avance-financiero class="mt-1em"></app-tabla-avance-financiero>
 

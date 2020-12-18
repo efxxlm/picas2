@@ -28,10 +28,10 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
           if ( this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ) {
             const avanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
             if ( avanceFisico.registroCompleto === false ) {
-              this.semaforoRegistroFotografico = 'en-proceso';
+              this.semaforoAvanceFisico = 'en-proceso';
             }
             if ( avanceFisico.registroCompleto === true ) {
-              this.semaforoRegistroFotografico = 'completo';
+              this.semaforoAvanceFisico = 'completo';
             }
           }
           // Semaforo registro fotografico

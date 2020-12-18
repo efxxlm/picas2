@@ -19,6 +19,9 @@ export class GestionDeObraComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
+      if ( this.seguimientoSemanal !== undefined && this.seguimientoSemanal.seguimientoSemanalGestionObra.length === 0 ) {
+        this.estadoSemaforoGestionObra.emit( 'sin-diligenciar' );
+      }
       if ( this.seguimientoSemanal !== undefined && this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ) {
         let sinDiligenciar = 0;
         let completo = 0;

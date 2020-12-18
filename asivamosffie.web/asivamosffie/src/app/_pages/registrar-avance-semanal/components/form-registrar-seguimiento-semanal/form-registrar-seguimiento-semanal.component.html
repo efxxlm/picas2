@@ -110,7 +110,8 @@
         </mat-accordion>
     </div>
 
-    <div class="d-flex justify-content-center align-items-center mt-1em">
+    <div class="d-flex justify-content-center align-items-center mt-1em" *ngIf="seguimientoSemanal.numeroSemana % 5 !== 0">
+        <img src="./assets/img/icon/sim.svg" class="img-size">
         <p><small>Una vez cumplido el mes calendario, se habilitará la sección <b>“Avance financiero”</b>, para continuar el proceso</small></p>
     </div>
 </section>
