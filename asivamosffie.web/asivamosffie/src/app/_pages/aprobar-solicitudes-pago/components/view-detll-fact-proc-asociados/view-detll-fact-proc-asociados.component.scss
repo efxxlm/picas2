@@ -1,8 +1,4 @@
-.mx-1em {
-    margin-left: 1em;
-    margin-right: 1em;
-  }
-  .contenidoContrato{
+.contenidoContrato{
     width: 100%;
     margin-top: 20px;
     color: var(--mainColor);
@@ -188,3 +184,9 @@ table td{
 .supportBlack{
     color: #474747;
 }
+.izqTitle{
+    text-align: left;
+  }
+  .justCenter{
+      justify-content: center;
+  }

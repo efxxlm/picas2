@@ -52,6 +52,10 @@
                     *ngIf="element.estadoAprobacion=='En proceso de aprobación'">
                         Ver detalle/Editar
                     </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)"
+                    *ngIf="element.estadoAprobacion=='Con solicitud devuelta por el supervisor'">
+                        Ver detalle
+                    </button>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
