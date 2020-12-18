@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     public interface IDerivativeActionService
     {
         
-        Task<Respuesta> CreateEditarSeguimientoActuacionDerivada(SeguimientoActuacionDerivada seguimientoActuacionDerivada);
+        Task<Respuesta> CreateEditarSeguimientoActuacionDerivada(SeguimientoActuacionDerivada seguimientoActuacionDerivada, AppSettingsService settings);
         Task<List<GrillaTipoActuacionDerivada>> ListGrillaTipoActuacionDerivada();
 
         Task<SeguimientoActuacionDerivada> GetSeguimientoActuacionDerivadaById(int id);
