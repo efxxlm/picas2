@@ -51,7 +51,7 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
@@ -59,13 +59,13 @@
                 <app-avance-fisico-financiero [seguimientoDiario]="seguimientoSemanal"></app-avance-fisico-financiero>
             </mat-expansion-panel>
 
-            <mat-expansion-panel class="expansion-style" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0">
+            <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="valuePending( seguimientoSemanal.numeroSemana )">
                         Avance financiero
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal"></app-avance-financiero>
+                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0"></app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -108,5 +108,9 @@
                 <app-comite-obra [seguimientoSemanal]="seguimientoSemanal"></app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center mt-1em">
+        <p><small>Una vez cumplido el mes calendario, se habilitará la sección <b>“Avance financiero”</b>, para continuar el proceso</small></p>
     </div>
 </section>

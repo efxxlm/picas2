@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
 
   seguimientoSemanal: any;
+  semaforoAvanceFisico = 'sin-diligenciar';
   semaforoGestionObra: string;
   semaforoReporteActividad: string;
   semaforoRegistroFotografico = 'sin-diligenciar';
@@ -23,7 +24,16 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
         seguimiento => {
           this.seguimientoSemanal = seguimiento;
           console.log( this.seguimientoSemanal );
-
+          // Semaforo avance fisico
+          if ( this.seguimientoSemanal.seguimientoSemanalAvanceFisico.length > 0 ) {
+            const avanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
+            if ( avanceFisico.registroCompleto === false ) {
+              this.semaforoRegistroFotografico = 'en-proceso';
+            }
+            if ( avanceFisico.registroCompleto === true ) {
+              this.semaforoRegistroFotografico = 'completo';
+            }
+          }
           // Semaforo registro fotografico
           if ( this.seguimientoSemanal.seguimientoSemanalRegistroFotografico.length > 0 ) {
             const registroFotografico = this.seguimientoSemanal.seguimientoSemanalRegistroFotografico[0];
@@ -57,6 +67,26 @@ export class FormRegistrarSeguimientoSemanalComponent implements OnInit {
     }
     if ( tipoSemaforo === 'gestionObra' ) {
       this.semaforoGestionObra = value;
+    }
+  }
+
+  valuePending( value: number ) {
+    if ( value % 5 === 0 ) {
+      let semaforoFinanciero = 'sin-diligenciar';
+      if ( this.seguimientoSemanal !== undefined ) {
+        if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
+          const avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
+          if ( avanceFinanciero.requiereObservacion !== undefined && avanceFinanciero.registroCompleto === false ) {
+            semaforoFinanciero = 'en-proceso';
+          }
+          if ( avanceFinanciero.registroCompleto === true ) {
+            semaforoFinanciero = 'completo';
+          }
+        }
+      }
+      return semaforoFinanciero;
+    } else {
+      return 'en-alerta';
     }
   }
 
