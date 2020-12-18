@@ -1,0 +1,21 @@
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="fechaRevision">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de revisión </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaRevision }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="responsable">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Responsable </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.responsable }} </td>
+        </ng-container>
+        <ng-container matColumnDef="observaciones">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Historial de observaciones </th>
+            <td mat-cell *matCellDef="let element" align="center"> 
+                {{ element.observaciones }}
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+</div>

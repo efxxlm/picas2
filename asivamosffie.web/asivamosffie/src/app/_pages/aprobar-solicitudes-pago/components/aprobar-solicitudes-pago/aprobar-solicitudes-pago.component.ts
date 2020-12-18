@@ -28,7 +28,7 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoAprobacion: 'Sin aprobación',
+      estadoAprobacion: 'En proceso de aprobación',
       gestion: 1
     },
     {
@@ -66,6 +66,9 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   aprobarSolicitud(id){
-    this.routes.navigate(['/aprobarSolicitudesPago/aprobacionSolicitud',id])
+    this.routes.navigate(['/aprobarSolicitudesPago/aprobacionSolicitud',id]);
+  }
+  verDetalleEditar(id){
+    this.routes.navigate(['/aprobarSolicitudesPago/verDetalleEditar',id]);
   }
 }
