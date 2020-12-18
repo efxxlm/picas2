@@ -48,12 +48,16 @@
                     *ngIf="element.estadoAprobacion=='Sin aprobación'">
                         Aprobar solicitud
                     </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()"
+                    *ngIf="element.estadoAprobacion=='Con solicitud aprobada por el supervisor'">
+                        Enviar para autorizar solicitud
+                    </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)"
                     *ngIf="element.estadoAprobacion=='En proceso de aprobación'">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)"
-                    *ngIf="element.estadoAprobacion=='Con solicitud devuelta por el supervisor'">
+                    *ngIf="element.estadoAprobacion=='Con solicitud devuelta por el supervisor' || element.estadoAprobacion=='Con solicitud aprobada por el supervisor'">
                         Ver detalle
                     </button>
                 </td>

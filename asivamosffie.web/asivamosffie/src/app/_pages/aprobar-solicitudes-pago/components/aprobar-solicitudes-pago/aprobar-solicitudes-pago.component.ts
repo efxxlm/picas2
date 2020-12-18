@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DialogEnvioAutorizacionComponent } from '../dialog-envio-autorizacion/dialog-envio-autorizacion.component';
 
 @Component({
   selector: 'app-aprobar-solicitudes-pago',
@@ -28,7 +30,7 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoAprobacion: 'Con solicitud devuelta por el supervisor',
+      estadoAprobacion: 'Con solicitud aprobada por el supervisor',
       gestion: 1
     },
     {
@@ -40,7 +42,7 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
       gestion: 2
     },
   ];
-  constructor(private routes: Router) { }
+  constructor(private routes: Router, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTable);
@@ -73,5 +75,13 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
   }
   verDetalle(id){
     this.routes.navigate(['/aprobarSolicitudesPago/verDetalleAprobarSolicitud',id]);
+  }
+  openCertificate(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '1020px';
+    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
+    const dialogRef = this.dialog.open(DialogEnvioAutorizacionComponent, dialogConfig);
+    //dialogRef.afterClosed().subscribe(value => {});
   }
 }
