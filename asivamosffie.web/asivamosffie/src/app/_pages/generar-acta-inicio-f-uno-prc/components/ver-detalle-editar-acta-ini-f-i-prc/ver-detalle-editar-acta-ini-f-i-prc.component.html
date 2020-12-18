@@ -86,7 +86,7 @@
             <mat-card class="shipping-card mainGris">
                 <mat-card-content>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-9 pl0">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="fechaActaInicioFUnoPreconstruccion"
@@ -142,7 +142,7 @@
                                         [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid}">
                                         Meses
                                     </label>
-                                    <mat-form-field class="w-8em">
+                                    <mat-form-field class="w97">
                                         <input matInput maxlength="2" min="1" max="99" required
                                             (keypress)="number($event)"
                                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
@@ -154,7 +154,7 @@
                                         [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase1.invalid}">
                                         Días
                                     </label>
-                                    <mat-form-field class="w-8em">
+                                    <mat-form-field class="w97">
                                         <input matInput maxlength="2" min="1" max="31" required
                                             (keypress)="number($event)"
                                             onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
@@ -203,7 +203,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex align-items-start">
+                    <div class="row">
                         <div class="text-area-quill noDecorated">
                             <label class="label-left" for="observacionesEspeciales">Observaciones o
                                 consideraciones especiales</label>

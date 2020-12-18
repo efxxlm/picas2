@@ -87,17 +87,17 @@
     </form>
 </div>
 <div align="center" *ngIf="this.observacionesCompleted==true">
-    <mat-card class="border mt-1em" *ngIf="contratoConstruccion.tieneObservacionesProgramacionObraSupervisor !== undefined && contratoConstruccion.tieneObservacionesProgramacionObraSupervisor === true">
+    <mat-card class="border mt-1em">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
                 Validación de la supervisión
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p style="margin-left: 2em;"><b> {{ contratoConstruccion.observacionProgramacionObraSupervisor.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-            <p *ngIf="contratoConstruccion.tieneObservacionesProgramacionObraSupervisor === true" style="margin-left: 2em;"><b>¿Tiene observaciones a la programación de obra?:</b> Si</p>
-            <p *ngIf="contratoConstruccion.tieneObservacionesProgramacionObraSupervisor === false" style="margin-left: 2em;"><b>¿Tiene observaciones a la programación de obra?:</b> No</p>
-            <section *ngIf="contratoConstruccion.observacionProgramacionObraSupervisor.observaciones !== undefined" [innerHTML]="contratoConstruccion.observacionProgramacionObraSupervisor.observaciones" style="margin-left: 2em;"></section>
+            <p *ngIf="contratoConstruccion.observacionDevolucionProgramacionObra !== undefined" style="margin-left: 2em;"><b> {{ contratoConstruccion.observacionDevolucionProgramacionObra.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p *ngIf="contratoConstruccion.observacionDevolucionProgramacionObra !== undefined" style="margin-left: 2em;"><b>¿Tiene observaciones a la programación de obra?:</b> Si</p>
+            <p *ngIf="contratoConstruccion.observacionDevolucionProgramacionObra === undefined" style="margin-left: 2em;"><b>¿Tiene observaciones a la programación de obra?:</b> No</p>
+            <section *ngIf="contratoConstruccion.observacionDevolucionProgramacionObra !== undefined" [innerHTML]="contratoConstruccion.observacionDevolucionProgramacionObra.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
     <!--Tabla para historial de observaciones-->

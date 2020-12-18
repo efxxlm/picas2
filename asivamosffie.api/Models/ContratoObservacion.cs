@@ -15,6 +15,7 @@ namespace asivamosffie.api.Models
         public string UsuarioModificacion { get; set; }
         public bool? EsActaFase1 { get; set; }
         public bool? EsActaFase2 { get; set; }
+        public bool? Archivado { get; set; }
 
         public virtual Contrato Contrato { get; set; }
     }

@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class HojasVidaInterventoriaArtcComponent implements OnInit {
 
   @Input() observacionesCompleted;
+  @Input() observacionDevolucion;
   @Input() observacionesPerfil;
   @Input() tieneObservacion;
   @Input() fechaModificacion;

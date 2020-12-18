@@ -16,6 +16,7 @@ export class DiagnosticoComponent implements OnInit {
   formDiagnostico: FormGroup;
   totalConstruccion: number;
   @Input() contratoConstruccion;
+  @Input() proyecto;
   @Output() diagnostico = new EventEmitter();
   @ViewChild( 'valorTotalFaseConstruccion', { static: true } ) totalFaseConstruccion: ElementRef;
 
@@ -88,6 +89,11 @@ export class DiagnosticoComponent implements OnInit {
   }
 
   enviar() {
+    console.log( this.proyecto.valorFaseConstruccion, this.totalConstruccion )
+    if ( this.proyecto.valorFaseConstruccion != this.totalConstruccion){
+      this.openDialog('','El valor total de la <b> fase 2 - construcción </b> después del diagnóstico no coincide con el valor registrado en el <b> DRP </> para el componente')
+      return false;
+    }
 
     this.formDiagnostico.get( 'valorTotalFaseConstruccion' ).setValue( this.totalConstruccion );
     console.log( this.formDiagnostico.value.requiereModificacionContractual );

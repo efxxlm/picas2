@@ -8,7 +8,7 @@
         {{this.title}} acta de inicio contrato {{this.contratoCode}} fase 2 - Construcción
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de aprobación de requeisitos por el supervisor: <b>{{this.fechaAprobacionSupervisor}}</b></span>
+        <span>Fecha de aprobación de requisitos por el supervisor: <b>{{this.fechaAprobacionSupervisor | date:'dd/MM/yyyy'}}</b></span>
     </p>
 </section>
 <section class="container">
@@ -16,10 +16,8 @@
         <mat-card-content>
             <p><strong>Vigencia del contrato: </strong>{{this.vigenciaContrato}}</p>
             <p><strong>Fecha de firma del contrato: </strong>{{this.fechaFirmaContrato}}</p>
-            <p><strong>Número del DRP 1. </strong>{{this.numeroDRP1}}</p>
-            <p><strong>Fecha de generación de DRP 1. </strong>{{this.fechaGeneracionDRP1}}</p>
-            <p><strong>Número del DRP 2. </strong>{{this.numeroDRP2}}</p>
-            <p><strong>Fecha de generación de DRP 2. </strong>{{this.fechaGeneracionDRP2}}</p>
+            <p><strong>Número del DRP. </strong>{{this.numeroDRP1}}</p>
+            <p><strong>Fecha de generación de DRP. </strong>{{this.fechaGeneracionDRP1}}</p>
             <p><strong>Fecha de aprobación de la garantía / póliza: </strong>{{this.fechaAprobacionGarantiaPoliza}}</p>
             <p><strong>Objeto:</strong></p>
             <div [innerHtml]="this.objeto"></div>
@@ -29,6 +27,15 @@
             </p>
             <p><strong>Valor fase 2 - Construcción (Obra): </strong>{{this.valorfase2ConstruccionObra}}</p>
             <div *ngIf="this.valorProponente=='1'">
+                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                </strong></p>
+            <p><strong>Nombre del representante legal del contratista de interventoría:
+                </strong> </p>
+            <p><strong>Número de identificación del contratista de interventoría:
+                </strong> {{this.contrato.usuarioInterventoria.numeroIdentificacion }}</p>
+            <p><strong>Nombre de la entidad contratista de interventoría:
+                </strong>{{this.contrato.usuarioInterventoria.nombres}} {{ this.contrato.usuarioInterventoria.apellidos }}
+            </p>
                 <p><strong>Número de identificación del representante legal del contratista de obra:
                     </strong>{{ this.numeroIdentificacionRepresentanteContratistaInterventoria}}</p>
                 <p><strong>Nombre del representante legal del contratista de obra:
@@ -44,7 +51,13 @@
                 <p><strong>Número de identificación del contratista de interventoría: </strong>870.876.977-4</p>
                 <p><strong>Nombre de la entidad contratista de interventoría:
                     </strong>{{this.nombreEntidadContratistaObra}}</p>
+                    <p><strong>Número de identificación Supervisor:
+                    </strong> {{this.contrato.usuarioInterventoria.numeroIdentificacion }}</p>
+                <p><strong>Nombre Supervisor:
+                    </strong>{{this.contrato.usuarioInterventoria.nombres}} {{ this.contrato.usuarioInterventoria.apellidos }}
+                </p>
             </div>
+            <p><strong>Plazo inicial del contrato: meses {{this.plazoActualContratoMeses}} días {{this.plazoActualContratoDias}} </strong>
 
         </mat-card-content>
     </mat-card>
@@ -55,8 +68,9 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaActaInicioFDosConstruccion">Fecha del acta de inicio
-                                    de la fase 2 - Construcción</label>
+                                <label class="label-left" for="fechaActaInicioFDosConstruccion">
+                                  Fecha del acta de inicio de la fase 2 - Construcción
+                                </label>
                             </div>
                             <div class="col d-flex align-items-center">
                                 <mat-form-field class="example-full-width">
@@ -78,12 +92,13 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="fechaPrevistaTerminacion">Fecha prevista de
-                                    terminación</label>
+                                <label class="label-left" for="fechaPrevistaTerminacion">
+                                  Fecha prevista de terminación
+                                </label>
                             </div>
-                            <div class="col d-flex align-items-center">
+                            <div class="col d-flex align-items-center pr-2-8em">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
+                                    <input matInput [matDatepicker]="picker2" required readonly
                                         formControlName="fechaPrevistaTerminacion" placeholder="DD/MM/AAAA">
                                     <mat-datepicker #picker2></mat-datepicker>
                                 </mat-form-field>
@@ -91,15 +106,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" *ngIf="false">
                     <div class="col-md-9 padd0">
                         <div class="row">
                             <div class="pr-1">
                                 <label class="label-left">Plazo actual del contrato:</label>
                             </div>
                             <div class="col d-flex d-flex-row" style="margin-top: .5em;">
-                                <p><strong>Meses: </strong>{{this.plazoActualContratoMeses}} <strong>Días:
-                                    </strong>{{this.plazoActualContratoDias}}</p>
+                                <p>
+                                  <strong>Meses: </strong>{{this.plazoActualContratoMeses}}
+                                  <strong>Días: </strong>{{this.plazoActualContratoDias}}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -111,8 +128,10 @@
                                 <label class="label-left">Plazo de ejecución fase 1 – Preconstrucción:</label>
                             </div>
                             <div class="col d-flex d-flex-row" style="margin-top: .5em;">
-                                <p><strong>Meses: </strong>{{this.plazoEjecucionPreConstruccionMeses}} <strong>Días:
-                                    </strong>{{this.plazoEjecucionPreConstruccionDias}}</p>
+                                <p>
+                                  <strong>Meses: </strong>{{this.plazoEjecucionPreConstruccionMeses}}
+                                  <strong>Días: </strong>{{this.plazoEjecucionPreConstruccionDias}}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -130,45 +149,51 @@
                                 <mat-form-field class="w-8em">
                                     <input matInput maxlength="2" min="1" max="99" required (keypress)="number($event)"
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
-                                        formControlName="mesPlazoEjFase2">
+                                        formControlName="mesPlazoEjFase2" #mesPlazoEjFase2>
                                 </mat-form-field>
-                                <span class="contador"
-                                    *ngIf="addressForm.value.mesPlazoEjFase2 !== null">{{2 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase2').value.toString().length:0)}}</span>
-                                <span class="contador" *ngIf="addressForm.value.mesPlazoEjFase2==null">2</span>
+                                <span class="contador">
+                                    {{2 - mesPlazoEjFase2.value.length}}
+                                </span>
                                 <label class="label-left sub-label" for="diasPlazoEjFase2">
                                     Días
                                 </label>
                                 <mat-form-field class="w-8em">
                                     <input matInput maxlength="2" min="1" max="31" required (keypress)="number($event)"
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
-                                        formControlName="diasPlazoEjFase2">
+                                        formControlName="diasPlazoEjFase2" #diasPlazoEjFase2>
                                 </mat-form-field>
-                                <span class="contador"
-                                    *ngIf="addressForm.value.diasPlazoEjFase2 !== null">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase2').value.toString().length:0)}}</span>
-                                <span class="contador" *ngIf="addressForm.value.diasPlazoEjFase2 == null">2</span>
+                                <span class="contador">
+                                    {{2 - diasPlazoEjFase2.value.length}}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="d-flex align-items-start">
-                    <div class="text-area-quill noDecorated">
-                        <label class="label-left" for="observacionesEspeciales">Observaciones o consideraciones
-                            especiales</label>
-                        <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                            (onContentChanged)="maxLength($event, 500)" formControlName="observacionesEspeciales">
-                        </quill-editor>
-                    </div>
-                    <span class="contador auxMarg" *ngIf="addressForm.value.observacionesEspeciales !== null">
-                        {{500 - textoLimpio(addressForm.get('observacionesEspeciales').value)}}
-                    </span>
-                    <span class="contador auxMarg" *ngIf="addressForm.value.observacionesEspeciales === null">
-                        500
-                    </span>
+                <div>
+                  <div>
+                    <label class="label-left" for="observacionesEspeciales">
+                      Observaciones o consideraciones especiales
+                    </label>
+                  </div>
+                  <div class="col d-flex">
+                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                        (onContentChanged)="maxLength($event, 500)" formControlName="observacionesEspeciales">
+                    </quill-editor>
+
+                      <div class="d-flex align-items-center">
+                        <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
+                          {{500 - (textoLimpio(addressForm.get('observacionesEspeciales').value)>500?500:textoLimpio(addressForm.get('observacionesEspeciales').value))}}
+                      </span>
+                      <span class="contador auxMarg" *ngIf="!addressForm.get('observacionesEspeciales').value">
+                          500
+                      </span>
+                      </div>
+                  </div>
                 </div>
             </mat-card-content>
         </mat-card>
-        <div class="text-center">
-            <button mat-button color="warn" class="btn-guardar" type="submit">
+        <div class="text-center mb-2em">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="addressForm.invalid">
                 <img src="assets/img/icon/guardar.svg" alt="Guardar">
             </button>
         </div>
@@ -176,7 +201,7 @@
 
     <div *ngIf="this.observacionesActaFase2!=undefined || this.observacionesActaFase2!=null ">
         <mat-card class="shipping-card mainGris">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text textoGris">
                     Observaciones al acta de inicio
                 </mat-card-title>

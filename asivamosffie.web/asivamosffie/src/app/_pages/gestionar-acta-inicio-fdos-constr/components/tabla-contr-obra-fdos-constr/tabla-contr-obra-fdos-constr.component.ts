@@ -100,6 +100,7 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
 
   ngOnInit(): void {
     this.services.GetListGrillaActaInicio(8).subscribe((data:any)=>{
+      console.log( data );
       for(let actas of data){
         if(actas.tipoContrato == 'Obra' && (actas.estadoActaCodigo!='13' && actas.estadoActaCodigo!='14')){
           this.dataTable.push(actas);
@@ -136,23 +137,27 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   }
   enviarRevision(id,estadoObs){
     if(estadoObs=="Con revisión sin observaciones"){
+      
       this.services.CambiarEstadoActa(id,"18","usr2").subscribe(data=>{
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
-    }
-    else{
+
+    }else{
+      
       this.services.CambiarEstadoActa(id,"17","usr2").subscribe(data=>{
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
+      
     }
     this.services.EnviarCorreoSupervisorContratista(id,2).subscribe(resp=>{
 
     });
   }
+
   enviarInterventor(id){
     if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){
       this.services.CambiarEstadoActa(id,"18","usr2").subscribe(data=>{

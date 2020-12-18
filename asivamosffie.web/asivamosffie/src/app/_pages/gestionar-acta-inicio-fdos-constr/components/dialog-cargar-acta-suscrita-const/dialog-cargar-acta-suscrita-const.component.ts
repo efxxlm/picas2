@@ -49,7 +49,7 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
   public fecha1Titulo;
   public fecha2Titulo;
 
-  constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarActaSuscritaConstComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private services: ActBeginService) { 
+  constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<DialogCargarActaSuscritaConstComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private services: ActBeginService) {
     this.declararInputFile();
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -71,7 +71,7 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   private declararInputFile() {
@@ -96,14 +96,14 @@ export class DialogCargarActaSuscritaConstComponent implements OnInit {
     this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
     this.services.EditCargarActaSuscritaContrato(this.idContrato,this.fechaSesionString,this.fechaSesionString2,inputNode.files[0],"usr3").subscribe(data=>{
       if(data.isSuccessful==true){
-        this.openDialog(data.message,"");
+        this.openDialog('', `<b>${data.message}</b>`);
         this.close();
         this.services.EnviarCorreoSupervisorContratista(this.idContrato,this.idRol).subscribe(resp=>{
 
         });
       }
       else{
-        this.openDialog(data.message,"");
+        this.openDialog('', `<b>${data.message}</b>`);
       }
     });
   }

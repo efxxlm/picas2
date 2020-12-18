@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using asivamosffie.model.Models;
 
 namespace asivamosffie.model.APIModels
 {
@@ -24,7 +25,7 @@ namespace asivamosffie.model.APIModels
         public string NombreRepresentanteContratistaInterventoria { get; set; }
         public string NumeroIdentificacionContratistaInterventoria { get; set; }
         public string NombreEntidadContratistaSupervisorInterventoria { get; set; }
-        public string? PlazoInicialContratoSupervisor { get; set; }
+        public string PlazoInicialContratoSupervisor { get; set; }
 
         public Int32? PlazoFase1PreMeses { get; set; }
         public Int32? PlazoFase2ConstruccionDias { get; set; }
@@ -38,15 +39,15 @@ namespace asivamosffie.model.APIModels
         public string NombreEntidadContratistaObra { get; set; }
 
         //datos PDF opcionales
-        public string? LlaveMENContrato { get; set; }
-        public string? InstitucionEducativaLlaveMEN { get; set; }
-        public string? DepartamentoYMunicipioLlaveMEN { get; set; }        
+        public string LlaveMENContrato { get; set; }
+        public string InstitucionEducativaLlaveMEN { get; set; }
+        public string DepartamentoYMunicipioLlaveMEN { get; set; }        
 
-        public string? ObservacionOConsideracionesEspeciales { get; set; }
+        public string ObservacionOConsideracionesEspeciales { get; set; }
 
-        public string? FechaPrevistaTerminacion { get; set; }
+        public string FechaPrevistaTerminacion { get; set; }
 
-        public string? FechaActaInicio { get; set; }
+        public string FechaActaInicio { get; set; }
 
         public DateTime? FechaActaInicioFase1DateTime { get; set; }
         public DateTime? FechaActaInicioFase2DateTime { get; set; }
@@ -57,11 +58,14 @@ namespace asivamosffie.model.APIModels
 
         public Int32? ContratacionId { get; set; }
         public string FechaAprobacionRequisitosSupervisor { get; set; }
+        public DateTime? FechaAprobacionRequisitosSupervisorDate { get; set; }
         public string ProponenteCodigo { get; set; }
         public string ProponenteNombre { get; set; }
         public int PlazoActualContratoMeses { get; set; }
         public int PlazoActualContratoDias { get; set; }
         public string RutaActaSuscrita { get; set; }
         public string NumeroIdentificacionSupervisor { get; set; }
+
+        public Contrato Contrato { get; set; }
     }
 }

@@ -4,14 +4,14 @@
   </button>
 
   <h1 class="title-menu--h1" style="margin-top: 0px;">
-    Flujo de inversión de recursos
+     {{ data.esFlujoInversion == true ? 'Flujo de inversión de recursos' : 'Programación de obra' }}
   </h1>
 
   <section class="flex-center mt-05em">
     <span><strong>{{ data.fechaCreacion | date: 'dd/MM/yyyy' }}</strong></span>
     <span class="info-text sin-diligenciar" style="margin-left: 1em;"
       *ngIf="data.estadoCargue === 'Fallido'">Fallido</span>
-    <span class="info-text completo" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Validos'">Válido</span>
+    <span class="info-text completo" style="margin-left: 1em;" *ngIf="data.estadoCargue === 'Válidos'">Válido</span>
   </section>
 
   <form autocomplete="off" [formGroup]="formObservacion" (ngSubmit)="guardar()">
@@ -34,7 +34,7 @@
     </div>
 
     <div class="text-center">
-      <button mat-button color="warn" class="btn-guardar" type="submit">
+      <button mat-button color="warn" class="btn-guardar" type="submit" *ngIf="data.ocultarBoton != true">
         <img src="assets/img/icon/guardar.svg">
       </button>
     </div>

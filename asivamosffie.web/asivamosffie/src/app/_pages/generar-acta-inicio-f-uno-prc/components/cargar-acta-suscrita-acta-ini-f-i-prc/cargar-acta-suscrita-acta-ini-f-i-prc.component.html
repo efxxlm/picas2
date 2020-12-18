@@ -67,7 +67,7 @@
                     permitidos
                     son: pdf
                 </p>
-                <button mat-raised-button color="accent" type="submit">{{boton}}</button>
+                <button mat-raised-button color="accent" [disabled]="!addressForm.valid" type="submit">{{boton}}</button>
             </div>
         </div>
     </form>

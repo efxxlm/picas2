@@ -126,11 +126,14 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.elementsObservacion = data;
       for (let i = 0; i < data.length; i++) {
         if (data[i].esSupervision == false) {
+
           this.esActa = data[i].esActa;
           this.conObervacionesActa = data[i].esActaFase1;
           this.observacionesActaFase1 = data[i].observaciones;
           this.fechaCreacion = data[i].fechaCreacion;
           this.indexObservacionFinal = data[i].contratoObservacionId;
+          //seteo el queseenvia jflorez
+          this.indexContratacionID = data[i].contratoObservacionId;
           this.addressForm.get('observacionesEspeciales').setValue(this.observacionesActaFase1);
         }
       }
@@ -146,6 +149,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
 
   cargarRol() {
     this.rolAsignado = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
+    //jflorez, el perfil 11 es interventor.....
     if (this.rolAsignado == 11) {
       this.opcion = 1;
     }
@@ -183,14 +187,15 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
     this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
     this.tipoCodigo = data.contratacion.tipoSolicitudCodigo;
-    if (this.opcion == 1) {
+    if (this.opcion == 1) {//jflorez, el perfil 11 es interventor, no supervisor, revisar esta condición
       this.dataSupervisor = true;
       this.numIdentifiacionSupervisor = data.usuarioInterventoria.numeroIdentificacion;
       this.nomSupervisor = data.usuarioInterventoria.nombres + " " + data.usuarioInterventoria.apellidos;
     }
-    for (let i = 0; i < data.contratoObservacion.length; i++) {
+    //jflorez, no puededeterminarel id de esta forma si no esta seteando el formulario, podria enviar a edición a unoque no corresponde
+    /*for (let i = 0; i < data.contratoObservacion.length; i++) {
       this.indexContratacionID = data.contratoObservacion[i].contratoObservacionId;
-    }
+    }*/
   }
 
   generarActaSuscrita() {
@@ -259,10 +264,24 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     }
   }
   textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length > 500 ? 500 : textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
@@ -297,7 +316,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     else {
       this.observacionesOn = false;
     }
-    if (this.opcion == 1) {
+    if (this.opcion == 1) {//jflorez, el perfil 11 es interventor no supervisor, revisar
       esSupervisionBool = true;
     }
     else {
@@ -309,7 +328,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     sumaMeses = parseInt(this.addressForm.value.mesPlazoEjFase1) + parseInt(this.addressForm.value.mesPlazoEjFase2);
     sumaDias = parseInt(this.addressForm.value.diasPlazoEjFase1) + parseInt(this.addressForm.value.diasPlazoEjFase2);
     if (sumaMeses > this.mesPlazoIni || sumaDias > this.diasPlazoIni) {
-      this.openDialog('', 'Debe verificar la información ingresada en el campo Plazo de ejecución - fase 1 - Preconstruccion Meses, dado que no coincide con la informacion inicial registrada para el contrato');
+      this.openDialog('', 'Debe verificar la información ingresada en el campo <b>Plazo de ejecución - fase 1 - Preconstruccion Meses</b>, dado que no coincide con la informacion inicial registrada para el contrato');
     }
     else {
       const arrayObservacion = [{
@@ -318,7 +337,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         "observaciones": this.addressForm.value.observacionesEspeciales,
         'esActa': true,
         'esActaFase1': true,
-        'esSupervision': esSupervisionBool
+        'esSupervision': this.rolAsignado==8?true:false//perfil 8 es supervisor
+        //'esSupervision': esSupervisionBool
       }];
       const arrayContrato: EditContrato = {
         contratoId: this.idContrato,
@@ -350,19 +370,19 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
         if (data.code == "200") {
           if (localStorage.getItem("origin") == "obra") {
             this.service.CambiarEstadoActa(this.idContrato, "14").subscribe(data0 => {
-              this.openDialog('', data.message);
+              this.openDialog2('', `<b>${data.message}</b>`);
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
           }
           else {
             this.service.CambiarEstadoActa(this.idContrato, "2").subscribe(data1 => {
-              this.openDialog('', data.message);
+              this.openDialog2('', `<b>${data.message}</b>`);
               this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
             });
           }
         }
         else {
-          this.openDialog('', data.message);
+          this.openDialog2('', `<b>${data.message}</b>`);
         }
       });
       this.realizoPeticion = true;

@@ -59,7 +59,9 @@
 
           <app-diagnostico 
                           [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]" 
-                          (diagnostico)="getDiagnostico( i, $event )">
+                          [proyecto]="contratacion.proyecto" 
+                          (diagnostico)="getDiagnostico( i, $event )"
+                          >
           </app-diagnostico>
 
         </mat-expansion-panel>
@@ -109,6 +111,7 @@
                                         [contratoId]="contrato.contratoId"
                                         [proyectoId]="contratacion.proyectoId"
                                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
+                                        (actualizarRegistros)="getContrato()"
                                         (perfilesCompletados)="estadoSemaforo( i, $event )">
             </app-hoja-vida-contratista>
           </section>
@@ -117,7 +120,8 @@
                                         [contratoId]="contrato.contratoId"
                                         [proyectoId]="contratacion.proyectoId"
                                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
-                                        (perfilesCompletados)="estadoSemaforo( i, $event )">
+                                        (perfilesCompletados)="estadoSemaforo( i, $event )"
+                                        (actualizarRegistros)="getContrato()">
             </app-hoja-vida-contratista>
           </section>
           
@@ -141,7 +145,8 @@
                                                   [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
                                                   [proyectoId]="contratacion.proyecto.proyectoId"
                                                   [contrato]="contrato"
-                                                  (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
+                                                  (terminoCarga)="getCargaMasiva( $event )"
+                                                  (realizoObservacion)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
@@ -151,7 +156,8 @@
                                                   [proyectoId]="contratacion.proyecto.proyectoId"
                                                   [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
                                                   [contrato]="contrato"
-                                                  (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
+                                                  (terminoCarga)="getCargaMasiva( $event )"
+                                                  (realizoObservacion)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
         </mat-expansion-panel>
@@ -188,7 +194,8 @@
                                                     [contrato]="contrato" 
                                                     [proyectoId]="contratacion.proyecto.proyectoId"
                                                     [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion : undefined"
-                                                    (terminoCarga)="getCargaMasiva( $event )">
+                                                    (terminoCarga)="getCargaMasiva( $event )"
+                                                    (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion> 
           </section>
 

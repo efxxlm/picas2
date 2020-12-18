@@ -69,6 +69,7 @@
                         </div>
                         <app-hojas-vida-interventoria-artc  [observacionesCompleted]="true"
                                                             [observacionesPerfil]="perfil.construccionPerfilObservacion"
+                                                            [observacionDevolucion]="perfil.observacionDevolucion !== undefined ? perfil.observacionDevolucion : undefined"
                                                             [tieneObservacion]="perfil.tieneObservacionesSupervisor !== undefined ? perfil.tieneObservacionesSupervisor : undefined"
                                                             [fechaModificacion]="perfil.fechaModificacion">
                         </app-hojas-vida-interventoria-artc>

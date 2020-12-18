@@ -19,8 +19,11 @@ export class HojaVidaContratistaComponent implements OnInit {
   @Input() perfilProyecto: any[] = [];
   @Input() contratoId: number;
   @Input() proyectoId: number;
+
   @Output() enviarPerfilesContrato = new EventEmitter();
   @Output() perfilesCompletados = new EventEmitter();
+  @Output() actualizarRegistros = new EventEmitter();
+
   @ViewChild( 'cantidadPerfiles', { static: true } ) cantidadPerfiles: ElementRef;
   perfilesCompletos = 0;
   editorStyle = {
@@ -249,13 +252,19 @@ export class HojaVidaContratistaComponent implements OnInit {
   }
 
   disabledDate( cantidadHvAprobadas: string, cantidadHvRequeridas: string, index: number ) {
-    if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
-    } else {
+    if ( cantidadHvAprobadas != null && cantidadHvRequeridas != null){
+      if ( cantidadHvAprobadas >= cantidadHvRequeridas ) {
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).enable();
+      } else {
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      }
+      if ( cantidadHvRequeridas.length === 0 ) {
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+        this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue(null);
+      }
+    }else{
       this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
-    }
-    if ( cantidadHvRequeridas.length === 0 ) {
-      this.perfiles.controls[index].get( 'fechaAprobacion' ).disable();
+      this.perfiles.controls[index].get( 'fechaAprobacion' ).setValue(null);
     }
   }
 
@@ -281,10 +290,24 @@ export class HojaVidaContratistaComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
     if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   textoLimpioMessage(texto: string) {
@@ -325,6 +348,8 @@ export class HojaVidaContratistaComponent implements OnInit {
                 this.formContratista.patchValue({
                   numeroPerfiles: `${ this.perfiles.length }`
                 });
+                this.actualizarRegistros.emit( true );
+
               },
               err => this.openDialog( '', err.message )
             );

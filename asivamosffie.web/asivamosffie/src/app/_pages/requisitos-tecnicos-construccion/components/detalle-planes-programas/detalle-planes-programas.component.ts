@@ -51,7 +51,7 @@ export class DetallePlanesProgramasComponent implements OnInit, OnChanges {
   openDialogObservacion(planPrograma: string, observacion: string, id: number) {
     const dialogObservacion = this.dialog.open(DialogObservacionesComponent, {
       width: '60em',
-      data: { planPrograma, observacion }
+      data: { planPrograma, observacion, ocultarBoton: true }
     });
 
     dialogObservacion.afterClosed().subscribe(resp => {

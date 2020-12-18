@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
@@ -34,7 +35,8 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                return await _ActBegin.GetListVistaGenerarActaInicio(pContratoId);
+                int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+                return await _ActBegin.GetListVistaGenerarActaInicio(pContratoId, pUserId);
             }
             catch (Exception ex)
             {
@@ -45,9 +47,17 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetContratoObservacionByIdContratoId")]
         [HttpGet]        
-        public async Task<ConstruccionObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
+        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoId(int pContratoId, bool pEsSupervisor)
         {
             var respuesta = await _ActBegin.GetContratoObservacionByIdContratoId(pContratoId,  pEsSupervisor);
+            return respuesta;
+        }
+
+        [Route("GetContratoObservacionByIdContratoIdUltimaArchivada")]
+        [HttpGet]        
+        public async Task<ContratoObservacion> GetContratoObservacionByIdContratoIdUltimaArchivada(int pContratoId, bool pEsSupervisor)
+        {
+            var respuesta = await _ActBegin.GetContratoObservacionByIdContratoIdUltimaArchivada(pContratoId,  pEsSupervisor);
             return respuesta;
         }
 
@@ -62,22 +72,14 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateEditContratoObservacion")]        
-        public async Task<IActionResult> InsertEditContratoObservacion( ConstruccionObservacion construccionObservacion)
+        public async Task<IActionResult> InsertEditContratoObservacion( Contrato pContrato )
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                if (construccionObservacion.ConstruccionObservacionId == 0)
-                {
-                    construccionObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                }
-                else
-                {
-                    construccionObservacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                }                    
+                pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                     
-                respuesta = await _ActBegin.InsertEditContratoObservacion(construccionObservacion);
+                respuesta = await _ActBegin.InsertEditContratoObservacion( pContrato );
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -148,7 +150,8 @@ namespace asivamosffie.api.Controllers
             {
 
                 pUsuarioModifica=HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.CambiarEstadoActa( pContratoId,  pNuevoCodigoEstadoActa,  pUsuarioModifica);
+                respuesta = await _ActBegin.CambiarEstadoActa( pContratoId,  pNuevoCodigoEstadoActa,  pUsuarioModifica
+                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -209,7 +212,8 @@ namespace asivamosffie.api.Controllers
                 pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _ActBegin.EditarCargarActaSuscritaContrato( pContratoId,  pFechaFirmaContratista,  pFechaFirmaActaContratistaInterventoria                     
              ,  pUsuarioModificacion
-             //, _appSettingsService
+             ,pFile
+             ,Path.Combine(_settings.Value.DirectoryBase, _settings.Value.DirectoryBaseCargue, _settings.Value.DirectoryActaSuscritaContrato)
              );
                 return Ok(respuesta);
             }
@@ -264,14 +268,14 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("EditarContratoObservacion")]        
-        public async Task<IActionResult> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa)
+        public async Task<IActionResult> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa, [FromBody] ConstruccionObservacion pConstruccionObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 pUsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.EditarContratoObservacion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pObservacion,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2,  pEsSupervisor,  pEsActa);
+                respuesta = await _ActBegin.EditarContratoObservacion( pContratoId,  pPlazoFase2PreMeses,  pPlazoFase2PreDias,  pConstruccionObservacion.Observaciones,  pUsuarioModificacion,  pFechaActaInicioFase1,  pFechaTerminacionFase2,  pEsSupervisor,  pEsActa);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -279,6 +283,20 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
+        }
+
+        [Route("GetDiasHabilesActaConstruccionEnviada")]
+        [HttpGet]        
+        public async Task GetDiasHabilesActaConstruccionEnviada(  )
+        {
+            await _ActBegin.GetDiasHabilesActaConstruccionEnviada(toAppSettingsService(_settings));
+        }
+
+        [Route("GetDiasHabilesActaRegistrada")]
+        [HttpGet]        
+        public async Task GetDiasHabilesActaRegistrada(  )
+        {
+            await _ActBegin.GetDiasHabilesActaRegistrada(toAppSettingsService(_settings));
         }
 
 

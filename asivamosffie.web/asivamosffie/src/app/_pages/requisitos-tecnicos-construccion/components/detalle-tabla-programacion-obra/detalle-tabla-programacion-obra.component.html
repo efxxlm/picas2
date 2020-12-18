@@ -10,24 +10,24 @@
 
   <div class="table-responsive">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-      <ng-container matColumnDef="fechaCargue">
+      <ng-container matColumnDef="fechaCreacion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de cargue </th>
-        <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaCargue }} </b> </td>
+        <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaCreacion | date: 'dd/MM/yyyy' }} </b> </td>
       </ng-container>
 
-      <ng-container matColumnDef="totalRegistros">
+      <ng-container matColumnDef="cantidadRegistros">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número total de registros </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.totalRegistros }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadRegistros }} </td>
       </ng-container>
 
-      <ng-container matColumnDef="registrosValidos">
+      <ng-container matColumnDef="cantidadRegistrosValidos">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de registros válidos </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.registrosValidos }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadRegistrosValidos }} </td>
       </ng-container>
-
-      <ng-container matColumnDef="registrosInvalidos">
+  
+      <ng-container matColumnDef="cantidadRegistrosInvalidos">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de registros inválidos </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.registrosInvalidos }} </td>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.cantidadRegistrosInvalidos }} </td>
       </ng-container>
 
 
@@ -36,17 +36,18 @@
         <td mat-cell *matCellDef="let element">
 
           <button mat-raised-button
-                  color="accent"
-                  class="btn-table">
-                  Ver detalle
-          </button>
+                color="accent"
+                class="btn-table"
+                (click)="descargar( element.archivoCargueId )">
+                Ver detalle
+        </button>
 
-          <button mat-raised-button
-                  color="accent"
-                  class="btn-table sin-diligenciar"
-                  (click)="this.addObservaciones()">
-                  Observaciones
-          </button>
+        <button mat-raised-button
+                color="accent"
+                class="btn-table sin-diligenciar"
+                (click)="this.addObservaciones( element.archivoCargueId, element.estadoCargue, element.fechaCreacion, element.observaciones ? element.observaciones : null  )">
+                Observaciones
+        </button>
 
         </td>
       </ng-container>

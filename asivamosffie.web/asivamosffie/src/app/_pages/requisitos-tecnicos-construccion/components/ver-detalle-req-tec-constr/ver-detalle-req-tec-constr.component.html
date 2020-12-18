@@ -104,7 +104,10 @@
                         Programación de obra
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-detalle-tabla-programacion-obra></app-detalle-tabla-programacion-obra>
+                    <app-detalle-tabla-programacion-obra
+                        [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+                    >
+                  </app-detalle-tabla-programacion-obra>
                   </mat-expansion-panel>
 
                   <mat-expansion-panel class="expansion-style sub-expansion">
@@ -113,7 +116,9 @@
                         Flujo de inversión de recursos
                       </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-detalle-tabla-flujo-recursos></app-detalle-tabla-flujo-recursos>
+                    <app-detalle-tabla-flujo-recursos 
+                        [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId">
+                  </app-detalle-tabla-flujo-recursos>
                   </mat-expansion-panel>
                   
             </mat-expansion-panel>

@@ -22,3 +22,10 @@
 .w-31 {
   width: 31%;
 }
+
+.inline-flex {
+  display: block;
+  @media only screen and (min-width: 48em) {
+    display: inline-flex;
+  }
+}

@@ -1,8 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -13,28 +11,15 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   @Input() isEditable;
-  @Input() idControversia;
-  @Output() estadoSemaforo1 = new EventEmitter<string>();
+
   addressForm = this.fb.group({
     urlSoporte: [null, Validators.required]
   });
-  constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService) { }
+  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    if (this.isEditable == true) {
-      this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
-        this.addressForm.get('urlSoporte').setValue(resp.rutaSoporte);
-        this.loadSemaforo();
-      });
-    }
-  }
-
-  loadSemaforo() {
-    if (this.addressForm.value.urlSoporte != null) {  
-      this.estadoSemaforo1.emit('completo');
-    }
-    else {
-      this.estadoSemaforo1.emit('sin-diligenciar');
+    if(this.isEditable==true){
+      this.addressForm.get('urlSoporte').setValue('http://www.prueba1444.com');
     }
   }
 
@@ -47,19 +32,6 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.services.ActualizarRutaSoporteControversiaContractual(this.idControversia, this.addressForm.value.urlSoporte).subscribe(resp => {
-      if (resp.isSuccessful == true) {
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
-        if (this.isEditable == true) {
-          this.router.navigate(['/gestionarTramiteControversiasContractuales']);
-        }
-        else {
-          this.router.navigate(['/gestionarTramiteControversiasContractuales']);
-        }
-      }
-      else {
-        this.openDialog('', resp.message);
-      }
-    });
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 }
