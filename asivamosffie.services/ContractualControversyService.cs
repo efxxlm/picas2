@@ -1667,6 +1667,143 @@ namespace asivamosffie.services
                 return vistaContratoContratista;
         }
 
+        //Usuario Jurídica Controversias contractuales
+
+        //estado de la actuación derivada sea "Cumplida" y el estado del registro sea completo
+        public async Task<Respuesta> EnviarCorreoContratistaInterventorSupervisorFiduciaria(int pControversiaContractualId, AppSettingsService settings)
+        {
+            Respuesta respuesta = new Respuesta();
+            string fechaFirmaContrato = "";
+            string correo = "cdaza@ivolucion.com";
+
+            ControversiaActuacion controversiaActuacion = null;
+
+            ControversiaContractual controversiaContractual = _context.ControversiaContractual
+                .Where(r => r.ControversiaContractualId == pControversiaContractualId).FirstOrDefault();
+
+            if (controversiaContractual != null)
+            {
+                controversiaActuacion = _context.ControversiaActuacion
+             .Where(r => r.ControversiaContractualId == controversiaContractual.ControversiaContractualId).FirstOrDefault();
+            }
+
+            SeguimientoActuacionDerivada actuacionDerivada = null;
+            if (controversiaActuacion != null)
+            {
+                actuacionDerivada = _context.SeguimientoActuacionDerivada
+               .Where(r => r.ControversiaActuacionId == controversiaActuacion.ControversiaActuacionId).FirstOrDefault();
+
+            }
+            int perfilId = 0;
+
+            //Alerta Contratista / Interventor / Supervisor / Fiduciaria
+            perfilId = (int)EnumeratorPerfil.Supervisor; //  
+            //correo = getCorreos(perfilId);
+
+            try
+            {
+                int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContractualControversy.CorreoEnviado, (int)EnumeratorTipoDominio.Acciones);
+
+
+                int pIdTemplate = (int)enumeratorTemplate.AlertaParticipacionJuridica4_2_1;
+
+                //PolizaObservacion polizaObservacion;           
+                correo = "cdaza@ivolucion.com";
+
+                //Task<Respuesta> result = EnviarCorreoGestionPoliza(correo, settings.MailServer,
+                //settings.MailPort, settings.Password, settings.Sender,
+                //objVistaContratoGarantiaPoliza, fechaFirmaContrato, pIdTemplate, msjNotificacion);
+
+                bool blEnvioCorreo = false;
+                //Respuesta respuesta = new Respuesta();
+
+                Template TemplateRecoveryPassword = await _commonService.GetTemplateById(pIdTemplate);
+
+                string template = TemplateRecoveryPassword.Contenido;
+
+                Contrato contrato;
+                contrato = _context.Contrato.Where(r => r.ContratoId == controversiaContractual.ContratoId).FirstOrDefault();
+
+                string strTipoControversiaCodigo = "";
+                string strTipoControversia = "";
+
+                Dominio TipoControversiaCodigo;
+
+
+                TipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
+                if (TipoControversiaCodigo != null)
+                {
+                    strTipoControversiaCodigo = TipoControversiaCodigo.Codigo;
+                    strTipoControversia = TipoControversiaCodigo.Nombre;
+                }
+
+                //template = template.Replace("_Numero_Contrato_", contrato.NumeroContrato);
+                template = template.Replace("_Fecha_solicitud_controversia_", Convert.ToDateTime(controversiaContractual.FechaSolicitud).ToString("dd/MM/yyyy"));
+                template = template.Replace("_Numero_solicitud_", controversiaContractual.NumeroSolicitud);
+                template = template.Replace("_Tipo_controversia_", strTipoControversia);  //fomato miles .                
+                DateTime? fechaNull = null;
+                fechaNull = actuacionDerivada != null ? actuacionDerivada.FechaActuacionDerivada : null;
+                //template = template.Replace("_Fecha_actuacion_derivada_", fechaNull == null ? "" : Convert.ToDateTime(fechaNull).ToString("dd/MM/yyyy"));
+                template = template.Replace("_Proxima_actuacion_requerida_", "CAMPO PENDIENTE");
+                
+                //template = template.Replace("_Descripcion_actuacion_adelantada_", actuacionDerivada.DescripciondeActuacionAdelantada);
+
+                List<UsuarioPerfil> lstUsuariosPerfil = new List<UsuarioPerfil>();
+
+                lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
+
+                List<Usuario> lstUsuarios = new List<Usuario>();
+
+                foreach (var item in lstUsuariosPerfil)
+                {
+                    lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
+
+                    foreach (var usuario in lstUsuarios)
+                    {
+
+                        blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestionar controversias contractuales", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
+                    }
+                }
+
+                if (blEnvioCorreo)
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContractualControversy.CorreoEnviado };
+
+                else
+                    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContractualControversy.ErrorEnviarCorreo };
+
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_actuaciones_controversias_contractuales, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificacion_Controversia_Contractual), correo, "Gestionar controversias contractuales");
+                //return respuesta;
+
+                //blEnvioCorreo = Helpers.Helpers.EnviarCorreo(lstMails, "Gestión Poliza", template, pSentender, pPassword, pMailServer, pMailPort);
+
+                //if (blEnvioCorreo)
+                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
+
+                //else
+                //    respuesta = new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
+
+                //}
+                //}
+                //else
+                //{
+                //    respuesta = new Respuesta() { IsSuccessful = true, IsValidation = true, Code = ConstantMessagesContratoPoliza.CorreoNoExiste };
+
+                //}
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_actuaciones_controversias_contractuales, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificacion_Controversia_Contractual), correo, "Gestionar controversias contractuales");
+                return respuesta;
+
+            }
+            catch (Exception ex)
+            {
+
+                respuesta = new Respuesta() { IsSuccessful = false, IsValidation = false, Code = ConstantMessagesUsuarios.ErrorGuardarCambios };
+                respuesta.Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_actuaciones_controversias_contractuales, respuesta.Code, Convert.ToInt32(ConstantCodigoAcciones.Notificacion_Controversia_Contractual), correo, "Gestionar controversias contractuales") + ": " + ex.ToString() + ex.InnerException;
+                return respuesta;
+            }
+
+        }
+
+
         public async Task<Respuesta> EnviarCorreoTecnicaJuridicaContratacion(string lstMails, string pMailServer, int pMailPort, string pPassword, string pSentender, int pContratoId,  int pIdTemplate)
         {
             bool blEnvioCorreo = false;

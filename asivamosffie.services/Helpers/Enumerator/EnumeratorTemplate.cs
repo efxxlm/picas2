@@ -29,6 +29,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         NotificacionContratacion341 = 32,
         DRPNotificacion = 33,
         DDPCancelado = 34,
-        DRPCancelado = 35
+        DRPCancelado = 35,
+        AlertaParticipacionJuridica4_2_1=52
     }
 }

@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         public string TemaComunidad { get; set; }
         public string Conclusion { get; set; }
         public int? CantidadEmpleosDirectos { get; set; }
-        public int? CantidadEmpletosIndirectos { get; set; }
+        public int? CantidadEmpleosIndirectos { get; set; }
         public int? CantidadTotalEmpleos { get; set; }
         public string UrlSoporteGestion { get; set; }
         public bool? RegistroCompleto { get; set; }
