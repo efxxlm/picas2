@@ -20,5 +20,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<VProyectosXcontrato>> gridVerifyDailyFollowUp();
         Task<Respuesta> CreateEditObservacion( SeguimientoDiario pSeguimientoDiario, bool esSupervisor );
         Task<Respuesta> SendToSupervision( int pId, string pUsuario );
+        Task<List<VProyectosXcontrato>> gridValidateDailyFollowUp();
     }
 }

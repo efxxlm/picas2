@@ -7,30 +7,6 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 import { Router } from '@angular/router';
 
-export interface VerificacionDiaria {
-  id: string;
-  fechaReporte: string;
-  llaveMEN: string;
-  tipoInterventor: string;
-  institucionEducativa: string;
-  sede: string;
-  alertas: string;
-  estadoVerificacion: string;
-}
-
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaReporte: 'Sin registro',
-    llaveMEN: 'LJ776554',
-    tipoInterventor: 'Remodelación',
-    institucionEducativa: 'I.E. María Villa Campo',
-    sede: 'Única sede',
-    alertas: 'Si',
-    estadoVerificacion: 'Sin verificar'
-  }
-];
-
 @Component({
   selector: 'app-tabla-verificar-seguimiento-diario',
   templateUrl: './tabla-verificar-seguimiento-diario.component.html',

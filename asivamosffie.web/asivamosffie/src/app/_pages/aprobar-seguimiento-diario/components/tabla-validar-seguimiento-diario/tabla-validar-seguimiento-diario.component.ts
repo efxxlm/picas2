@@ -4,30 +4,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-
-export interface VerificacionDiaria {
-  id: string;
-  fechaReporte: string;
-  llaveMEN: string;
-  tipoInterventor: string;
-  institucionEducativa: string;
-  sede: string;
-  alertas: string;
-  estadoVerificacion: string;
-}
-
-const ELEMENT_DATA: VerificacionDiaria[] = [
-  {
-    id: '1',
-    fechaReporte: '05/07/2020',
-    llaveMEN: 'LJ776554',
-    tipoInterventor: 'Remodelación',
-    institucionEducativa: 'I.E. María Villa Campo',
-    sede: 'Única sede',
-    alertas: 'Si',
-    estadoVerificacion: 'Sin verificar'
-  }
-];
+import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tabla-validar-seguimiento-diario',
@@ -37,31 +15,43 @@ const ELEMENT_DATA: VerificacionDiaria[] = [
 export class TablaValidarSeguimientoDiarioComponent implements AfterViewInit {
 
   displayedColumns: string[] = [
-    'fechaReporte',
-    'llaveMEN',
-    'tipoInterventor',
+    'fechaUltimoSeguimientoDiario',
+    'llaveMen',
+    'tipoIntervencion',
     'institucionEducativa',
     'sede',
     'alertas',
-    'estadoVerificacion',
-    'id'
+    'estadoCodigo',
+    'seguimientoDiarioId'
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() { }
+  constructor(
+              private followUpDailyService: FollowUpDailyService,
+              private router: Router,
+              private dialog: MatDialog,
+             ) 
+  { }
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      return (page + 1).toString() + ' de ' + length.toString();
-    };
-    this.paginator._intl.previousPageLabel = 'Anterior';
+    
+    this.followUpDailyService.gridValidateDailyFollowUp()
+      .subscribe( respuesta => {
+        this.dataSource = new MatTableDataSource(respuesta);
+
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          return (page + 1).toString() + ' de ' + length.toString();
+        };
+        this.paginator._intl.previousPageLabel = 'Anterior';
+      });
+
   }
 
   applyFilter(event: Event) {
@@ -71,6 +61,26 @@ export class TablaValidarSeguimientoDiarioComponent implements AfterViewInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  Validar(proyecto ){
+    this.router.navigate( [ '/aprobarSeguimientoDiario/validarSeguimiento', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
+
+  Enviar( proyecto ){
+    this.followUpDailyService.sendToSupervision( proyecto.seguimientoDiarioId )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message)
+        if ( respuesta.code == "200" )
+          this.ngAfterViewInit()
+      })
   }
 
 }

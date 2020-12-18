@@ -46,6 +46,10 @@ export class FollowUpDailyService {
     return this.http.get<any[]>( `${ this.url }/gridVerifyDailyFollowUp`);
   };
 
+  gridValidateDailyFollowUp(){
+    return this.http.get<any[]>( `${ this.url }/gridValidateDailyFollowUp`);
+  };
+
   createEditObservacion( seguimiento: SeguimientoDiario, esSupervisor: boolean ){
     return this.http.post<Respuesta>( `${ this.url }/createEditObservacion?esSupervisor=${ esSupervisor }`, seguimiento);
   };

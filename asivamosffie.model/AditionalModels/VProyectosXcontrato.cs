@@ -29,6 +29,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public bool TieneAlertas { get; set; } 
 
+        [NotMapped]
+        public bool? tieneObservaciones { get; set; } 
+
         
 
         
