@@ -10,11 +10,14 @@ import { FormAprobarSolicitudComponent } from './components/form-aprobar-solicit
 import { DialogProyectosAsociadosAprobComponent } from './components/dialog-proyectos-asociados-aprob/dialog-proyectos-asociados-aprob.component';
 import { ObsCargarFormaPagoComponent } from './components/obs-cargar-forma-pago/obs-cargar-forma-pago.component';
 import { ObsRegistrarSolicitudPagoComponent } from './components/obs-registrar-solicitud-pago/obs-registrar-solicitud-pago.component';
+import { ObsCriterioPagosComponent } from './components/obs-criterio-pagos/obs-criterio-pagos.component';
+import { ObsDetllFactProcAsociadosComponent } from './components/obs-detll-fact-proc-asociados/obs-detll-fact-proc-asociados.component';
+import { ObsDatosFacturaComponent } from './components/obs-datos-factura/obs-datos-factura.component';
 
 
 
 @NgModule({
-  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent],
+  declarations: [AprobarSolicitudesPagoComponent, FormAprobarSolicitudComponent, DialogProyectosAsociadosAprobComponent, ObsCargarFormaPagoComponent, ObsRegistrarSolicitudPagoComponent, ObsCriterioPagosComponent, ObsDetllFactProcAsociadosComponent, ObsDatosFacturaComponent],
   imports: [
     CommonModule,
     AprobarSolicitudesPagoRoutingModule,
