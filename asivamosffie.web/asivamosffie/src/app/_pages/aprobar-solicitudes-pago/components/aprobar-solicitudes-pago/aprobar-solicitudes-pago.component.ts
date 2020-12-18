@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-aprobar-solicitudes-pago',
@@ -39,7 +40,7 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
       gestion: 2
     },
   ];
-  constructor() { }
+  constructor(private routes: Router) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTable);
@@ -64,5 +65,7 @@ export class AprobarSolicitudesPagoComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-
+  aprobarSolicitud(id){
+    this.routes.navigate(['/aprobarSolicitudesPago/aprobacionSolicitud',id])
+  }
 }
