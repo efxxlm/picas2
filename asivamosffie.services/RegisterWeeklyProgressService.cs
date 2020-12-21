@@ -1033,6 +1033,8 @@ namespace asivamosffie.services
                 {
                     SeguimientoSemanalGestionObraAmbiental SeguimientoSemanalGestionObraAmbientalOld = _context.SeguimientoSemanalGestionObraAmbiental.Find(SeguimientoSemanalGestionObraAmbiental.SeguimientoSemanalGestionObraAmbientalId);
 
+                    SeguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
+
                     SeguimientoSemanalGestionObraAmbientalOld.UsuarioModificacion = pUsuarioCreacion;
                     SeguimientoSemanalGestionObraAmbientalOld.FechaModificacion = DateTime.Now;
                     SeguimientoSemanalGestionObraAmbientalOld.SeEjecutoGestionAmbiental = SeguimientoSemanalGestionObraAmbiental.SeEjecutoGestionAmbiental;
@@ -1406,7 +1408,6 @@ namespace asivamosffie.services
                         seguimientoSemanalGestionObraAlertaOld.Alerta = SeguimientoSemanalGestionObraAlerta.Alerta;
                     }
                 }
-
                 seguimientoSemanalGestionObraOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObra(pSeguimientoSemanalGestionObra);
             }
         }
@@ -1623,18 +1624,16 @@ namespace asivamosffie.services
 
             return true;
         }
-        private bool ValidarRegistroCompletoMuestasLaboratorio(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
-        {
-            foreach (var item in pGestionObraCalidadEnsayoLaboratorio.EnsayoLaboratorioMuestra)
-            {
-                if (!item.RegistroCompleto.HasValue || !(bool)item.RegistroCompleto)
-                    return false;
-            }
 
-            return true;
-        }
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSocial(SeguimientoSemanalGestionObraSocial seguimientoSemanalGestionObraSocial)
         {
+            if (  seguimientoSemanalGestionObraSocial.CantidadEmpleosDirectos.HasValue
+               && seguimientoSemanalGestionObraSocial.CantidadEmpleosIndirectos.HasValue
+               && seguimientoSemanalGestionObraSocial.CantidadTotalEmpleos.HasValue
+               && seguimientoSemanalGestionObraSocial.SeRealizaronReuniones == false)
+                return true;
+
+
             if (
                     !seguimientoSemanalGestionObraSocial.CantidadEmpleosDirectos.HasValue
                  || !seguimientoSemanalGestionObraSocial.CantidadEmpleosIndirectos.HasValue
@@ -1646,15 +1645,19 @@ namespace asivamosffie.services
             {
                 return false;
             }
+
+       
+
             return true;
         }
 
         #region Validar Obra Calidad
 
-
         #endregion
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSeguridadSalud(SeguimientoSemanalGestionObraSeguridadSalud seguimientoSemanalGestionObraSeguridadSalud)
         {
+            if (seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes == 0)
+                return true;
 
             if (!seguimientoSemanalGestionObraSeguridadSalud.CantidadAccidentes.HasValue
                 || seguimientoSemanalGestionObraSeguridadSalud.SeguridadSaludCausaAccidente.Count() == 0
@@ -1672,8 +1675,6 @@ namespace asivamosffie.services
 
             return true;
         }
-
-
 
         private bool ValidarRegistroCompletoGestionObraCalidadEnsayoLaboratorio(GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorio)
         {
@@ -1710,8 +1711,11 @@ namespace asivamosffie.services
         }
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental pSeguimientoSemanalGestionObraAmbiental)
-        { 
-            if (   !pSeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo.HasValue
+        {
+            if (pSeguimientoSemanalGestionObraAmbiental.SeEjecutoGestionAmbiental == false)
+                return true;
+
+            if (!pSeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo.HasValue
                 && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion.HasValue
                 && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales.HasValue
                 && !pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro.HasValue
@@ -1733,7 +1737,6 @@ namespace asivamosffie.services
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro == true)
                 if (pSeguimientoSemanalGestionObraAmbiental.ManejoOtro.RegistroCompleto == false)
                     return false;
-
 
             return true;
         }
