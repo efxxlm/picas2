@@ -18,10 +18,10 @@ stages:
             versionSpec: '10.x'
           displayName: 'Install Node.js'
         - script: 
-            dir;
+            cd asivamosffie.web\asivamosffie;
             npm install -g @angular/cli
             npm install
-            ng build --pru
+            ng build --configuration=pru
         displayName: 'npm install and build'
   - stage: deployAcceptance
     displayName: Deploy Acceptance
