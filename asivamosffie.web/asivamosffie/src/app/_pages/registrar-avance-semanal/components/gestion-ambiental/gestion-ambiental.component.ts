@@ -53,6 +53,7 @@ export class GestionAmbientalComponent implements OnInit {
         this.formGestionAmbiental.get( 'cantidadActividad' ).valueChanges
             .subscribe( value => {
                 if ( Number( value ) > 0 ) {
+                    this.actividades.clear();
                     for ( let i = 0; i < Number( value ); i++ ) {
                         this.actividades.push(
                             this.fb.group({
@@ -90,7 +91,6 @@ export class GestionAmbientalComponent implements OnInit {
                             })
                         );
                     }
-                    console.log( this.actividades.value );
                 }
             } );
     }
@@ -137,6 +137,14 @@ export class GestionAmbientalComponent implements OnInit {
                 }
             }
         }
+    }
+
+    valuePendingTipoActividad( actividad: Dominio ) {
+        this.tipoActividades.filter( ( value, index ) => {
+            if ( value.codigo === actividad.codigo ) {
+                this.tipoActividades.splice( index, 1 );
+            }
+        } );
     }
 
     openDialog(modalTitle: string, modalText: string) {
@@ -263,22 +271,22 @@ export class GestionAmbientalComponent implements OnInit {
         }
         pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
         console.log( pSeguimientoSemanal );
-        this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.seRealizoPeticion.emit( true );
-                    console.log( this.routes.url );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-                                    ]
-                                )
-                    );
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            );
+        // this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
+        //     .subscribe(
+        //         response => {
+        //             this.openDialog( '', `<b>${ response.message }</b>` );
+        //             this.seRealizoPeticion.emit( true );
+        //             console.log( this.routes.url );
+        //             this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+        //                 () =>   this.routes.navigate(
+        //                             [
+        //                                 '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+        //                             ]
+        //                         )
+        //             );
+        //         },
+        //         err => this.openDialog( '', `<b>${ err.message }</b>` )
+        //     );
     }
 
 }
