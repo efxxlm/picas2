@@ -3,6 +3,8 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
+import { DefensaJudicialService } from 'src/app/core/_services/defensa-judicial.service';
 
 @Component({
   selector: 'app-form-contratos-asociados-dj',
@@ -15,30 +17,6 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataTable: any[] = [
-    {
-      nomEntidadContratista: 'Constructora Colpatria SAS',
-      institucionEdu: 'Andres Bello',
-      codDane: 'D435678',
-      sede: 'Sede Principal',
-      codSede: 'D435678',
-      id: 1
-    },
-    {
-      nomEntidadContratista: 'Constructora Colpatria SAS',
-      institucionEdu: 'Andres Bello',
-      codDane: 'D435678',
-      sede: 'Sede 2',
-      codSede: 'D435678',
-      id: 2
-    },
-    {
-      nomEntidadContratista: 'Constructora Colpatria SAS',
-      institucionEdu: 'Andres Bello',
-      codDane: 'D435678',
-      sede: 'Sede 3',
-      codSede: 'D435678',
-      id: 3
-    }
   ];
   formContratista: FormGroup;
   editorStyle = {
@@ -52,16 +30,16 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  contratosArray = [
-    { name: 'C223456789', value: '1' },
-    { name: 'C223456999', value: '2' },
-  ];
+  contratosArray = [];
 
-  constructor ( private fb: FormBuilder ) {
+  constructor ( private fb: FormBuilder, private defensaService:DefensaJudicialService ) {
     this.crearFormulario();
   }
 
   ngOnInit(): void {
+    this.defensaService.GetListContract().subscribe(response=>{
+      this.contratosArray=response.map(x=>x.numeroContrato);
+    });
     this.formContratista.get( 'numeroContratos' ).valueChanges
       .subscribe( value => {
         this.perfiles.clear();
