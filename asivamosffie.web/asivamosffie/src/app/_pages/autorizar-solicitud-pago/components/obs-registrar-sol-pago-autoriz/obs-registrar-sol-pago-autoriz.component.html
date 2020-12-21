@@ -1,0 +1,130 @@
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="faseContrato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fase del contrato </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.faseContrato }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="pagosRealizados">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pagos Realizados </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.pagosRealizados }} </td>
+        </ng-container>
+        <ng-container matColumnDef="valorFacturado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor facturado </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.valorFacturado }} </td>
+        </ng-container>
+        <ng-container matColumnDef="porcentajeFacturado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje facturado </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajeFacturado }} </td>
+        </ng-container>
+        <ng-container matColumnDef="saldoPorPagar">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo por pagar </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.saldoPorPagar }} </td>
+        </ng-container>
+        <ng-container matColumnDef="porcentajePorPagar">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Porcentaje por pagar </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.porcentajePorPagar }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+</div>
+<mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card">
+        <mat-card-title class="header-card--text textoGris">
+            Registro
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="text-align: left;">
+        <p><strong>Fecha de solicitud:</strong> 01/10/2020</p>
+        <p><strong>Número de radicado:</strong> RAD000056</p>
+        <p><strong>Fase del contrato:</strong> Fase 1 - Preconstrucción</p>
+    </mat-card-content>
+</mat-card>
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <div class="row mtop justCenter">
+        <div class="col-md-5">
+            <label class="label-left">¿Desde la coordinación tiene observaciones al registro de la solicitud?</label>
+        </div>
+        <div class="col-md-2">
+            <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                formControlName="tieneObservaciones">
+                <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+            <span class="required-form-group">*</span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+        <div class="text-area-quill izqTitle">
+            <label for="observaciones" class="text-area-quill--label">Observaciones al registro de la solicitud</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
+        </div>
+        <span class="contador" *ngIf="addressForm.get('observaciones').value">
+            {{1000 - addressForm.get('observaciones').value.length}}
+        </span>
+        <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
+            1000
+        </span>
+    </div>
+    <button mat-button color="warn" class="btn-guardar"
+        type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+</form>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Fase 1 - Preconstrucción
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Criterios de pago incluidos en la factura
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <app-obs-criterio-pagos-autoriz></app-obs-criterio-pagos-autoriz>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Detalle factura para proyectos asociados
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+              <app-obs-detllfact-procasoc-autoriz></app-obs-detllfact-procasoc-autoriz>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="expansion-style sub-expansion-black">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        Datos de la factura
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+               /*/*/*/*
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Descuentos Dirección Técnica
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        /**/*/*
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Soporte de la solicitud
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+      /*/*/*/
+    </mat-expansion-panel>
+</mat-accordion>
