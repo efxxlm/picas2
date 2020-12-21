@@ -1,4 +1,4 @@
-<section class="container">
+<section class="container" *ngIf="ensayoLaboratorio !== undefined">
     <div class="text-right">
         <a (click)="getRutaAnterior()" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,31 +7,32 @@
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar resultados gestión de calidad LU990088
+            Ver resultados gestión de calidad {{ ensayoLaboratorio.llaveMen }}
         </h1>
     </div>
 
     <div class="text-center d-flex justify-content-center mt-1em colorMainColor">
-        <p>Fecha de toma: <b>05/07/2020</b></p>
-        <p style="margin-left: 2em;"><b>Ensayo de laboratorio 1</b></p>
-        <p style="margin-left: 2em;">Tipo de ensayo: <b>Muestra de tierra</b></p>
+        <p>Fecha de toma: <b> {{ ensayoLaboratorio.fechaTomaMuestras | date: 'dd/MM/yyyy' }} </b></p>
+        <p style="margin-left: 2em;"><b>Ensayo de laboratorio {{ ensayoLaboratorio.numeroLaboratorio }}</b></p>
+        <p style="margin-left: 2em;">Tipo de ensayo: <b> {{ ensayoLaboratorio.tipoEnsayoCodigo }} </b></p>
     </div>
 
-    <div class="text-center mt-1em">
-        <mat-accordion>
+    <div class="text-center mt-1em" *ngIf="ensayoLaboratorio.ensayoLaboratorioMuestra.length > 0">
+        <mat-accordion *ngFor="let muestra of ensayoLaboratorio.ensayoLaboratorioMuestra; index as i">
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title">
-                        Muestra 1
+                        Muestra {{ i + 1 }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <div align="left">
+                <div class="mt-1em" align="left">
                     <mat-card class="border">
                         <mat-card-content class="mt-1em">
-                            <p><b>Nombre de la muestra</b>: Muestreo para análisis de micorrizas</p>
+                            <p><b>Fecha de entrega de resultados</b>: {{ muestra.fechaEntregaResultado | date: 'dd/MM/yyyy' }} </p>
+                            <p><b>Nombre de la muestra</b>: {{ muestra.nombreMuestra }} </p>
                             <section>
-                                <p><b>Observaciones frente a los resultados:</b></p> <div [innerHTML]="'<p>Se requiere análisis de esporas del suelo.</p>'"></div>
+                                <p><b>Observaciones frente a los resultados:</b></p> <div [innerHTML]="muestra.observacion"></div>
                             </section>
                         </mat-card-content>
                     </mat-card>

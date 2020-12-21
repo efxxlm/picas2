@@ -37,7 +37,17 @@
   
 .color-text {
   color: #000000b8;
-  border-color: #000000b8;
+  border-color: #000000b8 !important;
+}
+
+.border-right {
+    border-right: 1px solid #000000b8;
+}
+
+.border-color-detalle {
+    color: rgb(63, 63, 63) !important;
+    border-bottom: 1.5px solid#000000b8 !important;
+    border-right: 1.5px solid#000000b8 !important;
 }
 
 .h-2em {

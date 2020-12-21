@@ -36,7 +36,6 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
-        private routes: Router,
         private avanceSemanalSvc: RegistrarAvanceSemanalService )
     {
         this.crearFormulario();

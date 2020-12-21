@@ -78,17 +78,17 @@
 </section>
 
 <!-- Ver detalle -->
-<section class="text-center" *ngIf="esVerDetalle === true">
+<section class="text-center" *ngIf="esVerDetalle === true && gestionComiteObra !== undefined">
     <div class="d-flex justify-content-center colorMainColor">
-        <p>Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
-        <p style="margin-left: 2em;">Número de comité de obra: <b>Cobra_001</b> </p>
+        <p>Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+        <p style="margin-left: 2em;">Número de comité de obra: <b> {{ numeroComiteObra }} </b> </p>
     </div>
 
     <div align="left">
         <mat-card class="border">
             <mat-card-content class="mt-1em">
-              <p><b>Fecha de comité de obra</b>: 10/07/2020</p>
-              <p><b>URL con soporte</b>: https://drive.google.com/drive/registroavancesemanal/comitedeobra</p>
+              <p><b>Fecha de comité de obra</b>: {{ gestionComiteObra.fechaComite | date: 'dd/MM/yyyy' }} </p>
+              <p><b>URL con soporte</b>: {{ gestionComiteObra.urlSoporteComite }} </p>
             </mat-card-content>
         </mat-card>
     </div>

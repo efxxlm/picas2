@@ -59,44 +59,48 @@ export class GestionSSTComponent implements OnInit {
                 this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
                 this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
                 this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
-            }
-            if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
+
+                if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
                     && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud.length > 0 )
-            {
-                this.gestionObraSst =
-                    this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
-                if (    this.gestionObraSst.seguridadSaludCausaAccidente !== undefined
-                        && this.gestionObraSst.seguridadSaludCausaAccidente.length > 0 )
                 {
-                    for ( const causa of this.gestionObraSst.seguridadSaludCausaAccidente ) {
-                        const causaSeleccionada = this.causasDeAccidentes.filter( value => value.codigo === causa.causaAccidenteCodigo );
-                        causas.push( causaSeleccionada[0] );
-                    }
-                    this.formSst.get( 'seguridadSaludCausaAccidente' ).setValue( causas );
-                }
-                if ( this.gestionObraSst.cantidadAccidentes !== undefined ) {
-                    this.seguimientoSemanalGestionObraSeguridadSaludId = this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId;
-                    this.formSst.get( 'cantidadAccidentes' ).setValue( this.gestionObraSst.cantidadAccidentes !== undefined ? `${ this.gestionObraSst.cantidadAccidentes }` : '' );
-                    this.formSst.markAsDirty();
-                }
-                this.formSst.patchValue(
+                    this.gestionObraSst =
+                        this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+                    if (    this.gestionObraSst.seguridadSaludCausaAccidente !== undefined
+                            && this.gestionObraSst.seguridadSaludCausaAccidente.length > 0 )
                     {
-                        seRealizoCapacitacion:  this.gestionObraSst.seRealizoCapacitacion !== undefined ?
-                                                this.gestionObraSst.seRealizoCapacitacion : null,
-                        temaCapacitacion:   this.gestionObraSst.temaCapacitacion !== undefined ?
-                                            this.gestionObraSst.temaCapacitacion : null,
-                        seRealizoRevisionElementosProteccion:   this.gestionObraSst.seRealizoRevisionElementosProteccion !== undefined ?
-                                                                this.gestionObraSst.seRealizoRevisionElementosProteccion : null,
-                        cumpleRevisionElementosProyeccion:  this.gestionObraSst.cumpleRevisionElementosProyeccion !== undefined ?
-                                                            this.gestionObraSst.cumpleRevisionElementosProyeccion : null,
-                        seRealizoRevisionSenalizacion:  this.gestionObraSst.seRealizoRevisionSenalizacion !== undefined ?
-                                                        this.gestionObraSst.seRealizoRevisionSenalizacion : null,
-                        cumpleRevisionSenalizacion: this.gestionObraSst.cumpleRevisionSenalizacion !== undefined ?
-                                                    this.gestionObraSst.cumpleRevisionSenalizacion : null,
-                        urlSoporteGestion:  this.gestionObraSst.urlSoporteGestion !== undefined ?
-                                            this.gestionObraSst.urlSoporteGestion : ''
+                        for ( const causa of this.gestionObraSst.seguridadSaludCausaAccidente ) {
+                            const causaSeleccionada = this.causasDeAccidentes.filter(
+                                value => value.codigo === causa.causaAccidenteCodigo
+                            );
+                            causas.push( causaSeleccionada[0] );
+                        }
+                        this.formSst.get( 'seguridadSaludCausaAccidente' ).setValue( causas );
                     }
-                );
+                    if ( this.gestionObraSst.cantidadAccidentes !== undefined ) {
+                        this.seguimientoSemanalGestionObraSeguridadSaludId =    this.gestionObraSst
+                                                                                .seguimientoSemanalGestionObraSeguridadSaludId;
+                        this.formSst.get( 'cantidadAccidentes' ).setValue( this.gestionObraSst.cantidadAccidentes !== undefined ? `${ this.gestionObraSst.cantidadAccidentes }` : '' );
+                        this.formSst.markAsDirty();
+                    }
+                    this.formSst.patchValue(
+                        {
+                            seRealizoCapacitacion:  this.gestionObraSst.seRealizoCapacitacion !== undefined ?
+                                                    this.gestionObraSst.seRealizoCapacitacion : null,
+                            temaCapacitacion:   this.gestionObraSst.temaCapacitacion !== undefined ?
+                                                this.gestionObraSst.temaCapacitacion : null,
+                            seRealizoRevisionElementosProteccion:   this.gestionObraSst.seRealizoRevisionElementosProteccion !== undefined ?
+                                                                    this.gestionObraSst.seRealizoRevisionElementosProteccion : null,
+                            cumpleRevisionElementosProyeccion:  this.gestionObraSst.cumpleRevisionElementosProyeccion !== undefined ?
+                                                                this.gestionObraSst.cumpleRevisionElementosProyeccion : null,
+                            seRealizoRevisionSenalizacion:  this.gestionObraSst.seRealizoRevisionSenalizacion !== undefined ?
+                                                            this.gestionObraSst.seRealizoRevisionSenalizacion : null,
+                            cumpleRevisionSenalizacion: this.gestionObraSst.cumpleRevisionSenalizacion !== undefined ?
+                                                        this.gestionObraSst.cumpleRevisionSenalizacion : null,
+                            urlSoporteGestion:  this.gestionObraSst.urlSoporteGestion !== undefined ?
+                                                this.gestionObraSst.urlSoporteGestion : ''
+                        }
+                    );
+                }
             }
         } );
     }
@@ -113,6 +117,20 @@ export class GestionSSTComponent implements OnInit {
             cumpleRevisionSenalizacion: [ null ],
             urlSoporteGestion: [ '' ]
         });
+    }
+
+    getCausasDetalle( causas: any[] ) {
+        if ( this.causasDeAccidentes.length > 0 && this.seguimientoSemanal !== undefined ) {
+            const causaSeleccion = [];
+            causas.forEach( causa => {
+                this.causasDeAccidentes.filter( value => {
+                    if ( causa.causaAccidenteCodigo === value.codigo ) {
+                        causaSeleccion.push( value );
+                    }
+                } );
+            } );
+            return causaSeleccion;
+        }
     }
 
     validateNumber( value: string, campoForm: string ) {

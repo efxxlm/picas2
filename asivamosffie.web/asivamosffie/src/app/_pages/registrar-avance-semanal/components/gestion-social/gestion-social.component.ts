@@ -54,31 +54,32 @@ export class GestionSocialComponent implements OnInit {
             this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
             this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
             this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
-        }
-        if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
-            && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial.length > 0 )
-        {
-            this.gestionSocial = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
-            if ( this.gestionSocial !== undefined ) {
-                this.seguimientoSemanalGestionObraSocialId = this.gestionSocial.seguimientoSemanalGestionObraSocialId;
-                this.formGestionSocial.setValue(
-                    {
-                        cantidadEmpleosDirectos:    this.gestionSocial.cantidadEmpleosDirectos !== undefined ?
-                                                    String( this.gestionSocial.cantidadEmpleosDirectos ) : '',
-                        cantidadEmpleosIndirectos:  this.gestionSocial.cantidadEmpleosIndirectos !== undefined ?
-                                                    String( this.gestionSocial.cantidadEmpleosIndirectos ) : '',
-                        cantidadTotalEmpleos:   this.gestionSocial.cantidadTotalEmpleos !== undefined ?
-                                                String( this.gestionSocial.cantidadTotalEmpleos ) : '',
-                        seRealizaronReuniones:  this.gestionSocial.seRealizaronReuniones !== undefined ?
-                                                this.gestionSocial.seRealizaronReuniones : null,
-                        temaComunidad:  this.gestionSocial.temaComunidad !== undefined ?
-                                        this.gestionSocial.temaComunidad : null,
-                        conclusion: this.gestionSocial.conclusion !== undefined ?
-                                    this.gestionSocial.conclusion : null,
-                        urlSoporteGestion:  this.gestionSocial.urlSoporteGestion !== undefined ?
-                                            this.gestionSocial.urlSoporteGestion : ''
-                    }
-                );
+
+            if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
+                && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial.length > 0 )
+            {
+                this.gestionSocial = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
+                if ( this.gestionSocial !== undefined ) {
+                    this.seguimientoSemanalGestionObraSocialId = this.gestionSocial.seguimientoSemanalGestionObraSocialId;
+                    this.formGestionSocial.setValue(
+                        {
+                            cantidadEmpleosDirectos:    this.gestionSocial.cantidadEmpleosDirectos !== undefined ?
+                                                        String( this.gestionSocial.cantidadEmpleosDirectos ) : '',
+                            cantidadEmpleosIndirectos:  this.gestionSocial.cantidadEmpleosIndirectos !== undefined ?
+                                                        String( this.gestionSocial.cantidadEmpleosIndirectos ) : '',
+                            cantidadTotalEmpleos:   this.gestionSocial.cantidadTotalEmpleos !== undefined ?
+                                                    String( this.gestionSocial.cantidadTotalEmpleos ) : '',
+                            seRealizaronReuniones:  this.gestionSocial.seRealizaronReuniones !== undefined ?
+                                                    this.gestionSocial.seRealizaronReuniones : null,
+                            temaComunidad:  this.gestionSocial.temaComunidad !== undefined ?
+                                            this.gestionSocial.temaComunidad : null,
+                            conclusion: this.gestionSocial.conclusion !== undefined ?
+                                        this.gestionSocial.conclusion : null,
+                            urlSoporteGestion:  this.gestionSocial.urlSoporteGestion !== undefined ?
+                                                this.gestionSocial.urlSoporteGestion : ''
+                        }
+                    );
+                }
             }
         }
     }

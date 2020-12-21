@@ -191,22 +191,43 @@
 </section>
 
 <!-- Ver detalle -->
-<section *ngIf="esVerDetalle === true">
-  <div align="left">
-    <mat-card class="border">
-        <mat-card-content class="mt-1em">
-          <section>
-            <p><b>Técnicas</b></p> <div [innerHTML]="'<p>Revisión de la programación de obra.</p>'"></div>
-          </section>
-
-          <section>
-            <p><b>Legales</b></p> <div [innerHTML]="'<p>Solicitar licencia ambiental.</p>'"></div>
-          </section>
-
-          <section>
-            <p><b>Administrativas - Financieras</b></p> <div [innerHTML]="'<p>Se revisó el flujo de inversión de recursos.</p>'"></div>
-          </section>
-        </mat-card-content>
-    </mat-card>
-  </div>
+<section *ngIf="esVerDetalle === true && reporteActividad !== undefined">
+  <section *ngIf="esSiguienteSemana === false">
+    <div align="left">
+      <mat-card class="border">
+          <mat-card-content class="mt-1em">
+            <section>
+              <p><b>Técnicas</b></p> <div [innerHTML]="reporteActividad.actividadTecnica"></div>
+            </section>
+  
+            <section>
+              <p><b>Legales</b></p> <div [innerHTML]="reporteActividad.actividadLegal"></div>
+            </section>
+  
+            <section>
+              <p><b>Administrativas - Financieras</b></p> <div [innerHTML]="reporteActividad.actividadAdministrativaFinanciera"></div>
+            </section>
+          </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
+  <section *ngIf="esSiguienteSemana === true">
+    <div align="left">
+      <mat-card class="border">
+          <mat-card-content class="mt-1em">
+            <section>
+              <p><b>Técnicas</b></p> <div [innerHTML]="reporteActividad.actividadTecnicaSiguiente"></div>
+            </section>
+  
+            <section>
+              <p><b>Legales</b></p> <div [innerHTML]="reporteActividad.actividadLegalSiguiente"></div>
+            </section>
+  
+            <section>
+              <p><b>Administrativas - Financieras</b></p> <div [innerHTML]="reporteActividad.actividadAdministrativaFinancieraSiguiente"></div>
+            </section>
+          </mat-card-content>
+      </mat-card>
+    </div>
+  </section>
 </section>

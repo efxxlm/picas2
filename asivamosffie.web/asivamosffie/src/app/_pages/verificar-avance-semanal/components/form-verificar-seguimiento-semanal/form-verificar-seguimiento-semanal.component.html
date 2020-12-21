@@ -1,13 +1,13 @@
 <section class="container" *ngIf="seguimientoSemanal !== undefined">
     <div class="text-right">
-        <a mat-button color="primary" class="btn-regresar" (click)="getRutaAnterior()">
+        <a mat-button color="primary" class="btn-regresar" routerLink="/verificarAvanceSemanal">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Ver detalle/Editar registro de seguimiento semanal {{ seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
+            Verificar avance semanal {{ seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
         </h1>
     </div>
 
@@ -51,20 +51,24 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
+                    <mat-panel-title class="expansion-style--title completo">
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-avance-fisico-financiero [seguimientoDiario]="seguimientoSemanal" [esVerDetalle]="true"></app-avance-fisico-financiero>
+                <!--
+                    <app-avance-fisico-financiero [seguimientoDiario]="seguimientoSemanal" [esVerDetalle]="true"></app-avance-fisico-financiero>
+                -->
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
+                    <mat-panel-title class="expansion-style--title completo">
                         Avance financiero
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-avance-financiero>
+                <!--
+                    <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-avance-financiero>
+                -->
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -73,34 +77,42 @@
                         Gestión de la obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-de-obra>
+                <!--
+                    <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-de-obra>
+                -->
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
+                    <mat-panel-title class="expansion-style--title completo">
                         Reporte de actividades
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-reporte-actividades>
+                <!--
+                    <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-reporte-actividades>
+                -->
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
+                    <mat-panel-title class="expansion-style--title completo">
                         Registro fotográfico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-registro-fotografico>
+                <!--
+                    <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-registro-fotografico>
+                -->
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
+                    <mat-panel-title class="expansion-style--title completo">
                         Comité de obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-comite-obra>
+                <!--
+                    <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-comite-obra>
+                -->
             </mat-expansion-panel>
         </mat-accordion>
     </div>

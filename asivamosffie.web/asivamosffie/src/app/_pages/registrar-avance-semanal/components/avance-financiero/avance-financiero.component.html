@@ -88,4 +88,23 @@
 </section>
 
 <!-- Ver detalle -->
-<section class="text-center" *ngIf="esVerDetalle === true"></section>
+<section class="text-center" *ngIf="esVerDetalle === true && avanceFinanciero !== undefined">
+  <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+
+  <app-tabla-avance-financiero class="mt-1em"></app-tabla-avance-financiero>
+
+  <div align="left">
+    <mat-card class="border">
+        <mat-card-content class="mt-1em">
+            <p *ngIf="this.avanceFinanciero.requiereObservacion === true"><b>¿Requiere hacer alguna observación al avance financiero?</b>: Si </p>
+            <p *ngIf="this.avanceFinanciero.requiereObservacion === false"><b>¿Requiere hacer alguna observación al avance financiero?</b>: No </p>
+            <section *ngIf="this.avanceFinanciero.requiereObservacion === true">
+              <b>Observaciones</b>:
+              <div [innerHTML]="avanceFinanciero.observacion"></div>
+            </section>
+            <p *ngIf="avanceFinanciero.generarAlerta === true"><b>¿Considera que se debe generar una alerta sobre el avance financiero de la obra?</b>: Si </p>
+            <p *ngIf="avanceFinanciero.generarAlerta === false"><b>¿Considera que se debe generar una alerta sobre el avance financiero de la obra?</b>: No </p>
+        </mat-card-content>
+    </mat-card>
+</div>
+</section>

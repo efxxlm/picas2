@@ -71,7 +71,7 @@
 </section>
 
 <!-- Ver detalle -->
-<section class="text-center" *ngIf="esVerDetalle === true">
+<section class="text-center" *ngIf="esVerDetalle === true && reporteActividad !== undefined">
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -88,8 +88,7 @@
                         </mat-card-title>
                     </mat-card-header>
                     <mat-card-content class="mt-1em">
-                        <p>1. Las actividades a realizar para esta semana se cumplieron sin ningín imprevisto.</p>
-                        <p>2. Las activdiades programadas para la próxima semana serán supervisadas para asegurar el cumplimiento de las mismas.</p>
+                        <section [innerHTML]="reporteActividad.resumenEstadoContrato" style="margin-left: 2em;"></section>
                     </mat-card-content>
                 </mat-card>
             </div>
@@ -102,7 +101,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="false" [esVerDetalle]="true"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas [reporteActividad]="reporteActividad" [esSiguienteSemana]="false" [esVerDetalle]="true"></app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
@@ -112,7 +111,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="true" [esVerDetalle]="true"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas [reporteActividad]="reporteActividad" [esSiguienteSemana]="true" [esVerDetalle]="true"></app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

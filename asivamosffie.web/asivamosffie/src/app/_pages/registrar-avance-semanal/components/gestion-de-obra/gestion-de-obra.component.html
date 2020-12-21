@@ -59,7 +59,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-ambiental [esVerDetalle]="true"></app-gestion-ambiental>
+        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-ambiental>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -69,7 +69,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-calidad [esVerDetalle]="true"></app-gestion-calidad>
+        <app-gestion-calidad [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-calidad>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -79,7 +79,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-sst [esVerDetalle]="true"></app-gestion-sst>
+        <app-gestion-sst [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-sst>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -89,7 +89,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-social [esVerDetalle]="true"></app-gestion-social>
+        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-social>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -99,6 +99,6 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-alertas-relevantes [esVerDetalle]="true"></app-alertas-relevantes>
+        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-alertas-relevantes>
     </mat-expansion-panel>
 </mat-accordion>

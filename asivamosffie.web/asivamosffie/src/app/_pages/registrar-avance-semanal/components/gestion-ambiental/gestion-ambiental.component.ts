@@ -53,17 +53,18 @@ export class GestionAmbientalComponent implements OnInit {
             this.seguimientoSemanalId = this.seguimientoSemanal.seguimientoSemanalId;
             this.seguimientoSemanalGestionObraId =  this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ?
                 this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraId : 0;
-        }
-        if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
-                && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental.length > 0 )
-        {
-            const gestionObraAmbiental = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental[0];
-            if ( gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
-                this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).setValue( gestionObraAmbiental.seEjecutoGestionAmbiental );
-                this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).markAsDirty();
-                this.gestionAmbiental = true;
-            } else {
-                this.gestionAmbiental = false;
+            if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
+                    && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental.length > 0 )
+            {
+                const gestionObraAmbiental =    this.seguimientoSemanal.seguimientoSemanalGestionObra[0]
+                                                .seguimientoSemanalGestionObraAmbiental[0];
+                if ( gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
+                    this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).setValue( gestionObraAmbiental.seEjecutoGestionAmbiental );
+                    this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).markAsDirty();
+                    this.gestionAmbiental = true;
+                } else {
+                    this.gestionAmbiental = false;
+                }
             }
         }
     }
