@@ -124,6 +124,7 @@ namespace asivamosffie.api.Controllers
             }
         }
                 
+        /*jflorez deprecated, no entendi su funcionalidad*/
         [HttpGet]
         [Route("GetListProyects")]
         public async Task<ActionResult<List<ProyectoGrilla>>> GetListProyects(int pProyectoId)

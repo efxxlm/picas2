@@ -27,12 +27,12 @@
                                 </div>
                                 <div class="col d-flex">
                                     <mat-form-field class="full-width">
-                                        <input matInput #nombre type="text" maxlength="100" required
+                                        <input matInput #nombre type="text" [formControl]="myControl" maxlength="100" required
                                             [matAutocomplete]="auto">
                                         <mat-autocomplete #auto="matAutocomplete">
-                                            <mat-option (click)="seleccionAutocomplete(nombres.name)"
-                                                *ngFor="let nombres of contratosArray" [value]="nombres.name">
-                                                {{nombres.name}}
+                                            <mat-option (click)="seleccionAutocomplete(nombres)"
+                                                *ngFor="let nombres of contratosArray" [value]="nombres">
+                                                {{nombres}}
                                             </mat-option>
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="contrato">
@@ -52,19 +52,19 @@
                 </div>
                 <div class="table-responsive w-100">
                     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-                        <ng-container matColumnDef="nomEntidadContratista">
+                        <ng-container matColumnDef="nombreContratista">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre de la entidad contratista </th>
-                            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.nomEntidadContratista }} </b> </td>
+                            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.nombreContratista }} </b> </td>
                         </ng-container>
                 
-                        <ng-container matColumnDef="institucionEdu">
+                        <ng-container matColumnDef="institucionEducativa">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEdu }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
                         </ng-container>
                 
-                        <ng-container matColumnDef="codDane">
+                        <ng-container matColumnDef="codigoDane">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Código DANE IE </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.codDane }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.codigoDane }} </td>
                         </ng-container>
                 
                         <ng-container matColumnDef="sede">
@@ -72,16 +72,16 @@
                             <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
                         </ng-container>
                 
-                        <ng-container matColumnDef="codSede">
+                        <ng-container matColumnDef="sedeCodigo">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Código SEDE </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.codSede }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.sedeCodigo }} </td>
                         </ng-container>
                 
-                        <ng-container matColumnDef="gestion">
+                        <ng-container matColumnDef="contratacionProyectoId">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Seleccionar </th>
                             <td mat-cell *matCellDef="let element">
                                 <section class="example-section">
-                                    <mat-checkbox></mat-checkbox>
+                                    <mat-checkbox (click)="addProject(element.contratacionProyectoId)"></mat-checkbox>
                                   </section>
                             </td>
                         </ng-container>

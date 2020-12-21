@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { environment } from 'src/environments/environment';
-import { Respuesta } from './common/common.service';
+import { Respuesta } from '../common/common.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,7 @@ export class DefensaJudicialService {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CreateOrEditFichaEstudio`, fichaEstudio );
   }
 
-  CreateOrEditDefensaJudicial( defensaJudicial: FormData) {
+  CreateOrEditDefensaJudicial( defensaJudicial: DefensaJudicial) {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CreateOrEditDefensaJudicial`, defensaJudicial );
   }
 
@@ -50,5 +51,18 @@ export class DefensaJudicialService {
   GetPlantillaDefensaJudicial(pContratoId:number)//file
   {
     return this.http.get(`${this.url}/JudicialDefense/GetPlantillaDefensaJudicial?pContratoId=${ pContratoId }`, { responseType: "blob" } );
-  }
+  }    
+}
+
+export interface DefensaJudicial{
+  defensaJudicialId:number,
+  legitimacionCodigo:string,
+  tipoProcesoCodigo:string,
+  numeroProceso:string,
+  cantContratos:number,
+  estadoProcesoCodigo:string,
+  solicitudId:number,
+  esLegitimacionActiva:boolean,
+  esCompleto:boolean,
+  defensaJudicialContratacionProyecto:any[]
 }
