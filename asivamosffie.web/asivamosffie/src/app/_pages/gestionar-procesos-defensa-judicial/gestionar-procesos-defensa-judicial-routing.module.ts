@@ -29,7 +29,7 @@ const routes: Routes = [
     component: GestionarProcesosDefensaJudicialComponent
   },
   {
-    path: 'registrarNuevoProcesoJudicial',
+    path: 'registrarNuevoProcesoJudicial/:id',
     component: RegistroNuevoProcesoJudicialComponent
   },
   {

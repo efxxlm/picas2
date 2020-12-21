@@ -62,7 +62,11 @@
                     Contratos asociados
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-contratos-asociados-dj></app-form-contratos-asociados-dj>
+            <app-form-contratos-asociados-dj 
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"
+             ></app-form-contratos-asociados-dj>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>

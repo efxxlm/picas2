@@ -9,6 +9,7 @@ import { Respuesta } from '../common/common.service';
   providedIn: 'root'
 })
 export class DefensaJudicialService {
+  
 
   url: string = environment.apiUrl;
 
@@ -40,8 +41,8 @@ export class DefensaJudicialService {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CreateOrEditFichaEstudio`, fichaEstudio );
   }
 
-  CreateOrEditDefensaJudicial( defensaJudicial: DefensaJudicial) {
-    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CreateOrEditDefensaJudicial`, defensaJudicial );
+  CreateOrEditDefensaJudicial( prmDefensaJudicial: DefensaJudicial) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CreateOrEditDefensaJudicial`, prmDefensaJudicial );
   }
 
   CreateOrEditDemandadoConvocado( defensaJudicial: FormData) {
@@ -52,17 +53,26 @@ export class DefensaJudicialService {
   {
     return this.http.get(`${this.url}/JudicialDefense/GetPlantillaDefensaJudicial?pContratoId=${ pContratoId }`, { responseType: "blob" } );
   }    
+
+  GetDefensaJudicialById(controlJudicialId: any) {
+    return this.http.get<DefensaJudicial>(`${this.url}/JudicialDefense/GetVistaDatosBasicosProceso?pDefensaJudicialId=${ controlJudicialId }` );    
+  }
 }
 
 export interface DefensaJudicial{
-  defensaJudicialId:number,
-  legitimacionCodigo:string,
-  tipoProcesoCodigo:string,
-  numeroProceso:string,
-  cantContratos:number,
-  estadoProcesoCodigo:string,
-  solicitudId:number,
-  esLegitimacionActiva:boolean,
-  esCompleto:boolean,
-  defensaJudicialContratacionProyecto:any[]
+  defensaJudicialId?:number,
+  legitimacionCodigo?:string,
+  tipoProcesoCodigo?:string,
+  numeroProceso?:string,
+  cantContratos?:number,
+  estadoProcesoCodigo?:string,
+  solicitudId?:number,
+  esLegitimacionActiva?:boolean,
+  esCompleto?:boolean,
+  defensaJudicialContratacionProyecto?:DefensaJudicialContratacionProyecto[]
+}
+export interface DefensaJudicialContratacionProyecto{
+  defensaJudicialContratacionProyectoId?:number,
+  contratacionProyectoId?:number,
+  esCompleto?:boolean
 }

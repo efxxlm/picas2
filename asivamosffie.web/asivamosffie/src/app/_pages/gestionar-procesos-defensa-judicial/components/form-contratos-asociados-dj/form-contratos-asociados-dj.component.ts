@@ -1,12 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { ContratosModificacionesContractualesService } from 'src/app/core/_services/contratos-modificaciones-contractuales/contratos-modificaciones-contractuales.service';
-import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
+import { DefensaJudicial, DefensaJudicialContratacionProyecto, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-contratos-asociados-dj',
@@ -18,6 +21,11 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+  @Input() legitimacion:boolean;
+  @Input() tipoProceso:string;
+  @Input() defensaJudicial:DefensaJudicial;
+
   dataTable: any[] = [
   ];
   myControl = new FormControl();
@@ -39,15 +47,25 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   listProyectos: any[]=[];
   listProyectosSeleccion: any[]=[];
 
-  constructor ( private fb: FormBuilder, private defensaService:DefensaJudicialService ) {
+  constructor ( private fb: FormBuilder, private defensaService:DefensaJudicialService,
+    public dialog: MatDialog,    
+    private route: ActivatedRoute,
+    private router: Router ) {
     this.crearFormulario();
   }
 
   ngOnInit(): void {
+    console.log("form");
+    console.log(this.defensaJudicial);
+    console.log(this.legitimacion);
+    console.log(this.tipoProceso);
+    if(Object.keys(this.defensaJudicial).length>0)
+    {
+      this.formContratista.get( 'numeroContratos' ).setValue(this.defensaJudicial.cantContratos);
+    }
     this.defensaService.GetListContract().subscribe(response=>{
       this.contratosArray=response.map(x=>x.numeroContrato);
       this.contratos=response;
-      console.log(this.contratosArray);
     });
     this.formContratista.get( 'numeroContratos' ).valueChanges
       .subscribe( value => {
@@ -169,11 +187,11 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   guardar () {
     console.log( this.formContratista );
     console.log(this.listProyectos);
-    let defContraProyecto:any[]=[];
+    let defContraProyecto:DefensaJudicialContratacionProyecto[]=[];
     this.listProyectos.forEach(element => {
       defContraProyecto.push({
         defensaJudicialContratacionProyectoId:0,
-        contratacionProyectoId:element,
+        contratacionProyectoId:element.contratacionProyectoId,
         esCompleto:true
       });
     });
@@ -183,19 +201,36 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       legitimacionCodigo:'',
       tipoProcesoCodigo:'',
       numeroProceso:'',
-      cantContratos:0,
+      cantContratos:this.formContratista.get( 'numeroContratos' ).value,
       estadoProcesoCodigo:'',
       solicitudId:0,
       esLegitimacionActiva:null,
       esCompleto:false,
-      defensaJudicialContratacionProyecto:defContraProyecto};
+      defensaJudicialContratacionProyecto:defContraProyecto
+    };
       console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
         response=>{
-          console.log(response);
+          this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
         }
       );
 
+  }
+
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+          if(id>0)
+          {
+            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
+          }                  
+      });
+    }
   }
 
   addProject(idproyecto:any)

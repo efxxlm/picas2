@@ -26,7 +26,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateOrEditDemandadoConvocado")]        
-        public async Task<IActionResult> CreateOrEditDemandadoConvocado(DemandadoConvocado demandadoConvocado)
+        public async Task<IActionResult> CreateOrEditDemandadoConvocado([FromBody] DemandadoConvocado demandadoConvocado)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -71,7 +71,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateOrEditDefensaJudicial")]
-        public async Task<IActionResult> CreateOrEditDefensaJudicial(DefensaJudicial defensaJudicial)
+        public async Task<IActionResult> CreateOrEditDefensaJudicial([FromBody] DefensaJudicial defensaJudicial)
         {
             Respuesta respuesta = new Respuesta();
             try

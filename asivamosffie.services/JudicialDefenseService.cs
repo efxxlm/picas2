@@ -150,6 +150,14 @@ namespace asivamosffie.services
                     defensaJudicial.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
                     //fichaEstudio.DefensaJudicialId = fichaEstudio.DefensaJudicialId;
                     defensaJudicial.Eliminado = false;
+                    foreach(var defContratcionProyecto in defensaJudicial.DefensaJudicialContratacionProyecto)
+                    {
+                        defContratcionProyecto.UsuarioCreacion= defensaJudicial.UsuarioCreacion;
+                        defContratcionProyecto.FechaCreacion = DateTime.Now;
+                        defContratcionProyecto.EsCompleto = true;
+                        defContratcionProyecto.Eliminado = false;
+                    }
+
                     _context.DefensaJudicial.Add(defensaJudicial);
                 }
                 else
@@ -170,7 +178,13 @@ namespace asivamosffie.services
 
                     defensaJudicialBD.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
                     defensaJudicialBD.EsRequiereSupervisor = defensaJudicial.EsRequiereSupervisor;
-
+                    foreach (var defContratcionProyecto in defensaJudicial.DefensaJudicialContratacionProyecto)
+                    {
+                        defContratcionProyecto.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
+                        defContratcionProyecto.FechaModificacion = DateTime.Now;
+                        defContratcionProyecto.EsCompleto = true;
+                        defContratcionProyecto.Eliminado = false;
+                    }
                     _context.DefensaJudicial.Update(defensaJudicialBD);
 
                 }
