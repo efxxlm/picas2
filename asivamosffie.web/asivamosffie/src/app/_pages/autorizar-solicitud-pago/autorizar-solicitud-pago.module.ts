@@ -11,11 +11,17 @@ import { ObsCargarFormpagoAutorizComponent } from './components/obs-cargar-formp
 import { ObsRegistrarSolPagoAutorizComponent } from './components/obs-registrar-sol-pago-autoriz/obs-registrar-sol-pago-autoriz.component';
 import { ObsCriterioPagosAutorizComponent } from './components/obs-criterio-pagos-autoriz/obs-criterio-pagos-autoriz.component';
 import { ObsDetllfactProcasocAutorizComponent } from './components/obs-detllfact-procasoc-autoriz/obs-detllfact-procasoc-autoriz.component';
+import { ObsDatosFacturaAutorizComponent } from './components/obs-datos-factura-autoriz/obs-datos-factura-autoriz.component';
+import { ObsDescDirTecnicaAutorizComponent } from './components/obs-desc-dir-tecnica-autoriz/obs-desc-dir-tecnica-autoriz.component';
+import { ObsSoporteurlAutorizComponent } from './components/obs-soporteurl-autoriz/obs-soporteurl-autoriz.component';
+import { ObsValidListchqeoAutorizComponent } from './components/obs-valid-listchqeo-autoriz/obs-valid-listchqeo-autoriz.component';
+import { ObsCertAutorizacionAutorizComponent } from './components/obs-cert-autorizacion-autoriz/obs-cert-autorizacion-autoriz.component';
+import { FormEditAutorizarSolicitudComponent } from './components/form-edit-autorizar-solicitud/form-edit-autorizar-solicitud.component';
 
 
 
 @NgModule({
-  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent],
+  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent],
   imports: [
     CommonModule,
     MaterialModule,
