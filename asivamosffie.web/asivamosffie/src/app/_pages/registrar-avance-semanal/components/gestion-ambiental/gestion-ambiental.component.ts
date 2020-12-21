@@ -72,6 +72,7 @@ export class GestionAmbientalComponent implements OnInit {
     crearFormulario() {
         this.formGestionAmbiental = this.fb.group({
             seEjecutoGestionAmbiental: [ null ],
+            cantidadActividad: [ '' ],
             tipoActividad: [ null ],
             manejoMaterialInsumo: this.fb.group({
                 manejoMaterialesInsumosId: [ 0 ],
@@ -106,8 +107,19 @@ export class GestionAmbientalComponent implements OnInit {
         });
     }
 
-    valuePending( value: any ) {
-        console.log( value );
+    valuePending( value: string ) {
+        if ( isNaN( Number( value ) ) === true ) {
+            this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( '' );
+        } else {
+            if ( value.length > 0 ) {
+                if ( Number( value ) <= 0 ) {
+                    this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( '1' );
+                }
+                if ( Number( value ) > 4 ) {
+                    this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( '4' );
+                }
+            }
+        }
     }
 
     openDialog(modalTitle: string, modalText: string) {

@@ -115,7 +115,7 @@ export class GestionSocialComponent implements OnInit {
                             this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( `${ empleosDirectos + empleosIndirectos }` );
                         }
                         if ( empleosDirectos === 0 && empleosIndirectos === 0 ) {
-                            this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( '' );
+                            this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( '0' );
                         }
                     }
                 }
@@ -134,7 +134,7 @@ export class GestionSocialComponent implements OnInit {
                             this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( `${ empleosDirectos + empleosIndirectos }` );
                         }
                         if ( empleosDirectos === 0 && empleosIndirectos === 0 ) {
-                            this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( '' );
+                            this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( '0' );
                         }
                     }
                 }

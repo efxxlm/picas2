@@ -68,12 +68,16 @@ export class GestionCalidadComponent implements OnInit {
     }
 
     valuePending( value: string ) {
-        if ( value.length > 0 ) {
-            if ( Number( value ) <= 0 ) {
-                this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '1' );
-            }
-            if ( Number( value ) > 10 ) {
-                this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '10' );
+        if ( isNaN( Number( value ) ) === true ) {
+            this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '' );
+        } else {
+            if ( value.length > 0 ) {
+                if ( Number( value ) <= 0 ) {
+                    this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '1' );
+                }
+                if ( Number( value ) > 10 ) {
+                    this.formGestionCalidad.get( 'cantidadEnsayos' ).setValue( '10' );
+                }
             }
         }
     }
