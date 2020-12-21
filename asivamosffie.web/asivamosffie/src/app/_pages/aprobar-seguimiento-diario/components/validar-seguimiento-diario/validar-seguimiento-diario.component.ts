@@ -50,4 +50,11 @@ export class ValidarSeguimientoDiarioComponent implements OnInit {
     }
   }
 
+  innerObservacion ( observacion: string ) {
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return `<b>${ observacionHtml }</b>`;
+    };
+  };
+
 }

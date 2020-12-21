@@ -76,7 +76,7 @@
                       color="accent" 
                       class="btn-table" 
                       type="button"
-                      (click)="Enviar( element )"
+                      (click)="Validar( element )"
                       *ngIf="element.estadoCodigo == '5' && element.tieneObservaciones === false"
           >
           Validar
@@ -100,7 +100,7 @@
                       color="accent" 
                       class="btn-table" 
                       type="button"
-                      (click)="Validar( element )"
+                      (click)="Registrar( element )"
                       *ngIf="element.estadoCodigo == '5'"
           >
           Ver detalle/Editar
@@ -112,7 +112,7 @@
                       color="accent" 
                       class="btn-table" 
                       type="button"
-                      (click)="Validar( element )"
+                      (click)="Registrar( element )"
                       *ngIf="element.estadoCodigo == '6' || element.estadoCodigo == '7'"
           >
           Ver detalle

@@ -103,6 +103,12 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
     private commonServcie: CommonService,
 
   ) {
+
+    if (this.router.getCurrentNavigation().extras.replaceUrl) {
+      this.router.navigateByUrl('/aprobarSeguimientoDiario');
+      return;
+    };
+
     this.minDate = new Date();
     if (this.router.getCurrentNavigation().extras.state)
       this.proyecto = this.router.getCurrentNavigation().extras.state.proyecto;

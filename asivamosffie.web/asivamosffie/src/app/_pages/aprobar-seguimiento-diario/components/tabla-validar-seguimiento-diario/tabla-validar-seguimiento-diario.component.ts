@@ -63,7 +63,7 @@ export class TablaValidarSeguimientoDiarioComponent implements AfterViewInit {
     }
   }
 
-  Validar(proyecto ){
+  Registrar(proyecto ){
     this.router.navigate( [ '/aprobarSeguimientoDiario/validarSeguimiento', proyecto.seguimientoDiarioId ? proyecto.seguimientoDiarioId : 0 ], { state: { proyecto } } )
   }
 
@@ -81,6 +81,10 @@ export class TablaValidarSeguimientoDiarioComponent implements AfterViewInit {
         if ( respuesta.code == "200" )
           this.ngAfterViewInit()
       })
+  }
+
+  Validar( proyecto ){
+    
   }
 
 }

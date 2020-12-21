@@ -20,6 +20,11 @@ export class VerDetalleRegistroComponent implements OnInit {
     private dailyFollowUpService: FollowUpDailyService,
   ) 
   { 
+    if (this.router.getCurrentNavigation().extras.replaceUrl) {
+      this.router.navigateByUrl('/aprobarSeguimientoDiario');
+      return;
+    };
+
     if (this.router.getCurrentNavigation().extras.state)
       this.proyecto = this.router.getCurrentNavigation().extras.state.proyecto;
   }
@@ -41,5 +46,12 @@ export class VerDetalleRegistroComponent implements OnInit {
   volver(){
     this.router.navigate(['/registroSeguimientoDiario/verBitacora', this.seguimiento.contratacionProyectoId]);
   }
+
+  innerObservacion ( observacion: string ) {
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return `<b>${ observacionHtml }</b>`;
+    };
+  };
 
 }

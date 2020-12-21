@@ -20,6 +20,11 @@ export class VerificarSeguimientoComponent implements OnInit {
     private dailyFollowUpService: FollowUpDailyService,
   ) 
   {
+    if (this.router.getCurrentNavigation().extras.replaceUrl) {
+      this.router.navigateByUrl('/aprobarSeguimientoDiario');
+      return;
+    };
+
     if (this.router.getCurrentNavigation().extras.state)
       this.proyecto = this.router.getCurrentNavigation().extras.state.proyecto;
   }
@@ -44,5 +49,12 @@ export class VerificarSeguimientoComponent implements OnInit {
       return textolimpio.length;
     }
   }
+
+  innerObservacion ( observacion: string ) {
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return `<b>${ observacionHtml }</b>`;
+    };
+  };
 
 }
