@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,6 +32,10 @@ export class GestionAmbientalComponent implements OnInit {
         otra: '4'
     };
 
+    get actividades() {
+        return this.formGestionAmbiental.get( 'actividades' ) as FormArray;
+    }
+
     constructor(
         private fb: FormBuilder,
         private commonSvc: CommonService,
@@ -46,6 +50,49 @@ export class GestionAmbientalComponent implements OnInit {
                     this.tipoActividades = actividades;
                 }
             );
+        this.formGestionAmbiental.get( 'cantidadActividad' ).valueChanges
+            .subscribe( value => {
+                if ( Number( value ) > 0 ) {
+                    for ( let i = 0; i < Number( value ); i++ ) {
+                        this.actividades.push(
+                            this.fb.group({
+                                tipoActividad: [ null ],
+                                manejoMaterialInsumo: this.fb.group({
+                                    manejoMaterialesInsumosId: [ 0 ],
+                                    proveedores: this.fb.array( [] ),
+                                    estanProtegidosDemarcadosMateriales: [ null ],
+                                    requiereObservacion: [ null ],
+                                    observacion: [ null ],
+                                    url: [ null ]
+                                }),
+                                manejoResiduosConstruccion: this.fb.group({
+                                    manejoResiduosConstruccionDemolicionId: [ 0 ],
+                                    estaCuantificadoRCD: [ null ],
+                                    requiereObservacion: [ null ],
+                                    observacion: [ null ],
+                                    manejoResiduosConstruccionDemolicionGestor: this.fb.array( [] ),
+                                    seReutilizadorResiduos: [ null ],
+                                    cantidadToneladas: [ '' ]
+                                }),
+                                manejoResiduosPeligrosos: this.fb.group({
+                                    manejoResiduosPeligrososEspecialesId: [ 0 ],
+                                    estanClasificados: [ null ],
+                                    requiereObservacion: [ null ],
+                                    observacion: [ null ],
+                                    urlRegistroFotografico: [ '' ]
+                                }),
+                                otra: this.fb.group({
+                                    manejoOtroId: [ 0 ],
+                                    fechaActividad: [ null ],
+                                    actividad: [ null ],
+                                    urlSoporteGestion: [ '' ]
+                                })
+                            })
+                        );
+                    }
+                    console.log( this.actividades.value );
+                }
+            } );
     }
 
     ngOnInit(): void {
@@ -73,37 +120,7 @@ export class GestionAmbientalComponent implements OnInit {
         this.formGestionAmbiental = this.fb.group({
             seEjecutoGestionAmbiental: [ null ],
             cantidadActividad: [ '' ],
-            tipoActividad: [ null ],
-            manejoMaterialInsumo: this.fb.group({
-                manejoMaterialesInsumosId: [ 0 ],
-                proveedores: this.fb.array( [] ),
-                estanProtegidosDemarcadosMateriales: [ null ],
-                requiereObservacion: [ null ],
-                observacion: [ null ],
-                url: [ null ]
-            }),
-            manejoResiduosConstruccion: this.fb.group({
-                manejoResiduosConstruccionDemolicionId: [ 0 ],
-                estaCuantificadoRCD: [ null ],
-                requiereObservacion: [ null ],
-                observacion: [ null ],
-                manejoResiduosConstruccionDemolicionGestor: this.fb.array( [] ),
-                seReutilizadorResiduos: [ null ],
-                cantidadToneladas: [ '' ]
-            }),
-            manejoResiduosPeligrosos: this.fb.group({
-                manejoResiduosPeligrososEspecialesId: [ 0 ],
-                estanClasificados: [ null ],
-                requiereObservacion: [ null ],
-                observacion: [ null ],
-                urlRegistroFotografico: [ '' ]
-            }),
-            otra: this.fb.group({
-                manejoOtroId: [ 0 ],
-                fechaActividad: [ null ],
-                actividad: [ null ],
-                urlSoporteGestion: [ '' ]
-            })
+            actividades: this.fb.array( [] )
         });
     }
 

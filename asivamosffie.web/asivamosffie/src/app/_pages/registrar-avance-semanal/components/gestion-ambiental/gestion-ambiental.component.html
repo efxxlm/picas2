@@ -60,6 +60,7 @@
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
+                    <!--
                     <mat-card>
                         <mat-card-content>
         
@@ -84,7 +85,7 @@
                                 </div>
                             </div>
 
-                            <!-- Manejo de materiales e insumos -->
+                            Manejo de materiales e insumos
                             <app-manejo-material-insumo [formManejoMaterialInsumo]="formGestionAmbiental.get( 'manejoMaterialInsumo' )"
                                                         [materialInsumo]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
                                                         *ngIf=" formGestionAmbiental.get( 'tipoActividad' ).value !== null
@@ -93,7 +94,7 @@
                                                         class="mt-1em">
                             </app-manejo-material-insumo>
         
-                            <!-- Manejo de residuos de construcción y demolición -->
+                            Manejo de residuos de construcción y demolición
                             <app-manejo-residuos-construccion [formManejoResiduosConstruccion]="formGestionAmbiental.get( 'manejoResiduosConstruccion' )"
                                                               [residuosConstruccion]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
                                                               *ngIf=" formGestionAmbiental.get( 'tipoActividad' ).value !== null
@@ -102,7 +103,7 @@
                                                               class="mt-1em">
                             </app-manejo-residuos-construccion>
         
-                            <!-- Manejo de residuos peligrosos y especiales -->
+                            Manejo de residuos peligrosos y especiales
                             <app-manejo-residuos-peligrosos [formManejoResiduosPeligrosos]="formGestionAmbiental.get( 'manejoResiduosPeligrosos' )"
                                                             [residuosPeligrosos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
                                                             *ngIf=" formGestionAmbiental.get( 'tipoActividad' ).value !== null
@@ -111,7 +112,7 @@
                                                             class="mt-1em">
                             </app-manejo-residuos-peligrosos>
         
-                            <!-- Otros manejos -->
+                            Otros manejos
                             <app-otros-manejos  [formOtrosManejos]="formGestionAmbiental.get( 'otra' )"
                                                 [otrosManejos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
                                                 *ngIf=" formGestionAmbiental.get( 'tipoActividad' ).value !== null
@@ -121,6 +122,7 @@
                             </app-otros-manejos>
                         </mat-card-content>
                     </mat-card>
+                    -->
                 </mat-expansion-panel>
             </mat-accordion>
         </div>

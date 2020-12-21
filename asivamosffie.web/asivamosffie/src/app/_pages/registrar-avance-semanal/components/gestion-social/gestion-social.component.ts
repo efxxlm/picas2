@@ -106,12 +106,12 @@ export class GestionSocialComponent implements OnInit {
                 response => {
                     if ( response.length > 0 ) {
                         empleosDirectos = Number( response );
-                        if ( empleosDirectos > 0 || empleosIndirectos > 0 ) {
+                        if ( empleosDirectos >= 0 || empleosIndirectos >= 0 ) {
                             this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( `${ empleosDirectos + empleosIndirectos }` );
                         }
                     } else {
                         empleosDirectos = 0;
-                        if ( empleosDirectos > 0 || empleosIndirectos > 0 ) {
+                        if ( empleosDirectos >= 0 || empleosIndirectos >= 0 ) {
                             this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( `${ empleosDirectos + empleosIndirectos }` );
                         }
                         if ( empleosDirectos === 0 && empleosIndirectos === 0 ) {
@@ -125,12 +125,12 @@ export class GestionSocialComponent implements OnInit {
                 response => {
                     if ( response.length > 0 ) {
                         empleosIndirectos = Number( response );
-                        if ( empleosDirectos > 0 || empleosIndirectos > 0 ) {
+                        if ( empleosDirectos >= 0 || empleosIndirectos >= 0 ) {
                             this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( `${ empleosDirectos + empleosIndirectos }` );
                         }
                     } else {
                         empleosIndirectos = 0;
-                        if ( empleosDirectos > 0 || empleosIndirectos > 0 ) {
+                        if ( empleosDirectos >= 0 || empleosIndirectos >= 0 ) {
                             this.formGestionSocial.get( 'cantidadTotalEmpleos' ).setValue( `${ empleosDirectos + empleosIndirectos }` );
                         }
                         if ( empleosDirectos === 0 && empleosIndirectos === 0 ) {
