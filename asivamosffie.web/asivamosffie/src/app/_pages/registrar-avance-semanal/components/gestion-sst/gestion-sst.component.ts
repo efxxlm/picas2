@@ -178,7 +178,7 @@ export class GestionSSTComponent implements OnInit {
         const pSeguimientoSemanal = this.seguimientoSemanal;
         const causas = [];
         const causaSeleccionadas = this.formSst.get( 'seguridadSaludCausaAccidente' ).value;
-        if ( causaSeleccionadas.length > 0 ) {
+        if ( causaSeleccionadas !== null && causaSeleccionadas.length > 0 ) {
             for ( const causa of causaSeleccionadas ) {
                 causas.push(
                     {
