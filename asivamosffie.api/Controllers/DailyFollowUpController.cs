@@ -162,6 +162,42 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        [HttpPut]
+        [Route("ApproveDailyFollowUp")]
+        public async Task<IActionResult> ApproveDailyFollowUp([FromQuery] int pId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string usuario = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _dailyFollowUp.ApproveDailyFollowUp( pId, usuario );
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPut]
+        [Route("ReturnToComptroller")]
+        public async Task<IActionResult> ReturnToComptroller([FromQuery] int pId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                string usuario = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _dailyFollowUp.ReturnToComptroller( pId, usuario );
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
  
     }
 }

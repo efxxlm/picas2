@@ -37,6 +37,7 @@ export interface SeguimientoDiario {
         seguimientoDiarioObservaciones?: SeguimientoDiarioObservaciones[],
         observacionApoyo?: SeguimientoDiarioObservaciones,
         observacionSupervisor?: SeguimientoDiarioObservaciones,
+        observacionDevolucion?: SeguimientoDiarioObservaciones,
         productividadNombre?: string,
         disponibilidadMaterialNombre?: string,
         disponibilidadEquipoNombre?: string,

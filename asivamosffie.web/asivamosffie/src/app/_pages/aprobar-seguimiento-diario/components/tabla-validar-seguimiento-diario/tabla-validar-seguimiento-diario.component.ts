@@ -75,7 +75,7 @@ export class TablaValidarSeguimientoDiarioComponent implements AfterViewInit {
   }
 
   Enviar( proyecto ){
-    this.followUpDailyService.sendToSupervision( proyecto.seguimientoDiarioId )
+    this.followUpDailyService.returnToComptroller( proyecto.seguimientoDiarioId )
       .subscribe( respuesta => {
         this.openDialog( '', respuesta.message)
         if ( respuesta.code == "200" )
@@ -84,7 +84,14 @@ export class TablaValidarSeguimientoDiarioComponent implements AfterViewInit {
   }
 
   Validar( proyecto ){
-    
+
+    this.followUpDailyService.approveDailyFollowUp( proyecto.seguimientoDiarioId )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message)
+        if ( respuesta.code == "200" )
+          this.ngAfterViewInit()
+      });
+
   }
 
 }

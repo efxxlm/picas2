@@ -58,4 +58,12 @@ export class FollowUpDailyService {
     return this.http.put<Respuesta>( `${ this.url }/SendToSupervision?pId=${ id }`, null);
   }
 
+  approveDailyFollowUp( id ){
+    return this.http.put<Respuesta>( `${ this.url }/approveDailyFollowUp?pId=${ id }`, null);
+  }
+
+  returnToComptroller( id ){
+    return this.http.put<Respuesta>( `${ this.url }/returnToComptroller?pId=${ id }`, null);
+  }
+
 }

@@ -123,5 +123,9 @@
         public const string Create_Edit_Observacion_Seguimiento_Diario = "154";
 
         public const string Enviar_Seguimiento_Diario_A_Supervision = "155";
+
+        public const string Aprobar_Seguimiento_Diario = "172";
+        public const string Devolver_Seguimiento_Diario = "173";
+        
     }
 }
