@@ -24,16 +24,16 @@
             <div class="col-md-12" style="padding-left: 0;">
                 <div>
                     <div class="d-flex align-items-center">
-                        <div class="text-area-quill" style="text-align: left; margin-top: 1em;">
+                        <div class="text-area-quill" style="text-align: left; margin-top: 1em; max-width: calc(100% - 2.3em); margin-left: -2em;">
                             <label for="observaciones" class="text-area-quill--label size-label colorMainColor">
                                 Observaciones
                             </label>
                             <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones">
+                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
                             </quill-editor>
                         </div>
                         <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                            {{1000 - textoLimpio(addressForm.controls.observaciones.value)}}
+                            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
                         </span>
                         <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                             1000

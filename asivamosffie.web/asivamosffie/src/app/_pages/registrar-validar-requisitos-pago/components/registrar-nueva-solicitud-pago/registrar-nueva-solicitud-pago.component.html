@@ -30,14 +30,14 @@
         </div>
         <div *ngIf="this.addressForm.value.tipoSolicitud=='1'">
             <mat-card class="shipping-card ">
-                <mat-card-header class="header-card">
+                <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">
                         Contratos de obra
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="modalidadContrato">Modalidad del contrato</label>
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="row" *ngIf="this.addressForm.value.modalidadContrato!=null">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="numeroContrato">Número de contrato</label>
@@ -85,14 +85,14 @@
         </div>
         <div *ngIf="this.addressForm.value.tipoSolicitud=='2'">
             <mat-card class="shipping-card">
-                <mat-card-header class="header-card">
+                <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">
                         Contratos de interventoría
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="modalidadContrato">Modalidad del contrato</label>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div class="row" *ngIf="this.addressForm.value.modalidadContrato!=null">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="numeroContrato">Número de contrato</label>
@@ -140,7 +140,7 @@
         </div>
         <div *ngIf="this.addressForm.value.numeroContrato!=null">
             <mat-card class="shipping-card var-main-gris">
-                <mat-card-header class="header-card">
+                <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text textoGris">
                         N801801
                     </mat-card-title>
@@ -182,7 +182,7 @@
                         </table>
                         <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
                     </div>
-                    <div class="tabs--actions">
+                    <div class="tabs--actions" style="margin-top: 1em;">
                         <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="this.openProyectosAsociados()">
                             Ver proyectos asociados
                         </button>

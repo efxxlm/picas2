@@ -17,7 +17,7 @@
                 </ng-container>
                 <ng-container matColumnDef="documento">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
-                    <td mat-cell *matCellDef="let element" align="center"> {{ element.documento }} </td>
+                    <td mat-cell *matCellDef="let element" align="left" > <span class="supportBlack">{{ element.documento }}</span> </td>
                 </ng-container>
                 <ng-container matColumnDef="revTecnica">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Revisión técnica </th>
@@ -39,8 +39,10 @@
                     <td mat-cell *matCellDef="let element" align="center">
                         <button mat-raised-button color="accent" class="btn-table " [class.sin-diligenciar]="element.item==1" *ngIf="element.item==1"
                             (click)="this.callObservaciones()">Observaciones</button>
+
                         <button mat-raised-button color="accent" class="btn-table " [class.sin-diligenciar]="element.item==2" *ngIf="element.item==2"
                             (click)="this.callSubsanacion()">Observaciones</button>
+                            
                     </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

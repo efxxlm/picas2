@@ -16,7 +16,7 @@
         </div>
     </div>
     <div *ngIf="formDescuentos.get( 'aplicaDescuento' ).value == true">
-        <div class="d-flex mt-1em col-md-6" style="margin: 0 auto;">
+        <div class="d-flex mt-1em col-md-6" style="margin: 10px auto;">
             <label class="mr-label" class="label-left"><b>¿Cuántos descuentos se aplican sobre la factura?</b></label>
             <div class="col d-flex">
                 <mat-form-field class="w-70">
@@ -45,7 +45,7 @@
         <div formArrayName="descuentos" *ngIf="formDescuentos.get( 'numeroDescuentos' ).value !== null">
             <div *ngFor="let descuento of descuentos.controls; index as i">
                 <mat-card class="shipping-card" [formGroup]="descuento">
-                    <mat-card-header class="header-card">
+                    <mat-card-header class="header-card header-card--margin">
                         <mat-card-title class="header-card--text">
                             Descuento {{i+1}}
                         </mat-card-title>

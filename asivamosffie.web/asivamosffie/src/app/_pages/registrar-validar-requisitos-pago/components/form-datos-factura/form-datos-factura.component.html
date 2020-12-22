@@ -1,6 +1,6 @@
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
   <mat-card class="shipping-card">
-    <mat-card-header class="header-card">
+    <mat-card-header class="header-card header-card--margin">
       <mat-card-title class="header-card--text">
         Datos
       </mat-card-title>
@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <p><strong>Valor facturado: </strong>$15.000.000</p>
+      <p style="margin-top: 10px;"><strong>Valor facturado: </strong>$15.000.000</p>
       <!--
       <h2 class="card-subTitle">Descuentos dirección técnica asociados a la factura</h2>
       <div class="row">
