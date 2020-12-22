@@ -152,8 +152,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Obra_Avance_Semanal = 111,
 
-        Estado_Reporte_Semanal = 112,
-
-        Estado_Muestras_Seguimiento_Semanal = 118,
+        Estado_Reporte_Semanal_Y_Muestras = 112,
+         
     }
 }

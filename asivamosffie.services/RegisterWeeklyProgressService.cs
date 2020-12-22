@@ -410,7 +410,7 @@ namespace asivamosffie.services
             List<dynamic> ListBitaCora = new List<dynamic>();
 
             List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
-            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal).ToList();
+            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
 
             int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
 
@@ -469,7 +469,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal).FirstOrDefault().Nombre;
+                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).FirstOrDefault().Nombre;
 
                 return new Respuesta
                 {
@@ -512,7 +512,7 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Muestras_Seguimiento_Semanal ).FirstOrDefault().Nombre;
+                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).FirstOrDefault().Nombre;
 
                 return new Respuesta
                 {
