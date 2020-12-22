@@ -1743,22 +1743,22 @@ namespace asivamosffie.services
             if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().RegistroCompleto == false)
                 return false;
 
-            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraCalidad.Count() > 0)
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraCalidad.Count() == 0)
                 return false;
             if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraCalidad.FirstOrDefault().RegistroCompleto == false)
                 return false;
 
-            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSeguridadSalud.Count() > 0)
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSeguridadSalud.Count() == 0)
                 return false;
             if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSeguridadSalud?.FirstOrDefault().RegistroCompleto == false)
                 return false;
 
-            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSocial.Count() > 0)
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSocial.Count() == 0)
                 return false;
             if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraSocial?.FirstOrDefault().RegistroCompleto == false)
                 return false;
 
-            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraAlerta?.Count() > 0)
+            if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraAlerta?.Count() == 0)
                 return false;
             if (pSeguimientoSemanalGestionObra?.SeguimientoSemanalGestionObraAlerta?.FirstOrDefault().RegistroCompleto == false)
                 return false;
@@ -1880,19 +1880,19 @@ namespace asivamosffie.services
                 return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoMaterialesInsumo == true)
-                if (pSeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RegistroCompleto == false)
+                if (ValidarRegistroCompletoManejoMaterialesInsumo(pSeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo) == false)
                     return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion == true)
-                if (pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.RegistroCompleto == false)
+                if (ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion) == false)
                     return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales == true)
-                if (pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales.RegistroCompleto == false)
+                if (ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales)== false)
                     return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro == true)
-                if (pSeguimientoSemanalGestionObraAmbiental.ManejoOtro.RegistroCompleto == false)
+                if (ValidarRegistroCompletoManejoOtro(pSeguimientoSemanalGestionObraAmbiental.ManejoOtro) == false)
                     return false;
 
             return true;
