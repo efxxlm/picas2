@@ -412,11 +412,22 @@ namespace asivamosffie.services
 
             List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
             List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal).ToList();
-             
+
             int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
 
             foreach (var item in ListseguimientoSemanal)
-            { 
+            {
+                decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
+
+                if (item.SeguimientoSemanalAvanceFisico.Count() > 0)
+                {
+                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal.HasValue)
+                        ProgramacionAcumulada = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
+                   
+                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal.HasValue)
+                        AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
+
+                }
                 ListBitaCora.Add(new
                 {
                     item.NumeroSemana,
@@ -424,13 +435,13 @@ namespace asivamosffie.services
                     item.FechaInicio,
                     item.FechaFin,
                     EstadoObra = !string.IsNullOrEmpty(item.ContratacionProyecto.EstadoObraCodigo) ? ListEstadoObra.Where(r => r.Codigo == item.ContratacionProyecto.EstadoObraCodigo).FirstOrDefault().Nombre : "---",
-                    ProgramacionAcumulada = Math.Truncate((decimal)item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal),
-                    AvanceFisico = Math.Truncate((decimal)item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal),
+                    ProgramacionAcumulada = Math.Truncate((decimal)ProgramacionAcumulada),
+                    AvanceFisico = Math.Truncate((decimal)AvanceFisico),
                     EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
                     item.ContratacionProyecto?.Proyecto?.LlaveMen,
-                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato, 
+                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
                     EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoObraCodigo) ? ListEstadoObra.Where(r => r.Codigo == item.EstadoObraCodigo).FirstOrDefault().Nombre : "---",
-                });  
+                });
             }
             return ListBitaCora;
         }
