@@ -30,7 +30,7 @@
     <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
 </div>
 <mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card">
+    <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text textoGris">
             Registro
         </mat-card-title>
@@ -52,19 +52,19 @@
                 <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
                 <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
             </mat-radio-group>
-            <span class="required-form-group">*</span>
+            <span class="required-form-group" style="margin-left: 1px;">*</span>
         </div>
     </div>
     <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
         <div class="text-area-quill izqTitle">
-            <label for="observaciones" class="text-area-quill--label">Observaciones al registro de la solicitud</label>
-            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
+            <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones al registro de la solicitud</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
         </div>
-        <span class="contador" *ngIf="addressForm.get('observaciones').value">
-            {{1000 - addressForm.get('observaciones').value.length}}
+        <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
         </span>
-        <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
+        <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
             1000
         </span>
     </div>

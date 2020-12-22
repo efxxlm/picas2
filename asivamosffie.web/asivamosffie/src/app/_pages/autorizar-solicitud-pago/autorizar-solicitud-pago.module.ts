@@ -20,11 +20,13 @@ import { FormEditAutorizarSolicitudComponent } from './components/form-edit-auto
 import { DialogProyectosAsociadosAutorizComponent } from './components/dialog-proyectos-asociados-autoriz/dialog-proyectos-asociados-autoriz.component';
 import { TablaObservacionesAutorizComponent } from './components/tabla-observaciones-autoriz/tabla-observaciones-autoriz.component';
 import { VerDetalleAutorizarSolicitudComponent } from './components/ver-detalle-autorizar-solicitud/ver-detalle-autorizar-solicitud.component';
+import { DetalleSoliPagoAutorizComponent } from './components/detalle-soli-pago-autoriz/detalle-soli-pago-autoriz.component';
+import { DetalleValidListchqAutorizComponent } from './components/detalle-valid-listchq-autoriz/detalle-valid-listchq-autoriz.component';
 
 
 
 @NgModule({
-  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent],
+  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent],
   imports: [
     CommonModule,
     MaterialModule,

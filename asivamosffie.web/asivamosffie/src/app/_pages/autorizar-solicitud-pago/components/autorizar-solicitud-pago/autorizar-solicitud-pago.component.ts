@@ -30,7 +30,7 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoAprobacion: 'En proceso de autorización',
+      estadoAprobacion: 'Con solicitud devuelta por el coordinador',
       gestion: 1
     },
     {
@@ -71,10 +71,10 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
     this.routes.navigate(['/autorizarSolicitudDePago/autorizacionSolicitud',id]);
   }
   verDetalleEditar(id){
-    this.routes.navigate(['/autorizarSolicitudDePago/verDetalleEditarAprobarSolicitud',id]);
+    this.routes.navigate(['/autorizarSolicitudDePago/verDetalleEditarAutorizarSolicitud',id]);
   }
   verDetalle(id){
-    this.routes.navigate(['/autorizarSolicitudDePago/verDetalleAprobarSolicitud',id]);
+    this.routes.navigate(['/autorizarSolicitudDePago/verDetalleAutorizarSolicitud',id]);
   }
   openCertificate(){
     const dialogConfig = new MatDialogConfig();
