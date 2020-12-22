@@ -527,24 +527,24 @@ export class GestionAmbientalComponent implements OnInit {
             ];
         }
         console.log( seguimientoSemanalGestionObra );
-        // pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
-        // console.log( pSeguimientoSemanal );
-        // this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
-        //     .subscribe(
-        //         response => {
-        //             this.openDialog( '', `<b>${ response.message }</b>` );
-        //             this.seRealizoPeticion.emit( true );
-        //             console.log( this.routes.url );
-        //             this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-        //                 () =>   this.routes.navigate(
-        //                             [
-        //                                 '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-        //                             ]
-        //                         )
-        //             );
-        //         },
-        //         err => this.openDialog( '', `<b>${ err.message }</b>` )
-        //     );
+        pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
+        console.log( pSeguimientoSemanal );
+        this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.seRealizoPeticion.emit( true );
+                    console.log( this.routes.url );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
