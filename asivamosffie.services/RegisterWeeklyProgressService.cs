@@ -397,36 +397,40 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
-            List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId )
+            List<SeguimientoSemanal> ListseguimientoSemanal =
+                await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
                 .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
                 .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Contratacion)
                        .ThenInclude(r => r.Contrato)
+                .Include(r => r.SeguimientoSemanalAvanceFisico)
+
                 .ToListAsync();
 
             List<dynamic> ListBitaCora = new List<dynamic>();
 
-            List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
-            List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
+            List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
+            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal).ToList();
+             
+            int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
 
             foreach (var item in ListseguimientoSemanal)
-            {
-                InstitucionEducativaSede Sede = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == item.ContratacionProyecto?.Proyecto?.SedeId).FirstOrDefault();
-                InstitucionEducativaSede institucionEducativa = ListInstitucionEducativaSede.Where(r => r.InstitucionEducativaSedeId == Sede.PadreId).FirstOrDefault();
-
+            { 
                 ListBitaCora.Add(new
                 {
+                    item.NumeroSemana,
+                    UltimaSemana,
+                    item.FechaInicio,
+                    item.FechaFin,
+                    EstadoObra = !string.IsNullOrEmpty(item.ContratacionProyecto.EstadoObraCodigo) ? ListEstadoObra.Where(r => r.Codigo == item.ContratacionProyecto.EstadoObraCodigo).FirstOrDefault().Nombre : "---",
+                    ProgramacionAcumulada = Math.Truncate((decimal)item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal),
+                    AvanceFisico = Math.Truncate((decimal)item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal),
+                    EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
                     item.ContratacionProyecto?.Proyecto?.LlaveMen,
-                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
-                    TipoIntervencion = !string.IsNullOrEmpty(item.ContratacionProyecto?.Proyecto.TipoIntervencionCodigo) ? TipoIntervencion.Where(r => r.Codigo == item.ContratacionProyecto?.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre : " ",
-                    institucionEducativa.Nombre,
-                    Sede = Sede.Nombre,
-                    item.FechaModificacion,
-                    EstadoObra = item.EstadoObraCodigo
-                });
-
-
+                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato, 
+                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoObraCodigo) ? ListEstadoObra.Where(r => r.Codigo == item.EstadoObraCodigo).FirstOrDefault().Nombre : "---",
+                });  
             }
             return ListBitaCora;
         }
@@ -1349,7 +1353,7 @@ namespace asivamosffie.services
                                 manejoOtroOld.UrlSoporteGestion = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UrlSoporteGestion;
                             }
                         }
-                    } 
+                    }
                 }
 
                 //Gestion Calidad
