@@ -751,7 +751,7 @@ namespace asivamosffie.services
                 SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
                 seguimientoSemanalMod.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
-                seguimientoSemanalMod.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalMod);
+                seguimientoSemanalMod.EnviarSupervisor = ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalMod);
 
                 _context.Update(seguimientoSemanalMod);
                 _context.SaveChanges();
