@@ -1,4 +1,4 @@
-<form autocomplete="off" [formGroup]="formOtrosManejos" *ngIf="formOtrosManejos !== undefined">
+<form autocomplete="off" [formGroup]="formOtrosManejos" *ngIf="formOtrosManejos !== undefined && esVerDetalle === false">
     <div class="row">
         <div class="col-md-12">
           <div class="row">
@@ -80,3 +80,13 @@
         </div>
     </div>
 </form>
+
+<!-- Ver detalle -->
+<section *ngIf="formOtrosManejos !== undefined && esVerDetalle === true">
+  <p><b>Fecha de actividad</b>: {{ formOtrosManejos.get( 'fechaActividad' ).value | date: 'dd/MM/yyyy' }} </p>
+  <section>
+    <b>Actividad</b>:
+    <div [innerHTML]="formOtrosManejos.get( 'actividad' ).value"></div>
+  </section>
+  <p *ngIf="formOtrosManejos.get( 'urlSoporteGestion' ).value.length > 0"><b>URL con soporte</b>: {{ formOtrosManejos.get( 'urlSoporteGestion' ).value }} </p>
+</section>

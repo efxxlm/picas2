@@ -13,6 +13,7 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
 
     @Input() formManejoResiduosConstruccion: FormGroup;
     @Input() residuosConstruccion: any;
+    @Input() esVerDetalle = false;
     manejoResiduosConstruccion: any;
     editorStyle = {
         height: '45px'

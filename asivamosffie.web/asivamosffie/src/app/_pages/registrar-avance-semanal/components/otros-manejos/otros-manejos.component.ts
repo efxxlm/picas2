@@ -10,6 +10,7 @@ export class OtrosManejosComponent implements OnInit {
 
     @Input() formOtrosManejos: FormGroup;
     @Input() otrosManejos: any;
+    @Input() esVerDetalle = false;
     otros: any;
     editorStyle = {
         height: '45px'

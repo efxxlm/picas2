@@ -23,6 +23,8 @@ export class GestionAmbientalComponent implements OnInit {
     seguimientoSemanalGestionObraId: number;
     gestionAmbiental: boolean;
     gestionObraAmbiental: any;
+    cantidadActividades = 0;
+    gestionAmbientalDetalle: any[] = [];
     booleanosActividadRelacionada: any[] = [
         { value: true, viewValue: 'Si' },
         { value: false, viewValue: 'No' }
@@ -58,7 +60,7 @@ export class GestionAmbientalComponent implements OnInit {
             if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
                     && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental.length > 0 )
             {
-                let cantidadActividades = 0;
+                this.cantidadActividades = 0;
                 this.gestionObraAmbiental =     this.seguimientoSemanal.seguimientoSemanalGestionObra[0]
                                                 .seguimientoSemanalGestionObraAmbiental[0];
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
@@ -70,22 +72,22 @@ export class GestionAmbientalComponent implements OnInit {
                     this.gestionAmbiental = false;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoMaterialesInsumo === true ) {
-                    cantidadActividades++;
+                    this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion === true ) {
-                    cantidadActividades++;
+                    this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales === true ) {
-                    cantidadActividades++;
+                    this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.tieneManejoOtro === true ) {
-                    cantidadActividades++;
+                    this.cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental === true ) {
-                    if ( cantidadActividades > 0 ) {
+                    if ( this.cantidadActividades > 0 ) {
                         this.formGestionAmbiental.get( 'cantidadActividad' ).disable();
                     }
-                    this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( `${ cantidadActividades }` );
+                    this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( `${ this.cantidadActividades }` );
                 }
             }
         }

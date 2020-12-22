@@ -220,20 +220,20 @@ export class GestionSSTComponent implements OnInit {
         ];
         console.log( seguimientoSemanalGestionObra );
         pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
-        // this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
-        //     .subscribe(
-        //         response => {
-        //             this.openDialog( '', `<b>${ response.message }</b>` );
-        //             this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-        //                 () =>   this.routes.navigate(
-        //                             [
-        //                                 '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-        //                             ]
-        //                         )
-        //             );
-        //         },
-        //         err => this.openDialog( '', `<b>${ err.message }</b>` )
-        //     );
+        this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

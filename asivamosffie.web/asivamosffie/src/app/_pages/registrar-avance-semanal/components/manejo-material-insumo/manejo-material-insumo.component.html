@@ -1,4 +1,4 @@
-<form autocomplete="off" [formGroup]="formManejoMaterialInsumo" *ngIf="proveedores.length > 0">
+<form autocomplete="off" [formGroup]="formManejoMaterialInsumo" *ngIf="proveedores.length > 0 && esVerDetalle === false">
     <section *ngFor="let proveedor of proveedores.controls; index as i" [formGroup]="proveedor">
         <div class="row">
             <div class="col-md-12">
@@ -190,3 +190,29 @@
         </div>
     </div>
 </form>
+
+<!-- Ver Detalle -->
+<section *ngIf="proveedores.length > 0 && esVerDetalle === true">
+  <div *ngFor="let proveedor of proveedores.controls; index as i">
+    <div class="row">
+      <div class="col-md-12">
+          <div class="row">
+              <h3> <b> Proveedor {{ i+1 }} </b> </h3>
+          </div>
+      </div>
+  </div>
+    <p><b>Proveedor</b>: {{ proveedor.get( 'proveedor' ).value }} </p>
+    <p *ngIf="proveedor.get( 'requierePermisosAmbientalesMineros' ).value === true"><b>¿Requiere permisos ambientales y/o mineros?</b>: Si</p>
+    <p *ngIf="proveedor.get( 'requierePermisosAmbientalesMineros' ).value === false"><b>¿Requiere permisos ambientales y/o mineros?</b>: No</p>
+    <p *ngIf="proveedor.get( 'urlRegistroFotografico' ).value.length > 0"><b>Campo URL</b>: {{ proveedor.get( 'urlRegistroFotografico' ).value }} </p>
+  </div>
+  <p class="mt-1em" *ngIf="formManejoMaterialInsumo.get( 'estanProtegidosDemarcadosMateriales' ).value === true"><b>¿Los materiales de construcción se encontraron protegidos y demarcados correctamente?</b>: Si</p>
+  <p class="mt-1em" *ngIf="formManejoMaterialInsumo.get( 'estanProtegidosDemarcadosMateriales' ).value === false"><b>¿Los materiales de construcción se encontraron protegidos y demarcados correctamente?</b>: No</p>
+  <p *ngIf="formManejoMaterialInsumo.get( 'requiereObservacion' ).value === true"><b>¿Requiere hacer una observación acerca del estado de los materiales de construcción?</b>: Si</p>
+  <p *ngIf="formManejoMaterialInsumo.get( 'requiereObservacion' ).value === false"><b>¿Requiere hacer una observación acerca del estado de los materiales de construcción?</b>: No</p>
+  <section *ngIf="formManejoMaterialInsumo.get( 'requiereObservacion' ).value === true">
+    <b>Observacion</b>:
+    <div [innerHTML]="formManejoMaterialInsumo.get( 'observacion' ).value"></div>
+  </section>
+  <p *ngIf="formManejoMaterialInsumo.get( 'url' ).value !== null"><b>URL con soporte</b>: {{ formManejoMaterialInsumo.get( 'url' ).value }} </p>
+</section>
