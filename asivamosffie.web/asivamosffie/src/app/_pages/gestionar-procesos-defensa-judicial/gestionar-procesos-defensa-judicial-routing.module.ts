@@ -33,6 +33,10 @@ const routes: Routes = [
     component: RegistroNuevoProcesoJudicialComponent
   },
   {
+    path: 'registrarNuevoProcesoJudicial',
+    component: RegistroNuevoProcesoJudicialComponent
+  },
+  {
     path: 'verDetalleEditarProceso/:id',
     component: VerDetalleEditarRegistroProcesoDjComponent
   },
