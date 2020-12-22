@@ -111,6 +111,7 @@ export class GestionAmbientalComponent implements OnInit {
                         this.actividades.push(
                             this.fb.group({
                                 tipoActividad: [ null ],
+                                estadoSemaforo: [ 'sin-diligenciar' ],
                                 manejoMaterialInsumo: this.fb.group({
                                     manejoMaterialesInsumosId: [ 0 ],
                                     proveedores: this.fb.array( [] ),
@@ -147,13 +148,24 @@ export class GestionAmbientalComponent implements OnInit {
                 }
                 if ( Number( value ) > 0 && this.gestionObraAmbiental !== undefined ) {
                     // GET manejo de materiales e insumos
+                    let estadoSemaforoMaterial = 'sin-diligenciar';
                     if ( this.gestionObraAmbiental.tieneManejoMaterialesInsumo === true ) {
                         const actividadSeleccionada = this.tipoActividades.filter(
                             actividad => actividad.codigo === this.tipoActividadesCodigo.manejoMaterialInsumo
                         );
+                        const manejoMaterial = this.gestionObraAmbiental.manejoMaterialesInsumo;
+
+                        if ( manejoMaterial !== undefined && manejoMaterial.registroCompleto === false ) {
+                            estadoSemaforoMaterial = 'en-proceso';
+                        }
+
+                        if ( manejoMaterial !== undefined && manejoMaterial.registroCompleto === true ) {
+                            estadoSemaforoMaterial = 'completo';
+                        }
                         this.actividades.push(
                             this.fb.group({
                                 tipoActividad: [ actividadSeleccionada[0] ],
+                                estadoSemaforo: [ estadoSemaforoMaterial ],
                                 manejoMaterialInsumo: this.fb.group({
                                     manejoMaterialesInsumosId: [ 0 ],
                                     proveedores: this.fb.array( [] ),
@@ -190,12 +202,23 @@ export class GestionAmbientalComponent implements OnInit {
                     }
                     // GET residuos de construccion y demolicion
                     if ( this.gestionObraAmbiental.tieneManejoResiduosConstruccionDemolicion === true ) {
+                        let estadoSemaforoConstruccion = 'sin-diligenciar';
                         const actividadSeleccionada = this.tipoActividades.filter(
                             actividad => actividad.codigo === this.tipoActividadesCodigo.manejoResiduosConstruccion
                         );
+                        const residuosConstruccion = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion;
+
+                        if ( residuosConstruccion !== undefined && residuosConstruccion.registroCompleto === false ) {
+                            estadoSemaforoConstruccion = 'en-proceso';
+                        }
+
+                        if ( residuosConstruccion !== undefined && residuosConstruccion.registroCompleto === true ) {
+                            estadoSemaforoConstruccion = 'completo';
+                        }
                         this.actividades.push(
                             this.fb.group({
                                 tipoActividad: [ actividadSeleccionada[0] ],
+                                estadoSemaforo: [ estadoSemaforoConstruccion ],
                                 manejoMaterialInsumo: this.fb.group({
                                     manejoMaterialesInsumosId: [ 0 ],
                                     proveedores: this.fb.array( [] ),
@@ -232,12 +255,24 @@ export class GestionAmbientalComponent implements OnInit {
                     }
                     // GET manejo de residuos peligrosos y especiales
                     if ( this.gestionObraAmbiental.tieneManejoResiduosPeligrososEspeciales === true ) {
+                        let estadoSemaforoEspeciales = 'sin-diligenciar';
                         const actividadSeleccionada = this.tipoActividades.filter(
                             actividad => actividad.codigo === this.tipoActividadesCodigo.manejoResiduosPeligrosos
                         );
+
+                        const residuosEspeciales = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales;
+
+                        if ( residuosEspeciales !== undefined && residuosEspeciales.registroCompleto === false ) {
+                            estadoSemaforoEspeciales = 'en-proceso';
+                        }
+
+                        if ( residuosEspeciales !== undefined && residuosEspeciales.registroCompleto === true ) {
+                            estadoSemaforoEspeciales = 'completo';
+                        }
                         this.actividades.push(
                             this.fb.group({
                                 tipoActividad: [ actividadSeleccionada[0] ],
+                                estadoSemaforo: [ estadoSemaforoEspeciales ],
                                 manejoMaterialInsumo: this.fb.group({
                                     manejoMaterialesInsumosId: [ 0 ],
                                     proveedores: this.fb.array( [] ),
@@ -274,12 +309,24 @@ export class GestionAmbientalComponent implements OnInit {
                     }
                     // GET manejo de otros
                     if ( this.gestionObraAmbiental.tieneManejoOtro === true ) {
+                        let estadoSemaforoOtra = 'sin-diligenciar';
                         const actividadSeleccionada = this.tipoActividades.filter(
                             actividad => actividad.codigo === this.tipoActividadesCodigo.otra
                         );
+
+                        const manejoOtros = this.gestionObraAmbiental.manejoOtro;
+
+                        if ( manejoOtros !== undefined && manejoOtros.registroCompleto === false ) {
+                            estadoSemaforoOtra = 'en-proceso';
+                        }
+
+                        if ( manejoOtros !== undefined && manejoOtros.registroCompleto === true ) {
+                            estadoSemaforoOtra = 'completo';
+                        }
                         this.actividades.push(
                             this.fb.group({
                                 tipoActividad: [ actividadSeleccionada[0] ],
+                                estadoSemaforo: [ estadoSemaforoOtra ],
                                 manejoMaterialInsumo: this.fb.group({
                                     manejoMaterialesInsumosId: [ 0 ],
                                     proveedores: this.fb.array( [] ),

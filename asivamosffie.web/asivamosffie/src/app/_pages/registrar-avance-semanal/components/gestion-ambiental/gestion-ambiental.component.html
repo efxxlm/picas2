@@ -55,7 +55,7 @@
             <mat-accordion *ngIf="actividades.length > 0">
                 <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let actividad of actividades.controls; index as i" [formGroup]="actividad">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="actividad.get( 'estadoSemaforo' ).value">
                             Actividad {{ i + 1 }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
