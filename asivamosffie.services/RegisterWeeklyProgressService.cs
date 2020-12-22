@@ -442,7 +442,7 @@ namespace asivamosffie.services
                     EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
                     item.ContratacionProyecto?.Proyecto?.LlaveMen,
                     item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
-                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoObraCodigo) ? ListEstadoObra.Where(r => r.Codigo == item.EstadoObraCodigo).FirstOrDefault().Nombre : "---",
+                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoObra.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
                 });
             }
             return ListBitaCora;
@@ -458,7 +458,7 @@ namespace asivamosffie.services
             {
                 SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
 
-                seguimientoSemanalMod.EstadoObraCodigo = pEstadoMod;
+                seguimientoSemanalMod.EstadoSeguimientoSemanalCodigo = pEstadoMod;
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
 
@@ -768,7 +768,8 @@ namespace asivamosffie.services
                 SeguimientoSemanal seguimientoSemanalMod = await _context.SeguimientoSemanal.FindAsync(pSeguimientoSemanal.SeguimientoSemanalId);
                 seguimientoSemanalMod.UsuarioModificacion = pSeguimientoSemanal.UsuarioCreacion;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
-                seguimientoSemanalMod.EnviarSupervisor = ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalMod);
+                if (ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalMod))
+                    seguimientoSemanalMod.FechaEnvioSupervisor = DateTime.Now;
 
                 _context.Update(seguimientoSemanalMod);
                 _context.SaveChanges();
@@ -1183,7 +1184,6 @@ namespace asivamosffie.services
                     {
                         SeguimientoSemanalGestionObraAmbiental SeguimientoSemanalGestionObraAmbientalOld = _context.SeguimientoSemanalGestionObraAmbiental.Find(SeguimientoSemanalGestionObraAmbiental.SeguimientoSemanalGestionObraAmbientalId);
 
-                        SeguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
 
                         SeguimientoSemanalGestionObraAmbientalOld.UsuarioModificacion = pUsuarioCreacion;
                         SeguimientoSemanalGestionObraAmbientalOld.FechaModificacion = DateTime.Now;
@@ -1193,7 +1193,6 @@ namespace asivamosffie.services
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoResiduosConstruccionDemolicion = SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosConstruccionDemolicion;
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoResiduosPeligrososEspeciales = SeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales;
                         SeguimientoSemanalGestionObraAmbientalOld.TieneManejoOtro = SeguimientoSemanalGestionObraAmbiental.TieneManejoOtro;
-
 
                         //Manejo Materiales e Insumos
                         if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo != null)
@@ -1366,6 +1365,11 @@ namespace asivamosffie.services
                                 manejoOtroOld.UrlSoporteGestion = SeguimientoSemanalGestionObraAmbiental.ManejoOtro.UrlSoporteGestion;
                             }
                         }
+
+
+                        //Validar Registro Completo
+                        SeguimientoSemanalGestionObraAmbientalOld.RegistroCompleto = ValidarRegistroCompletoSeguimientoSemanalGestionObraAmbiental(SeguimientoSemanalGestionObraAmbiental);
+
                     }
                 }
 
@@ -1896,22 +1900,50 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoManejoMaterialesInsumo(ManejoMaterialesInsumos pManejoMaterialesInsumo)
         {
-            return false;
+            if (!pManejoMaterialesInsumo.EstanProtegidosDemarcadosMateriales.HasValue
+                || !pManejoMaterialesInsumo.RequiereObservacion.HasValue
+                || (pManejoMaterialesInsumo.RequiereObservacion.HasValue && string.IsNullOrEmpty(pManejoMaterialesInsumo.Observacion))
+                )
+                return false;
+
+            foreach (var ManejoMaterialesInsumosProveedor in pManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor)
+            {
+                if (ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor) == false)
+                    return false;
+            }
+            return true;
         }
 
         private bool ValidarRegistroCompletoManejoMaterialesInsumosProveedor(ManejoMaterialesInsumosProveedor pManejoMaterialesInsumosProveedor)
         {
-            return false;
+            if (string.IsNullOrEmpty(pManejoMaterialesInsumosProveedor.Proveedor)
+                || !pManejoMaterialesInsumosProveedor.RequierePermisosAmbientalesMineros.HasValue)
+                return false;
+            return true;
         }
 
         private bool ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(ManejoResiduosConstruccionDemolicion pManejoResiduosConstruccionDemolicion)
         {
-            return false;
+            if (!pManejoResiduosConstruccionDemolicion.EstaCuantificadoRcd.HasValue
+                   || !pManejoResiduosConstruccionDemolicion.RequiereObservacion.HasValue
+                   || (pManejoResiduosConstruccionDemolicion.RequiereObservacion.HasValue == true && string.IsNullOrEmpty(pManejoResiduosConstruccionDemolicion.Observacion)))
+                return false;
+
+            foreach (var ManejoResiduosConstruccionDemolicionGestor in pManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
+            {
+                if (ValidarRegistroCompletoManejoResiduosConstruccionDemolicionGestor(ManejoResiduosConstruccionDemolicionGestor) == false)
+                    return false;
+            }
+
+            return true;
         }
 
         private bool ValidarRegistroCompletoManejoResiduosConstruccionDemolicionGestor(ManejoResiduosConstruccionDemolicionGestor pManejoResiduosConstruccionDemolicionGestor)
         {
-            return false;
+            if (string.IsNullOrEmpty(pManejoResiduosConstruccionDemolicionGestor.NombreGestorResiduos)
+                || !pManejoResiduosConstruccionDemolicionGestor.TienePermisoAmbiental.HasValue)
+                return false;
+            return true;
         }
 
         private bool ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(ManejoResiduosPeligrososEspeciales pManejoResiduosPeligrososEspeciales)

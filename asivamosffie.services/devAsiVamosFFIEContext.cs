@@ -139,6 +139,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<Solicitud> Solicitud { get; set; }
         public virtual DbSet<TemaCompromiso> TemaCompromiso { get; set; }
         public virtual DbSet<TemaCompromisoSeguimiento> TemaCompromisoSeguimiento { get; set; }
+        public virtual DbSet<Temp> Temp { get; set; }
         public virtual DbSet<TempFlujoInversion> TempFlujoInversion { get; set; }
         public virtual DbSet<TempOrdenLegibilidad> TempOrdenLegibilidad { get; set; }
         public virtual DbSet<TempProgramacion> TempProgramacion { get; set; }
@@ -3893,11 +3894,13 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanal>(entity =>
             {
-                entity.Property(e => e.EstadoObraCodigo)
+                entity.Property(e => e.EstadoSeguimientoSemanalCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaEnvioSupervisor).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFin).HasColumnType("datetime");
 
@@ -4796,6 +4799,53 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.TemaCompromisoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TemaCompromisoId");
+            });
+
+            modelBuilder.Entity<Temp>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("Temp");
+
+                entity.Property(e => e.EstadoObra)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoObraCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaUltimoReporte)
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoContrato)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<TempFlujoInversion>(entity =>
