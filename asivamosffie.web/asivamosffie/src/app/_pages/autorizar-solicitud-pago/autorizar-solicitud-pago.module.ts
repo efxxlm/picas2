@@ -22,11 +22,13 @@ import { TablaObservacionesAutorizComponent } from './components/tabla-observaci
 import { VerDetalleAutorizarSolicitudComponent } from './components/ver-detalle-autorizar-solicitud/ver-detalle-autorizar-solicitud.component';
 import { DetalleSoliPagoAutorizComponent } from './components/detalle-soli-pago-autoriz/detalle-soli-pago-autoriz.component';
 import { DetalleValidListchqAutorizComponent } from './components/detalle-valid-listchq-autoriz/detalle-valid-listchq-autoriz.component';
+import { DetalleFacturaProcasAutorizComponent } from './components/detalle-factura-procas-autoriz/detalle-factura-procas-autoriz.component';
+import { DialogEnvSolicitudAutorizComponent } from './components/dialog-env-solicitud-autoriz/dialog-env-solicitud-autoriz.component';
 
 
 
 @NgModule({
-  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent],
+  declarations: [AutorizarSolicitudPagoComponent, FormAutorizarSolicitudComponent, ObsCargarFormpagoAutorizComponent, ObsRegistrarSolPagoAutorizComponent, ObsCriterioPagosAutorizComponent, ObsDetllfactProcasocAutorizComponent, ObsDatosFacturaAutorizComponent, ObsDescDirTecnicaAutorizComponent, ObsSoporteurlAutorizComponent, ObsValidListchqeoAutorizComponent, ObsCertAutorizacionAutorizComponent, FormEditAutorizarSolicitudComponent, DialogProyectosAsociadosAutorizComponent, TablaObservacionesAutorizComponent, VerDetalleAutorizarSolicitudComponent, DetalleSoliPagoAutorizComponent, DetalleValidListchqAutorizComponent, DetalleFacturaProcasAutorizComponent, DialogEnvSolicitudAutorizComponent],
   imports: [
     CommonModule,
     MaterialModule,

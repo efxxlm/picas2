@@ -1,0 +1,69 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<div style="padding: 30px 20px; text-align: center;">
+    <h1 class="title-menu--h1 centerTrick">
+        Enviar solicitud SolPagoO0001
+    </h1>
+    <mat-card class="shipping-card" style="padding: 1em 2em;">
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="fechaRadicacionSAC">Fecha de radicación SAC a
+                                financiera</label>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="fechaRadicacionSAC" [matDatepicker]="pickerFecha"
+                                    readonly (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
+                                <mat-datepicker #pickerFecha></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button color="primary" type="button" (click)="pickerFecha.open()"
+                                class="btn-calendario">
+                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label for="numeroRadicacionSAC" class="label-left">Número de radicación SAC a
+                                financiera</label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #numeroRadicacionSAC type="text" maxlength="10"
+                                    formControlName="numeroRadicacionSAC" required>
+                            </mat-form-field>
+                            <span class="contador">{{10 - numeroRadicacionSAC.value.length}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label for="urlSoporte" class="label-left">Url con soporte</label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #urlSoporte type="text" formControlName="urlSoporte" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center">
+        <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="addressForm.invalid">
+            Enviar para autorización
+        </button>
+    </div>
+</div>

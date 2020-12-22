@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DialogEnvSolicitudAutorizComponent } from '../dialog-env-solicitud-autoriz/dialog-env-solicitud-autoriz.component';
 
 @Component({
   selector: 'app-autorizar-solicitud-pago',
@@ -30,7 +31,7 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoAprobacion: 'Con solicitud devuelta por el coordinador',
+      estadoAprobacion: 'Con solicitud autorizada por el coordinador',
       gestion: 1
     },
     {
@@ -81,7 +82,7 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
     dialogConfig.height = 'auto';
     dialogConfig.width = '1020px';
     //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    //const dialogRef = this.dialog.open(DialogEnvioAutorizacionComponent, dialogConfig);
+    const dialogRef = this.dialog.open(DialogEnvSolicitudAutorizComponent, dialogConfig);
     //dialogRef.afterClosed().subscribe(value => {});
   }
 
