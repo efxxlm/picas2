@@ -114,6 +114,10 @@ strong {
   }
 }
 
+.line-25 {
+  line-height: 25px !important;
+}
+
 .m-0 {
   margin: 0 !important;
 }
@@ -159,8 +163,8 @@ strong {
 }
 
 .px-2em {
-  padding-left: 2em;
-  padding-right: 2em;
+  padding-left: 2em !important;
+  padding-right: 2em !important;
 }
 
 .pt-1 {

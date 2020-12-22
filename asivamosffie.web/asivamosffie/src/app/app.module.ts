@@ -63,11 +63,11 @@ export const customCurrencyMaskConfig = {
     NgxCurrencyModule.forRoot(customCurrencyMaskConfig)
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true }, 
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true },
     /*{ provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }, no alcance a implementarlo, att juan*/
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     //{ provide: LOCALE_ID, useValue: "es-ES" },
-    DatePipe, 
+    DatePipe,
     AuthGuard,
     CanDeactivateGuard
   ],
