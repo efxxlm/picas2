@@ -184,4 +184,23 @@
                         [tieneObservaciones]="seguimiento.tieneObservacionApoyo">
   </app-ver-observaciones>
 
+
+<mat-card class="shipping-card var-main-gris" *ngIf=" seguimiento !== undefined && seguimiento.observacionDevolucion !== undefined">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text">
+      Observaciones de la supervisión
+    </mat-card-title>
+</mat-card-header>
+  <mat-card-content>
+
+    ¿Tiene observaciones al registro del seguimiento diario?: <span>{{ 'Si' }}</span>
+    <br>
+    <p>
+      {{ seguimiento.observacionDevolucion.observaciones }}
+    </p>
+
+  </mat-card-content>
+</mat-card>
+
 </section>
+

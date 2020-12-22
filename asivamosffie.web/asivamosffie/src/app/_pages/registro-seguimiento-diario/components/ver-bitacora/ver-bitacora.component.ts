@@ -9,31 +9,14 @@ import { DatePipe } from '@angular/common';
 import { FollowUpDailyService } from 'src/app/core/_services/dailyFollowUp/daily-follow-up.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-
-export interface SeguimientoDiario {
-  id: string;
-  fechaRegistro: string;
-  fechaValidacion: string;
-  productividad: string;
-  estadoSeguimiento: string;
-}
-
-const ELEMENT_DATA: SeguimientoDiario[] = [
-  {
-    id: '1',
-    fechaRegistro: '05/07/2020',
-    fechaValidacion: 'Sin seguimiento ',
-    productividad: 'Alta',
-    estadoSeguimiento: 'Seguimiento diario enviado'
-  }
-];
-
 @Component({
   selector: 'app-ver-bitacora',
   templateUrl: './ver-bitacora.component.html',
   styleUrls: ['./ver-bitacora.component.scss']
 })
 export class VerBitacoraComponent implements AfterViewInit {
+
+  proyecto: any;
 
   displayedColumns: string[] = [
     'fechaSeguimiento',
@@ -51,6 +34,7 @@ export class VerBitacoraComponent implements AfterViewInit {
     private followUpDailyService: FollowUpDailyService,
     private route: ActivatedRoute,
     private router: Router,
+    public dialog: MatDialog,
   ) 
   { }
 
@@ -59,8 +43,14 @@ export class VerBitacoraComponent implements AfterViewInit {
       //this.seguimientoId = params.id;
       this.followUpDailyService.getDailyFollowUpByContratacionProyectoId( params.id )
       //this.followUpDailyService.getDailyFollowUpById(  )
-      .subscribe(respuesta => {
-        this.dataSource = new MatTableDataSource(respuesta);
+      .subscribe(listaSeguimientos => {
+
+        // this.followUpDailyService.gridRegisterDailyFollowUp()
+        //   .subscribe( listaProyectos => {
+        //     this.proyecto = listaSeguimientos.find( s => s.contratacionProyectoId == params.id );
+        //   });
+
+        this.dataSource = new MatTableDataSource( listaSeguimientos );
 
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -85,8 +75,29 @@ export class VerBitacoraComponent implements AfterViewInit {
     }
   }
 
-   verDetalle( seguimiento ){
-    this.router.navigate( [ '/registroSeguimientoDiario/verDetalle', seguimiento.seguimientoDiarioId ? seguimiento.seguimientoDiarioId : 0 ], { state: { proyecto: seguimiento.contratacionProyecto.proyecto.infoProyecto } } )
-     
-   }
+  verDetalle( seguimiento ){
+  this.router.navigate( [ '/registroSeguimientoDiario/verDetalle', seguimiento.seguimientoDiarioId ? seguimiento.seguimientoDiarioId : 0 ], { state: { proyecto: seguimiento.contratacionProyecto.proyecto.infoProyecto } } )
+    
+  }
+
+  Editar( seguimiento ){
+    this.router.navigate( [ '/registroSeguimientoDiario/registrarSeguimiento', seguimiento.seguimientoDiarioId ? seguimiento.seguimientoDiarioId : 0 ], { state: { proyecto: seguimiento.contratacionProyecto.proyecto.infoProyecto } } )
+  }
+
+  Enviar( id ){
+    this.followUpDailyService.sendToSupervisionSupport( id )
+      .subscribe( respuesta => {
+        this.openDialog( '', respuesta.message )
+        if ( respuesta.code == "200" )
+          this.ngAfterViewInit();
+
+      })
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
 }

@@ -16,6 +16,7 @@ import { CommonService } from 'src/app/core/_services/common/common.service';
 export class FormRegistrarSeguimientoComponent implements OnInit {
 
   seguimientoId?: number;
+  seguimiento: SeguimientoDiario;
 
   addressForm = this.fb.group({
     fechaSeguimiento: [null, Validators.required],
@@ -105,7 +106,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   ) {
 
     if (this.router.getCurrentNavigation().extras.replaceUrl) {
-      this.router.navigateByUrl('/aprobarSeguimientoDiario');
+      this.router.navigateByUrl('/registroSeguimientoDiario');
       return;
     };
 
@@ -153,6 +154,8 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
   editMode(){
     this.dailyFollowUpService.getDailyFollowUpById( this.seguimientoId )
       .subscribe( seguimiento => {
+
+        this.seguimiento = seguimiento;
         
         this.addressForm.setValue(
           {

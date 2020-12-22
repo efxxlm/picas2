@@ -30,17 +30,32 @@ namespace asivamosffie.services
 
             listaInfoProyectos.ForEach(p =>
             {
-                SeguimientoDiario seguimientoDiario = _context.SeguimientoDiario
+                List<SeguimientoDiario> listaSeguimientoDiario = _context.SeguimientoDiario
                                                                 .Where(s => s.ContratacionProyectoId == p.ContratacionProyectoId &&
                                                                        s.Eliminado != true)
-                                                                .OrderByDescending(r => r.FechaSeguimiento).FirstOrDefault();
+                                                                .OrderByDescending(r => r.FechaSeguimiento)
+                                                                .ToList();
 
-                if (seguimientoDiario != null)
+                if (listaSeguimientoDiario.Count() > 0)
                 {
+                    SeguimientoDiario seguimientoDiario = listaSeguimientoDiario.FirstOrDefault();
+
                     p.FechaUltimoSeguimientoDiario = seguimientoDiario.FechaSeguimiento;
                     p.SeguimientoDiarioId = seguimientoDiario.SeguimientoDiarioId;
                     p.RegistroCompleto = seguimientoDiario.RegistroCompleto.HasValue ? seguimientoDiario.RegistroCompleto.Value : false;
                     p.EstadoCodigo = seguimientoDiario.EstadoCodigo;
+
+                    if ( listaSeguimientoDiario.Where( sd => sd.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas ).Count() > 0 ){
+                        SeguimientoDiario seguimientoTemp = listaSeguimientoDiario
+                                                                .Where( sd => sd.EstadoCodigo == ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas )
+                                                                .FirstOrDefault();
+
+                        p.TieneObservaciones = true;    
+                        p.RegistroCompletoTieneObservaciones = seguimientoTemp.RegistroCompleto;
+
+
+                    }
+
                 }
             });
 
@@ -154,7 +169,7 @@ namespace asivamosffie.services
                                                       .FirstOrDefault()?.Nombre;
 
                     p.TieneAlertas = VerificarAlertas(seguimientoDiario);
-                    p.tieneObservaciones = seguimientoDiario.TieneObservacionSupervisor; 
+                    p.TieneObservaciones = seguimientoDiario.TieneObservacionSupervisor; 
 
 
                 }
@@ -170,7 +185,7 @@ namespace asivamosffie.services
                                                       .FirstOrDefault()?.Nombre;
 
                     p.TieneAlertas = VerificarAlertas(seguimientoDiarioEnviado);
-                    p.tieneObservaciones = seguimientoDiarioEnviado.TieneObservacionSupervisor;
+                    p.TieneObservaciones = seguimientoDiarioEnviado.TieneObservacionSupervisor;
                 }
 
             });
@@ -596,6 +611,7 @@ namespace asivamosffie.services
                 s.ContratacionProyecto.Proyecto.InfoProyecto = listaProyectos.Where(r => r.ProyectoId == s.ContratacionProyecto.ProyectoId).FirstOrDefault();
                 s.ProductividadNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Productividad && r.Codigo == s.ProductividadCodigo).FirstOrDefault()?.Nombre;
                 s.EstadoNombre = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario && r.Codigo == s.EstadoCodigo).FirstOrDefault()?.Nombre;
+                s.EstadoDescripcion = listaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Seguimiento_Diario && r.Codigo == s.EstadoCodigo).FirstOrDefault()?.Descripcion;
             });
 
             return listaSeguimientos;
@@ -759,6 +775,7 @@ namespace asivamosffie.services
 
                 seguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.Aprobado;
                 seguimientoDiario.FechaValidacion = DateTime.Now;
+                seguimientoDiario.ObservacionSupervisorId = null;
 
                 _context.SaveChanges();
 
@@ -798,10 +815,6 @@ namespace asivamosffie.services
                 seguimientoDiario.UsuarioModificacion = pUsuario;
                 seguimientoDiario.FechaModificacion = DateTime.Now;
 
-                seguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas;
-                seguimientoDiario.TieneObservacionApoyo = null;
-                seguimientoDiario.TieneObservacionSupervisor = null;
-
                 if ( seguimientoDiario.TieneObservacionApoyo == true ){
 
                     SeguimientoDiarioObservaciones observacionesApoyo = getObservacion( seguimientoDiario, false );
@@ -822,6 +835,12 @@ namespace asivamosffie.services
 
                 }
 
+                seguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.ConObservacionesEnviadas;
+                seguimientoDiario.TieneObservacionApoyo = null;
+                seguimientoDiario.TieneObservacionSupervisor = null;
+                seguimientoDiario.RegistroCompleto = null;
+                seguimientoDiario.RegistroCompletoValidacion = null;
+                seguimientoDiario.RegistroCompletoVerificacion = null;
 
                 _context.SaveChanges();
 

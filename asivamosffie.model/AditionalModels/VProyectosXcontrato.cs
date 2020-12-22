@@ -30,9 +30,10 @@ namespace asivamosffie.model.Models
         public bool TieneAlertas { get; set; } 
 
         [NotMapped]
-        public bool? tieneObservaciones { get; set; } 
+        public bool? TieneObservaciones { get; set; } 
 
-        
+        [NotMapped]
+        public bool? RegistroCompletoTieneObservaciones { get; set; }
 
         
     }

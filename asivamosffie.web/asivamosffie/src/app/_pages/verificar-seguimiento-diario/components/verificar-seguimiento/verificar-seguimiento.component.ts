@@ -21,7 +21,7 @@ export class VerificarSeguimientoComponent implements OnInit {
   ) 
   {
     if (this.router.getCurrentNavigation().extras.replaceUrl) {
-      this.router.navigateByUrl('/aprobarSeguimientoDiario');
+      this.router.navigateByUrl('/verificarSeguimientoDiario');
       return;
     };
 
