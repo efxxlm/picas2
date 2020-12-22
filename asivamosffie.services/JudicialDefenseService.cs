@@ -157,6 +157,12 @@ namespace asivamosffie.services
                         defContratcionProyecto.EsCompleto = true;
                         defContratcionProyecto.Eliminado = false;
                     }
+                    foreach (var defConvocado in defensaJudicial.DemandadoConvocado)
+                    {
+                        defConvocado.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                        defConvocado.FechaCreacion = DateTime.Now;
+                        defConvocado.Eliminado = false;
+                    }
 
                     _context.DefensaJudicial.Add(defensaJudicial);
                 }
