@@ -150,6 +150,7 @@ export class GestionAmbientalComponent implements OnInit {
                     this.actividades.clear();
                     this.tipoActividades = [];
                     this.getListaActividades();
+                    setTimeout(() => {
                     // GET manejo de materiales e insumos
                     if ( this.gestionObraAmbiental.tieneManejoMaterialesInsumo === true ) {
                         let estadoSemaforoMaterial = 'sin-diligenciar';
@@ -412,6 +413,7 @@ export class GestionAmbientalComponent implements OnInit {
                             })
                         );
                     }
+                    }, 1500);
                 }
             } );
     }
