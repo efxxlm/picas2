@@ -53,11 +53,11 @@
                                 <div class="text-area-quill auxBox">
                                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                         required (onContentChanged)="maxLength($event, 500)"
-                                        formControlName="descripcionActuacionAdelantada">
+                                        formControlName="descripcionActuacionAdelantada" #descripcionActuacionAdelantada>
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.descripcionActuacionAdelantada.value">
-                                    {{500 - textoLimpio(addressForm.controls.descripcionActuacionAdelantada.value)}}
+                                    {{500 - (textoLimpio(descripcionActuacionAdelantada.quillEditor,500))}}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.descripcionActuacionAdelantada.value">
                                     500
@@ -100,11 +100,11 @@
                                 <div class="text-area-quill auxBox">
                                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                         required (onContentChanged)="maxLength($event, 1000)"
-                                        formControlName="observaciones">
+                                        formControlName="observaciones" #observaciones>
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                                    {{1000 - textoLimpio(addressForm.controls.observaciones.value)}}
+                                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                                     1000
@@ -116,7 +116,7 @@
             </mat-card-content>
         </mat-card>
         <mat-card class="shipping-card">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
                     Soporte
                 </mat-card-title>
@@ -133,7 +133,7 @@
                                     <input matInput #urlSoporte type="text" formControlName="urlSoporte"
                                       required>
                                 </mat-form-field>
-                                <div align="center">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite.</div>
+                                <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite.</span>
                             </div>
                         </div>
                     </div>
