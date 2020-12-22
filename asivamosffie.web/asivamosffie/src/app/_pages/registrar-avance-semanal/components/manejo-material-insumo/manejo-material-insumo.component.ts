@@ -54,17 +54,29 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                     })
                 );
             } else {
-                for ( const proveedor of this.manejoMaterialInsumo.manejoMaterialesInsumosProveedor ) {
-                    this.proveedores.push( this.fb.group(
-                        {
-                            proveedor: proveedor.proveedor !== undefined ? proveedor.proveedor : '',
-                            requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros ?
-                                                                proveedor.requierePermisosAmbientalesMineros : null,
-                            urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : '',
-                            manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId,
-                            manejoMaterialesInsumosId: proveedor.manejoMaterialesInsumosId
-                        }
-                    ) );
+                if ( this.manejoMaterialInsumo.manejoMaterialesInsumosProveedor.length === 0 ) {
+                    this.proveedores.push(
+                        this.fb.group({
+                            proveedor: [ '' ],
+                            requierePermisosAmbientalesMineros: [ null ],
+                            urlRegistroFotografico: [ '' ],
+                            manejoMaterialesInsumosProveedorId: [ 0 ],
+                            manejoMaterialesInsumosId: [ 0 ]
+                        })
+                    );
+                } else {
+                    for ( const proveedor of this.manejoMaterialInsumo.manejoMaterialesInsumosProveedor ) {
+                        this.proveedores.push( this.fb.group(
+                            {
+                                proveedor: proveedor.proveedor !== undefined ? proveedor.proveedor : '',
+                                requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros ?
+                                                                    proveedor.requierePermisosAmbientalesMineros : null,
+                                urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : '',
+                                manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId,
+                                manejoMaterialesInsumosId: proveedor.manejoMaterialesInsumosId
+                            }
+                        ) );
+                    }
                 }
                 this.formManejoMaterialInsumo.patchValue( {
                     manejoMaterialesInsumosId: this.manejoMaterialInsumo.manejoMaterialesInsumosId,
