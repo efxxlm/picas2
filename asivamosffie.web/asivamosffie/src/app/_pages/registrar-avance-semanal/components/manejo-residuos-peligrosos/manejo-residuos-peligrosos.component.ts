@@ -32,7 +32,6 @@ export class ManejoResiduosPeligrososComponent implements OnInit {
     ngOnInit(): void {
         if ( this.residuosPeligrosos !== undefined && this.residuosPeligrosos.length > 0 ) {
             this.manejoResiduosPeligrosos = this.residuosPeligrosos[0].manejoResiduosPeligrososEspeciales;
-            console.log( this.manejoResiduosPeligrosos );
             if ( this.manejoResiduosPeligrosos !== undefined ) {
                 this.formManejoResiduosPeligrosos.setValue(
                     {

@@ -28,7 +28,6 @@ export class OtrosManejosComponent implements OnInit {
     ngOnInit(): void {
         if ( this.otrosManejos !== undefined && this.otrosManejos.length > 0 ) {
             this.otros = this.otrosManejos[0].manejoOtro;
-            console.log( this.otros );
             if ( this.otros !== undefined ) {
                 this.formOtrosManejos.setValue(
                     {

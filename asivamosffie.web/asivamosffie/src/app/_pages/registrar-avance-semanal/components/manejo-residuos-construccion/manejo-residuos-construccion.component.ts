@@ -42,7 +42,6 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
     ngOnInit(): void {
         if ( this.residuosConstruccion !== undefined && this.residuosConstruccion.length > 0 ) {
             this.manejoResiduosConstruccion = this.residuosConstruccion[0].manejoResiduosConstruccionDemolicion;
-            console.log( this.manejoResiduosConstruccion );
             this.gestorResiduos.clear();
             if ( this.manejoResiduosConstruccion === undefined ) {
                 this.gestorResiduos.push(

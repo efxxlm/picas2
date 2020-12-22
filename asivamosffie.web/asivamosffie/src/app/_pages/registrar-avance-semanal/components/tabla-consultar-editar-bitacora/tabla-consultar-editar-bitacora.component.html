@@ -12,37 +12,37 @@
     <table mat-table [dataSource]="tablaConsultarEditarBitacora" matSort>
 
         <ng-container matColumnDef="semanaNumero">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Semana número </th>
           <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.llaveMen }} </b> </td>
         </ng-container>
 
         <ng-container matColumnDef="periodoReporte">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato de obra </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Periodo del reporte </th>
           <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato  }} </td>
         </ng-container>
 
         <ng-container matColumnDef="estadoObra">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la obra </th>
           <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
         </ng-container>
 
         <ng-container matColumnDef="programacionObraAcumulada">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución Educativa </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Programación de obra acumulada </th>
           <td mat-cell *matCellDef="let element" align="center"> {{ element.nombre }} </td>
         </ng-container>
 
         <ng-container matColumnDef="avanceFisico">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Avance físico acumulado ejecutado </th>
             <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
         </ng-container>
 
         <ng-container matColumnDef="estadoRegistro">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del último reporte </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
             <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaModificacion | date: 'dd/MM/yyyy' }} </td>
         </ng-container>
 
         <ng-container matColumnDef="estadoReporteSemanal">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la obra </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del reporte semanal </th>
             <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoObra }} </td>
         </ng-container>
   

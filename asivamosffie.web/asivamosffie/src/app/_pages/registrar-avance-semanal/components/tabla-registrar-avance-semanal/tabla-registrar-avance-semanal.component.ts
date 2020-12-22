@@ -1,8 +1,10 @@
+import { DialogCargarActaComponent } from './../dialog-cargar-acta/dialog-cargar-acta.component';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tabla-registrar-avance-semanal',
@@ -25,7 +27,10 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
       'gestion'
     ];
 
-    constructor( private avanceSemanalSvc: RegistrarAvanceSemanalService ) {
+    constructor(
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private dialog: MatDialog )
+    {
       this.avanceSemanalSvc.getVRegistrarAvanceSemanal()
         .subscribe(
           listas => {
@@ -44,6 +49,13 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
     applyFilter( event: Event ) {
       const filterValue      = (event.target as HTMLInputElement).value;
       this.tablaRegistro.filter = filterValue.trim().toLowerCase();
+    }
+
+    openDialogCargarActa( registro: any ) {
+        this.dialog.open( DialogCargarActaComponent, {
+          width: '70em',
+          data : { registro }
+        });
     }
 
 }

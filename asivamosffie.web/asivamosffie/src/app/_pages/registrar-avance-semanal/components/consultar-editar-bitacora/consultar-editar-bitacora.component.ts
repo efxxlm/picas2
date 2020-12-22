@@ -16,7 +16,10 @@ export class ConsultarEditarBitacoraComponent implements OnInit {
     private activatedRoute: ActivatedRoute )
   {
     this.avanceSemanalSvc.getListSeguimientoSemanalByContratacionProyectoId( this.activatedRoute.snapshot.params.id )
-      .subscribe( bitacora => this.consultarBitacora = bitacora );
+      .subscribe( bitacora => {
+        this.consultarBitacora = bitacora;
+        console.log( bitacora );
+      } );
   }
 
   ngOnInit(): void {

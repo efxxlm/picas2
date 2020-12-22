@@ -82,6 +82,9 @@ export class GestionAmbientalComponent implements OnInit {
                     cantidadActividades++;
                 }
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental === true ) {
+                    if ( cantidadActividades > 0 ) {
+                        this.formGestionAmbiental.get( 'cantidadActividad' ).disable();
+                    }
                     this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( `${ cantidadActividades }` );
                 }
             }
@@ -526,7 +529,6 @@ export class GestionAmbientalComponent implements OnInit {
                 }
             ];
         }
-        console.log( seguimientoSemanalGestionObra );
         pSeguimientoSemanal.seguimientoSemanalGestionObra = seguimientoSemanalGestionObra;
         console.log( pSeguimientoSemanal );
         this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )

@@ -35,10 +35,11 @@ import { ManejoResiduosConstruccionComponent } from './components/manejo-residuo
 import { ManejoResiduosPeligrososComponent } from './components/manejo-residuos-peligrosos/manejo-residuos-peligrosos.component';
 import { OtrosManejosComponent } from './components/otros-manejos/otros-manejos.component';
 import { TablaDisponibilidadMaterialComponent } from './components/tabla-disponibilidad-material/tabla-disponibilidad-material.component';
+import { DialogCargarActaComponent } from './components/dialog-cargar-acta/dialog-cargar-acta.component';
 
 
 @NgModule({
-  declarations: [RegistrarAvanceSemanalComponent, TablaRegistrarAvanceSemanalComponent, FormRegistrarSeguimientoSemanalComponent, AvanceFisicoFinancieroComponent, TablaAvanceResumenAlertasComponent, TablaAvanceFisicoComponent, DialogTablaAvanceResumenComponent, DialogAvanceAcumuladoComponent, GestionDeObraComponent, GestionAmbientalComponent, GestionCalidadComponent, GestionSSTComponent, GestionSocialComponent, AlertasRelevantesComponent, RegistrarResultadosEnsayoComponent, ReporteActividadesComponent, FormReporteActividadesRealizadasComponent, RegistroFotograficoComponent, ComiteObraComponent, ConsultarEditarBitacoraComponent, TablaConsultarEditarBitacoraComponent, VerDetalleAvanceSemanalComponent, AvanceFinancieroComponent, VerDetalleMuestrasComponent, TablaAvanceFinancieroComponent, ManejoMaterialInsumoComponent, ManejoResiduosConstruccionComponent, ManejoResiduosPeligrososComponent, OtrosManejosComponent, TablaDisponibilidadMaterialComponent],
+  declarations: [RegistrarAvanceSemanalComponent, TablaRegistrarAvanceSemanalComponent, FormRegistrarSeguimientoSemanalComponent, AvanceFisicoFinancieroComponent, TablaAvanceResumenAlertasComponent, TablaAvanceFisicoComponent, DialogTablaAvanceResumenComponent, DialogAvanceAcumuladoComponent, GestionDeObraComponent, GestionAmbientalComponent, GestionCalidadComponent, GestionSSTComponent, GestionSocialComponent, AlertasRelevantesComponent, RegistrarResultadosEnsayoComponent, ReporteActividadesComponent, FormReporteActividadesRealizadasComponent, RegistroFotograficoComponent, ComiteObraComponent, ConsultarEditarBitacoraComponent, TablaConsultarEditarBitacoraComponent, VerDetalleAvanceSemanalComponent, AvanceFinancieroComponent, VerDetalleMuestrasComponent, TablaAvanceFinancieroComponent, ManejoMaterialInsumoComponent, ManejoResiduosConstruccionComponent, ManejoResiduosPeligrososComponent, OtrosManejosComponent, TablaDisponibilidadMaterialComponent, DialogCargarActaComponent],
   imports: [
     CommonModule,
     FormsModule,
