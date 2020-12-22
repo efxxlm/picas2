@@ -1,7 +1,8 @@
 <section class="container text-center">
     <div class="text-right">
         <!-- 3 va quemado-->
-        <a routerLink="/gestionarProcesoDefensaJudicial/actualizarProceso/3" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/gestionarProcesoDefensaJudicial/actualizarProceso/3" mat-button color="primary"
+            class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -20,12 +21,14 @@
                     <div class="col-md-6" style="padding-left: 0;">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="Estado de avance proceso">Estado de avance proceso</label>
+                                <label class="label-left" for="Estado de avance proceso">Estado de avance
+                                    proceso</label>
                             </div>
                             <div class="col">
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="estadoAvanceProceso" required>
-                                        <mat-option *ngFor="let contr of estadoAvanceProcesoArray" [value]="contr.value">
+                                        <mat-option *ngFor="let contr of estadoAvanceProcesoArray"
+                                            [value]="contr.value">
                                             {{ contr.name }}
                                         </mat-option>
                                     </mat-select>
@@ -48,13 +51,13 @@
                         <div>
                             <div class="d-flex align-items-center">
                                 <div class="text-area-quill auxBox">
-                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                        required (onContentChanged)="maxLength($event, 2000)"
-                                        formControlName="actuacionAdelantada">
+                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                        [modules]="config" required (onContentChanged)="maxLength($event, 2000)"
+                                        formControlName="actuacionAdelantada" #actuacionAdelantada>
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.actuacionAdelantada.value">
-                                    {{2000 - textoLimpio(addressForm.controls.actuacionAdelantada.value)}}
+                                    {{2000 - (textoLimpio(actuacionAdelantada.quillEditor,2000))}}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.actuacionAdelantada.value">
                                     2000
@@ -67,7 +70,8 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="proximaActuacionRequerida">Próxima actuación requerida</label>
+                                <label class="label-left" for="proximaActuacionRequerida">Próxima actuación
+                                    requerida</label>
                             </div>
                         </div>
                     </div>
@@ -77,15 +81,17 @@
                         <div>
                             <div class="d-flex align-items-center">
                                 <div class="text-area-quill auxBox">
-                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                        required (onContentChanged)="maxLength($event, 2000)"
-                                        formControlName="proximaActuacionRequerida">
+                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                        [modules]="config" required (onContentChanged)="maxLength($event, 2000)"
+                                        formControlName="proximaActuacionRequerida" #proximaActuacionRequerida>
                                     </quill-editor>
                                 </div>
-                                <span class="contador miles" *ngIf="addressForm.controls.proximaActuacionRequerida.value">
-                                    {{2000 - textoLimpio(addressForm.controls.proximaActuacionRequerida.value)}}
+                                <span class="contador miles"
+                                    *ngIf="addressForm.controls.proximaActuacionRequerida.value">
+                                    {{2000 - (textoLimpio(proximaActuacionRequerida.quillEditor,2000))}}
                                 </span>
-                                <span class="contador miles" *ngIf="!addressForm.controls.proximaActuacionRequerida.value">
+                                <span class="contador miles"
+                                    *ngIf="!addressForm.controls.proximaActuacionRequerida.value">
                                     2000
                                 </span>
                             </div>
@@ -94,35 +100,40 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label class="label-left" for="fechaVencimientoTerminos">Fecha de vencimiento de términos para la próxima actuación requerida</label>
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="fechaVencimientoTerminos">Fecha de vencimiento de
+                                    términos para la próxima actuación requerida</label>
+                            </div>
+                            <div class="col d-flex align-items-center">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="fechaVencimientoTerminos"
+                                        [matDatepicker]="pickerFecha" readonly (click)="pickerFecha.open()" required
+                                        placeholder="DD/MM/AAAA">
+                                    <mat-datepicker #pickerFecha></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="pickerFecha.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                </button>
+                            </div>
                         </div>
-                        <div class="col d-flex align-items-center">
-                          <mat-form-field class="example-full-width">
-                            <input matInput formControlName="fechaVencimientoTerminos" [matDatepicker]="pickerFecha"  readonly
-                              (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
-                            <mat-datepicker #pickerFecha></mat-datepicker>
-                          </mat-form-field>
-                          <button mat-button color="primary" type="button" (click)="pickerFecha.open()" class="btn-calendario">
-                            <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                          </button>
-                        </div>
-                      </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1">
-                                <label class="label-left" for="actuacionParticipaSupervisor">¿Esta actuación requiere la participación o insumo del supervisor del contrato?</label>
+                                <label class="label-left" for="actuacionParticipaSupervisor">¿Esta actuación requiere la
+                                    participación o insumo del supervisor del contrato?</label>
                             </div>
                             <div class="col">
-                                <mat-radio-group class="radioInput" formControlName="actuacionParticipaSupervisor" required>
+                                <mat-radio-group class="radioInput" formControlName="actuacionParticipaSupervisor"
+                                    required>
                                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                                     <mat-radio-button [value]="false">No</mat-radio-button>
                                 </mat-radio-group>
-                                <span class="required-form-group">*</span>
+                                <span class="required-form-group" style="margin-left:1px;">*</span>
                             </div>
                         </div>
                     </div>
@@ -141,13 +152,13 @@
                         <div>
                             <div class="d-flex align-items-center">
                                 <div class="text-area-quill auxBox">
-                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                        required (onContentChanged)="maxLength($event, 2000)"
-                                        formControlName="observaciones">
+                                    <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                        [modules]="config" required (onContentChanged)="maxLength($event, 2000)"
+                                        formControlName="observaciones" #observaciones>
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                                    {{2000 - textoLimpio(addressForm.controls.observaciones.value)}}
+                                    {{2000 - (textoLimpio(observaciones.quillEditor,2000))}}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                                     2000
@@ -160,15 +171,17 @@
                     <div class="col-md-12">
                         <div class="row">
                             <div class="pr-1" style="width: 85%;">
-                                <label class="label-left" for="actuacionDefinitiva">¿El proceso tiene actuación definitiva (sentencia, o acto de autocomposición procesal - Transacción,
-                                    Conciliación, Desistimiento o un convencimiento-), ¿y se considera cerrado el proceso?</label>
+                                <label class="label-left" for="actuacionDefinitiva">¿El proceso tiene actuación
+                                    definitiva (sentencia, o acto de autocomposición procesal - Transacción,
+                                    Conciliación, Desistimiento o un convencimiento-), ¿y se considera cerrado el
+                                    proceso?</label>
                             </div>
                             <div class="col">
                                 <mat-radio-group class="radioInput" formControlName="actuacionDefinitiva" required>
                                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                                     <mat-radio-button [value]="false">No</mat-radio-button>
                                 </mat-radio-group>
-                                <span class="required-form-group">*</span>
+                                <span class="required-form-group" style="margin-left:1px;">*</span>
                             </div>
                         </div>
                     </div>
@@ -192,7 +205,7 @@
                                 <mat-form-field class="full-width">
                                     <input matInput #urlSoporte type="text" formControlName="urlSoporte" required>
                                 </mat-form-field>
-                                <div align="center">Indique la ruta en la que se encuentran los documentos de soporte de la actuación</div>
+                                <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte de la actuación</span>
                             </div>
                         </div>
                     </div>
@@ -206,4 +219,3 @@
         </div>
     </form>
 </section>
-
