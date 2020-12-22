@@ -58,11 +58,13 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title sin-diligenciar" (click)="descripcion.cargarRegistro()">
                     Contratos asociados
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-contratos-asociados-dj 
+            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()"
+                id="botonDescripcion"></button>
+            <app-form-contratos-asociados-dj #descripcion
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
                 [tipoProceso]="addressForm.get('tipoProceso').value" 
                 [defensaJudicial]="defensaJudicial"
@@ -72,54 +74,83 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title sin-diligenciar"
+                (click)="detalle1.cargarRegistro();detalle2.cargarRegistro()">
                     Detalle del proceso
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-detalle-proceso-dj *ngIf="this.addressForm.value.legitimacionActiva==true">
+            <app-form-detalle-proceso-dj #detalle1
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"
+            *ngIf="this.addressForm.value.legitimacionActiva==true">
             </app-form-detalle-proceso-dj>
-            <app-form-detalle-proceso-pasivo-dj *ngIf="this.addressForm.value.legitimacionActiva==false">
+            <app-form-detalle-proceso-pasivo-dj #detalle2
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"
+                *ngIf="this.addressForm.value.legitimacionActiva==false">
             </app-form-detalle-proceso-pasivo-dj>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==true">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title sin-diligenciar"
+                (click)="convocado.cargarRegistro()">
                     Convocados
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-convocados-dj></app-form-convocados-dj>
+            <app-form-convocados-dj #convocado
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"></app-form-convocados-dj>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title sin-diligenciar"
+                (click)="demandantes.cargarRegistro()">
                     Demandantes/Convocantes
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-demandantes-convocantes-dj></app-form-demandantes-convocantes-dj>
+            <app-form-demandantes-convocantes-dj
+                #demandantes
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"
+                ></app-form-demandantes-convocantes-dj>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                <mat-panel-title class="expansion-style--title sin-diligenciar"
+                (click)="soporte.cargarRegistro()">
                     Soporte del registro del proceso
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-urlsoporte-dj></app-form-urlsoporte-dj>
+            <app-form-urlsoporte-dj
+                #soporte
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"></app-form-urlsoporte-dj>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
+                <mat-panel-title class="expansion-style--title en-alerta"
+                (click)="ficha.cargarRegistro()">
                     Ficha de estudio
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-ficha-estudio-dj></app-form-ficha-estudio-dj>
+            <app-form-ficha-estudio-dj
+                #ficha
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"></app-form-ficha-estudio-dj>
         </mat-expansion-panel>
     </mat-accordion>
     <div style="margin-top: 1em;">

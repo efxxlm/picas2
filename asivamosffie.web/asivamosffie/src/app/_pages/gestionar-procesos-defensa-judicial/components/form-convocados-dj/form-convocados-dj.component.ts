@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DefensaJudicial } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 
 @Component({
   selector: 'app-form-convocados-dj',
@@ -26,6 +27,17 @@ export class FormConvocadosDjComponent implements OnInit {
     { name: 'Cedula de ciudadanía', value: '1' },
     { name: 'Cedula de extranjería', value: '2' },
   ];
+
+  @Input() legitimacion:boolean;
+  @Input() tipoProceso:string;
+  @Input() defensaJudicial:DefensaJudicial;
+  cargarRegistro() {
+    //this.ngOnInit().then(() => {
+      console.log("form");
+      console.log(this.defensaJudicial);
+      console.log(this.legitimacion);
+      console.log(this.tipoProceso);      
+  }
 
   constructor ( private fb: FormBuilder ) {
     this.crearFormulario();

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 
@@ -23,18 +24,42 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
     public judicialServices:DefensaJudicialService,
     private activatedRoute: ActivatedRoute,) { }
 
+    async editMode(){
+    
+    
+      this.cargarRegistro().then(() => 
+      { 
+  
+        this.addressForm.get("legitimacionActiva").setValue(this.defensaJudicial.esLegitimacionActiva);
+        this.addressForm.get("tipoProceso").setValue(this.defensaJudicial.tipoProcesoCodigo);
+  
+      });
+  
+    }
+
+  async cargarRegistro() {
+    return new Promise( resolve => {
+
+      forkJoin([
+        this.judicialServices.GetDefensaJudicialById(this.controlJudicialId)
+      ]).subscribe( proceso => {
+          this.defensaJudicial=proceso[0];    
+          console.log(this.defensaJudicial); 
+          setTimeout(() => { resolve(); },1000)
+      });           
+    });
+
+    
+  }
+
   ngOnInit(): void {
     this.activatedRoute.params.subscribe( param => {
       this.controlJudicialId = param['id'];
+      
       if(this.controlJudicialId)
       {
-        this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(response=>{
-          this.defensaJudicial=response;
-          console.log(response);
-          this.addressForm.get("legitimacionActiva").setValue(response.esLegitimacionActiva);
-          this.addressForm.get("tipoProceso").setValue(response.tipoProcesoCodigo);
-
-        });
+        this.editMode();
+        
       }
     });
     this.commonServices.listaProcesosJudiciales().subscribe(

@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange } from '@angular/material/select';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { DefensaJudicial } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -24,12 +26,8 @@ export class FormDetalleProcesoDjComponent implements OnInit {
   municipioArray = [
   ];
   tipoAccionArray = [
-    { name: 'Reparacion Directa', value: '1' },
-    { name: 'Reparacion Indirecta', value: '2' },
   ];
   jurisdiccionArray = [
-    { name: 'Ordinaria', value: '1' },
-    { name: 'Extraordinaria', value: '2' },
   ];
   editorStyle = {
     height: '50px'
@@ -44,11 +42,52 @@ export class FormDetalleProcesoDjComponent implements OnInit {
   };
   constructor(private fb: FormBuilder,public dialog: MatDialog, public commonService:CommonService) { }
 
+  @Input() legitimacion:boolean;
+  @Input() tipoProceso:string;
+  @Input() defensaJudicial:DefensaJudicial;
+  cargarRegistro() {
+    //this.ngOnInit().then(() => {
+      console.log("form");
+      console.log(this.defensaJudicial);
+      console.log(this.legitimacion);
+      console.log(this.tipoProceso);      
+  }
+  
   ngOnInit(): void {
     this.commonService.listaDepartamentos().subscribe(response=>{
       this.departamentoArray=response;
     });
+
+    this.commonService.listaTipoAccionJudicial().subscribe(response=>{
+      this.tipoAccionArray=response;
+    });
+
+    this.commonService.listaJurisdiccion().subscribe(response=>{
+      this.jurisdiccionArray=response;
+    });
+    
   }
+
+  getMunicipio(event: MatSelectChange) {
+    this.commonService.listaMunicipiosByIdDepartamento(event.value).subscribe(respuesta => {
+      this.municipioArray = respuesta;
+    },
+      err => {
+        let mensaje: string;
+        console.log(err);
+        if (err.message) {
+          mensaje = err.message;
+        }
+        else if (err.error.message) {
+          mensaje = err.error.message;
+        }
+        this.openDialog('Error', mensaje);
+      },
+      () => {
+        // console.log('terminó');
+      });
+  }
+  
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);

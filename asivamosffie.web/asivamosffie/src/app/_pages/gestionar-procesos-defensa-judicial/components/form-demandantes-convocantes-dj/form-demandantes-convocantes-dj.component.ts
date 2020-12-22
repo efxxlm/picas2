@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DefensaJudicial } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 
 @Component({
   selector: 'app-form-demandantes-convocantes-dj',
@@ -29,6 +30,17 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
 
   constructor ( private fb: FormBuilder ) {
     this.crearFormulario();
+  }
+
+  @Input() legitimacion:boolean;
+  @Input() tipoProceso:string;
+  @Input() defensaJudicial:DefensaJudicial;
+  cargarRegistro() {
+    //this.ngOnInit().then(() => {
+      console.log("form");
+      console.log(this.defensaJudicial);
+      console.log(this.legitimacion);
+      console.log(this.tipoProceso);      
   }
 
   ngOnInit(): void {

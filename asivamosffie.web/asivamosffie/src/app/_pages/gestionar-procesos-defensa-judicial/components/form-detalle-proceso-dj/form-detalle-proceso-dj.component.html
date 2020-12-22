@@ -10,9 +10,9 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
-                                <mat-select formControlName="departamentoInicio" required>
-                                    <mat-option *ngFor="let contr of departamentoArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                <mat-select formControlName="departamentoInicio" (selectionChange)="getMunicipio($event)" required>
+                                    <mat-option *ngFor="let contr of departamentoArray" [value]="contr.localizacionId">
+                                        {{ contr.descripcion }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -29,8 +29,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="municipioInicio" required>
-                                    <mat-option *ngFor="let contr of municipioArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let contr of municipioArray" [value]="contr.localizacionId">
+                                        {{ contr.descripcion }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

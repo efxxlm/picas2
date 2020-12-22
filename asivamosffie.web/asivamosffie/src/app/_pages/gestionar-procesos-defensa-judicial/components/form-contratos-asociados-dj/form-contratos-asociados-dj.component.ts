@@ -51,18 +51,24 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     public dialog: MatDialog,    
     private route: ActivatedRoute,
     private router: Router ) {
-    this.crearFormulario();
+    this.crearFormulario();    
+  }
+  
+  cargarRegistro() {
+    //this.ngOnInit().then(() => {
+      console.log("form");
+      console.log(this.defensaJudicial);
+      console.log(this.legitimacion);
+      console.log(this.tipoProceso);
+      if(Object.keys(this.defensaJudicial).length>0)
+      {
+        this.formContratista.get( 'numeroContratos' ).setValue(this.defensaJudicial.cantContratos);
+      }  
+    //});
   }
 
   ngOnInit(): void {
-    console.log("form");
-    console.log(this.defensaJudicial);
-    console.log(this.legitimacion);
-    console.log(this.tipoProceso);
-    if(Object.keys(this.defensaJudicial).length>0)
-    {
-      this.formContratista.get( 'numeroContratos' ).setValue(this.defensaJudicial.cantContratos);
-    }
+    
     this.defensaService.GetListContract().subscribe(response=>{
       this.contratosArray=response.map(x=>x.numeroContrato);
       this.contratos=response;

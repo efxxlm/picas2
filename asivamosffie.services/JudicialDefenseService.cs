@@ -236,7 +236,9 @@ namespace asivamosffie.services
                 else
                 {
                     ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false
-                    && r.DefensaJudicialId == pDefensaJudicialId).Distinct()
+                    && r.DefensaJudicialId == pDefensaJudicialId).
+                    Include(x=>x.DefensaJudicialContratacionProyecto).
+                    Distinct()
                 .ToListAsync();
 
 
@@ -268,7 +270,11 @@ namespace asivamosffie.services
 
                     string TipoIntervencionCodigoTmp = string.Empty;
                     string TipoIntervencionNombreTmp = string.Empty;
-
+                    foreach (var contr in defensaJudicial.DefensaJudicialContratacionProyecto)
+                    {
+                        var contratacionProyecto = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contr.ContratacionProyectoId).FirstOrDefault();
+                        contr.numeroContrato = _context.Contrato.Where(x => x.ContratacionId == contratacionProyecto.ContratacionId).FirstOrDefault().NumeroContrato;
+                    }
                     return defensaJudicial;
 
                 }

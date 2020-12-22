@@ -212,6 +212,14 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=105`);
   }
 
+  listaTipoAccionJudicial() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=106`);
+  }
+
+  listaJurisdiccion() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=115`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];
