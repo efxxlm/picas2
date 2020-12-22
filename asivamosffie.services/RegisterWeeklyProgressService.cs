@@ -423,13 +423,14 @@ namespace asivamosffie.services
                 {
                     if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal.HasValue)
                         ProgramacionAcumulada = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
-                   
+
                     if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal.HasValue)
                         AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
 
                 }
                 ListBitaCora.Add(new
                 {
+                    UltimoReporte = item.FechaModificacion,
                     item.SeguimientoSemanalId,
                     item.NumeroSemana,
                     UltimaSemana,
