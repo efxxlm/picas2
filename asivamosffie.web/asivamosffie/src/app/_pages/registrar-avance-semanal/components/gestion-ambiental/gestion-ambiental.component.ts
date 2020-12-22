@@ -2,7 +2,7 @@ import { delay } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -85,7 +85,6 @@ export class GestionAmbientalComponent implements OnInit {
                 }
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental === true ) {
                     if ( this.cantidadActividades > 0 ) {
-                        this.formGestionAmbiental.get( 'cantidadActividad' ).disable();
                     }
                     this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( `${ this.cantidadActividades }` );
                 }
@@ -147,9 +146,13 @@ export class GestionAmbientalComponent implements OnInit {
                     }
                 }
                 if ( Number( value ) > 0 && this.gestionObraAmbiental !== undefined ) {
+
+                    this.actividades.clear();
+                    this.tipoActividades = [];
+                    this.getListaActividades();
                     // GET manejo de materiales e insumos
-                    let estadoSemaforoMaterial = 'sin-diligenciar';
                     if ( this.gestionObraAmbiental.tieneManejoMaterialesInsumo === true ) {
+                        let estadoSemaforoMaterial = 'sin-diligenciar';
                         const actividadSeleccionada = this.tipoActividades.filter(
                             actividad => actividad.codigo === this.tipoActividadesCodigo.manejoMaterialInsumo
                         );
@@ -360,6 +363,54 @@ export class GestionAmbientalComponent implements OnInit {
                             })
                         );
                         this.valuePendingTipoActividad( actividadSeleccionada[0] );
+                    }
+
+                    this.formGestionAmbiental.get( 'cantidadActividad' ).setValidators( Validators.min( this.actividades.length ) );
+                    const nuevasActividades = Number( value ) - this.actividades.length;
+                    if ( Number( value ) < this.actividades.length && Number( value ) > 0 ) {
+                        this.openDialog(
+                          '', '<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>'
+                        );
+                        this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( String( this.actividades.length ) );
+                        return;
+                    }
+                    for ( let i = 0; i < nuevasActividades; i++ ) {
+                        this.actividades.push(
+                            this.fb.group({
+                                tipoActividad: [ null ],
+                                estadoSemaforo: [ 'sin-diligenciar' ],
+                                manejoMaterialInsumo: this.fb.group({
+                                    manejoMaterialesInsumosId: [ 0 ],
+                                    proveedores: this.fb.array( [] ),
+                                    estanProtegidosDemarcadosMateriales: [ null ],
+                                    requiereObservacion: [ null ],
+                                    observacion: [ null ],
+                                    url: [ null ]
+                                }),
+                                manejoResiduosConstruccion: this.fb.group({
+                                    manejoResiduosConstruccionDemolicionId: [ 0 ],
+                                    estaCuantificadoRCD: [ null ],
+                                    requiereObservacion: [ null ],
+                                    observacion: [ null ],
+                                    manejoResiduosConstruccionDemolicionGestor: this.fb.array( [] ),
+                                    seReutilizadorResiduos: [ null ],
+                                    cantidadToneladas: [ '' ]
+                                }),
+                                manejoResiduosPeligrosos: this.fb.group({
+                                    manejoResiduosPeligrososEspecialesId: [ 0 ],
+                                    estanClasificados: [ null ],
+                                    requiereObservacion: [ null ],
+                                    observacion: [ null ],
+                                    urlRegistroFotografico: [ '' ]
+                                }),
+                                otra: this.fb.group({
+                                    manejoOtroId: [ 0 ],
+                                    fechaActividad: [ null ],
+                                    actividad: [ null ],
+                                    urlSoporteGestion: [ '' ]
+                                })
+                            })
+                        );
                     }
                 }
             } );
