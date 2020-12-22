@@ -42,7 +42,6 @@ export class ManejoMaterialInsumoComponent implements OnInit {
     ngOnInit(): void {
         if ( this.materialInsumo !== undefined && this.materialInsumo.length > 0 ) {
             this.manejoMaterialInsumo = this.materialInsumo[0].manejoMaterialesInsumo;
-            console.log( this.manejoMaterialInsumo );
             this.proveedores.clear();
             if ( this.manejoMaterialInsumo === undefined ) {
                 this.proveedores.push(
@@ -78,7 +77,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                 } );
             }
         }
-        if ( this.manejoMaterialInsumo !== undefined && this.materialInsumo.length === 0 ) {
+        if ( this.materialInsumo.length === 0 ) {
             this.proveedores.push(
                 this.fb.group({
                     proveedor: [ '' ],
