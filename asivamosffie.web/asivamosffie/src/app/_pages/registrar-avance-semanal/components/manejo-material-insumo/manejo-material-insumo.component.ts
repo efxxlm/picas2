@@ -70,7 +70,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
                         this.proveedores.push( this.fb.group(
                             {
                                 proveedor: proveedor.proveedor !== undefined ? proveedor.proveedor : '',
-                                requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros ?
+                                requierePermisosAmbientalesMineros: proveedor.requierePermisosAmbientalesMineros !== undefined ?
                                                                     proveedor.requierePermisosAmbientalesMineros : null,
                                 urlRegistroFotografico: proveedor.urlRegistroFotografico !== undefined ? proveedor.urlRegistroFotografico : '',
                                 manejoMaterialesInsumosProveedorId: proveedor.manejoMaterialesInsumosProveedorId,
