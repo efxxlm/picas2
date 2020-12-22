@@ -156,18 +156,14 @@ export class ReporteActividadesComponent implements OnInit {
             }
         ];
         if ( reporte !== undefined ) {
-            console.log( reporte );
-            if ( reporte.esSiguienteSemana === true ) {
-                seguimientoSemanalReporteActividad[0].actividadTecnicaSiguiente = reporte.reporteActividades.actividadTecnicaSiguiente;
-                seguimientoSemanalReporteActividad[0].actividadLegalSiguiente = reporte.reporteActividades.actividadLegalSiguiente;
-                seguimientoSemanalReporteActividad[0]
-                    .actividadAdministrativaFinancieraSiguiente = reporte.reporteActividades.actividadAdministrativaFinancieraSiguiente;
-            } else {
-                seguimientoSemanalReporteActividad[0].actividadTecnica = reporte.reporteActividades.actividadTecnica;
-                seguimientoSemanalReporteActividad[0].actividadLegal = reporte.reporteActividades.actividadLegal;
-                seguimientoSemanalReporteActividad[0]
-                    .actividadAdministrativaFinanciera = reporte.reporteActividades.actividadAdministrativaFinanciera;
-            }
+            seguimientoSemanalReporteActividad[0].actividadTecnicaSiguiente = reporte.reporteActividadSiguiente.actividadTecnicaSiguiente;
+            seguimientoSemanalReporteActividad[0].actividadLegalSiguiente = reporte.reporteActividadSiguiente.actividadLegalSiguiente;
+            seguimientoSemanalReporteActividad[0]
+                .actividadAdministrativaFinancieraSiguiente = reporte.reporteActividadSiguiente.actividadAdministrativaFinancieraSiguiente;
+            seguimientoSemanalReporteActividad[0].actividadTecnica = reporte.reporteActividad.actividadTecnica;
+            seguimientoSemanalReporteActividad[0].actividadLegal = reporte.reporteActividad.actividadLegal;
+            seguimientoSemanalReporteActividad[0]
+                .actividadAdministrativaFinanciera = reporte.reporteActividad.actividadAdministrativaFinanciera;
         }
 
         console.log( seguimientoSemanalReporteActividad );
