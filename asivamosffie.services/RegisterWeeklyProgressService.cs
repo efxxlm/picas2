@@ -430,6 +430,7 @@ namespace asivamosffie.services
                 }
                 ListBitaCora.Add(new
                 {
+                    item.SeguimientoSemanalId,
                     item.NumeroSemana,
                     UltimaSemana,
                     item.FechaInicio,
