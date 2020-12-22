@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { DialogProyectosAsociadosAutorizComponent } from '../dialog-proyectos-asociados-autoriz/dialog-proyectos-asociados-autoriz.component';
 
 @Component({
   selector: 'app-form-autorizar-solicitud',
@@ -66,7 +67,7 @@ export class FormAutorizarSolicitudComponent implements OnInit {
     dialogConfig.height = 'auto';
     dialogConfig.width = '1020px';
     //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    //const dialogRef = this.dialog.open(DialogProyectosAsociadosAprobComponent, dialogConfig);
+    const dialogRef = this.dialog.open(DialogProyectosAsociadosAutorizComponent, dialogConfig);
     //dialogRef.afterClosed().subscribe(value => {});
   }
 

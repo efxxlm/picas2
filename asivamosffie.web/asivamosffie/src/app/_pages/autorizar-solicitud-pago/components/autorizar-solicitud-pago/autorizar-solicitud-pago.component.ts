@@ -30,7 +30,7 @@ export class AutorizarSolicitudPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoAprobacion: 'Sin autorización',
+      estadoAprobacion: 'En proceso de autorización',
       gestion: 1
     },
     {

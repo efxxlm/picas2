@@ -49,15 +49,15 @@
                         Autorizar solicitud
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()"
-                    *ngIf="element.estadoAprobacion=='Con solicitud aprobada por el supervisor'">
+                    *ngIf="element.estadoAprobacion=='Con solicitud autorizada por el coordinador'">
                         Enviar para autorizar solicitud
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)"
-                    *ngIf="element.estadoAprobacion=='En proceso de aprobación'">
+                    *ngIf="element.estadoAprobacion=='En proceso de autorización'">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)"
-                    *ngIf="element.estadoAprobacion=='Con solicitud devuelta por el supervisor' || element.estadoAprobacion=='Con solicitud aprobada por el supervisor'">
+                    *ngIf="element.estadoAprobacion=='Con solicitud devuelta por el coordinador' || element.estadoAprobacion=='Con solicitud autorizada por el coordinador'">
                         Ver detalle
                     </button>
                 </td>
