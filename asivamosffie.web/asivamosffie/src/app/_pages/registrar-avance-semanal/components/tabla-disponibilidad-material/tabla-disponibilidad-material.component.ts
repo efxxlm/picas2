@@ -30,13 +30,14 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
             const seguimientoDiario = [];
             let sumaTotal = 0;
             for ( const seguimiento of this.seguimientoDiario ) {
-                if (    seguimiento.cantidadPersonalProgramado !== undefined
-                        && seguimiento.cantidadPersonalTrabajando !== undefined
-                        && seguimiento.numeroHorasRetrasoPersonal !== undefined )
-                {
-                    seguimientoDiario.push( seguimiento );
-                    sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
-                }
+                let totalhorasRetraso = 0;
+                totalhorasRetraso += seguimiento.numeroHorasRetrasoMaterial !== undefined ? seguimiento.numeroHorasRetrasoMaterial : 0;
+                totalhorasRetraso += seguimiento.numeroHorasRetrasoEquipo !== undefined ? seguimiento.numeroHorasRetrasoEquipo : 0;
+                totalhorasRetraso +=    seguimiento.numeroHorasRetrasoProductividad !== undefined ?
+                                        seguimiento.numeroHorasRetrasoProductividad : 0;
+                seguimiento.totalHorasRetraso = totalhorasRetraso === 0 ? '---' : totalhorasRetraso;
+                sumaTotal += totalhorasRetraso;
+                seguimientoDiario.push( seguimiento );
             }
 
             this.dataSeguimientoDiario.push(

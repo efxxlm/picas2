@@ -112,6 +112,9 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     valuePending( value: string, registro: any ) {
+        if ( isNaN( Number( value ) ) === true ) {
+            registro.avanceFisicoCapitulo = '0';
+        }
         this.seRealizoCambio = true;
         this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] = 0;
         let totalAvanceFisicoSemana = 0;
