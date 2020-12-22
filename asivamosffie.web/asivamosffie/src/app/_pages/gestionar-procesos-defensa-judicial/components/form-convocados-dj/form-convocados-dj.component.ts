@@ -147,7 +147,7 @@ export class FormConvocadosDjComponent implements OnInit {
     if(this.defensaJudicial.defensaJudicialId==0)
     {
       defensaJudicial={
-        defensaJudicialId:this.defensaJudicial.pDefensaJudicialId,
+        defensaJudicialId:this.defensaJudicial.defensaJudicialId,
         //legitimacionCodigo:this.legitimacion,
         tipoProcesoCodigo:this.tipoProceso,
         cantContratos:this.formContratista.get( 'numeroContratos' ).value,
