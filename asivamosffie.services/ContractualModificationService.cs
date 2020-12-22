@@ -50,8 +50,8 @@ namespace asivamosffie.services
                     {
                         //Auditoria
                         strCrearEditar = "REGISTRAR NOVEDAD CONTRACTUAL";
-                        // pNovedadContractual.FechaCreacion = DateTime.Now;
-                        //pNovedadContractual.Eliminado = false;
+                        pNovedadContractual.FechaCreacion = DateTime.Now;
+                        pNovedadContractual.Eliminado = false;
                         //PENDIENTE REGISTRO COMPLETO                        
                         _context.NovedadContractual.Add(pNovedadContractual);
                     }
@@ -101,7 +101,7 @@ namespace asivamosffie.services
 
             try
             {
-                ListContratos=await _context.NovedadContractual/*.Where(r => !(bool)r.Eliminado)*/.ToListAsync();     
+                ListContratos=await _context.NovedadContractual.Where(r => !(bool)r.Eliminado).ToListAsync();     
                                 
                 return ListContratos.OrderByDescending(r => r.FechaSolictud).ToList();
             }
