@@ -30,10 +30,10 @@
         <div class="text-area-quill izqTitle">
             <label for="observaciones" class="text-area-quill--label"  style="color: #174193;">Observaciones a los descuentos de la Dirección Técnica</label>
             <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
+                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
         </div>
         <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
-            {{1000 - (textoLimpio(observacionesInicio.quillEditor,1000))}}
+            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
         </span>
         <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
             1000
