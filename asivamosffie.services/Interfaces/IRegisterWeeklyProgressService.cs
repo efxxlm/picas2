@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterWeeklyProgressService
     {
-        Task<Respuesta> ChangueStatusSeguimientoSemanal(int pSeguimientoSemanalId, string pEstadoMod, string pUsuarioMod);
+        Task<Respuesta> ChangueStatusSeguimientoSemanal(int pContratacionProyectoId, string pEstadoMod, string pUsuarioMod);
 
         Task<Respuesta> DeleteGestionObraCalidadEnsayoLaboratorio(int GestionObraCalidadEnsayoLaboratorioId, string pUsuarioModificacion);
 

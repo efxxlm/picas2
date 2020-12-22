@@ -89,7 +89,6 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
                        .Include(r => r.SeguimientoSemanalAvanceFinanciero)
 
-
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
 
                        //Gestion Obra
@@ -432,6 +431,7 @@ namespace asivamosffie.services
                 {
                     UltimoReporte = item.FechaModificacion,
                     item.SeguimientoSemanalId,
+                    RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
                     item.NumeroSemana,
                     UltimaSemana,
                     item.FechaInicio,
@@ -450,13 +450,13 @@ namespace asivamosffie.services
         #endregion
 
         #region Save Edit
-        public async Task<Respuesta> ChangueStatusSeguimientoSemanal(int pSeguimientoSemanalId, string pEstadoMod, string pUsuarioMod)
+        public async Task<Respuesta> ChangueStatusSeguimientoSemanal(int pContratacionProyectoId, string pEstadoMod, string pUsuarioMod)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            {
-                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
+            { 
+                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Where(r=> r.ContratacionProyectoId == pContratacionProyectoId && r.RegistroCompleto == false).FirstOrDefault();
 
                 seguimientoSemanalMod.EstadoSeguimientoSemanalCodigo = pEstadoMod;
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
@@ -1200,7 +1200,7 @@ namespace asivamosffie.services
                             //New
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId == 0)
                             {
-                               
+
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.UsuarioCreacion = pUsuarioCreacion;
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Eliminado = false;
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.FechaCreacion = DateTime.Now;
@@ -1890,7 +1890,7 @@ namespace asivamosffie.services
                     return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales == true)
-                if (ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales)== false)
+                if (ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales) == false)
                     return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro == true)

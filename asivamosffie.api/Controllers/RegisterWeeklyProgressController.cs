@@ -115,9 +115,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("ChangueStatusSeguimientoSemanal")]
-        public async Task<IActionResult> ChangueStatusSeguimientoSemanal([FromQuery] int pSeguimientoSemanalId, string pEstadoMod)
+        public async Task<IActionResult> ChangueStatusSeguimientoSemanal([FromQuery] int pContratacionProyectoId, string pEstadoMod)
         {
-            return Ok(await _registerWeeklyProgressService.ChangueStatusSeguimientoSemanal(pSeguimientoSemanalId, pEstadoMod, HttpContext.User.FindFirst("User").Value));
+            return Ok(await _registerWeeklyProgressService.ChangueStatusSeguimientoSemanal(pContratacionProyectoId, pEstadoMod, HttpContext.User.FindFirst("User").Value));
         }
 
         [HttpPost]
