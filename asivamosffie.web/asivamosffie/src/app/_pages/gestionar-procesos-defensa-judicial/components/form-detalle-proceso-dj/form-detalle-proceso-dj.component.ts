@@ -2,9 +2,11 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
+import { Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { DefensaJudicial } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DefensaJudicialService } from '../../../../core/_services/defensaJudicial/defensa-judicial.service';
 
 @Component({
   selector: 'app-form-detalle-proceso-dj',
@@ -40,7 +42,8 @@ export class FormDetalleProcesoDjComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(private fb: FormBuilder,public dialog: MatDialog, public commonService:CommonService) { }
+  constructor(private fb: FormBuilder,public dialog: MatDialog, public commonService:CommonService
+    ,private router: Router, public defensaService: DefensaJudicialService) { }
 
   @Input() legitimacion:boolean;
   @Input() tipoProceso:string;
@@ -105,16 +108,45 @@ export class FormDetalleProcesoDjComponent implements OnInit {
     return textolimpio.length;
   }
 
-  openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+          if(id>0)
+          {
+            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
+          }                  
+      });
+    }
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    let defensaJudicial:DefensaJudicial={
+      defensaJudicialId:this.defensaJudicial.defensaJudicialId,
+      
+      tipoProcesoCodigo:this.tipoProceso,
+      numeroProceso:'',
+      solicitudId:0,
+      esLegitimacionActiva:this.legitimacion,
+      localizacionIdMunicipio:this.addressForm.get("municipioInicio").value,
+      tipoAccionCodigo:this.addressForm.get("tipoAccion").value,
+      jurisdiccionCodigo:this.addressForm.get("jurisdiccion").value,
+      pretensiones:this.addressForm.get("pretensiones").value,
+      cuantiaPerjuicios:this.addressForm.get("cuantiaPerjuicios").value,
+      esRequiereSupervisor:this.addressForm.get("requeridoParticipacionSupervisor").value,
+      
+    };
+      console.log(defensaJudicial);
+      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
+        response=>{
+          this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
+        }
+      );
+    
   }
 
   onChangeMun()

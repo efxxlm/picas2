@@ -217,7 +217,11 @@ export class CommonService {
   }
 
   listaJurisdiccion() {
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=115`);
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=116`);
+  }
+
+  listaTipodocumento(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=30`);
   }
 
   public listaUsuarios(){

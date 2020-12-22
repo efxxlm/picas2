@@ -47,8 +47,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="tipoAccion" required>
-                                    <mat-option *ngFor="let contr of tipoAccionArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let contr of tipoAccionArray" [value]="contr.codigo">
+                                        {{ contr.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -65,8 +65,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="jurisdiccion" required>
-                                    <mat-option *ngFor="let contr of jurisdiccionArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let contr of jurisdiccionArray" [value]="contr.codigo">
+                                        {{ contr.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

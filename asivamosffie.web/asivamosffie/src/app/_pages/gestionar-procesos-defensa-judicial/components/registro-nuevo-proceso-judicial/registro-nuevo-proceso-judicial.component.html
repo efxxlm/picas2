@@ -75,17 +75,17 @@
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title sin-diligenciar"
-                (click)="detalle1.cargarRegistro();detalle2.cargarRegistro()">
+                (click)="detalle.cargarRegistro();detallepasivo.cargarRegistro()">
                     Detalle del proceso
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-detalle-proceso-dj #detalle1
+            <app-form-detalle-proceso-dj #detalle
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
                 [tipoProceso]="addressForm.get('tipoProceso').value" 
                 [defensaJudicial]="defensaJudicial"
             *ngIf="this.addressForm.value.legitimacionActiva==true">
             </app-form-detalle-proceso-dj>
-            <app-form-detalle-proceso-pasivo-dj #detalle2
+            <app-form-detalle-proceso-pasivo-dj #detallepasivo
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
                 [tipoProceso]="addressForm.get('tipoProceso').value" 
                 [defensaJudicial]="defensaJudicial"

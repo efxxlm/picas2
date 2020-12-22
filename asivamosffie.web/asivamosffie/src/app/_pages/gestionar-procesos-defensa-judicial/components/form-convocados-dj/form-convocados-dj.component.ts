@@ -1,9 +1,14 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DefensaJudicial } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
+import { CommonService } from '../../../../core/_services/common/common.service';
+import { DefensaJudicialService, DemandadoConvocado } from '../../../../core/_services/defensaJudicial/defensa-judicial.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-form-convocados-dj',
@@ -24,13 +29,12 @@ export class FormConvocadosDjComponent implements OnInit {
     ]
   };
   tiposIdentificacionArray = [
-    { name: 'Cedula de ciudadanía', value: '1' },
-    { name: 'Cedula de extranjería', value: '2' },
   ];
 
   @Input() legitimacion:boolean;
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
+
   cargarRegistro() {
     //this.ngOnInit().then(() => {
       console.log("form");
@@ -39,11 +43,16 @@ export class FormConvocadosDjComponent implements OnInit {
       console.log(this.tipoProceso);      
   }
 
-  constructor ( private fb: FormBuilder ) {
+  constructor ( private fb: FormBuilder,public commonService:CommonService,
+    public defensaService:DefensaJudicialService,
+    public dialog: MatDialog, private router: Router  ) {
     this.crearFormulario();
   }
 
   ngOnInit(): void {
+    this.commonService.listaTipodocumento().subscribe(response=>{
+      this.tiposIdentificacionArray=response;
+    });
     this.formContratista.get( 'numeroContratos' ).valueChanges
       .subscribe( value => {
         this.perfiles.clear();
@@ -122,6 +131,54 @@ export class FormConvocadosDjComponent implements OnInit {
 
   guardar () {
     console.log( this.formContratista );
+    let defContraProyecto:DemandadoConvocado[]=[];
+    for(let perfil of this.perfiles.controls){
+      defContraProyecto.push({
+        nombre:perfil.get("nomConvocado").value,
+        tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
+        numeroIdentificacion:perfil.get("numIdentificacion").value,
+        direccion:perfil.get("direccion").value,
+        email:perfil.get("correo").value,
+        esConvocado:false //para este modulo, no lo es
+      });
+    };
+    
+    let defensaJudicial=this.defensaJudicial;
+    if(this.defensaJudicial.defensaJudicialId==0)
+    {
+      defensaJudicial={
+        defensaJudicialId:this.defensaJudicial.pDefensaJudicialId,
+        //legitimacionCodigo:this.legitimacion,
+        tipoProcesoCodigo:this.tipoProceso,
+        cantContratos:this.formContratista.get( 'numeroContratos' ).value,
+        esLegitimacionActiva:this.legitimacion,
+        esCompleto:false,      
+      };
+    }
+    defensaJudicial.demandadoConvocado=defContraProyecto;
+    
+      console.log(defensaJudicial);
+      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
+        response=>{
+          this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
+        }
+      );
+
   }
 
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+          if(id>0)
+          {
+            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
+          }                  
+      });
+    }
+  }
 }

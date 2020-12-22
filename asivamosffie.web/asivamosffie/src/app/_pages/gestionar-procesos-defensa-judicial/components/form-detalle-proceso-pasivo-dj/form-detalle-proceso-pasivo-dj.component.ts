@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DefensaJudicial } from '../../../../core/_services/defensaJudicial/defensa-judicial.service';
 
 @Component({
   selector: 'app-form-detalle-proceso-pasivo-dj',
@@ -55,6 +56,17 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
   };
   constructor(private fb: FormBuilder,public dialog: MatDialog) { }
 
+  @Input() legitimacion:boolean;
+  @Input() tipoProceso:string;
+  @Input() defensaJudicial:DefensaJudicial;
+  
+  cargarRegistro() {
+    //this.ngOnInit().then(() => {
+      console.log("form");
+      console.log(this.defensaJudicial);
+      console.log(this.legitimacion);
+      console.log(this.tipoProceso);      
+  }
   ngOnInit(): void {
   }
   validateNumberKeypress(event: KeyboardEvent) {

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { environment } from 'src/environments/environment';
+import { Contrato } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 import { Respuesta } from '../common/common.service';
 
 
@@ -69,10 +69,30 @@ export interface DefensaJudicial{
   solicitudId?:number,
   esLegitimacionActiva?:boolean,
   esCompleto?:boolean,
-  defensaJudicialContratacionProyecto?:DefensaJudicialContratacionProyecto[]
+  defensaJudicialContratacionProyecto?:DefensaJudicialContratacionProyecto[],
+  demandadoConvocado?:DemandadoConvocado[]
 }
 export interface DefensaJudicialContratacionProyecto{
   defensaJudicialContratacionProyectoId?:number,
   contratacionProyectoId?:number,
   esCompleto?:boolean
+}
+
+
+export interface DemandadoConvocado{
+  demandadoConvocadoId?:number,
+  esConvocado?:boolean,
+  nombre?:string,
+  tipoIdentificacionCodigo?:string,
+  numeroIdentificacion?:string,
+  direccion?:string,
+  email?:string,
+  convocadoAutoridadDespacho?:string,
+  localizacionIdMunicipio?:number,
+  radicadoDespacho?:string,
+  fechaRadicado?:Date,
+  medioControlAccion?:string,
+  etapaProcesoFfiecodigo?:string,
+  caducidadPrescripcion?:Date,
+  defensaJudicialId?:number
 }
