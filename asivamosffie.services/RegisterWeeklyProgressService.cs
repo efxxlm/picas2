@@ -432,6 +432,45 @@ namespace asivamosffie.services
         #endregion
 
         #region Save Edit
+        public async Task<Respuesta> ChangueStatusSeguimientoSemanal(int pSeguimientoSemanalId, string pEstadoMod, string pUsuarioMod)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
+
+                seguimientoSemanalMod.EstadoObraCodigo = pEstadoMod;
+                seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
+                seguimientoSemanalMod.FechaModificacion = DateTime.Now;
+                 
+                _context.SaveChanges();
+
+                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal).FirstOrDefault().Nombre;
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioMod,"EL ESTADO DEL SEGUIMIENTO SEMANAL CAMBIO A: "+ strNombreSEstadoObraCodigo.ToUpper())
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioMod, ex.InnerException.ToString())
+                };
+            }
+        }
+
+
         public async Task<Respuesta> CreateEditEnsayoLaboratorioMuestra(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Ensayo_Laboratorio_Muestra, (int)EnumeratorTipoDominio.Acciones);
@@ -502,8 +541,6 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pGestionObraCalidadEnsayoLaboratorio.UsuarioModificacion, ex.InnerException.ToString())
                 };
             }
-
-
         }
 
         public async Task<Respuesta> DeleteGestionObraCalidadEnsayoLaboratorio(int GestionObraCalidadEnsayoLaboratorioId, string pUsuarioModificacion)
@@ -1627,7 +1664,7 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraSocial(SeguimientoSemanalGestionObraSocial seguimientoSemanalGestionObraSocial)
         {
-            if (  seguimientoSemanalGestionObraSocial.CantidadEmpleosDirectos.HasValue
+            if (seguimientoSemanalGestionObraSocial.CantidadEmpleosDirectos.HasValue
                && seguimientoSemanalGestionObraSocial.CantidadEmpleosIndirectos.HasValue
                && seguimientoSemanalGestionObraSocial.CantidadTotalEmpleos.HasValue
                && seguimientoSemanalGestionObraSocial.SeRealizaronReuniones == false)
@@ -1646,7 +1683,7 @@ namespace asivamosffie.services
                 return false;
             }
 
-       
+
 
             return true;
         }

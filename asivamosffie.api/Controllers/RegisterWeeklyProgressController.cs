@@ -27,7 +27,7 @@ namespace asivamosffie.api.Controllers
             _registerWeeklyProgressService = registerWeeklyProgressService;
             _settings = settings;
         }
-    
+
         [Route("GetEnsayoLaboratorioMuestras")]
         [HttpGet]
         public async Task<ActionResult<GestionObraCalidadEnsayoLaboratorio>> GetEnsayoLaboratorioMuestras([FromQuery] int pGestionObraCalidadEnsayoLaboratorioId)
@@ -85,7 +85,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-         
+
         [HttpPost]
         [Route("CreateEditEnsayoLaboratorioMuestra")]
         public async Task<IActionResult> CreateEditEnsayoLaboratorioMuestra([FromBody] GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
@@ -104,13 +104,20 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("SaveUpdateSeguimientoSemanal")]
         public async Task<IActionResult> SaveUpdateSeguimientoSemanal([FromBody] SeguimientoSemanal pSeguimientoSemanal)
-        { 
-                pSeguimientoSemanal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value; 
-                return Ok( await _registerWeeklyProgressService.SaveUpdateSeguimientoSemanal(pSeguimientoSemanal)); 
+        {
+            pSeguimientoSemanal.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+            return Ok(await _registerWeeklyProgressService.SaveUpdateSeguimientoSemanal(pSeguimientoSemanal));
+        }
+
+        [HttpPost]
+        [Route("ChangueStatusSeguimientoSemanal")]
+        public async Task<IActionResult> ChangueStatusSeguimientoSemanal([FromQuery] int pSeguimientoSemanalId, string pEstadoMod)
+        {
+            return Ok(await _registerWeeklyProgressService.ChangueStatusSeguimientoSemanal(pSeguimientoSemanalId, pEstadoMod, HttpContext.User.FindFirst("User").Value));
         }
 
         [HttpPost]
@@ -130,7 +137,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("DeleteResiduosConstruccionDemolicionGestor")]
         public async Task<IActionResult> DeleteResiduosConstruccionDemolicionGestor([FromQuery] int ResiduosConstruccionDemolicionGestorId)
@@ -148,7 +155,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-         
+
         [HttpPost]
         [Route("DeleteGestionObraCalidadEnsayoLaboratorio")]
         public async Task<IActionResult> DeleteGestionObraCalidadEnsayoLaboratorio([FromQuery] int GestionObraCalidadEnsayoLaboratorioId)
