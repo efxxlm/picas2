@@ -52,7 +52,6 @@ namespace asivamosffie.model.Models
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual SeguimientoDiarioObservaciones ObservacionSupervisor { get; set; }
-        public virtual SeguimientoDiarioObservaciones ObservacionDevolucion { get; set; }
         public virtual SeguimientoSemanal SeguimientoSemanal { get; set; }
 
 

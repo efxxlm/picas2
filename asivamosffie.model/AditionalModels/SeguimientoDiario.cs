@@ -44,7 +44,10 @@ namespace asivamosffie.model.Models
         public string EstadoNombre { get; set; } 
 
         [NotMapped]
-        public SeguimientoDiarioObservaciones ObservacionApoyo { get; set; } 
+        public SeguimientoDiarioObservaciones ObservacionApoyo { get; set; }
+        
+        [NotMapped]
+        public SeguimientoDiarioObservaciones ObservacionDevolucion { get; set; }
     }
 
 }
