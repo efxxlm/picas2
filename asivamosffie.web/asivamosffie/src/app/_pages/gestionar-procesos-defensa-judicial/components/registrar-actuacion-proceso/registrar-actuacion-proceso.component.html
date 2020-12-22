@@ -50,11 +50,11 @@
                                 <div class="text-area-quill auxBox">
                                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                         required (onContentChanged)="maxLength($event, 2000)"
-                                        formControlName="actuacionAdelantada">
+                                        formControlName="actuacionAdelantada" #actuacionAdelantada>
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.actuacionAdelantada.value">
-                                    {{2000 - textoLimpio(addressForm.controls.actuacionAdelantada.value)}}
+                                    {{2000 - (textoLimpio(actuacionAdelantada.quillEditor,2000))}}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.actuacionAdelantada.value">
                                     2000
@@ -79,11 +79,11 @@
                                 <div class="text-area-quill auxBox">
                                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                         required (onContentChanged)="maxLength($event, 2000)"
-                                        formControlName="proximaActuacionRequerida">
+                                        formControlName="proximaActuacionRequerida" #proximaActuacionRequerida>
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.proximaActuacionRequerida.value">
-                                    {{2000 - textoLimpio(addressForm.controls.proximaActuacionRequerida.value)}}
+                                    {{2000 - (textoLimpio(proximaActuacionRequerida.quillEditor,2000))}}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.proximaActuacionRequerida.value">
                                     2000
@@ -122,7 +122,7 @@
                                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                                     <mat-radio-button [value]="false">No</mat-radio-button>
                                 </mat-radio-group>
-                                <span class="required-form-group">*</span>
+                                <span class="required-form-group" style="margin-left: 1px;">*</span>
                             </div>
                         </div>
                     </div>
@@ -143,11 +143,11 @@
                                 <div class="text-area-quill auxBox">
                                     <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                         required (onContentChanged)="maxLength($event, 2000)"
-                                        formControlName="observaciones">
+                                        formControlName="observaciones" #observaciones>
                                     </quill-editor>
                                 </div>
                                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                                    {{2000 - textoLimpio(addressForm.controls.observaciones.value)}}
+                                    {{2000 - (textoLimpio(observaciones.quillEditor,2000))}}
                                 </span>
                                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                                     2000
@@ -168,7 +168,7 @@
                                     <mat-radio-button [value]="true">Sí</mat-radio-button>
                                     <mat-radio-button [value]="false">No</mat-radio-button>
                                 </mat-radio-group>
-                                <span class="required-form-group">*</span>
+                                <span class="required-form-group" style="margin-left: 1px;">*</span>
                             </div>
                         </div>
                     </div>
@@ -192,7 +192,7 @@
                                 <mat-form-field class="full-width">
                                     <input matInput #urlSoporte type="text" formControlName="urlSoporte" required>
                                 </mat-form-field>
-                                <div align="center">Indique la ruta en la que se encuentran los documentos de soporte de la actuación</div>
+                                <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte de la actuación</span>
                             </div>
                         </div>
                     </div>

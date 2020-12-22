@@ -90,11 +90,11 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="pretensiones">
+                                    formControlName="pretensiones" #pretensiones>
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.pretensiones.value">
-                                {{1000 - textoLimpio(addressForm.controls.pretensiones.value)}}
+                                {{1000 - (textoLimpio(pretensiones.quillEditor,1000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.pretensiones.value">
                                 1000
@@ -136,7 +136,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
