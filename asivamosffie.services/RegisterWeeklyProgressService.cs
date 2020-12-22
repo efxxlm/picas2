@@ -16,6 +16,7 @@ using DinkToPdf.Contracts;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Microsoft.EntityFrameworkCore.Internal;
+using asivamosffie.services.Helpers.Constants;
 
 namespace asivamosffie.services
 {
@@ -443,7 +444,12 @@ namespace asivamosffie.services
                 seguimientoSemanalMod.EstadoObraCodigo = pEstadoMod;
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
-                 
+
+                if (pEstadoMod == ConstanCodigoEstadoReporteSemanal.Enviado_a_verificacion)
+                {
+                    seguimientoSemanalMod.RegistroCompleto = true;
+                }
+
                 _context.SaveChanges();
 
                 string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal).FirstOrDefault().Nombre;
@@ -454,7 +460,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioMod,"EL ESTADO DEL SEGUIMIENTO SEMANAL CAMBIO A: "+ strNombreSEstadoObraCodigo.ToUpper())
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioMod, "EL ESTADO DEL SEGUIMIENTO SEMANAL CAMBIO A: " + strNombreSEstadoObraCodigo.ToUpper())
                 };
             }
             catch (Exception ex)
@@ -469,7 +475,6 @@ namespace asivamosffie.services
                 };
             }
         }
-
 
         public async Task<Respuesta> CreateEditEnsayoLaboratorioMuestra(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
         {
@@ -513,10 +518,20 @@ namespace asivamosffie.services
                             RegistroCompletoMuestras = false;
                     }
                 }
-                GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld = _context.GestionObraCalidadEnsayoLaboratorio.Find(pGestionObraCalidadEnsayoLaboratorio.GestionObraCalidadEnsayoLaboratorioId);
+                GestionObraCalidadEnsayoLaboratorio gestionObraCalidadEnsayoLaboratorioOld =
+                    _context.GestionObraCalidadEnsayoLaboratorio
+                    .Where(r => r.GestionObraCalidadEnsayoLaboratorioId == pGestionObraCalidadEnsayoLaboratorio.GestionObraCalidadEnsayoLaboratorioId)
+                    .Include(r => r.SeguimientoSemanalGestionObraCalidad)
+                        .ThenInclude(r => r.SeguimientoSemanalGestionObra)
+                        .FirstOrDefault();
                 gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
                 gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
+
+                //if (RegistroCompletoMuestras)
+                //{
+                //    SeguimientoSemanal seguimientoSemanalOld = _context.SeguimientoSemanal.Find(gestionObraCalidadEnsayoLaboratorioOld.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanalId);
+                //}
 
                 _context.SaveChanges();
 
@@ -730,8 +745,6 @@ namespace asivamosffie.services
 
                 if (pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.Count() > 0)
                     SaveUpdateComiteObra(pSeguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault(), pSeguimientoSemanal.UsuarioCreacion);
-
-
 
                 await _context.SaveChangesAsync();
 
@@ -1728,6 +1741,10 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoSeguimientoSemanalGestionObraCalidad(SeguimientoSemanalGestionObraCalidad seguimientoSemanalGestionObraCalidad)
         {
+
+            if (seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio == false)
+                 return true;
+
             if (!seguimientoSemanalGestionObraCalidad.SeRealizaronEnsayosLaboratorio.HasValue
                 || seguimientoSemanalGestionObraCalidad.GestionObraCalidadEnsayoLaboratorio.Count() == 0
                 )
