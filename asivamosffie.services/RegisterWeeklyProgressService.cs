@@ -493,6 +493,49 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> ChangueStatusMuestrasSeguimientoSemanal(int pSeguimientoSemanalID, string pEstadoMod, string pUsuarioMod)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Muestras_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Find(pSeguimientoSemanalID);
+
+                seguimientoSemanalMod.EstadoMuestrasCodigo = pEstadoMod;
+                seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
+                seguimientoSemanalMod.FechaModificacion = DateTime.Now;
+
+                if (pEstadoMod == ConstanCodigoEstadoReporteSemanal.Enviado_a_verificacion)
+                {
+                    seguimientoSemanalMod.RegistroCompleto = true;
+                }
+
+                _context.SaveChanges();
+
+                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Muestras_Seguimiento_Semanal ).FirstOrDefault().Nombre;
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioMod, "EL ESTADO DEL SEGUIMIENTO SEMANAL CAMBIO A: " + strNombreSEstadoObraCodigo.ToUpper())
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioMod, ex.InnerException.ToString())
+                };
+            }
+        }
+         
         public async Task<Respuesta> CreateEditEnsayoLaboratorioMuestra(GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Ensayo_Laboratorio_Muestra, (int)EnumeratorTipoDominio.Acciones);

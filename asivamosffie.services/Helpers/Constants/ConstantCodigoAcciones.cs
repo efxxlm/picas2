@@ -166,5 +166,7 @@
         public const string Eliminar_Gestion_Obra_Calidad_Ensayo_Laboratorio = "167";
 
         public const string Cambiar_Estado_Seguimiento_Semanal = "174";
+        
+        public const string Cambiar_Estado_Muestras_Seguimiento_Semanal = "175";
     }
 }

@@ -119,6 +119,13 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerWeeklyProgressService.ChangueStatusSeguimientoSemanal(pContratacionProyectoId, pEstadoMod, HttpContext.User.FindFirst("User").Value));
         }
+   
+        [HttpPost]
+        [Route("ChangueStatusMuestrasSeguimientoSemanal")]
+        public async Task<IActionResult> ChangueStatusMuestrasSeguimientoSemanal([FromQuery] int pSeguimientoSemanalID, string pEstadoMod)
+        {
+            return Ok(await _registerWeeklyProgressService.ChangueStatusMuestrasSeguimientoSemanal(pSeguimientoSemanalID, pEstadoMod, HttpContext.User.FindFirst("User").Value));
+        }
 
         [HttpPost]
         [Route("DeleteManejoMaterialesInsumosProveedor")]
