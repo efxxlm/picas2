@@ -32,7 +32,6 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
 
     ngOnInit(): void {
         if ( this.consultarBitacora !== undefined ) {
-            console.log( this.consultarBitacora );
             this.tablaConsultarEditarBitacora = new MatTableDataSource( this.consultarBitacora );
             this.tablaConsultarEditarBitacora.sort = this.sort;
             this.tablaConsultarEditarBitacora.paginator = this.paginator;
@@ -45,8 +44,8 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
         this.tablaConsultarEditarBitacora.filter = filterValue.trim().toLowerCase();
     }
 
-    getVerDetalleAvance() {
-        this.routes.navigate( [ `${ this.routes.url }/verDetalleAvanceSemanal`, 3 ] );
+    getVerDetalleAvance( seguimientoSemanalId: number ) {
+        this.routes.navigate( [ `${ this.routes.url }/verDetalleAvanceSemanal`, seguimientoSemanalId ] );
     }
 
     enviarVerificacion() {

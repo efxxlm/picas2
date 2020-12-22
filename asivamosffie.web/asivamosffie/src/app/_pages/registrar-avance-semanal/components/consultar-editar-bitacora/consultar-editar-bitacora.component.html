@@ -1,4 +1,4 @@
-<section class="container text-center" *ngIf="consultarBitacora !== undefined">
+<section class="container text-center" *ngIf="ultimaBitacora !== undefined">
     <div class="text-right">
         <a routerLink="/registrarAvanceSemanal" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -6,12 +6,12 @@
     </div>
 
     <h1 class="title-menu--h1">
-        Consultar / Editar bitácora LU990088
+        Consultar / Editar bitácora {{ ultimaBitacora.llaveMen }}
     </h1>
 
     <div class="d-flex justify-content-center colorMainColor mt-1em">
-        <p>Número de contrato de obra: <b>CC223456789</b> </p>
-        <p style="margin-left: 2em;">Fecha de último reporte: <b>11/07/2020</b> </p>
+        <p>Número de contrato de obra: <b> {{ ultimaBitacora.numeroContrato }} </b> </p>
+        <p style="margin-left: 2em;">Fecha de último reporte: <b> {{ ultimaBitacora.ultimoReporte | date: 'dd/MM/yyyy' }} </b> </p>
     </div>
 
     <app-tabla-consultar-editar-bitacora [consultarBitacora]="consultarBitacora"></app-tabla-consultar-editar-bitacora>

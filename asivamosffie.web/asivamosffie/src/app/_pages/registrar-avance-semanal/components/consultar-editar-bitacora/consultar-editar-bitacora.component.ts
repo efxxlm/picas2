@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class ConsultarEditarBitacoraComponent implements OnInit {
 
   consultarBitacora: any;
+  ultimaBitacora: any;
 
   constructor(
     private avanceSemanalSvc: RegistrarAvanceSemanalService,
@@ -18,7 +19,8 @@ export class ConsultarEditarBitacoraComponent implements OnInit {
     this.avanceSemanalSvc.getListSeguimientoSemanalByContratacionProyectoId( this.activatedRoute.snapshot.params.id )
       .subscribe( bitacora => {
         this.consultarBitacora = bitacora;
-        console.log( bitacora );
+        this.ultimaBitacora = this.consultarBitacora[ this.consultarBitacora.length - 1 ];
+        console.log( this.ultimaBitacora );
       } );
   }
 
