@@ -2,7 +2,7 @@
 <p style="text-align: center;"><strong>¿Cuántos descuentos se aplican sobre la factura?:</strong> 1</p>
 <p style="text-align: center;"><strong>Valor a pagar después de descuentos:</strong> $14.940.000</p>
 <mat-card class="shipping-card var-main-gris">
-    <mat-card-header class="header-card">
+    <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text textoGris">
             Descuento 1
         </mat-card-title>
@@ -14,7 +14,7 @@
 </mat-card>
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <div class="row mtop justCenter">
-        <div class="col-md-7">
+        <div class="col-md-6">
             <label class="label-left">¿Desde la supervisión tiene observaciones a los descuentos de la Dirección Técnica?</label>
         </div>
         <div class="col-md-2">
@@ -23,19 +23,19 @@
                 <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
                 <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
             </mat-radio-group>
-            <span class="required-form-group">*</span>
+            <span class="required-form-group" style="margin-left: 1px;">*</span>
         </div>
     </div>
     <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
         <div class="text-area-quill izqTitle">
-            <label for="observaciones" class="text-area-quill--label">Observaciones a los descuentos de la Dirección Técnica</label>
-            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+            <label for="observaciones" class="text-area-quill--label"  style="color: #174193;">Observaciones a los descuentos de la Dirección Técnica</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
                 (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
         </div>
-        <span class="contador" *ngIf="addressForm.get('observaciones').value">
-            {{1000 - addressForm.get('observaciones').value.length}}
+        <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+            {{1000 - (textoLimpio(observacionesInicio.quillEditor,1000))}}
         </span>
-        <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
+        <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
             1000
         </span>
     </div>

@@ -16,7 +16,7 @@
     </p>
     <div *ngIf="this.idGestion==1">
         <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text textoGris">
                     Contratos de obra
                 </mat-card-title>
@@ -27,7 +27,7 @@
             </mat-card-content>
         </mat-card>
         <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text textoGris">
                     N801801
                 </mat-card-title>
@@ -70,7 +70,8 @@
                     <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
                 </div>
                 <div class="tabs--actions">
-                    <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="this.openProyectosAsociados()">
+                    <button mat-raised-button color="accent" class="tabs--btn auxBtn"
+                        (click)="this.openProyectosAsociados()">
                         Ver proyectos asociados
                     </button>
                 </div>
@@ -114,7 +115,7 @@
     </div>
     <div *ngIf="this.idGestion==2">
         <mat-card class="shipping-card var-main-gris">
-            <mat-card-header class="header-card">
+            <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text textoGris">
                     Expensas
                 </mat-card-title>
@@ -140,10 +141,11 @@
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        Lista de chequeo    
+                        Lista de chequeo
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                */*/*/*/
+                <!-- dbenitez, Este componente puesto es provisional mientras se define al momento de la integracion-->
+                <app-obs-valid-listachequeo></app-obs-valid-listachequeo>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
