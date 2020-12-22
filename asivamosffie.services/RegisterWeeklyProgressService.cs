@@ -1200,6 +1200,7 @@ namespace asivamosffie.services
                             //New
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId == 0)
                             {
+                               
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.UsuarioCreacion = pUsuarioCreacion;
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Eliminado = false;
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.FechaCreacion = DateTime.Now;
@@ -1221,12 +1222,13 @@ namespace asivamosffie.services
                                 manejoMaterialesInsumosOld.RequiereObservacion = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.RequiereObservacion;
                                 manejoMaterialesInsumosOld.Observacion = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Observacion;
                                 manejoMaterialesInsumosOld.Url = SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Url;
-                                manejoMaterialesInsumosOld.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(manejoMaterialesInsumosOld);
+                                manejoMaterialesInsumosOld.RegistroCompleto = ValidarRegistroCompletoManejoMaterialesInsumo(SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo);
                             }
                             foreach (var ManejoMaterialesInsumosProveedor in SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosProveedor)
                             {
                                 if (ManejoMaterialesInsumosProveedor.ManejoMaterialesInsumosProveedorId == 0)
                                 {
+                                    ManejoMaterialesInsumosProveedor.ManejoMaterialesInsumosId = (int)SeguimientoSemanalGestionObraAmbientalOld.ManejoMaterialesInsumoId;
                                     ManejoMaterialesInsumosProveedor.UsuarioCreacion = pUsuarioCreacion;
                                     ManejoMaterialesInsumosProveedor.Eliminado = false;
                                     ManejoMaterialesInsumosProveedor.FechaCreacion = DateTime.Now;
@@ -1267,7 +1269,7 @@ namespace asivamosffie.services
                             {
                                 ManejoResiduosConstruccionDemolicion manejoResiduosConstruccionDemolicionOld = _context.ManejoResiduosConstruccionDemolicion.Find(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionId);
 
-                                manejoResiduosConstruccionDemolicionOld.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(manejoResiduosConstruccionDemolicionOld);
+                                manejoResiduosConstruccionDemolicionOld.RegistroCompleto = ValidarRegistroCompletoManejoResiduosConstruccionDemolicion(SeguimientoSemanalGestionObraAmbiental.ManejoResiduosConstruccionDemolicion);
                                 manejoResiduosConstruccionDemolicionOld.UsuarioModificacion = pUsuarioCreacion;
                                 manejoResiduosConstruccionDemolicionOld.FechaModificacion = DateTime.Now;
 
