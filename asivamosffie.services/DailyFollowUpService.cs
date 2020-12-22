@@ -273,12 +273,20 @@ namespace asivamosffie.services
             {
                 pSeguimientoDiario.EstadoCodigo = ConstanCodigoEstadoSeguimientoDiario.EnProcesoDeRegistro;
 
+                SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal
+                                                                    .Where( 
+                                                                            r => r.ContratacionProyectoId == pSeguimientoDiario.ContratacionProyectoId &&
+                                                                            r.FechaInicio.Value.Date <= pSeguimientoDiario.FechaSeguimiento.Date &&
+                                                                            r.FechaFin.Value.Date >= pSeguimientoDiario.FechaSeguimiento.Date
+                                                                           )
+                                                                    .FirstOrDefault();
+
                 if (pSeguimientoDiario.SeguimientoDiarioId == 0)
                 {
                     CreateEdit = "CREAR SEGUIMIENTO DIARIO";
                     pSeguimientoDiario.FechaCreacion = DateTime.Now;
                     pSeguimientoDiario.Eliminado = false;
-                    pSeguimientoDiario.SeguimientoSemanalId = _context.SeguimientoSemanal.FirstOrDefault().SeguimientoSemanalId;
+                    pSeguimientoDiario.SeguimientoSemanalId = seguimientoSemanal.SeguimientoSemanalId;
                     pSeguimientoDiario.RegistroCompleto = VerificarRegistroCompleto(pSeguimientoDiario);
 
                     _context.SeguimientoDiario.Add(pSeguimientoDiario);
@@ -313,6 +321,7 @@ namespace asivamosffie.services
                     seguimientoDiario.CausaIndisponibilidadProductividadCodigo = pSeguimientoDiario.CausaIndisponibilidadProductividadCodigo;
                     seguimientoDiario.SeGeneroRetrasoProductividad = pSeguimientoDiario.SeGeneroRetrasoProductividad;
                     seguimientoDiario.NumeroHorasRetrasoProductividad = pSeguimientoDiario.NumeroHorasRetrasoProductividad;
+                    seguimientoDiario.SeguimientoSemanalId = seguimientoSemanal.SeguimientoSemanalId;
 
                     seguimientoDiario.RegistroCompleto = VerificarRegistroCompleto(seguimientoDiario);
 
