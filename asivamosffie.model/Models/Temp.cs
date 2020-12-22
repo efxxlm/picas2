@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class VRegistrarAvanceSemanal
+    public partial class Temp
     {
         public string TipoContrato { get; set; }
         public string LlaveMen { get; set; }

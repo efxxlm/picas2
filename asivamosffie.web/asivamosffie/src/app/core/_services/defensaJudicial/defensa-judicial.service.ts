@@ -75,6 +75,7 @@ export interface DefensaJudicial{
   esRequiereSupervisor?:boolean,
   esLegitimacionActiva?:boolean,
   esCompleto?:boolean,
+  urlSoporteProceso?:string,
   defensaJudicialContratacionProyecto?:DefensaJudicialContratacionProyecto[],
   demandadoConvocado?:DemandadoConvocado[]
 }

@@ -144,13 +144,13 @@ export class FormConvocadosDjComponent implements OnInit {
     };
     
     let defensaJudicial=this.defensaJudicial;
-    if(this.defensaJudicial.defensaJudicialId==0)
+    if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
     {
       defensaJudicial={
         defensaJudicialId:this.defensaJudicial.defensaJudicialId,
         //legitimacionCodigo:this.legitimacion,
         tipoProcesoCodigo:this.tipoProceso,
-        cantContratos:this.formContratista.get( 'numeroContratos' ).value,
+        //cantContratos:this.formContratista.get( 'numeroContratos' ).value,
         esLegitimacionActiva:this.legitimacion,
         esCompleto:false,      
       };

@@ -58,7 +58,9 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar" (click)="descripcion.cargarRegistro()">
+                <mat-panel-title class="expansion-style--title"
+                [ngClass]="{'sin-diligenciar':contratos_class===0,'en-proceso':contratos_class===1,'completo':contratos_class===2}"
+                 (click)="descripcion.cargarRegistro()">
                     Contratos asociados
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -74,7 +76,8 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar"
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':detalle_class===0,'en-proceso':detalle_class===1,'completo':detalle_class===2}"
                 >
                     Detalle del proceso
                 </mat-panel-title>
@@ -96,7 +99,8 @@
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==true">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar"
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':convocados_class===0,'en-proceso':convocados_class===1,'completo':convocados_class===2}"
                 (click)="convocado.cargarRegistro()">
                     Convocados
                 </mat-panel-title>
@@ -110,7 +114,8 @@
     <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false">
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar"
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':convocados_class===0,'en-proceso':convocados_class===1,'completo':convocados_class===2}"
                 (click)="demandantes.cargarRegistro()">
                     Demandantes/Convocantes
                 </mat-panel-title>
@@ -126,7 +131,8 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar"
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':soporte_class===0,'en-proceso':soporte_class===1,'completo':soporte_class===2}"
                 (click)="soporte.cargarRegistro()">
                     Soporte del registro del proceso
                 </mat-panel-title>

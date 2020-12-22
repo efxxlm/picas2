@@ -163,7 +163,9 @@ namespace asivamosffie.services
                         defConvocado.FechaCreacion = DateTime.Now;
                         defConvocado.Eliminado = false;
                     }
-
+                    defensaJudicial.EstadoProcesoCodigo = "1";
+                    defensaJudicial.LegitimacionCodigo = "";
+                    defensaJudicial.NumeroProceso = Helpers.Helpers.Consecutive("DF",_context.DefensaJudicial.Count());
                     _context.DefensaJudicial.Add(defensaJudicial);
                 }
                 else
@@ -244,6 +246,9 @@ namespace asivamosffie.services
                     ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false
                     && r.DefensaJudicialId == pDefensaJudicialId).
                     Include(x=>x.DefensaJudicialContratacionProyecto).
+                    Include(x=>x.DemandadoConvocado).
+                    Include(x=>x.FichaEstudio).
+                    
                     Distinct()
                 .ToListAsync();
 
