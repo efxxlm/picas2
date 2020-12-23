@@ -111,7 +111,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
         this.tablaAvanceFisico = new MatTableDataSource( this.avanceFisico );
     }
 
-    valuePending( value: string, registro: any ) {
+    valuePending( value: number, registro: any ) {
         if ( isNaN( Number( value ) ) === true ) {
             registro.avanceFisicoCapitulo = '0';
         } else {
@@ -129,10 +129,10 @@ export class TablaAvanceFisicoComponent implements OnInit {
             }
             for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
                 let avanceValue;
-                if ( capitulo.avanceFisicoCapitulo.length > 0 ) {
+                if ( capitulo.avanceFisicoCapitulo > 0 ) {
                     avanceValue = this.verifyInteger( Number( capitulo.avanceFisicoCapitulo ), false );
                 }
-                if ( capitulo.avanceFisicoCapitulo.length === 0 ) {
+                if ( capitulo.avanceFisicoCapitulo === 0 ) {
                     avanceValue = 0;
                 }
                 totalAvanceFisicoSemana += Number( avanceValue );
@@ -183,6 +183,13 @@ export class TablaAvanceFisicoComponent implements OnInit {
             data: { avanceAcumulado: this.seguimientoDiario.avanceAcumulado }
         } );
     }
+
+    textoLimpio(texto: number) {
+        if (texto !== undefined) {
+          const textolimpio = texto.toString().replace(/[^\w\s]/gi, '');
+          return textolimpio.length;
+        }
+      }
 
     guardar() {
         const pSeguimientoSemanal = this.seguimientoDiario;
