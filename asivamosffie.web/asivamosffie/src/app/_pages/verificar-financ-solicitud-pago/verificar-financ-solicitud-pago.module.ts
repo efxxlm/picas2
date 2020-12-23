@@ -9,9 +9,10 @@ import { VerificarFinancSolicitudPagoRoutingModule } from './verificar-financ-so
 import { FormVerificarSolicitudVfspComponent } from './components/form-verificar-solicitud-vfsp/form-verificar-solicitud-vfsp.component';
 import { DetalleRegSolPagoVfspComponent } from './components/detalle-reg-sol-pago-vfsp/detalle-reg-sol-pago-vfsp.component';
 import { FormValidListchequeoVfspComponent } from './components/form-valid-listchequeo-vfsp/form-valid-listchequeo-vfsp.component';
+import { DetalleFactProcasVfspComponent } from './components/detalle-fact-procas-vfsp/detalle-fact-procas-vfsp.component';
 
 @NgModule({
-  declarations: [VerificarFinancSolicitudPagoComponent,FormVerificarSolicitudVfspComponent, DetalleRegSolPagoVfspComponent, FormValidListchequeoVfspComponent],
+  declarations: [VerificarFinancSolicitudPagoComponent,FormVerificarSolicitudVfspComponent, DetalleRegSolPagoVfspComponent, FormValidListchequeoVfspComponent, DetalleFactProcasVfspComponent],
   imports: [
     CommonModule,
     MaterialModule,
