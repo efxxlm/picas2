@@ -12,24 +12,22 @@ import { CompromisosActasComiteService } from '../../../../core/_services/compro
 export class TablaDetalleCompromisoComponent implements OnInit {
 
   dataSource = new MatTableDataSource();
-  @Input() sesionComiteTecnicoCompromisoId: number;
+  @Input() compromisoId: number;
+  @Input() tipoCompromiso: number;
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
   @ViewChild( MatSort, { static: true } ) sort: MatSort;
-  displayedColumns: string[] = [ 'fechaRegistroAvanceCompromiso', 'descripcionSeguimiento', 'estadoCompromiso' ];
+  displayedColumns: string[] = [ 'fechaCreacion', 'descripcionSeguimiento', 'estadoCompromiso' ];
 
   constructor ( private compromisoSvc: CompromisosActasComiteService ) {
   }
 
   ngOnInit(): void {
-    //
-    this.getDataTable( this.sesionComiteTecnicoCompromisoId );
+    this.getDataTable( this.compromisoId, this.tipoCompromiso );
   }
 
-  getDataTable ( sesionComiteTecnicoCompromisoId: number ) {
-
-    this.compromisoSvc.getCompromiso( sesionComiteTecnicoCompromisoId )
+  getDataTable ( compromisoId: number, tipoCompromiso: number ) {
+    this.compromisoSvc.getCompromiso( compromisoId, tipoCompromiso )
       .subscribe( ( resp: any ) => {
-        console.log( resp );
         this.dataSource = new MatTableDataSource( resp );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

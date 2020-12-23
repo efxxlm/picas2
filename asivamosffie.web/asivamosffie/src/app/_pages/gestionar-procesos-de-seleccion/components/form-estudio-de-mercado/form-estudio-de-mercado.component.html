@@ -2,16 +2,21 @@
   <mat-card class="shipping-card">
     <mat-card-content>
       <div class="row">
-        <div class="pr-1">
-          <label for="cuantasCotizaciones" class="label-left">¿Cuántas cotizaciones se recibieron?</label>
-        </div>
-        <div class="col d-flex">
-          <mat-form-field class="full-width">
-            <input matInput #cuantasCotizaciones class="mainColor" type="number" min="1" max="99" maxlength="2"
-              onKeyPress="if(this.value.length>=this.maxLength) return false;" required
-              formControlName="cuantasCotizaciones" (keyup)="CambioNumeroCotizantes()">
-          </mat-form-field>
-          <span class="contador">{{2 - cuantasCotizaciones.value.length}}</span>
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label for="cuantasCotizaciones" class="label-left">¿Cuántas cotizaciones se recibieron?</label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="full-width">
+                <input matInput #cuantasCotizaciones class="mainColor" type="number" min="1" max="99" maxlength="2"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required
+                  formControlName="cuantasCotizaciones" (keyup)="CambioNumeroCotizantes()">
+              </mat-form-field>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{2 - cuantasCotizaciones.value.length}}</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -33,20 +38,25 @@
                     required>
                   <input type="hidden" formControlName="procesoSeleccionCotizacionId">
                 </mat-form-field>
-                <span class="contador">{{20 - nombreOrganizacion.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - nombreOrganizacion.value.length}}</span>
               </div>
             </div>
             <div class="row">
-              <div class="pr-1">
-                <label for="valor" class="label-left">Valor de la cotización</label>
-              </div>
-              <div class="col d-flex">
-                <mat-form-field class="full-width mainColor">
-                  <input matInput #valor currencyMask
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
-                    formControlName="valor" required>
-                </mat-form-field>
-                <span class="contador">{{20 - valor.value.length}}</span>
+              <div class="col-md-8">
+                <div class="row">
+                  <div class="pr-1">
+                    <label for="valor" class="label-left">Valor de la cotización</label>
+                  </div>
+                  <div class="col d-flex">
+                    <mat-form-field class="full-width mainColor">
+                      <input matInput #valor currencyMask
+                        [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }" maxlength="20"
+                        formControlName="valor" required>
+                    </mat-form-field>
+                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                    matTooltipClass="info-tooltip">{{20 - valor.value.length}}</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="row">
@@ -69,9 +79,9 @@
             </div>
             <div class="row">
               <div class="pr-1">
-                <label for="url" class="label-left">Url con soporte</label>
+                <label for="url" class="label-left">URL con soporte</label>
               </div>
-              <div class="col d-flex pr-3-3">
+              <div class="col d-flex pr-3em">
                 <mat-form-field class="full-width">
                   <input matInput type="url" formControlName="url">
                 </mat-form-field>
@@ -83,7 +93,7 @@
               </div>
             </div>
             <div class="text-right" *ngIf="addressForm.value.cotizaciones.length > 1">
-              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(cotizaciones, i)">
+              <button *ngIf="editar" mat-button color="warn" type="button" class="btn-eliminar" (click)="borrarArray(cotizaciones, i)">
                 <img src="assets/img/icon/menos.svg" alt="Eliminar cotización">
                 Eliminar cotización
               </button>
@@ -95,8 +105,8 @@
   </mat-card>
 
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    <button  *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>
 </form>

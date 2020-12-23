@@ -1,30 +1,43 @@
 <div align="left" *ngIf="institucionesEducativa.length > 0">
   <mat-card class="border" *ngFor="let institucion of institucionesEducativa">
-    <mat-card-title class="text-area-quill--label">{{ institucion.nombre }}</mat-card-title>
-    <mat-card-content>
-      <p><b>Tipo de intervención</b>: {{ institucion.proyectoInstitucionEducativa[0]?.tipoIntervencionCodigo }}</p>
-      <p><b>Departamento</b>: {{ institucion.departamento.descripcion }}</p>
-      <p><b>Municipio</b>: {{ institucion.municipio.descripcion }}</p>
-      <p><b>Valor total del proyecto</b>: {{ institucion.proyectoInstitucionEducativa[0]?.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        {{ institucion.llaveMen }} - {{ institucion.institucionEducativa.nombre }} - {{ institucion.sede.nombre }}
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="margin-top: .5em;">
+      <p><b>Tipo de intervención</b>: {{ institucion.tipoIntervencionCodigo }}</p>
+      <p><b>Departamento</b>: {{ institucion.institucionEducativa.departamento.descripcion }}</p>
+      <p><b>Municipio</b>: {{ institucion.institucionEducativa.municipio.descripcion }}</p>
+      <p><b>Valor total del proyecto</b>: {{ institucion.valorObra + institucion.valorInterventoria | currency:'COP':'symbol-narrow':'.0-0' }}</p>
       <h2 class="card-subTitle back-color">Aportantes</h2>
-      
-      <div *ngFor="let proyectoAportante of institucion.proyectoInstitucionEducativa[0]?.proyectoAportante; let i = index">
+
+      <div *ngFor="let proyectoAportante of institucion.proyectoAportante; index as i">
 
         <mat-card class="border">
-          <mat-card-title class="text-area-quill--label"><b>Aportante {{ i+1 }}</b></mat-card-title>
+          <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+              <b>Aportante {{ i+1 }}</b>
+            </mat-card-title>
+          </mat-card-header>
           <mat-card-content>
-            <div>
-              <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportante }}</p>
-              <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.nombreAportante }}</p>
+            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === 6" style="margin-top: .5em;">
+                <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
+                <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
+                <p><b>Valor del aportante al proyecto</b>: {{ proyectoAportante.valorTotalAportante | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+            </section>
+            <section *ngIf="proyectoAportante.aportante.tipoAportanteId === 9" style="margin-top: .5em;">
+              <p><b>Tipo de aportante</b>: {{ proyectoAportante.aportante.tipoAportanteString }}</p>
+              <p><b>Nombre del aportante</b>: {{ proyectoAportante.aportante.departamento.descripcion }} / {{ proyectoAportante.aportante.municipio.descripcion }}</p>
               <p><b>Valor del aportante al proyecto</b>: {{ proyectoAportante.valorTotalAportante | currency:'COP':'symbol-narrow':'.0-0' }}</p>
-            </div>
-            <div *ngFor="let fuente of proyectoAportante.aportante.fuenteFinanciacion; let j = index">
-              <h3><b>Fuente {{ j+1 }}</b></h3>
+          </section>
+            <section *ngFor="let fuente of proyectoAportante.aportante.fuenteFinanciacion; let j = index">
+              <h3 style="margin-bottom: .2em;margin-top: 1em;"><b>Fuente {{ j+1 }}</b></h3>
               <div>
                 <p><b>Fuente</b>: {{ fuente.fuenteRecursosCodigo }}</p>
                 <p><b>Valor solicitado de la fuente</b>: {{ fuente.valorFuente | currency:'COP':'symbol-narrow':'.0-0' }}</p>
               </div>
-            </div>
+            </section>
           </mat-card-content>
         </mat-card>
 

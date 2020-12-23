@@ -125,7 +125,8 @@
                           
                           formControlName="valorSolicitado">
                       </mat-form-field>
-                      <span class="contador">{{20 - valorSolicitado.value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                      matTooltipClass="info-tooltip">{{20 - valorSolicitado.value.length}}</span>
                     </div>
                   </div>
                 </div>

@@ -1,0 +1,64 @@
+<section class="text-center">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title completo">
+                    Resumen general del estado del contrato
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <form autocomplete="off" [formGroup]="formResumenGeneral" (ngSubmit)="guardar()">
+                <div class="flex-editor size-resumen-general justify-content-center">
+                    <mat-card class="shipping-card" style="width: 100%;">
+                        <mat-card-header class="header-card">
+                            <mat-card-title class="header-card--text">
+                                Resumen general del estado del contrato
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+        
+                            <quill-editor align="left" class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
+                                (onContentChanged)="maxLength($event, 2000)" formControlName="observaciones">
+                            </quill-editor>
+        
+                        </mat-card-content>
+                    </mat-card>
+                    <span class="contador miles mb-2em" *ngIf="formResumenGeneral.value.observaciones !== null">
+                        {{2000 - textoLimpio(formResumenGeneral.get('observaciones').value)}}
+                    </span>
+                    <span class="contador miles mb-2em" *ngIf="formResumenGeneral.value.observaciones === null">
+                        2000
+                    </span>
+                </div>
+                <div class="text-center" style="margin-top: 2em;">
+                    <button mat-button
+                            color="warn"
+                            class="btn-guardar"
+                            type="submit">
+                            <img  src="assets/img/icon/guardar.svg">
+                    </button>
+                </div>
+            </form>
+
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title completo">
+                    Actividades realizadas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="false"></app-form-reporte-actividades-realizadas>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title completo">
+                    Actividades a realizar la siguiente semana
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="true"></app-form-reporte-actividades-realizadas>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

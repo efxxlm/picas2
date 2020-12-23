@@ -1,0 +1,22 @@
+<section class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Registrar información de personal de obra
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+  
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenido/a aquí podrá realizar el registro de la programación inicial del personal de obra para los contratos asignados a usted, 
+        los cuales cuentan con acta de inicio de fase 2 - Construcción.
+    </div>
+
+    <app-tabla-registro-programacion></app-tabla-registro-programacion>
+  
+  </section>

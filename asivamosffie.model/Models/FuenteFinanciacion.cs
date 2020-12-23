@@ -17,8 +17,8 @@ namespace asivamosffie.model.Models
         public int FuenteFinanciacionId { get; set; }
         public int AportanteId { get; set; }
         public string FuenteRecursosCodigo { get; set; }
-        public decimal ValorFuente { get; set; }
-        public int CantVigencias { get; set; }
+        public decimal? ValorFuente { get; set; }
+        public int? CantVigencias { get; set; }
         public DateTime FechaCreacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }

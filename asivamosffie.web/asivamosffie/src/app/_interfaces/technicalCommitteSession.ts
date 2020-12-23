@@ -2,7 +2,7 @@ import { Usuario } from '../core/_services/autenticacion/autenticacion.service';
 import { Contratacion } from './project-contracting';
 import { Proyecto } from '../core/_services/project/project.service';
 import { dashCaseToCamelCase } from '@angular/compiler/src/util';
-import { ProcesoSeleccion } from '../core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccion, ProcesoSeleccionCronograma } from '../core/_services/procesoSeleccion/proceso-seleccion.service';
 
 export interface SolicitudesContractuales{
     id?: number,
@@ -13,6 +13,11 @@ export interface SolicitudesContractuales{
     sesionComiteSolicitudId?: number,
     tipoSolicitudCodigo?: string,
     solicitudId?: number,
+    comiteTecnicoId?: number,
+    fecha?: Date,
+    nombreSesion?: string,
+    data?: any[],
+    
 }
 
 export interface ComiteTecnico{
@@ -110,14 +115,67 @@ export interface SesionComiteSolicitud {
     numeroSolicitud?: string,
     fechaSolicitud?: Date, 
     completo?: boolean,
+    numeroHijo?: string,
 
     sesionSolicitudVoto?: SesionSolicitudVoto[],
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
     sesionSolicitudCompromiso?: SesionSolicitudCompromiso[],
     contratacion?: Contratacion,
     procesoSeleccion?: ProcesoSeleccion,
+    procesoSeleccionMonitoreo?: ProcesoSeleccionMonitoreo,
+    sesionSolicitudObservacionActualizacionCronograma?: SesionSolicitudObservacionActualizacionCronograma[],
 
 
+}
+
+export interface ProcesoSeleccionMonitoreo{
+    procesoSeleccionMonitoreoId?: number,
+    procesoSeleccionId?: number,
+    numeroProceso?: string,
+    estadoActividadCodigo?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    enviadoComiteTecnico?: boolean,
+
+    procesoSeleccionCronogramaMonitoreo?: ProcesoSeleccionCronogramaMonitoreo[],
+}
+
+export interface ProcesoSeleccionCronogramaMonitoreo{
+    procesoSeleccionCronogramaMonitoreoId?: number,
+    numeroActividad?: number,
+    descripcion?: string,
+    fechaMaxima?: Date,
+    estadoActividadCodigo?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    eliminado?: boolean,
+    fechaModificacion?: Date,
+    usuarioModificacion?: string,
+    procesoSeleccionMonitoreoId?: number,
+    procesoSeleccionCronogramaId?: number,
+
+    sesionSolicitudObservacionActualizacionCronograma?: SesionSolicitudObservacionActualizacionCronograma[],
+    procesoSeleccionCronograma: ProcesoSeleccionCronograma,
+}
+
+export interface SesionSolicitudObservacionActualizacionCronograma{
+    sesionSolicitudObservacionActualizacionCronogramaId?: number,
+    sesionComiteSolicitudId?: number,
+    procesoSeleccionCronogramaMonitoreoId?: number,
+    sesionParticipanteId?: number,
+    observacion?: string,
+    fechaCreacion?: Date,
+    usuarioCreacion?: string,
+    usuarioModificacion?: string,
+    fechaModificacion?: Date,
+    eliminado?: boolean,
+
+    nombreParticipante?: string,
+    procesoSeleccionCronograma?: ProcesoSeleccionCronograma
+    procesoSeleccionCronogramaMonitoreo?: ProcesoSeleccionCronogramaMonitoreo,
 }
 
 export interface SesionParticipante{
@@ -134,6 +192,7 @@ export interface SesionParticipante{
     sesionSolicitudVoto?: SesionSolicitudVoto[],
     sesionTemaVoto?: SesionTemaVoto[],
     sesionSolicitudObservacionProyecto?: SesionSolicitudObservacionProyecto[],
+    sesionSolicitudObservacionActualizacionCronograma?: SesionSolicitudObservacionActualizacionCronograma[],
 
 }
 
@@ -284,13 +343,30 @@ interface EstadoComite{
     AperturaDeProcesoDeSeleccion?: string,
     Contratacion?: string,
     ModificacionContractual?: string,
-    
+    ActualizacionCronogramaProcesoseleccion?: string,
   }
   
   export const TiposSolicitud: TipoSolicitud = {
     AperturaDeProcesoDeSeleccion: "1",
     Contratacion: "2",
     ModificacionContractual: "3",
+    ActualizacionCronogramaProcesoseleccion: "6",
 
   }
+
+  interface EstadoActaComite{
+    SinActa?: string,
+    EnProcesoAprobacion?: string,
+    Aprobada?: string,
+    Devuelta?: string,
+  }
+  
+  export const EstadosActaComite: EstadoActaComite = {
+    SinActa: "1",
+    EnProcesoAprobacion: "2",
+    Aprobada: "3",
+    Devuelta: "6",
+
+  }
+
 

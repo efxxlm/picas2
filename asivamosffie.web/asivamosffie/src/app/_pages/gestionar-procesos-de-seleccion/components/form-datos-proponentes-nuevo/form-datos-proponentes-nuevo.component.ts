@@ -15,6 +15,7 @@ import { startWith,map } from 'rxjs/operators';
 export class FormDatosProponentesNuevoComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() noTanNuevo: boolean=false;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
   listaDepartamentos: Localizacion[] = [];
@@ -28,7 +29,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   personaNaturalForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -36,26 +37,31 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(100)])
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(1000),
+      // Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])
     ]
   });
 
   personaJuridicaIndividualForm = this.fb.group({
     procesoSeleccionProponenteId: [],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     numeroIdentificacion: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
     ],
     representanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     cedulaRepresentanteLegal: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -63,13 +69,18 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required, Validators.minLength(10), Validators.maxLength(100)])
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(1000),
+      // Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])
     ]
   });
 
@@ -79,7 +90,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
       Validators.required, ])
     ],
     nombreConsorcio: [null, Validators.compose([
-      Validators.required, Validators.minLength(2), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(2), Validators.maxLength(1000)])
     ],
     entidades: this.fb.array([]),
     nombre: [null, Validators.compose([
@@ -94,13 +105,18 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
     depaetamento: [null, Validators.required],
     municipio: [null, Validators.required],
     direccion: [null, Validators.compose([
-      Validators.required,  Validators.maxLength(100)])
+      Validators.required,  Validators.maxLength(500)])
     ],
     telefono: [null, Validators.compose([
       Validators.required, Validators.minLength(7), Validators.maxLength(10)])
     ],
     correoElectronico: [null, Validators.compose([
-      Validators.required,  Validators.maxLength(100)])
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(1000),
+      // Validators.email,
+      Validators.pattern(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/)
+    ])
     ]
   });
   listaProponentesNombres: any[]=[];
@@ -330,8 +346,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   }
 
   onSubmitPersonaNatural() {
-
-    this.procesoSeleccion.procesoSeleccionProponente = [];
+    if(!this.noTanNuevo)
+    {
+      this.procesoSeleccion.procesoSeleccionProponente = [];
+    }
+    
     let proponente: ProcesoSeleccionProponente = {
       procesoSeleccionProponenteId: this.personaNaturalForm.get('procesoSeleccionProponenteId').value,
       direccionProponente: this.personaNaturalForm.get('direccion').value,
@@ -353,7 +372,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
   onSubmitPersonaJuridicaIndividual() {
 
-    this.procesoSeleccion.procesoSeleccionProponente = [];
+    if(!this.noTanNuevo)
+    {
+      this.procesoSeleccion.procesoSeleccionProponente = [];
+    }
     let proponente: ProcesoSeleccionProponente = {
 
       procesoSeleccionProponenteId: this.personaJuridicaIndividualForm.get('procesoSeleccionProponenteId').value,
@@ -396,7 +418,10 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
     let porcentaje: number = 0;
 
-    this.procesoSeleccion.procesoSeleccionProponente = [];
+    if(!this.noTanNuevo)
+    {
+      this.procesoSeleccion.procesoSeleccionProponente = [];
+    }
     this.procesoSeleccion.procesoSeleccionIntegrante = [];
 
     let listaIntegrantes =  this.unionTemporalForm.get('entidades') as FormArray;
@@ -434,7 +459,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
     let mensajeValidaciones = this.validacionesUnionTemporal( porcentaje );
     if (mensajeValidaciones.length > 0){
-       this.openDialog('', mensajeValidaciones); 
+       this.openDialog('', `<b>${mensajeValidaciones}</b>`); 
        return false;
     }
 

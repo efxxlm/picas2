@@ -15,7 +15,8 @@ using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Reflection;
-
+using System.Threading.Tasks;
+ 
 namespace asivamosffie.services.Helpers
 {
     public class Helpers
@@ -26,24 +27,44 @@ namespace asivamosffie.services.Helpers
         {
             _context = context;
         }
+
+
         public static string HtmlConvertirTextoPlano(string origen)
         {
             DocumentoHtml documento = new DocumentoHtml();
             origen = documento.ConvertirATextoPlano(origen);
             return origen.Replace("<", "").Replace(">", "").Replace("/", "").Replace("\\", "").Replace("[", "").Replace("]", "").Replace("{", "").Replace("}", "");
         }
+
         public static string HtmlStringLimpio(string valor)
         {
             valor = Regex.Replace(valor, @"\t|\n|\r", "");
             return HtmlConvertirTextoPlano(valor);
         }
 
+        public static string HtmlEntities(string valor)
+        {
+            valor = valor.Replace("á", "&aacute;")
+                .Replace("é", "&eacute;")
+                .Replace("í", "&iacute;")
+                .Replace("ó", "&oacute;")
+                .Replace("ú", "&uacute;")
+                .Replace("ñ", "&ntilde;")
+                .Replace("Á", "&Aacute;")
+                .Replace("É", "&Eacute;")
+                .Replace("Í", "&Iacute;")
+                .Replace("Ó", "&Oacute;")
+                .Replace("Ó", "&Uacute;")
+                .Replace("Ñ", "&Ntilde;")
+                ;
+            return valor;
+        }
 
         public double CentimetrosAMedidaPDF(double centimetros)
         {
             return (double)(centimetros * 0.393701 * 72);
         }
-         
+
         public static string encryptSha1(string password)
         {
 
@@ -75,8 +96,8 @@ namespace asivamosffie.services.Helpers
         public static string CleanStringInput(string text)//ÁÉÍÓÚ //
         {
 
-            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
-            char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', '/', '.', ',', '@', '_', '(', ')', ':', ';' };
+            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ',/* ' ',*/ ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+            char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', /*'/',*/ '.', ',', '@', '_', '(', ')', ':', ';' };
 
             if (text != null)
             {
@@ -127,12 +148,24 @@ namespace asivamosffie.services.Helpers
                 return $"{(number).ToString("D4")}";
             }
 
+            //Concecutivo actualizacion de conograma proceso de seleccion 3.1.3
+            if (input == "ACTCRONO")
+            {
+                return $"{"ACTCRONO"}{(number).ToString("D4")}";
+            }
+            //DefensaJudicial
+            if (input == "DJ")
+            {
+                return $"{"DJ"}{(++number).ToString("D4")}";
+            }
 
             //Invitacion Abierta SA
             else
             {
                 return $"{"SA"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
             }
+
+            
         }
 
         //TODO: Implementacion para cosultas complejas
@@ -172,7 +205,6 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-
         public static object ConvertToUpercase(object dataObject)
         {
             try
@@ -206,9 +238,9 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort, bool pMailHighPriority=false)
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort, bool pMailHighPriority=false, string pFileNamePath="")
 
-   {
+        {
             try
             {
                 MailMessage mail = new MailMessage();
@@ -218,6 +250,13 @@ namespace asivamosffie.services.Helpers
                 mail.To.Add(pDestinatario);
                 mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
+
+                Attachment item;
+                if(pFileNamePath != "")
+                {
+                    item = new Attachment(pFileNamePath);
+                    mail.Attachments.Add(item);
+                }                    
 
                 if(pMailHighPriority)
                     mail.Priority = MailPriority.High;
@@ -290,5 +329,6 @@ namespace asivamosffie.services.Helpers
             string def = "Az-" + randomw.Next(5).ToString();
             return string.Join(null, password) + def;
         }
+         
     }
 }

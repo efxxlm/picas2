@@ -37,7 +37,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div align="left">
+        <div align="left" style="margin-top: 2em;">
           <mat-card class="border">
             <mat-card-content>
               <p><b>Nombre del contratista</b>: {{ contratacion?.contratista.nombre }} </p>
@@ -57,9 +57,9 @@
         </mat-expansion-panel-header>
 
         <div align="left">
-          <mat-card class="border">
+          <mat-card class="border" style="margin-top: 2em;">
             <mat-card-content>
-              <p><b>Tipo de contrato</b>: {{ contratacion?.contrato[0].tipoContratoCodigo }} </p>
+              <p><b>Tipo de contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].opcionContratarCodigo }} </p>
               <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
               <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ contratacion?.disponibilidadPresupuestal[0].plazoDias }} días</p>
             </mat-card-content>
@@ -75,7 +75,7 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div align="left">
+        <div align="left" style="margin-top: 2em;">
           <mat-card class="border">
             <mat-card-content>
               <p><b>Fecha del trámite</b>: {{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }} </p>
@@ -84,10 +84,21 @@
               <p><b>Fecha de firma por parte del contratista</b>: {{ form.get( 'fechaFirmaPorParteContratista' ).value | date: 'dd/MM/yyyy' }} </p>
               <p><b>Fecha de envío para la firma de la fiduciaria</b>: {{ form.get( 'fechaEnvioParaFirmaFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
               <p><b>Fecha de de firma por parte de la fiduciaria</b>: {{ form.get( 'fechaFirmaPorParteFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
-              <p><b>Observaciones</b>: {{ form.get( 'observaciones' ).value}} </p>
-              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
+              <section>
+                <b>Observaciones</b>
+                <div [innerHTML]="innerObservacion( form.get( 'observaciones' ).value )">
+                  
+                </div>
+              </section>
+              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'documento' ).value }} </p>
             </mat-card-content>
           </mat-card>
+        </div>
+
+        <div class="text-center" style="width: 20%;display: inline-block;">
+          <button mat-raised-button color="accent" class="btn-table" (click)="getDocumento( form.get( 'rutaDocumento' ).value )">
+            Descargar documento
+          </button>
         </div>
 
       </mat-expansion-panel>
@@ -95,11 +106,19 @@
   </div>
 
   <div class="mt-2em" align="left" *ngIf="estadoCodigo !== estadoCodigos.firmado">
-    <mat-card class="border">
-      <mat-card-title class="text-area-quill--label">Registrar trámite</mat-card-title>
+    <mat-card>
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          Registrar trámite
+        </mat-card-title>
+      </mat-card-header>
       <mat-card-content class="mt-2em">
-        <p><b>Fecha del trámite</b> <span class="color-titulo ml-1em"> {{ contratacion?.contrato[0].fechaTramite || fechaTramite | date: 'dd/MM/yyyy' }} </span></p>
-        <app-form-registro-tramite [fechaTramite]="contratacion?.contrato[0].fechaTramite || fechaTramite" [dataFormulario]="form" [contratacionId]="contratacion?.contratacionId" [contratoId]="contratacion?.contrato[0].contratoId"></app-form-registro-tramite>
+        <p><b>Fecha del trámite</b> <span class="color-titulo ml-1em"> {{ fechaTramite | date: 'dd/MM/yyyy' }} </span></p>
+        <app-form-registro-tramite  [fechaTramite]="contratacion?.contrato.length > 0 ? contratacion?.contrato[0].fechaTramite : fechaTramite"
+                                    [dataFormulario]="form"
+                                    [contratacionId]="contratacion?.contratacionId"
+                                    [contratoId]="contratacion?.contrato.length > 0 ? contratacion?.contrato[0].contratoId : null">
+        </app-form-registro-tramite>
       </mat-card-content>
     </mat-card>
   </div>

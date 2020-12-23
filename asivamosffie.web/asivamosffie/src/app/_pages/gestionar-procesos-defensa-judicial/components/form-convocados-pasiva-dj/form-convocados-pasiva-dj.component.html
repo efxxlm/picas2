@@ -1,0 +1,249 @@
+<form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
+    <div class="d-flex mt-1em col-md-6" style="margin: 0 auto;">
+        <label class="mr-label" class="label-left"><b>Número de convocados</b></label>
+        <div class="col d-flex">
+            <mat-form-field class="w-70">
+                <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
+            </mat-form-field>
+            <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.length}}</span>
+        </div>
+    </div>
+
+    <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Convocado {{ i+1 }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card [formGroup]="perfil">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="nomConvocado" class="label-left">Nombre del demandado</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #nomConvocado type="text" maxlength="100"
+                                            formControlName="nomConvocado" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{100 - nomConvocado.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="tipoIdentificacion">Tipo de identificación del
+                                        demandado</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="tipoIdentificacion" required>
+                                            <mat-option *ngFor="let contr of tiposIdentificacionArray"
+                                                [value]="contr.value">
+                                                {{ contr.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="numIdentificacion" class="label-left">Número de identificación
+                                        demandado</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #numIdentificacion type="text" maxlength="9"
+                                            formControlName="numIdentificacion" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{9 - numIdentificacion.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="despacho" class="label-left">Autoridad / Despacho de
+                                        conocimiento</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #despacho type="text" maxlength="20" formControlName="despacho"
+                                            required>
+                                    </mat-form-field>
+                                    <span class="contador">{{20 - despacho.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="departamento">Departamento</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="departamento" required>
+                                            <mat-option *ngFor="let contr of departamentoArray" [value]="contr.value">
+                                                {{ contr.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="municipio">Municipio</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="municipio" required>
+                                            <mat-option *ngFor="let contr of municipioArray" [value]="contr.value">
+                                                {{ contr.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="radicadoDespacho" class="label-left">Radicado en despacho de
+                                        conocimiento</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #radicadoDespacho type="text" maxlength="20"
+                                            formControlName="radicadoDespacho" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{20 - radicadoDespacho.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="fechaRadicadoDespacho">Fecha de radicado en despacho
+                                        de conocimiento</label>
+                                </div>
+                                <div class="col d-flex align-items-center">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput formControlName="fechaRadicadoDespacho"
+                                            [matDatepicker]="pickerFecha" readonly (click)="pickerFecha.open()" required
+                                            placeholder="DD/MM/AAAA">
+                                        <mat-datepicker #pickerFecha></mat-datepicker>
+                                    </mat-form-field>
+                                    <button mat-button color="primary" type="button" (click)="pickerFecha.open()"
+                                        class="btn-calendario">
+                                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="accionAEvitar">Medio de Control/Acción a evitar</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div>
+                                <div class="d-flex align-items-center">
+                                    <div class="text-area-quill auxBox">
+                                        <quill-editor class="quill-editor-style card" [styles]="editorStyle"
+                                            [modules]="config" required (onContentChanged)="maxLength($event, 1000)"
+                                            formControlName="accionAEvitar">
+                                        </quill-editor>
+                                    </div>
+                                    <span class="contador miles">
+                                        {{1000 - perfil.get( 'accionAEvitar' ).value}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="etapaProcesoFFIE">Etapa en la que se encuentra el
+                                        proceso al momento de llegar al FFIE</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="etapaProcesoFFIE" required>
+                                            <mat-option *ngFor="let contr of intanciasArray" [value]="contr.value">
+                                                {{ contr.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="caducidad">Caducidad o Prescripción</label>
+                                </div>
+                                <div class="col d-flex align-items-center">
+                                    <mat-form-field class="example-full-width">
+                                        <input matInput formControlName="caducidad" [matDatepicker]="pickerFecha2"
+                                            readonly (click)="pickerFecha2.open()" required placeholder="DD/MM/AAAA">
+                                        <mat-datepicker #pickerFecha2></mat-datepicker>
+                                    </mat-form-field>
+                                    <button mat-button color="primary" type="button" (click)="pickerFecha2.open()"
+                                        class="btn-calendario">
+                                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="text-right">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarPerfil( i )"
+                    [disabled]="perfiles.controls.length == 1">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                    Eliminar convocado
+                </button>
+            </div>
+
+            <div class="text-center">
+                <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
+                    <img src="assets/img/icon/guardar.svg">
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>

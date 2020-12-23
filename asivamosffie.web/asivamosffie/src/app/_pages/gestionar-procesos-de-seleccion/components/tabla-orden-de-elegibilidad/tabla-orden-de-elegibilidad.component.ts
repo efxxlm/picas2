@@ -6,7 +6,7 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { EstadosProcesoSeleccion, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { EstadosProcesoSeleccion, ProcesoSeleccion, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 
 export interface RegistrosCargados {
   id: number;
@@ -28,6 +28,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
   displayedColumns: string[] = ['fechaCargue', 'totalRegistros', 'registrosValidos', 'registrosInvalidos','gestion'];
   dataSource = new MatTableDataSource();
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
   //@Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
@@ -49,17 +50,18 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
 
   constructor(
               private projectService: ProjectService,
+              private procesoSeleccionService: ProcesoSeleccionService,
               private datepipe: DatePipe,
               public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.projectService.getListProjectsFileProjectByOrigenId( "2" ).subscribe(respuesta => {
+    this.projectService.getListProjectsFileProjectByOrigenIdAndRelacionID( "2",this.procesoSeleccion.procesoSeleccionId).subscribe(respuesta => {
       let datos:RegistrosCargados[]=[];
       console.log(respuesta);
 
       respuesta.forEach(element => {
-          datos.push({fechaCargue:this.datepipe.transform(element.fechaCreacion, 'yyyy-MM-dd')
+          datos.push({fechaCargue:this.datepipe.transform(element.fechaCreacion, 'dd/MM/yyyy')
           ,id:element.archivoCargueId,registrosInvalidos:element.cantidadRegistrosInvalidos
           ,registrosValidos:element.cantidadRegistrosValidos,totalRegistros:element.cantidadRegistros
           ,gestion:element.nombre});
@@ -100,7 +102,7 @@ export class TablaOrdenDeElegibilidadComponent implements OnInit {
   ver(gestion:any)
   {
     console.log(gestion);
-    this.projectService.getFileByName(gestion.gestion).subscribe(respuesta => {
+    this.procesoSeleccionService.downloadOrdenElegibilidadFilesByName(gestion.gestion).subscribe(respuesta => {
       let documento="documento.xlsx";
       //console.log(documento);
               

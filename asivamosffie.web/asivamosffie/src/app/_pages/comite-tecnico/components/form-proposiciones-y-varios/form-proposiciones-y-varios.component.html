@@ -89,7 +89,7 @@
             (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" required></quill-editor>
           <div class="d-flex align-items-center">
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{3000 - textoLimpio(addressForm.get('observaciones').value)}}
+              {{3000 - (textoLimpio(addressForm.get('observaciones').value)>3000?3000:textoLimpio(addressForm.get('observaciones').value))}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
               3000
@@ -114,7 +114,7 @@
             <div class="pr-1">
               <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
             </div>
-            <div class="col">
+            <div >
               <mat-radio-group class="radioInput" formControlName="tieneCompromisos">
                 <mat-radio-button value="true">Sí</mat-radio-button>
                 <mat-radio-button value="false">No</mat-radio-button>
@@ -127,15 +127,17 @@
         <div class="col-md-10">
           <div class="row">
             <div class="pr-1">
-              <label class="label-left" for="cuantosCompromisos">¿Cuántos compromisos se generaron en este tema del
-                orden del día?</label>
+              <label class="label-left" for="cuantosCompromisos">
+                ¿Cuántos compromisos se generaron en este tema del orden del día?
+              </label>
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #cuantosGrupos type="number" min="1" max="99" formControlName="cuantosCompromisos"
-                  (keyup)="CambioCantidadCompromisos()">
+                <input matInput #cuantosGrupos type="number" min="1" max="10" formControlName="cuantosCompromisos" required
+                  (keyup)="CambioCantidadCompromisos()" onkeyup="if(this.value>10) this.value = 10;">
               </mat-form-field>
-              <span class="contador">{{2 - cuantosGrupos.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Ingrese un número de 1 a 10"
+              matTooltipClass="info-tooltip">{{2 - cuantosGrupos.value.length}}</span>
             </div>
           </div>
         </div>
@@ -157,7 +159,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
                 </mat-form-field>
-                <span class="contador">{{100 - tarea.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{100 - tarea.value.length}}</span>
               </div>
             </div>
           </div>
@@ -180,7 +182,7 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()">
+                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()" placeholder="DD/MM/AAAA">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">

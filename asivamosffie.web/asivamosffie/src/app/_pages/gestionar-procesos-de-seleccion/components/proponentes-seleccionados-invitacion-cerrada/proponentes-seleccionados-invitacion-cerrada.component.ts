@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent implements OnInit {
 
   @Input() procesoSeleccion: ProcesoSeleccion;
+  @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter(); 
 
   nombresProponentesList: ProcesoSeleccionProponente[] = [];
@@ -27,13 +28,13 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     nombresProponentes: [null, Validators.required],
     tipoProponente: [null, Validators.required],
     nombre: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
     ],
     numeroIdentificacon: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
     ],
     representanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
     ],
     cedulaRepresentanteLegal: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(12)])
@@ -41,7 +42,7 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     departamentoRepresentanteLegal: [null, Validators.required],
     municipioRepresentanteLegal: [null, Validators.required],
     direccionPrincipalRepresentanteLegal: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+      Validators.required, Validators.minLength(1), Validators.maxLength(100)])
     ],
     telefonoRepresentanteLegal: [null, Validators.compose([
       Validators.required, Validators.minLength(10), Validators.maxLength(10)])
@@ -123,24 +124,38 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
     })
   }
 
-  changeProponente(){
-    console.log(this.addressForm.get('nombresProponentes').value);
+  changeProponente($event:any){
     
+    console.log(this.addressForm.get('cuantosProponentes').value);
+    //this.procesoSeleccion.procesoSeleccionProponente=[];
+    console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
+    console.log(this.addressForm.get('nombresProponentes').value.length);
+    console.log(this.addressForm.get('nombresProponentes').value);
     if(this.addressForm.get('cuantosProponentes').value>0)
     {
-      if(this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
+      if(this.procesoSeleccion.procesoSeleccionProponente.length>this.addressForm.get('nombresProponentes').value.length)
       {
-        this.addressForm.get('nombresProponentes').value.forEach(element => {
+        this.procesoSeleccion.procesoSeleccionProponente=[];
+      }
+      if(this.addressForm.get('cuantosProponentes').value>=this.addressForm.get('nombresProponentes').value.length
+      && this.addressForm.get('cuantosProponentes').value>this.procesoSeleccion.procesoSeleccionProponente.length)
+      {
+        this.addressForm.get('nombresProponentes').value.forEach(element => {   
+          console.log(element);     
           if ( element != 'Nuevo' ){
             let elemento: ProcesoSeleccionProponente = element;
-            elemento.procesoSeleccionProponenteId = "0";
-            elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;
+            if(elemento.procesoSeleccionProponenteId!="0" && this.procesoSeleccion.procesoSeleccionId!=elemento.procesoSeleccionId)
+            {
+              elemento.procesoSeleccionProponenteId = "0";
+              elemento.procesoSeleccionId = this.procesoSeleccion.procesoSeleccionId;              
+            }
             if(!this.procesoSeleccion.procesoSeleccionProponente.includes(elemento))
             {
               this.procesoSeleccion.procesoSeleccionProponente.push( elemento );    
             }
             
             this.idProponenteExistente = element.procesoSeleccionProponenteId; 
+            console.log(this.procesoSeleccion.procesoSeleccionProponente);
           }
           else{
             this.nuevo=true;
@@ -181,19 +196,25 @@ export class FormDatosProponentesSeleccionadosInvitacionCerradaComponent impleme
         { 
           this.addressForm.get('cuantosProponentes').setValue( this.procesoSeleccion.cantidadProponentesInvitados );      
           let proceso:ProcesoSeleccionProponente[]=[];
+          
           this.procesoSeleccion.procesoSeleccionProponente.forEach(element => {
-            proceso.push({direccionProponente: element.direccionProponente,
-            emailProponente: element.emailProponente,
-            localizacionIdMunicipio: element.localizacionIdMunicipio,
-            nombreProponente: element.nombreProponente,
-            numeroIdentificacion: element.numeroIdentificacion,
-            procesoSeleccionId: element.procesoSeleccionId,
-            procesoSeleccionProponenteId: element.procesoSeleccionProponenteId,
-            telefonoProponente: element.telefonoProponente,
-            tipoProponenteCodigo: element.tipoProponenteCodigo})
+            //busco 
+            console.log("busco "+element.procesoSeleccionProponenteId+" en");
+            console.log(this.nombresProponentesList);
+            let nombre = this.nombresProponentesList.filter(x=>x.procesoSeleccionProponenteId==element.procesoSeleccionProponenteId);
+            if(nombre.length>0)
+            {
+              proceso.push(nombre[0]);
+            }     
+            else
+            {
+              this.nombresProponentesList.push(element);
+              proceso.push(element);
+            }       
           });
+          console.log(proceso)
           this.addressForm.get('nombresProponentes').setValue(proceso);
-          console.log(proceso);
+          console.log(this.addressForm.get('nombresProponentes').value);
         });
   }
 

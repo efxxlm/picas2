@@ -27,6 +27,7 @@
             <app-form-descripcion-del-proceso-de-seleccion
                 #descripcion
                 [procesoSeleccion]="procesoSeleccion"
+                [editar]="bitPuedoEditar"
                 (guardar)="onSubmit()"
                 [style.pointer-events]="getStyleProponentesCreado()">
             </app-form-descripcion-del-proceso-de-seleccion>
@@ -41,6 +42,7 @@
             <app-form-estudio-de-mercado
                 #estudio
                 [procesoSeleccion]="procesoSeleccion"
+                [editar]="bitPuedoEditar"
                 (guardar)="onSubmit()"
                 [style.pointer-events]="getStyleProponentesCreado()">
             </app-form-estudio-de-mercado>
@@ -57,6 +59,7 @@
             <app-form-datos-proponentes-seleccionados-invitacion-cerrada
                 #proponenteCerrada
                 [procesoSeleccion]="procesoSeleccion"
+                [editar]="bitPuedoEditar"
                 (guardar)="onSubmit()"
                 [style.pointer-events]="getStyleProponentesCreado()">
             </app-form-datos-proponentes-seleccionados-invitacion-cerrada>
@@ -70,7 +73,10 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="evaluacion.cargarRegistro()"
                 id="botonevaluacion"></button>
-            <app-form-evaluacion #evaluacion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()" [style.pointer-events]="getStyleEvaluacion()">
+            <app-form-evaluacion #evaluacion 
+                [procesoSeleccion]="procesoSeleccion"
+                [editar]="bitPuedoEditar"
+                (guardar)="onSubmit()" [style.pointer-events]="getStyleEvaluacion()">
             </app-form-evaluacion>
         </mat-expansion-panel>
 
@@ -82,15 +88,16 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="proponenteInvitar.cargarRegistro()"
                 id="botonProponenteInvitar"></button>
-            <app-form-seleccion-proponente-a-invitar #proponenteInvitar [procesoSeleccion]="procesoSeleccion"
-                [style.pointer-events]="getStyleProponentesSeleccionados()"
+            <app-form-seleccion-proponente-a-invitar #proponenteInvitar
+                [editar]="bitPuedoEditar"    
+                [procesoSeleccion]="procesoSeleccion"               
                 (guardar)="onSubmit()">
             </app-form-seleccion-proponente-a-invitar>
 
         </mat-expansion-panel>
 
     </mat-accordion>
-    <!-- <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo!=estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+     <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo!=estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
     Cuando la solicitud se encuentra en estado <b>“Aprobada apertura de comité fiduciario”</b> el sistema habilitará las opciones para continuar el proceso.
-    </div> -->
+    </div>
 </div>

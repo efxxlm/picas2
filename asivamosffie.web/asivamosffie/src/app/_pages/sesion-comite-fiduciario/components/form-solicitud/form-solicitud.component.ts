@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { SesionComiteSolicitud, SesionParticipante, SesionSolicitudCompromiso, TiposSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
 import { FiduciaryCommitteeSessionService } from 'src/app/core/_services/fiduciaryCommitteeSession/fiduciary-committee-session.service';
 import { ContratacionProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
 
 @Component({
   selector: 'app-form-solicitud',
@@ -67,6 +68,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private commonService: CommonService,
     private fiduciaryCommitteeSessionService: FiduciaryCommitteeSessionService,
+    private technicalCommitteSessionService: TechnicalCommitteSessionService,
     public dialog: MatDialog,
     private router: Router,
 
@@ -90,7 +92,11 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       return 'none';
   }
   ngOnInit(): void {
-    console.log( this.fechaMaxima );
+    // console.log( this.fechaMaxima );
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
   }
 
   maxLength(e: any, n: number) {
@@ -100,14 +106,45 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+    let saltosDeLinea = 0;
+    // saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    // saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   borrarArray(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
+  }
+
+  eliminarCompromiso(i: number) {
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este compromiso?</b>', i);
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        this.eliminarCompromisos(e);
+      }
+    });
   }
 
   agregaCompromiso() {
@@ -119,11 +156,53 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       sesionSolicitudCompromisoId: [],
       sesionComiteSolicitudId: [],
       tarea: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(500)])
       ],
       responsable: [null, Validators.required],
       fecha: [null, Validators.required]
     });
+  }
+
+  changeCompromisos(requiereCompromisos) {
+
+    if (requiereCompromisos.value === false) {
+      console.log(requiereCompromisos.value);
+      this.technicalCommitteSessionService.eliminarCompromisosSolicitud(this.sesionComiteSolicitud.sesionComiteSolicitudId)
+        .subscribe(respuesta => {
+          if (respuesta.code == "200") {
+            this.compromisos.clear();
+            this.addressForm.get("cuantosCompromisos").setValue(null);
+          }
+        })
+    }
+  }
+
+  eliminarCompromisos(i) {
+
+    let compromiso = this.compromisos.controls[i];
+
+    this.technicalCommitteSessionService.deleteSesionComiteCompromiso(compromiso.get('sesionSolicitudCompromisoId').value)
+      .subscribe(respuesta => {
+        if (respuesta.code == "200") {
+          this.openDialog('', '<b>La información ha sido eliminada correctamente.</b>');
+          this.compromisos.removeAt(i)
+          this.addressForm.get("cuantosCompromisos").setValue(this.compromisos.length);
+        }
+      })
+  }
+
+
+  validarCompromisosDiligenciados(): boolean {
+    let vacio = true;
+    this.compromisos.controls.forEach(control => {
+      if (  control.value.tarea ||
+            control.value.responsable ||
+            control.value.fecha
+      )
+        vacio = false;
+    })
+
+    return vacio;
   }
 
   CambioCantidadCompromisos() {
@@ -133,8 +212,18 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
         this.compromisos.push(this.crearCompromiso());
       }
     } else if (FormGrupos.cuantosCompromisos <= this.compromisos.length && FormGrupos.cuantosCompromisos >= 0) {
-      while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
-        this.borrarArray(this.compromisos, this.compromisos.length - 1);
+      if (this.validarCompromisosDiligenciados()) {
+
+        while (this.compromisos.length > FormGrupos.cuantosCompromisos) {
+          this.borrarArray(this.compromisos, this.compromisos.length - 1);
+        }
+
+      }
+      else {
+
+        this.openDialog('', 'Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos');
+        this.addressForm.get('cuantosCompromisos').setValue( this.compromisos.length );
+
       }
     }
   }
@@ -199,7 +288,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     this.fiduciaryCommitteeSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
-        this.openDialog('', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         console.log(respuesta.data)
         this.validar.emit(respuesta.data);
         if (respuesta.code == "200" && !respuesta.data)
@@ -218,14 +307,27 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       .subscribe(response => {
 
         this.estadosArray = response.filter(s => estados.includes(s.codigo));
-        if (this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.AprobadaPorComiteFiduciario) {
-          this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
-        } else if (this.sesionComiteSolicitud.estadoCodigo == EstadosSolicitud.RechazadaPorComiteFiduciario) {
-          this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo))
-        }
-        console.log(this.estadosArray)
+      if ( this.sesionComiteSolicitud.requiereVotacionFiduciario ){
+        this.sesionComiteSolicitud.sesionSolicitudVoto.filter(sv => sv.comiteTecnicoFiduciarioId == this.sesionComiteSolicitud.comiteTecnicoFiduciarioId).forEach(sv => {
+          if (sv.esAprobado)
+            this.cantidadAprobado++;
+          else
+            this.cantidadNoAprobado++;
+        })
 
-      })
+        if (this.cantidadNoAprobado == 0){
+          this.resultadoVotacion = 'Aprobó'
+          this.estadosArray = this.estadosArray.filter(e => e.codigo == EstadosSolicitud.AprobadaPorComiteFiduciario)
+        }else if ( this.cantidadAprobado == 0 ){
+          this.resultadoVotacion = 'No Aprobó'
+          this.estadosArray = this.estadosArray.filter(e => [EstadosSolicitud.RechazadaPorComiteFiduciario, EstadosSolicitud.DevueltaPorComiteFiduciario].includes(e.codigo))
+        }else if ( this.cantidadAprobado > this.cantidadNoAprobado ){
+          this.resultadoVotacion = 'Aprobó'
+        }else if ( this.cantidadAprobado <= this.cantidadNoAprobado ){
+          this.resultadoVotacion = 'No Aprobó'
+        }
+      }
+    });
 
     this.addressForm.get('estadoSolicitud').setValue(this.sesionComiteSolicitud.estadoCodigo)
     this.addressForm.get('observaciones').setValue(this.sesionComiteSolicitud.observacionesFiduciario)
@@ -258,24 +360,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
     });
 
-    this.sesionComiteSolicitud.sesionSolicitudVoto.filter(sv => sv.comiteTecnicoFiduciarioId == this.sesionComiteSolicitud.comiteTecnicoFiduciarioId).forEach(sv => {
-      if (sv.esAprobado)
-        this.cantidadAprobado++;
-      else
-        this.cantidadNoAprobado++;
-    })
-
-    if (this.cantidadNoAprobado > 0)
-      this.resultadoVotacion = 'No Aprobó'
-    else
-      this.resultadoVotacion = 'Aprobó'
-
-    // let btnSolicitudMultiple = document.getElementsByName( 'btnSolicitudMultiple' );
-
-    // btnSolicitudMultiple.forEach( element =>{
-    //   element.click();
-    // })
-
+    this.tieneVotacion = this.sesionComiteSolicitud.requiereVotacionFiduciario;
 
     if (this.sesionComiteSolicitud.tipoSolicitudCodigo == TiposSolicitud.AperturaDeProcesoDeSeleccion) {
       this.justificacion = this.sesionComiteSolicitud.procesoSeleccion.justificacion

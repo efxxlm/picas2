@@ -8,8 +8,8 @@
     </h1>
 
     <p class="info-sub-title">
-        <span>Tipo de solicitud:<b>Contratación</b></span>
-        <span>Número de solicitud: <b>002</b></span>
+        <span>Tipo de solicitud:<b>{{tipo}}</b></span>
+        <span>Número de solicitud: <b>{{nSolicitud}}</b></span>
     </p>
 </div>
 
@@ -20,7 +20,7 @@
             (onContentChanged)="maxLength($event, 2000)" [formControl]="observaciones"></quill-editor>
     </div>
     <span class="contador miles" *ngIf="observaciones.value">
-        {{2000 - textoLimpio(observaciones.value)}}
+        {{2000 - (textoLimpio(observaciones.value)>2000?2000:textoLimpio(observaciones.value))}}
     </span>
     <span class="contador miles" *ngIf="!observaciones.value">
         2000

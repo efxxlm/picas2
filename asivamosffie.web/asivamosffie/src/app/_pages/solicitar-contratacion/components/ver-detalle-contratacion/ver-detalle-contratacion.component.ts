@@ -46,11 +46,16 @@ export class VerDetalleContratacionComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  innerObservacion ( observacion: string ) {
+    const observacionHtml = observacion.replace( '"', '' );
+    return observacionHtml;
+  }
+
   getProjectContracting ( id: any ) {
     this.projectContractingSvc.getContratacionByContratacionId( id )
       .subscribe( resp => {
         this.contratacion = resp;
-        console.log( this.contratacion.contratacionProyecto );
+        console.log( this.contratacion );
         for ( let contratacionProyecto of this.contratacion.contratacionProyecto ) {
           
           contratacionProyecto.dataAportantes = this.getDataAportantes( contratacionProyecto.contratacionProyectoAportante );

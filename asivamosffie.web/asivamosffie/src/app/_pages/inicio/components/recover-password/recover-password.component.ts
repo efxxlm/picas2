@@ -70,16 +70,16 @@ export class RecoverPasswordComponent implements OnInit {
     {
         if (respuesta.code === '101') // Expected response 
         {
-          this.openDialog('', respuesta.message);
+          this.openDialog('', `<b>${respuesta.message}</b>`);
           this.router.navigate(['/inicio']);
         }
         else
         {
-          this.openDialog('', respuesta.message);
+          this.openDialog('', `<b>${respuesta.message}</b>`);
         }
     }else 
     {
-      this.openDialog('', respuesta.message);
+      this.openDialog('', `<b>${respuesta.message}</b>`);
     }
     
   }

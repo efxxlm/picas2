@@ -16,10 +16,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'fecha',
-    'numero',
-    'valorSolicitado',
-    'estadoSolicitud',
+    'fechaSolicitud',
+    'numeroSolicitud',
+    'valorSolicitud',
+    'estadoSolicitudNombre',
     'estadoRegistro',
     'id'
   ];
@@ -45,35 +45,40 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
 
     this.budgetAvailabilityService.getDDPEspecial()
       .subscribe( listaDDP => {
+        console.log( listaDDP );
         this.dataSource = new MatTableDataSource(listaDDP);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.paginator._intl.nextPageLabel = 'Siguiente';
+        this.paginator._intl.previousPageLabel = 'Anterior';
+        this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
+          if (length === 0 || pageSize === 0) { return '0 de ' + length; }
+          length = Math.max(length, 0);
+          const startIndex = page * pageSize;
+          const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+          return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+        };
       })
-
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
-    this.paginator._intl.nextPageLabel = 'Siguiente';
-    this.paginator._intl.previousPageLabel = 'Anterior';
-    this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
-      if (length === 0 || pageSize === 0) { return '0 de ' + length; }
-      length = Math.max(length, 0);
-      const startIndex = page * pageSize;
-      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
-      return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
-    };
   }
 
-  openDialog(modalTitle: string, modalText: string) {
+  
+  openDialog(modalTitle: string, modalText: string,reload:boolean=false) {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    dialogRef.afterClosed().subscribe(result => {
+      if(reload)
+        location.reload();
+    })
   }
 
   enviarSolicitud(e: number) {
     
     this.budgetAvailabilityService.sendRequest( e )
       .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message );
+        this.openDialog( '', `<b>${respuesta.message}</b>` );
         if (respuesta.code == "200")
           this.ngOnInit();
       })
@@ -85,12 +90,31 @@ export class TablaCrearSolicitudEspecialComponent implements OnInit {
   }
 
   eliminar(e: number) {
-    this.budgetAvailabilityService.eliminarDisponibilidad( e )
-      .subscribe( respuesta => {
-        this.openDialog( '', respuesta.message );
+    this.openDialogSiNo('', '<b>¿Está seguro de eliminar este registro?</b>', e)
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        this.budgetAvailabilityService.eliminarDisponibilidad( e )
+        .subscribe( respuesta => {
+          console.log(respuesta);
+        this.openDialog( '', `<b>${respuesta.message}</b>` ,true);
         if (respuesta.code == "200")
           this.ngOnInit();
       })
+      }
+    });
+  }
+
+  verDetalle(e: number){
+    this.router.navigate(['/solicitarDisponibilidadPresupuestal/verDetalleDDPEspecial',e]);
   }
 
 }

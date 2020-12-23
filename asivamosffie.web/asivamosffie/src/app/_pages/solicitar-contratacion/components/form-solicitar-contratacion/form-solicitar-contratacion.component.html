@@ -18,31 +18,28 @@
       <mat-radio-button value="true">Sí</mat-radio-button>
       <mat-radio-button value="false">No</mat-radio-button>
     </mat-radio-group>
+    <span class="required-form-group">*</span>
   </div>
 
   <div class="text-center">
-    <button mat-raised-button 
-            color="primary" 
-            class="btn-cargar-proyecto" 
-            (click)="verBusqueda = !verBusqueda"
-            [disabled]="esMultiple.value == 'free'"
-            >Gestionar busqueda de proyectos</button>
+    <button mat-raised-button color="primary" class="btn-cargar-proyecto" (click)="verBusqueda = !verBusqueda"
+      [disabled]="esMultiple.value == 'free'">Gestionar busqueda de proyectos</button>
   </div>
 
   <div class="animatedDown" *ngIf="verBusqueda">
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-      <mat-card class="shipping-card" style="width: 60%;">
+      <mat-card class="shipping-card">
         <button type="button" mat-icon-button (click)="verBusqueda = false" class="text-info--close">
           <img src="assets/img/icon/cerrar-primary.svg" alt="cerrar">
         </button>
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
           <mat-card-title class="header-card--text">
             Filtro de busqueda
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="tipoInterventor">Tipo de intervención</label>
@@ -60,32 +57,31 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="llaveMEN">Llave MEN</label>
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #llaveMEN type="number" maxlength="12" formControlName="llaveMEN"
-                      (keypress)="validateNumberKeypress($event)"
+                    <input matInput #llaveMEN type="text" maxlength="8" formControlName="llaveMEN"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{12 - llaveMEN.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{8 - llaveMEN.value.length}}</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="region">Región</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="region" (selectionChange)="changeRegion()">
-                      <mat-option *ngFor="let region of selectRegion" [value]="region" >
+                    <mat-select class="capitalize" formControlName="region" (selectionChange)="changeRegion()">
+                      <mat-option class="capitalize" *ngFor="let region of selectRegion" [value]="region">
                         {{ region.descripcion }}
                       </mat-option>
                     </mat-select>
@@ -95,15 +91,15 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="departamento">Departamento</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="departamento" (selectionChange)="changeDepartamento()">
-                      <mat-option *ngFor="let departamento of selectDepartamento" [value]="departamento">
+                    <mat-select class="capitalize" formControlName="departamento" (selectionChange)="changeDepartamento()">
+                      <mat-option class="capitalize" *ngFor="let departamento of selectDepartamento" [value]="departamento">
                         {{ departamento.descripcion }}
                       </mat-option>
                     </mat-select>
@@ -113,15 +109,15 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="municipio">Municipio</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="municipio" (selectionChange)="changeMunicipio()">
-                      <mat-option *ngFor="let municipio of selectMunicipio" [value]="municipio">
+                    <mat-select class="capitalize" formControlName="municipio" (selectionChange)="changeMunicipio()">
+                      <mat-option class="capitalize" *ngFor="let municipio of selectMunicipio" [value]="municipio">
                         {{ municipio.descripcion }}
                       </mat-option>
                     </mat-select>
@@ -131,7 +127,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="institucionEducativa">Institución Educativa</label>
@@ -150,14 +146,14 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-6">
               <div class="row">
                 <div class="pr-1">
                   <label class="label-left" for="sede">Sede</label>
                 </div>
                 <div class="col">
                   <mat-form-field class="select-width">
-                    <mat-select formControlName="sede" >
+                    <mat-select formControlName="sede">
                       <mat-option *ngFor="let sede of selectSede" [value]="sede">
                         {{ sede.nombre }}
                       </mat-option>
@@ -169,29 +165,21 @@
           </div>
         </mat-card-content>
         <mat-card-actions class="text-center">
-          <button mat-button color="primary" class="btn-buscar" type="submit" [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
+          <button mat-button color="primary" class="btn-buscar btn-borrar" type="button"
+            (click)="reiniciarFiltro()" [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
+            <img src="assets/img/icon/borrar.svg" alt="buscar">
+          </button>
+
+          <button mat-button color="primary" class="btn-buscar" type="submit"
+            [disabled]="!addressForm.controls.tipoInterventor.value && !addressForm.controls.llaveMEN.value && !addressForm.controls.region.value && !addressForm.controls.departamento.value && !addressForm.controls.municipio.value && !addressForm.controls.institucionEducativa.value && !addressForm.controls.sede.value">
             <img src="assets/img/icon/lupa.svg" alt="buscar"> Buscar
           </button>
 
-          <button mat-button 
-                  color="primary" 
-                  class="btn-buscar" 
-                  type="button" 
-                  style="font-size: 70%;"
-                  (click)="reiniciarFiltro()"
-                  [disabled]="!addressForm.dirty">
-            <img src="assets/img/icon/borrar.svg" alt="buscar">
-          </button>
         </mat-card-actions>
       </mat-card>
     </form>
   </div>
 </div>
-<button style="display: none;" (click)="tablaResultados.ngOnInit()" id="btnListaResultado" ></button>
-<app-tabla-resultados
-    [listaResultados]="listaResultado" 
-    [esMultiproyecto]="esMultiple.value"
-    #tablaResultados 
->
-
+<button style="display: none;" (click)="tablaResultados.ngOnInit()" id="btnListaResultado"></button>
+<app-tabla-resultados [listaResultados]="listaResultado" [esMultiproyecto]="esMultiple.value" #tablaResultados>
 </app-tabla-resultados>

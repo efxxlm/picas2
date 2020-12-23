@@ -75,6 +75,8 @@ interface DisponibilidadPresupuestal {
   numeroDrp: string;
   disponibilidadPresupuestalObservacion: any[];
   disponibilidadPresupuestalProyecto: any[];
+  //notmapped
+  stringAportante?:string; 
 }
 
 interface ContratacionProyecto2 {

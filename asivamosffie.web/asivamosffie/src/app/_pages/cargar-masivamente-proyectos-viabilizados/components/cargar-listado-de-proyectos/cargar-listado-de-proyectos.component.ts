@@ -42,10 +42,9 @@ export class CargarListadoDeProyectosComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
-        {
+        
           this.router.navigate(["/cargarMasivamente"], {});
-        }
+        
       });
     }
   }
@@ -56,11 +55,11 @@ export class CargarListadoDeProyectosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.projectService.uploadOkProjectsFileProject(this.idProject).subscribe(
           response => {
-            this.openDialog('', response.message,response.code=="200");
+            this.openDialog('', `<b>${response.message}</b>`,response.code=="200");
           },
           error => {
             console.log(<any>error);

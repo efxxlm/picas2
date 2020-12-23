@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { MaterialModule } from './../../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GenerarRegistroPresupuestalComponent } from './components/generar-registro-presupuestal/generar-registro-presupuestal.component';
@@ -18,6 +18,7 @@ import { QuillModule } from 'ngx-quill';
     MaterialModule,
     ReactiveFormsModule,
     QuillModule.forRoot()
-  ]
+  ],
+  providers:[CurrencyPipe]
 })
 export class GenerarRegistroPresupuestalModule { }

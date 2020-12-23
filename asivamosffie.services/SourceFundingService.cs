@@ -49,7 +49,7 @@ namespace asivamosffie.services
             else if (retorno.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
             {
                 retorno.Aportante.NombreAportanteString = retorno.Aportante.NombreAportanteId == null
-                    ? "Error" :
+                    ? "" :
                     _context.Dominio.Find(retorno.Aportante.NombreAportanteId).Nombre;                    
             }
             else
@@ -57,13 +57,13 @@ namespace asivamosffie.services
                 if(retorno.Aportante.MunicipioId==null)
                 {
                     retorno.Aportante.NombreAportanteString = retorno.Aportante.DepartamentoId == null
-                    ? "Error" :
+                    ? "" :
                     "Gobernación " + _context.Localizacion.Find(retorno.Aportante.DepartamentoId).Descripcion;
                 }
                 else
                 {
                     retorno.Aportante.NombreAportanteString = retorno.Aportante.MunicipioId == null
-                    ? "Error" :
+                    ? "" :
                     "Alcaldía " + _context.Localizacion.Find(retorno.Aportante.MunicipioId).Descripcion;
                 }
             }
@@ -158,13 +158,40 @@ namespace asivamosffie.services
             {
                 retorno = false;
             }
-            if(fuentefinanciacion.FuenteRecursosCodigo.Equals(""))
+            if(fuentefinanciacion.FuenteRecursosCodigo == null || fuentefinanciacion.FuenteRecursosCodigo.Equals(""))
             {
                 retorno = false;
             }
             if(fuentefinanciacion.CuentaBancaria.Count()==0)
             {
                 retorno = false;
+            }
+            else
+            {
+                foreach(var cuentas in fuentefinanciacion.CuentaBancaria)
+                {
+                    if(cuentas.BancoCodigo==null)
+                    {
+                        retorno = false;
+                    }
+                    if (cuentas.CodigoSifi == null)
+                    {
+                        retorno = false;
+                    }
+                    if (cuentas.NombreCuentaBanco == null)
+                    {
+                        retorno = false;
+                    }
+                    if (cuentas.TipoCuentaCodigo == null)
+                    {
+                        retorno = false;
+                    }
+                    if (cuentas.Exenta == null)
+                    {
+                        retorno = false;
+                    }
+                }
+
             }
             if(fuentefinanciacion.AportanteId!=null)
             {
@@ -320,12 +347,12 @@ namespace asivamosffie.services
                     if (ret.Aportante.MunicipioId != null)
                     {
                         ret.Aportante.NombreAportanteString = ret.Aportante.MunicipioId==null?
-                            "Error":"Alcaldía de "+_context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
+                            "":"Alcaldía de "+_context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
                     }
                     else//solo departamento
                     {
                         ret.Aportante.NombreAportanteString = ret.Aportante.DepartamentoId == null ?
-                            "Error" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
+                            "" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
                     }
                 }
                 else
@@ -333,7 +360,7 @@ namespace asivamosffie.services
                     ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
                 }
                 ret.Aportante.TipoAportanteString = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
-                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "Error" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
             }
             return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
         }
@@ -348,7 +375,13 @@ namespace asivamosffie.services
             foreach (var ret in retorno)
             {
                 ret.ControlRecurso = _context.ControlRecurso.Where(x=>x.FuenteFinanciacionId==ret.FuenteFinanciacionId && !(bool)x.Eliminado).ToList();
+                foreach(var control in ret.ControlRecurso)
+                {
+                    control.FuenteFinanciacion = null;
+                }
                 ret.Aportante.Cofinanciacion = _context.Cofinanciacion.Find(ret.Aportante.CofinanciacionId);
+                ret.Aportante.Cofinanciacion.CofinanciacionAportante = null;
+                ret.Aportante.FuenteFinanciacion = null;
                 if (ret.Aportante.TipoAportanteId == ConstanTipoAportante.Ffie)
                 {
                     ret.Aportante.NombreAportanteString = ConstanStringTipoAportante.Ffie;
@@ -359,12 +392,12 @@ namespace asivamosffie.services
                     if (ret.Aportante.MunicipioId != null)
                     {
                         ret.Aportante.NombreAportanteString = ret.Aportante.MunicipioId == null ?
-                            "Error" : "Alcaldía de " + _context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
+                            "" : "Alcaldía de " + _context.Localizacion.Find(ret.Aportante.MunicipioId).Descripcion;
                     }
                     else//solo departamento
                     {
                         ret.Aportante.NombreAportanteString = ret.Aportante.DepartamentoId == null ?
-                            "Error" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
+                            "" : "Gobernación de " + _context.Localizacion.Find(ret.Aportante.DepartamentoId).Descripcion;
                     }
                 }
                 else
@@ -372,7 +405,7 @@ namespace asivamosffie.services
                     ret.Aportante.NombreAportanteString = _context.Dominio.Find(ret.Aportante.NombreAportanteId).Nombre;
                 }
                 ret.Aportante.TipoAportanteString = _context.Dominio.Find(ret.Aportante.TipoAportanteId).Nombre;
-                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "Error" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
+                ret.FuenteRecursosString = ret.FuenteRecursosCodigo == null ? "" : _context.Dominio.Where(x => x.Codigo == ret.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre;
             }
             return retorno.OrderByDescending(x => x.FechaCreacion).ToList();
         }
@@ -444,7 +477,7 @@ namespace asivamosffie.services
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
                     Nuevo_saldo_de_la_fuente = 0,
-                    Saldo_actual_de_la_fuente= financiacion.ValorFuente,
+                    Saldo_actual_de_la_fuente= (decimal)financiacion.ValorFuente,
                     Valor_solicitado_de_la_fuente=0
                 }); 
             }
@@ -454,21 +487,23 @@ namespace asivamosffie.services
         public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid,int aportanteID)
         {
             List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();            
-            var gestion = _context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.FuenteFinanciacionId).ToList();
-            if(gestion.Count()==0)
-            {
-                gestion = _context.FuenteFinanciacion.Where(x => x.AportanteId == aportanteID && x.Eliminado == false).Select(x => x.FuenteFinanciacionId).ToList();
-            }
+            var gestion = _context.FuenteFinanciacion.Where(x => x.AportanteId == aportanteID && x.Eliminado == false).Select(x => x.FuenteFinanciacionId).ToList();
+            
             var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
             foreach (var financiacion in financiaciones)
             {
+                var valorDisponible = (decimal)financiacion.ValorFuente-_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId != disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
+                var valorsolicitado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
+                     && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado);
                 ListaRetorno.Add(new GrillaFuentesFinanciacion
                 {
                     FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
                     Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
-                    Nuevo_saldo_de_la_fuente = financiacion.ValorFuente - _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId==disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado),
-                    Saldo_actual_de_la_fuente = financiacion.ValorFuente - _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId==financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Sum(x=>x.ValorSolicitado),
-                    Valor_solicitado_de_la_fuente = _context.GestionFuenteFinanciacion.Where(x => x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Sum(x => x.ValorSolicitado)
+                    Nuevo_saldo_de_la_fuente = valorDisponible-valorsolicitado,
+                    Saldo_actual_de_la_fuente = valorDisponible,
+                    Valor_solicitado_de_la_fuente =valorsolicitado,
+                    GestionFuenteFinanciacionID = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId
+                     && x.DisponibilidadPresupuestalProyectoId == disponibilidadPresupuestalProyectoid).Select(x => x.GestionFuenteFinanciacionId).FirstOrDefault(),
                 });
             }
             return ListaRetorno;
@@ -509,12 +544,12 @@ namespace asivamosffie.services
                 if (aportante.MunicipioId != null)
                 {
                     nombre = aportante.MunicipioId == null ?
-                        "Error" : "Alcaldía de " + _context.Localizacion.Find(aportante.MunicipioId).Descripcion;
+                        "" : "Alcaldía de " + _context.Localizacion.Find(aportante.MunicipioId).Descripcion;
                 }
                 else//solo departamento
                 {
                     nombre = aportante.DepartamentoId == null ?
-                        "Error" : "Gobernación de " + _context.Localizacion.Find(aportante.DepartamentoId).Descripcion;
+                        "" : "Gobernación de " + _context.Localizacion.Find(aportante.DepartamentoId).Descripcion;
                 }
             }
             else
@@ -522,6 +557,107 @@ namespace asivamosffie.services
                 nombre = _context.Dominio.Find(aportante.NombreAportanteId).Nombre;
             }
             return nombre;
+        }
+        
+        public async Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId)
+        {
+            List<GrillaFuentesFinanciacion> ListaRetorno = new List<GrillaFuentesFinanciacion>();
+            var gestion = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.FuenteFinanciacionId).ToList();
+            if (gestion.Count() == 0)
+            {
+                var disponibilidad = _context.DisponibilidadPresupuestalProyecto.Where(x => x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).
+                    Include(x => x.ProyectoAdministrativo).
+                        ThenInclude(x => x.ProyectoAdministrativoAportante).
+                            ThenInclude(x => x.AportanteFuenteFinanciacion).
+                   Include(x=>x.Proyecto).
+                    ThenInclude(x => x.ProyectoAportante).
+                        ThenInclude(x => x.Aportante).
+                            ThenInclude(x => x.FuenteFinanciacion).ToList();
+                if(_context.DisponibilidadPresupuestal.Where(x=>x.DisponibilidadPresupuestalId==disponibilidadPresupuestaId).
+                    FirstOrDefault().TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)//entonces es una disponivlidad espacial
+                {
+                    var ddp = _context.DisponibilidadPresupuestal.Where(x => x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).
+                        Include(x => x.Aportante).
+                            ThenInclude(x => x.FuenteFinanciacion).ToList();
+                    foreach (var d in ddp)
+                    {
+                        foreach (var fuente in d.Aportante.FuenteFinanciacion)
+                        {
+                            if (fuente.FuenteFinanciacionId != null)
+                            {
+                                gestion.Add(Convert.ToInt32(fuente.FuenteFinanciacionId));
+                            }
+                        }
+                    }
+                }
+                foreach (var dDisponibilidadProyecto in disponibilidad)
+                {
+                    if(dDisponibilidadProyecto.ProyectoAdministrativoId!=null)
+                    {
+                        foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.ProyectoAdministrativo.ProyectoAdministrativoAportante)
+                        {
+                            foreach (var d in pAdminsitrativoApo.AportanteFuenteFinanciacion)
+                            {
+                                if (d.FuenteFinanciacionId != null)
+                                {
+                                    gestion.Add(Convert.ToInt32(d.FuenteFinanciacionId));
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach (var pAdminsitrativoApo in dDisponibilidadProyecto.Proyecto.ProyectoAportante)
+                        {
+                            foreach (var d in pAdminsitrativoApo.Aportante.FuenteFinanciacion)
+                            {
+                                if (d.FuenteFinanciacionId != null)
+                                {
+                                    gestion.Add(Convert.ToInt32(d.FuenteFinanciacionId));
+                                }
+                            }
+                        }
+                    }
+                    
+                }                
+            }
+            var financiaciones = _context.FuenteFinanciacion.Where(x => gestion.Contains(x.FuenteFinanciacionId) && x.Eliminado == false).ToList();
+            
+            foreach (var financiacion in financiaciones)
+            {
+                var gestionfienteid= _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.GestionFuenteFinanciacionId);
+                int gestionid = 0;
+                if(gestionfienteid!=null)
+                {
+                    gestionid = gestionfienteid.FirstOrDefault();
+                }
+                decimal valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
+                if(valor==0)//si es disponibilidad especial entonces la relacion es diferente
+                {
+                    var gestionfiente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Select(x => x.GestionFuenteFinanciacionId);
+                    if (gestionfiente != null)
+                    {
+                        gestionid = gestionfiente.FirstOrDefault();
+                    }
+                    valor = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalId == disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
+                }
+                var saldoFuente = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.FuenteFinanciacionId == financiacion.FuenteFinanciacionId && x.DisponibilidadPresupuestalProyecto.DisponibilidadPresupuestalId != disponibilidadPresupuestaId).Sum(x => x.ValorSolicitado);
+                //si no he gestionado fuentes, soy especial y mi saldo es el total de la fuente
+                if(saldoFuente==0)
+                {
+                    saldoFuente = Convert.ToDecimal(financiacion.ValorFuente);
+                }
+                ListaRetorno.Add(new GrillaFuentesFinanciacion
+                {
+                    GestionFuenteFinanciacionID= gestionid,
+                    FuenteFinanciacionID = financiacion.FuenteFinanciacionId,
+                    Fuente = _context.Dominio.Where(x => x.Codigo == financiacion.FuenteRecursosCodigo && x.TipoDominioId == (int)EnumeratorTipoDominio.Fuentes_de_financiacion).FirstOrDefault().Nombre,
+                    Nuevo_saldo_de_la_fuente = saldoFuente-valor,
+                    Saldo_actual_de_la_fuente = saldoFuente,
+                    Valor_solicitado_de_la_fuente = valor
+                });
+            }
+            return ListaRetorno;
         }
     }
 }

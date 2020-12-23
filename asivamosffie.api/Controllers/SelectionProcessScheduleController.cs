@@ -71,10 +71,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta _response = new Respuesta();
             try
-            {
-
-                string usermodified = " ";
-                //string usermodified = HttpContext.User.FindFirst("User").Value;
+            {                
+                string usermodified = HttpContext.User.FindFirst("User").Value.ToUpper();
                 procesoSeleccionCronograma.UsuarioCreacion = usermodified;
                 _response = await _selectionProcessScheduleService.Insert(procesoSeleccionCronograma);
                 return Ok(_response);
@@ -95,8 +93,7 @@ namespace asivamosffie.api.Controllers
             try
             {
 
-                string usermodified = " ";
-                //string usermodified = HttpContext.User.FindFirst("User").Value;
+                string usermodified = HttpContext.User.FindFirst("User").Value.ToUpper();
                 procesoSeleccionObservacion.UsuarioCreacion = usermodified;
                 _response = await _selectionProcessScheduleService.RecordActivities(procesoSeleccionObservacion);
                 return Ok(_response);
@@ -124,6 +121,73 @@ namespace asivamosffie.api.Controllers
                 _reponse.Data = ex.ToString();
                 return Ok(_reponse);
             }   
+        }
+
+        /*autor: jflorez
+            descripción: trae las actividades por proceso de selección
+            impacto: CU 3.1.3*/
+        [Route("GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId")]
+        [HttpGet]
+        public async Task<ActionResult<List<ProcesoSeleccionMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(int pProcesoSeleccionId)
+        {
+            try
+            {
+                return await _selectionProcessScheduleService.GetListProcesoSeleccionMonitoreoCronogramaByProcesoSeleccionId(pProcesoSeleccionId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /*autor: jflorez
+                descripción: crea o actualiza el monitoreo a cronograma
+                impacto: CU 3.1.3*/
+        [HttpPost]
+        [Route("setProcesoSeleccionMonitoreoCronograma")]
+        public async Task<IActionResult> setProcesoSeleccionMonitoreoCronograma([FromBody] ProcesoSeleccionMonitoreo procesoSeleccionCronograma)
+        {
+            Respuesta _response = new Respuesta();
+            try
+            {
+
+                string usermodified = HttpContext.User.FindFirst("User").Value.ToUpper();
+                if(procesoSeleccionCronograma.ProcesoSeleccionMonitoreoId>0)
+                {
+                    procesoSeleccionCronograma.UsuarioModificacion = usermodified;
+                }
+                else
+                {
+                    procesoSeleccionCronograma.UsuarioCreacion = usermodified;
+                }
+                
+                _response = await _selectionProcessScheduleService.setProcesoSeleccionMonitoreoCronograma(procesoSeleccionCronograma,
+                     _settings.Value.DominioFront,
+                    _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.Data = ex.ToString();
+                return Ok(_response);
+            }
+        }
+
+        /*autor: jflorez
+            descripción: trae las actividades por monitoreoid
+            impacto: CU 3.1.3*/
+        [Route("GetListProcesoSeleccionMonitoreoCronogramaByMonitoreoId")]
+        [HttpGet]
+        public async Task<ActionResult<List<ProcesoSeleccionCronogramaMonitoreo>>> GetListProcesoSeleccionMonitoreoCronogramaByMonitoreoId(int pProcesoSeleccionId)
+        {
+            try
+            {
+                return await _selectionProcessScheduleService.GetListProcesoSeleccionMonitoreoCronogramaByMonitoreoId(pProcesoSeleccionId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

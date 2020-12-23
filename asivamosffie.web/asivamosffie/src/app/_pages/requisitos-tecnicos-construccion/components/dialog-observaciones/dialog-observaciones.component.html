@@ -1,0 +1,57 @@
+<section class="text-center">
+  <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  </button>
+
+  <h1 class="title-menu--h1" *ngIf="data.ocultarBoton != true">
+    Observaciones
+  </h1>
+
+  <p class="p mt-05em font-weight-bold">
+    {{ data.planPrograma }}
+  </p>
+
+  <form autocomplete="off" [formGroup]="formObservacion">
+
+    <div class="d-flex align-items-center" *ngIf="data.ocultarBoton != true">
+      <div class="text-area-quill"
+        [class.color-secondaryColor]="formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched">
+        <label for="observaciones" class="text-area-quill--label size-label colorMainColor"
+          [class.color-secondaryColor]="formObservacion.get('observaciones').invalid && formObservacion.get('observaciones').touched">
+          Observaciones
+        </label>
+        <quill-editor class="quill-editor-style miles" [styles]="editorStyle" [modules]="config"
+          (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+        </quill-editor>
+      </div>
+      <span class="contador miles" *ngIf="formObservacion.get('observaciones').value !== null">
+        {{1000 - (textoLimpio(formObservacion.get('observaciones').value)>1000?1000:textoLimpio(formObservacion.get('observaciones').value))}}
+      </span>
+      <span class="contador miles" *ngIf="formObservacion.get('observaciones').value === null">
+        1000
+      </span>
+    </div>
+
+    <div align="center" *ngIf="data.ocultarBoton == true">
+      <mat-card class="border mt-2em">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text grayTitle">
+            Observaciones
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+          <section style="margin-left: 2em;">
+            <div [innerHTML]="formObservacion.value.observaciones"></div>
+          </section>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="text-center">
+      <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="formObservacion.invalid"
+        (click)="guardar()" *ngIf="data.ocultarBoton != true">
+        Realizar observación
+      </button>
+    </div>
+  </form>
+</section>

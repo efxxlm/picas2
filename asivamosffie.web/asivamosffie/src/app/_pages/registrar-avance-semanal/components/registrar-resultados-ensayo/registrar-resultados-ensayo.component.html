@@ -1,0 +1,98 @@
+<section class="container">
+    <div class="text-right">
+        <a (click)="getRutaAnterior()" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Registrar resultados gestión de calidad LU990088
+        </h1>
+    </div>
+
+    <div class="text-center d-flex justify-content-center mt-1em colorMainColor">
+        <p>Fecha de toma: <b>05/07/2020</b></p>
+        <p style="margin-left: 2em;"><b>Ensayo de laboratorio 1</b></p>
+        <p style="margin-left: 2em;">Tipo de ensayo: <b>Muestra de tierra</b></p>
+    </div>
+
+    <div class="text-center" style="padding-top: 2em;">
+        <p class="info-container">
+			<span class="info-text sin-diligenciar">Sin diligenciar</span>
+			<span class="info-text en-proceso">En proceso</span>
+			<span class="info-text completo">Completo</span>
+        </p>
+    </div>
+
+    <div class="text-center mt-1em">
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title completo">
+                        Muestra 1
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                
+                <form autocomplete="off" [formGroup]="formMuestra" (ngSubmit)="guardar()">
+                    <div align="left">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="row" style="margin-left: .1em;">
+                                    <div class="col-md-12">
+                                      <div class="row">
+                                        <div class="pr-1">
+                                          <label class="label-left">Nombre de la muestra</label>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <section style="width: 94%;">
+                                                <mat-form-field>
+                                                    <input matInput type="text" maxlength="30" formControlName="nombreMuestra" required>
+                                                </mat-form-field>
+                                            </section>
+                                            <span class="contador">{{30 - formMuestra.get( 'nombreMuestra' ).value.length}}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 1em;">
+                                    <div class="col-md-12">
+                                      <div>
+                                        <div class="pr-1">
+                                          <label class="label-left">Observaciones frente a los resultados</label>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <quill-editor   class="quill-editor-style card-80em position-relative"
+                                                            [styles]="editorStyle"
+                                                            [modules]="config"
+                                                            (onContentChanged)="maxLength($event, 400)"
+                                                            formControlName="observaciones"
+                                                            required>
+                                            </quill-editor>
+                                            <span class="contador miles" *ngIf="formMuestra.get('observaciones').value !== null" style="margin-top: 3.5em;">
+                                                {{400 - (textoLimpio(formMuestra.get('observaciones').value))}}
+                                            </span>
+                                            <span class="contador miles" *ngIf="formMuestra.get('observaciones').value === null" style="margin-top: 3.5em;">
+                                                400
+                                            </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="text-center" style="margin-top: 2em;">
+                        <button mat-button
+                                color="warn"
+                                class="btn-guardar"
+                                type="submit">
+                                <img  src="assets/img/icon/guardar.svg">
+                        </button>
+                    </div>
+                </form>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</section>

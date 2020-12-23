@@ -9,6 +9,11 @@ namespace asivamosffie.model.Models
     public partial class DisponibilidadPresupuestal
     {
         [NotMapped]
-        public string EstadoSolicitudNombre { get; set; } 
+        public string EstadoSolicitudNombre { get; set; }
+        /*jflorez, dejo el notmapped en el nombre par no generar confusi�n*/
+        [NotMapped]
+        public DateTime FechaComiteTecnicoNotMapped { get; set; }
+        [NotMapped]
+        public string stringAportante{ get; set; }
     }
 }

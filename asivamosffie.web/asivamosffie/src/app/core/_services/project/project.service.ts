@@ -11,6 +11,7 @@ import { ContratacionProyecto, Contratacion } from 'src/app/_interfaces/project-
 })
 export class ProjectService {
   
+  
 
   constructor(private http: HttpClient) {  }
 
@@ -38,11 +39,16 @@ export class ProjectService {
     return retorno;
   }
 
+  public getListProjectsFileProjectByOrigenIdAndRelacionID(pOrigenId: string,idRelacion:number) {
+    const retorno = this.http.get<any>(`${environment.apiUrl}/Document/GetListloadedDocumentsByRelacion?pOrigenId=${ pOrigenId }&pRelacionId=${idRelacion}`);
+    return retorno;
+  }
+
   public getFileByName(name: string) {   
     const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesByName?pNameFiles=${name}`, { responseType: "blob" });
     return retorno;
   }
-
+    
   public getListProjects() {   
     const retorno = this.http.get<any>(`${environment.apiUrl}/Project/ListProject`);
     return retorno;
@@ -180,6 +186,7 @@ export interface Proyecto{
   fechaSesionJunta?: Date,
   numeroActaJunta?:number,
   tipoIntervencionCodigo?:number,
+  tipoIntervencionString?:number,
   llaveMen?:string,
   localizacionIdMunicipio?:string,
   institucionEducativaId?:number,
@@ -198,11 +205,21 @@ export interface Proyecto{
   usuarioCreacion?:string,
   fechaModificacion?: Date,
   usuarioModificacion?:string,
+
+  plazoMesesObra?:number,
+  plazoDiasObra?:number ,
+  plazoMesesInterventoria?:number ,
+  plazoDiasInterventoria?:number ,
+  coordinacionResponsableCodigo?:string ,
+  fechaInicioEtapaObra?: Date,
+  fechaFinEtapaObra?: Date,
+
   //no modelado
   cantidadAportantes?:number;
   regid?:string;
   depid?:string;
-
+  departamento?:string;
+  municipio?:string;
   institucionEducativa?:InstitucionEducativa
   institucionEducativaSede?:InstitucionEducativa,
   localizacionIdMunicipioNavigation?: Localizacion,
@@ -211,6 +228,9 @@ export interface Proyecto{
   infraestructuraIntervenirProyecto?:InfraestructuraIntervenirProyecto[],
   proyectoAportante?:ProyectoAportante[],
   proyectoPredio?:ProyectoPredio[],
+  sedeString?:string,
+  institucionEducativaString?:string,
+  stringAportante?:string,
   
 }
 
@@ -258,11 +278,7 @@ export interface InfraestructuraIntervenirProyecto{
   usuarioCreacion:string ,
   fechaEliminacion?:Date ,
   usuarioEliminacion:string ,
-  plazoMesesObra :number,
-  plazoDiasObra:number ,
-  plazoMesesInterventoria:number ,
-  plazoDiasInterventoria:number ,
-  coordinacionResponsableCodigo:string ,
+  
 }
 export interface ProyectoAportante{
   mun?: string;

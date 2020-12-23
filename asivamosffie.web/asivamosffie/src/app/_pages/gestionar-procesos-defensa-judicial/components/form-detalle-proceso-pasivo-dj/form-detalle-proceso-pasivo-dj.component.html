@@ -1,0 +1,205 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="departamentoInicio">Departamento donde se inició el
+                                proceso</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="departamentoInicio" required>
+                                    <mat-option *ngFor="let contr of departamentoArray" [value]="contr.value">
+                                        {{ contr.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="municipioInicio">Municipio donde se inició el proceso</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="municipioInicio" required>
+                                    <mat-option *ngFor="let contr of municipioArray" [value]="contr.value">
+                                        {{ contr.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="tipoAccion">Tipo de acción</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="tipoAccion" required>
+                                    <mat-option *ngFor="let contr of tipoAccionArray" [value]="contr.value">
+                                        {{ contr.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="jurisdiccion">Jurisdicción</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="jurisdiccion" required>
+                                    <mat-option *ngFor="let contr of jurisdiccionArray" [value]="contr.value">
+                                        {{ contr.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="pretensiones">Pretensiones</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 1000)"
+                                    formControlName="pretensiones" #pretensiones>
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.pretensiones.value">
+                                {{1000 - (textoLimpio(pretensiones.quillEditor,1000))}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.pretensiones.value">
+                                1000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="cuantiaPerjuicios">
+                                Cuantía / Perjuicios
+                            </label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #cuantiaPerjuicios currencyMask maxlength="20" required
+                                    formControlName="cuantiaPerjuicios" (keypress)="validateNumberKeypress($event)"
+                                    onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                            </mat-form-field>
+                            <span class="contador">{{20 - cuantiaPerjuicios.value.length}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="requeridoParticipacionSupervisor">¿Requiere la participación
+                                o insumo del supervisor del contrato?</label>
+                        </div>
+                        <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="requeridoParticipacionSupervisor"
+                                required>
+                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="fechaRadicado">Fecha de radicado en FFIE</label>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="fechaRadicado" [matDatepicker]="pickerFecha" readonly
+                                    (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
+                                <mat-datepicker #pickerFecha></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button color="primary" type="button" (click)="pickerFecha.open()"
+                                class="btn-calendario">
+                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label for="numeroRadicado" class="label-left">Número de radicado en FFIE</label>
+                        </div>
+                        <div class="col d-flex">
+                            <mat-form-field class="full-width">
+                                <input matInput #numeroRadicado type="text" maxlength="20"
+                                    formControlName="numeroRadicado" required>
+                            </mat-form-field>
+                            <span class="contador">{{20 - numeroRadicado.value.length}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="canalIngreso">Canal de ingreso</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="canalIngreso" required>
+                                    <mat-option *ngFor="let contr of canalIngresoArray" [value]="contr.value">
+                                        {{ contr.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+    </div>
+</form>

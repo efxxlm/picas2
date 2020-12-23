@@ -1,0 +1,272 @@
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text">
+                Registrar controversia
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="tipoControversia">Tipo de controversia</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="tipoControversia" required>
+                                    <mat-option *ngFor="let tipoControversia of tipoControversiaArrayDom"
+                                        [value]="tipoControversia">
+                                        {{ tipoControversia.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '4')">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="fechaRadicadoSAC">Fecha de radicado en SAC</label>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="fechaRadicadoSAC"
+                                    [matDatepicker]="pickerfechaRadicadoSAC" readonly
+                                    (click)="pickerfechaRadicadoSAC.open()" required placeholder="DD/MM/AAAA">
+                                <mat-datepicker #pickerfechaRadicadoSAC></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button color="primary" type="button" (click)="pickerfechaRadicadoSAC.open()"
+                                class="btn-calendario" placeholder="DD/MM/AAAA">
+                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+            *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '2') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '3') || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '4')">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="numeroRadicadoSAC">Número de radicado en SAC</label>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <mat-form-field class="full-width">
+                                <input matInput #numeroRadicadoSAC type="text" maxlength="10" formControlName="numeroRadicadoSAC"
+                                  required>
+                              </mat-form-field>
+                            <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="addressForm.controls.numeroRadicadoSAC.value">
+                                {{10 - textoLimpio(addressForm.controls.numeroRadicadoSAC.value)}}
+                            </span>
+                            <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
+                                10
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')
+            || (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '5')
+            ||(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '6')
+            ||(addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '7')">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="fechaSolicitud">Fecha de solicitud</label>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="fechaSolicitud" [matDatepicker]="pickerFechaSolicitud"
+                                    readonly (click)="pickerFechaSolicitud.open()" required placeholder="DD/MM/AAAA">
+                                <mat-datepicker #pickerFechaSolicitud></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button color="primary" type="button" (click)="pickerFechaSolicitud.open()"
+                                class="btn-calendario">
+                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="addressForm.value.tipoControversia!==null">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="motivosSolicitud">Motivos de la solicitud</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="motivosSolicitud" required multiple (selectionChange)="getvalues($event.value)">
+                                    <mat-option *ngFor="let motivosSolicitud of motivosSolicitudArray"
+                                        [value]="motivosSolicitud">
+                                        {{ motivosSolicitud.nombre }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="fechaComitePretecnico">Fecha de Comité Pre-Técnico</label>
+                        </div>
+                        <div class="col d-flex align-items-center">
+                            <mat-form-field class="example-full-width">
+                                <input matInput formControlName="fechaComitePretecnico"
+                                    [matDatepicker]="pickerfechaComitePretecnico" readonly
+                                    (click)="pickerfechaComitePretecnico.open()" required placeholder="DD/MM/AAAA">
+                                <mat-datepicker #pickerfechaComitePretecnico></mat-datepicker>
+                            </mat-form-field>
+                            <button mat-button color="primary" type="button"
+                                (click)="pickerfechaComitePretecnico.open()" class="btn-calendario">
+                                <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="conclusionComitePretecnico">Conclusión del Comité Pre-técnico
+                                de acuerdo con la solicitud</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 1000)"
+                                    formControlName="conclusionComitePretecnico">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.conclusionComitePretecnico.value">
+                                {{1000 - textoLimpio(addressForm.controls.conclusionComitePretecnico.value)}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.conclusionComitePretecnico.value">
+                                1000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+            *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="resumenJustificacionSolicitud">Resumen de la justificación de
+                                la solicitud</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+            *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo != '1'">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 1000)"
+                                    formControlName="resumenJustificacionSolicitud">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles"
+                                *ngIf="addressForm.controls.resumenJustificacionSolicitud.value">
+                                {{1000 - textoLimpio(addressForm.controls.resumenJustificacionSolicitud.value)}}
+                            </span>
+                            <span class="contador miles"
+                                *ngIf="!addressForm.controls.resumenJustificacionSolicitud.value">
+                                1000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1'">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="procedeSolicitud">¿La solicitud procede?</label>
+                        </div>
+                        <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="procedeSolicitud" required>
+                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                            <span class="required-form-group">*</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+            *ngIf="addressForm.value.procedeSolicitud===false && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="motivosRechazo">Motivos de rechazo</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+            *ngIf="addressForm.value.procedeSolicitud===false && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 1000)"
+                                    formControlName="motivosRechazo">
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles"
+                                *ngIf="addressForm.controls.motivosRechazo.value">
+                                {{1000 - textoLimpio(addressForm.controls.motivosRechazo.value)}}
+                            </span>
+                            <span class="contador miles"
+                                *ngIf="!addressForm.controls.motivosRechazo.value">
+                                1000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                *ngIf="addressForm.value.procedeSolicitud===true && (addressForm.controls.tipoControversia.value && addressForm.controls.tipoControversia.value.codigo == '1')">
+                <div class="col-md-6" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="requeridoComite">¿Requiere comité técnico?</label>
+                        </div>
+                        <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="requeridoComite" required>
+                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                            <span class="required-form-group">*</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+    </div>
+</form>

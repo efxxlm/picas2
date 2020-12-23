@@ -1,0 +1,15 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Registrar nueva actuación de trámite
+    </h1>
+    <p class="info-sub-title">
+        <span>Solicitud: <b>{{this.codigoSolicitud}}</b> Número del contrato: <b>{{this.numeroContrato}}</b> Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
+    </p>
+    <app-form-descripcion-actuacion></app-form-descripcion-actuacion>
+</div>
+

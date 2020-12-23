@@ -1,0 +1,75 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<div style="padding: 30px 0px;">
+    <h1 class="title-menu--h1 centerTrick">
+        Cargar acta suscrita contrato {{this.numContrato}}
+    </h1>
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <div class="text-center">
+            <div class="mtop">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left"
+                                    [ngClass]="{'color-secondaryColor' : this.fechaFirmaContratistaObra==undefined  && this.esRojo==true}">{{this.fecha1Titulo}}</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput [matDatepicker]="picker" required [max]="maxDate" readonly
+                                        (click)="picker.open()" formControlName="fechaFirmaContratistaObra"
+                                        placeholder="DD/MM/AAAA">
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="picker.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left"
+                                    [ngClass]="{'color-secondaryColor' : this.fechaFirmaContratistaInterventoria==undefined  && this.esRojo==true}">{{this.fecha2Titulo}}</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field class="example-full-width"
+                                    [ngStyle]="{'width': this.fecha2Titulo=='Fecha de la firma del documento por parte del supervisor' ? '20%' : '0%' }">
+                                    <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
+                                        (click)="picker2.open()" formControlName="fechaFirmaContratistaInterventoria"
+                                        placeholder="DD/MM/AAAA">
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button color="primary" type="button" (click)="picker2.open()"
+                                    class="btn-calendario">
+                                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-file"
+                    [ngStyle]="{'color': this.archivo==undefined && this.esRojo==true ? '#d21e18' : '#174193' }">
+                    <span class="input-file--text">{{archivo}}</span>
+                    <button mat-raised-button color="primary" type="button" (click)="fileInput.click()"
+                        class="input-file--btn">Explorar</button>
+                    <input required hidden (change)="fileName( $event )" #fileInput type="file" id="file"
+                        formControlName="documentoFile">
+                    <span class="required-form-group m-0">*</span>
+                </div>
+                <p>
+                    Explore en su computador o dispositivo y seleccione el documento que desea cargar los formatos
+                    permitidos
+                    son: pdf
+                </p>
+                <button mat-raised-button color="accent" [disabled]="!addressForm.valid" type="submit">{{boton}}</button>
+            </div>
+        </div>
+    </form>
+
+</div>

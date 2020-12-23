@@ -40,7 +40,6 @@ export class TablaGestionCompromisosComponent implements OnInit {
 
     this.compromisosSvc.getGrillaCompromisos()
       .subscribe( ( resp: any[] ) => {
-        console.log( resp );
         this.dataSource = new MatTableDataSource( resp );
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

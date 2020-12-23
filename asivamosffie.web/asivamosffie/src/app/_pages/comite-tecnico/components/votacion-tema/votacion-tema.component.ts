@@ -44,8 +44,24 @@ export class VotacionTemaComponent implements OnInit{
   };
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   maxLength(e: any, n: number) {
@@ -67,27 +83,27 @@ export class VotacionTemaComponent implements OnInit{
 
   constructor(
               private fb: FormBuilder,
-              public dialogRef: MatDialogRef<VotacionTemaComponent>, 
-              @Inject(MAT_DIALOG_DATA) public data: { 
-                                                      sesionComiteTema: SesionComiteTema, 
-                                                      //objetoComiteTecnico: ComiteTecnico 
+              public dialogRef: MatDialogRef<VotacionTemaComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: {
+                                                      sesionComiteTema: SesionComiteTema,
+                                                      //objetoComiteTecnico: ComiteTecnico
                                                     },
               private technicalCommitteSessionService: TechnicalCommitteSessionService,
               public dialog: MatDialog,
               private router: Router,
 
-             ) 
+             )
   {
 
   }
 
   ngOnInit(): void {
 
-    
+
 
     this.data.sesionComiteTema.sesionTemaVoto.forEach( v => {
       let grupoVotacion = this.crearParticipante();
-      
+
       grupoVotacion.get('nombreParticipante').setValue( v.nombreParticipante );
       grupoVotacion.get('aprobacion').setValue( v.esAprobado );
       grupoVotacion.get('observaciones').setValue( v.observacion );
@@ -139,23 +155,23 @@ export class VotacionTemaComponent implements OnInit{
     sesionComiteTema.estadoTemaCodigo = EstadosSolicitud.AprobadaPorComiteTecnico;
     sesionComiteTema.sesionTemaVoto.forEach( tv => {
       if (tv.esAprobado != true )
-      sesionComiteTema.estadoTemaCodigo = EstadosSolicitud.RechazadaPorComiteTecnico; 
+      sesionComiteTema.estadoTemaCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
     })
 
     console.log( sesionComiteTema )
 
     this.technicalCommitteSessionService.createEditSesionTemaVoto( sesionComiteTema )
     .subscribe( respuesta => {
-      this.openDialog('Comité técnico', respuesta.message)
+      this.openDialog('', `<b>${respuesta.message}</b>`)
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.sesionComiteTema);
         //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])
-        
-        
+
+
       }
 
     })
-    
+
   }
- 
+
 }

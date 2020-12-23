@@ -18,7 +18,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title completo">
                     Validación de solicitudes contractuales
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -35,7 +35,7 @@
         </mat-expansion-panel>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title completo">
                     Otros temas
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -79,8 +79,8 @@
     </mat-accordion>
 
     <div class="text-center mt-2em mb-2em">
-        <button mat-raised-button color="accent" class="btn-ancho" (click)="openDialogAplazarSesion()">Aplazar sesión</button>
-        <button mat-raised-button color="accent" class="btn-ancho" (click)="fallida()">Declarar fallida </button>
-        <a routerLink="registrarParticipantes" mat-raised-button color="accent" class="btn-ancho">Registrar participantes</a>
+        <button mat-raised-button color="accent" [disabled]="!cargoRegistro" class="btn-ancho" (click)="openDialogAplazarSesion()">Aplazar sesión</button>
+        <button mat-raised-button color="accent" [disabled]="!cargoRegistro" class="btn-ancho" (click)="fallida()">Declarar fallida </button>
+        <a routerLink="registrarParticipantes" [disabled]="!cargoRegistro" mat-raised-button color="accent" class="btn-ancho">Registrar participantes</a>
     </div>
 </section>

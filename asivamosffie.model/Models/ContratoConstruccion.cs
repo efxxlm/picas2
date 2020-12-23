@@ -11,6 +11,7 @@ namespace asivamosffie.model.Models
             ConstruccionObservacion = new HashSet<ConstruccionObservacion>();
             ConstruccionPerfil = new HashSet<ConstruccionPerfil>();
             FlujoInversion = new HashSet<FlujoInversion>();
+            MesEjecucion = new HashSet<MesEjecucion>();
             Programacion = new HashSet<Programacion>();
             TempFlujoInversion = new HashSet<TempFlujoInversion>();
             TempProgramacion = new HashSet<TempProgramacion>();
@@ -111,6 +112,20 @@ namespace asivamosffie.model.Models
         public bool? TieneObservacionesFlujoInversionApoyo { get; set; }
         public bool? TieneObservacionesFlujoInversionSupervisor { get; set; }
         public bool? RegistroCompleto { get; set; }
+        public int? ArchivoCargueIdProgramacionObra { get; set; }
+        public int? ArchivoCargueIdFlujoInversion { get; set; }
+        public bool? RegistroCompletoVerificacion { get; set; }
+        public int? ObservacionDiagnosticoSupervisorId { get; set; }
+        public bool? RegistroCompletoDiagnostico { get; set; }
+        public int? ObservacionPlanesProgramasSupervisorId { get; set; }
+        public bool? RegistroCompletoPlanesProgramas { get; set; }
+        public int? ObservacionManejoAnticipoSupervisorId { get; set; }
+        public bool? RegistroCompletoManejoAnticipo { get; set; }
+        public int? ObservacionProgramacionObraSupervisorId { get; set; }
+        public bool? RegistroCompletoProgramacionObra { get; set; }
+        public int? ObservacionFlujoInversionSupervisorId { get; set; }
+        public bool? RegistroCompletoFlujoInversion { get; set; }
+        public bool? RegistroCompletoValidacion { get; set; }
 
         public virtual Contrato Contrato { get; set; }
         public virtual Proyecto Proyecto { get; set; }
@@ -118,6 +133,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<ConstruccionObservacion> ConstruccionObservacion { get; set; }
         public virtual ICollection<ConstruccionPerfil> ConstruccionPerfil { get; set; }
         public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }
+        public virtual ICollection<MesEjecucion> MesEjecucion { get; set; }
         public virtual ICollection<Programacion> Programacion { get; set; }
         public virtual ICollection<TempFlujoInversion> TempFlujoInversion { get; set; }
         public virtual ICollection<TempProgramacion> TempProgramacion { get; set; }

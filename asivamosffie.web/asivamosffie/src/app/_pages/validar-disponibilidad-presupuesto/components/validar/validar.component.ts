@@ -27,29 +27,34 @@ export class ValidarComponent implements OnInit {
           
           if(element.nombreEstado=='En validación presupuestal'||element.nombreEstado=='Devuelta por coordinación financiera')
           {            
-            let cantcompleto=0;
-            element.disponibilidadPresupuestal.forEach(element2 => {
-              if(element2.estadoRegistro)
-              {
-                cantcompleto++;
-              }
-            });
-            if(cantcompleto==element.disponibilidadPresupuestal.length)
+            console.log(element.disponibilidadPresupuestal.length);
+            if(element.disponibilidadPresupuestal.length==0)
             {
-              element.completo='Completo';
+              element.completo="";
             }
             else{
-              if(element.disponibilidadPresupuestal.length>0)
+              let cantcompleto=0;
+              element.disponibilidadPresupuestal.forEach(element2 => {
+                if(element2.estadoRegistro)
+                {
+                  cantcompleto++;
+                }
+              });
+              if(cantcompleto==element.disponibilidadPresupuestal.length)
               {
-                element.completo='Incompleto';
+                element.completo='Completo';
               }
               else{
-                element.completo='';
+                if(element.disponibilidadPresupuestal.length>0)
+                {
+                  element.completo='Incompleto';
+                }
+                else{
+                  element.completo='';
+                }                
               }
-              
-            }
-          }
-         
+            }            
+          }         
         });
       }
     );

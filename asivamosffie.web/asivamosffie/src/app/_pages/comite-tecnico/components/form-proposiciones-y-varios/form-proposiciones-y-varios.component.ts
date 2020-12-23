@@ -44,7 +44,12 @@ export class FormProposicionesYVariosComponent implements OnInit {
   }
 
   constructor(private fb: FormBuilder) { }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.addressForm.valueChanges
+    .subscribe(value => {
+      if (value.cuantosCompromisos > 10) { value.cuantosCompromisos = 10; }
+    });
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -53,8 +58,24 @@ export class FormProposicionesYVariosComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   borrarArray(borrarForm: any, i: number) {
@@ -68,7 +89,7 @@ export class FormProposicionesYVariosComponent implements OnInit {
   crearCompromiso() {
     return this.fb.group({
       tarea: [null, Validators.compose([
-        Validators.required, Validators.minLength(5), Validators.maxLength(100)])
+        Validators.required, Validators.minLength(1), Validators.maxLength(100)])
       ],
       responsable: [null, Validators.required],
       fecha: [null, Validators.required]

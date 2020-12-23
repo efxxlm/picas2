@@ -221,6 +221,7 @@ namespace asivamosffie.services
                         }
                     }
                     _context.Cofinanciacion.Add(cofinanciacion);
+                    _context.SaveChanges();
                 }
                 else
                 {
@@ -229,7 +230,8 @@ namespace asivamosffie.services
                     cofinanciacionEdit.RegistroCompleto = ValidarRegistroCompleto(cofinanciacion);
                     cofinanciacionEdit.VigenciaCofinanciacionId = cofinanciacion.VigenciaCofinanciacionId;
                     cofinanciacionEdit.FechaModificacion = DateTime.Now;
-                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion.ToUpper();                    
+                    cofinanciacionEdit.UsuarioModificacion = cofinanciacion.UsuarioCreacion.ToUpper();
+                    _context.Cofinanciacion.Update(cofinanciacionEdit);
                 }
 
                 foreach (var cofinanciacionAportante in cofinanciacion.CofinanciacionAportante)
@@ -251,11 +253,54 @@ namespace asivamosffie.services
                                 {
                                     cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
                                     cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
-                                    CreateCofinancingDocuments(cofinancicacionDocumento);
-
+                                    CreateCofinancingDocuments(cofinancicacionDocumento,true);
+                                }
+                                else
+                                {
+                                    cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
+                                    cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
+                                    CreateCofinancingDocuments(cofinancicacionDocumento, false);
                                 }
 
                             }
+                        }else
+                        {
+                            foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                            {
+
+                                if (cofinancicacionDocumento.CofinanciacionDocumentoId > 0)
+                                {
+                                    cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
+                                    cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
+                                    CreateCofinancingDocuments(cofinancicacionDocumento,true);
+
+                                }
+                                else
+                                {
+                                    cofinancicacionDocumento.CofinanciacionAportanteId = idCofinancicacionAportante;
+                                    cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
+                                    CreateCofinancingDocuments(cofinancicacionDocumento,false);
+                                }
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        cofinanciacionAportante.UsuarioCreacion = cofinanciacion.UsuarioCreacion.ToUpper();
+                        cofinanciacionAportante.FechaCreacion = DateTime.Now;
+                        cofinanciacionAportante.Eliminado = false;
+                        cofinanciacionAportante.CofinanciacionId = cofinanciacion.CofinanciacionId;
+                        _context.CofinanciacionAportante.Add(cofinanciacionAportante);
+                        _context.SaveChanges();
+                        foreach (var cofinancicacionDocumento in cofinanciacionAportante.CofinanciacionDocumento)
+                        {
+                            cofinancicacionDocumento.UsuarioCreacion = cofinanciacionAportante.UsuarioCreacion.ToUpper();
+                            cofinancicacionDocumento.FechaCreacion = DateTime.Now;
+                            cofinancicacionDocumento.Eliminado = false;
+                            cofinancicacionDocumento.CofinanciacionAportanteId = cofinanciacionAportante.CofinanciacionAportanteId;
+                            cofinancicacionDocumento.CofinanciacionDocumentoId = 0;
+                            _context.CofinanciacionDocumento.Add(cofinancicacionDocumento);
                         }
                     }
                 }
@@ -309,14 +354,20 @@ namespace asivamosffie.services
 
         }
 
-        public int CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento)
+        public int CreateCofinancingDocuments(CofinanciacionDocumento pCofinanciacionDocumento,bool editar)
         {
             try
             {
-                CofinanciacionDocumento cofinanciacionDocumentoEdit = _context.CofinanciacionDocumento.Find(pCofinanciacionDocumento.CofinanciacionDocumentoId);
+                CofinanciacionDocumento cofinanciacionDocumentoEdit = pCofinanciacionDocumento;
+                if (editar)
+                {
+                    cofinanciacionDocumentoEdit = _context.CofinanciacionDocumento.Find(pCofinanciacionDocumento.CofinanciacionDocumentoId);
+                    cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion.ToUpper();
+                    cofinanciacionDocumentoEdit.FechaModificacion = DateTime.Now;
+                }
+                
 
-                cofinanciacionDocumentoEdit.UsuarioModificacion = pCofinanciacionDocumento.UsuarioCreacion.ToUpper();
-                cofinanciacionDocumentoEdit.FechaModificacion = DateTime.Now;
+
                 cofinanciacionDocumentoEdit.FechaActa = pCofinanciacionDocumento.FechaActa;
                 cofinanciacionDocumentoEdit.FechaAcuerdo = pCofinanciacionDocumento.FechaAcuerdo;
                 cofinanciacionDocumentoEdit.NumeroActa = pCofinanciacionDocumento.NumeroActa;
@@ -325,7 +376,12 @@ namespace asivamosffie.services
                 cofinanciacionDocumentoEdit.ValorTotalAportante = pCofinanciacionDocumento.ValorTotalAportante;
                 cofinanciacionDocumentoEdit.VigenciaAporte = pCofinanciacionDocumento.VigenciaAporte;
                 cofinanciacionDocumentoEdit.NumeroAcuerdo = pCofinanciacionDocumento.NumeroAcuerdo;
-
+                cofinanciacionDocumentoEdit.Eliminado = false;
+                if (!editar)
+                {
+                    cofinanciacionDocumentoEdit.FechaCreacion = DateTime.Now;
+                    _context.CofinanciacionDocumento.Add(cofinanciacionDocumentoEdit);
+                }
                 return pCofinanciacionDocumento.CofinanciacionDocumentoId;
             }
             catch (Exception)
@@ -384,8 +440,16 @@ namespace asivamosffie.services
                     }
                     else//solo departamento
                     {
-                        nombre = "Gobernación de " + cofinanciacionAportante.DepartamentoId == null ? "Error" :
+                        if(cofinanciacionAportante.DepartamentoId == null)
+                        {
+                            nombre = "";
+                        }
+                        else
+                        {
+                            nombre = "Gobernación de " + cofinanciacionAportante.DepartamentoId == null ? "" :
                             _context.Localizacion.Find(cofinanciacionAportante.DepartamentoId).Descripcion;
+                        }
+                        
                     }
 
                 }
@@ -453,6 +517,46 @@ namespace asivamosffie.services
                 ret.FuenteFinanciacion = _context.FuenteFinanciacion.Where(x=>x.AportanteId==ret.CofinanciacionAportanteId).ToList();
             }
             return retorno.OrderByDescending(x=>x.FechaCreacion).ToList();
+        }
+
+        public async Task<Respuesta> EliminarCofinanciacionAportanteByCofinanciacionAportanteId(int pCofinancicacionId, string pUsuarioModifico)
+        {
+            int IdAccionEliminarCofinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                //valido que no tenga ninguna relación para poder eliminarlo
+                CofinanciacionAportante cofinanciacion = _context.CofinanciacionAportante.Find(pCofinancicacionId);
+                
+
+                cofinanciacion.Eliminado = true;
+                cofinanciacion.UsuarioModificacion = pUsuarioModifico.ToUpper();
+                cofinanciacion.FechaModificacion = DateTime.Now;
+                //Si falla descomentar el de abajo
+                // _context.Update(cofinanciacion);
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesCofinanciacion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.EliminacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                             new Respuesta
+                             {
+                                 IsSuccessful = true,
+                                 IsException = false,
+                                 IsValidation = false,
+                                 Code = ConstantMessagesProyecto.Error,
+                                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.Error, IdAccionEliminarCofinanciacion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                             };
+            }
         }
     }
 }

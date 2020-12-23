@@ -1,0 +1,103 @@
+<section class="container">
+    <div class="text-right">
+        <a routerLink="/registrarAvanceSemanal" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Registrar seguimiento semanal LU990088
+        </h1>
+    </div>
+
+    <div class="text-center">
+        <p>Número de contrato de obra:
+          <b>CC223456789</b>
+        </p>
+    </div>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>Tipo de intervención</b>: Remodelación</p>
+              <p><b>Departamento</b>: Atlántico</p>
+              <p><b>Municipio</b>: Baranoa</p>
+              <p><b>Institución Educativa</b>: María Inmaculada</p>
+              <p><b>Sede</b>: Sede 2</p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-title class="text-area-quill--label">Semana de reporte</mat-card-title>
+            <mat-card-content class="mt-1em">
+                <section class="d-flex">
+                    <p class="ml-1em"><b>Fecha inicial</b>: 04/07/2020</p>
+                    <p class="ml-final-date"><b>Fecha final</b>: 11/07/2020</p>
+                </section>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="text-center">
+        <p class="info-container">
+			<span class="info-text sin-diligenciar">Sin diligenciar</span>
+			<span class="info-text en-proceso">En proceso</span>
+			<span class="info-text completo">Completo</span>
+        </p>
+        
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title completo">
+                        Avance físico y financiero
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-avance-fisico-financiero></app-avance-fisico-financiero>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title completo">
+                        Gestión de la obra
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-gestion-de-obra></app-gestion-de-obra>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title completo">
+                        Reporte de actividades
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-reporte-actividades></app-reporte-actividades>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title completo">
+                        Registro fotográfico
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-registro-fotografico></app-registro-fotografico>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title completo">
+                        Comité de obra
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <app-comite-obra></app-comite-obra>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</section>

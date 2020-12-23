@@ -11,7 +11,10 @@ namespace asivamosffie.model.Models
         public int NumeroCompromisos { get; set; }
         [NotMapped]
         public int NumeroCompromisosCumplidos { get; set; }
-        
+        [NotMapped]
+        public int UsuarioId { get; set; }
+
+
     }
 
 }
