@@ -146,11 +146,15 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Proxima_actuacion_requerida =103,
 
+        Procesos_judiciales=105,
+
         Tipo_accion_judicial = 106,
 
         Estados_acta_Interventoria_319 = 107,
 
-
+        Jurisdiccion=116,
+        Actuaciones_Recomendadas=119,
+        Estados_Defensa_Judicial=120
 
     }
 }

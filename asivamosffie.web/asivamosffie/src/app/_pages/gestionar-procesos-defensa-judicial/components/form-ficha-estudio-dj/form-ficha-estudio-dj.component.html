@@ -271,8 +271,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="tipoActuacionRecomendada" required>
-                                    <mat-option *ngFor="let contr of actuacionesArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let contr of actuacionesArray" [value]="contr.codigo">
+                                        {{ contr.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

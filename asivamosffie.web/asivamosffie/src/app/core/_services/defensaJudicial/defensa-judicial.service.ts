@@ -77,7 +77,8 @@ export interface DefensaJudicial{
   esCompleto?:boolean,
   urlSoporteProceso?:string,
   defensaJudicialContratacionProyecto?:DefensaJudicialContratacionProyecto[],
-  demandadoConvocado?:DemandadoConvocado[]
+  demandadoConvocado?:DemandadoConvocado[],
+  fichaEstudio?:FichaEstudio
 }
 export interface DefensaJudicialContratacionProyecto{
   defensaJudicialContratacionProyectoId?:number,
@@ -102,4 +103,23 @@ export interface DemandadoConvocado{
   etapaProcesoFfiecodigo?:string,
   caducidadPrescripcion?:Date,
   defensaJudicialId?:number
+}
+
+export interface FichaEstudio{  
+  fichaEstudioId?:number,
+  defensaJudicialId?:number,
+  antecedentes?:string,
+  hechosRelevantes?:string,
+  jurisprudenciaDoctrina?:string,
+  decisionComiteDirectrices?:string,
+  analisisJuridico?:string,
+  recomendaciones?:string,
+  esPresentadoAnteComiteFfie?:boolean,
+  fechaComiteDefensa?:Date,
+  recomendacionFinalComite?:string,
+  esAprobadoAperturaProceso?:boolean,
+  tipoActuacionCodigo?:string,
+  esActuacionTramiteComite?:boolean,
+  abogado?:string,
+  rutaSoporte?:string,
 }

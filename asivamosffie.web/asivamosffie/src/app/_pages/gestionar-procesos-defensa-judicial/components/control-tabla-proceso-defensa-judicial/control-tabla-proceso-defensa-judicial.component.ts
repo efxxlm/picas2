@@ -3,49 +3,34 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 @Component({
   selector: 'app-control-tabla-proceso-defensa-judicial',
   templateUrl: './control-tabla-proceso-defensa-judicial.component.html',
   styleUrls: ['./control-tabla-proceso-defensa-judicial.component.scss']
 })
 export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
-  displayedColumns: string[] = ['fecha', 'legitimacion', 'tipoAccion', 'numeroProceso', 'estadoProceso', 'gestion'];
+  displayedColumns: string[] = ['fechaRegistro', 'legitimacionPasivaActiva', 'tipoAccion', 'numeroProceso', 'estadoProceso', 'gestion'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataTable: any[] = [
-    {
-      fecha: '19/06/2020',
-      legitimacion: 'Activa',
-      tipoAccion: 'Reparación Directa',
-      numeroProceso: 'DJ0012020',
-      estadoProceso: 'En análisis jurídico',
-      id: 1
-    },
-    {
-      fecha: '22/06/2020',
-      legitimacion: 'Pasiva',
-      tipoAccion: 'Reparación Directa',
-      numeroProceso: 'DJ0012021',
-      estadoProceso: 'En análisis jurídico',
-      id: 2
-    },
-    {
-      fecha: '22/06/2020',
-      legitimacion: 'Activa',
-      tipoAccion: 'Reparación Directa',
-      numeroProceso: 'DJ0012021',
-      estadoProceso: 'Aprobado por comité técnico',
-      id: 3
-    }
+    
   ]
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+    private defensaServices:DefensaJudicialService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.defensaServices.GetListGrillaProcesosDefensaJudicial().subscribe(
+      response=>{
+        console.log(response);
+        this.dataSource = new MatTableDataSource(response);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      }
+    );
+    
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -55,7 +40,7 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
     this.router.navigate(['/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial']);
   }
   editProceso(id){
-    this.router.navigate(['/gestionarProcesoDefensaJudicial/verDetalleEditarProceso',id]);
+    this.router.navigate(['/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial',id]);
   }
   actualizarProceso(id){
     this.router.navigate(['/gestionarProcesoDefensaJudicial/actualizarProceso',id]);

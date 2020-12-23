@@ -15,14 +15,14 @@
 
 <div class="table-responsive w-100">
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-        <ng-container matColumnDef="fecha">
+        <ng-container matColumnDef="fechaRegistro">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del registro de proceso </th>
-            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fecha }} </b> </td>
+            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaRegistro }} </b> </td>
         </ng-container>
 
-        <ng-container matColumnDef="legitimacion">
+        <ng-container matColumnDef="legitimacionPasivaActiva">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Legitimación </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.legitimacion }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.legitimacionPasivaActiva }} </td>
         </ng-container>
 
         <ng-container matColumnDef="tipoAccion">
@@ -48,12 +48,12 @@
                     Enviar proceso a comité técnico
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoProceso === 'En análisis jurídico'"
-                    (click)="this.editProceso(element.id)">
+                    *ngIf="element.estadoProceso === 'En análisis jurídico' || element.estadoProceso === 'Registrado'"
+                    (click)="this.editProceso(element.defensaJudicialId)">
                     Ver detalle/Editar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoProceso === 'En análisis jurídico'">
+                    *ngIf="element.estadoProceso === 'En análisis jurídico'|| element.estadoProceso === 'Registrado'">
                     Eliminar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
@@ -62,7 +62,7 @@
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
                     *ngIf="element.estadoProceso === 'Aprobado por comité técnico' || element.estadoProceso === 'En desarrollo'"
-                    (click)="this.actualizarProceso(element.id)">
+                    (click)="this.actualizarProceso(element.defensaJudicialId)">
                     Actualizar proceso
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
