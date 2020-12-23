@@ -194,7 +194,7 @@
                   <input type="hidden" formControlName="sesionSolicitudCompromisoId">
                   <input type="hidden" formControlName="sesionComiteSolicitudId">
                 </mat-form-field>
-                <span class="contador">{{500 - tarea.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - tarea.value.length}}</span>
               </div>
             </div>
           </div>

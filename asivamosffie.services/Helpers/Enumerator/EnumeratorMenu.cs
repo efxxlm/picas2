@@ -48,6 +48,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         Registrar_actuaciones_controversias_contractuales=57,
 
 
+        Cargar_enlace_monitoreo=43,
+
+
     }
 
     public enum enumeratorAccion

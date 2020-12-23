@@ -46,6 +46,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   }
   cargarTablaDeDatos(){
     this.services.GetListGrillaActaInicio(2).subscribe((data:any)=>{
+      console.log( data );
       for (let actas of data){
         if(actas.tipoContrato == 'Obra'){
           this.dataTable.push(actas);

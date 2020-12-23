@@ -42,5 +42,8 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public DateTime FechaFinEtapaObra { get; set; }
+
+        [NotMapped]
+        public decimal? ValorFaseConstruccion { get; set; }
     }
 }

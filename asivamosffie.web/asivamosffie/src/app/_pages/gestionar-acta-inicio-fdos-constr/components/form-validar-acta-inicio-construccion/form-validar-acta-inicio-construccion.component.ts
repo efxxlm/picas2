@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ActBeginService, ConstruccionObservacion, ContratoObservacion } from 'src/app/core/_services/actBegin/act-begin.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-form-validar-acta-inicio-construccion',
@@ -46,6 +47,8 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   plazoEjecucionConstrM: number;
   plazoEjecucionConstrD: number;
   observacionID: any;
+  contrato?: any;
+  contratoObservacionId?: any;
 
   fechaSesionString: string;
   fechaSesion: Date;
@@ -129,13 +132,17 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       this.obsConEspeciales = data.observacionOConsideracionesEspeciales;
       this.plazoEjecucionConstrM = data.plazoFase2ConstruccionDias;
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
+
+      this.contrato = data.contrato;
+      this.addressForm.get('tieneObservaciones').setValue(data.contrato.conObervacionesActaFase2);
+      
     });
     this.contratoId = id;
   }
   loadDataObservaciones(id) {
     if (localStorage.getItem("editable") == "true") {
       this.services.GetContratoObservacionByIdContratoId(id, true).subscribe(data0 => {
-        this.addressForm.get('tieneObservaciones').setValue(data0.esActa);
+        //this.addressForm.get('tieneObservaciones').setValue(data0.esActa);
         this.addressForm.get('observaciones').setValue(data0.observaciones);
         this.loadData2(data0);
         this.fechaCreacion = data0.fechaCreacion;
@@ -148,8 +155,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     }
   }
   loadData2(data) {
-    this.construccionObservacionId = data.construccionObservacionId;
-    this.contratoConstruccionId = data.contratoConstruccionId;
+    this.contratoObservacionId = data.contratoObservacionId;
     this.esActa = data.esActa;
     this.esSupervision = data.esSupervision;
     this.fechaCreacion = data.fechaCreacion;
@@ -188,6 +194,27 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     }
   }
 
+  textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
+  }
+
   generarActaSuscrita() {
     this.services.GetPlantillaActaInicio(this.contratoId).subscribe(resp => {
       const documento = `Prueba.pdf`; // Valor de prueba
@@ -203,18 +230,21 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   onSubmit() {
     this.fechaSesion = new Date(this.fechaCreacion);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
-    const contratoObs: ConstruccionObservacion = {
-      ContratoConstruccionId: this.contratoConstruccionId,
-      TipoObservacionConstruccion: "",
-      Observaciones: this.addressForm.value.observaciones,
-      UsuarioModificacion: "usr3",
-      FechaCreacion: this.fechaSesionString,
-      UsuarioCreacion: "usr3",
-      EsSupervision: true,
-      EsActa: true,
-      FechaModificacion: this.fechaSesionString
-    };
+    
+    const objetoContrato = {
+      conObervacionesActaFase2: this.addressForm.value.tieneObservaciones,
+      contratoId: this.contratoId,
 
+      contratoObservacion: [{
+
+        contratoId : this.contratoId,
+        observaciones: this.addressForm.value.observaciones,
+        esActaFase2: true,
+        contratoObservacionId: this.contratoObservacionId,
+
+      }]
+    }
+        
     if (localStorage.getItem("editable") == "false") {
       this.services.CreateTieneObservacionesActaInicio(this.contratoId, this.addressForm.value.observaciones, "usr3", true, this.addressForm.value.tieneObservaciones).subscribe(resp => {
         if (resp.code == "200") {
@@ -257,7 +287,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       });
     }
     else {
-      this.services.CreateEditContratoObservacion(contratoObs).subscribe(resp => {
+      this.services.CreateEditContratoObservacion(objetoContrato).subscribe(resp => {
         if (resp.code == "200") {
           if (this.addressForm.value.tieneObservaciones == true) {
             if (localStorage.getItem("origin") == "interventoria") {
@@ -298,7 +328,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
       });
     }
     console.log(this.addressForm.value);
-    //this.openDialog('La información ha sido guardada exitosamente.', "");
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 
 }

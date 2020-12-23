@@ -12,7 +12,7 @@
           required (keypress)="validateNumberKeypress($event)"
           onKeyPress="if(this.value.length>=this.maxLength) return false;">
       </mat-form-field>
-      <span class="contador">{{3 - numeroPerfiles.value.length}}</span>
+      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - numeroPerfiles.value.length}}</span>
     </div>
   </div>
 
@@ -60,7 +60,7 @@
                       #cantidadHvRequeridas (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{3 - cantidadHvRequeridas.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvRequeridas.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -81,7 +81,7 @@
                       #cantidadHvRecibidas (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{3 - cantidadHvRecibidas.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvRecibidas.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -102,7 +102,7 @@
                       #cantidadHvAprobadas (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{3 - cantidadHvAprobadas.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvAprobadas.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -161,7 +161,7 @@
                 <mat-form-field class="w-38">
                   <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
                 </mat-form-field>
-                <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
               </div>
               <div class="text-right" *ngIf="numeroRadicado( i ).length > 1">
                 <button mat-button color="warn" type="button" class="btn-eliminar"
@@ -257,9 +257,9 @@
             </mat-card-title>
           </mat-card-header>
           <mat-card-content align="left">
-            <p><b>{{ perfil.value.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>{{ perfil.value.observacionDevolucion.observacion }}</p>
+            <p style="margin-left: 2em;"><b>{{ perfil.value.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <section [innerHTML]="perfil.value.observacionDevolucion.observacion" style="margin-left: 2em;"></section>
           </mat-card-content>
         </mat-card>
       </div>

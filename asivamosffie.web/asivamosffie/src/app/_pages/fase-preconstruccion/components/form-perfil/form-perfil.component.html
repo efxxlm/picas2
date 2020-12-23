@@ -9,7 +9,9 @@
           <mat-form-field class="w-38">
             <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles required>
           </mat-form-field>
-          <span class="contador">{{3 - formContratista.get( 'numeroPerfiles' ).value.length}}</span>
+          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">
+            {{3 - formContratista.get( 'numeroPerfiles' ).value.length}}
+          </span>
         </div>
       </div>
     </div>
@@ -60,7 +62,10 @@
                             (ngModelChange)="validateNumber( $event, i, 'cantidadHvRequeridas' )"
                             [class.invalid]="perfil.get( 'cantidadHvRequeridas' ).value.length > 0 ? perfil.get( 'cantidadHvRequeridas' ).markAsUntouched() : perfil.get( 'cantidadHvRequeridas' ).markAsTouched()">
                   </mat-form-field>
-                  <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.toString().length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">
+                    {{3 - perfil.get( 'cantidadHvRequeridas' ).value.toString().length}}
+
+                  </span>
                 </div>
               </div>
             </div>
@@ -82,7 +87,9 @@
                             (ngModelChange)="validateNumber( $event, i, 'cantidadHvRecibidas' )"
                             [class.invalid]="perfil.get( 'cantidadHvRecibidas' ).value.length > 0 ? perfil.get( 'cantidadHvRecibidas' ).markAsUntouched() : perfil.get( 'cantidadHvRecibidas' ).markAsTouched()">
                   </mat-form-field>
-                  <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.toString().length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">
+                    {{3 - perfil.get( 'cantidadHvRecibidas' ).value.toString().length}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -104,7 +111,9 @@
                             (ngModelChange)="validateNumber( $event, i, 'cantidadHvAprobadas' )"
                             [class.invalid]="perfil.get( 'cantidadHvAprobadas' ).value.length > 0 ? perfil.get( 'cantidadHvAprobadas' ).markAsUntouched() : perfil.get( 'cantidadHvAprobadas' ).markAsTouched()">
                   </mat-form-field>
-                  <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.toString().length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">
+                    {{3 - perfil.get( 'cantidadHvAprobadas' ).value.toString().length}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -186,7 +195,7 @@
                                 required
                                 [class.invalid]="numero.get( 'numeroRadicado' ).value.length > 0 ? numero.get( 'numeroRadicado' ).markAsUntouched() : numero.get( 'numeroRadicado' ).markAsTouched()">
                       </mat-form-field>
-                      <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
                     </div>
                   </div>
                 </div>

@@ -43,5 +43,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         EnviarActaParaFirmar319 = 45,
 
         AlertaJuridicaDerivadaCumplida4_4_1= 51	,
+        EnviarActaCargada319 = 46,
+        Notificarinterventor=48,
+        ObservacionesActaInicioFase2=50,
     }
 }

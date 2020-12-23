@@ -127,25 +127,38 @@ namespace asivamosffie.services.Helpers.Enumerator
 
 
         Tiempo_Aprobar_Acta = 84,
-
+ 
         Estados_actas_inicio_obra = 85,
 
-        Estados_actas_inicio_interventoria = 86,    
-               
+        Estados_actas_inicio_interventoria = 86,
+
         Estado_Programacion_Inicial = 88,
         
-        Tipo_de_controversia=80,
+        //Tipo_de_controversia=80,
+        Tipo_de_controversia = 100,
 
         Estado_controversia_contractual_TAI = 90,
 
-        Estado_avance_reclamacion = 91,
+        Estado_controversia= 89,
 
         Estados_acta_Interventoria_319 = 107,
         Estado_Actuacion_Derivada_4_4_1 = 114,
 
          
+        //Estado_avance_reclamacion = 91,
+        Estado_avance_reclamacion = 108,
 
+        Proxima_actuacion_requerida =103,
 
+        Procesos_judiciales=105,
+
+        Tipo_accion_judicial = 106,
+
+        Estados_acta_Interventoria_319 = 107,
+
+        Jurisdiccion=116,
+        Actuaciones_Recomendadas=119,
+        Estados_Defensa_Judicial=120
 
     }
 }

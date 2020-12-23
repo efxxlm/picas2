@@ -1,0 +1,87 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteControversiasContractuales" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Ver detalle controversia contractual {{this.numeroSolicitud}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Solicitud: <b>{{this.numeroSolicitud}}</b> Número del contrato: <b>{{this.numContrato}}</b> Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
+    </p>
+    <div style="margin-top: 2em">
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card">
+                <mat-card-title class="header-card--text textoGris">
+                    Datos del contrato
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>Nombre del contratista:</strong> {{this.nombreContratista}}</p>
+                <p><strong>Tipo de identificación:</strong> {{this.tipoIdentificacion}}</p>
+                <p><strong>Número de identificación:</strong> {{this.numIdentificacion}}</p>
+                <p><strong>Tipo de intervención:</strong> {{this.tipoIntervencion}}</p>
+                <p><strong>Valor del contrato:</strong> $ {{this.valorContrato}}</p>
+                <p><strong>Plazo:</strong> {{this.plazoContrato}}</p>
+                <p><strong>Fecha de inicio de contrato:</strong> {{this.fechaInicioContrato}}</p>
+                <p><strong>Fecha de finalización de contrato:</strong> {{this.fechaFinalizacionContrato}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        Registrar controversias
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-card class="shipping-card mainGris">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text textoGris">
+                            Registrar controversia
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><strong>Tipo de controversia:</strong> {{this.tipoControversia}}</p>
+                        <p><strong>Fecha de solicitud:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}</p>
+                        <p><strong>Motivos de la solicitud:</strong></p>
+                        <div *ngFor="let motivo of this.motivosList; let i = index">
+                            <div *ngIf="motivo.motivoSolicitudCodigo=='1'">
+                                Motivo 1
+                            </div>
+                            <div *ngIf="motivo.motivoSolicitudCodigo=='2'">
+                                Motivo 2
+                            </div>
+                        </div>
+                        <p><strong>Fecha de Comité Pre-Técnico:</strong> {{this.fechaComitePreTecnico | date:'dd/MM/yyyy'}}</p>
+                        <p><strong>Conclusión del Comité Pre-técnico de acuerdo con la solicitud:</strong></p>
+                        <div [innerHtml]="this.conclusionComitePreTecnico"></div>
+                        <p><strong>¿La solicitud procede?:</strong> {{this.laSolicitudProcede}}</p>
+                        <p *ngIf="this.laSolicitudProcede=='No'"><strong>Motivos de rechazo:</strong></p>
+                        <div *ngIf="this.laSolicitudProcede=='No'" [innerHtml]="this.motivosRechazo"></div>
+                        <p *ngIf="this.laSolicitudProcede=='Sí'"><strong>¿Requiere comité técnico?:</strong> {{this.vaParaComite}}</p>
+                    </mat-card-content>
+                </mat-card>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        Soporte de la solicitud
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-card class="shipping-card mainGris">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text textoGris">
+                            Soporte del registro del proceso
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: left;">
+                        <p><strong>URL con soporte:</strong> {{this.soporteSolicitud}}</p>
+                    </mat-card-content>
+                </mat-card>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+</div>

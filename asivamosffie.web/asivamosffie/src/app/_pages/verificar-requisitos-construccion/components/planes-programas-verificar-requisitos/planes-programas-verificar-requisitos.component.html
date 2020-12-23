@@ -74,8 +74,10 @@
             </div>
         </div>
         <div class="d-flex align-items-center animatedDown" *ngIf="addressForm.value.tieneObservaciones === true">
-            <div class="text-area-quill">
-                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched">
+                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7"
+                [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
                     Observaciones a los planes y programas
                 </label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
@@ -97,6 +99,21 @@
         </div>
     </form>
 </div>
+<div align="center" *ngIf="this.observacionesCompleted===true">
+
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                observaciones a los planes y programas
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><b>¿Tiene observaciones a los planes y programas?:</b>
+                {{ planesProgramas.tieneObservacionesPlanesProgramasApoyo == true ? 'Si' : 'No' }}</p>
+            <p>{{ planesProgramas.observacionPlanesProgramasApoyo ? planesProgramas.observacionPlanesProgramasApoyo.observaciones : '' }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
 <div align="center" *ngIf="planesProgramas.observacionDevolucionPlanesProgramas">
     <mat-card class="border" style="margin-top: 20px;">
         <mat-card-header class="header-card">
@@ -105,9 +122,9 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>{{ planesProgramas.observacionDevolucionPlanesProgramas.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>{{ planesProgramas.observacionDevolucionPlanesProgramas.observaciones }}</p>
+            <p style="margin-left: 2em;"><b>{{ planesProgramas.observacionDevolucionPlanesProgramas.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <section [innerHTML]="planesProgramas.observacionDevolucionPlanesProgramas.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
 </div>

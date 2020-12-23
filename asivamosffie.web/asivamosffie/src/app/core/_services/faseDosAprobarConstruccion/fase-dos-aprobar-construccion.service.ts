@@ -65,7 +65,7 @@ export class FaseDosAprobarConstruccionService {
                 if ( value.codigo === '6' ) {
                   estadosConstruccion.enviadoAlSupervisor = {
                     codigo: value.codigo,
-                    nombre: value.descripcion
+                    nombre: value.nombre
                   };
                 }
                 if ( value.codigo === '7' ) {
@@ -100,7 +100,7 @@ export class FaseDosAprobarConstruccionService {
                 if ( value.codigo === '6' ) {
                   estadosConstruccion.enviadoAlSupervisor = {
                     codigo: value.codigo,
-                    nombre: value.descripcion
+                    nombre: value.nombre
                   };
                 }
                 if ( value.codigo === '7' ) {

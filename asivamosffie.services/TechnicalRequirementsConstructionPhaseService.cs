@@ -265,6 +265,8 @@ namespace asivamosffie.services
                          .ThenInclude(r => r.Contratista)
                     .FirstOrDefaultAsync();
 
+                
+
                 contrato.ContratoConstruccion = _context.ContratoConstruccion.Where(cc => cc.ContratoId == pContratoId)
                                                                                 .Include(r => r.ConstruccionPerfil)
                                                                                     .ThenInclude(r => r.ConstruccionPerfilObservacion)
@@ -340,7 +342,13 @@ namespace asivamosffie.services
                     ContratacionProyecto.Proyecto.Municipio = Municipio.Descripcion;
                     ContratacionProyecto.Proyecto.TipoIntervencionCodigo = ListParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion && r.Codigo == ContratacionProyecto.Proyecto.TipoIntervencionCodigo).FirstOrDefault().Nombre;
                     //verifico que fases tiene
-                    var componentes = _context.ComponenteAportante.Where(x => x.ContratacionProyectoAportante.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId && !(bool)x.Eliminado).ToList();
+                    var componentes = _context.ComponenteAportante
+                                                    .Where(
+                                                            x => x.ContratacionProyectoAportante.ContratacionProyectoId == ContratacionProyecto.ContratacionProyectoId && 
+                                                            !(bool)x.Eliminado
+                                                          )
+                                                    .Include( r => r.ComponenteUso )
+                                                    .ToList();
                     bool construccion = false;
                     bool preconstruccion = false;
                     if (componentes.Where(x => x.FaseCodigo == ConstanCodigoFaseContrato.Construccion).Count() > 0)
@@ -353,6 +361,13 @@ namespace asivamosffie.services
                     }
                     ContratacionProyecto.faseConstruccionNotMapped = construccion;
                     ContratacionProyecto.fasePreConstruccionNotMapped = preconstruccion;
+
+                    ContratacionProyecto.Proyecto.ValorFaseConstruccion = 0;
+                    componentes.Where(x => x.FaseCodigo == ConstanCodigoFaseContrato.Construccion).ToList().ForEach( ca => {
+                        ca.ComponenteUso.ToList().ForEach( cu => {
+                            ContratacionProyecto.Proyecto.ValorFaseConstruccion += cu.ValorUso;
+                        });
+                    });
 
 
                 }
@@ -1283,7 +1298,7 @@ namespace asivamosffie.services
 
             if (
                 pConstruccion.EsInformeDiagnostico == null ||
-                string.IsNullOrEmpty(pConstruccion.RutaInforme) ||
+                ( pConstruccion.EsInformeDiagnostico == true && string.IsNullOrEmpty(pConstruccion.RutaInforme) ) ||
                 pConstruccion.CostoDirecto == null ||
                 pConstruccion.Administracion == null ||
                 pConstruccion.Imprevistos == null ||
@@ -1365,16 +1380,16 @@ namespace asivamosffie.services
                 cc.ObservacionProgramacionObraApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.ProgramacionObra, true);
                 cc.ObservacionFlujoInversionApoyo = getObservacion(cc, ConstanCodigoTipoObservacionConstruccion.FlujoInversion, true);
 
-                if (cc.TieneObservacionesDiagnosticoApoyo == null ||
-                     (cc.TieneObservacionesDiagnosticoApoyo == true && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
-                     cc.TieneObservacionesFlujoInversionApoyo == null ||
-                     (cc.TieneObservacionesFlujoInversionApoyo == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
-                     cc.TieneObservacionesManejoAnticipoApoyo == null ||
-                     (cc.TieneObservacionesManejoAnticipoApoyo == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo != null ? cc.ObservacionManejoAnticipoApoyo.Observaciones : null)) ||
-                     cc.TieneObservacionesPlanesProgramasApoyo == null ||
-                     (cc.TieneObservacionesPlanesProgramasApoyo == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo != null ? cc.ObservacionPlanesProgramasApoyo.Observaciones : null)) ||
-                     cc.TieneObservacionesProgramacionObraApoyo == null ||
-                     (cc.TieneObservacionesProgramacionObraApoyo == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo != null ? cc.ObservacionProgramacionObraApoyo.Observaciones : null))
+                if ( ( TieneFasePreconstruccion( cc.ContratoId) && cc.TieneObservacionesDiagnosticoApoyo == null ) ||
+                     ( ( TieneFasePreconstruccion( cc.ContratoId) && cc.TieneObservacionesDiagnosticoApoyo == true ) && string.IsNullOrEmpty(cc.ObservacionDiagnosticoApoyo != null ? cc.ObservacionDiagnosticoApoyo.Observaciones : null)) ||
+                     cc.TieneObservacionesFlujoInversionSupervisor == null ||
+                     (cc.TieneObservacionesFlujoInversionSupervisor == true && string.IsNullOrEmpty(cc.ObservacionFlujoInversionApoyo != null ? cc.ObservacionFlujoInversionApoyo.Observaciones : null)) ||
+                     cc.TieneObservacionesManejoAnticipoSupervisor == null ||
+                     (cc.TieneObservacionesManejoAnticipoSupervisor == true && string.IsNullOrEmpty(cc.ObservacionManejoAnticipoApoyo != null ? cc.ObservacionManejoAnticipoApoyo.Observaciones : null)) ||
+                     cc.TieneObservacionesPlanesProgramasSupervisor == null ||
+                     (cc.TieneObservacionesPlanesProgramasSupervisor == true && string.IsNullOrEmpty(cc.ObservacionPlanesProgramasApoyo != null ? cc.ObservacionPlanesProgramasApoyo.Observaciones : null)) ||
+                     cc.TieneObservacionesProgramacionObraSupervisor == null ||
+                     (cc.TieneObservacionesProgramacionObraSupervisor == true && string.IsNullOrEmpty(cc.ObservacionProgramacionObraApoyo != null ? cc.ObservacionProgramacionObraApoyo.Observaciones : null))
                      )
                 {
                     esCompleto = false;
@@ -1439,17 +1454,41 @@ namespace asivamosffie.services
 
             if (
                     pConstruccion.PlanLicenciaVigente == null ||
+                    pConstruccion.PlanLicenciaVigente == false ||
+
                     pConstruccion.PlanCambioConstructorLicencia == null ||
+                    pConstruccion.PlanCambioConstructorLicencia == false ||
+
                     pConstruccion.PlanActaApropiacion == null ||
+                    pConstruccion.PlanActaApropiacion == false ||
+
                     pConstruccion.PlanResiduosDemolicion == null ||
+                    pConstruccion.PlanResiduosDemolicion == false ||
+
                     pConstruccion.PlanManejoTransito == null ||
+                    pConstruccion.PlanManejoTransito == false ||
+
                     pConstruccion.PlanManejoAmbiental == null ||
+                    pConstruccion.PlanManejoAmbiental == false ||
+
                     pConstruccion.PlanAseguramientoCalidad == null ||
+                    pConstruccion.PlanAseguramientoCalidad == false ||
+
                     pConstruccion.PlanProgramaSeguridad == null ||
+                    pConstruccion.PlanProgramaSeguridad == false ||
+
                     pConstruccion.PlanProgramaSalud == null ||
+                    pConstruccion.PlanProgramaSalud == false ||
+
                     pConstruccion.PlanInventarioArboreo == null ||
+                    pConstruccion.PlanInventarioArboreo == 1 ||
+
                     pConstruccion.PlanAprovechamientoForestal == null ||
+                    pConstruccion.PlanAprovechamientoForestal == 1 ||
+
                     pConstruccion.PlanManejoAguasLluvias == null ||
+                    pConstruccion.PlanManejoAguasLluvias == 1 ||
+
                     string.IsNullOrEmpty(pConstruccion.PlanRutaSoporte)
             )
             {
@@ -2018,7 +2057,55 @@ namespace asivamosffie.services
                 perfil.FechaModificacion = DateTime.Now;
                 perfil.Eliminado = true;
 
+                ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find( perfil.ContratoConstruccionId );
+
+                Contrato contrato = _context.Contrato
+                                                .Where(c => c.ContratoId == contratoConstruccion.ContratoId)
+                                                .Include(r => r.Contratacion)
+                                                .FirstOrDefault();
+
+                if (contrato.Contratacion.TipoSolicitudCodigo == "1")
+                {// contrato de obra
+                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Sin_aprobacion_de_requisitos_tecnicos)
+                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_aprobacion_de_requisitos_tecnicos;
+
+                    VerificarRegistroCompletoContratoObra(contratoConstruccion.ContratoId);
+                }
+
+                if (contrato.Contratacion.TipoSolicitudCodigo == "2")
+                { // contrato de interventoria
+                    if (contrato.EstadoVerificacionConstruccionCodigo == null || contrato.EstadoVerificacionConstruccionCodigo == ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_aprobados)
+                        contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.En_proceso_de_verificacion_de_requisitos_tecnicos;
+
+                    List<ContratoConstruccion> listaConstruccion = _context.ContratoConstruccion
+                                                                        .Where(cp => cp.ContratoId == contratoConstruccion.ContratoId)
+                                                                        .Include(r => r.ConstruccionPerfil)
+                                                                        .ToList();
+
+                    string estadoTempContrato = contrato.EstadoVerificacionConstruccionCodigo;
+                    contrato.EstadoVerificacionConstruccionCodigo = ConstanCodigoEstadoConstruccion.Con_requisitos_tecnicos_verificados;
+
+                    listaConstruccion.ForEach(c =>
+                    {
+
+                        c.RegistroCompleto = true;
+                        c.ConstruccionPerfil.ToList().ForEach(cp =>
+                        {
+                            if (cp.RegistroCompleto != true)
+                            {
+                                c.RegistroCompleto = false;
+                                contrato.EstadoVerificacionConstruccionCodigo = estadoTempContrato;
+                            }
+                        });
+
+                    });
+
+                    VerificarRegistroCompletoContratoInterventoria(contratoConstruccion.ContratoId);
+                }
+
                 _context.SaveChanges();
+
+
 
                 return
                     new Respuesta
@@ -2096,8 +2183,13 @@ namespace asivamosffie.services
 
                 ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion.Find(pContratoConstruccionId);
 
+                
+
                 if (pEsFlujoInvserion)
                 {
+                    List<FlujoInversion> listaFlujoInversion = _context.FlujoInversion.Where( f => f.ContratoConstruccionId == pContratoConstruccionId ).ToList();
+                    _context.FlujoInversion.RemoveRange( listaFlujoInversion );
+
                     contratoConstruccion.ArchivoCargueIdFlujoInversion = null;
                     contratoConstruccion.RegistroCompletoFlujoInversion = false;
                 }
@@ -2108,6 +2200,7 @@ namespace asivamosffie.services
                 }
 
                 _context.SaveChanges();
+                VerificarRegistroCompletoContratoObra(contratoConstruccion.ContratoId);
 
                 return
                     new Respuesta
@@ -2167,9 +2260,10 @@ namespace asivamosffie.services
                                                                         .Include(r => r.Proyecto)
                                                                         .FirstOrDefault();
 
-            DateTime? fechaInicioContrato = contratoConstruccion?.Contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault()?.FechaDrp.Value;
-            DateTime fechaFinalContrato = fechaInicioContrato.Value.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
-            fechaFinalContrato = fechaFinalContrato.AddDays(contratoConstruccion.Proyecto.PlazoDiasObra.Value);
+            Proyecto proyectoTemp = CalcularFechaInicioContrato( pContratoConstruccionId );
+
+            DateTime? fechaInicioContrato = proyectoTemp.FechaInicioEtapaObra;
+            DateTime fechaFinalContrato = proyectoTemp.FechaFinEtapaObra;
 
             int CantidadRegistrosVacios = 0;
             int CantidadResgistrosValidos = 0;
@@ -2208,6 +2302,17 @@ namespace asivamosffie.services
                             temp.UsuarioCreacion = pUsuarioCreo;
                             temp.ContratoConstruccionId = pContratoConstruccionId;
 
+                            List<FlujoInversion> listaFlujo = _context.FlujoInversion.Where( r => r.ContratoConstruccionId == pContratoConstruccionId ).ToList();
+
+                            if ( listaFlujo.Count() > 1 ) {
+                                worksheet.Cells[1, 1].AddComment("se debe eliminar una carga de flujo de inversión asociada a este Proyecto", "Admin");
+                                worksheet.Cells[1, 1].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                                worksheet.Cells[1, 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.Yellow);
+                                tieneErrores = true;
+                                CantidadResgistrosValidos--;
+                            }
+
+                            
                             // #1
                             //Tipo Actividad
                             if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text))

@@ -22,8 +22,10 @@
             </div>
         </div>
         <div class="d-flex align-items-center animatedDown" *ngIf="addressForm.value.tieneObservaciones === true">
-            <div class="text-area-quill">
-                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched">
+                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7"
+                [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
                     Observaciones a la programación de obra
                 </label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
@@ -45,6 +47,20 @@
         </div>
     </form>
 </div>
+<div align="center" *ngIf="this.observacionesCompleted===true">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                Observaciones a la programación de obra
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><b>¿Tiene observaciones a la programación de obra?:</b>
+                {{ contratoConstruccion.tieneObservacionesProgramacionObraApoyo == true ? 'Si' : 'No' }}</p>
+            <p>{{ contratoConstruccion.observacionProgramacionObraApoyo ? contratoConstruccion.observacionProgramacionObraApoyo.observaciones : '' }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
 <div align="center" *ngIf="contratoConstruccion.observacionDevolucionProgramacionObra">
     <mat-card class="border" style="margin-top: 20px;">
         <mat-card-header class="header-card">
@@ -53,10 +69,9 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>{{ contratoConstruccion.observacionDevolucionProgramacionObra.fechaCreacion | date: "dd/MM/yyyy" }}</b>
-            </p>
-            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>{{ contratoConstruccion.observacionDevolucionProgramacionObra.observaciones }}</p>
+            <p style="margin-left: 2em;"><b>{{ contratoConstruccion.observacionDevolucionProgramacionObra.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <section [innerHTML]="contratoConstruccion.observacionDevolucionProgramacionObra.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
 </div>

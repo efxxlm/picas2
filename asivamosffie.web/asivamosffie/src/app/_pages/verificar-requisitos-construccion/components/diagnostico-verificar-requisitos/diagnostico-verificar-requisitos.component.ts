@@ -59,7 +59,7 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
       this.addressForm.get('observaciones').setValue(this.construccion.observacionDiagnosticoApoyo ? this.construccion.observacionDiagnosticoApoyo.observaciones : null)
       //en edición el setvalue 0 genera la creacion de registros
       //this.addressForm.get('construccionObservacionId').setValue(0);
-      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoApoyo.construccionObservacionId);
+      this.addressForm.get('construccionObservacionId').setValue(this.construccion.observacionDiagnosticoApoyo?this.construccion.observacionDiagnosticoApoyo.construccionObservacionId:null);
 
       //this.validarSemaforo();
     }
@@ -84,10 +84,24 @@ export class DiagnosticoVerificarRequisitosComponent implements OnInit, OnChange
   }
 
   textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   openDialog(modalTitle: string, modalText: string) {

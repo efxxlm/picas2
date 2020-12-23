@@ -9,6 +9,7 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
   providedIn: 'root'
 })
 export class ContratosModificacionesContractualesService {
+  
 
   url: string = environment.apiUrl;
 
@@ -39,5 +40,4 @@ export class ContratosModificacionesContractualesService {
   postRegistroTramiteContrato( pContrato: FormData, pEstadoCodigo: string ) {
     return this.http.post<Respuesta>( `${ this.url }/RegisterContractsAndContractualModifications/RegistrarTramiteContrato?pEstadoCodigo=${ pEstadoCodigo }`, pContrato );
   }
-
 }

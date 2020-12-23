@@ -1,0 +1,163 @@
+<form [formGroup]="addressForm" novalidate>
+    <div class="row" style="justify-content: center;">
+        <div class="col-md-6" style="padding-left: 0;">
+            <div class="row">
+                <div class="pr-1">
+                    <label class="label-left" for="demandaContraFFIE">¿Ya existe demanda contra el FFIE en el
+                        proceso?</label>
+                </div>
+                <div class="col">
+                    <mat-radio-group class="radioInput" formControlName="demandaContraFFIE" required>
+                        <mat-radio-button [value]="true">Sí</mat-radio-button>
+                        <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group" style="margin-left: 1px;">*</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
+    <mat-card class="shipping-card">
+        <mat-card-content align="left">
+            <div class="d-flex mt-1em col-md-6">
+                <label class="mr-label" class="label-left"><b>Número de demandantes</b></label>
+                <div class="col d-flex">
+                    <mat-form-field class="w-70">
+                        <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
+                    </mat-form-field>
+                    <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.length}}</span>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Demandante {{ i+1 }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card [formGroup]="perfil">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="nomConvocado" class="label-left">Nombre del demandante</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #nomConvocado type="text" maxlength="100"
+                                            formControlName="nomConvocado" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{100 - nomConvocado.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="tipoIdentificacion">Tipo de identificación del demandante</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="tipoIdentificacion" required>
+                                            <mat-option *ngFor="let contr of tiposIdentificacionArray" [value]="contr.value">
+                                                {{ contr.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="numIdentificacion" class="label-left">Número de identificación demandante</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #numIdentificacion type="text" maxlength="9"
+                                            formControlName="numIdentificacion" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{9 - numIdentificacion.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="direccion" class="label-left">Dirección física para envío de notificaciones</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #direccion type="text" maxlength="200"
+                                            formControlName="direccion" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{200 - direccion.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="correo" class="label-left">Correo electrónico para envío de notificaciones</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #correo type="text" maxlength="200"
+                                            formControlName="correo" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{200 - correo.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="text-right">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarPerfil( i )"
+                    [disabled]="perfiles.controls.length == 1">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                    Eliminar convocado
+                </button>
+            </div>
+
+            <div class="text-center">
+                <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
+                    <img src="assets/img/icon/guardar.svg">
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>
+<mat-accordion  *ngIf="this.addressForm.value.demandaContraFFIE==true">
+    <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Demandados
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-form-demandados-dj></app-form-demandados-dj>
+    </mat-expansion-panel>
+</mat-accordion>
+<mat-accordion  *ngIf="this.addressForm.value.demandaContraFFIE==false">
+    <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Convocados
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-form-convocados-pasiva-dj></app-form-convocados-pasiva-dj>
+    </mat-expansion-panel>
+</mat-accordion>

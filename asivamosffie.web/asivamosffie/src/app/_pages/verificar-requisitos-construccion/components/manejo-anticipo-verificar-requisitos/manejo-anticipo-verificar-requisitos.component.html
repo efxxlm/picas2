@@ -35,8 +35,10 @@
         </div>
 
         <div class="d-flex align-items-center animatedDown" *ngIf="addressForm.value.tieneObservaciones == true">
-            <div class="text-area-quill">
-                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched">
+                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7"
+                [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
                     Observaciones al manejo del anticipo
                 </label>
                 <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
@@ -58,6 +60,20 @@
         </div>
     </form>
 </div>
+<div align="center" *ngIf="this.observacionesCompleted===true">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                observaciones al manejo del anticipo
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><b>¿Tiene observaciones al manejo del anticipo?:</b>
+                {{ contratacion.tieneObservacionesManejoAnticipoApoyo == true ? 'Si' : 'No' }}</p>
+            <p>{{ contratacion.observacionManejoAnticipoApoyo ? contratacion.observacionManejoAnticipoApoyo.observaciones : '' }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
 <div align="center" *ngIf="contratacion.observacionDevolucionManejoAnticipo">
     <mat-card class="border" style="margin-top: 20px;">
         <mat-card-header class="header-card">
@@ -66,9 +82,9 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p><b>{{ contratacion.observacionDevolucionManejoAnticipo.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-            <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p>{{ contratacion.observacionDevolucionManejoAnticipo.observaciones }}</p>
+            <p style="margin-left: 2em;"><b>{{ contratacion.observacionDevolucionManejoAnticipo.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <section [innerHTML]="contratacion.observacionDevolucionManejoAnticipo.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
 </div>

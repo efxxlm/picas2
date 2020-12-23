@@ -100,14 +100,14 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   validarActaParaInicio(id) {
-    localStorage.setItem("origin", "interventoria");
+    localStorage.setItem("origin", "interventoria"); 
     localStorage.setItem("editable", "false");
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
   }
   verDetalleEditar(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "true");
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
   }
   verDetalle(id) {
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion', id]);
@@ -134,14 +134,15 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     }
   }
   enviarActaParaFirma(id) {
-    if (localStorage.getItem("origin") == "interventoria") {
+    //console.log(localStorage.getItem("origin"))
+    //if (localStorage.getItem("origin") == "interventoria") {
       this.services.CambiarEstadoActa(id, "6", "usr2").subscribe(data => {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
       this.descargarActaDesdeTabla(id);
-    }
+    //}
   }
   enviarInterventorBtn(id){
     if (localStorage.getItem("origin") == "interventoria") {

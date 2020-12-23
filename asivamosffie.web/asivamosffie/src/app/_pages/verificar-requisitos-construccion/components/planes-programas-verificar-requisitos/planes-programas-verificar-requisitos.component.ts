@@ -84,7 +84,7 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   openDialogObservacion(planPrograma: string, observacion: string, id: number) {
     const dialogObservacion = this.dialog.open(DialogObservacionesComponent, {
       width: '60em',
-      data: { planPrograma, observacion }
+      data: { planPrograma, observacion, ocultarBoton: true }
     });
 
     dialogObservacion.afterClosed().subscribe(resp => {
@@ -244,10 +244,24 @@ export class PlanesProgramasVerificarRequisitosComponent implements OnInit, OnCh
   }
 
   textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
     if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   guardarPlanes() {

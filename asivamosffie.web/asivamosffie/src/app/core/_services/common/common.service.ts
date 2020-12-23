@@ -11,6 +11,8 @@ import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstrucc
   providedIn: 'root'
 })
 export class CommonService {
+  
+  
     
   constructor(private http: HttpClient) { }
 
@@ -207,6 +209,26 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
   }
 
+  listaProcesosJudiciales() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=105`);
+  }
+
+  listaTipoAccionJudicial() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=106`);
+  }
+
+  listaJurisdiccion() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=116`);
+  }
+
+  listaTipodocumento(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=30`);
+  }
+
+  getTipoActuacion() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=119`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];
@@ -271,7 +293,21 @@ export class CommonService {
   listaGarantiasPolizas(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
-
+  listaTiposDeControversiaContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=100`);
+  }
+  listaMotivosSolicitudControversiaContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=99`);
+  }
+  listaEstadosAvanceTramite(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=90`);
+  }
+  listaActuacionAdelantada(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=104`);
+  }
+  listaProximaActuacionRequerida(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=103`);
+  }
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];

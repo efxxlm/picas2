@@ -61,7 +61,7 @@
             <mat-form-field class="full-width">
               <input matInput #nombre type="text" maxlength="50" formControlName="nombre" required>
             </mat-form-field>
-            <span class="contador">{{50 - nombre.value.length}}</span>
+            <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{50 - nombre.value.length}}</span>
           </div>
         </div>
         <div class="row">
@@ -76,7 +76,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #numeroPoliza type="text" maxlength="20" formControlName="numeroPoliza" required>
                 </mat-form-field>
-                <span class="contador">{{20 - numeroPoliza.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numeroPoliza.value.length}}</span>
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@
                   <input matInput #numeroCertificado type="text" maxlength="20" formControlName="numeroCertificado"
                     required>
                 </mat-form-field>
-                <span class="contador">{{20 - numeroCertificado.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numeroCertificado.value.length}}</span>
               </div>
             </div>
           </div>
@@ -178,7 +178,7 @@
                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
                   matTooltipClass="info-tooltip">{{20 - valorAmparo.value.length}}</span>
               </div>
             </div>
