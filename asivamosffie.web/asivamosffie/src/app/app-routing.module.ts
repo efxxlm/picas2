@@ -196,6 +196,11 @@ const routes: Routes = [
       },
       {
         path: 'validarSolicitudDeNovedades',
+        loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
+        .then(m => m.VerificarSolicitudDeNovedadesModule)
+      },
+      {
+        path: 'validarSolicitudDeNovedades',
         loadChildren: () => import('./_pages/validar-solicitud-novedades/validar-solicitud-novedades.module')
         .then(m => m.ValidarSolicitudNovedadesModule)
       },
