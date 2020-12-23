@@ -152,6 +152,23 @@ namespace asivamosffie.services
 
                                         break;
                                     }
+                                case ConstanCodigoTipoSolicitud.ControversiasContractuales:
+                                    {
+                                        ControversiaContractual controversiaContractual= _context.ControversiaContractual.Find(ss.SolicitudId);
+
+                                        if (controversiaContractual != null)
+                                            comite.data.Add(new
+                                            {
+                                                Id = controversiaContractual.ControversiaContractualId,
+                                                IdSolicitud = ss.SesionComiteSolicitudId,
+                                                FechaSolicitud = (DateTime?)(controversiaContractual.FechaSolicitud),
+                                                NumeroSolicitud = controversiaContractual.NumeroSolicitud,
+                                                TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.ControversiasContractuales).FirstOrDefault().Nombre,
+                                                tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.ControversiasContractuales
+                                            });
+
+                                        break;
+                                    }
                             }
                     }
                     if (comite.data.Count > 0)
@@ -515,6 +532,20 @@ namespace asivamosffie.services
                                 }
                                 break;
                             }
+                        case ConstanCodigoTipoSolicitud.ControversiasContractuales:
+                            {
+                                ControversiaContractual controversiaContractual = _context.ControversiaContractual
+                                                                                        .Where(r => r.ControversiaContractualId == ss.SolicitudId)
+                                                                                        .FirstOrDefault();
+
+                                if (controversiaContractual != null)
+                                {
+                                    ss.FechaSolicitud = (DateTime?)(controversiaContractual.FechaSolicitud);
+                                    ss.NumeroSolicitud = controversiaContractual.NumeroSolicitud;
+                                    ss.TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.ControversiasContractuales).FirstOrDefault().Nombre;
+                                }
+                                break;
+                            }
                     }
                 }
 
@@ -809,6 +840,18 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.ProcesoSeleccionMonitoreo = actualizacionCronograma;
 
                         sesionComiteSolicitud.NumeroHijo = actualizacionCronograma.NumeroProceso;
+
+                        break;
+                    
+                    case ConstanCodigoTipoSolicitud.ControversiasContractuales:
+
+                        ControversiaContractual controversiaContractual = _context.ControversiaContractual
+                                                                                .Where(r => r.ControversiaContractualId == sesionComiteSolicitud.SolicitudId)
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = controversiaContractual.FechaSolicitud;
+
+                        sesionComiteSolicitud.NumeroSolicitud = controversiaContractual.NumeroSolicitud;
 
                         break;
                 }
@@ -2556,6 +2599,33 @@ namespace asivamosffie.services
 
 
 
+
+                    }
+
+                }
+
+                #endregion
+
+                #region Controversia contractual
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.ControversiasContractuales)
+                {
+                    ControversiaContractual controversiaContractual= _context.ControversiaContractual.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if ( controversiaContractual != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_fiduciario)
+                        {
+                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteFiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_fiduciario)
+                        {
+                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteFiduciario;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario)
+                        {
+                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteFiduciario;
+                        }
 
                     }
 

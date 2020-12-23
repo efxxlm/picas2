@@ -954,6 +954,14 @@ namespace asivamosffie.services
                     .Include(r => r.ProcesoSeleccion)
                     .OrderByDescending(r => r.ProcesoSeleccionMonitoreoId).ToList();
 
+                List<ControversiaContractual> ListControversiasContractuales = _context.ControversiaContractual
+                    .Where(r => !(bool)r.Eliminado
+                    && r.EsRequiereComite == true
+                    && r.EstadoCodigo == "6"
+                    && r.FechaSolicitud < pFechaOrdenDelDia
+                    )
+                    .OrderByDescending(r => r.ControversiaContractualId).ToList();
+
                 //Quitar los que ya estan en sesionComiteSolicitud
 
                 List<int> LisIdContratacion = _context.SesionComiteSolicitud
@@ -988,6 +996,14 @@ namespace asivamosffie.services
                                                                  )
                                                             .Select(r => r.SolicitudId).Distinct().ToList();
 
+                List<int> ListIdControversiasContractuales = _context.SesionComiteSolicitud
+                                                            .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.ControversiasContractuales &&
+                                                                r.Eliminado != true &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico
+                                                                 )
+                                                            .Select(r => r.SolicitudId).Distinct().ToList();
+
                 //Se comentan ya que no esta listo el caso de uso
                 //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
                 //List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.ToList();
@@ -998,6 +1014,7 @@ namespace asivamosffie.services
                 ListProcesoSeleccion.RemoveAll(item => ListIdProcesosSeleccion.Contains(item.ProcesoSeleccionId));
                 ListProcesoSeleccionEvaluacion.RemoveAll(item => ListIdProcesosSeleccionEvaluacion.Contains(item.ProcesoSeleccionId));
                 ListActualizacionCronograma.RemoveAll(item => ListIdActualizacionCronograma.Contains(item.ProcesoSeleccionMonitoreoId));
+                ListControversiasContractuales.RemoveAll(item => ListIdControversiasContractuales.Contains(item.ControversiaContractualId));
 
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
@@ -1047,6 +1064,18 @@ namespace asivamosffie.services
                         NumeroSolicitud = Actualizacion.ProcesoSeleccion.NumeroProceso,
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion
+                    });
+                };
+
+                foreach (var controversiaContractual in ListControversiasContractuales)
+                {
+                    ListValidacionSolicitudesContractualesGrilla.Add(new
+                    {
+                        Id = controversiaContractual.ControversiaContractualId,
+                        FechaSolicitud = Convert.ToDateTime(controversiaContractual.FechaSolicitud.ToString("yyyy-MM-dd")),
+                        NumeroSolicitud = controversiaContractual.NumeroSolicitud,
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.ControversiasContractuales).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.ControversiasContractuales
                     });
                 };
 
@@ -1420,6 +1449,17 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.NumeroHijo = actualizacionCronograma.NumeroProceso;
 
                         break;
+                    case ConstanCodigoTipoSolicitud.ControversiasContractuales:
+
+                        ControversiaContractual controversiaContractual = _context.ControversiaContractual
+                                                                                .Where(r => r.ControversiaContractualId == sesionComiteSolicitud.SolicitudId)
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = controversiaContractual.FechaSolicitud;
+
+                        sesionComiteSolicitud.NumeroSolicitud = controversiaContractual.NumeroSolicitud;
+
+                    break;
 
                 }
 
@@ -2195,6 +2235,33 @@ namespace asivamosffie.services
                         if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
                         {
                             procesoSeleccionMonitoreo.EstadoActividadCodigo = ConstanCodigoEstadoActividadCronogramaProcesoSeleccion.DevueltoPorComiteTecnico;
+                        }
+
+                    }
+
+                }
+
+                #endregion
+
+                #region Controversia Contractual
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.ControversiasContractuales)
+                {
+                    ControversiaContractual controversiaContractual= _context.ControversiaContractual.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (controversiaContractual != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico)
+                        {
+                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteTecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
+                        {
+                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteTecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
+                        {
+                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteTecnico;
                         }
 
                     }
