@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-ver-detalle-actuacion-notai',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VerDetalleActuacionNotaiComponent implements OnInit {
 
-  constructor() { }
+  idControversia: any;
+
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe(param => {
+      this.idControversia = param.id;
+    });
   }
 
 }

@@ -183,11 +183,6 @@ const routes: Routes = [
         path: 'registrarAvanceSemanal',
         loadChildren: () => import( './_pages/registrar-avance-semanal/registrar-avance-semanal.module' )
           .then( module => module.RegistrarAvanceSemanalModule )
-      },
-      {
-        path: 'verificarAvanceSemanal',
-        loadChildren: () => import( './_pages/verificar-avance-semanal/verificar-avance-semanal.module' )
-          .then( module => module.VerificarAvanceSemanalModule )
       }
     ]
 

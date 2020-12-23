@@ -48,7 +48,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaVerificacion { get; set; }
         public DateTime? FechaValidacion { get; set; }
         public bool? RegistroCompletoVerificacion { get; set; }
-        public bool? RegistroCompletoValidacion { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual SeguimientoDiarioObservaciones ObservacionSupervisor { get; set; }

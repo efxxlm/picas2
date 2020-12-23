@@ -203,18 +203,6 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
   }
 
-  listaTipoActividades() {
-    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=109` );
-  }
-
-  listaTipoEnsayos() {
-    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=74` );
-  }
-
-  listaCausaAccidente() {
-    return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=75` );
-  }
-
   public listaUsuarios(){
 
     let lista: Usuario[] = [];
@@ -279,7 +267,21 @@ export class CommonService {
   listaGarantiasPolizas(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
   }
-
+  listaTiposDeControversiaContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=100`);
+  }
+  listaMotivosSolicitudControversiaContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=99`);
+  }
+  listaEstadosAvanceTramite(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=90`);
+  }
+  listaActuacionAdelantada(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=104`);
+  }
+  listaProximaActuacionRequerida(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=103`);
+  }
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];

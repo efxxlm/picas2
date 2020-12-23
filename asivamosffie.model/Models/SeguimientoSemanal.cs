@@ -32,13 +32,6 @@ namespace asivamosffie.model.Models
         public string EstadoObraCodigo { get; set; }
         public bool? RegistroCompletoMuestras { get; set; }
         public bool? EnviarSupervisor { get; set; }
-        public string EstadoSeguimientoSemanalCodigo { get; set; }
-        public DateTime? FechaEnvioSupervisor { get; set; }
-        public bool? TieneObservacionApoyo { get; set; }
-        public bool? RegistroCompletoVerificar { get; set; }
-        public bool? TieneObservacionSupervisor { get; set; }
-        public bool? RegistroCompletoAvalar { get; set; }
-        public string EstadoMuestrasCodigo { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }

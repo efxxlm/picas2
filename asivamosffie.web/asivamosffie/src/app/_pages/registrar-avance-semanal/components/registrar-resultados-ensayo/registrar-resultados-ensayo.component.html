@@ -1,4 +1,4 @@
-<section class="container" *ngIf="ensayoLaboratorio !== undefined && muestras.length > 0">
+<section class="container">
     <div class="text-right">
         <a (click)="getRutaAnterior()" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -7,14 +7,14 @@
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Registrar resultados gestión de calidad {{ ensayoLaboratorio.llaveMen }}
+            Registrar resultados gestión de calidad LU990088
         </h1>
     </div>
 
     <div class="text-center d-flex justify-content-center mt-1em colorMainColor">
-        <p>Fecha de toma: <b>{{ ensayoLaboratorio.fechaTomaMuestras | date: 'dd/MM/yyyy' }}</b></p>
-        <p style="margin-left: 2em;"><b>Ensayo de laboratorio {{ ensayoLaboratorio.numeroLaboratorio }} </b></p>
-        <p style="margin-left: 2em;">Tipo de ensayo: <b> {{ ensayoLaboratorio.tipoEnsayoCodigo }} </b></p>
+        <p>Fecha de toma: <b>05/07/2020</b></p>
+        <p style="margin-left: 2em;"><b>Ensayo de laboratorio 1</b></p>
+        <p style="margin-left: 2em;">Tipo de ensayo: <b>Muestra de tierra</b></p>
     </div>
 
     <div class="text-center" style="padding-top: 2em;">
@@ -25,104 +25,74 @@
         </p>
     </div>
 
-    <form autocomplete="off" [formGroup]="formMuestra" (ngSubmit)="guardar()">
-        <div class="text-center mt-1em">
-            <mat-accordion formArrayName="muestras" *ngFor="let muestra of muestras.controls; index as i">
-                <mat-expansion-panel class="expansion-style" [formGroup]="muestra">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title" [ngClass]="muestra.get( 'semaforoMuestra' ).value">
-                            Muestra {{ i + 1 }}
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    
-                        <div align="left" class="mt-1em">
-                            <mat-card>
-                                <mat-card-content>
-                                    <div class="row" style="width: 99%;">
-                                        <div class="col-md-12">
-                                          <div class="row">
-                                            <div class="pr-1">
-                                              <label class="label-left">Fecha de entrega de resultados</label>
-                                            </div>
-                                            <div class="col d-flex">
+    <div class="text-center mt-1em">
+        <mat-accordion>
+            <mat-expansion-panel class="expansion-style">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title completo">
+                        Muestra 1
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                
+                <form autocomplete="off" [formGroup]="formMuestra" (ngSubmit)="guardar()">
+                    <div align="left">
+                        <mat-card>
+                            <mat-card-content>
+                                <div class="row" style="margin-left: .1em;">
+                                    <div class="col-md-12">
+                                      <div class="row">
+                                        <div class="pr-1">
+                                          <label class="label-left">Nombre de la muestra</label>
+                                        </div>
+                                        <div class="col d-flex">
+                                            <section style="width: 94%;">
                                                 <mat-form-field>
-                                                    <input  matInput
-                                                            [matDatepicker]="pickerfechaMuestra"
-                                                            formControlName="fechaEntregaResultado"
-                                                            placeholder="DD/MM/AAAA"
-                                                            (click)="pickerfechaMuestra.open()"
-                                                            readonly required>
-                                                    <mat-datepicker #pickerfechaMuestra></mat-datepicker>
+                                                    <input matInput type="text" maxlength="30" formControlName="nombreMuestra" required>
                                                 </mat-form-field>
-                                                <button mat-button
-                                                        color="primary"
-                                                        type="button"
-                                                        (click)="pickerfechaMuestra.open()"
-                                                        class="btn-calendario">
-                                                        <img  class="mr-bottom-1"
-                                                              src="assets/img/icon/calendarioCirculo.svg"
-                                                              alt="Abrir Calendario">
-                                                </button>
-                                            </div>
-                                          </div>
+                                            </section>
+                                            <span class="contador">{{30 - formMuestra.get( 'nombreMuestra' ).value.length}}</span>
                                         </div>
+                                      </div>
                                     </div>
-                                    <div class="row mt-1em" style="margin-left: .1em;">
-                                        <div class="col-md-12">
-                                          <div class="row">
-                                            <div class="pr-1">
-                                              <label class="label-left">Nombre de la muestra</label>
-                                            </div>
-                                            <div class="col d-flex">
-                                                <section style="width: 94%;">
-                                                    <mat-form-field>
-                                                        <input matInput type="text" maxlength="30" formControlName="nombreMuestra" required>
-                                                    </mat-form-field>
-                                                </section>
-                                                <span class="contador">{{30 - muestra.get( 'nombreMuestra' ).value.length}}</span>
-                                            </div>
-                                          </div>
+                                </div>
+                                <div class="row" style="margin-bottom: 1em;">
+                                    <div class="col-md-12">
+                                      <div>
+                                        <div class="pr-1">
+                                          <label class="label-left">Observaciones frente a los resultados</label>
                                         </div>
-                                    </div>
-                                    <div class="row mt-1em" style="margin-bottom: 1em;">
-                                        <div class="col-md-12">
-                                          <div>
-                                            <div class="pr-1">
-                                              <label class="label-left">Observaciones frente a los resultados</label>
-                                            </div>
-                                            <div class="col d-flex" style="width: 99%;">
-                                                <quill-editor   class="quill-editor-style card-80em position-relative"
-                                                                [styles]="editorStyle"
-                                                                [modules]="config"
-                                                                (onContentChanged)="maxLength($event, 400)"
-                                                                formControlName="observacion"
-                                                                #obsResultado
-                                                                required>
-                                                </quill-editor>
-                                                <span class="contador miles" *ngIf="muestra.get('observacion').value !== null" style="margin-top: 3.5em;">
-                                                    {{400 - textoLimpio( obsResultado.quillEditor, 400 )}}
-                                                </span>
-                                                <span class="contador miles" *ngIf="muestra.get('observacion').value === null" style="margin-top: 3.5em;">
-                                                    400
-                                                </span>
-                                            </div>
-                                          </div>
+                                        <div class="col d-flex">
+                                            <quill-editor   class="quill-editor-style card-80em position-relative"
+                                                            [styles]="editorStyle"
+                                                            [modules]="config"
+                                                            (onContentChanged)="maxLength($event, 400)"
+                                                            formControlName="observaciones"
+                                                            required>
+                                            </quill-editor>
+                                            <span class="contador miles" *ngIf="formMuestra.get('observaciones').value !== null" style="margin-top: 3.5em;">
+                                                {{400 - (textoLimpio(formMuestra.get('observaciones').value))}}
+                                            </span>
+                                            <span class="contador miles" *ngIf="formMuestra.get('observaciones').value === null" style="margin-top: 3.5em;">
+                                                400
+                                            </span>
                                         </div>
+                                      </div>
                                     </div>
-                                </mat-card-content>
-                            </mat-card>
-                        </div>    
-                </mat-expansion-panel>
-            </mat-accordion>
-            <div class="text-center" style="margin-bottom: 2em;">
-                <button mat-button
-                        color="warn"
-                        class="btn-guardar"
-                        type="submit"
-                        [disabled]="formMuestra.dirty === false">
-                        <img  src="assets/img/icon/guardar.svg">
-                </button>
-            </div>
-        </div>
-    </form>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                    <div class="text-center" style="margin-top: 2em;">
+                        <button mat-button
+                                color="warn"
+                                class="btn-guardar"
+                                type="submit">
+                                <img  src="assets/img/icon/guardar.svg">
+                        </button>
+                    </div>
+                </form>
+
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
 </section>

@@ -32,5 +32,8 @@ namespace asivamosffie.model.APIModels
         public string NumeroContrato { get; set; }
      
         public List<CofinanicacionAportanteGrilla> Aportantes { get; set; }
+        public string CodigoDane { get; set; }
+        public string SedeCodigo { get; set; }
+        public string NombreContratista { get; set; }
     }
 }

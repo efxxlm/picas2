@@ -50,14 +50,6 @@ namespace asivamosffie.services
             return string.Concat(Nomeclatura, consecutivo );
         }
 
-        public async Task<string> EnumeradorComiteObra()
-        {
-            int cantidadDeResgistros = _context.SeguimientoSemanalRegistrarComiteObra.Count();
-            string Nomeclatura = "CObra__";
-            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
-            return string.Concat(Nomeclatura, consecutivo);
-        }
-
         public async Task<string> EnumeradorComiteFiduciario()
         {
             int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == true ).Count();

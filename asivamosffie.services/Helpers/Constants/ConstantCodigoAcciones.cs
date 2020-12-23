@@ -147,7 +147,8 @@
         public const string Cambiar_estado_Controversia_Actuacion = "136";
         public const string  Cambiar_estado_Controversia_Contractual = "137";
         public const string  Notificacion_Controversia_Contractual= "140";
-        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";        	
+        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";
+        public const string  Crear_Editar_Controversia_Motivo= "153";        	
 
         //4.2.2 Gestionar procesos de Defensa Judicial
         public const string  Crear_Editar_Ficha_Estudio= "145";
@@ -162,20 +163,5 @@
         public const string  Eliminar_Novedad_Contractual= "165";          	
 	
 	
-
-        // 4.1.12
-        public const string Crear_Editar_Seguimiento_Semanal = "160";
-
-        public const string Eliminar_Manejo_Materiales_Insumo_Proveedor = "161";
-
-        public const string Eliminar_Residuos_Construccion_Demolicion_Gestor = "162";
-
-        public const string Crear_Editar_Ensayo_Laboratorio_Muestra = "166";
-
-        public const string Eliminar_Gestion_Obra_Calidad_Ensayo_Laboratorio = "167";
-
-        public const string Cambiar_Estado_Seguimiento_Semanal = "174";
-        
-        public const string Cambiar_Estado_Muestras_Seguimiento_Semanal = "175";
     }
 }

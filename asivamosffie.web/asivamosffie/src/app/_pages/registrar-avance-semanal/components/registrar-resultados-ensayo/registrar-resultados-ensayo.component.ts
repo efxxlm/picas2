@@ -1,6 +1,4 @@
-import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -14,7 +12,6 @@ import { MatDialog } from '@angular/material/dialog';
 export class RegistrarResultadosEnsayoComponent implements OnInit {
 
     formMuestra: FormGroup;
-    ensayoLaboratorio: any;
     editorStyle = {
         height: '45px'
     };
@@ -27,81 +24,15 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
       ]
     };
 
-    get muestras() {
-        return this.formMuestra.get( 'muestras' ) as FormArray;
-    }
-
     constructor(
         private location: Location,
         private fb: FormBuilder,
-        private dialog: MatDialog,
-        private activatedRoute: ActivatedRoute,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private dialog: MatDialog )
     {
         this.crearFormulario();
-        this.getEnsayoLaboratorio();
     }
 
     ngOnInit(): void {
-    }
-
-    getEnsayoLaboratorio() {
-        this.avanceSemanalSvc.getEnsayoLaboratorioMuestras( Number( this.activatedRoute.snapshot.params.idEnsayo ) )
-            .subscribe(
-                response => {
-                    this.ensayoLaboratorio = response;
-                    console.log( this.ensayoLaboratorio );
-                    if ( this.ensayoLaboratorio.ensayoLaboratorioMuestra.length > 0 ) {
-                        this.muestras.clear();
-                        for ( const muestra of this.ensayoLaboratorio.ensayoLaboratorioMuestra ) {
-                            let semaforoMuestra: string;
-
-                            if ( muestra.registroCompleto === true ) {
-                                semaforoMuestra = 'completo';
-                            }
-                            if (    muestra.registroCompleto === false
-                                    && (    muestra.fechaEntregaResultado !== undefined
-                                            || (    muestra.nombreMuestra !== undefined
-                                                    && muestra.nombreMuestra.length > 0 )
-                                            || (    muestra.observacion !== undefined
-                                                    && muestra.observacion.length > 0 ) ) )
-                            {
-                                semaforoMuestra = 'en-proceso';
-                            }
-
-                            this.muestras.push(
-                                this.fb.group(
-                                    {
-                                        semaforoMuestra: semaforoMuestra !== undefined ? semaforoMuestra : 'sin-diligenciar',
-                                        ensayoLaboratorioMuestraId: muestra.ensayoLaboratorioMuestraId,
-                                        gestionObraCalidadEnsayoLaboratorioId: muestra.gestionObraCalidadEnsayoLaboratorioId,
-                                        fechaEntregaResultado:  muestra.fechaEntregaResultado !== undefined
-                                                                ? new Date( muestra.fechaEntregaResultado ) : null,
-                                        nombreMuestra: muestra.nombreMuestra !== undefined ? muestra.nombreMuestra : '',
-                                        observacion: muestra.observacion !== undefined ? muestra.observacion : null
-                                    }
-                                )
-                            );
-                        }
-                    } else {
-                        this.muestras.clear();
-                        for ( let i = 0; i < this.ensayoLaboratorio.numeroMuestras; i++ ) {
-                            this.muestras.push(
-                                this.fb.group(
-                                    {
-                                        semaforoMuestra: [ 'sin-diligenciar' ],
-                                        ensayoLaboratorioMuestraId: 0,
-                                        gestionObraCalidadEnsayoLaboratorioId: this.ensayoLaboratorio.gestionObraCalidadEnsayoLaboratorioId,
-                                        fechaEntregaResultado: [null],
-                                        nombreMuestra: [''],
-                                        observacion: ['']
-                                    }
-                                )
-                            );
-                        }
-                    }
-                }
-            );
     }
 
     getRutaAnterior() {
@@ -109,24 +40,22 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
     }
 
     crearFormulario() {
-        this.formMuestra = this.fb.group(
-            {
-                muestras: this.fb.array( [] )
-            }
-        );
+        this.formMuestra = this.fb.group({
+            nombreMuestra: [ '' ],
+            observaciones: [ null ]
+        });
+    }
+
+    textoLimpio(texto: string) {
+        if ( texto ){
+            const textolimpio = texto.replace(/<[^>]*>/g, '');
+            return textolimpio.length;
+        }
     }
 
     maxLength(e: any, n: number) {
         if (e.editor.getLength() > n) {
-            e.editor.deleteText(n - 1, e.editor.getLength());
-        }
-    }
-
-    textoLimpio( evento: any, n: number ) {
-        if ( evento !== undefined ) {
-            return evento.getLength() > n ? n : evento.getLength();
-        } else {
-            return 0;
+          e.editor.deleteText(n, e.editor.getLength());
         }
     }
 
@@ -138,24 +67,8 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
     }
 
     guardar() {
-        const pGestionObraCalidadEnsayoLaboratorio = this.ensayoLaboratorio;
-        this.muestras.controls.forEach( value => {
-            value.get( 'fechaEntregaResultado' ).setValue(
-                value.get( 'fechaEntregaResultado' ).value !== null ?
-                new Date( value.get( 'fechaEntregaResultado' ).value ).toISOString() : null
-            );
-        } );
-        pGestionObraCalidadEnsayoLaboratorio.ensayoLaboratorioMuestra = this.muestras.value;
-        console.log( pGestionObraCalidadEnsayoLaboratorio );
-        this.avanceSemanalSvc.createEditEnsayoLaboratorioMuestra( pGestionObraCalidadEnsayoLaboratorio )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.ensayoLaboratorio = undefined;
-                    this.getEnsayoLaboratorio();
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            );
+        console.log( this.formMuestra.value );
+        this.openDialog( '', '<b>La información ha sido guardada exitosamente.</b>' );
     }
 
 }

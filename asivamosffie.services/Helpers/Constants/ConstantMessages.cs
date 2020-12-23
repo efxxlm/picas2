@@ -228,7 +228,8 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-     
+
+
     public class ConstantMessagesFuentesFinanciacion
     {
 
@@ -485,7 +486,6 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-
     public class ConstantSesionComiteTecnico
     {
 
@@ -560,7 +560,6 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-   
     public class ConstantMessagesGenerateBudget
     {
 
@@ -583,7 +582,14 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-     
+
+    
+
+    
+
+
+
+
     public class ConstantGestionarProcesosContractuales
     {
 
@@ -606,7 +612,8 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-     
+    
+
     public class ConstantMessagesProcesoSeleccion
     {
         #region Mensajes Error
@@ -667,7 +674,11 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500";
         #endregion
     }
-     
+
+
+
+    
+
     public class ConstantMessagesContratoPoliza
     {
 
@@ -804,16 +815,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         public const string Error = "500";
 
-        #endregion Mensajes Error
-
-        #region Mensajes Exitoso
-
-        public const string OperacionExitosa = "200";
-        public const string EliminacionCancelada = "202";
-        public const string EliminacionExitosa = "201";
-
-        #endregion Mensajes Exitoso
-
+        #endregion Mensajes Informativos
 
         #region Mensajes Informativos
 
@@ -829,15 +831,6 @@ namespace asivamosffie.services.Helpers.Constant
 
         #endregion Mensajes Informativos
 
-    }
-
-    public class ConstanMessagesRegisterWeeklyProgress {
-        #region Mensajes Informativos
-
-        public const string NoEliminarLaboratorio = "100";
-
-        #endregion Mensajes Informativos
-
         #region Mensajes Exitoso
 
         public const string OperacionExitosa = "200";
@@ -846,7 +839,11 @@ namespace asivamosffie.services.Helpers.Constant
 
         #endregion Mensajes Exitoso
 
-        
-    }
+        #region Mensajes Redireccion
 
+
+
+        #endregion Mensajes Redireccion
+
+    }
 }

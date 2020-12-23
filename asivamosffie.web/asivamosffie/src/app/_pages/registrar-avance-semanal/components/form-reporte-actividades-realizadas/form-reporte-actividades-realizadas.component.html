@@ -1,233 +1,88 @@
-<section *ngIf="esVerDetalle === false">
-  <section *ngIf="esSiguienteSemana === false">
-    <form autocomplete="off" [formGroup]="formActividadesRealizadas" (ngSubmit)="guardar()">
-      <div align="left">
-          <mat-card>
-              <mat-card-content>
-                  <div class="row">
-                      <div class="col-md-12">
-                        <div>
-                          <div class="pr-1">
-                            <label class="label-left">Técnicas</label>
-                          </div>
-                          <div class="col d-flex" style="width: 100%;">
-                              <quill-editor   class="quill-editor-style card-80em position-relative"
-                                              [styles]="editorStyle"
-                                              [modules]="config"
-                                              (onContentChanged)="maxLength($event, 2000)"
-                                              formControlName="actividadTecnica"
-                                              #obsTecnica
-                                              required>
-                              </quill-editor>
-                              <span class="contador miles" *ngIf="formActividadesRealizadas.get('actividadTecnica').value !== null" style="margin-top: 3.5em;">
-                                  {{2000 - textoLimpio( obsTecnica.quillEditor, 2000 )}}
-                              </span>
-                              <span class="contador miles" *ngIf="formActividadesRealizadas.get('actividadTecnica').value === null" style="margin-top: 3.5em;">
-                                  2000
-                              </span>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-12">
-                        <div>
-                          <div class="pr-1">
-                            <label class="label-left">Legales</label>
-                          </div>
-                          <div class="col d-flex" style="width: 100%;">
-                              <quill-editor   class="quill-editor-style card-80em position-relative"
-                                              [styles]="editorStyle"
-                                              [modules]="config"
-                                              (onContentChanged)="maxLength($event, 2000)"
-                                              formControlName="actividadLegal"
-                                              #obsLegales
-                                              required>
-                              </quill-editor>
-                              <span class="contador miles" *ngIf="formActividadesRealizadas.get('actividadLegal').value !== null" style="margin-top: 3.5em;">
-                                  {{2000 - textoLimpio( obsLegales.quillEditor, 2000 )}}
-                              </span>
-                              <span class="contador miles" *ngIf="formActividadesRealizadas.get('actividadLegal').value === null" style="margin-top: 3.5em;">
-                                  2000
-                              </span>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-12">
-                        <div>
-                          <div class="pr-1">
-                            <label class="label-left">Administrativas - Financieras</label>
-                          </div>
-                          <div class="col d-flex" style="width: 100%;">
-                              <quill-editor   class="quill-editor-style card-80em position-relative"
-                                              [styles]="editorStyle"
-                                              [modules]="config"
-                                              (onContentChanged)="maxLength($event, 2000)"
-                                              formControlName="actividadAdministrativaFinanciera"
-                                              #obsAdministrativa
-                                              required>
-                              </quill-editor>
-                              <span class="contador miles" *ngIf="formActividadesRealizadas.get('actividadAdministrativaFinanciera').value !== null" style="margin-top: 3.5em;">
-                                  {{2000 - textoLimpio( obsAdministrativa.quillEditor, 2000 )}}
-                              </span>
-                              <span class="contador miles" *ngIf="formActividadesRealizadas.get('actividadAdministrativaFinanciera').value === null" style="margin-top: 3.5em;">
-                                  2000
-                              </span>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-              </mat-card-content>
-          </mat-card>
-      </div>
-      <div class="text-center" style="margin-top: 2em;">
-          <button mat-button
-                  color="warn"
-                  class="btn-guardar"
-                  type="submit"
-                  [disabled]="formActividadesRealizadas.dirty === false">
-                  <img  src="assets/img/icon/guardar.svg">
-          </button>
-      </div>
-    </form>
-  </section>
-
-  <section *ngIf="esSiguienteSemana === true">
-    <form autocomplete="off" [formGroup]="formActividadesRealizadasSiguienteSemana" (ngSubmit)="guardar()">
-      <div align="left">
-          <mat-card>
-              <mat-card-content>
-                  <div class="row">
-                      <div class="col-md-12">
-                        <div>
-                          <div class="pr-1">
-                            <label class="label-left">Técnicas</label>
-                          </div>
-                          <div class="col d-flex" style="width: 100%;">
-                              <quill-editor   class="quill-editor-style card-80em position-relative"
-                                              [styles]="editorStyle"
-                                              [modules]="config"
-                                              (onContentChanged)="maxLength($event, 2000)"
-                                              formControlName="actividadTecnicaSiguiente"
-                                              #obsTecnica
-                                              required>
-                              </quill-editor>
-                              <span class="contador miles" *ngIf="formActividadesRealizadasSiguienteSemana.get('actividadTecnicaSiguiente').value !== null" style="margin-top: 3.5em;">
-                                  {{2000 - textoLimpio( obsTecnica.quillEditor, 2000 )}}
-                              </span>
-                              <span class="contador miles" *ngIf="formActividadesRealizadasSiguienteSemana.get('actividadTecnicaSiguiente').value === null" style="margin-top: 3.5em;">
-                                  2000
-                              </span>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-12">
-                        <div>
-                          <div class="pr-1">
-                            <label class="label-left">Legales</label>
-                          </div>
-                          <div class="col d-flex" style="width: 100%;">
-                              <quill-editor   class="quill-editor-style card-80em position-relative"
-                                              [styles]="editorStyle"
-                                              [modules]="config"
-                                              (onContentChanged)="maxLength($event, 2000)"
-                                              formControlName="actividadLegalSiguiente"
-                                              #obsLegales
-                                              required>
-                              </quill-editor>
-                              <span class="contador miles" *ngIf="formActividadesRealizadasSiguienteSemana.get('actividadLegalSiguiente').value !== null" style="margin-top: 3.5em;">
-                                  {{2000 - textoLimpio( obsLegales.quillEditor, 2000 )}}
-                              </span>
-                              <span class="contador miles" *ngIf="formActividadesRealizadasSiguienteSemana.get('actividadLegalSiguiente').value === null" style="margin-top: 3.5em;">
-                                  2000
-                              </span>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="row">
-                      <div class="col-md-12">
-                        <div>
-                          <div class="pr-1">
-                            <label class="label-left">Administrativas - Financieras</label>
-                          </div>
-                          <div class="col d-flex" style="width: 100%;">
-                              <quill-editor   class="quill-editor-style card-80em position-relative"
-                                              [styles]="editorStyle"
-                                              [modules]="config"
-                                              (onContentChanged)="maxLength($event, 2000)"
-                                              formControlName="actividadAdministrativaFinancieraSiguiente"
-                                              #obsAdministrativa
-                                              required>
-                              </quill-editor>
-                              <span class="contador miles" *ngIf="formActividadesRealizadasSiguienteSemana.get('actividadAdministrativaFinancieraSiguiente').value !== null" style="margin-top: 3.5em;">
-                                  {{2000 - textoLimpio( obsAdministrativa.quillEditor, 2000 )}}
-                              </span>
-                              <span class="contador miles" *ngIf="formActividadesRealizadasSiguienteSemana.get('actividadAdministrativaFinancieraSiguiente').value === null" style="margin-top: 3.5em;">
-                                  2000
-                              </span>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-              </mat-card-content>
-          </mat-card>
-      </div>
-      <div class="text-center" style="margin-top: 2em;">
-          <button mat-button
-                  color="warn"
-                  class="btn-guardar"
-                  type="submit"
-                  [disabled]="formActividadesRealizadasSiguienteSemana.dirty === false">
-                  <img  src="assets/img/icon/guardar.svg">
-          </button>
-      </div>
-    </form>
-  </section>
-</section>
-
-<!-- Ver detalle -->
-<section *ngIf="esVerDetalle === true && reporteActividad !== undefined">
-  <section *ngIf="esSiguienteSemana === false">
+<form autocomplete="off" [formGroup]="formActividadesRealizadas" (ngSubmit)="guardar()">
     <div align="left">
-      <mat-card class="border">
-          <mat-card-content class="mt-1em">
-            <section>
-              <p><b>Técnicas</b></p> <div [innerHTML]="reporteActividad.actividadTecnica"></div>
-            </section>
-  
-            <section>
-              <p><b>Legales</b></p> <div [innerHTML]="reporteActividad.actividadLegal"></div>
-            </section>
-  
-            <section>
-              <p><b>Administrativas - Financieras</b></p> <div [innerHTML]="reporteActividad.actividadAdministrativaFinanciera"></div>
-            </section>
-          </mat-card-content>
-      </mat-card>
+        <mat-card>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-12">
+                      <div>
+                        <div class="pr-1">
+                          <label class="label-left">Técnicas</label>
+                        </div>
+                        <div class="col d-flex" style="width: 100%;">
+                            <quill-editor   class="quill-editor-style card-80em position-relative"
+                                            [styles]="editorStyle"
+                                            [modules]="config"
+                                            (onContentChanged)="maxLength($event, 2000)"
+                                            formControlName="observacionTecnica"
+                                            required>
+                            </quill-editor>
+                            <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionTecnica').value !== null" style="margin-top: 3.5em;">
+                                {{2000 - (textoLimpio(formActividadesRealizadas.get('observacionTecnica').value))}}
+                            </span>
+                            <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionTecnica').value === null" style="margin-top: 3.5em;">
+                                2000
+                            </span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                      <div>
+                        <div class="pr-1">
+                          <label class="label-left">Legales</label>
+                        </div>
+                        <div class="col d-flex" style="width: 100%;">
+                            <quill-editor   class="quill-editor-style card-80em position-relative"
+                                            [styles]="editorStyle"
+                                            [modules]="config"
+                                            (onContentChanged)="maxLength($event, 2000)"
+                                            formControlName="observacionLegal"
+                                            required>
+                            </quill-editor>
+                            <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionLegal').value !== null" style="margin-top: 3.5em;">
+                                {{2000 - (textoLimpio(formActividadesRealizadas.get('observacionTecnica').value))}}
+                            </span>
+                            <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionLegal').value === null" style="margin-top: 3.5em;">
+                                2000
+                            </span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                      <div>
+                        <div class="pr-1">
+                          <label class="label-left">Administrativas - Financieras</label>
+                        </div>
+                        <div class="col d-flex" style="width: 100%;">
+                            <quill-editor   class="quill-editor-style card-80em position-relative"
+                                            [styles]="editorStyle"
+                                            [modules]="config"
+                                            (onContentChanged)="maxLength($event, 2000)"
+                                            formControlName="observacionAdministrativa"
+                                            required>
+                            </quill-editor>
+                            <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionAdministrativa').value !== null" style="margin-top: 3.5em;">
+                                {{2000 - (textoLimpio(formActividadesRealizadas.get('observacionAdministrativa').value))}}
+                            </span>
+                            <span class="contador miles" *ngIf="formActividadesRealizadas.get('observacionAdministrativa').value === null" style="margin-top: 3.5em;">
+                                2000
+                            </span>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
-  </section>
-  <section *ngIf="esSiguienteSemana === true">
-    <div align="left">
-      <mat-card class="border">
-          <mat-card-content class="mt-1em">
-            <section>
-              <p><b>Técnicas</b></p> <div [innerHTML]="reporteActividad.actividadTecnicaSiguiente"></div>
-            </section>
-  
-            <section>
-              <p><b>Legales</b></p> <div [innerHTML]="reporteActividad.actividadLegalSiguiente"></div>
-            </section>
-  
-            <section>
-              <p><b>Administrativas - Financieras</b></p> <div [innerHTML]="reporteActividad.actividadAdministrativaFinancieraSiguiente"></div>
-            </section>
-          </mat-card-content>
-      </mat-card>
+    <div class="text-center" style="margin-top: 2em;">
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
+                type="submit">
+                <img  src="assets/img/icon/guardar.svg">
+        </button>
     </div>
-  </section>
-</section>
+</form>

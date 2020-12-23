@@ -1,5 +1,5 @@
-<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
-    <p class="colorMainColor">Periodo del reporte: <b> {{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </b> </p>
+<section class="text-center">
+    <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
 
     <form autocomplete="off" [formGroup]="formGestionAmbiental" (ngSubmit)="guardar()">
         <div align="left">
@@ -12,11 +12,11 @@
                               <label class="label-left" style="margin-top: 1.5em;">¿Se ejecutó alguna actividad relacionada con la gestión ambiental durante la semana?</label>
                             </div>
                             <div class="col d-flex">
-                                <section style="width: 100%;">
+                                <section style="width: 90%;">
                                     <mat-form-field class="w-50" appearance="fill">
-                                      <mat-select class="padding-left" formControlName="seEjecutoGestionAmbiental" required>
+                                      <mat-select class="padding-left" formControlName="actividadRelacionada" required>
                                         <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
-                                            {{requisito.viewValue}}
+                                          {{requisito.viewValue}}
                                         </mat-option>
                                       </mat-select>
                                     </mat-form-field>
@@ -25,200 +25,16 @@
                           </div>
                         </div>
                     </div>
-
-                  <div class="row" *ngIf="formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true">
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="pr-1">
-                          <label class="label-left" style="margin-top: 1em;">¿Cuántas actividades se ejecutarón?</label>
-                        </div>
-                        <div class="col d-flex">
-                          <section style="width: 100%;">
-                            <mat-form-field>
-                                <input  matInput
-                                        type="text"
-                                        maxlength="1"
-                                        formControlName="cantidadActividad"
-                                        (ngModelChange)="valuePending( $event )"
-                                        required>
-                            </mat-form-field>
-                          </section>
-                          <span class="contador">{{1 - formGestionAmbiental.get( 'cantidadActividad' ).value.length}}</span>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-
                 </mat-card-content>
             </mat-card>
-
-            <mat-accordion *ngIf="actividades.length > 0 && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true">
-                <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let actividad of actividades.controls; index as i" [formGroup]="actividad">
-                    <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title" [ngClass]="actividad.get( 'estadoSemaforo' ).value">
-                            Actividad {{ i + 1 }}
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <mat-card>
-                        <mat-card-content>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                  <div class="row">
-                                    <div class="pr-1">
-                                      <label class="label-left" style="margin-top: 1.5em;">Tipo de actividad</label>
-                                    </div>
-                                    <div class="col d-flex">
-                                        <section style="width: 100%;">
-                                            <mat-form-field class="w-50" appearance="fill">
-                                              <mat-select   class="padding-left"
-                                                            formControlName="tipoActividad"
-                                                            *ngIf="actividad.get( 'tipoActividad' ).value === null"
-                                                            (ngModelChange)="valuePendingTipoActividad( $event )"
-                                                            required>
-                                                <mat-option *ngFor="let actividad of tipoActividades" [value]="actividad">
-                                                  {{actividad.nombre}}
-                                                </mat-option>
-                                              </mat-select>
-                                              <mat-select class="padding-left" formControlName="tipoActividad" *ngIf="actividad.get( 'tipoActividad' ).value !== null" required>
-                                                <mat-option [value]="actividad.get( 'tipoActividad' ).value">
-                                                  {{actividad.get( 'tipoActividad' ).value.nombre}}
-                                                </mat-option>
-                                              </mat-select>
-                                            </mat-form-field>
-                                          </section>
-                                    </div>
-                                  </div>
-                                </div>
-                            </div>
-
-                            <!-- Manejo de materiales e insumos -->
-                            <app-manejo-material-insumo [formManejoMaterialInsumo]="actividad.get( 'manejoMaterialInsumo' )"
-                                                        [materialInsumo]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
-                                                        *ngIf=" actividad.get( 'tipoActividad' ).value !== null
-                                                                && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
-                                                                && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoMaterialInsumo"
-                                                        class="mt-1em">
-                            </app-manejo-material-insumo>
-        
-                            <!-- Manejo de residuos de construcción y demolición -->
-                            <app-manejo-residuos-construccion [formManejoResiduosConstruccion]="actividad.get( 'manejoResiduosConstruccion' )"
-                                                              [residuosConstruccion]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
-                                                              *ngIf=" actividad.get( 'tipoActividad' ).value !== null
-                                                                      && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
-                                                                      && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosConstruccion"
-                                                              class="mt-1em">
-                            </app-manejo-residuos-construccion>
-        
-                            <!-- Manejo de residuos peligrosos y especiales -->
-                            <app-manejo-residuos-peligrosos [formManejoResiduosPeligrosos]="actividad.get( 'manejoResiduosPeligrosos' )"
-                                                            [residuosPeligrosos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
-                                                            *ngIf=" actividad.get( 'tipoActividad' ).value !== null
-                                                                    && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
-                                                                    && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosPeligrosos"
-                                                            class="mt-1em">
-                            </app-manejo-residuos-peligrosos>
-        
-                            <!-- Otros manejos -->
-                            <app-otros-manejos  [formOtrosManejos]="actividad.get( 'otra' )"
-                                                [otrosManejos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
-                                                *ngIf=" actividad.get( 'tipoActividad' ).value !== null
-                                                        && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
-                                                        && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.otra"
-                                                class="mt-1em">
-                            </app-otros-manejos>
-                        </mat-card-content>
-                    </mat-card>
-                    <div class="text-center" style="margin-top: 2em;">
-                        <button mat-button
-                                color="warn"
-                                class="btn-guardar"
-                                type="submit"
-                                [disabled]="formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).dirty === false">
-                                <img  src="assets/img/icon/guardar.svg">
-                        </button>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <div class="text-center" style="margin-top: 2em;" *ngIf="formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === false">
-              <button mat-button
-                      color="warn"
-                      class="btn-guardar"
-                      type="submit"
-                      [disabled]="formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).dirty === false">
-                      <img  src="assets/img/icon/guardar.svg">
-              </button>
-            </div>
+        </div>
+        <div class="text-center" style="margin-top: 2em;">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit">
+                    <img  src="assets/img/icon/guardar.svg">
+            </button>
         </div>
     </form>
-</section>
-
-<!-- Ver detalle -->
-<section class="text-center" *ngIf="esVerDetalle === true && gestionObraAmbiental !== undefined">
-  <p class="colorMainColor">Periodo del reporte: <b> {{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </b> </p>
-
-  <div class="mt-1em" align="left">
-    <mat-card class="border">
-        <mat-card-content class="mt-1em">
-          <p *ngIf="gestionObraAmbiental.seEjecutoGestionAmbiental === true"><b>¿Se ejecutó alguna actividad relacionada con la gestión ambiental durante la semana?</b>: Si</p>
-          <p *ngIf="gestionObraAmbiental.seEjecutoGestionAmbiental === false"><b>¿Se ejecutó alguna actividad relacionada con la gestión ambiental durante la semana?</b>: No</p>
-          <p *ngIf="gestionObraAmbiental.seEjecutoGestionAmbiental === true"><b>¿Cuántas actividades se ejecutarón?</b>: {{ cantidadActividades }} </p>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-accordion *ngIf="actividades.length > 0">
-        <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let actividad of actividades.controls; index as i" [formGroup]="actividad">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
-                    Actividad {{ i + 1 }}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <mat-card class="border">
-                <mat-card-content class="mt-1em">
-                    <p><b>Tipo de actividad</b>: {{ actividad.get( 'tipoActividad' ).value.nombre }} </p>
-                    <!-- Manejo de materiales e insumos -->
-                    <app-manejo-material-insumo [formManejoMaterialInsumo]="actividad.get( 'manejoMaterialInsumo' )"
-                                                [materialInsumo]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
-                                                *ngIf=" actividad.get( 'tipoActividad' ).value !== null
-                                                        && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
-                                                        && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoMaterialInsumo"
-                                                [esVerDetalle]="true"
-                                                class="mt-1em">
-                    </app-manejo-material-insumo>
-        
-                    <!-- Manejo de residuos de construcción y demolición -->
-                    <app-manejo-residuos-construccion   [formManejoResiduosConstruccion]="actividad.get( 'manejoResiduosConstruccion' )"
-                                                        [residuosConstruccion]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
-                                                        *ngIf=" actividad.get( 'tipoActividad' ).value !== null
-                                                                && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
-                                                                && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosConstruccion"
-                                                        [esVerDetalle]="true"
-                                                        class="mt-1em">
-                    </app-manejo-residuos-construccion>
-        
-                    <!-- Manejo de residuos peligrosos y especiales -->
-                    <app-manejo-residuos-peligrosos [formManejoResiduosPeligrosos]="actividad.get( 'manejoResiduosPeligrosos' )"
-                                                    [residuosPeligrosos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
-                                                    *ngIf=" actividad.get( 'tipoActividad' ).value !== null
-                                                            && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
-                                                            && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosPeligrosos"
-                                                    [esVerDetalle]="true"
-                                                    class="mt-1em">
-                    </app-manejo-residuos-peligrosos>
-
-                    <!-- Otros manejos -->
-                    <app-otros-manejos  [formOtrosManejos]="actividad.get( 'otra' )"
-                                        [otrosManejos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
-                                        *ngIf=" actividad.get( 'tipoActividad' ).value !== null
-                                                && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
-                                                && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.otra"
-                                        [esVerDetalle]="true"
-                                        class="mt-1em">
-                    </app-otros-manejos>
-                </mat-card-content>
-            </mat-card>
-        </mat-expansion-panel>
-    </mat-accordion>
-  </div>
 </section>

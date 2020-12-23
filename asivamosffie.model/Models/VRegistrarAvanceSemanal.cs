@@ -13,9 +13,8 @@ namespace asivamosffie.model.Models
         public string InstitucionEducativa { get; set; }
         public string Sede { get; set; }
         public string EstadoObraCodigo { get; set; }
-        public int? NumeroSemana { get; set; }
+        public bool? EnviarSupervisor { get; set; }
         public string FechaUltimoReporte { get; set; }
         public string EstadoObra { get; set; }
-        public bool? EnviarSupervisor { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-<section class="text-center" *ngIf="esVerDetalle === false">
+<section class="text-center">
     <form autocomplete="off" [formGroup]="formGestionSocial" (ngSubmit)="guardar()">
         <div align="left">
             <mat-card>
@@ -12,12 +12,7 @@
                                 <div class="col d-flex">
                                     <section style="width: 100%;">
                                         <mat-form-field>
-                                            <input  matInput
-                                                    type="text"
-                                                    maxlength="3"
-                                                    formControlName="cantidadEmpleosDirectos"
-                                                    (ngModelChange)="validateNumber( $event, 'cantidadEmpleosDirectos' )"
-                                                    required>
+                                            <input matInput type="text" maxlength="3" formControlName="cantidadEmpleosDirectos" required>
                                         </mat-form-field>
                                     </section>
                                     <span class="contador">{{3 - formGestionSocial.get( 'cantidadEmpleosDirectos' ).value.length}}</span>
@@ -34,12 +29,7 @@
                                 <div class="col d-flex">
                                     <section style="width: 100%;">
                                         <mat-form-field>
-                                            <input  matInput
-                                                    type="text"
-                                                    maxlength="3"
-                                                    formControlName="cantidadEmpleosIndirectos"
-                                                    (ngModelChange)="validateNumber( $event, 'cantidadEmpleosIndirectos' )"
-                                                    required>
+                                            <input matInput type="text" maxlength="3" formControlName="cantidadEmpleosIndirectos" required>
                                         </mat-form-field>
                                     </section>
                                     <span class="contador">{{3 - formGestionSocial.get( 'cantidadEmpleosIndirectos' ).value.length}}</span>
@@ -56,10 +46,10 @@
                                 <div class="col d-flex">
                                     <section style="width: 100%;">
                                         <mat-form-field>
-                                            <input matInput type="text" maxlength="3" formControlName="cantidadTotalEmpleos" readonly required>
+                                            <input matInput type="text" maxlength="3" formControlName="totalEmpleosGenerados" required>
                                         </mat-form-field>
                                     </section>
-                                    <span class="contador">{{3 - formGestionSocial.get( 'cantidadTotalEmpleos' ).value.length}}</span>
+                                    <span class="contador">{{3 - formGestionSocial.get( 'totalEmpleosGenerados' ).value.length}}</span>
                                 </div>
                             </div>
                         </div>
@@ -85,86 +75,11 @@
                                             </mat-option>
                                           </mat-select>
                                         </mat-form-field>
-                                    </section>
+                                      </section>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <section *ngIf="formGestionSocial.get( 'seRealizaronReuniones' ).value === true">
-                        <div class="row">
-                            <div class="col-md-12">
-                              <div>
-                                <div class="pr-1">
-                                  <label class="label-left">Tema</label>
-                                </div>
-                                <div class="col d-flex" style="width: 100%;">
-                                    <quill-editor   class="quill-editor-style card-80em position-relative"
-                                                    [styles]="editorStyle"
-                                                    [modules]="configTema"
-                                                    (onContentChanged)="maxLength($event, 200)"
-                                                    formControlName="temaComunidad"
-                                                    #obsTema
-                                                    required>
-                                    </quill-editor>
-                                    <span class="contador miles" *ngIf="formGestionSocial.get('temaComunidad').value !== null" style="margin-top: 3.5em;">
-                                        {{200 - textoLimpio( obsTema.quillEditor, 200 )}}
-                                    </span>
-                                    <span class="contador miles" *ngIf="formGestionSocial.get('temaComunidad').value === null" style="margin-top: 3.5em;">
-                                        200
-                                    </span>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                        <div class="row mt-1em" style="margin-bottom: 1em;">
-                            <div class="col-md-12">
-                              <div>
-                                <div class="pr-1">
-                                  <label class="label-left">Conclusiones</label>
-                                </div>
-                                <div class="col d-flex">
-                                    <quill-editor   class="quill-editor-style card-80em position-relative"
-                                                    [styles]="editorStyle"
-                                                    [modules]="config"
-                                                    (onContentChanged)="maxLength($event, 2000)"
-                                                    formControlName="conclusion"
-                                                    #obsConclusiones
-                                                    required>
-                                    </quill-editor>
-                                    <span class="contador miles" *ngIf="formGestionSocial.get('conclusion').value !== null" style="margin-top: 3.5em;">
-                                        {{2000 - textoLimpio( obsConclusiones.quillEditor, 2000 )}}
-                                    </span>
-                                    <span class="contador miles" *ngIf="formGestionSocial.get('conclusion').value === null" style="margin-top: 3.5em;">
-                                        2000
-                                    </span>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                        <div class="row mt-1em">
-                            <div class="col-md-12">
-                              <div class="row">
-                                <div class="pr-1">
-                                  <label class="label-left">URL con soporte</label>
-                                </div>
-                                <div class="col d-flex">
-                                    <mat-form-field style="width: 97.8%;">
-                                        <input  matInput
-                                                type="text"
-                                                formControlName="urlSoporteGestion">
-                                    </mat-form-field>
-                                </div>
-                                <div class="d-flex justify-content-center size-text-descriptivo">
-                                    <p class="color-text-descriptivo">
-                                        <i> 
-                                            Indique la ruta en la que se encuentran los documentos de soporte de la Gestión social
-                                        </i>
-                                    </p>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                    </section>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -172,43 +87,9 @@
             <button mat-button
                     color="warn"
                     class="btn-guardar"
-                    type="submit"
-                    [disabled]="formGestionSocial.dirty === false">
+                    type="submit">
                     <img  src="assets/img/icon/guardar.svg">
             </button>
         </div>
     </form>
-</section>
-
-<!-- Ver detalle -->
-<section class="text-center" *ngIf="esVerDetalle === true && seguimientoSemanal !== undefined">
-    <div align="left">
-        <mat-card class="border">
-            <mat-card-content class="mt-1em">
-              <p><b>Cantidad de empleos directos generados</b>: {{ gestionSocial.cantidadEmpleosDirectos }} </p>
-              <p><b>Cantidad de empleos indirectos generados</b>: {{ gestionSocial.cantidadEmpleosIndirectos }} </p>
-              <p><b>Total de empleos generados</b>: {{ gestionSocial.cantidadTotalEmpleos }} </p>
-            </mat-card-content>
-        </mat-card>
-    </div>
-
-    <div class="mt-1em" align="left">
-        <mat-card class="border">
-            <mat-card-content class="mt-1em">
-                <p *ngIf="gestionSocial.seRealizaronReuniones === true"><b>¿Se realizaron reuniones, socializaciones o capacitaciones con la comunidad durante la semana?</b>: Si </p>
-                <p *ngIf="gestionSocial.seRealizaronReuniones === false"><b>¿Se realizaron reuniones, socializaciones o capacitaciones con la comunidad durante la semana?</b>: No </p>
-                <div *ngIf="gestionSocial.seRealizaronReuniones === true">
-                    <section>
-                        <b>Tema</b>:
-                        <div [innerHTML]="gestionSocial.temaComunidad"></div>
-                    </section>
-                    <section>
-                        <b>Conclusiones</b>:
-                        <div [innerHTML]="gestionSocial.conclusion"></div>
-                    </section>
-                    <p *ngIf="gestionSocial.urlSoporteGestion !== undefined"><b>URL con soporte</b>: {{ gestionSocial.urlSoporteGestion }} </p>
-                </div>
-            </mat-card-content>
-        </mat-card>
-    </div>
 </section>
