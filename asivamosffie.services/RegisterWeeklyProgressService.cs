@@ -593,6 +593,7 @@ namespace asivamosffie.services
                     .Include(r => r.SeguimientoSemanalGestionObraCalidad)
                         .ThenInclude(r => r.SeguimientoSemanalGestionObra)
                         .FirstOrDefault();
+
                 gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
                 gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
