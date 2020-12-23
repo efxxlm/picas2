@@ -104,7 +104,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
+    
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }

@@ -91,14 +91,15 @@ export class FormDescripcionActuacionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
+    
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n-1, e.editor.getLength());
     }
   }
-
-  textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+  textoLimpio(texto,n) {
+    if (texto!=undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
+    }
   }
 
   openDialog(modalTitle: string, modalText: string) {

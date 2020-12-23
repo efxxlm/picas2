@@ -56,11 +56,11 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)" formControlName="actuacionAdelantada">
+                                    required (onContentChanged)="maxLength($event, 500)" formControlName="actuacionAdelantada" #actuacionAdelantada>
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.actuacionAdelantada.value">
-                                {{500 - textoLimpio(addressForm.controls.actuacionAdelantada.value)}}
+                                {{500 - (textoLimpio(actuacionAdelantada.quillEditor,500))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.actuacionAdelantada.value">
                                 500
@@ -84,11 +84,11 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)" formControlName="proximaActuacionRequerida">
+                                    required (onContentChanged)="maxLength($event, 500)" formControlName="proximaActuacionRequerida" #proximaActuacionRequerida>
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.proximaActuacionRequerida.value">
-                                {{500 - textoLimpio(addressForm.controls.proximaActuacionRequerida.value)}}
+                                {{500 - (textoLimpio(proximaActuacionRequerida.quillEditor,500))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.proximaActuacionRequerida.value">
                                 500
@@ -152,7 +152,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
@@ -160,7 +160,7 @@
         </mat-card-content>
     </mat-card>
     <mat-card class="shipping-card">
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">
                 Soporte de la actuación
             </mat-card-title>
@@ -177,7 +177,7 @@
                                 <input matInput #urlSoporte type="text" 
                                     formControlName="urlSoporte" required>
                             </mat-form-field>
-                            <div align="center">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite</div>
+                            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite</span>
                         </div>
                     </div>
                 </div>

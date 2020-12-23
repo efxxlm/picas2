@@ -1,6 +1,6 @@
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <mat-card class="shipping-card">
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">
                 Registrar controversia
             </mat-card-title>
@@ -148,12 +148,12 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 1000)"
+                                    required (onContentChanged)="maxLength($event, 1000)" #conclusionComitePretecnico
                                     formControlName="conclusionComitePretecnico">
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.conclusionComitePretecnico.value">
-                                {{1000 - textoLimpio(addressForm.controls.conclusionComitePretecnico.value)}}
+                                {{1000 - (textoLimpio(conclusionComitePretecnico.quillEditor,1000))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.conclusionComitePretecnico.value">
                                 1000
@@ -181,12 +181,12 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="resumenJustificacionSolicitud">
+                                    formControlName="resumenJustificacionSolicitud" #resumenJustificacionSolicitud>
                                 </quill-editor>
                             </div>
                             <span class="contador miles"
                                 *ngIf="addressForm.controls.resumenJustificacionSolicitud.value">
-                                {{1000 - textoLimpio(addressForm.controls.resumenJustificacionSolicitud.value)}}
+                                {{1000 - (textoLimpio(resumenJustificacionSolicitud.quillEditor,1000))}}
                             </span>
                             <span class="contador miles"
                                 *ngIf="!addressForm.controls.resumenJustificacionSolicitud.value">
@@ -207,7 +207,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
@@ -230,12 +230,12 @@
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
                                     required (onContentChanged)="maxLength($event, 1000)"
-                                    formControlName="motivosRechazo">
+                                    formControlName="motivosRechazo" #motivosRechazo>
                                 </quill-editor>
                             </div>
                             <span class="contador miles"
                                 *ngIf="addressForm.controls.motivosRechazo.value">
-                                {{1000 - textoLimpio(addressForm.controls.motivosRechazo.value)}}
+                                {{1000 - (textoLimpio(motivosRechazo.quillEditor,1000))}}
                             </span>
                             <span class="contador miles"
                                 *ngIf="!addressForm.controls.motivosRechazo.value">
@@ -257,7 +257,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
