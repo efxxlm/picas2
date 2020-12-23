@@ -23,6 +23,7 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
         'avanceFisico',
         'estadoRegistro',
         'estadoReporteSemanal',
+        'estadoMuestras',
         'gestion'
       ];
 

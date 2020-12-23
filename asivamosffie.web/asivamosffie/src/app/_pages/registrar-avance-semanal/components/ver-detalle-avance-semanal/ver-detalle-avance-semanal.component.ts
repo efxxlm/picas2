@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 export class VerDetalleAvanceSemanalComponent implements OnInit {
 
     seguimientoSemanal: any;
+    semaforoGestionObra = 'sin-diligenciar';
 
     constructor(
         private location: Location,
@@ -32,6 +33,12 @@ export class VerDetalleAvanceSemanalComponent implements OnInit {
 
     getRutaAnterior() {
         this.location.back();
+    }
+
+    valuePendingSemaforo( value: string, tipoSemaforo: string ) {
+        if ( tipoSemaforo === 'gestionObra' ) {
+          this.semaforoGestionObra = value;
+        }
     }
 
 

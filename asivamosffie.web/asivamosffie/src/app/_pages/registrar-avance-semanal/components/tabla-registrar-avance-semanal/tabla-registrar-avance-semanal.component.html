@@ -68,6 +68,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
+                (click)="enviarVerificacion( element.contratacionProyectoId )"
                 *ngIf="element.enviarSupervisor === true">
                 Enviar a verificación
         </button>
