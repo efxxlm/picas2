@@ -1,4 +1,4 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoDiario !== undefined">
     <div class="colorMainColor">
         <p>Estado de la obra: <b>En ejecución</b> </p>
     </div>
@@ -11,21 +11,102 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <div class="colorMainColor">
-                <p> <b>Disponiblidad personal: Insuficiente</b> </p>
-            </div>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title">
+                            Disponibilidad de personal
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
 
-            <app-tabla-avance-resumen-alertas></app-tabla-avance-resumen-alertas>
+                    <div class="colorMainColor">
+                        <p> <b>Disponiblidad personal: Insuficiente</b> </p>
+                    </div>
+        
+                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-avance-resumen-alertas>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title">
+                            Disponibilidad de material, equipo o productividad
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="d-flex justify-content-center colorMainColor">
+                        <p><b>Disponiblidad de material</b>: Media</p>
+                        <p style="margin-left: 2em;"> <b>Disponiblidad del equipo</b>: Baja </p>
+                        <p style="margin-left: 2em;"><b>Productividad</b>: --- </p>
+                    </div>
+
+                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-disponibilidad-material>
+                </mat-expansion-panel>
+            </mat-accordion>
+
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
                     Avance físico
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico></app-tabla-avance-fisico>
+            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoDiario"></app-tabla-avance-fisico>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>
+
+<section class="text-center" *ngIf="esVerDetalle === true">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Resumen de alertas generadas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title">
+                            Disponibilidad de personal
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="colorMainColor">
+                        <p> <b>Disponiblidad personal: Insuficiente</b> </p>
+                    </div>
+        
+                    <app-tabla-avance-resumen-alertas [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-avance-resumen-alertas>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title">
+                            Disponibilidad de material, equipo o productividad
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="d-flex justify-content-center colorMainColor">
+                        <p><b>Disponiblidad de material</b>: Media</p>
+                        <p style="margin-left: 2em;"> <b>Disponiblidad del equipo</b>: Baja </p>
+                        <p style="margin-left: 2em;"><b>Productividad</b>: --- </p>
+                    </div>
+
+                    <app-tabla-disponibilidad-material [seguimientoDiario]="seguimientoDiario.seguimientoDiario"></app-tabla-disponibilidad-material>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Avance físico
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoDiario" [esVerDetalle]="true"></app-tabla-avance-fisico>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

@@ -1,8 +1,8 @@
-<section class="text-center">
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoReporte">
                     Resumen general del estado del contrato
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -15,17 +15,23 @@
                             </mat-card-title>
                         </mat-card-header>
                         <mat-card-content>
-        
-                            <quill-editor align="left" class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-                                (onContentChanged)="maxLength($event, 2000)" formControlName="observaciones">
+
+                            <quill-editor   align="left"
+                                            class="quill-editor-style ml-1em"
+                                            [styles]="editorStyle"
+                                            [modules]="config"
+                                            (onContentChanged)="maxLength($event, 2000)"
+                                            formControlName="resumenEstadoContrato"
+                                            #obsResumenGeneral
+                                            required>
                             </quill-editor>
-        
+
                         </mat-card-content>
                     </mat-card>
-                    <span class="contador miles mb-2em" *ngIf="formResumenGeneral.value.observaciones !== null">
-                        {{2000 - textoLimpio(formResumenGeneral.get('observaciones').value)}}
+                    <span class="contador miles" *ngIf="formResumenGeneral.value.observaciones !== null">
+                        {{2000 - textoLimpio( obsResumenGeneral.quillEditor, 2000 )}}
                     </span>
-                    <span class="contador miles mb-2em" *ngIf="formResumenGeneral.value.observaciones === null">
+                    <span class="contador miles" *ngIf="formResumenGeneral.value.observaciones === null">
                         2000
                     </span>
                 </div>
@@ -33,7 +39,8 @@
                     <button mat-button
                             color="warn"
                             class="btn-guardar"
-                            type="submit">
+                            type="submit"
+                            [disabled]="formResumenGeneral.get( 'resumenEstadoContrato' ).dirty === false">
                             <img  src="assets/img/icon/guardar.svg">
                     </button>
                 </div>
@@ -43,22 +50,68 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoActividad">
                     Actividades realizadas
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="false"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="false" [reporteActividad]="reporteActividad" (reporteDeActividades)="guardar( $event )"></app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
 
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title completo">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoActividadSiguiente">
                     Actividades a realizar la siguiente semana
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="true"></app-form-reporte-actividades-realizadas>
+            <app-form-reporte-actividades-realizadas [esSiguienteSemana]="true" [reporteActividad]="reporteActividad" (reporteDeActividades)="guardar( $event )"></app-form-reporte-actividades-realizadas>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true && reporteActividad !== undefined">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Resumen general del estado del contrato
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div align="left">
+                <mat-card class="border">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text text-color">
+                            Resumen general del estado del contrato
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="mt-1em">
+                        <section [innerHTML]="reporteActividad.resumenEstadoContrato" style="margin-left: 2em;"></section>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Actividades realizadas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-reporte-actividades-realizadas [reporteActividad]="reporteActividad" [esSiguienteSemana]="false" [esVerDetalle]="true"></app-form-reporte-actividades-realizadas>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Actividades a realizar la siguiente semana
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-reporte-actividades-realizadas [reporteActividad]="reporteActividad" [esSiguienteSemana]="true" [esVerDetalle]="true"></app-form-reporte-actividades-realizadas>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

@@ -1,5 +1,5 @@
-<section class="text-center">
-    <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
 
     <form autocomplete="off" [formGroup]="formRegistroFotografico" (ngSubmit)="guardar()">
         <div align="left">
@@ -29,10 +29,10 @@
                               <label class="label-left">URL con soporte</label>
                             </div>
                             <div class="col d-flex">
-                                <mat-form-field style="width: 100%;">
+                                <mat-form-field style="width: 97.5%;">
                                     <input  matInput
                                             type="text"
-                                            formControlName="urlSoporte"
+                                            formControlName="urlSoporteFotografico"
                                             required>
                                 </mat-form-field>
                             </div>
@@ -58,13 +58,14 @@
                                                 [styles]="editorStyle"
                                                 [modules]="config"
                                                 (onContentChanged)="maxLength($event, 2000)"
-                                                formControlName="observaciones"
+                                                formControlName="descripcion"
+                                                #obsDescripcion
                                                 required>
                                 </quill-editor>
-                                <span class="contador miles" *ngIf="formRegistroFotografico.get('observaciones').value !== null" style="margin-top: 3.5em;">
-                                    {{2000 - (textoLimpio(formRegistroFotografico.get('observaciones').value))}}
+                                <span class="contador miles" *ngIf="formRegistroFotografico.get('descripcion').value !== null" style="margin-top: 3.5em;">
+                                    {{2000 - textoLimpio( obsDescripcion.quillEditor, 2000 )}}
                                 </span>
-                                <span class="contador miles" *ngIf="formRegistroFotografico.get('observaciones').value === null" style="margin-top: 3.5em;">
+                                <span class="contador miles" *ngIf="formRegistroFotografico.get('descripcion').value === null" style="margin-top: 3.5em;">
                                     2000
                                 </span>
                             </div>
@@ -78,9 +79,26 @@
             <button mat-button
                     color="warn"
                     class="btn-guardar"
-                    type="submit">
+                    type="submit"
+                    [disabled]="formRegistroFotografico.dirty === false">
                     <img  src="assets/img/icon/guardar.svg">
             </button>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true && seguimientoSemanal !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+                <p><b>URL con soporte</b>: {{ reporteFotografico.urlSoporteFotografico }} </p>
+                <section>
+                    <p><b>Descripción</b></p> <div [innerHTML]="reporteFotografico.descripcion"></div>
+                </section>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </section>

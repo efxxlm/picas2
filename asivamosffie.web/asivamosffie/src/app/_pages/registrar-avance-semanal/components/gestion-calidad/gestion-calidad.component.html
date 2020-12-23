@@ -1,5 +1,5 @@
-<section class="text-center">
-    <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b> {{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </b> </p>
 
     <form autocomplete="off" [formGroup]="formGestionCalidad" (ngSubmit)="guardar()">
         <div align="left">
@@ -14,7 +14,7 @@
                             <div class="col d-flex">
                                 <section style="width: 90%;">
                                     <mat-form-field class="w-50" appearance="fill">
-                                      <mat-select class="padding-left" formControlName="esEnsayosLaboratorio" required>
+                                      <mat-select class="padding-left" formControlName="seRealizaronEnsayosLaboratorio" required>
                                         <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
                                           {{requisito.viewValue}}
                                         </mat-option>
@@ -25,7 +25,7 @@
                           </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" *ngIf="formGestionCalidad.get( 'seRealizaronEnsayosLaboratorio' ).value === true">
                         <div class="col-md-12">
                           <div class="row">
                             <div class="pr-1">
@@ -34,7 +34,12 @@
                             <div class="col d-flex">
                                 <section style="width: 90%;">
                                     <mat-form-field>
-                                        <input matInput type="text" maxlength="3" formControlName="cantidadEnsayos" required>
+                                        <input  matInput
+                                                type="text"
+                                                maxlength="2"
+                                                formControlName="cantidadEnsayos"
+                                                (ngModelChange)="valuePending( $event )"
+                                                required>
                                     </mat-form-field>
                                   </section>
                             </div>
@@ -48,7 +53,7 @@
             <mat-accordion formArrayName="ensayosLaboratorio" *ngFor="let ensayo of ensayosLaboratorio.controls; index as i">
                 <mat-expansion-panel class="expansion-style sub-expansion-black" [formGroup]="ensayo">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title completo">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="ensayo.get( 'semaforoEnsayo' ).value">
                             Ensayo de laboratorio {{ i+1 }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -65,9 +70,9 @@
                                         <div class="col d-flex">
                                             <section style="width: 97%;">
                                                 <mat-form-field class="w-50" appearance="fill">
-                                                  <mat-select class="padding-left" formControlName="tipoEnsayo" required>
-                                                    <mat-option *ngFor="let requisito of tipoEnsayos" [value]="requisito">
-                                                      {{requisito.viewValue}}
+                                                  <mat-select class="padding-left" formControlName="tipoEnsayoCodigo" required>
+                                                    <mat-option *ngFor="let requisito of tipoEnsayos" [value]="requisito.codigo">
+                                                      {{requisito.nombre}}
                                                     </mat-option>
                                                   </mat-select>
                                                 </mat-form-field>
@@ -85,7 +90,12 @@
                                         <div class="col d-flex">
                                             <section style="width: 100%;">
                                                 <mat-form-field>
-                                                    <input matInput type="text" maxlength="2" formControlName="numeroMuestras" required>
+                                                    <input  matInput
+                                                            type="text"
+                                                            maxlength="2"
+                                                            formControlName="numeroMuestras"
+                                                            (ngModelChange)="validateNumber( $event, i, 'numeroMuestras' )"
+                                                            required>
                                                 </mat-form-field>
                                             </section>
                                             <span class="contador">{{2 - ensayo.get( 'numeroMuestras' ).value.length}}</span>
@@ -97,13 +107,13 @@
                                     <div class="col-md-12">
                                       <div class="row">
                                         <div class="pr-1">
-                                          <label class="label-left">Número de muestras</label>
+                                          <label class="label-left">Fecha de toma</label>
                                         </div>
                                         <div class="col d-flex">
                                             <mat-form-field>
                                                 <input  matInput
                                                         [matDatepicker]="pickerfechaToma"
-                                                        formControlName="fechaToma"
+                                                        formControlName="fechaTomaMuestras"
                                                         placeholder="DD/MM/AAAA"
                                                         (click)="pickerfechaToma.open()"
                                                         readonly required>
@@ -132,7 +142,7 @@
                                             <mat-form-field>
                                                 <input  matInput
                                                         [matDatepicker]="pickerProyectadaEntrega"
-                                                        formControlName="fechaProyectadaEntrega"
+                                                        formControlName="fechaEntregaResultados"
                                                         placeholder="DD/MM/AAAA"
                                                         (click)="pickerProyectadaEntrega.open()"
                                                         readonly required>
@@ -160,7 +170,7 @@
                                         <div class="col d-flex">
                                             <section style="width: 95%;">
                                                 <mat-form-field class="w-50" appearance="fill">
-                                                  <mat-select class="padding-left" formControlName="seRealizoControl" required>
+                                                  <mat-select class="padding-left" formControlName="realizoControlMedicion" required>
                                                     <mat-option *ngFor="let requisito of booleanosEnsayosLaboratorio" [value]="requisito.value">
                                                       {{requisito.viewValue}}
                                                     </mat-option>
@@ -171,7 +181,7 @@
                                       </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" *ngIf="ensayo.get( 'realizoControlMedicion' ).value === true">
                                     <div class="col-md-12">
                                       <div>
                                         <div class="pr-1">
@@ -182,13 +192,14 @@
                                                             [styles]="editorStyle"
                                                             [modules]="config"
                                                             (onContentChanged)="maxLength($event, 400)"
-                                                            formControlName="observaciones"
+                                                            formControlName="observacion"
+                                                            #obsEnsayo
                                                             required>
                                             </quill-editor>
-                                            <span class="contador miles" *ngIf="ensayo.get('observaciones').value !== null" style="margin-top: 3.5em;">
-                                                {{400 - (textoLimpio(ensayo.get('observaciones').value))}}
+                                            <span class="contador miles" *ngIf="ensayo.get('observacion').value !== null" style="margin-top: 3.5em;">
+                                                {{400 - textoLimpio( obsEnsayo.quillEditor, 400 )}}
                                             </span>
-                                            <span class="contador miles" *ngIf="ensayo.get('observaciones').value === null" style="margin-top: 3.5em;">
+                                            <span class="contador miles" *ngIf="ensayo.get('observacion').value === null" style="margin-top: 3.5em;">
                                                 400
                                             </span>
                                         </div>
@@ -205,7 +216,7 @@
                                             <mat-form-field style="width: 96%;">
                                                 <input  matInput
                                                         type="text"
-                                                        formControlName="urlSoporte">
+                                                        formControlName="urlSoporteGestion">
                                             </mat-form-field>
                                         </div>
                                         <div class="d-flex justify-content-center size-text-descriptivo">
@@ -218,12 +229,14 @@
                                       </div>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-center mt-1em">
-                                    <div style="width: 20%;">
-                                        <button mat-raised-button color="accent" type="button" class="btn-table" (click)="getRegistrarResultados()">
-                                            Registrar resultados
-                                        </button>
-                                    </div>
+                                <div class="d-flex justify-content-center mt-1em" *ngIf="ensayo.get( 'registroCompleto' ).value === true">
+                                  <button mat-raised-button
+                                          color="accent"
+                                          class="btn-table expansion-style--title btn-color h-2em w-20"
+                                          [ngClass]="semaforoBtnRegistrar( ensayo.get( 'registroCompletoMuestras' ).value )"
+                                          (click)="getRegistrarResultados( ensayo.get( 'gestionObraCalidadEnsayoLaboratorioId' ).value )">
+                                          <small class="mr-1em btn-color-text">Registrar resultados</small>
+                                  </button>
                                 </div>
                             </mat-card-content>
                         </mat-card>
@@ -233,22 +246,83 @@
                                 color="warn"
                                 type="button"
                                 class="btn-eliminar"
-                                (click)="eliminarEnsayo( i )">
+                                (click)="eliminarEnsayo( ensayo.get( 'gestionObraCalidadEnsayoLaboratorioId' ).value, i )">
                           <img src="assets/img/icon/menos.svg">
                           Eliminar ensayo de laboratorio
-                        </button>
-                    </div>
-
-                    <div class="text-center" style="margin-top: 2em;">
-                        <button mat-button
-                                color="warn"
-                                class="btn-guardar"
-                                type="submit">
-                                <img  src="assets/img/icon/guardar.svg">
                         </button>
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
         </div>
+        <div class="text-center" style="margin-top: 2em;">
+          <button mat-button
+                  color="warn"
+                  class="btn-guardar"
+                  type="submit"
+                  [disabled]="formGestionCalidad.dirty === false">
+                  <img  src="assets/img/icon/guardar.svg">
+          </button>
+        </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true && seguimientoSemanal !== undefined">
+  <p class="colorMainColor">Periodo del reporte: <b> {{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </b> </p>
+
+  <div align="left">
+    <mat-card class="border">
+      <mat-card-content class="mt-1em">
+        <p *ngIf="gestionObraCalidad.seRealizaronEnsayosLaboratorio === true"><b>¿Se realizaron ensayos de laboratorio durante la semana?</b>: Si</p>
+        <p *ngIf="gestionObraCalidad.seRealizaronEnsayosLaboratorio === false"><b>¿Se realizaron ensayos de laboratorio durante la semana?</b>: No</p>
+        <p><b>Cantidad de ensayos de laboratorio realizados en la semana</b>: {{ gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length }} </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <mat-accordion *ngIf="gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0">
+    <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let ensayo of gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio; index as i">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+              Ensayo de laboratorio {{ i + 1 }}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+              <mat-card-content class="mt-1em">
+                <p><b>Tipo de ensayo</b>: {{ getTipoEnsayo( ensayo.tipoEnsayoCodigo ) }} </p>
+                <p><b>Número de muestras</b>: {{ ensayo.numeroMuestras }} </p>
+                <p><b>Fecha de toma</b>: {{ ensayo.fechaTomaMuestras | date: 'dd/MM/yyyy' }} </p>
+                <p><b>Fecha proyectada de entrega deresultados</b>: {{ ensayo.fechaEntregaResultados | date: 'dd/MM/yyyy' }} </p>
+                <p *ngIf="ensayo.realizoControlMedicion === true"><b>¿Se realizó control a los equipos de medición durante la semana?</b>: Si</p>
+                <p *ngIf="ensayo.realizoControlMedicion === false"><b>¿Se realizó control a los equipos de medición durante la semana?</b>: No</p>
+                <section *ngIf="ensayo.realizoControlMedicion === true">
+                  <b>Observaciones</b>
+                  <div [innerHTML]="ensayo.observacion"></div>
+                </section>
+                <p *ngIf="ensayo.urlSoporteGestion !== undefined"><b>URL con soporte de la gestión de calidad</b>: {{ ensayo.urlSoporteGestion }}</p>
+                <div class="d-flex justify-content-center mt-1em">
+                  <div *ngIf="ensayo.registroCompletoMuestras === false">
+                    <button mat-raised-button
+                            color="accent"
+                            class="btn-table expansion-style--title btn-color h-2em"
+                            [ngClass]="semaforoBtnRegistrar( ensayo.registroCompletoMuestras )"
+                            (click)="getRegistrarResultados( ensayo.gestionObraCalidadEnsayoLaboratorioId )">
+                            <small class="mr-1em btn-color-text">Registrar resultados</small>
+                    </button>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-center mt-1em" *ngIf="ensayo.registroCompletoMuestras === true">
+                  <div style="width: 16%;">
+                      <button mat-raised-button color="accent" type="button" class="btn-table" (click)="getVerDetalleMuestras( ensayo.gestionObraCalidadEnsayoLaboratorioId )">
+                        <small>Ver resultados</small>
+                      </button>
+                  </div>
+                </div>
+              </mat-card-content>
+          </mat-card>
+        </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 </section>

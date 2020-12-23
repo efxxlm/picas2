@@ -5,10 +5,10 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle/Editar trámite controversia contractual {{this.numeroSolicitud}}
+        Ver detalle/Editar trámite controversia contractual C0001
     </h1>
     <p class="info-sub-title">
-        <span>Contrato: <b>{{this.numContrato}}</b></span>
+        <span>Contrato: <b>C223456789</b></span>
     </p>
     <div>
         <mat-card class="shipping-card mainGris">
@@ -18,14 +18,14 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><strong>Nombre del contratista:</strong> {{this.nombreContratista}}</p>
-                <p><strong>Tipo de identificación:</strong> {{this.tipoIdentificacion}}</p>
-                <p><strong>Número de identificación:</strong> {{this.numIdentificacion}}</p>
-                <p><strong>Tipo de intervención:</strong> {{this.tipoIntervencion}}</p>
-                <p><strong>Valor del contrato:</strong> $ {{this.valorContrato}}</p>
-                <p><strong>Plazo:</strong> {{this.plazoContrato}}</p>
-                <p><strong>Fecha de inicio de contrato:</strong> {{this.fechaInicioContrato}}</p>
-                <p><strong>Fecha de finalización de contrato:</strong> {{this.fechaFinalizacionContrato}}</p>
+                <p><strong>Nombre del contratista:</strong> Constructora Colpatria SAS</p>
+                <p><strong>Tipo de identificación:</strong> NIT</p>
+                <p><strong>Número de identificación:</strong> 900.879.989</p>
+                <p><strong>Tipo de intervención:</strong> Remodelación</p>
+                <p><strong>Valor del contrato:</strong> $ 56.000.000</p>
+                <p><strong>Plazo:</strong> 12 meses / 10 días</p>
+                <p><strong>Fecha de inicio de contrato:</strong> 18/07/2020</p>
+                <p><strong>Fecha de finalización de contrato:</strong> 28/07/2021</p>
             </mat-card-content>
         </mat-card>
         <div class="text-center">
@@ -38,21 +38,21 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
                         Registrar controversias
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-form-registrar-controvrs-accord [isEditable]="true" [idControversia]=this.idControversia  (estadoSemaforo)="estadoAcordeon = $event"></app-form-registrar-controvrs-accord>
+                <app-form-registrar-controvrs-accord [isEditable]="true"></app-form-registrar-controvrs-accord>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon1">
+                    <mat-panel-title class="expansion-style--title sin-diligenciar">
                         Soporte de la solicitud
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-form-registrar-controvrs-sop-sol  [isEditable]="true" [idControversia]=this.idControversia  (estadoSemaforo1)="estadoAcordeon1 = $event"></app-form-registrar-controvrs-sop-sol>
+                <app-form-registrar-controvrs-sop-sol  [isEditable]="true"></app-form-registrar-controvrs-sop-sol>
             </mat-expansion-panel>
         </mat-accordion>
     </div>

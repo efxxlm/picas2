@@ -38,7 +38,10 @@
 
     <ng-container matColumnDef="fechaUltimoReporte">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del último reporte </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.fechaUltimoReporte }} </td>
+        <td mat-cell *matCellDef="let element" align="center">
+          <section *ngIf="element.fechaUltimoReporte === 'Sin registro'"> {{ element.fechaUltimoReporte }} </section>
+          <section *ngIf="element.fechaUltimoReporte !== 'Sin registro'"> {{ element.fechaUltimoReporte | date: 'dd/MM/yyyy' }} </section>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="estadoObra">
@@ -53,14 +56,29 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                [routerLink]="[ 'registroSeguimientoSemanal', element.id ]">
+                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
                 Registrar seguimiento semanal
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                *ngIf="element.numeroSemana !== primeraSemana"
+                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
+                Consultar/Editar bitacora
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                (click)="enviarVerificacion( element.contratacionProyectoId )"
+                *ngIf="element.enviarSupervisor === true">
+                Enviar a verificación
         </button>
         <!--
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
-                Enviar a verificación
+                class="btn-table"
+                (click)="openDialogCargarActa( element )">
+                Cargar acta de terminación de contrato
         </button>
         <button mat-raised-button
                 color="accent" 
@@ -70,10 +88,20 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table">
+                Consultar bitácora
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
+                Enviar para registrar informe final
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
                 Eliminar
         </button>
         -->
-  
+
       </td>
     </ng-container>
   

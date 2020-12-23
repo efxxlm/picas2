@@ -1,7 +1,7 @@
-<section class="text-center">
-    <div class="d-flex justify-content-center">
-        <p class="colorMainColor">Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
-        <p class="colorMainColor" style="margin-left: 2em;">Número de comité de obra: <b>Cobra_001</b> </p>
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined && numeroComiteObra !== undefined">
+    <div class="d-flex justify-content-center colorMainColor">
+        <p>Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+        <p style="margin-left: 2em;">Número de comité de obra: <b> {{ numeroComiteObra }} </b> </p>
     </div>
 
     <form autocomplete="off" [formGroup]="formComiteObra" (ngSubmit)="guardar()">
@@ -18,7 +18,7 @@
                                 <mat-form-field>
                                     <input  matInput
                                             [matDatepicker]="pickerComiteObra"
-                                            formControlName="fechaComiteObra"
+                                            formControlName="fechaComite"
                                             placeholder="DD/MM/AAAA"
                                             (click)="pickerComiteObra.open()"
                                             readonly required>
@@ -48,7 +48,7 @@
                                 <mat-form-field style="width: 100%;">
                                     <input  matInput
                                             type="text"
-                                            formControlName="urlSoporte"
+                                            formControlName="urlSoporteComite"
                                             required>
                                 </mat-form-field>
                             </div>
@@ -69,9 +69,27 @@
             <button mat-button
                     color="warn"
                     class="btn-guardar"
-                    type="submit">
+                    type="submit"
+                    [disabled]="formComiteObra.dirty === false">
                     <img  src="assets/img/icon/guardar.svg">
             </button>
         </div>
     </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true && gestionComiteObra !== undefined">
+    <div class="d-flex justify-content-center colorMainColor">
+        <p>Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+        <p style="margin-left: 2em;">Número de comité de obra: <b> {{ numeroComiteObra }} </b> </p>
+    </div>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>Fecha de comité de obra</b>: {{ gestionComiteObra.fechaComite | date: 'dd/MM/yyyy' }} </p>
+              <p><b>URL con soporte</b>: {{ gestionComiteObra.urlSoporteComite }} </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
 </section>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
@@ -8,8 +8,12 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 })
 export class FormReporteActividadesRealizadasComponent implements OnInit {
 
-    formActividadesRealizadas: FormGroup;
     @Input() esSiguienteSemana: boolean;
+    @Input() esVerDetalle = false;
+    @Input() reporteActividad: any;
+    @Output() reporteDeActividades = new EventEmitter();
+    formActividadesRealizadas: FormGroup;
+    formActividadesRealizadasSiguienteSemana: FormGroup;
     editorStyle = {
         height: '45px'
     };
@@ -26,38 +30,82 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
         private fb: FormBuilder )
     {
         this.crearFormulario();
+        this.crearFormularioSiguienteSemana();
     }
 
     ngOnInit(): void {
-        console.log( this.esSiguienteSemana );
+        if ( this.reporteActividad !== undefined ) {
+            this.formActividadesRealizadas.setValue(
+                {
+                    actividadTecnica:   this.reporteActividad.actividadTecnica !== undefined ?
+                                        this.reporteActividad.actividadTecnica : null,
+                    actividadLegal: this.reporteActividad.actividadLegal !== undefined ?
+                                    this.reporteActividad.actividadLegal : null,
+                    actividadAdministrativaFinanciera:  this.reporteActividad.actividadAdministrativaFinanciera !== undefined ?
+                                                        this.reporteActividad.actividadAdministrativaFinanciera : null
+                }
+            );
+            this.formActividadesRealizadasSiguienteSemana.setValue(
+                {
+                    actividadTecnicaSiguiente:  this.reporteActividad.actividadTecnicaSiguiente !== undefined ?
+                                                this.reporteActividad.actividadTecnicaSiguiente : null,
+                    actividadLegalSiguiente:    this.reporteActividad.actividadLegalSiguiente !== undefined ?
+                                                this.reporteActividad.actividadLegalSiguiente : null,
+                    actividadAdministrativaFinancieraSiguiente:
+                        this.reporteActividad.actividadAdministrativaFinancieraSiguiente !== undefined ?
+                        this.reporteActividad.actividadAdministrativaFinancieraSiguiente : null
+                }
+            );
+        }
     }
 
     crearFormulario() {
         this.formActividadesRealizadas = this.fb.group({
-            observacionTecnica: [ null ],
-            observacionLegal: [ null ],
-            observacionAdministrativa: [ null ]
+            actividadTecnica: [ null ],
+            actividadLegal: [ null ],
+            actividadAdministrativaFinanciera: [ null ]
         });
     }
 
-    textoLimpio(texto: string) {
-        if ( texto ){
-            const textolimpio = texto.replace(/<[^>]*>/g, '');
-            return textolimpio.length;
-        }
+    crearFormularioSiguienteSemana() {
+        this.formActividadesRealizadasSiguienteSemana = this.fb.group({
+            actividadTecnicaSiguiente: [ null ],
+            actividadLegalSiguiente: [ null ],
+            actividadAdministrativaFinancieraSiguiente: [ null ]
+        });
     }
 
     maxLength(e: any, n: number) {
         if (e.editor.getLength() > n) {
-          e.editor.deleteText(n, e.editor.getLength());
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
+
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
         }
     }
 
     guardar() {
         if ( this.esSiguienteSemana === true ) {
-            console.log( 'esSiguienteSemana', this.formActividadesRealizadas.value );
+            this.reporteDeActividades.emit(
+                {
+                    esSiguienteSemana: this.esSiguienteSemana,
+                    reporteActividadSiguiente: this.formActividadesRealizadasSiguienteSemana.value,
+                    reporteActividad: this.formActividadesRealizadas.value
+                }
+            );
         } else {
-            console.log( 'noEsSiguienteSemana', this.formActividadesRealizadas.value );
+            this.reporteDeActividades.emit(
+                {
+                    esSiguienteSemana: this.esSiguienteSemana,
+                    reporteActividadSiguiente: this.formActividadesRealizadasSiguienteSemana.value,
+                    reporteActividad: this.formActividadesRealizadas.value
+                }
+            );
         }
     }
 
