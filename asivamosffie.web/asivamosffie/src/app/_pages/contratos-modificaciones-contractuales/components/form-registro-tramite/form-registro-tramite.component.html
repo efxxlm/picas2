@@ -14,7 +14,7 @@
                     [class.invalid]="campoSinDiligenciar( 'numeroContrato' )"
                     required>
           </mat-form-field>
-          <span class="contador">{{10 - dataFormulario.get( 'numeroContrato' ).value.length}}</span>
+          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{10 - dataFormulario.get( 'numeroContrato' ).value.length}}</span>
         </div>
       </div>
     </div>

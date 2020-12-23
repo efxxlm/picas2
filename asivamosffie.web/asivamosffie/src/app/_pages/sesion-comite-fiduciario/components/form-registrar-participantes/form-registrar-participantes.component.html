@@ -46,7 +46,7 @@
                     <input matInput #nombreInvitado type="text" formControlName="nombre" maxlength="100" required>
                     <input type="hidden" formControlName="sesionInvitadoId">
                   </mat-form-field>
-                  <span class="contador">{{100 - nombreInvitado.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{100 - nombreInvitado.value.length}}</span>
                 </div>
               </div>
               <div class="row">
@@ -57,7 +57,7 @@
                   <mat-form-field class="full-width">
                     <input matInput #cargo type="text" formControlName="cargo" maxlength="50" required>
                   </mat-form-field>
-                  <span class="contador">{{50 - cargo.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{50 - cargo.value.length}}</span>
                 </div>
               </div>
               <div class="row">
@@ -68,7 +68,7 @@
                   <mat-form-field class="full-width">
                     <input matInput #entidad type="text" formControlName="entidad" maxlength="100" required>
                   </mat-form-field>
-                  <span class="contador">{{100 - entidad.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{100 - entidad.value.length}}</span>
                 </div>
               </div>
               <div class="text-right" *ngIf="invitados.controls.length > 1">

@@ -6,7 +6,7 @@
         <mat-form-field class="w-38">
           <input matInput type="text" maxlength="10" formControlName="numeroOtroSi">
         </mat-form-field>
-        <span class="contador">{{10 - dataFormulario.get( 'numeroOtroSi' ).value.length}}</span>
+        <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{10 - dataFormulario.get( 'numeroOtroSi' ).value.length}}</span>
       </div>
     </div>
 

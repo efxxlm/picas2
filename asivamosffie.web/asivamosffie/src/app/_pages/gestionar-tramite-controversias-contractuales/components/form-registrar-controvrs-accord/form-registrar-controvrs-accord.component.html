@@ -56,10 +56,10 @@
                                 <input matInput #numeroRadicadoSAC type="text" maxlength="10" formControlName="numeroRadicadoSAC"
                                   required>
                               </mat-form-field>
-                            <span class="contador miles" *ngIf="addressForm.controls.numeroRadicadoSAC.value">
+                            <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="addressForm.controls.numeroRadicadoSAC.value">
                                 {{10 - textoLimpio(addressForm.controls.numeroRadicadoSAC.value)}}
                             </span>
-                            <span class="contador miles" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
+                            <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
                                 10
                             </span>
                         </div>
