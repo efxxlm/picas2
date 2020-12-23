@@ -16,15 +16,26 @@ export class ConsultarEditarBitacoraComponent implements OnInit {
     private avanceSemanalSvc: RegistrarAvanceSemanalService,
     private activatedRoute: ActivatedRoute )
   {
+    this.getBitacora();
+  }
+
+  ngOnInit(): void {
+  }
+
+  getBitacora() {
+    this.consultarBitacora = undefined;
+    this.ultimaBitacora = undefined;
     this.avanceSemanalSvc.getListSeguimientoSemanalByContratacionProyectoId( this.activatedRoute.snapshot.params.id )
       .subscribe( bitacora => {
         this.consultarBitacora = bitacora;
         this.ultimaBitacora = this.consultarBitacora[ this.consultarBitacora.length - 1 ];
-        console.log( this.ultimaBitacora );
       } );
   }
 
-  ngOnInit(): void {
+  valuePendingBitacora( value: boolean ) {
+    if ( value === true ) {
+      this.getBitacora();
+    }
   }
 
 }

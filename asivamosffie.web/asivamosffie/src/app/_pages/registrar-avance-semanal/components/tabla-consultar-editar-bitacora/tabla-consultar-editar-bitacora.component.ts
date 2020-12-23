@@ -1,7 +1,7 @@
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -16,6 +16,7 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
 
     tablaConsultarEditarBitacora = new MatTableDataSource();
     @Input() consultarBitacora: any;
+    @Output() seRealizoPeticion = new EventEmitter<boolean>();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     estadoAvanceSemanal: any;
@@ -44,6 +45,9 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
     }
 
     ngOnInit(): void {
+    }
+
+    getBitacora() {
         if ( this.consultarBitacora !== undefined ) {
             this.tablaConsultarEditarBitacora = new MatTableDataSource( this.consultarBitacora );
             this.tablaConsultarEditarBitacora.sort = this.sort;
@@ -73,7 +77,12 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
             .changueStatusMuestrasSeguimientoSemanal( seguimientoSemanalId, this.estadoAvanceSemanal.enviadoAVerificacion.codigo )
                 .subscribe(
                     response => {
+                        this.tablaConsultarEditarBitacora = new MatTableDataSource();
                         this.openDialog( '', `<b>${ response.message }</b>` );
+                        this.seRealizoPeticion.emit( true );
+                        setTimeout(() => {
+                            this.getBitacora();
+                        }, 1000);
                     }
                 );
     }

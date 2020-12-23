@@ -14,7 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class TablaRegistrarAvanceSemanalComponent implements OnInit {
 
-    tablaRegistro              = new MatTableDataSource();
+    tablaRegistro = new MatTableDataSource();
     dataTable: any = [];
     estadoAvanceSemanal: any;
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -84,6 +84,7 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
                     response => {
                         this.openDialog( '', `<b>${ response.message }</b>` );
                         this.dataTable = [];
+                        this.tablaRegistro = new MatTableDataSource();
                         this.getDataTable();
                     }
                 );
