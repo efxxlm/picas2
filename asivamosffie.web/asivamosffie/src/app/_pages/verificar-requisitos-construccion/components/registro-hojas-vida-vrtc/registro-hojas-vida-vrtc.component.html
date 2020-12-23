@@ -11,8 +11,9 @@
           required (keypress)="validateNumberKeypress($event)"
           onKeyPress="if(this.value.length>=this.maxLength) return false;">
       </mat-form-field>
-      <span
-        class="contador">{{formContratista.get( 'numeroPerfiles' ).value? 3 - formContratista.get( 'numeroPerfiles' ).value.toString().length:3}}</span>
+      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+        {{formContratista.get( 'numeroPerfiles' ).value? 3 - formContratista.get( 'numeroPerfiles' ).value.toString().length:3}}
+      </span>
     </div>
   </div>
 
@@ -61,7 +62,7 @@
                       #cantidadHvRequeridas (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{3 - cantidadHvRequeridas.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvRequeridas.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -82,7 +83,7 @@
                       #cantidadHvRecibidas (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{3 - cantidadHvRecibidas.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvRecibidas.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -105,7 +106,7 @@
                       #cantidadHvAprobadas (keypress)="validateNumberKeypress($event)"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{3 - cantidadHvAprobadas.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvAprobadas.value.length}}</span>
                 </div>
               </div>
             </div>
@@ -183,7 +184,7 @@
                       <mat-form-field class="full-width">
                         <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
                       </mat-form-field>
-                      <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
                     </div>
                   </div>
                 </div>

@@ -110,14 +110,16 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
       //ruta del acta suscrita
       this.rutaActaSuscrita = data.rutaActaSuscrita;
-      console.log(data.contrato.estadoActaFase2, data.contrato.estadoActaFase2 == 20 );
-      if ( data.contrato.estadoActaFase2 == 20 || data.contrato.estadoActaFase2 == 7)
+      //console.log(data.contrato.estadoActaFase2, data.contrato.estadoActaFase2 == 20 );
+      if ( data.contrato && ( data.contrato.estadoActaFase2 == 20 || data.contrato.estadoActaFase2 == 7 ) )
         this.mostrarCarga = true;
     });
     this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data1=>{
-      this.conObservacionesSupervisor = data1.esActa;
-      this.observacionesSupervisor = data1.observaciones;
-      this.fechaCreacion = data1.fechaCreacion;
+      if ( data1 ){
+        this.conObservacionesSupervisor = data1.esActa;
+        this.observacionesSupervisor = data1.observaciones;
+        this.fechaCreacion = data1.fechaCreacion;
+      }
     });
     this.idContrato = id;
   }

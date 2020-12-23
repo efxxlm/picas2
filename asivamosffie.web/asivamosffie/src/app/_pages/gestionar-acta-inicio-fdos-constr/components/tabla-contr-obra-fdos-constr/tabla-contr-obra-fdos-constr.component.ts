@@ -137,23 +137,27 @@ export class TablaContrObraFdosConstrComponent implements OnInit {
   }
   enviarRevision(id,estadoObs){
     if(estadoObs=="Con revisión sin observaciones"){
+      
       this.services.CambiarEstadoActa(id,"18","usr2").subscribe(data=>{
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
-    }
-    else{
+
+    }else{
+      
       this.services.CambiarEstadoActa(id,"17","usr2").subscribe(data=>{
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
+      
     }
     this.services.EnviarCorreoSupervisorContratista(id,2).subscribe(resp=>{
 
     });
   }
+
   enviarInterventor(id){
     if(localStorage.getItem("estadoObs")=="Con revisión sin observaciones"){
       this.services.CambiarEstadoActa(id,"18","usr2").subscribe(data=>{

@@ -76,7 +76,8 @@ namespace asivamosffie.model.Models
         public DateTime? FechaAprobacionRequisitosConstruccionSupervisor { get; set; }
         public bool? RegistroCompletoConstruccion { get; set; }
         public bool? ConObervacionesActaFase2 { get; set; }
-
+        public DateTime? FechaCambioEstadoFase2 { get; set; }
+        
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }
         public virtual ICollection<ContratoObservacion> ContratoObservacion { get; set; }

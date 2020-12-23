@@ -150,7 +150,8 @@ namespace asivamosffie.api.Controllers
             {
 
                 pUsuarioModifica=HttpContext.User.FindFirst("User").Value;
-                respuesta = await _ActBegin.CambiarEstadoActa( pContratoId,  pNuevoCodigoEstadoActa,  pUsuarioModifica);
+                respuesta = await _ActBegin.CambiarEstadoActa( pContratoId,  pNuevoCodigoEstadoActa,  pUsuarioModifica
+                    , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -282,6 +283,20 @@ namespace asivamosffie.api.Controllers
                 respuesta.Data = ex.InnerException.ToString();
                 return BadRequest(respuesta);
             }
+        }
+
+        [Route("GetDiasHabilesActaConstruccionEnviada")]
+        [HttpGet]        
+        public async Task GetDiasHabilesActaConstruccionEnviada(  )
+        {
+            await _ActBegin.GetDiasHabilesActaConstruccionEnviada(toAppSettingsService(_settings));
+        }
+
+        [Route("GetDiasHabilesActaRegistrada")]
+        [HttpGet]        
+        public async Task GetDiasHabilesActaRegistrada(  )
+        {
+            await _ActBegin.GetDiasHabilesActaRegistrada(toAppSettingsService(_settings));
         }
 
 

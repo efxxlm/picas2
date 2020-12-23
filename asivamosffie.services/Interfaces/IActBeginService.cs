@@ -24,7 +24,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> GuardarTieneObservacionesActaInicio(int pContratoId, string pObervacionesActa, string pUsuarioModificacion, bool pEsSupervisor, bool pEsActa);
 
         Task<Contrato> GetContratoByIdContratoId(int pContratoId);
-        Task<Respuesta> CambiarEstadoActa(int pContratoId, string pNuevoCodigoEstadoActa, string pUsuarioModifica);
+        Task<Respuesta> CambiarEstadoActa(int pContratoId, string pNuevoCodigoEstadoActa, string pUsuarioModifica, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<byte[]> GetPlantillaActaInicio(int pContratoId);
         //        ---guardar
         //¿Tiene observaciones al acta de inicio? Sí No  ?????
@@ -47,29 +47,10 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion, string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa);
 
-        //  FechaFirmaContratista - contrato
-        //FechaFirmaActaContratistaInterventoria  - contrato
-        //----cargar archivo pdf VALIDAR FORMATO PDF?? NATALIA   - julian cargar archivo ???
-
         Task<Respuesta> GuardarPlazoEjecucionFase2Construccion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacionesConsideracionesEspeciales, string pUsuarioModificacion, DateTime pFechaActaInicioFase1 , DateTime pFechaTerminacionFase2, bool pEsSupervisor, bool pEsActa);
-        //:  Meses: xx Días: xx   - PlazoFase2PreMeses  - PlazoFase2PreDias - contrato
-        //ObservacionesConsideracionesEspeciales Observaciones  - contrato
 
-        /// <summary>
-        /// ///////////
-        /// </summary>
-        /// <returns></returns>
-        //Task<ActionResult<List<CuentaBancaria>>> GetBankAccount();
-
-        //Task<CuentaBancaria> GetBankAccountById(int id);
-
-        //Task<Respuesta> CreateEditarCuentasBancarias(CuentaBancaria cuentaBancaria);
-
-        //Task<Respuesta> Insert(CuentaBancaria cuentaBancaria);
-
-        //Task<Respuesta> Update(CuentaBancaria cuentaBancaria);
-
-        //Task<bool> Delete(int id);
+        Task GetDiasHabilesActaConstruccionEnviada(AppSettingsService appSettingsService);
+        Task GetDiasHabilesActaRegistrada(AppSettingsService appSettingsService);
     }
 
 }
