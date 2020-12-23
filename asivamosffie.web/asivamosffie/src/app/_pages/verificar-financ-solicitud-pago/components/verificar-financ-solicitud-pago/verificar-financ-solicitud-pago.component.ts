@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DialogRechazarSolicitudVfspComponent } from '../dialog-rechazar-solicitud-vfsp/dialog-rechazar-solicitud-vfsp.component';
 
 @Component({
   selector: 'app-verificar-financ-solicitud-pago',
@@ -29,7 +30,7 @@ export class VerificarFinancSolicitudPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoVerificacion: 'Sin verificación',
+      estadoVerificacion: 'Con verificación de la solicitud por el equipo financiero',
       gestion: 1
     },
     {
@@ -75,12 +76,12 @@ export class VerificarFinancSolicitudPagoComponent implements OnInit {
   verDetalle(id){
     this.routes.navigate(['/verificarFinancieramenteSolicitudDePago/verDetalleVerificarFinancSolicitud',id]);
   }
-  openCertificate(){
+  openRechazo(){
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '1020px';
     //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    //const dialogRef = this.dialog.open(DialogEnvioAutorizacionComponent, dialogConfig);
+    const dialogRef = this.dialog.open(DialogRechazarSolicitudVfspComponent, dialogConfig);
     //dialogRef.afterClosed().subscribe(value => {});
   }
 

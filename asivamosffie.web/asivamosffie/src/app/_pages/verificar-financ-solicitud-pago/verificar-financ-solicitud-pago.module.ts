@@ -12,9 +12,11 @@ import { FormValidListchequeoVfspComponent } from './components/form-valid-listc
 import { DetalleFactProcasVfspComponent } from './components/detalle-fact-procas-vfsp/detalle-fact-procas-vfsp.component';
 import { DialogObservacionesVfspComponent } from './components/dialog-observaciones-vfsp/dialog-observaciones-vfsp.component';
 import { DialogRechazarSolicitudVfspComponent } from './components/dialog-rechazar-solicitud-vfsp/dialog-rechazar-solicitud-vfsp.component';
+import { FormEditVerificarSolicitudVfspComponent } from './components/form-edit-verificar-solicitud-vfsp/form-edit-verificar-solicitud-vfsp.component';
+import { VerdetalleVfspComponent } from './components/verdetalle-vfsp/verdetalle-vfsp.component';
 
 @NgModule({
-  declarations: [VerificarFinancSolicitudPagoComponent,FormVerificarSolicitudVfspComponent, DetalleRegSolPagoVfspComponent, FormValidListchequeoVfspComponent, DetalleFactProcasVfspComponent, DialogObservacionesVfspComponent, DialogRechazarSolicitudVfspComponent],
+  declarations: [VerificarFinancSolicitudPagoComponent,FormVerificarSolicitudVfspComponent, DetalleRegSolPagoVfspComponent, FormValidListchequeoVfspComponent, DetalleFactProcasVfspComponent, DialogObservacionesVfspComponent, DialogRechazarSolicitudVfspComponent, FormEditVerificarSolicitudVfspComponent, VerdetalleVfspComponent],
   imports: [
     CommonModule,
     MaterialModule,

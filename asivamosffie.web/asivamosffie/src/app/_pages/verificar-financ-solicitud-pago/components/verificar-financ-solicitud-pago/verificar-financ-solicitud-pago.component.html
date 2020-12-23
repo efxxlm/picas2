@@ -45,20 +45,18 @@
                     *ngIf="element.estadoVerificacion=='Sin verificación'">
                         Verificar solicitud
                     </button>
-                    <!--
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()"
-                    *ngIf="element.estadoVerificacion=='Con solicitud aprobada por el supervisor'">
-                        Enviar para autorizar solicitud
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.openRechazo()"
+                    *ngIf="element.estadoVerificacion=='Con verificación de la solicitud por el equipo financiero'">
+                        Rechazar solicitud
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)"
-                    *ngIf="element.estadoVerificacion=='En proceso de aprobación'">
+                    *ngIf="element.estadoVerificacion=='Con verificación de la solicitud por el equipo financiero'">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)"
-                    *ngIf="element.estadoVerificacion=='Con solicitud devuelta por el supervisor' || element.estadoVerificacion=='Con solicitud aprobada por el supervisor'">
+                    *ngIf="element.estadoVerificacion=='Rechazada por el equipo financiero' || element.estadoVerificacion=='Con solicitud aprobada por el supervisor'">
                         Ver detalle
                     </button>
-                -->
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
