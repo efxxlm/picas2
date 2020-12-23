@@ -4,12 +4,12 @@
     </button>
     
     <h1 class="title-menu--h1">
-        Avance acumulado por capítulo
+        Avance acumulado por capítulo {{ data.seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
     </h1>
     
     <div class="d-flex justify-content-center mt-1em">
-        <b>Semana 1</b>
-        <p class="ml-3em"> Periodo del reporte: <b>04/07/2020 - 11/07/2020</b> </p>
+        <b>Semana {{ data.seguimientoSemanal.numeroSemana }} </b>
+        <p class="ml-3em"> Periodo del reporte: <b> {{ data.seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ data.seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </b> </p>
     </div>
 
     <section class="table-responsive size-table">

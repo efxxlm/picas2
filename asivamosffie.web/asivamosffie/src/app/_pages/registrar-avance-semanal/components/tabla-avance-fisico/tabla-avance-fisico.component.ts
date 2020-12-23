@@ -135,9 +135,11 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 if ( capitulo.avanceFisicoCapitulo === 0 ) {
                     avanceValue = 0;
                 }
+                if ( capitulo.avanceFisicoCapitulo === null ) {
+                    avanceValue = 0;
+                }
                 totalAvanceFisicoSemana += Number( avanceValue );
             }
-            console.log( totalAvanceFisicoSemana );
             this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] =  this.verifyInteger( totalAvanceFisicoSemana, false );
         }
     }
@@ -180,14 +182,16 @@ export class TablaAvanceFisicoComponent implements OnInit {
     openDialogObservaciones( ) {
         this.dialog.open( DialogAvanceAcumuladoComponent, {
             width: '80em',
-            data: { avanceAcumulado: this.seguimientoDiario.avanceAcumulado }
+            data: { avanceAcumulado: this.seguimientoDiario.avanceAcumulado, seguimientoSemanal: this.seguimientoDiario }
         } );
     }
 
     textoLimpio(texto: number) {
-        if (texto !== undefined) {
+        if (texto !== null) {
           const textolimpio = texto.toString().replace(/[^\w\s]/gi, '');
           return textolimpio.length;
+        } else {
+            return 0;
         }
       }
 
