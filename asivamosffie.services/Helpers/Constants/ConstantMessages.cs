@@ -846,6 +846,13 @@ namespace asivamosffie.services.Helpers.Constant
 
         #endregion Mensajes Exitoso
 
+        #region Mensajes Error
+
+        public const string ErrorInterno = "501";
+
+        public const string Error = "500";
+
+        #endregion Mensajes Error
         
     }
 
