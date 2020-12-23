@@ -2023,8 +2023,7 @@ namespace asivamosffie.services
                         NumeroContrato = "ERROR",
                         EstadoControversia = "ERROR",
                         RegistroCompletoNombre = "ERROR",                        
-                        EstadoControversiaCodigo = "ERROR",
-                        ContratoId = 0,                                                                      
+                        EstadoControversiaCodigo = "ERROR",                                                                
 
                     };
                     ListControversiaContractualGrilla.Add(RegistroControversiaContractual);

@@ -32,7 +32,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         DRPNotificacion = 33,
         DDPCancelado = 34,
         DRPCancelado = 35,
-        AlertaParticipacionJuridica4_2_1=52
+        AlertaParticipacionJuridica4_2_1=52,
         AprobarInicio316 = 36,
         AprobarPoliza4diasNoGestion = 37,
         EnviarSupervisor317 = 38, 

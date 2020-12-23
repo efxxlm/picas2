@@ -3900,10 +3900,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanal>(entity =>
             {
-                entity.Property(e => e.EstadoObraCodigo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
+                
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaFin).HasColumnType("datetime");

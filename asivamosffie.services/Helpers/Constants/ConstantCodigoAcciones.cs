@@ -189,7 +189,6 @@ public const string Inicio_de_sesion = "1";
 
         public const string Cambiar_Estado_Verificacion_Construccion = "157";
 
-        public const string Cambiar_estado_Actuacion_Seguimiento = "150";
 
         //CU 4_4_1
         public const string Crear_seguimiento_actuacion_derivada = "168";

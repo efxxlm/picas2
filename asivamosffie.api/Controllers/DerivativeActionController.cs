@@ -8,6 +8,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace asivamosffie.api.Controllers
 {
@@ -17,10 +18,13 @@ namespace asivamosffie.api.Controllers
     {
 
         public readonly IDerivativeActionService _derivativeActionService;
+        private readonly IOptions<AppSettings> _settings;
 
-        public DerivativeActionController(IDerivativeActionService seguimientoActuacionDerivada)
+        public DerivativeActionController(IDerivativeActionService seguimientoActuacionDerivada, IOptions<AppSettings> settings)
         {
             _derivativeActionService = seguimientoActuacionDerivada;
+
+            _settings = settings;
         }
 
         [HttpPost]
@@ -34,8 +38,10 @@ namespace asivamosffie.api.Controllers
             {
                 
                     seguimientoActuacionDerivada.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-               
-                respuesta = await _derivativeActionService.CreateEditarSeguimientoActuacionDerivada(seguimientoActuacionDerivada);
+                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
+
+                _appSettingsService = toAppSettingsService(_settings);
+                respuesta = await _derivativeActionService.CreateEditarSeguimientoActuacionDerivada(seguimientoActuacionDerivada, _appSettingsService);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -120,7 +126,17 @@ namespace asivamosffie.api.Controllers
         //    }
         //}
 
+        public AppSettingsService toAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService();
+            appSettingsService.MailPort = appSettings.Value.MailPort;
+            appSettingsService.MailServer = appSettings.Value.MailServer;
+            appSettingsService.Password = appSettings.Value.Password;
+            appSettingsService.Sender = appSettings.Value.Sender;
 
+            return appSettingsService;
+
+        }
 
     }
 }

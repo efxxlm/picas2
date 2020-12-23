@@ -19,6 +19,7 @@ using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.IO;
 using asivamosffie.api.Helpers;
+using asivamosffie.api.Controllers;
 
 namespace asivamosffie.api
 {
