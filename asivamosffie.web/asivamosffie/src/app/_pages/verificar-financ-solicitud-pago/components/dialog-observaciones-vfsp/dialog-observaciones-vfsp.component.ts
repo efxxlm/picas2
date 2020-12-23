@@ -9,6 +9,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class DialogObservacionesVfspComponent implements OnInit {
   addressForm = this.fb.group({});
+  editorStyle = {
+    height: '45px',
+    overflow: 'auto'
+  };
+
+  config = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+    ]
+  };
   constructor(public matDialogRef: MatDialogRef<DialogObservacionesVfspComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private fb: FormBuilder) { }
 
   ngOnInit(): void {
