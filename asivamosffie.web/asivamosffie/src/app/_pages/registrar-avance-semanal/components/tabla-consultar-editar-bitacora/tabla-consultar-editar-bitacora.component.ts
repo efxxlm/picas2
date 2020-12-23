@@ -40,11 +40,11 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
         this.avanceSemanalSvc.estadosAvanceSemanal()
         .subscribe( estados => {
             this.estadoAvanceSemanal = estados;
-            console.log( this.estadoAvanceSemanal );
         } );
     }
 
     ngOnInit(): void {
+        this.getBitacora();
     }
 
     getBitacora() {
