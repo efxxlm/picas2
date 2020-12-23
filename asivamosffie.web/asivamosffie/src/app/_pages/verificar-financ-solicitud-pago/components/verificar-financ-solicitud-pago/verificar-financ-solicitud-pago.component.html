@@ -41,21 +41,21 @@
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center"> 
-                    <!--
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.aprobarSolicitud(element.gestion)"
-                    *ngIf="element.estadoAprobacion=='Sin aprobación'">
-                        Aprobar solicitud
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verificarSolicitud(element.gestion)"
+                    *ngIf="element.estadoVerificacion=='Sin verificación'">
+                        Verificar solicitud
                     </button>
+                    <!--
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()"
-                    *ngIf="element.estadoAprobacion=='Con solicitud aprobada por el supervisor'">
+                    *ngIf="element.estadoVerificacion=='Con solicitud aprobada por el supervisor'">
                         Enviar para autorizar solicitud
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)"
-                    *ngIf="element.estadoAprobacion=='En proceso de aprobación'">
+                    *ngIf="element.estadoVerificacion=='En proceso de aprobación'">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)"
-                    *ngIf="element.estadoAprobacion=='Con solicitud devuelta por el supervisor' || element.estadoAprobacion=='Con solicitud aprobada por el supervisor'">
+                    *ngIf="element.estadoVerificacion=='Con solicitud devuelta por el supervisor' || element.estadoVerificacion=='Con solicitud aprobada por el supervisor'">
                         Ver detalle
                     </button>
                 -->

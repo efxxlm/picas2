@@ -66,7 +66,7 @@ export class VerificarFinancSolicitudPagoComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-  aprobarSolicitud(id){
+  verificarSolicitud(id){
     this.routes.navigate(['/verificarFinancieramenteSolicitudDePago/verificarFinancSolicitud',id]);
   }
   verDetalleEditar(id){
