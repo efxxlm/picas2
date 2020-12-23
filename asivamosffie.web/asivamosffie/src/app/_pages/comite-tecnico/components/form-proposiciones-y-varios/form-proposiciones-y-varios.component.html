@@ -159,7 +159,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
                 </mat-form-field>
-                <span class="contador">{{100 - tarea.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{100 - tarea.value.length}}</span>
               </div>
             </div>
           </div>

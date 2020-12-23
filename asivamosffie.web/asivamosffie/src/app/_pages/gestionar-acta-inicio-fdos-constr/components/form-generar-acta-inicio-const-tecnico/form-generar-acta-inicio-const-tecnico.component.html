@@ -151,7 +151,7 @@
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
                                         formControlName="mesPlazoEjFase2" #mesPlazoEjFase2>
                                 </mat-form-field>
-                                <span class="contador">
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
                                     {{2 - mesPlazoEjFase2.value.length}}
                                 </span>
                                 <label class="label-left sub-label" for="diasPlazoEjFase2">
@@ -162,7 +162,7 @@
                                         onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
                                         formControlName="diasPlazoEjFase2" #diasPlazoEjFase2>
                                 </mat-form-field>
-                                <span class="contador">
+                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 31 días" matTooltipClass="info-tooltip">
                                     {{2 - diasPlazoEjFase2.value.length}}
                                 </span>
                             </div>

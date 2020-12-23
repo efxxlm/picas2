@@ -148,8 +148,9 @@
                                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                             type="number" formControlName="mesPlazoEjFase1">
                                     </mat-form-field>
-                                    <span
-                                        class="contador">{{3 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
+                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+                                    {{3 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}
+                                </span>
                                     <label class="label-left sub-label"
                                         [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase1.invalid}">
                                         Días
@@ -160,8 +161,9 @@
                                             onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                                             type="number" formControlName="diasPlazoEjFase1">
                                     </mat-form-field>
-                                    <span
-                                        class="contador">{{2 - (addressForm.get('diasPlazoEjFase1').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}</span>
+                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 31 días" matTooltipClass="info-tooltip">
+                                    {{2 - (addressForm.get('diasPlazoEjFase1').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}
+                                </span>
                                 </div>
                             </div>
                         </div>
@@ -185,8 +187,9 @@
                                             onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                             type="number" formControlName="mesPlazoEjFase2">
                                     </mat-form-field>
-                                    <span
-                                        class="contador">{{3 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
+                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+                                        {{3 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}
+                                    </span>
                                     <label class="label-left sub-label"
                                         [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase2.invalid}">
                                         Días
@@ -197,8 +200,9 @@
                                             onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                                             type="number" formControlName="diasPlazoEjFase2">
                                     </mat-form-field>
-                                    <span
-                                        class="contador">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}</span>
+                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 31 días" matTooltipClass="info-tooltip">
+                                        {{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}
+                                    </span>
                                 </div>
                             </div>
                         </div>
