@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { DialogProyAsociadosVfspComponent } from '../dialog-proy-asociados-vfsp/dialog-proy-asociados-vfsp.component';
 
 @Component({
   selector: 'app-form-verificar-solicitud-vfsp',
@@ -67,7 +68,7 @@ export class FormVerificarSolicitudVfspComponent implements OnInit {
     dialogConfig.height = 'auto';
     dialogConfig.width = '1020px';
     //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    //const dialogRef = this.dialog.open(DialogProyectosAsociadosAprobComponent, dialogConfig);
+    const dialogRef = this.dialog.open(DialogProyAsociadosVfspComponent, dialogConfig);
     //dialogRef.afterClosed().subscribe(value => {});
   }
 }
