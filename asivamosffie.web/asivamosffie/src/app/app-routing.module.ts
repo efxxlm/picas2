@@ -202,6 +202,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-procesos-defensa-judicial/gestionar-procesos-defensa-judicial.module')
         .then(m => m.GestionarProcesosDefensaJudicialModule)
       },
+      {
+        path: 'cargarEnlaceMonitoreoEnLinea',
+        loadChildren: () => import( './_pages/cargar-enlace-sistema-monitoreo-linea/cargar-enlace-sistema-monitoreo-linea.module' )
+          .then( module => module.CargarEnlaceSistemaMonitoreoLineaModule )
+      }
     ]
 
   },
