@@ -216,6 +216,11 @@ const routes: Routes = [
         path: 'preconstruccion',
         loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
         .then(m => m.FasePreconstruccionModule)
+      },      
+      {
+        path: 'verificarFinancieramenteSolicitudDePago',
+        loadChildren: () => import('./_pages/verificar-financ-solicitud-pago/verificar-financ-solicitud-pago.module')
+        .then(m => m.VerificarFinancSolicitudPagoModule)
       },
     ]
 
