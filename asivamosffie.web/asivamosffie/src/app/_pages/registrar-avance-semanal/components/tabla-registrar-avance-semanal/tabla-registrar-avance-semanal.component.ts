@@ -17,6 +17,7 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
     tablaRegistro = new MatTableDataSource();
     dataTable: any = [];
     estadoAvanceSemanal: any;
+    primeraSemana = 1;
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     displayedColumns: string[]  = [

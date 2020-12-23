@@ -62,6 +62,7 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
+                *ngIf="element.numeroSemana !== primeraSemana"
                 [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
                 Consultar/Editar bitacora
         </button>

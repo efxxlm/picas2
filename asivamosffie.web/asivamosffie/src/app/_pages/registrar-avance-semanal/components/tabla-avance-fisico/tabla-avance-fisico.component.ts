@@ -112,35 +112,34 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     valuePending( value: string, registro: any ) {
-        const validateNumber = '^[0-9]+(,[0-9]+)?$';
-        console.log(value.match( validateNumber ));
         if ( isNaN( Number( value ) ) === true ) {
             registro.avanceFisicoCapitulo = '0';
-        }
-        this.seRealizoCambio = true;
-        this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] = 0;
-        let totalAvanceFisicoSemana = 0;
-        if ( Number( value ) > 100 ) {
-            registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
-        }
-        if ( Number( value ) > Number( registro.programacionCapitulo ) ) {
-            registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
-        }
-        if ( Number( value ) < 0 ) {
-            registro.avanceFisicoCapitulo = '';
-        }
-        for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
-            let avanceValue;
-            if ( capitulo.avanceFisicoCapitulo.length > 0 ) {
-                avanceValue = this.verifyInteger( Number( capitulo.avanceFisicoCapitulo ), false );
+        } else {
+            this.seRealizoCambio = true;
+            this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] = 0;
+            let totalAvanceFisicoSemana = 0;
+            if ( Number( value ) > 100 ) {
+                registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
             }
-            if ( capitulo.avanceFisicoCapitulo.length === 0 ) {
-                avanceValue = 0;
+            if ( Number( value ) > Number( registro.programacionCapitulo ) ) {
+                registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
             }
-            totalAvanceFisicoSemana += Number( avanceValue );
+            if ( Number( value ) < 0 ) {
+                registro.avanceFisicoCapitulo = '';
+            }
+            for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
+                let avanceValue;
+                if ( capitulo.avanceFisicoCapitulo.length > 0 ) {
+                    avanceValue = this.verifyInteger( Number( capitulo.avanceFisicoCapitulo ), false );
+                }
+                if ( capitulo.avanceFisicoCapitulo.length === 0 ) {
+                    avanceValue = 0;
+                }
+                totalAvanceFisicoSemana += Number( avanceValue );
+            }
+            console.log( totalAvanceFisicoSemana );
+            this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] =  this.verifyInteger( totalAvanceFisicoSemana, false );
         }
-        console.log( totalAvanceFisicoSemana );
-        this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] =  this.verifyInteger( totalAvanceFisicoSemana, false );
     }
 
     valuePendingProgramacionObra() {
