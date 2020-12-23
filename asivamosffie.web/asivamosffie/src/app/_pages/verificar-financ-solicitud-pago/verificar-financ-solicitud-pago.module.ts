@@ -6,9 +6,10 @@ import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
 import { VerificarFinancSolicitudPagoComponent } from './components/verificar-financ-solicitud-pago/verificar-financ-solicitud-pago.component';
 import { VerificarFinancSolicitudPagoRoutingModule } from './verificar-financ-solicitud-pago-routing.module';
+import { FormVerificarSolicitudVfspComponent } from './components/form-verificar-solicitud-vfsp/form-verificar-solicitud-vfsp.component';
 
 @NgModule({
-  declarations: [VerificarFinancSolicitudPagoComponent],
+  declarations: [VerificarFinancSolicitudPagoComponent,FormVerificarSolicitudVfspComponent],
   imports: [
     CommonModule,
     MaterialModule,

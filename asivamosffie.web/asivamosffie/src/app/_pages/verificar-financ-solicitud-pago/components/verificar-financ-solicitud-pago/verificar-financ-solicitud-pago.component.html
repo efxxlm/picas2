@@ -1,1 +1,69 @@
-<p>verificar-financ-solicitud-pago works!</p>
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Verificar financieramente solicitud de pago
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenida/o, aquí podrá realizar la verificación de las solicitudes de pago para los contratos suscritos, y para los conceptos especiales de Expensas
+        u Otros costos/servicios, que le han sido asignadas a usted y que han sido aprobados previamente por el coordinador técnico y que son
+        ejecutados en el marco de la gestión del FFIE.
+    </div>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="fechaSolicitud">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de solicitud </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaSolicitud }}</b> </td>
+            </ng-container>
+            <ng-container matColumnDef="numeroSolicitud">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroSolicitud }} </td>
+            </ng-container>
+            <ng-container matColumnDef="modalidadContrato">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Modalidad del contrato </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.modalidadContrato }} </td>
+            </ng-container>
+            <ng-container matColumnDef="numeroContrato">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
+            </ng-container>
+            <ng-container matColumnDef="estadoVerificacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la aprobación </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoVerificacion }} </td>
+            </ng-container>
+            <ng-container matColumnDef="gestion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element" align="center"> 
+                    <!--
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.aprobarSolicitud(element.gestion)"
+                    *ngIf="element.estadoAprobacion=='Sin aprobación'">
+                        Aprobar solicitud
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.openCertificate()"
+                    *ngIf="element.estadoAprobacion=='Con solicitud aprobada por el supervisor'">
+                        Enviar para autorizar solicitud
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)"
+                    *ngIf="element.estadoAprobacion=='En proceso de aprobación'">
+                        Ver detalle/Editar
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)"
+                    *ngIf="element.estadoAprobacion=='Con solicitud devuelta por el supervisor' || element.estadoAprobacion=='Con solicitud aprobada por el supervisor'">
+                        Ver detalle
+                    </button>
+                -->
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+</div>
