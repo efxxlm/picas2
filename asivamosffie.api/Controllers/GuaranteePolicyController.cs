@@ -12,11 +12,13 @@ using asivamosffie.services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authorization;
 
 namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+   
     public class GuaranteePolicyController : ControllerBase
     {
         public readonly IGuaranteePolicyService _guaranteePolicy;
@@ -47,7 +49,13 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _guaranteePolicy.InsertEditPolizaObservacion(polizaObservacion);
+                if (polizaObservacion.PolizaObservacionId == 0)
+                    polizaObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    polizaObservacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                asivamosffie.model.APIModels.AppSettingsService _appSettingsService ;
+                _appSettingsService = toAppSettingsService(_settings);
+                respuesta = await _guaranteePolicy.InsertEditPolizaObservacion(polizaObservacion, _appSettingsService);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -65,6 +73,11 @@ namespace asivamosffie.api.Controllers
             try
             {
                 //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                if (polizaGarantia.PolizaGarantiaId == 0)
+                    polizaGarantia.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    polizaGarantia.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+
                 respuesta = await _guaranteePolicy.InsertEditPolizaGarantia(polizaGarantia);
                 return Ok(respuesta);
             }
@@ -81,8 +94,8 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {                
-                //contratoPoliza.UsuarioModificacion= HttpContext.User.FindFirst("User").Value;
+            {
+                contratoPoliza.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _guaranteePolicy.EditarContratoPoliza(contratoPoliza);
                 return Ok(respuesta);
             }
@@ -174,7 +187,7 @@ namespace asivamosffie.api.Controllers
                 asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
 
                 _appSettingsService = toAppSettingsService(_settings);
-                rta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato, _appSettingsService);
+                rta = await _guaranteePolicy.AprobarContratoByIdContrato(pIdContrato, _appSettingsService,  HttpContext.User.FindFirst("User").Value);
 
                 return Ok(rta);
             }
@@ -196,15 +209,79 @@ namespace asivamosffie.api.Controllers
         {
             var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoPolizaId(pContratoPolizaId);
             return respuesta;
+        }        
+
+        [Route("ConsultarRegistroCompletoCumple")]
+        [HttpGet]        
+        public async Task<bool> ConsultarRegistroCompletoCumple(int pContratoPolizaId)
+        {
+            var respuesta = await _guaranteePolicy.ConsultarRegistroCompletoCumple(pContratoPolizaId);
+            return respuesta;
         }
+
+        [Route("GetContratoPolizaByIdContratoId")]
+        [HttpGet]
+        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoId)
+        public async Task<ContratoPoliza> GetContratoPolizaByIdContratoId(int pContratoId)
+        {
+            var respuesta = await _guaranteePolicy.GetContratoPolizaByIdContratoId(pContratoId);
+            return respuesta;
+        }
+
+        [Route("GetNotificacionContratoPolizaByIdContratoId")]
+        [HttpGet]
+        //public async Task<List<ContratoPoliza>> GetContratoPolizaByIdContratoPolizaId(int pContratoId)
+        public async Task<NotificacionMensajeGestionPoliza> GetNotificacionContratoPolizaByIdContratoId(int pContratoId)
+        {
+            var respuesta = await _guaranteePolicy.GetNotificacionContratoPolizaByIdContratoId(pContratoId);
+            return respuesta;
+        }
+        
+
+
+        [HttpPut]
+        [Route("CambiarEstadoPoliza")]
+        public async Task<IActionResult> CambiarEstadoPoliza([FromQuery]  int pContratoPolizaId, string pCodigoNuevoEstadoPoliza)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _guaranteePolicy.CambiarEstadoPoliza( pContratoPolizaId,  pCodigoNuevoEstadoPoliza,  HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+         [HttpPut]
+        [Route("CambiarEstadoPolizaByContratoId")]
+        public async Task<IActionResult> CambiarEstadoPolizaByContratoId([FromQuery]  int pContratoId, string pCodigoNuevoEstadoPoliza)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _guaranteePolicy.CambiarEstadoPolizaByContratoId( pContratoId,  pCodigoNuevoEstadoPoliza,  HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+        
+
 
         [HttpGet]
         [Route("GetListVistaContratoGarantiaPoliza")]
-        public async Task<ActionResult<List<VistaContratoGarantiaPoliza>>> GetListVistaContratoGarantiaPoliza()
+        public async Task<ActionResult<List<VistaContratoGarantiaPoliza>>> GetListVistaContratoGarantiaPoliza(int pContratoId)
         {
             try
             {
-                return await _guaranteePolicy.ListVistaContratoGarantiaPoliza();
+                return await _guaranteePolicy.ListVistaContratoGarantiaPoliza(pContratoId);
             }
             catch (Exception ex)
             {

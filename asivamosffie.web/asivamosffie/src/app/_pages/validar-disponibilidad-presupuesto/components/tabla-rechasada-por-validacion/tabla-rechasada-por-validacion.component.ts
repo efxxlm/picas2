@@ -67,7 +67,7 @@ export class TablaRechasadaPorValidacionComponent implements OnInit {
 
   verDetalle(id: number) {
     console.log(id);
-    this.router.navigate(['validarDisponibilidadPresupuesto/rechazadaProValidacion', id]);
+    this.router.navigate(['validarDisponibilidadPresupuesto/conValidacionPresupuestal', id]);
   }
 
 }

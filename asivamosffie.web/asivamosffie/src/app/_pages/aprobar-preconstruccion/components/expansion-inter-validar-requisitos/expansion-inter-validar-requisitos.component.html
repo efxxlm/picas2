@@ -1,0 +1,155 @@
+<section class="container" *ngIf="contrato">
+  <div class="text-center">
+    <div class="text-right">
+      <a routerLink="/aprobarPreconstruccion" mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Validar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
+    </h1>
+    <p class="colorMainColor" style="margin-top: 1em;">
+      <span class="mx-2em">
+        <b> Fecha de aprobacion de póliza: </b> {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
+      </span>
+      <span style="margin-left: 2em;">
+        <b> Proyectos asociados: </b> {{ contrato.contratacion.contratacionProyecto.length }}
+      </span>
+    </p>
+    <p class="info-container" style="margin-top: 2em;">
+      <span class="info-text sin-diligenciar">Sin diligenciar</span>
+      <span class="info-text en-proceso">En proceso</span>
+      <span class="info-text completo">Completo</span>
+    </p>
+  </div>
+
+  <mat-accordion *ngFor="let contratoProyecto of contrato.contratacion.contratacionProyecto">
+    <mat-expansion-panel class="expansion-style">
+      <mat-expansion-panel-header class="expansion-style--header" style="width: 50%;">
+        <mat-panel-title class="expansion-style--title" [ngClass]="contratoProyecto[ 'estadoSemaforo' ]">
+          {{ contratoProyecto.proyecto.llaveMen }} - {{ contratoProyecto.proyecto[ 'institucionEducativa' ].nombre }} - {{ contratoProyecto.proyecto[ 'sede' ].nombre }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-card class="shipping-card">
+        <mat-card-content>
+          <p>
+            <b>Nombre del contratista:</b>
+            {{ contrato.contratacion.contratista.nombre }}
+          </p>
+          <p>
+            <b>Número de identificación (NIT/RUT):</b>
+            {{ contrato.contratacion.contratista.numeroIdentificacion }}
+          </p>
+          <p>
+            <b>Tipo de intervención:</b>
+            {{ contratoProyecto.proyecto.tipoIntervencionCodigo }}
+          </p>
+          <p>
+            <b>Departamento:</b>
+            {{ contratoProyecto.proyecto.departamento }}
+          </p>
+          <p>
+            <b>Municipio:</b>
+            {{ contratoProyecto.proyecto.municipio }}
+          </p>
+          <p>
+            <b>Valor total del proyecto:</b>
+            {{ contratoProyecto.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+
+
+      <mat-accordion *ngFor="let perfil of contratoProyecto.proyecto.contratoPerfil; index as i">
+        <mat-expansion-panel class="expansion-style sub-expansion">
+          <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="perfil[ 'estadoSemaforo' ]">
+              Perfil {{ i+1 }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-card class="shipping-card">
+            <mat-card-content>
+              <p>
+                <b>Perfil:</b>
+                {{ perfil[ 'nombre' ] }}
+              </p>
+              <p>
+                <b>Cantidad de hojas de vida requeridas:</b>
+                {{ perfil.cantidadHvRequeridas }}
+              </p>
+              <p>
+                <b>Cantidad de hojas de vida recibidas:</b>
+                {{ perfil.cantidadHvRecibidas }}
+              </p>
+              <p>
+                <b>Cantidad de hojas de vida aprobadas:</b>
+                {{ perfil.cantidadHvAprobadas }}
+              </p>
+              <p>
+                <b>Fecha de aprobación de la totalidad de las hojas de vida:</b>
+                {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }}
+              </p>
+              <div *ngFor="let obs of perfil.contratoPerfilObservacion">
+                <div *ngIf="obs.tipoObservacionCodigo === '2'">
+                  <b style="margin-bottom: .5em;">Oservaciones:</b> <div [innerHTML]="innerObservacion( obs.observacion )"></div>
+                </div>
+              </div>
+              <p *ngFor="let radicadoFfie of perfil.contratoPerfilNumeroRadicado; index as j">
+                <b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }}:</b>
+                {{ radicadoFfie['numeroRadicado'] }}
+              </p>
+              <p>
+                <b>URL con soporte:</b>
+                {{ perfil.rutaSoporte }}
+              </p>
+            </mat-card-content>
+          </mat-card>
+
+          <div class="row justify-content-center mb-2em">
+            <div class="pr-1">
+              <label class="label-left" for="tieneObservacion">
+                ¿Desde la supervisión tiene observaciones a las hojas de vida de este perfil?:
+              </label>
+            </div>
+            <div>
+              <mat-radio-group class="radioInput" [(ngModel)]="perfil['tieneObservaciones']">
+                <mat-radio-button [value]="true" [checked]="perfil['tieneObservaciones'] === true">Sí</mat-radio-button>
+                <mat-radio-button [value]="false" [checked]="perfil['tieneObservaciones'] === false">No</mat-radio-button>
+              </mat-radio-group>
+              <span class="required-form-group m-0">*</span>
+            </div>
+          </div>
+          <div class="d-flex align-items-center" *ngIf="perfil['tieneObservaciones'] === true">
+            <div class="text-area-quill">
+              <label for="alcanceParticular" class="text-area-quill--label size-label colorMainColor">
+                Observaciones a las hojas de vida del contratista de obra
+              </label>
+              <quill-editor class="quill-editor-style miles" [styles]="editorStyle" [modules]="config"
+                (onContentChanged)="maxLength($event, 1000)" [(ngModel)]="perfil['verificarObservacion']" required>
+              </quill-editor>
+            </div>
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] !== null && perfil['verificarObservacion'].length > 0">
+              {{1000 - textoLimpio(perfil['verificarObservacion'])}}
+            </span>
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] === null || perfil['verificarObservacion'].length === 0">
+              1000
+            </span>
+          </div>
+
+          <div class="text-center">
+            <button mat-button color="warn" class="btn-guardar" type="submit"
+            [disabled]="perfil['tieneObservaciones'] === null"
+            (click)="onSubmit( perfil )">
+              <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+          </div>
+
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+
+</section>

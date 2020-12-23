@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,8 +8,9 @@ import { Observable } from 'rxjs';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { ProjectService } from 'src/app/core/_services/project/project.service';
 import { ProjectContractingService } from 'src/app/core/_services/projectContracting/project-contracting.service';
-import { ContratacionProyecto, EstadosProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
+import { ContratacionObservacion, ContratacionProyecto, EstadosProyecto, EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
 import { SesionComiteSolicitud } from 'src/app/_interfaces/technicalCommitteSession';
+import { ObservacionComponent } from 'src/app/_pages/comite-tecnico/components/observacion/observacion.component';
 
 
 @Component({
@@ -27,6 +29,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
   listaEstadosCompleta: Dominio[] = [];
   estadosValidos: string[] = ['4', '6', '8'] 
   estadosSolicitud = EstadosSolicitud;
+  estadosProyecto = EstadosProyecto;
   proyectos: ContratacionProyecto[] = []
 
   displayedColumns: string[] = [
@@ -53,6 +56,7 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     private commonService: CommonService,
     private router: Router,
     private projectContractingService: ProjectContractingService,
+    public dialog: MatDialog,
 
   ) {
 
@@ -137,16 +141,44 @@ export class TablaFormSolicitudMultipleComponent implements OnInit, OnChanges {
     };
     this.cargarRegistro();
   }
-  Observaciones(contratacionProyectoid: number, contratacionid: number) {
-    this.router.navigate(['/comiteTecnico/crearActa',
-      this.sesionComiteSolicitud.comiteTecnicoId,
-      'observacion',
-      this.sesionComiteSolicitud.sesionComiteSolicitudId,
-      this.sesionComiteSolicitud.comiteTecnicoId,
-      contratacionProyectoid,
-      contratacionid
-    ])
+
+  Observaciones(contratacionProyectoid: number, 
+                contratacionid: number, 
+                contratacionObservacion: ContratacionObservacion[],
+                proyectoId: number,
+                estadoProyectoCodigo: number) {
+
+    let idsesionComiteSolicitud = this.sesionComiteSolicitud.sesionComiteSolicitudId;
+    let idcomiteTecnico = this.sesionComiteSolicitud.comiteTecnicoId;
+
+    const dialogRef = this.dialog.open(ObservacionComponent, {
+      width: '60em',
+      data: { contratacionProyectoid, 
+              contratacionid,
+              idsesionComiteSolicitud, 
+              idcomiteTecnico, 
+              contratacionObservacion,
+              proyectoId,
+              estadoProyectoCodigo
+
+             }
+    });
+
+    dialogRef.afterClosed().subscribe( observaciones => {
+      this.cargarRegistro();
+    })
   }
+
+  // Observaciones(contratacionProyectoid: number, contratacionid: number) {
+  //   this.router.navigate(['/comiteTecnico/crearActa',
+  //     this.sesionComiteSolicitud.comiteTecnicoId,
+  //     'observacion',
+  //     this.sesionComiteSolicitud.sesionComiteSolicitudId,
+  //     this.sesionComiteSolicitud.comiteTecnicoId,
+  //     contratacionProyectoid,
+  //     contratacionid
+  //   ])
+  // }
 
   onChangeEstado() {
     this.ActualizarProyectos.emit(this.proyectos);

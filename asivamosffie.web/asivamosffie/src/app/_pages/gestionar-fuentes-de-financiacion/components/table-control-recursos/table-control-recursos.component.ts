@@ -93,7 +93,7 @@ export class TableControlRecursosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.fuenteFinanciacionServices.DeleteResourceFundingBySourceFunding(borrarForm).subscribe(res=>{
           console.log(res);
@@ -109,13 +109,12 @@ export class TableControlRecursosComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
-      {
+      
         this.router.navigate(['/gestionarFuentes/controlRecursos', this.idFuente, 0])   
         setTimeout(() => {
           location.reload(); 
         }, 1000);    
-      }           
+                 
     });
   }
 
@@ -127,7 +126,7 @@ export class TableControlRecursosComponent implements OnInit {
 
   eliminar(e: number) {
     console.log(e);
-    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",e);
+    this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",e);
   }
 
 }

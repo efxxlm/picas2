@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ComiteGrilla, ComiteTecnico, SesionComiteSolicitud, SesionComiteTema, SesionParticipante, SesionSolicitudCompromiso, SesionTemaVoto, SolicitudesContractuales } from 'src/app/_interfaces/technicalCommitteSession';
+import { ComiteGrilla, ComiteTecnico, ProcesoSeleccionMonitoreo, SesionComiteSolicitud, SesionComiteTema, SesionParticipante, SesionSolicitudCompromiso, SesionTemaVoto, SolicitudesContractuales } from 'src/app/_interfaces/technicalCommitteSession';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../common/common.service';
 
@@ -52,6 +52,10 @@ export class FiduciaryCommitteeSessionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/createEditSesionComiteTema`, lista);    
   }
 
+  enviarComiteParaAprobacion( comite: ComiteTecnico ){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/RegisterSessionTechnicalCommittee/EnviarComiteParaAprobacion`, comite );
+   }
+
   aplazarSesionComite( comite: ComiteTecnico ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/aplazarSesionComite`, comite );
    }
@@ -102,6 +106,14 @@ export class FiduciaryCommitteeSessionService {
 
    verificarTemasCompromisos( comite: ComiteTecnico ){
     return this.http.post<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/verificarTemasCompromisos`, comite );
+   }
+
+   deleteComiteTecnicoByComiteTecnicoId( id: number ){
+    return this.http.delete<Respuesta>(`${environment.apiUrl}/CommitteeSessionFiduciario/deleteComiteTecnicoByComiteTecnicoId?pComiteTecnicoId=${ id }`);
+   }
+
+   getProcesoSeleccionMonitoreo( id: number ){
+    return this.http.get<ProcesoSeleccionMonitoreo>(`${environment.apiUrl}/CommitteeSessionFiduciario/getProcesoSeleccionMonitoreo?pProcesoSeleccionMonitoreoId=${ id }`);
    }
 
 }

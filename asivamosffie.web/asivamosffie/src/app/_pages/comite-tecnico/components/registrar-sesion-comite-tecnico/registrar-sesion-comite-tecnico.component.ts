@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AplazarSesionComponent } from '../aplazar-sesion/aplazar-sesion.component';
 import { TechnicalCommitteSessionService } from 'src/app/core/_services/technicalCommitteSession/technical-committe-session.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ComiteTecnico, EstadosComite } from 'src/app/_interfaces/technicalCommitteSession';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 @Component({
@@ -13,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class RegistrarSesionComiteTecnicoComponent implements OnInit {
 
   objetoComiteTecnico: ComiteTecnico = {};
+  cargoRegistro: boolean = false
 
   estadosComite = EstadosComite
   estadoAcordeon : string = "";
@@ -21,6 +22,7 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
                 public dialog: MatDialog,
                 private technicalCommitteeSessionService: TechnicalCommitteSessionService,
                 private activatedRoute: ActivatedRoute,
+                private router: Router
 
              ) 
   { 
@@ -48,8 +50,8 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
 
     this.technicalCommitteeSessionService.cambiarEstadoComiteTecnico( comite )
       .subscribe( respuesta => {
-        this.openDialog('', '“No se cuenta con el Quorum necesario para realizar la sesión”.');
-        this.ngOnInit();
+        this.openDialog('', '<b>No se cuenta con el Quorum necesario para realizar la sesión.</b>');
+        this.router.navigate(["/comiteTecnico"]);
       })
   }
 
@@ -64,6 +66,7 @@ export class RegistrarSesionComiteTecnicoComponent implements OnInit {
       this.technicalCommitteeSessionService.getComiteTecnicoByComiteTecnicoId( parametros.id )
         .subscribe( response => {
           this.objetoComiteTecnico = response;
+          this.cargoRegistro = true
 
           console.log( response )
 

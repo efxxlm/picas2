@@ -7,6 +7,8 @@ import { GrillaProcesosContractuales } from 'src/app/_interfaces/procesosContrac
 import { ProcesosContractualesService } from '../../../../core/_services/procesosContractuales/procesos-contractuales.service';
 import { Observable } from 'rxjs';
 import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-solicitudes-sin-tramitar',
@@ -22,10 +24,15 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
   @ViewChild( MatSort, { static: true } ) sort          : MatSort;
   displayedColumns: string[] = [ 'fechaSolicitud', 'numeroSolicitud', 'tipoSolicitud', 'estadoDelRegistro', 'id' ];
   estadoCodigo: string;
-  estadoCodigoFiduciaria: string = "9";
+  enviarFiduciaria: string = "4";
+  estadoCodigos = {
+    aprobadoCf: '13'
+  };
 
   constructor ( private routes: Router,
-                private procesosContractualesSvc: ProcesosContractualesService ) {
+                private procesosContractualesSvc: ProcesosContractualesService,
+                private dialog: MatDialog ) 
+  {
   }
 
   ngOnInit() {
@@ -40,7 +47,7 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
       
       for ( let solicitud of resp ) {
 
-        if ( solicitud.estadoCodigo === '2' ) {
+        if ( solicitud.estadoCodigo === this.estadoCodigos.aprobadoCf ) {
 
           ( solicitud.estadoRegistro ) ? conTrue+=1 : conFalse+=1;
 
@@ -68,9 +75,14 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
 
-  gestionar ( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number, estadoCodigo: string ) {
-    
-    console.log( sesionComiteSolicitudId );
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data : { modalTitle, modalText }
+    });
+  }
+
+  gestionar( tipoSolicitud: string, solicitudId: number, sesionComiteSolicitudId: number, estadoCodigo: string ) {
 
     switch ( tipoSolicitud ) {
 
@@ -95,10 +107,18 @@ export class TablaSolicitudesSinTramitarComponent implements OnInit {
 
   sendCambioTramite ( elemento: any ) {
     
-    elemento.estadoCodigo = this.estadoCodigoFiduciaria;
+    elemento.estadoCodigo = this.enviarFiduciaria;
 
     this.procesosContractualesSvc.sendCambioTramite( elemento )
-      .subscribe( console.log );
+      .subscribe(
+        response => {
+          this.openDialog( '', `<b>${response.message}</b>` );
+          this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+            () => this.routes.navigate( [ '/procesosContractuales' ] )
+          );
+        },
+        err => this.openDialog( '', `<b>${err.message}</b>` )
+      );
 
   }
 

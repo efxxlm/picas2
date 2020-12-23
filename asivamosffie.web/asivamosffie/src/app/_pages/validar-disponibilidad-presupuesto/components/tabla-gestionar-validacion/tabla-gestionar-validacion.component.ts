@@ -60,21 +60,23 @@ export class TablaGestionarValidacionComponent implements OnInit {
     console.log(this.ver);
     let elements:PeriodicElement[]=[];
     this.proyectos.forEach(element => {
-      elements.push({
-        llaveMen:element.llaveMen,
-        departamento:element.departamento,
-        estado:element.valorGestionado>0,//
-        id:element.aportanteID,//el aprotante id
-        institucion:element.institucionEducativa,
-        municipio:element.municipio,
-        sede:element.sede,
-        nombreAportante:element.nombreAportante,
-        tipoInterventor:element.tipoIntervencion,//revisar
-        valorAportante:element.valorAportante,
-        disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto,
-        valorGestionado:element.valorGestionado,
-        ver:this.ver
-      });  
+      element.aportantes.forEach(element2 => {
+        elements.push({
+          llaveMen:element.llaveMen,
+          departamento:element.departamento,
+          estado:element2.valorGestionado>0,//
+          id:element2.cofinanciacionAportanteId,//el aprotante id
+          institucion:element.institucionEducativa,
+          municipio:element.municipio,
+          sede:element.sede,
+          nombreAportante:element2.nombre,
+          tipoInterventor:element.tipoIntervencion,//revisar
+          valorAportante:element2.valorAportanteAlProyecto,
+          disponibilidadPresupuestalProyectoid:element.disponibilidadPresupuestalProyecto,
+          valorGestionado:element.valorGestionado,
+          ver:this.ver
+        });  
+      });
     });
     console.log(elements);
     this.dataSource = new MatTableDataSource(elements);

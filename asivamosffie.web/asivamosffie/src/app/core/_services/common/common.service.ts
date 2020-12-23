@@ -5,15 +5,13 @@ import { map } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 import { Usuario } from '../autenticacion/autenticacion.service';
 import { promise } from 'protractor';
+import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstruccion.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
-  
-  
-  
-
+    
   constructor(private http: HttpClient) { }
 
   public loadProfiles() {
@@ -26,9 +24,14 @@ export class CommonService {
     return retorno;
   }
 
+  getDocumento ( pPath: string ) {
+    return this.http.get( `${ environment.apiUrl }/Document/GetFileByPath?pPath=${ pPath }`, { responseType: "blob" } );
+  };
+
   listaTipoAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=3`);
   }
+  
 
   listaNombreAportante(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=4`);
@@ -93,7 +96,6 @@ export class CommonService {
   }
   
   listaAportanteByTipoAportanteId(pTipoAportanteID:number){
-    console.log(environment.apiUrl);
     return this.http.get<any[]>(`${environment.apiUrl}/Cofinancing/GetListAportanteByTipoAportanteId?pTipoAportanteID=${pTipoAportanteID}`);
   }
 
@@ -132,9 +134,16 @@ export class CommonService {
   listaEstadoProcesoSeleccion(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=35`);
   }
+  listaEstadoProcesoSeleccionMonitoreo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=79`);
+  }
 
   listaTipoDisponibilidadPresupuestal(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=36`);
+  }
+  
+  listaTipoDisponibilidadPresupuestalNotCode(minCode:string){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominioNotCode?pIdDominio=36&pMinCode=${minCode}`);
   }
 
   listaEstadoCronogramaSeguimiento(){
@@ -142,7 +151,7 @@ export class CommonService {
   }
 
   getUsuariosByPerfil( pIdPerfil: number ){
-    return this.http.get<Usuario[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
+    return this.http.get<any[]>(`${environment.apiUrl}/Common/GetUsuariosByPerfil?pIdPerfil=${ pIdPerfil }`);
   }
 
   listaFases(){
@@ -150,6 +159,9 @@ export class CommonService {
   }
   listaSalarios(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=64`);
+  }
+  listaEtapaActualProceso(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=83`);
   }
   listaLimiteSalarios(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=65`);
@@ -175,6 +187,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=50`);
   }
 
+  listaPerfil () {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=11`);
+  }
+
   listaEstadoCompromisos(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=45`);
   }
@@ -185,6 +201,10 @@ export class CommonService {
   
   listaEstadoProyecto(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
+  }
+
+  listaEstadoRevision(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
   }
 
   public listaUsuarios(){
@@ -248,6 +268,10 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=49`);
   }
 
+  listaGarantiasPolizas(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=58`);
+  }
+
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];
@@ -257,7 +281,14 @@ export class CommonService {
 
     return vigencias;
   }
+
+  public getFileById(id: number) {   
+    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesById?pArchivoCargueId=${id}`, { responseType: "blob" });
+    return retorno;
+  }
 }
+
+
 
 export interface Dominio{
   descripcion?: string;

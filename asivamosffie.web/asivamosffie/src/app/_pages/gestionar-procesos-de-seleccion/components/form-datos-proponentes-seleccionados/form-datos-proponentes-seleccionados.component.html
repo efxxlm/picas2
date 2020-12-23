@@ -2,7 +2,7 @@
   <div class="pr-1">
     <label class="label-left">Tipos de proponente</label>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-5">
     <mat-form-field class="select-width">
       <mat-select [formControl]="tipoProponente" (selectionChange)="limpiarForms()" required>
         <mat-option *ngFor="let proponente of listaProponentes" [value]="proponente">
@@ -28,7 +28,7 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #nombre type="text" maxlength="100" [formControl]="myControl" required
+            <input matInput #nombre type="text" maxlength="1000" [formControl]="myControl" required
               [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete">
               <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredName  | async"
@@ -38,7 +38,7 @@
             </mat-autocomplete>
             <input type="hidden" formControlName="procesoSeleccionProponenteId">
           </mat-form-field>
-          <span class="contador">{{100 - nombre.value.length}}</span>
+          <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{1000 - nombre.value.length}}</span>
         </div>
       </div>
       <div class="row">
@@ -50,9 +50,12 @@
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input matInput #numeroIdentificacion type="number" maxlength="12"
-                  formControlName="numeroIdentificacion" required>
+                  formControlName="numeroIdentificacion"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{12 - numeroIdentificacion.value.length}}</span>
             </div>
           </div>
         </div>
@@ -99,9 +102,9 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #direccion type="text" maxlength="100" formControlName="direccion" required>
+            <input matInput #direccion type="text" maxlength="500" formControlName="direccion" required>
           </mat-form-field>
-          <span class="contador">{{100 - direccion.value.length}}</span>
+          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - direccion.value.length}}</span>
         </div>
       </div>
       <div class="row">
@@ -116,7 +119,8 @@
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{10 - telefono.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{10 - telefono.value.length}}</span>
             </div>
           </div>
         </div>
@@ -127,16 +131,16 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #correoElectronico type="email" maxlength="100" formControlName="correoElectronico"
+            <input matInput #correoElectronico type="email" maxlength="1000" formControlName="correoElectronico"
               required>
           </mat-form-field>
-          <span class="contador">{{100 - correoElectronico.value.length}}</span>
+          <span class="contador miles">{{1000 - correoElectronico.value.length}}</span>
         </div>
       </div>
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button  *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>
@@ -157,7 +161,7 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="full-width">
-            <input matInput #nombre2 type="text" maxlength="100" [formControl]="myJuridica" required
+            <input matInput #nombre2 type="text" maxlength="1000" [formControl]="myJuridica" required
               [matAutocomplete]="auto2">
             <mat-autocomplete #auto2="matAutocomplete">
               <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredNameJuridica  | async"
@@ -167,7 +171,7 @@
             </mat-autocomplete>
             <input type="hidden" formControlName="procesoSeleccionProponenteId">
           </mat-form-field>
-          <span class="contador">{{100 - nombre2.value.length}}</span>
+          <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{1000 - nombre2.value.length}}</span>
         </div>
       </div>
       <div class="row">
@@ -179,9 +183,12 @@
             <div class="col d-flex">
               <mat-form-field class="full-width">
                 <input matInput #numeroIdentificacion2 type="number" maxlength="12"
-                  formControlName="numeroIdentificacion" required>
+                  formControlName="numeroIdentificacion"
+                  (keypress)="validateNumberKeypress($event)"
+                  onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{12 - numeroIdentificacion2.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{12 - numeroIdentificacion2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -194,7 +201,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #representanteLegal2 type="text" maxlength="100" [formControl]="representanteLegal"
+                <input matInput #representanteLegal2 type="text" maxlength="1000" [formControl]="representanteLegal"
                   required [matAutocomplete]="auto4">
                 <mat-autocomplete #auto4="matAutocomplete">
                   <mat-option (click)="seleccionAutocomplete2(nombres)"
@@ -203,7 +210,7 @@
                   </mat-option>
                 </mat-autocomplete>
               </mat-form-field>
-              <span class="contador">{{100 - representanteLegal2.value.length}}</span>
+              <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{1000 - representanteLegal2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -220,7 +227,8 @@
                   formControlName="cedulaRepresentanteLegal" (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
               </mat-form-field>
-              <span class="contador">{{12 - cedulaRepresentanteLegal2.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{12 - cedulaRepresentanteLegal2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -269,9 +277,9 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #direccion2 type="text" maxlength="100" formControlName="direccion" required>
+                <input matInput #direccion2 type="text" maxlength="500" formControlName="direccion" required>
               </mat-form-field>
-              <span class="contador">{{100 - direccion2.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - direccion2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -288,7 +296,8 @@
                   (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{10 - telefono2.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{10 - telefono2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -301,10 +310,10 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput #correoElectronico2 type="email" maxlength="100" formControlName="correoElectronico"
+                <input matInput #correoElectronico2 type="email" maxlength="1000" formControlName="correoElectronico"
                   required>
               </mat-form-field>
-              <span class="contador">{{100 - correoElectronico2.value.length}}</span>
+              <span class="contador miles">{{1000 - correoElectronico2.value.length}}</span>
             </div>
           </div>
         </div>
@@ -312,7 +321,7 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
+    <button  *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
       <img src="assets/img/icon/guardar.svg" alt="Regresar">
     </button>
   </div>
@@ -337,7 +346,8 @@
                   onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
                 <input type="hidden" formControlName="procesoSeleccionProponenteId">
               </mat-form-field>
-              <span class="contador">{{2 - cuantasEntidades.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{2 - cuantasEntidades.value.length}}</span>
             </div>
           </div>
         </div>
@@ -352,9 +362,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #nombre3 type="text" maxlength="100" formControlName="nombreConsorcio" required>
+                  <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombreConsorcio" required>
                 </mat-form-field>
-                <span class="contador">{{100 - nombre3.value.length}}</span>
+                <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{1000 - nombre3.value.length}}</span>
               </div>
             </div>
           </div>
@@ -374,9 +384,9 @@
                     </div>
                     <div class="col d-flex">
                       <mat-form-field class="full-width">
-                        <input matInput #nombre3 type="text" maxlength="100" formControlName="nombre" required>
+                        <input matInput #nombre3 type="text" maxlength="1000" formControlName="nombre" required>
                       </mat-form-field>
-                      <span class="contador">{{100 - nombre3.value.length}}</span>
+                      <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{1000 - nombre3.value.length}}</span>
                     </div>
                   </div>
                 </div>
@@ -395,13 +405,13 @@
                           onkeyup="if(this.value>100) this.value = 100;" required>
                         <input type="hidden" formControlName="procesoSeleccionIntegranteId">
                       </mat-form-field>
-                      <span class="contador">%</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">%</span>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-4 text-right" *ngIf="unionTemporalForm.value.entidades.length > 1">
-                  <button mat-button color="warn" type="button" class="btn-eliminar"
-                    (click)="borrarArray(entidades, i)">
+                  <button *ngIf="editar" mat-button color="warn" type="button" class="btn-eliminar"
+                    (click)="borrarIntegrante(entidades, i)">
                     <img src="assets/img/icon/menos.svg" alt="Eliminar integrante">
                     Eliminar integrante
                   </button>
@@ -435,7 +445,7 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #nombre type="text" maxlength="100" [formControl]="myJuridica2" required
+                  <input matInput #nombre type="text" maxlength="1000" [formControl]="myJuridica2" required
                     [matAutocomplete]="auto3">
                   <mat-autocomplete #auto3="matAutocomplete">
                     <mat-option (click)="seleccionAutocomplete3(nombres)"
@@ -444,7 +454,7 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <span class="contador">{{100 - nombre.value.length}}</span>
+                <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{1000 - nombre.value.length}}</span>
               </div>
             </div>
           </div>
@@ -461,7 +471,8 @@
                     formControlName="cedulaRepresentanteLegal" (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;" required>
                 </mat-form-field>
-                <span class="contador">{{12 - numeroIdentificacion.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{12 - numeroIdentificacion.value.length}}</span>
               </div>
             </div>
           </div>
@@ -511,9 +522,9 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #direccion3 type="text" maxlength="100" formControlName="direccion" required>
+                  <input matInput #direccion3 type="text" maxlength="500" formControlName="direccion" required>
                 </mat-form-field>
-                <span class="contador">{{100 - direccion3.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - direccion3.value.length}}</span>
               </div>
             </div>
           </div>
@@ -530,7 +541,8 @@
                     (keypress)="validateNumberKeypress($event)"
                     onKeyPress="if(this.value.length>=this.maxLength) return false;">
                 </mat-form-field>
-                <span class="contador">{{10 - telefono3.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                matTooltipClass="info-tooltip">{{10 - telefono3.value.length}}</span>
               </div>
             </div>
           </div>
@@ -543,10 +555,10 @@
               </div>
               <div class="col d-flex">
                 <mat-form-field class="full-width">
-                  <input matInput #correoElectronico3 type="email" maxlength="100" formControlName="correoElectronico"
+                  <input matInput #correoElectronico3 type="email" maxlength="1000" formControlName="correoElectronico"
                     required>
                 </mat-form-field>
-                <span class="contador">{{100 - correoElectronico3.value.length}}</span>
+                <span class="contador miles">{{1000 - correoElectronico3.value.length}}</span>
               </div>
             </div>
           </div>
@@ -555,8 +567,8 @@
     </mat-card-content>
   </mat-card>
   <div class="text-center">
-    <button mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Regresar">
+    <button  *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
     </button>
   </div>
 </form>

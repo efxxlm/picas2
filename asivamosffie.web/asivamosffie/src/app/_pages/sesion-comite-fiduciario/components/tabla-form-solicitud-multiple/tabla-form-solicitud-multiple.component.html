@@ -18,7 +18,7 @@
 
         <ng-container matColumnDef="institucionEducativa">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
-            <td mat-cell *matCellDef="let element"> {{ element.proyectoGrilla.institucionEducativa }} </td>
+            <td mat-cell *matCellDef="let element"> {{ element.proyectoGrilla.institucionEducativa }}  </td>
         </ng-container>
 
         <ng-container matColumnDef="sede">
@@ -46,14 +46,22 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button 
-                    (click)="Observaciones(element.contratacionProyectoId, element.contratacionId);"
+                    type="button"
+                    (click)="Observaciones(element.contratacionProyectoId, 
+                            element.contratacionId, 
+                            element.contratacionObservacion, 
+                            element.proyecto.proyectoId,
+                            element.proyecto.estadoProyectoCodigo
+                            );"
                     mat-raised-button 
                     color="accent" 
                     class="btn-table"
-                    [disabled]="element.estadoSolicitud && element.estadoSolicitud.codigo == estadosSolicitud.AprobadaPorComiteTecnico"
+                    [disabled]="element.proyecto.estadoProyectoCodigo == null || element.proyecto.estadoProyectoCodigo == estadosProyecto.AprobadoComiteFiduciario"
                     >
                     Observaciones
+                     
                 </button>
+                
             </td>
         </ng-container>
 

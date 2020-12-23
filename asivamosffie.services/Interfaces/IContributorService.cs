@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace asivamosffie.services.Interfaces
 {
-    public interface ICofinancingContributorService
+    public interface IContributorService
     {
         Task<ActionResult<List<CofinanciacionAportante>>> GetContributor();
 

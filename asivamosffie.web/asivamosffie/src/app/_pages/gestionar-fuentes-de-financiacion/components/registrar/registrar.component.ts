@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormArray, ControlValueAccessor, FormGroup, FormControl } from '@angular/forms';
 import { CommonService, Dominio, Localizacion, TiposAportante } from 'src/app/core/_services/common/common.service';
 import { CofinanciacionService, CofinanciacionAportante, CofinanciacionDocumento } from 'src/app/core/_services/Cofinanciacion/cofinanciacion.service';
@@ -58,6 +58,22 @@ export class RegistrarComponent implements OnInit {
     this.maxDate = new Date();
   }
 
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if ( this.addressForm.dirty && this.noGuardado==true) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+  };
 
   openDialog(modalTitle: string, modalText: string,redirect?:boolean) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
@@ -67,10 +83,9 @@ export class RegistrarComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-        if(result)
-        {
+        
           this.router.navigate(["/gestionarFuentes"], {});
-        }
+        
       });
     }
   }
@@ -81,7 +96,7 @@ export class RegistrarComponent implements OnInit {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         if(event==1)
         {
@@ -196,7 +211,7 @@ export class RegistrarComponent implements OnInit {
           grupoCuenta.get('codigoSIFI').setValue(ba.codigoSifi);
           grupoCuenta.get('tipoCuenta').setValue(ba.tipoCuentaCodigo);
           grupoCuenta.get('banco').setValue(bancoSeleccionado);
-          grupoCuenta.get('extra').setValue(ba.exenta.toString());
+          grupoCuenta.get('extra').setValue(ba.exenta!=null?ba.exenta.toString():"");
 
           listaCuentas.push(grupoCuenta);
         });
@@ -233,12 +248,12 @@ export class RegistrarComponent implements OnInit {
       ],
       cuantasVigencias: [1],
       vigencias: this.fb.array([]),
-      fuenteFinanciacionId: [null],
+      fuenteFinanciacionId: [null, Validators.required],
       cuentasBancaria: this.fb.array([
       ]),
-      tieneRP: [null],
+      tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
-        Validators.minLength(5), Validators.maxLength(50)])]
+        Validators.minLength(1), Validators.maxLength(50)])]
 
     });
   }
@@ -314,19 +329,19 @@ export class RegistrarComponent implements OnInit {
 
 
     this.addressForm = this.fb.group({
-      nombreAportante: [null],
-      nombreAportanteFFIE:[null],
-      documentoApropiacion: [null],
-      tipoDocumento:[null],
+      nombreAportante: [null, Validators.required],
+      nombreAportanteFFIE:[null, Validators.required],
+      documentoApropiacion: [null, Validators.required],
+      tipoDocumento:[null, Validators.required],
       numerodocumento: [null, Validators.compose([
         Validators.minLength(10), Validators.maxLength(10)])
       ],
-      vigenciaAcuerdo: [],
-      departamento: [],
-      municipio: [],
-      tieneRP: [null],
+      vigenciaAcuerdo: [null, Validators.required],
+      departamento: [null, Validators.required],
+      municipio: [null, Validators.required],
+      tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
-        Validators.minLength(5), Validators.maxLength(50)])]
+        Validators.minLength(1), Validators.maxLength(50)])]
       , registrosPresupuestales: this.fb.array([])
       , fuenteRecursosArray: this.fb.array([]),
     });
@@ -337,10 +352,10 @@ export class RegistrarComponent implements OnInit {
 
   createRP() {
     return this.fb.group({
-      registroPresupuestalId: [],
-      numeroRP: [null],
-      fecha: [null],
-      numerodocumentoRP:[null]
+      registroPresupuestalId: [null, Validators.required],
+      numeroRP: [null, Validators.required],
+      fecha: [null, Validators.required],
+      numerodocumentoRP:[null, Validators.required]
     });
   }
 
@@ -351,8 +366,12 @@ export class RegistrarComponent implements OnInit {
         this.registrosPresupuestales.push(this.createRP());
       }
     } else if (FormNumRP <= this.registrosPresupuestales.length && FormNumRP >= 0) {
+      let i=this.registrosPresupuestales.length;
       while (this.registrosPresupuestales.length > FormNumRP) {
-        this.borrarArray(this.registrosPresupuestales, this.registrosPresupuestales.length - 1,0,4);
+        console.log(this.registrosPresupuestales.length);
+        console.log(FormNumRP)
+        this.registrosPresupuestales.removeAt(i);
+        i--;
       }
     }
   }
@@ -520,8 +539,8 @@ export class RegistrarComponent implements OnInit {
         if(FormNumvigencias.cuantasVigencias==1)
         {
           this.vigencias1(j).push(this.fb.group({
-            vigenciaAporteId: [],
-            vigenciaAportante: [null],
+            vigenciaAporteId: [null, Validators.required],
+            vigenciaAportante: [null, Validators.required],
             valorVigencia: [this.addressForm.get("fuenteRecursosArray")['controls'][j].value.valorFuenteRecursos, Validators.compose([
               Validators.minLength(10), Validators.maxLength(10)])
             ]
@@ -544,15 +563,18 @@ export class RegistrarComponent implements OnInit {
           }
         });
         if(bitestavacio)
-        {
-          while (this.vigencias1(j).length > FormNumvigencias.cuantasVigencias) {
-            this.removeItemVigencia(this.vigencias1(j), this.vigencias1(j).length - 1,j,false);
+        {          
+          let cuantas=FormNumvigencias.cuantasVigencias;
+          var resta=this.vigencias1(j).length-FormNumvigencias.cuantasVigencias
+          for(let secuenciaa=this.vigencias1(j).length;secuenciaa>=cuantas;secuenciaa--) {
+            //this.removeItemVigencia(this.vigencias1(j), this.vigencias1(j).length - 1,j,false);
+            this.vigencias1(j).removeAt(secuenciaa);
           }
           this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
         else{
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
-          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
+          //this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
       }          
     }
@@ -582,7 +604,7 @@ export class RegistrarComponent implements OnInit {
 
   createCuentaBancaria(): FormGroup {
     return this.fb.group({
-      cuentaBancariaId: [],
+      cuentaBancariaId: [null, Validators.required],
       numeroCuenta: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(50)])
       ],
@@ -592,9 +614,9 @@ export class RegistrarComponent implements OnInit {
       codigoSIFI: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(6)])
       ],
-      tipoCuenta: ['free', Validators.required],
+      tipoCuenta: [null, Validators.required],
       banco: [null, Validators.required],
-      extra: ['free', Validators.required]
+      extra: [null, Validators.required]
     });
   }
 
@@ -605,17 +627,17 @@ export class RegistrarComponent implements OnInit {
       valorFuenteRecursos: [null, Validators.compose([
         Validators.required, Validators.minLength(2), Validators.maxLength(2)])
       ],
-      cuantasVigencias: [null],
+      cuantasVigencias: [null, Validators.required],
       vigencias: this.fb.array([]),
-      fuenteFinanciacionId: [null],
-      departamento: [],
-      municipio: [],
-      tieneRP: [null],
+      fuenteFinanciacionId: [null, Validators.required],
+      departamento: [null, Validators.required],
+      municipio: [null, Validators.required],
+      tieneRP: [null, Validators.required],
       cuantosRP: [null, Validators.compose([
-        Validators.minLength(5), Validators.maxLength(50)])]
+        Validators.minLength(1), Validators.maxLength(50)])]
       , cuentasBancaria: this.fb.array([
         this.fb.group({
-          cuentaBancariaId: [],
+          cuentaBancariaId: [null, Validators.required],
           numeroCuenta: [null, Validators.compose([
             Validators.required, Validators.minLength(1), Validators.maxLength(50)])
           ],
@@ -625,9 +647,9 @@ export class RegistrarComponent implements OnInit {
           codigoSIFI: [null, Validators.compose([
             Validators.required, Validators.minLength(1), Validators.maxLength(6)])
           ],
-          tipoCuenta: ['free', Validators.required],
+          tipoCuenta: [null, Validators.required],
           banco: [null, Validators.required],
-          extra: ['free', Validators.required]
+          extra: [null, Validators.required]
         })
       ]),
     });
@@ -635,8 +657,8 @@ export class RegistrarComponent implements OnInit {
 
   createVigencia(): FormGroup {
     return this.fb.group({
-      vigenciaAporteId: [],
-      vigenciaAportante: [null],
+      vigenciaAporteId: [null, Validators.required],
+      vigenciaAportante: [null, Validators.required],
       valorVigencia: [null, Validators.compose([
         Validators.minLength(10), Validators.maxLength(10)])
       ]
@@ -660,7 +682,8 @@ export class RegistrarComponent implements OnInit {
   removeItemVigencia(borrarForm: any, i: number,j:number,mensaje=true)
   {
     borrarForm.removeAt(i);
-    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(i).length);    
+    console.log(this.vigencias1(j).length);
+    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
     if(mensaje)
     {
       this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
@@ -681,7 +704,8 @@ export class RegistrarComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.addressForm.valid) {
+    //no puedo validarlo, porque puede ser parcial
+    //if (this.addressForm.valid) {
       
       let bitValorok=true;
       const lista: FuenteFinanciacion[] = [];
@@ -703,7 +727,7 @@ export class RegistrarComponent implements OnInit {
         const fuente: FuenteFinanciacion = {
           fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
           aportanteId: this.idAportante,
-          fuenteRecursosCodigo: controlFR.get('fuenteRecursos').value.codigo,
+          fuenteRecursosCodigo: controlFR.get('fuenteRecursos').value?.codigo,
           valorFuente: controlFR.get('valorFuenteRecursos').value,
           cantVigencias: controlFR.get('cuantasVigencias').value,
           cuentaBancaria: [],
@@ -748,7 +772,7 @@ export class RegistrarComponent implements OnInit {
         cuentas.controls.forEach(controlBa => {
           const cuentaBancaria: CuentaBancaria = {
             cuentaBancariaId: controlBa.get('cuentaBancariaId').value,
-            bancoCodigo: controlBa.get('banco').value.codigo,
+            bancoCodigo: controlBa.get('banco').value?.codigo,
             codigoSifi: controlBa.get('codigoSIFI').value,
             exenta: controlBa.get('extra').value,
             fuenteFinanciacionId: controlFR.get('fuenteFinanciacionId').value,
@@ -805,14 +829,15 @@ export class RegistrarComponent implements OnInit {
           .subscribe(respuesta => {
             const res = respuesta[0][0] as Respuesta;
             if (res.code === '200') {
-              this.openDialog('', res.message,true);
+              this.openDialog('', `<b>${res.message}</b>`,true);
+              this.noGuardado=false;
             }
             console.log(respuesta);
           });      
         this.data = lista;    
       }
       
-    }
+    //}
   }
   
   validateonevige(j){

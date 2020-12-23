@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -14,7 +14,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
   templateUrl: './revision-acta.component.html',
   styleUrls: ['./revision-acta.component.scss']
 })
-export class RevisionActaComponent implements OnInit {
+export class RevisionActaComponent implements OnInit, OnDestroy {
 
   acta: any;
   form:FormGroup;
@@ -24,6 +24,7 @@ export class RevisionActaComponent implements OnInit {
   editorStyle = {
     height: '45px'
   };
+  observacionInvalida: boolean = false;
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -32,9 +33,11 @@ export class RevisionActaComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  fechaComentario: Date = new Date();
   miembrosParticipantes: any[] = [];
   temas: any[] = [];
   proposicionesVarios: any[] = [];
+  seRealizoPeticion: boolean = false;
 
   constructor ( private routes: Router,
                 public dialog: MatDialog,
@@ -47,7 +50,13 @@ export class RevisionActaComponent implements OnInit {
                 private comiteTecnicoSvc: TechnicalCommitteSessionService ) {
     this.getActa( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
-  };
+  }
+  
+  ngOnDestroy(): void {
+    if ( this.form.get( 'comentarioActa' ).value !== null && this.seRealizoPeticion === false ) {
+      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' )
+    }
+  }
 
   ngOnInit(): void {
   };
@@ -56,9 +65,9 @@ export class RevisionActaComponent implements OnInit {
     this.compromisoSvc.getActa( comiteTecnicoId )
       .subscribe( ( resp: any ) => {
         this.acta = resp[0];
-        this.acta.sesionComiteSolicitudComiteTecnico = null;
+        console.log( this.acta );
 
-        for ( let temas of resp[0].sesionComiteTema ) {
+        for ( let temas of this.acta.sesionComiteTema ) {
           if ( !temas.esProposicionesVarios ) {
             this.temas.push( temas );
           } else {
@@ -66,12 +75,14 @@ export class RevisionActaComponent implements OnInit {
           }
         };
 
-        for ( let participantes of resp[0].sesionParticipante ) {
+        for ( let participantes of this.acta.sesionParticipante ) {
           this.miembrosParticipantes.push( `${ participantes.usuario.nombres } ${ participantes.usuario.apellidos }` )
         };
 
         this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId( this.activatedRoute.snapshot.params.id )
-        .subscribe( ( response: any ) => this.acta.sesionComiteSolicitudComiteTecnico = response.sesionComiteSolicitudComiteTecnico );
+        .subscribe( ( response: any ) => { 
+          this.acta.sesionComiteSolicitudComiteTecnico = response.sesionComiteSolicitudComiteTecnico;
+        } );
 
       } );
   };
@@ -90,10 +101,13 @@ export class RevisionActaComponent implements OnInit {
     };
   };
 
-  textoLimpio(texto: string) {
-    if ( texto ){
+  textoLimpio ( texto: string, maxLength: number ) {
+    if (texto !== undefined) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      console.log( textolimpio.length );
+      return textolimpio.length > maxLength ? maxLength : textolimpio.length;
+    } else {
+      return 0;
     };
   };
 
@@ -110,11 +124,25 @@ export class RevisionActaComponent implements OnInit {
       data: { modalTitle, modalText }
     });
   };
+  openDialogConfirmar(modalTitle: string, modalText: string) {
+    const confirmarDialog = this.dialog.open(ModalDialogComponent, {
+      width: '30em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });
+
+    confirmarDialog.afterClosed()
+      .subscribe( response => {
+        if ( response === true ) {
+          this.onSubmit();
+        }
+      } );
+  };
   //Submit de la data
   onSubmit () {
 
     if ( this.form.invalid ) {
-      this.openDialog('Falta registrar información', '');
+      this.observacionInvalida = true;
+      this.openDialog('', '<b>Falta registrar información.</b>');
       return;
     };
 
@@ -126,17 +154,26 @@ export class RevisionActaComponent implements OnInit {
 
     this.compromisoSvc.postComentariosActa( observaciones )
       .subscribe( ( resp: any ) => {
-        this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+        this.seRealizoPeticion = true;
+        this.openDialog( '', `<b>${ resp.message }</b>` );
         this.routes.navigate( ['/compromisosActasComite'] );
       } );
 
+  };
+
+  innerObservacion ( observacion: string ) {
+    if ( observacion !== undefined ) {
+      const observacionHtml = observacion.replace( '"', '' );
+      return `<b>${ observacionHtml }</b>`;
+    };
   };
   //Aprobar acta
   aprobarActa ( comiteTecnicoId ) {
     //Al aprobar acta redirige al componente principal
     this.compromisoSvc.aprobarActa( comiteTecnicoId )
       .subscribe( ( resp: any ) => {
-        this.openDialog( this.textoLimpioMessage( resp.message ), '' );
+        this.seRealizoPeticion = true;
+        this.openDialog( '', `<b>${ resp.message }</b>` );
         this.routes.navigate( ['/compromisosActasComite'] );
       } )
   };

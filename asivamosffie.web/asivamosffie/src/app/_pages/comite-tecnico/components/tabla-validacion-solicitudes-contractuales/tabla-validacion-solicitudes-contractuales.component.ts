@@ -30,7 +30,9 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     private technicalCommitteSessionService: TechnicalCommitteSessionService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  initTable() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -47,14 +49,13 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
-
-  verSoporte(pTablaId: string, pRegistroId: number) {
+  verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string) {
 
     //console.log(pTablaId, pRegistroId)
     this.technicalCommitteSessionService.getPlantillaByTablaIdRegistroId(pTablaId, pRegistroId)
       .subscribe(resp => {
         console.log(resp);
-        const documento = `FichaSolicitud ${pRegistroId}.pdf`;
+        const documento = `FichaSolicitud${numeroSolicitud}.pdf`;
         const text = documento,
           blob = new Blob([resp], { type: 'application/pdf' }),
           anchor = document.createElement('a');
@@ -68,6 +69,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
 
   cargarRegistro() {
     this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
+    this.initTable();
   }
 
 }

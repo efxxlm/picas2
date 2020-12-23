@@ -12,6 +12,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class InvitacionAbiertaComponent implements OnInit {
 
+  /*con este bit controlo los botones, esto lo hago ya sea por el estado del proyecto o en un futuro por el 
+    permiso que tenga el usuario
+    */
+  bitPuedoEditar=true;
   tiposProcesoSeleccion = TiposProcesoSeleccion; 
   estadosProcesoSeleccion = EstadosProcesoSeleccion;
 
@@ -95,6 +99,21 @@ export class InvitacionAbiertaComponent implements OnInit {
         
         botonDescripcion.click();
         botonevaluacion.click();
+
+        if(this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.Creado||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteFiduciario||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaAperturaPorComiteTecnico ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteFiduciario ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltaSeleccionPorComiteTecnico ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteFiduciario ||
+          this.procesoSeleccion.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.DevueltoPorComiteTecnico)
+        {
+          this.bitPuedoEditar=true;
+        }
+        else{
+          this.bitPuedoEditar=false;
+        }
     });
 
   }

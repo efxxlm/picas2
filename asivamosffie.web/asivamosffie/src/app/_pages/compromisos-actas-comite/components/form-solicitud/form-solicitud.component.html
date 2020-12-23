@@ -7,7 +7,7 @@
         </div>
         <div class="col">
           <b class="label-left color-blue">
-            {{ solicitudes.contratacion.fechaTramite | date: 'dd/MM/yyyy' }}
+            {{ ( solicitudes.fechaSolicitud || solicitudes.fechaComiteFiduciario ) | date: 'dd/MM/yyyy' }}
           </b>
         </div>
       </div>
@@ -15,9 +15,14 @@
         <div class="pr-1">
           <span class="label-left">Número de la solicitud</span>
         </div>
-        <div class="col">
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '1'">
           <b class="label-left color-blue">
-            {{ solicitudes.numeroSolicitud }}
+            {{ solicitudes.procesoSeleccion.numeroProceso }}
+          </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '2'">
+          <b class="label-left color-blue">
+            {{ solicitudes.contratacion.numeroSolicitud }}
           </b>
         </div>
       </div>
@@ -25,10 +30,23 @@
         <div class="pr-1">
           <span class="label-left">Tipo de solicitud</span>
         </div>
-        <div class="col">
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '1'">
           <b class="label-left color-blue">
-            {{ solicitudes.tipoSolicitud }}
+            Apertura de proceso de selección
           </b>
+        </div>
+        <div class="col" *ngIf="solicitudes.tipoSolicitudCodigo === '2'">
+          <b class="label-left color-blue">
+            Contratación
+          </b>
+        </div>
+      </div>
+      <div class="row" style="margin-top: .6em;">
+        <div class="col" *ngIf="solicitudes.desarrolloSolicitud">
+          <section class="color-blue" [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitud )"></section>
+        </div>
+        <div class="col" *ngIf="solicitudes.desarrolloSolicitudFiduciario">
+          <section class="color-blue" [innerHTML]="innerObservacion( solicitudes.desarrolloSolicitudFiduciario )"></section>
         </div>
       </div>
       <h2 class="card-subTitle">Decisiones</h2>
@@ -46,7 +64,7 @@
       <div class="row mt-2">
         <div class="col-md-12">
           <div class="row">
-            <app-tabla-decisiones-acta [contratacionId]="solicitudes.contratacion.contratacionId"></app-tabla-decisiones-acta>
+            <app-tabla-decisiones-acta [contratacionId]="solicitudes.solicitudId" [tipoSolicitudCodigo]="solicitudes.tipoSolicitudCodigo"></app-tabla-decisiones-acta>
           </div>
         </div>
       </div>
@@ -63,19 +81,33 @@
         </div>
       </div>
       <div class="row">
-        <div class="pr-1">
-          <label><b>Observaciones</b></label>
-        </div>
-        <div class="col w-80">
-          <span class="color-blue"> <b>{{ textoLimpioMessage( solicitudes.observaciones ) }}</b> </span>
-        </div>
+        <section *ngIf="esComiteFiduciario === false">
+          <div class="pr-1">
+            <label><b>Observaciones</b></label>
+          </div>
+          <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.observaciones )"></div>
+        </section>
+        <section *ngIf="esComiteFiduciario === true">
+          <div class="pr-1">
+            <label><b>Observaciones</b></label>
+          </div>
+          <div class="col color-blue" [innerHTML]="innerObservacion( solicitudes.observacionesFiduciario )"></div>
+        </section>
       </div>
-      <div class="row">
+      <div class="row" *ngIf="solicitudes.rutaSoporteVotacion && esComiteFiduciario === false">
         <div class="pr-1">
           <label><b>URL con soporte de votación</b></label>
         </div>
         <div class="col w-80">
           <span class="color-blue"> <b>{{ solicitudes.rutaSoporteVotacion }}</b> </span>
+        </div>
+      </div>
+      <div class="row" *ngIf="solicitudes.rutaSoporteVotacionFiduciario && esComiteFiduciario === true">
+        <div class="pr-1">
+          <label><b>URL con soporte de votación</b></label>
+        </div>
+        <div class="col w-80">
+          <span class="color-blue"> <b>{{ solicitudes.rutaSoporteVotacionFiduciario }}</b> </span>
         </div>
       </div>
       <h2 class="card-subTitle">Decisiones</h2>
@@ -91,12 +123,24 @@
                 <mat-radio-button [value]="false" [checked]="true" class="ml-min" *ngIf="solicitudes.sesionSolicitudCompromiso.length === 0">No</mat-radio-button>
               </mat-radio-group>
             </div>
-            <div *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0" class="margin-compromisos">
+            <div *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0 && esComiteFiduciario === false" class="margin-compromisos">
               <div *ngFor="let sesionCompromiso of solicitudes.sesionSolicitudCompromiso;let j = index" style="margin-top: 2em;">
-                <h3><b>Compromiso {{ j+1 }} </b></h3>
-                <p><b>Tarea</b>: {{ sesionCompromiso.tarea }} </p>
-                <p><b>Responsable</b>: {{ sesionCompromiso.responsableSesionParticipante.usuario.nombres }} {{ sesionCompromiso.responsableSesionParticipante.usuario.apellidos }} </p>
-                <p><b>Fecha de cumplimiento</b>: {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </p>
+                <section>
+                  <h3><b>Compromiso {{ j+1 }} </b></h3>
+                  <p><b>Tarea</b>: <span class="color-blue">{{ sesionCompromiso.tarea }}</span> </p>
+                  <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante !== undefined ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </span> </p>
+                  <p><b>Fecha de cumplimiento</b>: <span class="color-blue"> {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
+                </section>
+              </div>
+            </div>
+            <div *ngIf="solicitudes.sesionSolicitudCompromiso.length > 0 && esComiteFiduciario === true" class="margin-compromisos">
+              <div *ngFor="let sesionCompromiso of compromisosFiduciario( solicitudes.sesionSolicitudCompromiso );let j = index" style="margin-top: 2em;">
+                <section *ngIf="sesionCompromiso.esFiduciario === true">
+                  <h3><b>Compromiso {{ j+1 }} </b></h3>
+                  <p><b>Tarea</b>: <span class="color-blue"> {{ sesionCompromiso.tarea }} </span> </p>
+                  <p><b>Responsable</b>: <span class="color-blue"> {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.nombres : '' }} {{ sesionCompromiso.responsableSesionParticipante ? sesionCompromiso.responsableSesionParticipante.usuario.apellidos : '' }} </span> </p>
+                  <p><b>Fecha de cumplimiento</b>: <span class="color-blue"> {{ sesionCompromiso.fechaCumplimiento | date: 'dd/MM/yyyy' }} </span> </p>
+                </section>
               </div>
             </div>
           </div>

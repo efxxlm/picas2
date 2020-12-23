@@ -8,6 +8,7 @@ namespace asivamosffie.model.APIModels
     {
 
         public int? IdContrato { get; set; }
+        public int? ContratacionId { get; set; }
         //tipo identificacion
         public string TipoContrato { get; set; }
         public string NumeroContrato { get; set; }   
@@ -18,9 +19,11 @@ namespace asivamosffie.model.APIModels
         
         public string NumeroIdentificacion { get; set; }
 
+        public string TipoDocumento { get; set; }
+
         //Nit  ????
 
-        public string ValorContrato { get; set; }
+        public decimal ValorContrato { get; set; }
         
         public string PlazoContrato { get; set; }
 
@@ -33,7 +36,6 @@ namespace asivamosffie.model.APIModels
         public string? DescripcionModificacion { get; set; }
 
         public string? TipoModificacion { get; set; }
-
-
+        public string? FechaFirmaContrato { get; set; }
     }
 }

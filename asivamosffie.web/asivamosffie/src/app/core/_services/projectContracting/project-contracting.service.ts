@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Contratacion, ContratacionProyecto, ContratistaGrilla } from 'src/app/_interfaces/project-contracting';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../common/common.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,10 @@ export class ProjectContractingService {
 
   getContratacionByContratacionIdWithGrillaProyecto( id: number ){
     return this.http.get<Contratacion>(`${environment.apiUrl}/ProjectContracting/getContratacionByContratacionIdWithGrillaProyecto?pContratacionId=${ id }`);
-   }
+  }
+
+  deleteComponenteAportante( pComponenteAportanteId: number ) {
+    return this.http.post( `${ environment.apiUrl }/ProjectContracting/DeleteComponenteAportante`, pComponenteAportanteId );
+  }
 
 }

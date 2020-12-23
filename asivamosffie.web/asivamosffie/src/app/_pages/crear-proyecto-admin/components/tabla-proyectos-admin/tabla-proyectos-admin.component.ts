@@ -58,14 +58,14 @@ export class TablaProyectosAdminComponent {
     });   
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
-      if(result)
+      if(result === true)
       {
         this.projectService.DeleteProyectoAdministrativoByProyectoId(this.proyectoid).subscribe(respuesta => {
           let proyecto = respuesta;
           if(respuesta)
           {
             this.inicializar();
-            this.openDialog('', "<b>La información ha sido eliminadad correctamente.</b>");
+            this.openDialog('', "<b>La información ha sido eliminada correctamente.</b>");
           }
           else
           {
@@ -132,7 +132,7 @@ export class TablaProyectosAdminComponent {
   eliminar(gestion:any)
   {
     this.proyectoid=gestion.id;
-    this.openDialogSiNo('', "¿Está seguro de eliminar este registro?",);   
+    this.openDialogSiNo('', "<b>¿Está seguro de eliminar este registro?</b>",);   
   }
   
   enviar(gestion:any)

@@ -132,6 +132,13 @@ namespace asivamosffie.api.Controllers
             return File(await _committeeSessionFiduciarioService.GetPlantillaByTablaIdRegistroId(pTablaId, pRegistroId), "application/pdf");
         }
 
+        [HttpGet]
+        [Route("GetProcesoSeleccionMonitoreo")]
+        public async Task<ProcesoSeleccionMonitoreo> GetProcesoSeleccionMonitoreo( int pProcesoSeleccionMonitoreoId )
+        {
+            return await _committeeSessionFiduciarioService.GetProcesoSeleccionMonitoreo( pProcesoSeleccionMonitoreoId );
+        }
+
         [HttpPost]
         [Route("CreateEditSesionComiteTema")]
         public async Task<IActionResult> CreateEditSesionComiteTema([FromBody] List<SesionComiteTema> ListSesionComiteTemas)
@@ -189,6 +196,22 @@ namespace asivamosffie.api.Controllers
             {
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
+            }
+        }
+
+        [HttpDelete]
+        [Route("DeleteComiteTecnicoByComiteTecnicoId")]
+        public async Task<Respuesta> DeleteComiteTecnicoByComiteTecnicoId([FromQuery] int pComiteTecnicoId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _committeeSessionFiduciarioService.DeleteComiteTecnicoByComiteTecnicoId(pComiteTecnicoId, HttpContext.User.FindFirst("User").Value);
+                return respuesta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 

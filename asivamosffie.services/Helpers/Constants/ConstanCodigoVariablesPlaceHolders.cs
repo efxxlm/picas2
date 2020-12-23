@@ -44,6 +44,7 @@
         public const string  VALOR_USO_FUENTE_USO ="176";
         public const string  REGISTROS_USOS = "178";
         public const string  ROWSPAN_CANTIDAD_USOS = "179";
+        public const string  ROWSPAN_CANTIDAD_USOS_COMPONENTES = "193";
 
         #endregion
 
@@ -182,7 +183,13 @@
         public const string DDP_VALOR_SOLICITADO_FUENTE = "23";
         public const string DDP_NUEVO_SALDO_FUENTE = "24";
         public const string DDP_LIMITACION_ESPECIAL = "25";
-        
+        public const string DDP_TABLA_LIMITACION_ESPECIAL = "26";
+        public const string NUMEROCONTRATO = "27";
+        public const string DRP_NO = "28";
+        public const string FECHACONTRATO = "29";
+        public const string TABLAFUENTES  = "30";
+        public const string TABLAUSOS = "31";
+        public const string CABECERAPROYECTOS = "32";
 
         #endregion
 
@@ -215,7 +222,7 @@
         //public const string   MUNICIPIO ="142";
         //public const string   INSTITUCION_EDUCATIVA ="143";
         //public const string   SEDE ="144";
-        //public const string   NUMERO_SOLICITUD ="145";
+        public const string   NUMERO_SOLICITUD_PROCESO ="145";
         public const string TIPO_PROCESO = "146";
         public const string OBJETO_PROCESO = "147";
         public const string ALCANCE_PARTICULAR_PROCESO = "148";

@@ -7,10 +7,10 @@
     margin: 20px auto;
 }
 
-.mat-radio-button {
-    display: block;
-    margin: 5px 0;
-}
+// .mat-radio-button {
+//     display: block;
+//     margin: 5px 0;
+// }
 
 .row {
     display: flex;
@@ -42,4 +42,13 @@
     text-align: center;
     margin-bottom: 1em;
     font-style: italic;
+}
+
+.mt-05em {
+  margin-top: 0.5em;
+}
+
+.title-objeto {
+  font-size: 20px;
+  color: var(--mainColor);
 }

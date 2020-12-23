@@ -44,8 +44,24 @@ export class VotacionSolicitudComponent implements OnInit{
   };
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   maxLength(e: any, n: number) {
@@ -99,7 +115,7 @@ export class VotacionSolicitudComponent implements OnInit{
       this.listaVotacion.push( grupoVotacion )
     })
 
-    console.log( this.addressForm.value )
+    console.log( this.addressForm.value, this.data.sesionComiteSolicitud )
 
   }
 
@@ -145,7 +161,7 @@ export class VotacionSolicitudComponent implements OnInit{
 
     this.technicalCommitteSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
     .subscribe( respuesta => {
-      this.openDialog('Comité técnico', respuesta.message)
+      this.openDialog('', `<b>${respuesta.message}</b>`)
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.objetoComiteTecnico);
         //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])

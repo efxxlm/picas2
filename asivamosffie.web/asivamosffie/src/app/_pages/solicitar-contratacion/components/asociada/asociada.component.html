@@ -2,14 +2,13 @@
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
 
-<div class="row">
+<div class="row" style="margin-top: 2em;">
     <div class="pr-1">
-        <label class="label-left">Aportante</label>
+        <label class="label-left">¿La solicitud está asociada a?:</label>
     </div>
     <div class="col">
         <mat-form-field class="select-width">
-            <mat-select required [formControl]="solicitudAsociada">
-                <mat-option></mat-option>
+            <mat-select multiple required [formControl]="solicitudAsociada">
                 <mat-option *ngFor="let asociada of solicitudAsociadaArray" [value]="asociada.value">
                     {{ asociada.name }}
                 </mat-option>
@@ -18,6 +17,6 @@
     </div>
 </div>
 
-<div class="text-center">
+<div class="text-center" style="margin-top: 5em;">
     <button mat-raised-button color="accent" [disabled]="solicitudAsociada.invalid" (click)="onSave()">Guardar solicitud</button>
 </div>

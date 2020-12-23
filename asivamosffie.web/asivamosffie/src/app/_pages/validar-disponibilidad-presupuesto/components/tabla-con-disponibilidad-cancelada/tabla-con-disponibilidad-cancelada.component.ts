@@ -67,7 +67,7 @@ export class TablaConDisponibilidadCanceladaComponent implements OnInit {
  
   verDetalle(id: number) {
     console.log(id);
-    this.router.navigate(['validarDisponibilidadPresupuesto/conDisponibilidadcancelada', id]);
+    this.router.navigate(['validarDisponibilidadPresupuesto/conValidacionPresupuestal', id]);
   }
 
 }

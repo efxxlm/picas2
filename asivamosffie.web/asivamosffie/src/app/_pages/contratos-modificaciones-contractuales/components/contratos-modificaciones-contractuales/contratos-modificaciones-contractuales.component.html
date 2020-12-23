@@ -29,26 +29,26 @@
     <mat-accordion>
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header w-40">
-          <mat-panel-title class="expansion-style--title sin-diligenciar">
+          <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeonSinRegistro">
             Sin registro de contrato o modificación contractual
           </mat-panel-title>
         </mat-expansion-panel-header>
 
         <div *ngIf="sinDataSinregistro">
-          <app-tabla-sin-registro-contrato (sinData)="sinDataSinregistro = $event"></app-tabla-sin-registro-contrato>
+          <app-tabla-sin-registro-contrato (sinData)="sinDataSinregistro = $event" (estadoSemaforo)="estadoAcordeonSinRegistro = $event"></app-tabla-sin-registro-contrato>
         </div>
 
       </mat-expansion-panel>
 
       <mat-expansion-panel class="expansion-style">
         <mat-expansion-panel-header class="expansion-style--header w-40">
-          <mat-panel-title class="expansion-style--title en-proceso">
+          <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon">
             En proceso de firmas
           </mat-panel-title>
         </mat-expansion-panel-header>
 
         <div *ngIf="sinDataProcesoFirmas">
-          <app-tabla-proceso-firmas (sinData)="sinDataProcesoFirmas = $event"></app-tabla-proceso-firmas>
+          <app-tabla-proceso-firmas (sinData)="sinDataProcesoFirmas = $event" (estadoAcordeon)="estadoAcordeon = $event"></app-tabla-proceso-firmas>
         </div>
 
       </mat-expansion-panel>

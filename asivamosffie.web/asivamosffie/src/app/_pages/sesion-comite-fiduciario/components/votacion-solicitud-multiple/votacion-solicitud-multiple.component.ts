@@ -48,8 +48,24 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
   };
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   maxLength(e: any, n: number) {
@@ -140,8 +156,8 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
           let listaObservaciones = grupoProyecto.get('observaciones') as FormArray;
 
           grupoProyecto.get('llaveMen').setValue(cp.proyecto.llaveMen);
-          grupoProyecto.get('nombreInstitucion').setValue(''/*cp.proyecto.institucionEducativa.nombre*/);
-          grupoProyecto.get('nombreSede').setValue(''/*response.sede.nombre*/);
+          grupoProyecto.get('nombreInstitucion').setValue(cp.proyecto.institucionEducativa.nombre);
+          grupoProyecto.get('nombreSede').setValue(cp.proyecto.sede.nombre);
 
           this.data.sesionComiteSolicitud.sesionSolicitudObservacionProyecto
             .filter(o => o.contratacionProyectoId == cp.contratacionProyectoId)
@@ -219,7 +235,7 @@ export class VotacionSolicitudMultipleComponent implements OnInit {
 
     this.fiduciaryCommitteeSessionService.createEditSesionSolicitudVoto(sesionComiteSolicitud)
       .subscribe(respuesta => {
-        this.openDialog('Comité técnico', respuesta.message)
+        this.openDialog('', `<b>${respuesta.message}</b>`)
         if (respuesta.code == "200") {
           this.dialogRef.close(this.data.objetoComiteTecnico);
           //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])

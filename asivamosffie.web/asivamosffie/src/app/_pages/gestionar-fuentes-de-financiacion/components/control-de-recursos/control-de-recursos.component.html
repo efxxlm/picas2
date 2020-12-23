@@ -11,7 +11,7 @@
     </div>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
       <mat-card class="shipping-card var-main-gris">
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
           <mat-card-title class="header-card--text">
             Aportante
           </mat-card-title>
@@ -31,7 +31,7 @@
         </mat-card-content>
       </mat-card>
       <mat-card class="shipping-card var-main-gris">
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
           <mat-card-title class="header-card--text">
             Datos de la fuente
           </mat-card-title>
@@ -51,7 +51,7 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()">
+                <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()" required>
                   <mat-option *ngFor="let Nombre of NombresDeLaCuenta" [value]="Nombre">
                     {{ Nombre.nombreCuentaBanco }}
                   </mat-option>
@@ -65,7 +65,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput type="number" class="maincolor" formControlName="numeroCuenta" readonly >
+                <input matInput type="text" class="maincolor" formControlName="numeroCuenta" readonly >
               </mat-form-field>
               <!-- <span class="contador">{{10 - numDocumento.value.length}}</span> -->
             </div>
@@ -108,13 +108,13 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" class="maincolor" placeholder="DD/MM/AAAA" formControlName="fechaConsignacion" readonly (click)="picker.open()">
+                    <input matInput [matDatepicker]="picker" class="maincolor"  required placeholder="DD/MM/AAAA" formControlName="fechaConsignacion" readonly (click)="picker.open()">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
                     <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
                   </button>
-                </div>            
+                </div>
           </div>
           <div class="row">
                 <div class="pr-1">
@@ -122,12 +122,13 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="full-width">
-                    <input matInput #valorConsignacion currencyMask maxlength="50" class="maincolor"
+                    <input matInput #valorConsignacion currencyMask maxlength="50" required class="maincolor"
                     formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false"
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }">
                   </mat-form-field>
-                  <span class="contador">{{50 - valorConsignacion.value.length}}</span>
-                </div>            
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
+                  matTooltipClass="info-tooltip">{{50 - valorConsignacion.value.length}}</span>
+                </div>
           </div>
   
         </mat-card-content>

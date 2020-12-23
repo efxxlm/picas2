@@ -31,5 +31,6 @@ namespace asivamosffie.model.APIModels
 
         public string? URLMonitoreo { get; set; }
         public int? ContratoId { get; set; }
+        public List<CofinanicacionAportanteGrilla> Aportantes { get; set; }
     }
 }

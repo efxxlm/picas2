@@ -1,6 +1,6 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
-using asivamosffie.services.PostParameters;
+
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,9 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRequestBudgetAvailabilityService
     {
+        Task<dynamic> GetListAportanteByTipoAportanteByProyectoId(int pProyectoId, int pTipoAportanteId);
+        Task<Respuesta> CreateUpdateDisponibilidaPresupuestalEspecial(DisponibilidadPresupuestal pDisponibilidadPresupuestal);
+        Task<Contrato> GetListContatoByNumeroContrato(string pNumeroContrato);
         Task<List<ListAportantes>> GetAportantesByProyectoId(int proyectoId);
         Task<List<ListAdminProyect>> GetAportantesByProyectoAdministrativoId(int proyectoId);
         Task<Respuesta> CreateOrEditReportProgress(CompromisoSeguimiento compromisoSeguimiento);
@@ -25,12 +28,14 @@ namespace asivamosffie.services.Interfaces
         Task<HTMLContent> GetHTMLString(DetailValidarDisponibilidadPresupuesal detailValidarDisponibilidadPresupuesal);
         Task<ActionResult<List<GrillaValidarDisponibilidadPresupuesal>>> GetBudgetavailabilityRequests();
         Task<Respuesta> CreateOrEditServiceCosts(DisponibilidadPresupuestal disponibilidadPresupuestal, int proyectoId);
+        Task<Contrato> GetContratoByNumeroContrato(string pNumero);
         Task<List<ListConcecutivoProyectoAdministrativo>> GetListCocecutivoProyecto();
-        Task<Respuesta> SendRequest(int disponibilidadPresupuestalId);
+        Task<Respuesta> SendRequest(int disponibilidadPresupuestalId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<List<DetailValidarDisponibilidadPresupuesal>> GetDetailAvailabilityBudgetProyect(int? rubroAfinanciarId, int disponibilidadPresupuestalId);
         Task<Respuesta> CreateOrEditProyectoAdministrtivo(DisponibilidadPresupuestal disponibilidad);
         Task<List<DisponibilidadPresupuestal>> GetDDPAdministrativa();
         Task<Respuesta> EliminarDisponibilidad(int disponibilidadPresupuestalId);
+        Task<dynamic> GetContratos();
     }
     
 }

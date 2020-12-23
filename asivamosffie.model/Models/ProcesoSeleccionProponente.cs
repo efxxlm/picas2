@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class ProcesoSeleccionProponente
     {
+        public ProcesoSeleccionProponente()
+        {
+            Contratista = new HashSet<Contratista>();
+        }
+
         public int ProcesoSeleccionProponenteId { get; set; }
         public int ProcesoSeleccionId { get; set; }
         public string TipoProponenteCodigo { get; set; }
@@ -24,5 +29,6 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
 
         public virtual ProcesoSeleccion ProcesoSeleccion { get; set; }
+        public virtual ICollection<Contratista> Contratista { get; set; }
     }
 }

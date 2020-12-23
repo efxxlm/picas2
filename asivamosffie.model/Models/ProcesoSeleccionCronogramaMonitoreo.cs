@@ -22,6 +22,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public int? ProcesoSeleccionMonitoreoId { get; set; }
         public int? ProcesoSeleccionCronogramaId { get; set; }
+        public string EtapaActualProcesoCodigo { get; set; }
 
         public virtual ProcesoSeleccionMonitoreo ProcesoSeleccionMonitoreo { get; set; }
         public virtual ICollection<SesionSolicitudObservacionActualizacionCronograma> SesionSolicitudObservacionActualizacionCronograma { get; set; }

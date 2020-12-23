@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
 import { VerDetalleTablaProcesosComponent } from "../ver-detalle-tabla-procesos/ver-detalle-tabla-procesos.component";
-import { ProcesoSeleccionService, ProcesoSeleccion, EstadosProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
+import { ProcesoSeleccionService, ProcesoSeleccion, EstadosProcesoSeleccion, TiposProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { forkJoin } from 'rxjs';
 import { EstadosSolicitud } from 'src/app/_interfaces/project-contracting';
@@ -66,9 +66,25 @@ export class TablaProcesosComponent implements OnInit {
           //valido si esta incompleto si no tiene datos de evaluacion y proponentes seleccionados
           if(proceso.evaluacionDescripcion!="" 
           && proceso.urlSoporteEvaluacion!=""
-           && proceso.listaContratistas?.length>0)
+        
+        )
           {
-            proceso.esCompleto=true;
+            //si cerrada debe tener contratista
+            if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Cerrada)
+            {
+              if(proceso.listaContratistas?.length>0)
+              {
+                proceso.esCompleto=true;                
+              }              
+              else
+              {
+                proceso.esCompleto=false;
+              }
+            }
+            else
+            {
+              proceso.esCompleto=true;  
+            }            
           }
           else{
             proceso.esCompleto=false;

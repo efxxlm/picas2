@@ -83,7 +83,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
 
     });
-  }
+  };
 
   getMunicipio() {
     if (this.router.getCurrentNavigation().extras.replaceUrl || this.router.getCurrentNavigation().extras.skipLocationChange === false) {
@@ -106,7 +106,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
     this.contratacionProyecto.esReasignacion = this.addressForm.get('reasignacion').value;
     this.contratacionProyecto.esAvanceobra = this.addressForm.get('avanceObra').value;
-    this.contratacionProyecto.porcentajeAvanceObra = String(this.addressForm.get('porcentajeAvanceObra').value);
+    this.contratacionProyecto.porcentajeAvanceObra = this.addressForm.get('porcentajeAvanceObra').value;
     this.contratacionProyecto.requiereLicencia = this.addressForm.get('requiereLicencias').value;
     this.contratacionProyecto.licenciaVigente = this.addressForm.get('licenciaVigente').value;
     this.contratacionProyecto.numeroLicencia = this.addressForm.get('numeroLicencia').value;
@@ -116,7 +116,7 @@ export class DefinirCaracteristicasComponent implements OnInit {
     this.projectContractingService.createEditContratacionProyecto(this.contratacionProyecto)
       .subscribe(respuesta => {
 
-        this.openDialog('', respuesta.message);
+        this.openDialog('', `<b>${respuesta.message}</b>`);
         console.log(respuesta);
         // tslint:disable-next-line: triple-equals
         if (respuesta.code == '200') {

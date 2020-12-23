@@ -17,7 +17,9 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public int? DisponibilidadPresupuestalProyectoId { get; set; }
         public string EstadoCodigo { get; set; }
+        public int? DisponibilidadPresupuestalId { get; set; }
 
+        public virtual DisponibilidadPresupuestal DisponibilidadPresupuestal { get; set; }
         public virtual DisponibilidadPresupuestalProyecto DisponibilidadPresupuestalProyecto { get; set; }
         public virtual FuenteFinanciacion FuenteFinanciacion { get; set; }
     }

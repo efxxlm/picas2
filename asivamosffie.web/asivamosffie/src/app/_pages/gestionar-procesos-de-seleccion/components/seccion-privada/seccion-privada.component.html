@@ -23,7 +23,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()" id="botonDescripcion"></button>            
-            <app-form-descripcion-del-proceso-de-seleccion 
+            <app-form-descripcion-del-proceso-de-seleccion [editar]="bitPuedoEditar"
                 #descripcion [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()"
                 >
             </app-form-descripcion-del-proceso-de-seleccion>
@@ -35,7 +35,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="estudio.cargarRegistro()" id="botonEstudio"></button>
-            <app-form-estudio-de-mercado
+            <app-form-estudio-de-mercado [editar]="bitPuedoEditar"
             #estudio [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
         </app-form-estudio-de-mercado>
         </mat-expansion-panel>
@@ -46,7 +46,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="proponente.cargarRegistro()" id="botonProponente"></button>
-            <app-form-datos-proponentes-seleccionados
+            <app-form-datos-proponentes-seleccionados [editar]="bitPuedoEditar"
                #proponente [procesoSeleccion]="procesoSeleccion" (guardar)="onSubmit()">
             </app-form-datos-proponentes-seleccionados>
         </mat-expansion-panel>

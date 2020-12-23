@@ -1,0 +1,42 @@
+<section class="container">
+    <div class="text-center">
+        <div class="text-right">
+            <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+                <img src="assets/img/icon/regresar.svg" alt="Regresar">
+            </a>
+        </div>
+        <h1 class="title-menu--h1">
+            Verificar requisitos técnicos de inicio para fase 1 - Preconstrucción
+        </h1>
+        <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+        <div class="text-info" *ngIf="verAyuda">
+            <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+                <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+            </button>
+            Bienvenida/o, aquí podrá realizar la verificación de los requisitos técnicos aprobados por el interventor
+            para el inicio de la fase 1 - Preconstrucción de los contratos de obra y podrá registrar los requisitos
+            técnicos de inicio para los contratos de interventoría que se encuentran a su cargo, que están activos, que
+            cuentan con póliza aprobada, registro presupuestal y que serán ejecutados en el marco de la gestión del
+            FFIE.
+        </div>
+    </div>
+
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn"
+            [ngClass]="{'active': contratoObra === true}"
+            (click)="contratoObra = true; contratoInterventoria = false;"
+            >
+            Contratos de obra
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn"
+            [ngClass]="{'active': contratoInterventoria === true}"
+            (click)="contratoInterventoria = true; contratoObra = false;"
+            >
+            Contratos de interventoría
+        </button>
+    </div>
+
+    <app-tabla-contrato-de-obra *ngIf="contratoObra"></app-tabla-contrato-de-obra>
+    <app-tabla-contrato-de-interventoria *ngIf="contratoInterventoria"></app-tabla-contrato-de-interventoria>
+</section>

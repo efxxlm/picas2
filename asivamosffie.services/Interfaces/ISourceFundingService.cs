@@ -27,5 +27,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByAportanteId(int aportanteId);
         Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(int disponibilidadPresupuestalProyectoid, int idaportante);
         Task<List<FuenteFinanciacion>> GetListFuentesFinanciacionshort();
+        Task<List<GrillaFuentesFinanciacion>> GetListFuentesFinanciacionByDisponibilidadPresupuestald(int disponibilidadPresupuestaId);
     }
 }

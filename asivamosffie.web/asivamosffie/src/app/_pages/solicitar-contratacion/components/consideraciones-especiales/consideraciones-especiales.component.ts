@@ -9,16 +9,13 @@ import { Contratacion } from 'src/app/_interfaces/project-contracting';
 })
 export class ConsideracionesEspecialesComponent implements OnInit {
 
-  @Input() contratacion: Contratacion
+  @Input() contratacion: Contratacion;
   @Output() guardar: EventEmitter<any> = new EventEmitter()
 
   addressForm = this.fb.group({
     reasignacion: ['', Validators.required],
     descripcion: [ null ]
   });
-  editorStyle = {
-    height: '45px'
-  };
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -53,13 +50,13 @@ export class ConsideracionesEspecialesComponent implements OnInit {
 
     this.guardar.emit(null);
     console.log( this.contratacion );
-    
+
   }
 
   cargarRegistros(){
 
-    this.addressForm.get('reasignacion').setValue( this.contratacion.esObligacionEspecial ? this.contratacion.esObligacionEspecial.toString() : false );
-    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion );
+    this.addressForm.get('reasignacion').setValue( this.contratacion.esObligacionEspecial !== undefined ? this.contratacion.esObligacionEspecial : '' );
+    this.addressForm.get('descripcion').setValue( this.contratacion.consideracionDescripcion ? this.contratacion.consideracionDescripcion : null );
 
   }
 

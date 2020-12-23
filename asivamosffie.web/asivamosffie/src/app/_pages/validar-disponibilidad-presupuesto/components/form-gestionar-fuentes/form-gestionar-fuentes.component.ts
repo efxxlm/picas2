@@ -19,7 +19,8 @@ export class FormGestionarFuentesComponent implements OnInit {
         valorSolicitado: [null, Validators.compose([
           Validators.required, Validators.minLength(1), Validators.maxLength(20)])
         ],
-        nuevoSaldo: [null, Validators.required]
+        nuevoSaldo: [null, Validators.required],
+        gestionid:[null]
       })
     ])
   });
@@ -61,16 +62,60 @@ export class FormGestionarFuentesComponent implements OnInit {
     this.fuenteFinanciacionService.GetListFuentesFinanciacionByDisponibilidadPresupuestalProyectoid(this.disponibilidadPresupuestalProyectoid,this.data.elemento.id).subscribe(lista => {
       console.log(lista);
       this.fuentesbase=lista;
+      let esEdicion=false;
       lista.forEach(element => {
         this.fuentesArray.push({name:element.fuente,value:element.fuenteFinanciacionID});  
+        if(element.gestionFuenteFinanciacionID>0)
+        {
+          esEdicion=true;
+        }
       });
+      if(esEdicion)
+      {
+        let fuentesarray=this.fuentes;  
+        fuentesarray.clear(); 
+
+        lista.forEach(element => {
+          if(element.gestionFuenteFinanciacionID>0)//es edición
+          {
+            let fuent=this.crearFuente();
+            //let fuentesel = this.fuentesArray.find(m => m.value == element.fuenteFinanciacionID)
+
+            fuent.get('fuentecampo').setValue(element.fuenteFinanciacionID);
+            fuent.get('saldoActual').setValue(element.saldo_actual_de_la_fuente);
+            fuent.get('valorSolicitado').setValue(element.valor_solicitado_de_la_fuente);
+            fuent.get('nuevoSaldo').setValue(element.nuevo_saldo_de_la_fuente);
+            fuent.get('gestionid').setValue(element.gestionFuenteFinanciacionID);
+            fuentesarray.push(fuent);
+             console.log(fuentesarray);
+          }
+        });
+      }
       
     });
   }
   fuenteCambio(fuente:any)
   {
     let fuenteSeleccionada=this.fuentesbase.filter(x=>x.fuenteFinanciacionID==fuente.controls.fuentecampo.value);    
-    fuente.get('saldoActual').setValue(fuenteSeleccionada[0].saldo_actual_de_la_fuente);
+    //valido que no se haya seleccionado previamente
+    let cont=0;
+    this.addressForm.value.fuentes.forEach(element => {
+      console.log(element.fuentecampo);
+      if(element.fuentecampo==fuente.controls.fuentecampo.value)
+      {
+        cont++;
+      }
+    });
+    if(cont>1)
+    {
+     this.openDialog("","<b>Ya seleccionaste esta fuente de financiación</b>"); 
+     console.log(fuente);
+     fuente.get("fuentecampo").set("");
+    }
+    else
+    {
+      fuente.get('saldoActual').setValue(fuenteSeleccionada[0].saldo_actual_de_la_fuente);
+    }
   }
   reste(fuente:any)
   {
@@ -83,10 +128,16 @@ export class FormGestionarFuentesComponent implements OnInit {
     fuente.get('nuevoSaldo').setValue(fuente.controls.saldoActual.value-fuente.controls.valorSolicitado.value);
     
   }
-  openDialog(modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string, reload=false) {
     let dialog=this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
+    });
+    dialog.afterClosed().subscribe(c=>{
+      if(reload){
+        location.reload();
+      }
+      
     });
 
   }
@@ -103,7 +154,49 @@ export class FormGestionarFuentesComponent implements OnInit {
   }
 
   borrarArray(borrarForm: any, i: number) {
-    borrarForm.removeAt(i);
+    console.log(borrarForm);
+    this.openDialogSiNo("",'<b>¿Está seguro de eliminar este registro?</b>',i,borrarForm);
+  }
+
+
+  openDialogSiNo(modalTitle: string, modalText: string,id:number,borrarForm:any) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        if(borrarForm.value[id].gestionid>0)
+        {
+          this.disponibilidadPresupuestalService.DeleteFinancialFundingGestion(borrarForm.value[id].gestionid).subscribe(
+            response => {
+              borrarForm.removeAt(id);
+              this.openDialog('', `<b>La información ha sido eliminada correctamente.</b>`);
+            },
+            error => {
+              console.log(<any>error);
+              let mensaje: string;
+                if (error.error.message){
+                  mensaje = error.error.message;
+                }else {
+                  mensaje = error.message;
+                }
+                this.openDialog('Error', mensaje);
+                
+              },
+            () =>{
+              //else
+            }); 
+        }
+        else{
+          borrarForm.removeAt(id);
+          this.openDialog('', `<b>La información ha sido eliminada correctamente.</b>`);
+        }
+        
+      }           
+    });
   }
 
   agregaFuente() {
@@ -117,7 +210,8 @@ export class FormGestionarFuentesComponent implements OnInit {
       valorSolicitado: [null, Validators.compose([
         Validators.required, Validators.minLength(1), Validators.maxLength(20)])
       ],
-      nuevoSaldo: [null, Validators.required],
+      nuevoSaldo: [null, Validators.required],      
+      gestionid:[null]
     });
   }
 
@@ -128,14 +222,16 @@ export class FormGestionarFuentesComponent implements OnInit {
       let CreateFinancialFundingGestion={
         FuenteFinanciacionId:fuente.fuentecampo,
         ValorSolicitado:fuente.valorSolicitado,
-        DisponibilidadPresupuestalProyectoId:this.disponibilidadPresupuestalProyectoid};
+        gestionFuenteFinanciacionID:fuente.gestionid,
+        DisponibilidadPresupuestalProyectoId:this.disponibilidadPresupuestalProyectoid,
+      };
       this.disponibilidadPresupuestalService.CreateFinancialFundingGestion(CreateFinancialFundingGestion).subscribe(result=>
         {
           console.log("Guardado");
           mensaje=result.message
         });
     });      
-    this.openDialog('','<b>La información a sido guardad exitosamente.</b>');  
+    this.openDialog('','<b>La información a sido guardada exitosamente.</b>',true);  
     
   }
 }

@@ -98,8 +98,8 @@ namespace asivamosffie.api
             })
            .ConfigureApiBehaviorOptions(options =>
            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+               options.SuppressModelStateInvalidFilter = true;
+           });
 
             #region A gregado pora implementacion de descargas de PDF
             var context = new CustomAssemblyLoadContext();
@@ -121,7 +121,9 @@ namespace asivamosffie.api
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
             //Agregar Interfaces y clases
-
+            services.AddTransient<IApprovePreConstructionPhase1Service, ApprovePreConstructionPhase1Service>();
+            services.AddTransient<IRegisterPreContructionPhase1Service, RegisterPreContructionPhase1Service>();
+            services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
@@ -129,26 +131,29 @@ namespace asivamosffie.api
             services.AddTransient<IContributorService, ContributorService>();
             services.AddTransient<ISourceFundingService, SourceFundingService>();
             services.AddTransient<ICommitteeSessionFiduciarioService, CommitteeSessionFiduciarioService>();
+            services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<ICofinancingContributorService, CofinancingContributorService>();
             services.AddTransient<IBankAccountService, BankAccountService>();
-            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
             services.AddTransient<IProjectContractingService, ProjectContractingService>();
             services.AddTransient<ISelectionProcessService, SelectionProcessService>();
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
             services.AddTransient<IGuaranteePolicyService, GuaranteePolicyService>();
-            services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
             services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
-            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
-            services.AddTransient<IDocumentService, DocumentService>();
-            services.AddTransient<IProjectService, ProjectService>();
-
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
+            services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
+            services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
+            services.AddTransient<IContractualControversy, ContractualControversyService>();
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
+            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
+            services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
+            services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
+            services.AddTransient<IActBeginService, ActBeginService>();
+            services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IMonitoringURL, MonitoringURLService>();
-
-
-
-            // services.AddTransient<IUnitOfWork, UnitOfWork>(); // Unidad de trabajo
+            
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

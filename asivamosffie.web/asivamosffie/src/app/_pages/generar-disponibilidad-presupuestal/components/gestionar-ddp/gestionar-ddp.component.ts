@@ -5,6 +5,7 @@ import { CancelarDdpComponent } from '../cancelar-ddp/cancelar-ddp.component';
 import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { TipoDDP } from 'src/app/core/_services/budgetAvailability/budget-availability.service';
 
 @Component({
   selector: 'app-gestionar-ddp',
@@ -13,16 +14,24 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class GestionarDdpComponent implements OnInit {
   detailavailabilityBudget: any;
+  esModificacion=false;
+  pTipoDDP=TipoDDP;
 
   constructor(public dialog: MatDialog,private disponibilidadServices: DisponibilidadPresupuestalService,
     private route: ActivatedRoute,
     private router: Router) { }
 
-  openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string,relocate=false) {
+    let ref=this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    if(relocate)
+    {
+      ref.afterClosed().subscribe(result => {        
+        this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
+    });
+    }
   }
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
@@ -44,7 +53,7 @@ export class GestionarDdpComponent implements OnInit {
     this.disponibilidadServices.CreateDDP(this.detailavailabilityBudget.id).subscribe(listas => {
       console.log(listas);
       //this.detailavailabilityBudget=listas;
-      this.openDialog("",listas.message);
+      this.openDialog("",listas.message,true);
       if(listas.code=="200")
       {
         this.download();
@@ -73,7 +82,11 @@ export class GestionarDdpComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
-    
+    dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
+    dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
+    dialogRef.afterClosed().subscribe(result => {        
+      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
+    });
   }
 
   openDialogCancelarDDP() {
@@ -81,6 +94,12 @@ export class GestionarDdpComponent implements OnInit {
       width: '70em'
     });
     dialogRef.componentInstance.id = this.detailavailabilityBudget.id;
+    dialogRef.componentInstance.tipo = this.detailavailabilityBudget.tipoSolicitudEspecial;
+    dialogRef.componentInstance.nSolicitud = this.detailavailabilityBudget.numeroSolicitud;
+    dialogRef.afterClosed().subscribe(result => {        
+      this.router.navigate(["/generarDisponibilidadPresupuestal"], {});      
+    });
+    
   }
 
 }

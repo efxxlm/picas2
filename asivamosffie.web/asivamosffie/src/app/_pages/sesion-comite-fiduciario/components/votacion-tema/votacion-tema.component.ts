@@ -45,8 +45,24 @@ export class VotacionTemaComponent implements OnInit{
   };
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   maxLength(e: any, n: number) {
@@ -147,7 +163,7 @@ export class VotacionTemaComponent implements OnInit{
 
     this.fiduciaryCommitteeSessionService.createEditSesionTemaVoto( sesionComiteTema )
     .subscribe( respuesta => {
-      this.openDialog('', respuesta.message)
+      this.openDialog('', `<b>${respuesta.message}</b>`)
       if ( respuesta.code == "200" ){
         this.dialogRef.close(this.data.sesionComiteTema);
         //this.router.navigate(['/comiteTecnico/registrarSesionDeComiteTecnico',this.data.objetoComiteTecnico.comiteTecnicoId,'registrarParticipantes'])

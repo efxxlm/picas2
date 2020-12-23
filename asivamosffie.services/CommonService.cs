@@ -69,7 +69,7 @@ namespace asivamosffie.services
         public async Task<List<MenuPerfil>> GetMenuByRol(int pUserId)
         {
             int IdPerfil = await _context.UsuarioPerfil.Where(r => r.UsuarioId == pUserId).Select(r => r.PerfilId).FirstOrDefaultAsync();
-            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).ToList();
+            return _context.MenuPerfil.Where(r => r.PerfilId == IdPerfil && (bool)r.Activo).IncludeFilter(r => r.Menu).OrderBy(z=>z.Menu.Posicion).ToList();
         }
 
         public string GetNombreDepartamentoByIdMunicipio(string pIdMunicipio)
@@ -122,7 +122,7 @@ namespace asivamosffie.services
         {
             var retorno = await _context.MensajesValidaciones.Where(r => (bool)r.Activo && r.MenuId == pMenu && r.Codigo.Equals(pCodigo)).FirstOrDefaultAsync();
             /*almaceno auditoria*/
-            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
+            _context.Auditoria.Add(new Auditoria { AccionId = pAccionId, MensajesValidacionesId = retorno.MensajesValidacionesId, Usuario = pUsuario==null?"":pUsuario.ToUpper(), Observacion = pObservaciones.ToUpper(), Fecha = DateTime.Now });
             _context.SaveChanges();
             return retorno.Mensaje;
         }
@@ -131,9 +131,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).Select(r => r.DominioId).FirstOrDefaultAsync();
         }
-
-
-
+         
         public async Task<List<Localicacion>> GetListDepartamento()
         {
             
@@ -234,7 +232,12 @@ namespace asivamosffie.services
         {
             return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).FirstOrDefaultAsync();
         }
-        
+
+        public async Task<ContratoPoliza> GetLastContratoPolizaByContratoId(int pContratoId)
+        {
+            return await _context.ContratoPoliza.Where(r => r.ContratoId.Equals(pContratoId)).OrderByDescending(x=>x.ContratoPolizaId).FirstOrDefaultAsync();
+        }
+
         public async Task<Contratacion> GetContratacionByContratacionId(int pContratacionId)
         {
             return await _context.Contratacion.Where(r => r.ContratacionId.Equals(pContratacionId)).FirstOrDefaultAsync();
@@ -244,6 +247,7 @@ namespace asivamosffie.services
         {
             return await _context.Contratista.Where(r => r.ContratistaId.Equals(pContratistaId)).FirstOrDefaultAsync();
         }
+
         public string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId)
         {
             return _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).Select(r => r.Descripcion).FirstOrDefault();
@@ -290,9 +294,7 @@ namespace asivamosffie.services
         {
             return await _context.Dominio.Where(r => (bool)r.Activo && r.Codigo.Equals(pCodigo) && r.TipoDominioId == pTipoDominioId).FirstOrDefaultAsync();
         }
-
-
-
+         
         public async Task<List<InstitucionEducativaSede>> ListIntitucionEducativaByMunicipioId(string pIdMunicipio)
         {
             return await _context.InstitucionEducativaSede.Where(r => (bool)r.Activo && r.PadreId == null && r.LocalizacionIdMunicipio.Trim().Equals(pIdMunicipio.Trim())).ToListAsync();
@@ -329,9 +331,7 @@ namespace asivamosffie.services
                  IdPadre = x.IdPadre
              }).ToListAsync();
         }
-
-
-
+         
         public async Task<List<Localicacion>> GetListDepartamentoByIdMunicipio(string idMunicipio)
         {
             var munactual = _context.Localizacion.Find(idMunicipio);
@@ -350,7 +350,253 @@ namespace asivamosffie.services
         {
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
- 
+
+        public async Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular)
+        {
+            DateTime fechaInicial = pFechaCalcular;
+            DateTime fechadiasHabiles = pFechaCalcular;
+
+            for (int i = 0; i < pDias; i++)
+            {
+                fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+            }
+            List<DateTime> festivos = new List<DateTime>();
+
+            festivos.AddRange(DiasFestivosAnioRetroceso(fechaInicial.Year));
+
+            festivos.AddRange(DiasFestivosAnioRetroceso(fechaInicial.Year + 1));
+
+            foreach (var festivo in festivos)
+            {
+                if (festivo <= fechaInicial && festivo >= fechadiasHabiles)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+            }
+            return fechadiasHabiles;
+        }
+
+        /// <summary>
+        /// Julian Martinez
+        /// </summary>
+        /// <param name="dias">Cuantos dias habiles se agregan</param>
+        /// <param name="pFechaCalcular">La fecha a calcular los dias habiles</param>
+        /// <returns></returns>
+        public async Task <DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular)
+        {
+            DateTime fechaInicial = pFechaCalcular;
+            DateTime fechadiasHabiles = pFechaCalcular;
+
+            for (int i = 0; i < pDias; i++)
+            {
+                fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+            }
+            List<DateTime> festivos = new List<DateTime>();
+
+            festivos.AddRange(DiasFestivosAnio(fechaInicial.Year));
+
+            festivos.AddRange(DiasFestivosAnio(fechaInicial.Year + 1));
+
+            foreach (var festivo in festivos)
+            {
+                if (festivo >= fechaInicial && festivo <= fechadiasHabiles)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+            }
+            return fechadiasHabiles;
+        }
+
+        public static DateTime[] DiasFestivosAnio(int anio)
+        {
+            List<DateTime> fechas = new List<DateTime>
+            {
+                ////Fechas fijas
+                //año nuevo
+                new DateTime(anio, 1, 1),
+                //trabajo
+                new DateTime(anio, 5, 1),
+                //grito independencia
+                new DateTime(anio, 7, 20),
+                //Batalla boyacá
+                new DateTime(anio, 8, 7),
+                //Inmaculada concepcion
+                new DateTime(anio, 12, 8),
+                //Navidad
+                new DateTime(anio, 12, 25),
+                ////Fechas calculadas
+                ////Epifanía Primer lunes de enero
+                PrimerDiaMes(anio, 1, DayOfWeek.Monday, 6),
+                ////San José Primer lunes de marzo 
+                PrimerDiaMes(anio, 3, DayOfWeek.Monday, 19),
+                //san Pedro y San Pablo Primer Lunes de julio
+                PrimerDiaMes(anio, 6, DayOfWeek.Monday, 29),
+                //Asunción de la virgen agosto Primer Lunes
+                PrimerDiaMes(anio, 8, DayOfWeek.Monday, 15),
+                //Dia de La Raza primer lunes de octubre
+                PrimerDiaMes(anio, 10, DayOfWeek.Monday, 12),
+                //Todos los Santos primer lunes a partir del 1 de noviembre
+                PrimerDiaMes(anio, 11, DayOfWeek.Monday, 1),
+                //Independencia de Cartagena primer lunes a partir del 11 de noviembre
+                PrimerDiaMes(anio, 11, DayOfWeek.Monday, 11)
+            };
+            ////Fechas con domingo de pascua
+            DateTime domingopascua = DomingoPascua(anio);
+            //Jueves santo anterior al domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Thursday, domingopascua.Day, 1, true));
+            //viernes santo anterior al domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Friday, domingopascua.Day, 1, true));
+            //Ascension de Jesus 7 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 7));
+            //Ascension de Jesus 10 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 10));
+            //Sagrado Corazon de Jesus 11 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 11));
+            return fechas.ToArray();
+        }
+
+        public static DateTime[] DiasFestivosAnioRetroceso(int anio)
+        {
+            List<DateTime> fechas = new List<DateTime>
+            {
+                ////Fechas fijas
+                //año nuevo
+                new DateTime(anio, 1, 1),
+                //trabajo
+                new DateTime(anio, 5, 1),
+                //grito independencia
+                new DateTime(anio, 7, 20),
+                //Batalla boyacá
+                new DateTime(anio, 8, 7),
+                //Inmaculada concepcion
+                new DateTime(anio, 12, 8),
+                //Navidad
+                new DateTime(anio, 12, 25),
+                ////Fechas calculadas
+                ////Epifanía Primer lunes de enero
+                PrimerDiaMes(anio, 1, DayOfWeek.Monday, 6),
+                ////San José Primer lunes de marzo 
+                PrimerDiaMes(anio, 3, DayOfWeek.Monday, 19),
+                //san Pedro y San Pablo Primer Lunes de julio
+                PrimerDiaMes(anio, 6, DayOfWeek.Monday, 29),
+                //Asunción de la virgen agosto Primer Lunes
+                PrimerDiaMes(anio, 8, DayOfWeek.Monday, 15),
+                //Dia de La Raza primer lunes de octubre
+                PrimerDiaMes(anio, 10, DayOfWeek.Monday, 12),
+                //Todos los Santos primer lunes a partir del 1 de noviembre
+                PrimerDiaMes(anio, 11, DayOfWeek.Monday, 1),
+                //Independencia de Cartagena primer lunes a partir del 11 de noviembre
+                PrimerDiaMes(anio, 11, DayOfWeek.Monday, 11)
+            };
+            ////Fechas con domingo de pascua
+            DateTime domingopascua = DomingoPascua(anio);
+            //Jueves santo anterior al domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Thursday, domingopascua.Day, 1, true));
+            //viernes santo anterior al domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Friday, domingopascua.Day, 1, true));
+            //Ascension de Jesus 7 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 7));
+            //Ascension de Jesus 10 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 10));
+            //Sagrado Corazon de Jesus 11 despues del domingo de pascua
+            fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 11));
+            return fechas.ToArray();
+        }
+
+        public static DateTime PrimerDiaMes(int anio, int mes, DayOfWeek dia, int diaBase)
+        {
+            DateTime fechaRetorno = new DateTime(anio, mes, diaBase);
+            while (fechaRetorno.DayOfWeek != dia)
+            {
+                fechaRetorno = fechaRetorno.AddDays(1);
+            }
+            return fechaRetorno;
+        }
+
+        public static DateTime DiaMesCantidad(int anio, int mes, DayOfWeek dia, int diaBase, int cantidadVeces, bool antes = false)
+        {
+            DateTime fechaRetorno = new DateTime(anio, mes, diaBase);
+            int cantidadActual = 0;
+            int suma = 1;
+            if (antes)
+            {
+                suma = -1;
+            }
+            while (fechaRetorno.DayOfWeek != dia || cantidadVeces != cantidadActual)
+            {
+                fechaRetorno = fechaRetorno.AddDays(suma);
+                if (fechaRetorno.DayOfWeek == dia)
+                {
+                    cantidadActual++;
+                }
+            }
+            return fechaRetorno;
+        }
+         
+        public static DateTime DomingoPascua(int anyo)
+        {
+            int M = 25;
+            int N = 5;
+
+            if (anyo >= 1583 && anyo <= 1699) { M = 22; N = 2; }
+            else if (anyo >= 1700 && anyo <= 1799) { M = 23; N = 3; }
+            else if (anyo >= 1800 && anyo <= 1899) { M = 23; N = 4; }
+            else if (anyo >= 1900 && anyo <= 2099) { M = 24; N = 5; }
+            else if (anyo >= 2100 && anyo <= 2199) { M = 24; N = 6; }
+            else if (anyo >= 2200 && anyo <= 2299) { M = 25; N = 0; }
+
+            int a, b, c, d, e, dia, mes;
+
+            //Cálculo de residuos
+            a = anyo % 19;
+            b = anyo % 4;
+            c = anyo % 7;
+            d = (19 * a + M) % 30;
+            e = (2 * b + 4 * c + 6 * d + N) % 7;
+
+            // Decidir entre los 2 casos:
+            if (d + e < 10) { dia = d + e + 22; mes = 3; }
+            else { dia = d + e - 9; mes = 4; }
+
+            // Excepciones especiales
+            if (dia == 26 && mes == 4) dia = 19;
+            if (dia == 25 && mes == 4 && d == 28 && e == 6 && a > 10) dia = 18;
+
+            return new DateTime(anyo, mes, dia);
+        }
+
     }
 
 }

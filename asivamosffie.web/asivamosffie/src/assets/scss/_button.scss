@@ -22,25 +22,20 @@
     }
 }
 
+.mat-button.mat-primary[disabled],
 .mat-raised-button[disabled][disabled],
 .mat-raised-button.mat-accent[disabled],
 .mat-button:hover .mat-button-focus-overlay {
     opacity: .8;
 }
 
+.mat-button.mat-primary[disabled] {
+  color: $mainColor;
+}
+
 button.mat-raised-button {
     line-height: 24px;
     padding: 0 1.5em;
-}
-
-.btn-calendario {
-    padding: 0;
-    min-width: 2.2em;
-    margin-left: .65em;
-
-    img {
-        height: 2.2em;
-    }
 }
 
 .btn-descargar {
@@ -80,6 +75,10 @@ button.mat-raised-button {
     img {
         height: 1.5em;
     }
+
+    &:disabled {
+      opacity: .7;
+    }
 }
 
 .btn-descargar-plantilla,
@@ -109,6 +108,12 @@ button.btn-calendario {
     img {
         height: 2.2em;
     }
+
+    &:hover::before {
+        @extend %tooltip;
+        content: 'Haga clic en el calendario';
+        bottom: 2.5em;
+    }
 }
 
 .mat-dialog-actions {
@@ -118,4 +123,12 @@ button.btn-calendario {
 .mat-dialog-actions button {
     background-color: $mainColor;
     color: white;
+}
+
+
+.mat-button.btn-sino,
+.mat-button.btn-sino+.mat-button {
+    line-height: 1.8;
+    padding: 0 2em;
+    // margin-bottom: 2em;
 }
