@@ -289,7 +289,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("ActualizarRutaSoporteControversiaContractual")]
-        public async Task<IActionResult> ActualizarRutaSoporteControversiaContractual( int pControversiaContractualId, string pRutaSoporte)
+        public async Task<IActionResult> ActualizarRutaSoporteControversiaContractual(int pControversiaContractualId, string pRutaSoporte)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -304,7 +304,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+
 
         [HttpPost]
         [Route("ActualizarRutaSoporteControversiaActuacion")]

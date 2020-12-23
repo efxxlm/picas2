@@ -8,47 +8,59 @@
             <img src="assets/img/icon/lupa.svg" alt="Buscar">
         </button>
     </div>
-    <div class="table-responsive">
+    <div class="w-100 table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
             <ng-container matColumnDef="fechaAprobacionRequisitos">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de aprobación
-                    de requisitos </th>
-                <!-- Caso mapeado <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma | date:'dd/MM/yyyy'}}</b></td>-->
-                <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacionRequisitos}}</b></td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-25"> Fecha de aprobación de requisitos</th>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaAprobacionRequisitosDate | date:'dd/MM/yyyy'}}</b></td>
             </ng-container>
 
-            <ng-container matColumnDef="numeroContrato">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato de obra</th>
-                <td mat-cell *matCellDef="let element">{{element.numeroContrato}}</td>
+            <ng-container matColumnDef="numeroContratoObra">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-25"> Número del contrato</th>
+                <td mat-cell *matCellDef="let element">{{element.numeroContratoObra}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="estado">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del acta </th>
-                <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+            <ng-container matColumnDef="estadoActa">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-25"> Estado del acta </th>
+                <td mat-cell *matCellDef="let element"> {{element.estadoActa}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+            <ng-container matColumnDef="contratoId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-25"> Gestión </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estado=='Sin validar'"
-                        (click)="this.validarActaParaInicio()">Validar acta de inicio</button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita()"
-                        *ngIf="element.estado=='Con acta en proceso de firma'"> Cargar Acta Suscrita</button>
-                    <button mat-raised-button color="accent" class="btn-table" (click)="this.descargarActaDesdeTabla()"
-                        *ngIf="element.estado=='Con acta en proceso de firma'"> Descargar Acta</button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.enviadoparaInterventor==true">Enviar al interventor</button>
+                        (click)="this.cargarActaSuscrita(element.contratoId, element.tipoContratoNombre, element.numeroContratoObra)"
+                        *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Cargar acta suscrita</button>
+                        <!--
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estado=='Con acta generada'">Enviar acta para firmar</button>
+                        (click)="this.descargarActaDesdeTabla(element.contratoId)"
+                        *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Descargar acta preliminar </button>
+                    -->
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estado=='Con observaciones' || element.estado=='Con acta generada' || element.estado=='Con acta en proceso de firma'"
-                        (click)="this.verDetalleEditar()">Ver detalle/Editar</button>
+                        *ngIf="element.estadoActaCodigo=='2'"
+                        (click)="this.enviarActaParaFirma(element.contratoId,element.numeroContratoObra)">Enviar acta para firma</button>
+                   <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='8'"
+                        (click)="this.enviarInterventorBtn(element.contratoId)">Enviar al interventor</button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estado=='Enviada al interventor' || element.estado=='Con acta suscrita y cargada'"
-                        (click)="this.verDetalle(element.actaSuscrita)">Ver detalle</button>
+                        *ngIf="element.estadoActa=='Enviada por el supervisor'"
+                        (click)="this.cambiarEstadoInterventor(element.contratoId,element.tieneObservacionesSupervisor)">Enviar
+                        al interventor</button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estado=='Sin acta generada'" (click)="this.generarActaFUno()">Generar Acta</button>
+                        *ngIf="element.estadoActa=='Con acta generada' || element.estadoActa=='Con acta preliminar generada'"
+                        (click)="this.verDetalleEditar(element.contratoId)">Ver detalle/Editar</button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActaCodigo=='3'"
+                        (click)="this.verDetalle(element.contratoId)">Ver detalle</button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                    (click)="this.verDetalleActaCargada(element.contratoId)"
+                        *ngIf="element.estadoActaCodigo=='4'">
+                        Ver detalle</button>
+                    <button mat-raised-button color="accent" class="btn-table"
+                        *ngIf="element.estadoActaCodigo=='1'"
+                        (click)="this.validarActaParaInicio(element.contratoId)">Generar acta</button>
+
 
                 </td>
             </ng-container>

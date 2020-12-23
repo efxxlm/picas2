@@ -1,0 +1,111 @@
+<form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
+    <div class="d-flex mt-1em col-md-6" style="margin: 0 auto;">
+        <label class="mr-label" class="label-left"><b>Número de contratos vinculados al proceso</b></label>
+        <div class="col d-flex">
+            <mat-form-field class="w-70">
+                <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
+            </mat-form-field>
+            <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.length}}</span>
+        </div>
+    </div>
+
+    <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Contrato {{ i+1 }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card [formGroup]="perfil">
+                <mat-card-content>
+                    <div class="row" style="margin-top: 0.5em;">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="contrato">Número de contrato</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #nombre type="text" [formControl]="myControl" maxlength="100" required
+                                            [matAutocomplete]="auto">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option (click)="seleccionAutocomplete(nombres)"
+                                                *ngFor="let nombres of contratosArray" [value]="nombres">
+                                                {{nombres}}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                        <input type="hidden" formControlName="contrato">
+                                    </mat-form-field>
+                                    <button mat-button color="primary" class="busqueda--img">
+                                        <img src="assets/img/icon/lupa.svg" alt="Buscar">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div *ngIf="this.perfiles.value.contrato!=null">
+                <div style="margin-top: 1em;">
+                    Seleccione la(s) Institución(es) Educativa(s), sede(s) asociada(s) al proceso
+                </div>
+                <div class="table-responsive w-100">
+                    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                        <ng-container matColumnDef="nombreContratista">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre de la entidad contratista </th>
+                            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.nombreContratista }} </b> </td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="institucionEducativa">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución educativa </th>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="codigoDane">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Código DANE IE </th>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.codigoDane }} </td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="sede">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="sedeCodigo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Código SEDE </th>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.sedeCodigo }} </td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="contratacionProyectoId">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Seleccionar </th>
+                            <td mat-cell *matCellDef="let element">
+                                <section class="example-section">
+                                    <mat-checkbox (click)="addProject(element.contratacionProyectoId)"></mat-checkbox>
+                                  </section>
+                            </td>
+                        </ng-container>
+                
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                </div>
+            </div>
+            <div class="text-right">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarPerfil( i )"
+                    [disabled]="perfiles.controls.length == 1">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                    Eliminar contrato
+                </button>
+            </div>
+
+            <div class="text-center">
+                <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
+                    <img src="assets/img/icon/guardar.svg">
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>

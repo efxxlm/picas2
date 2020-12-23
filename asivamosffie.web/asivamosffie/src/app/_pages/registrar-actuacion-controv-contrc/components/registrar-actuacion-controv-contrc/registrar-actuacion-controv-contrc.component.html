@@ -1,0 +1,23 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Registrar actuaciones de controversias contractuales
+    </h1>
+    <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+    <div class="text-info" *ngIf="verAyuda">
+        <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+            <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+        </button>
+        Bienvenido/a, aquí podrá registrar y gestionar las actuaciones de controversias contractuales que le han sido
+        asignadas,
+        que fueron motivadas a partir de la ejecución de los contratos de obra o interventoría, que fueron solicitadas
+        por un contratista
+        de obra o interventoría o por el supervisor de contrato, en desarrollo de los proyectos de infraestructura del
+        FFIE.
+    </div>
+    <app-tabla-controversias-racc></app-tabla-controversias-racc>
+</div>

@@ -1,4 +1,4 @@
-<div class="container text-center">
+<div class="text-center" *ngIf='this.dataTable.length > 0'>
     <div class="table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
@@ -9,12 +9,21 @@
 
             <ng-container matColumnDef="observacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones generales</th>
-                <td mat-cell *matCellDef="let element">{{element.observacion}}</td>
+                <td mat-cell *matCellDef="let element">
+                    <div [innerHtml]="element.observacion"></div>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="estadoRevisionCodigo">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la revision</th>
-                <td mat-cell *matCellDef="let element"> {{element.estadoRevisionCodigo}} </td>
+                <td mat-cell *matCellDef="let element">
+                    <div *ngIf="element.estadoRevisionCodigo=='1'">
+                        Devuelta
+                    </div>
+                    <div *ngIf="element.estadoRevisionCodigo=='2'">
+                        Aprobada
+                    </div>
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

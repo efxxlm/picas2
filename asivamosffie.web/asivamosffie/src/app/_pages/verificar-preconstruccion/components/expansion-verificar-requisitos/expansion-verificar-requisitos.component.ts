@@ -39,27 +39,29 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     ]
   };
 
-  constructor ( private fb: FormBuilder,
-                private activatedRoute: ActivatedRoute,
-                private dialog: MatDialog,
-                private routes: Router,
-                private commonSvc: CommonService,
-                private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
-                private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService ) 
+  constructor(
+    private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private dialog: MatDialog,
+    private routes: Router,
+    private commonSvc: CommonService,
+    private faseUnoVerificarPreconstruccionSvc: FaseUnoVerificarPreconstruccionService,
+    private faseUnoPreconstruccionSvc: FaseUnoPreconstruccionService )
   {
     this.getContratacionByContratoId( this.activatedRoute.snapshot.params.id );
     if (this.routes.getCurrentNavigation().extras.replaceUrl) {
       this.routes.navigateByUrl('/verificarPreconstruccion');
       return;
-    };
-    if ( this.routes.getCurrentNavigation().extras.state )
+    }
+    if ( this.routes.getCurrentNavigation().extras.state ) {
       this.fechaPoliza = this.routes.getCurrentNavigation().extras.state.fechaPoliza;
+    }
   }
 
   ngOnInit(): void {
   }
 
-  getContratacionByContratoId ( pContratoId: string ) {
+  getContratacionByContratoId( pContratoId: string ) {
     this.commonSvc.listaPerfil()
       .subscribe( perfiles => {
         this.perfilesCv = perfiles;
@@ -69,87 +71,124 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
             this.contrato = contrato;
             console.log( this.contrato );
             const observacionTipo2 = [];
-            for ( let contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
-  
+            for ( const contratacionProyecto of contrato.contratacion.contratacionProyecto ) {
+
               let sinDiligenciar = 0;
+              let enProceso = 0;
               let completo = 0;
-  
-              for ( let perfil of contratacionProyecto.proyecto.contratoPerfil ) {
+
+              for ( const perfil of contratacionProyecto.proyecto.contratoPerfil ) {
+                // tslint:disable-next-line: no-string-literal
                 perfil[ 'tieneObservaciones' ] = null;
+                // tslint:disable-next-line: no-string-literal
                 perfil[ 'verificarObservacion' ] = '';
 
                 const tipoPerfil = this.perfilesCv.filter( value => value.codigo === perfil.perfilCodigo );
+                // tslint:disable-next-line: no-string-literal
                 perfil[ 'nombre' ] = tipoPerfil[0].nombre;
+                // tslint:disable-next-line: no-string-literal
                 if ( perfil[ 'tieneObservacionApoyo' ] === undefined ) {
+                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'estadoSemaforo' ] = 'sin-diligenciar';
                   sinDiligenciar++;
-                };
+                }
+                // tslint:disable-next-line: no-string-literal
                 if ( perfil[ 'tieneObservacionApoyo' ] === false ) {
+                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'estadoSemaforo' ] = 'completo';
+                  // tslint:disable-next-line: no-string-literal
                   perfil[ 'tieneObservaciones' ] = false;
                   completo++;
-                };
-                for ( let observacionApoyo of perfil.contratoPerfilObservacion ) {              
+                }
+                for ( const observacionApoyo of perfil.contratoPerfilObservacion ) {
                   if ( observacionApoyo.tipoObservacionCodigo === '2' ) {
                     observacionTipo2.push( observacionApoyo );
-                  };
-                };
+                  }
+                }
                 if ( observacionTipo2.length > 0 ) {
-                  if ( perfil[ 'tieneObservacionApoyo' ] === true && observacionTipo2[ observacionTipo2.length -1 ].observacion === undefined ) {
+                  // tslint:disable-next-line: no-string-literal
+                  if (  perfil[ 'tieneObservacionApoyo' ] === true
+                        && observacionTipo2[ observacionTipo2.length - 1 ].observacion === undefined ) {
+                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'estadoSemaforo' ] = 'en-proceso';
+                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
-                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo2[ observacionTipo2.length -1 ].contratoPerfilObservacionId;
-                  };
-                  if ( perfil[ 'tieneObservacionApoyo' ] === true && observacionTipo2[ observacionTipo2.length -1 ].observacion !== undefined ) {
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'contratoPerfilObservacionId' ] = observacionTipo2[ observacionTipo2.length - 1 ].contratoPerfilObservacionId;
+                    enProceso++;
+                  }
+                  // tslint:disable-next-line: no-string-literal
+                  if (  perfil[ 'tieneObservacionApoyo' ] === true
+                        && observacionTipo2[ observacionTipo2.length - 1 ].observacion !== undefined ) {
+                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'estadoSemaforo' ] = 'completo';
+                    // tslint:disable-next-line: no-string-literal
                     perfil[ 'tieneObservaciones' ] = true;
-                    perfil[ 'verificarObservacion' ] = observacionTipo2[ observacionTipo2.length -1 ].observacion;
+                    // tslint:disable-next-line: no-string-literal
+                    perfil[ 'verificarObservacion' ] = observacionTipo2[ observacionTipo2.length - 1 ].observacion;
                     completo++;
-                  };
-                };
-              };
+                  }
+                }
+              }
+              console.log( sinDiligenciar, completo, enProceso );
               if ( sinDiligenciar === contratacionProyecto.proyecto.contratoPerfil.length ) {
+                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'sin-diligenciar';
-                return;
-              };
+              }
               if ( completo === contratacionProyecto.proyecto.contratoPerfil.length ) {
+                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'completo';
-                return;
-              };
-              if ( ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length ) || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
+              }
+              if (  enProceso > 0
+                    || ( completo > 0 && completo < contratacionProyecto.proyecto.contratoPerfil.length )
+                    || ( sinDiligenciar > 0 && sinDiligenciar < contratacionProyecto.proyecto.contratoPerfil.length ) ) {
+                // tslint:disable-next-line: no-string-literal
                 contratacionProyecto[ 'estadoSemaforo' ] = 'en-proceso';
-                return;
-              };
-            };
+              }
+            }
             console.log( this.contrato );
           } );
       } );
-  };
+  }
 
-  innerObservacion ( observacion: string ) {
+  innerObservacion( observacion: string ) {
     const observacionHtml = observacion.replace( '"', '' );
     return observacionHtml;
-  };
+  }
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
-    };
-  };
+    }
+  }
 
   openDialog(modalTitle: string, modalText: string) {
-    let dialogRef =this.dialog.open(ModalDialogComponent, {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
-  };
+    });
+  }
 
   textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
     if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
-  };
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
+  }
 
   textoLimpioObservacion(texto: string) {
     if ( texto ){
@@ -158,15 +197,19 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
     }
   }
 
-  onSubmit ( perfil: ContratoPerfil ) {
+  onSubmit( perfil: ContratoPerfil ) {
     const observacionPerfil: ObservacionPerfil = {
       contratoPerfilId: perfil.contratoPerfilId,
-      observacion: perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
+      // tslint:disable-next-line: no-string-literal
+      observacion: perfil[ 'verificarObservacion' ] === null || perfil[ 'verificarObservacion' ].length === 0 ? null : perfil[ 'verificarObservacion' ],
+      // tslint:disable-next-line: no-string-literal
       tieneObservacionApoyo: perfil[ 'tieneObservaciones' ]
     };
+    // tslint:disable-next-line: no-string-literal
     if ( perfil[ 'contratoPerfilObservacionId' ] !== null ) {
+      // tslint:disable-next-line: no-string-literal
       observacionPerfil[ 'contratoPerfilObservacionId' ] = perfil[ 'contratoPerfilObservacionId' ];
-    };
+    }
     console.log( observacionPerfil );
     this.faseUnoVerificarPreconstruccionSvc.crearContratoPerfilObservacion( observacionPerfil )
       .subscribe(
@@ -177,6 +220,6 @@ export class ExpansionVerificarRequisitosComponent implements OnInit {
         },
         err => this.openDialog( '', err.message )
       );
-  };
+  }
 
 }

@@ -1,9 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
-import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -13,7 +10,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormDescripcionActuacionComponent implements OnInit {
   @Input() isEditable;
-  @Input() idActuacionFromEdit;
+ 
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -28,13 +25,16 @@ export class FormDescripcionActuacionComponent implements OnInit {
     participacionFiduciaria: [null, Validators.required],
     requiereComiteTecnico: [null, Validators.required],
     observaciones: [null, Validators.required],
-    urlSoporte: [null, Validators.required]
   });
-  estadoAvanceTramiteArrayDom: Dominio[] = [];
-  proximaActuacionRequeridaArrayDom: Dominio[] = [];
-  actuacionAdelantadaArrayDom: Dominio[] = [];
-
-  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  estadoAvanceTramiteArray = [
+    { name: 'Aprobación de Comunicación de Inicio de TAI', value: '1' },
+  ];
+  actuacionAdelantadaArray = [
+    { name: 'Actuación 1', value: '1' },
+  ];
+  proximaActuacionRequeridaArray = [
+    { name: 'Otro', value: '1' },
+  ];
   editorStyle = {
     height: '50px'
   };
@@ -83,7 +83,6 @@ export class FormDescripcionActuacionComponent implements OnInit {
       });
     }
   }
-
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);
@@ -96,10 +95,27 @@ export class FormDescripcionActuacionComponent implements OnInit {
       e.editor.deleteText(n-1, e.editor.getLength());
     }
   }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
-      return texto.getLength() > n ? n : texto.getLength();
+
+
+  textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -110,78 +126,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
   }
 
   onSubmit() {
-    let actuacionTaiArray;
-    if (this.isEditable == true) {
-      actuacionTaiArray = {
-        "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
-        "Observaciones": this.addressForm.value.observaciones,
-        "ResumenPropuestaFiduciaria": "",
-        "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        "FechaCreacion": "2020-3-3",
-        "UsuarioCreacion": "US CRE w",
-        "UsuarioModificacion": "US MODIF w",
-        "EsCompleto": true,
-        "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
-        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
-        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
-        "EsRequiereContratista":this.addressForm.value.participacionContratista,
-        "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
-        "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
-        "EsRequiereJuridico": "",
-        "EsRequiereFiduciaria": this.addressForm.value.participacionFiduciaria,
-        "EsRequiereComite": this.addressForm.value.requiereComiteTecnico,
-        "EsRequiereAseguradora": "",
-        "EsRequiereComiteReclamacion": "",
-        "EsprocesoResultadoDefinitivo": "",
-        "EsRequiereMesaTrabajo": "",
-        "Eliminado": false,
-        "ControversiaActuacionId": 7
-      }
-    }
-    else {
-      actuacionTaiArray = {
-        "ControversiaContractualId": this.controversiaID,
-        "ActuacionAdelantadaCodigo": this.addressForm.value.actuacionAdelantada.codigo,
-        "ActuacionAdelantadaOtro": "",
-        "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
-        "ProximaActuacionOtro": this.addressForm.value.cualOtro,
-        "Observaciones": this.addressForm.value.observaciones,
-        "ResumenPropuestaFiduciaria": "ResumenPropuestaFiduciaria w",
-        "RutaSoporte": this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        "FechaCreacion": "2020-3-3",
-        "UsuarioCreacion": "US CRE w",
-        "UsuarioModificacion": "US MODIF w",
-        "EsCompleto": true,
-        "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
-        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
-        "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
-        "EsRequiereContratista":this.addressForm.value.participacionContratista,
-        "EsRequiereInterventor": this.addressForm.value.participacionInterventorContrato,
-        "EsRequiereSupervisor": this.addressForm.value.participacionSupervisorContrato,
-        "EsRequiereJuridico": "",
-        "EsRequiereFiduciaria": this.addressForm.value.participacionFiduciaria,
-        "EsRequiereComite": this.addressForm.value.requiereComiteTecnico,
-        "EsRequiereAseguradora": "",
-        "EsRequiereComiteReclamacion": "",
-        "EsprocesoResultadoDefinitivo": "",
-        "EsRequiereMesaTrabajo": "",
-        "Eliminado": false
-      }
-    }
-    this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
-      if(data.isSuccessful==true){
-        this.openDialog("",data.message);
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
-      }
-      else{
-        this.openDialog("",data.message);
-      }
-    });
+    console.log(this.addressForm.value);
+    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 }

@@ -22,6 +22,7 @@
   width: 100%;
   margin-bottom: 1.5em;
   position: relative;
+  max-width: calc(100% - 7.3em);
 
   &.color-secondaryColor {
     border-color: $secondaryColor;
@@ -40,6 +41,9 @@
 }
 
 .quill-editor-style {
+  .ql-toolbar.ql-snow {
+    text-align: left;
+  }
   .ql-toolbar.ql-snow,
   .ql-container.ql-snow {
     border: 0;
@@ -78,10 +82,18 @@
     }
   }
 
+  &.invalid .quill-editor-style.card .ql-container.ql-snow {
+    border-color: $secondaryColor;
+  }
+
   &.card {
     width: 100%;
     .ql-container.ql-snow {
-      max-width: 70em;
+
+      .mat-dialog & {
+        max-width: 70em;
+      }
+
       border-bottom: $fontColor solid 1px;
 
       .quill-sin-borde & {
@@ -122,6 +134,10 @@
       top: calc(50% + 1.5em);
       transform: translateY(-50%);
       color: $mainColor;
+
+      .required-05 & {
+      top: calc(50% + .5em);
+      }
 
       .text-area-quill & {
         top: calc(50% + 0.5em);

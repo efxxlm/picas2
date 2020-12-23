@@ -27,7 +27,8 @@
                   max="999" required (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{3 - hvRequeridas.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{3 - hvRequeridas.value.length}}</span>
             </div>
           </div>
         </div>
@@ -44,7 +45,8 @@
                   required (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{3 - hvRecibidas.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{3 - hvRecibidas.value.length}}</span>
             </div>
           </div>
         </div>
@@ -61,7 +63,8 @@
                   required (keypress)="validateNumberKeypress($event)"
                   onKeyPress="if(this.value.length>=this.maxLength) return false;">
               </mat-form-field>
-              <span class="contador">{{3 - hvAprovadas.value.length}}</span>
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+              matTooltipClass="info-tooltip">{{3 - hvAprovadas.value.length}}</span>
             </div>
           </div>
         </div>
@@ -113,7 +116,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #numeroRadicadoInput type="text" [formControlName]="i" maxlength="20" required>
                 </mat-form-field>
-                <span class="contador">{{20 - numeroRadicadoInput.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numeroRadicadoInput.value.length}}</span>
               </div>
             </div>
           </div>
@@ -139,7 +142,7 @@
           <mat-form-field class="full-width">
             <input matInput #numeroRadicadoInput type="text" formControlName="url" maxlength="20" required>
           </mat-form-field>
-          <span class="text-center d-block">Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal.</span>
+          <span class="text-center d-block" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal.</span>
         </div>
       </div>
     </mat-card-content>

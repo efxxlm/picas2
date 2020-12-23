@@ -26,7 +26,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateOrEditDemandadoConvocado")]        
-        public async Task<IActionResult> CreateOrEditDemandadoConvocado(DemandadoConvocado demandadoConvocado)
+        public async Task<IActionResult> CreateOrEditDemandadoConvocado([FromBody] DemandadoConvocado demandadoConvocado)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -71,7 +71,7 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateOrEditDefensaJudicial")]
-        public async Task<IActionResult> CreateOrEditDefensaJudicial(DefensaJudicial defensaJudicial)
+        public async Task<IActionResult> CreateOrEditDefensaJudicial([FromBody] DefensaJudicial defensaJudicial)
         {
             Respuesta respuesta = new Respuesta();
             try
@@ -124,6 +124,7 @@ namespace asivamosffie.api.Controllers
             }
         }
                 
+        /*jflorez deprecated, no entendi su funcionalidad*/
         [HttpGet]
         [Route("GetListProyects")]
         public async Task<ActionResult<List<ProyectoGrilla>>> GetListProyects(int pProyectoId)
@@ -188,6 +189,36 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        /*autor: jflorez
+           descripción: trae listado de contratos asignados 
+           impacto: CU 4.2.2*/
+        [HttpGet]
+        [Route("GetListContract")]
+        public async Task<ActionResult<List<Contrato>>> GetListContract()
+        {
+            try
+            {
+                return await _judicialDefense.GetListContract();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListProyectsByContract")]
+        public async Task<ActionResult<List<ProyectoGrilla>>> GetListProyectsByContract(int pContratoId)
+        {
+            try
+            {
+                return await _judicialDefense.GetListProyectsByContract(pContratoId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
     }
 }

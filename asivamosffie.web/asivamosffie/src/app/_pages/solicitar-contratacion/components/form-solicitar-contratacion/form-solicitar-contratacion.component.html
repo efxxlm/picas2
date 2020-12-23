@@ -67,7 +67,7 @@
                     <input matInput #llaveMEN type="text" maxlength="8" formControlName="llaveMEN"
                       onKeyPress="if(this.value.length>=this.maxLength) return false;">
                   </mat-form-field>
-                  <span class="contador">{{8 - llaveMEN.value.length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{8 - llaveMEN.value.length}}</span>
                 </div>
               </div>
             </div>

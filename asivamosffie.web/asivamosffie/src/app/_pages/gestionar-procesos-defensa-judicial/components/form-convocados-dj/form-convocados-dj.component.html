@@ -1,0 +1,121 @@
+<form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
+    <div class="d-flex mt-1em col-md-5" style="margin: 0 auto;">
+        <label class="mr-label" class="label-left"><b>Número de convocados</b></label>
+        <div class="col d-flex">
+            <mat-form-field class="w-70">
+                <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
+            </mat-form-field>
+            <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.length}}</span>
+        </div>
+    </div>
+
+    <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
+        <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Convocado {{ i+1 }}
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <mat-card [formGroup]="perfil">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="nomConvocado" class="label-left">Nombre del convocado</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #nomConvocado type="text" maxlength="100"
+                                            formControlName="nomConvocado" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{100 - nomConvocado.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="tipoIdentificacion">Tipo de identificación del convocado</label>
+                                </div>
+                                <div class="col">
+                                    <mat-form-field class="select-width">
+                                        <mat-select formControlName="tipoIdentificacion" required>
+                                            <mat-option *ngFor="let contr of tiposIdentificacionArray" [value]="contr.codigo">
+                                                {{ contr.nombre }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="numIdentificacion" class="label-left">Número de identificación convocado</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #numIdentificacion type="text" maxlength="9"
+                                            formControlName="numIdentificacion" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{9 - numIdentificacion.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="direccion" class="label-left">Dirección para envío de notificaciones</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #direccion type="text" maxlength="200"
+                                            formControlName="direccion" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{200 - direccion.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label for="correo" class="label-left">Correo electrónico para envío de notificaciones</label>
+                                </div>
+                                <div class="col d-flex">
+                                    <mat-form-field class="full-width">
+                                        <input matInput #correo type="text" maxlength="200"
+                                            formControlName="correo" required>
+                                    </mat-form-field>
+                                    <span class="contador">{{200 - correo.value.length}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <div class="text-right">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarPerfil( i )"
+                    [disabled]="perfiles.controls.length == 1">
+                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                    Eliminar convocado
+                </button>
+            </div>
+
+            <div class="text-center">
+                <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()">
+                    <img src="assets/img/icon/guardar.svg">
+                </button>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</form>

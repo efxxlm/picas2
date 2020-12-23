@@ -1,0 +1,77 @@
+<div align="center">
+    <section>
+        <button mat-raised-button color="accent" (click)="descargar()">Descargar archivo</button>
+    </section>
+</div>
+<div align="center" style="margin-top: 30px;" *ngIf="this.observacionesCompleted==false">
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="guardarProgramacion()">
+        <div class="d-flex justify-content-center mb-2em">
+            <div class="row">
+                <div class="pr-1">
+                    <label class="label-left" for="tieneObservaciones">
+                        ¿Tiene observaciones a la programación de obra?
+                    </label>
+                </div>
+                <div class="col">
+                    <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                        <mat-radio-button [value]="true">Sí</mat-radio-button>
+                        <mat-radio-button [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group m-0">*</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-center animatedDown" *ngIf="addressForm.value.tieneObservaciones === true">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched">
+                <label for="observaciones" class="text-area-quill--label size-label colorMainColor left-1-7"
+                [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched)">
+                    Observaciones a la programación de obra
+                </label>
+                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
+                    (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+                </quill-editor>
+            </div>
+            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones !== null">
+                {{1000 - (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
+            </span>
+            <span class="contador miles mb-2em" *ngIf="addressForm.value.observaciones === null">
+                1000
+            </span>
+        </div>
+        <div class="text-center mb-2em">
+            <button mat-button color="warn" class="btn-guardar" type="submit"
+                [disabled]="addressForm.get('tieneObservaciones').invalid">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
+</div>
+<div align="center" *ngIf="this.observacionesCompleted===true">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                Observaciones a la programación de obra
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p><b>¿Tiene observaciones a la programación de obra?:</b>
+                {{ contratoConstruccion.tieneObservacionesProgramacionObraApoyo == true ? 'Si' : 'No' }}</p>
+            <p>{{ contratoConstruccion.observacionProgramacionObraApoyo ? contratoConstruccion.observacionProgramacionObraApoyo.observaciones : '' }}</p>
+        </mat-card-content>
+    </mat-card>
+</div>
+<div align="center" *ngIf="contratoConstruccion.observacionDevolucionProgramacionObra">
+    <mat-card class="border" style="margin-top: 20px;">
+        <mat-card-header class="header-card">
+            <mat-card-title class="header-card--text grayTitle">
+                Observaciones de la supervisión
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content align="left">
+            <p style="margin-left: 2em;"><b>{{ contratoConstruccion.observacionDevolucionProgramacionObra.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <section [innerHTML]="contratoConstruccion.observacionDevolucionProgramacionObra.observaciones" style="margin-left: 2em;"></section>
+        </mat-card-content>
+    </mat-card>
+</div>

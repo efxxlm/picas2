@@ -114,7 +114,7 @@
             <div class="pr-1">
               <label class="label-left" for="tieneCompromisos">¿Este tema del orden del día generó compromisos?</label>
             </div>
-            <div class="col">
+            <div >
               <mat-radio-group class="radioInput" formControlName="tieneCompromisos">
                 <mat-radio-button value="true">Sí</mat-radio-button>
                 <mat-radio-button value="false">No</mat-radio-button>
@@ -159,7 +159,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #tarea type="text" maxlength="100" formControlName="tarea">
                 </mat-form-field>
-                <span class="contador">{{100 - tarea.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{100 - tarea.value.length}}</span>
               </div>
             </div>
           </div>

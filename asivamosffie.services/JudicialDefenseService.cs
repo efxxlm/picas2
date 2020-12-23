@@ -150,6 +150,28 @@ namespace asivamosffie.services
                     defensaJudicial.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
                     //fichaEstudio.DefensaJudicialId = fichaEstudio.DefensaJudicialId;
                     defensaJudicial.Eliminado = false;
+                    foreach(var defContratcionProyecto in defensaJudicial.DefensaJudicialContratacionProyecto)
+                    {
+                        defContratcionProyecto.UsuarioCreacion= defensaJudicial.UsuarioCreacion;
+                        defContratcionProyecto.FechaCreacion = DateTime.Now;
+                        defContratcionProyecto.EsCompleto = true;
+                        defContratcionProyecto.Eliminado = false;
+                    }
+                    foreach (var defConvocado in defensaJudicial.DemandadoConvocado)
+                    {
+                        defConvocado.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                        defConvocado.FechaCreacion = DateTime.Now;
+                        defConvocado.Eliminado = false;
+                    }
+                    foreach (var defFicha in defensaJudicial.FichaEstudio)
+                    {
+                        defFicha.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                        defFicha.FechaCreacion = DateTime.Now;
+                        defFicha.Eliminado = false;
+                    }
+                    defensaJudicial.EstadoProcesoCodigo = "1";
+                    defensaJudicial.LegitimacionCodigo = "";
+                    defensaJudicial.NumeroProceso = Helpers.Helpers.Consecutive("DF",_context.DefensaJudicial.Count());
                     _context.DefensaJudicial.Add(defensaJudicial);
                 }
                 else
@@ -170,7 +192,56 @@ namespace asivamosffie.services
 
                     defensaJudicialBD.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
                     defensaJudicialBD.EsRequiereSupervisor = defensaJudicial.EsRequiereSupervisor;
-
+                    foreach (var defContratcionProyecto in defensaJudicial.DefensaJudicialContratacionProyecto)
+                    {
+                        if(defContratcionProyecto.UsuarioCreacion==null)
+                        {
+                            defContratcionProyecto.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                            defContratcionProyecto.FechaCreacion = DateTime.Now;
+                            defContratcionProyecto.EsCompleto = true;
+                            defContratcionProyecto.Eliminado = false;
+                        }
+                        else
+                        {
+                            defContratcionProyecto.UsuarioModificacion = defensaJudicial.UsuarioModificacion;
+                            defContratcionProyecto.FechaModificacion = DateTime.Now;
+                            defContratcionProyecto.EsCompleto = true;
+                            defContratcionProyecto.Eliminado = false;
+                        }
+                        
+                    }
+                    foreach (var defConvocado in defensaJudicial.DemandadoConvocado)
+                    {
+                        if (defConvocado.UsuarioCreacion == null)
+                        {
+                            defConvocado.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                            defConvocado.FechaCreacion = DateTime.Now;
+                            defConvocado.Eliminado = false;
+                        }
+                        else
+                        {
+                            defConvocado.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
+                            defConvocado.FechaModificacion = DateTime.Now;
+                            defConvocado.Eliminado = false;
+                        }
+                            
+                    }
+                    foreach (var defFicha in defensaJudicial.FichaEstudio)
+                    {
+                        if(defFicha.UsuarioCreacion==null)
+                        {
+                            defFicha.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                            defFicha.FechaCreacion = DateTime.Now;
+                            defFicha.Eliminado = false;
+                        }
+                        else
+                        {
+                            defFicha.UsuarioModificacion = defensaJudicial.UsuarioCreacion;
+                            defFicha.FechaModificacion = DateTime.Now;
+                            defFicha.Eliminado = false;
+                        }
+                        
+                    }
                     _context.DefensaJudicial.Update(defensaJudicialBD);
 
                 }
@@ -222,7 +293,12 @@ namespace asivamosffie.services
                 else
                 {
                     ListDefensaJudicial = await _context.DefensaJudicial.Where(r => (bool)r.Eliminado == false
-                    && r.DefensaJudicialId == pDefensaJudicialId).Distinct()
+                    && r.DefensaJudicialId == pDefensaJudicialId).
+                    Include(x=>x.DefensaJudicialContratacionProyecto).
+                    Include(x=>x.DemandadoConvocado).
+                    Include(x=>x.FichaEstudio).
+                    
+                    Distinct()
                 .ToListAsync();
 
 
@@ -254,7 +330,11 @@ namespace asivamosffie.services
 
                     string TipoIntervencionCodigoTmp = string.Empty;
                     string TipoIntervencionNombreTmp = string.Empty;
-
+                    foreach (var contr in defensaJudicial.DefensaJudicialContratacionProyecto)
+                    {
+                        var contratacionProyecto = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contr.ContratacionProyectoId).FirstOrDefault();
+                        contr.numeroContrato = _context.Contrato.Where(x => x.ContratacionId == contratacionProyecto.ContratacionId).FirstOrDefault().NumeroContrato;
+                    }
                     return defensaJudicial;
 
                 }
@@ -1158,49 +1238,35 @@ namespace asivamosffie.services
             {
                 try
                 {     
-                    //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string TipoAccionNombre = "sin definir";
+                   string TipoAccionNombre = "";
+                   
 
-                    string strEstadoSolicitudCodigoContratoPoliza = "sin definir";
-
-                    //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
-                    Dominio TipoAccion;
+                   Dominio TipoAccion;
                     Dominio EstadoSolicitudCodigoContratoPoliza;
 
-                    //if (contratoPoliza != null)
-                    //{
                     TipoAccion = await _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoAccionCodigo, (int)EnumeratorTipoDominio.Tipo_accion_judicial);
-                    //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_de_Solicitud);
                     if (TipoAccion != null)
                         TipoAccionNombre = TipoAccion.Nombre;
 
-                    //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
-                    //if (EstadoSolicitudCodigoContratoPoliza != null)
-                    //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
-
-                    //}
                     bool bRegistroCompleto = false;
                     string strRegistroCompleto = "Incompleto";
+                    strRegistroCompleto = (bool)defensaJudicial.EsCompleto ? "Completo" : "Incompleto";
+                   
 
-                    //if (defensaJudicial.EsCompleto != null)
-                    //{
-                        strRegistroCompleto = (bool)defensaJudicial.EsCompleto ? "Completo" : "Incompleto";
-                    //}
-
-                    //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
+                    
                     GrillaProcesoDefensaJudicial defensaJudicialGrilla = new GrillaProcesoDefensaJudicial
                     {
                         DefensaJudicialId = defensaJudicial.DefensaJudicialId,
                         FechaRegistro = defensaJudicial.FechaCreacion.ToString("dd/MM/yyyy"),
                         LegitimacionPasivaActiva= (bool)defensaJudicial.EsLegitimacionActiva ? "Activa" : "Pasiva",
-                        NumeroProceso="DJ"+ defensaJudicial.DefensaJudicialId.ToString("000") + defensaJudicial.FechaCreacion.ToString("yyyy"),
+                        NumeroProceso=defensaJudicial.NumeroProceso,
                         TipoAccionCodigo= defensaJudicial.TipoAccionCodigo,
                         TipoAccion = TipoAccionNombre,
-                        EstadoProceso= "PENDIENTE",
+                        EstadoProceso= _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.EstadoProcesoCodigo, (int)EnumeratorTipoDominio.Estados_Defensa_Judicial).Result.Nombre,
                         EstadoProcesoCodigo =defensaJudicial.EstadoProcesoCodigo,
                         
                         RegistroCompletoNombre =strRegistroCompleto,
-                        TipoProceso="PENDIENTE",
+                        TipoProceso= _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoProcesoCodigo, (int)EnumeratorTipoDominio.Procesos_judiciales).Result.Nombre,
                         TipoProcesoCodigo = defensaJudicial.TipoProcesoCodigo,                       
                                           
                     };
@@ -1234,6 +1300,49 @@ namespace asivamosffie.services
             }
             return ListDefensaJudicialGrilla.ToList();
 
+        }
+
+        /*autor: jflorez
+          descripción: trae listado de contratos
+          impacto: CU 4.2.2*/
+        public async Task<List<Contrato>> GetListContract()
+        {
+            var contratos = _context.Contrato.Where(x =>//x.UsuarioInterventoria==userID
+             !(bool)x.Eliminado
+            ).ToList();
+            
+            return contratos;
+        }
+
+
+        public async Task<List<ProyectoGrilla>> GetListProyectsByContract(int pContratoId)
+        {
+            List<ProyectoGrilla> ListProyectoGrilla = new List<ProyectoGrilla>();
+            var contrato = _context.Contrato.Find(pContratoId);
+            var proyecto = _context.Contratacion.Where(x => x.ContratacionId == contrato.ContratacionId).
+                Include(x=>x.ContratacionProyecto).
+                    ThenInclude(y=>y.Proyecto).
+                    ThenInclude(y=>y.InstitucionEducativa).
+                Include(x => x.ContratacionProyecto).
+                    ThenInclude(y => y.Proyecto).
+                    ThenInclude(y => y.Sede).
+                Include(x=>x.Contratista).FirstOrDefault();
+            foreach (var item in proyecto.ContratacionProyecto)
+            {
+                ListProyectoGrilla.Add(new ProyectoGrilla {
+                    NombreContratista=proyecto.Contratista.Nombre,
+                    TieneObra=proyecto.TipoSolicitudCodigo== ConstanCodigoTipoContratacion.Obra.ToString(),
+                    TieneInterventoria= proyecto.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Interventoria.ToString(),
+                    ProyectoId=item.ProyectoId,
+                    ContratacionProyectoId= item.ContratacionProyectoId,
+                    InstitucionEducativa=item.Proyecto.InstitucionEducativa.Nombre,
+                    Sede=item.Proyecto.Sede.Nombre,
+                    CodigoDane=item.Proyecto.InstitucionEducativa.CodigoDane,
+                    SedeCodigo=item.Proyecto.Sede.CodigoDane
+                });
+                
+            }
+            return ListProyectoGrilla;
         }
     }
 }

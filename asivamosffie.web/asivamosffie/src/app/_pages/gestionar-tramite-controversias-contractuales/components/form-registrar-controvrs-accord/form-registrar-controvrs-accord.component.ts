@@ -1,8 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
 import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
@@ -13,26 +11,29 @@ import { trimTrailingNulls } from '@angular/compiler/src/render3/view/util';
 })
 export class FormRegistrarControvrsAccordComponent implements OnInit {
   @Input() isEditable;
-  @Input() contratoId;
-  @Input() idControversia;
-  @Output() estadoSemaforo = new EventEmitter<string>();
 
-  estadoForm: boolean = null;
   addressForm = this.fb.group({
     tipoControversia: [null, Validators.required],
     fechaSolicitud: [null, Validators.required],
     motivosSolicitud: [null, Validators.required],
     fechaComitePretecnico: [null, Validators.required],
-    conclusionComitePretecnico: ['', Validators.required],
+    conclusionComitePretecnico: [null, Validators.required],
     procedeSolicitud: [null, Validators.required],
-    motivosRechazo: ['', Validators.required],
     requeridoComite: [null, Validators.required],
     fechaRadicadoSAC: ['', Validators.required],
     numeroRadicadoSAC: [0, Validators.required],
     resumenJustificacionSolicitud: ['', Validators.required]
   });
-  tipoControversiaArrayDom: Dominio[] = [];
-  motivosSolicitudArray: Dominio[] = [];
+  tipoControversiaArray = [
+    { name: 'Terminación anticipada por incumplimiento (TAI)', value: '1' },
+    { name: 'Terminación anticipada por imposibilidad de ejecución (TAIE)', value: '2' },
+    { name: 'Arreglo Directo (AD)', value: '3' },
+    { name: 'Otras controversias contractuales (OCC)', value: '4' },
+  ];
+  motivosSolicitudArray = [
+    { name: 'Incuplimiento de contratista de obra', value: '1' },
+    { name: 'Incuplimiento', value: '2' }
+  ];
   editorStyle = {
     height: '50px'
   };
@@ -44,28 +45,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  idContrato: any;
-  numeroSolicitud: any;
-  userCreation: any;
-  idMotivo1: number;
-  idMotivo2: number;
-  idMotivo3: number;
-  arrayMotivosLoaded: any[] = [];
-  estaCompleto: boolean;
-
-  fechaSesionString: string;
-  fechaSesion: Date;
-
-  fechaSesionString2: string;
-  fechaSesion2: Date;
-
-  fechaSesionString3: string;
-  fechaSesion3: Date;
-
-  constructor(private router: Router, private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService) { }
+  constructor(private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
-    this.loadtipoControversias();
-    this.loadMotivosList();
     if (this.isEditable == true) {
       this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
         const controversiaSelected = this.tipoControversiaArrayDom.find(t => t.codigo === resp.tipoControversiaCodigo);
@@ -238,6 +219,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     }
   }
 
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
+  }
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
@@ -742,4 +732,5 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       });
     }
   }
+
 }

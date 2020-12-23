@@ -912,7 +912,7 @@ namespace asivamosffie.services
                 //Controlar Registros
                 //Filas <=
                 //No comienza desde 0 por lo tanto el = no es necesario
-                for (int i = 2; i < worksheet.Dimension.Rows; i++)
+                for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                 {
                     try
                     {
@@ -1009,7 +1009,7 @@ namespace asivamosffie.services
                             { temporalProyecto.SedeId = SedeId; }
                             else
                             {
-                                archivoCarge.CantidadRegistrosInvalidos++;
+                                CantidadRegistrosInvalidos++;
                                 break;
                             }
 
@@ -1216,7 +1216,7 @@ namespace asivamosffie.services
                 //-2 ya los registros comienzan desde esta fila
                 archivoCarge.CantidadRegistrosInvalidos = CantidadRegistrosInvalidos;
                 archivoCarge.CantidadRegistrosValidos = CantidadResgistrosValidos;
-                archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 2);
+                archivoCarge.CantidadRegistros = (worksheet.Dimension.Rows - CantidadRegistrosVacios - 1);
                 _context.ArchivoCargue.Update(archivoCarge);
 
 

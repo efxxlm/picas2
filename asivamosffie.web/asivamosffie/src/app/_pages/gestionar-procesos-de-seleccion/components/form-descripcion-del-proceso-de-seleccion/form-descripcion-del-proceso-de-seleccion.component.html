@@ -133,7 +133,7 @@
                   <input matInput #nombreGrupo type="text" maxlength="100" formControlName="nombreGrupo" required>
                   <input type="hidden" formControlName="procesoSeleccionGrupoId">
                 </mat-form-field>
-                <span class="contador">{{500 - nombreGrupo.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{500 - nombreGrupo.value.length}}</span>
               </div>
             </div>
             <div class="row">

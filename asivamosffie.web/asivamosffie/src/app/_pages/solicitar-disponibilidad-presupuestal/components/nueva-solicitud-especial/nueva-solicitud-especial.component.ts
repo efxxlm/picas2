@@ -191,7 +191,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         if ( disponibilidad.tipoSolicitudEspecialCodigo === this.tipoSolicitudCodigos.solicitudExpensas ) {
           this.addressForm.get( 'disponibilidadPresupuestalId' ).setValue(disponibilidad.disponibilidadPresupuestalId);
           this.addressForm.get( 'tipo' ).setValue( this.tipoSeleccionado );
-          this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto );
+          this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto?disponibilidad.objeto:"" );
           this.addressForm.get( 'numeroRadicado' ).setValue( disponibilidad.numeroRadicadoSolicitud );
           this.addressForm.get( 'cartaAutorizacionET' ).setValue( disponibilidad.cuentaCartaAutorizacion );
   
@@ -222,7 +222,7 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
         if ( disponibilidad.tipoSolicitudEspecialCodigo === this.tipoSolicitudCodigos.solicitudOtrosCostos ) {
           this.addressForm.get( 'disponibilidadPresupuestalId' ).setValue( disponibilidad.disponibilidadPresupuestalId );
           this.addressForm.get( 'tipo' ).setValue( this.tipoSeleccionado );
-          this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto );
+          this.addressForm.get( 'objeto' ).setValue( disponibilidad.objeto?disponibilidad.objeto:"" );
           this.addressForm.get('numeroRadicado').setValue( disponibilidad.numeroRadicadoSolicitud );
           this.addressForm.get( 'numeroContrato' ).setValue( disponibilidad.numeroContrato );
           this.myFilter.setValue( disponibilidad.numeroContrato );
@@ -350,9 +350,25 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   };
 
   textoLimpio(texto: string) {
-    let textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
-  };
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
+  }
 
   onSubmit() {
     //if (this.addressForm.valid) {
@@ -364,7 +380,9 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
 
         switch (tipoDDP.codigo) {
           case "1": //expensas
-
+          console.log(this.proyecto);
+          if(this.proyecto && this.proyecto.proyectoId)
+          {
             let disponibilidad: DisponibilidadPresupuestal = {
               disponibilidadPresupuestalId: this.addressForm.get('disponibilidadPresupuestalId').value,
               tipoSolicitudCodigo: "2", //especial
@@ -388,6 +406,8 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
                 },
                 err => this.openDialog( '', err.message )
               );
+          }
+            
 
             break;
           case "2":
