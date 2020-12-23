@@ -155,15 +155,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Obra_Avance_Semanal = 111,
 
         Estado_Reporte_Semanal_Y_Muestras = 112,
-
-         //Tipo_de_controversia=80,
-
-
-        Estado_controversia= 89,
-
-        //Estado_avance_reclamacion = 91,
-
-        Proxima_actuacion_requerida =103,
          
     }
 }

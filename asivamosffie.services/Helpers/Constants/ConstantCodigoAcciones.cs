@@ -153,7 +153,6 @@
         public const string  Crear_Editar_Ficha_Estudio= "145";
         public const string  Crear_Editar_Demandado_Convocado= "146";
         public const string  Cambiar_Estado_Proceso= "147";
-        public const string  Crear_Editar_Controversia_Motivo= "153";        	
         public const string Crear_Editar_Defensa_Judicial = "156";
         public const string Eliminar_Defensa_Judicial = "159";
 
