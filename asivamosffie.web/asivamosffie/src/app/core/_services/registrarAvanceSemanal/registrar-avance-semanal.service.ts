@@ -52,8 +52,13 @@ export class RegistrarAvanceSemanalService {
     return this.http.post<Respuesta>( `${ this.urlApi }/DeleteGestionObraCalidadEnsayoLaboratorio?GestionObraCalidadEnsayoLaboratorioId=${ gestionObraCalidadEnsayoLaboratorioId }`, '' );
   }
 
+
   changueStatusSeguimientoSemanal(pContratacionProyectoId: number, pEstadoMod: string ) {
     return this.http.post<Respuesta>( `${ this.urlApi }/ChangueStatusSeguimientoSemanal?pContratacionProyectoId=${ pContratacionProyectoId }&pEstadoMod=${ pEstadoMod }`, '' );
+  }
+
+  changueStatusMuestrasSeguimientoSemanal( pSeguimientoSemanalID: number, pEstadoMod: string ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/ChangueStatusMuestrasSeguimientoSemanal?pSeguimientoSemanalID=${ pSeguimientoSemanalID }&pEstadoMod=${ pEstadoMod }`, '' );
   }
 
   estadosAvanceSemanal() {

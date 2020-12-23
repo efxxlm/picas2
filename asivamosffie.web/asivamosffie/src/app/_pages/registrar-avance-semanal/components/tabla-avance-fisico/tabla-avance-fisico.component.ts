@@ -112,6 +112,8 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     valuePending( value: string, registro: any ) {
+        const validateNumber = '^[0-9]+(,[0-9]+)?$';
+        console.log(value.match( validateNumber ));
         if ( isNaN( Number( value ) ) === true ) {
             registro.avanceFisicoCapitulo = '0';
         }

@@ -1,8 +1,11 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tabla-consultar-editar-bitacora',
@@ -15,6 +18,7 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
     @Input() consultarBitacora: any;
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
+    estadoAvanceSemanal: any;
     displayedColumns: string[]  = [
         'semanaNumero',
         'periodoReporte',
@@ -28,8 +32,16 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
       ];
 
     constructor(
-        private routes: Router )
-    { }
+        private routes: Router,
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private dialog: MatDialog )
+    {
+        this.avanceSemanalSvc.estadosAvanceSemanal()
+        .subscribe( estados => {
+            this.estadoAvanceSemanal = estados;
+            console.log( this.estadoAvanceSemanal );
+        } );
+    }
 
     ngOnInit(): void {
         if ( this.consultarBitacora !== undefined ) {
@@ -49,8 +61,21 @@ export class TablaConsultarEditarBitacoraComponent implements OnInit {
         this.routes.navigate( [ `${ this.routes.url }/verDetalleAvanceSemanal`, seguimientoSemanalId ] );
     }
 
-    enviarVerificacion() {
-        console.log( 'Metodo para enviar a verificacion.' );
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    enviarMuestrasVerificacion( seguimientoSemanalId: number ) {
+        this.avanceSemanalSvc
+            .changueStatusMuestrasSeguimientoSemanal( seguimientoSemanalId, this.estadoAvanceSemanal.enviadoAVerificacion.codigo )
+                .subscribe(
+                    response => {
+                        this.openDialog( '', `<b>${ response.message }</b>` );
+                    }
+                );
     }
 
 }
