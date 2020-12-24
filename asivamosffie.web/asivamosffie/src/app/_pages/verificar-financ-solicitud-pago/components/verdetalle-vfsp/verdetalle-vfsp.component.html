@@ -70,7 +70,8 @@
                     <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
                 </div>
                 <div class="tabs--actions" style="margin-top: 1em;">
-                    <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="this.openProyectosAsociados()">
+                    <button mat-raised-button color="accent" class="tabs--btn auxBtn"
+                        (click)="this.openProyectosAsociados()">
                         Ver proyectos asociados
                     </button>
                 </div>
@@ -137,7 +138,7 @@
                         Validar lista de chequeo
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-               /*/*/*/*/*
+                <app-detalle-valid-listchq-vfsp></app-detalle-valid-listchq-vfsp>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
@@ -169,10 +170,11 @@
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
                     <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        Lista de chequeo    
+                        Lista de chequeo
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                /*/*/*/*/*/*/
+                <!--dbenitez, se puso de manera provosional mientras se define con QA e integracion-->
+                <app-detalle-valid-listchq-vfsp></app-detalle-valid-listchq-vfsp>
             </mat-expansion-panel>
         </mat-accordion>
         <mat-accordion>
@@ -189,7 +191,8 @@
                         </mat-card-title>
                     </mat-card-header>
                     <mat-card-content style="text-align: left;">
-                        <p><strong>URL con soporte:</strong> https://drive.google.com/drive/registrofactura/solicituddepago0001</p>
+                        <p><strong>URL con soporte:</strong>
+                            https://drive.google.com/drive/registrofactura/solicituddepago0001</p>
                     </mat-card-content>
                 </mat-card>
             </mat-expansion-panel>
