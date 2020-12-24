@@ -1,8 +1,8 @@
+import { DialogAvanceResumenAlertasComponent } from './../dialog-avance-resumen-alertas/dialog-avance-resumen-alertas.component';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { DialogTablaAvanceResumenComponent } from '../dialog-tabla-avance-resumen/dialog-tabla-avance-resumen.component';
 
 @Component({
   selector: 'app-tabla-avance-resumen-alertas',
@@ -52,7 +52,7 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
     }
 
     openDialogObservaciones( observacion: string, registro: any ) {
-        this.dialog.open( DialogTablaAvanceResumenComponent, {
+        this.dialog.open( DialogAvanceResumenAlertasComponent, {
             width: '60em',
             data : { observacion, registro }
         } );

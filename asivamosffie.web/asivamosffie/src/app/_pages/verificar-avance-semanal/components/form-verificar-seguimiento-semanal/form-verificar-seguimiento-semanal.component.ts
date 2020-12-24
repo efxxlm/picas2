@@ -10,13 +10,14 @@ import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarA
 export class FormVerificarSeguimientoSemanalComponent implements OnInit {
 
     seguimientoSemanal: any;
+    semaforoAvanceFisico = 'sin-diligenciar';
 
     constructor(
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
         private activatedRoute: ActivatedRoute )
     {
         this.avanceSemanalSvc
-        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( this.activatedRoute.snapshot.params.id, 0 )
+        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0, 1224 )
             .subscribe(
               seguimiento => {
                   this.seguimientoSemanal = seguimiento;

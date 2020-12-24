@@ -1,8 +1,8 @@
-import { MatTableDataSource } from '@angular/material/table';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-dialog-avance-acumulado',
@@ -20,8 +20,7 @@ export class DialogAvanceAcumuladoComponent implements OnInit {
       'avanceAcumulado'
     ];
 
-    constructor( @Inject(MAT_DIALOG_DATA) public data ) {
-    }
+    constructor( @Inject(MAT_DIALOG_DATA) public data ) { }
 
     ngOnInit(): void {
         this.tablaAvanceAcumulado = new MatTableDataSource( this.data.avanceAcumulado );

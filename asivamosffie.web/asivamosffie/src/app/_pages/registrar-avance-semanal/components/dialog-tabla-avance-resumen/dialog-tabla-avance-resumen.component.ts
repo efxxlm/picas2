@@ -8,15 +8,16 @@ import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class DialogTablaAvanceResumenComponent implements OnInit {
 
-    constructor ( @Inject( MAT_DIALOG_DATA ) public observaciones ) { };
+    constructor( @Inject( MAT_DIALOG_DATA ) public observaciones ) { }
 
-    ngOnInit(): void {};
+    ngOnInit(): void {
+    }
 
-    innerObservacion ( observacion: string ) {
+    innerObservacion( observacion: string ) {
       if ( observacion !== undefined ) {
         const observacionHtml = observacion.replace( '"', '' );
         return observacionHtml;
-      };
-    };
+      }
+    }
 
-};
+}

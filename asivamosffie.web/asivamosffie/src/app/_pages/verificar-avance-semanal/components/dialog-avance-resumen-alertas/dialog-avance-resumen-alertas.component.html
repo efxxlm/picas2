@@ -1,0 +1,20 @@
+<section class="text-center">
+  <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  </button>
+  
+  <h1 class="title-menu--h1">
+    Observaciones
+  </h1>
+  
+  <div class="d-flex justify-content-center mt-1em">
+      <p> Fecha del reporte: <b> {{ observaciones.registro.fechaSeguimiento | date: 'dd/MM/yyyy' }} </b> </p>
+      <p class="ml-2em"> Disponibilidad personal: <b>Por integrar</b> </p>
+  </div>
+
+  <mat-card class="border mt-1em" align="left">
+      <mat-card-content>
+          <section class="mt-3em" [innerHTML]="innerObservacion( observaciones.observacion )"></section>
+      </mat-card-content>
+  </mat-card>
+</section>

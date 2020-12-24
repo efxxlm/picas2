@@ -1,11 +1,8 @@
-import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
-import { Router } from '@angular/router';
+import { DialogAvanceAcumuladoComponent } from './../dialog-avance-acumulado/dialog-avance-acumulado.component';
 import { DatePipe } from '@angular/common';
-import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogAvanceAcumuladoComponent } from '../dialog-avance-acumulado/dialog-avance-acumulado.component';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-tabla-avance-fisico',
@@ -33,9 +30,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
 
     constructor(
         private dialog: MatDialog,
-        private datePipe: DatePipe,
-        private routes: Router,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService )
+        private datePipe: DatePipe )
     { }
 
     ngOnInit(): void {
@@ -161,68 +156,11 @@ export class TablaAvanceFisicoComponent implements OnInit {
         }
     }
 
-    openDialog(modalTitle: string, modalText: string) {
-        this.dialog.open(ModalDialogComponent, {
-          width: '28em',
-          data : { modalTitle, modalText }
-        });
-    }
-
-    openDialogObservaciones( ) {
+    openDialogAvanceAcumulado( ) {
         this.dialog.open( DialogAvanceAcumuladoComponent, {
             width: '80em',
             data: { avanceAcumulado: this.seguimientoDiario.avanceAcumulado, seguimientoSemanal: this.seguimientoDiario }
         } );
-    }
-
-    textoLimpio(texto: number) {
-        if (texto !== null) {
-          const textolimpio = texto.toString().replace(/[^\w\s]/gi, '');
-          return textolimpio.length;
-        } else {
-            return 0;
-        }
-      }
-
-    guardar() {
-        const pSeguimientoSemanal = this.seguimientoDiario;
-        for (const flujoInversion of this.seguimientoDiario.flujoInversion ) {
-            this.tablaAvanceFisico.data[0][ 'avancePorCapitulo' ].filter( value => {
-                if ( flujoInversion.programacion.programacionId === value.programacionId ) {
-                    console.log( );
-                    if (  value.avanceFisicoCapitulo.length === 0 ) {
-                        flujoInversion.programacion.avanceFisicoCapitulo = null;
-                    } else {
-                        flujoInversion.programacion.avanceFisicoCapitulo = Number( value.avanceFisicoCapitulo );
-                    }
-                    flujoInversion.programacion.programacionCapitulo = Number( value.programacionCapitulo );
-                }
-            } );
-        }
-        const seguimientoSemanalAvanceFisico = [
-            {
-                seguimientoSemanalId: this.seguimientoSemanalId,
-                seguimientoSemanalAvanceFisicoId: this.seguimientoSemanalAvanceFisicoId,
-                programacionSemanal: this.avanceFisico[ 0 ].programacionSemana,
-                avanceFisicoSemanal: this.tablaAvanceFisico.data[ 0 ][ 'avanceFisicoSemana' ]
-            }
-        ];
-        pSeguimientoSemanal.seguimientoSemanalAvanceFisico = seguimientoSemanalAvanceFisico;
-        console.log( pSeguimientoSemanal );
-        this.avanceSemanalSvc.saveUpdateSeguimientoSemanal( pSeguimientoSemanal )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/registrarAvanceSemanal/registroSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
-                                    ]
-                                )
-                    );
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            );
     }
 
 }

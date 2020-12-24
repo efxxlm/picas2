@@ -51,12 +51,14 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAvanceFisico">
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
+                <!-- Por integrar -->
+                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal"></app-verificar-avance-fisico>
                 <!--
-                    <app-avance-fisico-financiero [seguimientoDiario]="seguimientoSemanal" [esVerDetalle]="true"></app-avance-fisico-financiero>
+                    <app-avance-fisico-financiero></app-avance-fisico-financiero>
                 -->
             </mat-expansion-panel>
 
