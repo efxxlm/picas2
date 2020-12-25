@@ -1,0 +1,44 @@
+<section class="text-center" *ngIf="reporteActividad !== undefined">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Resumen general del estado del contrato
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div align="left">
+                <mat-card class="border">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text text-color">
+                            Resumen general del estado del contrato
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="mt-1em">
+                        <section [innerHTML]="reporteActividad.resumenEstadoContrato" style="margin-left: 2em;"></section>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Actividades realizadas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-reporte-actividades-realizadas [reporteActividad]="reporteActividad" [esSiguienteSemana]="false"></app-form-reporte-actividades-realizadas>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title">
+                    Actividades a realizar la siguiente semana
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-reporte-actividades-realizadas [reporteActividad]="reporteActividad" [esSiguienteSemana]="true"></app-form-reporte-actividades-realizadas>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

@@ -1,0 +1,14 @@
+<section class="text-center" *ngIf="seguimientoSemanal !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+                <p><b>URL con soporte</b>: {{ reporteFotografico.urlSoporteFotografico }} </p>
+                <section>
+                    <p><b>Descripción</b></p> <div [innerHTML]="reporteFotografico.descripcion"></div>
+                </section>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</section>

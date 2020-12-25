@@ -1,6 +1,5 @@
-import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -26,10 +25,6 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
           [{ align: [] }],
         ]
     };
-    booleanosActividadRelacionada: any[] = [
-        { value: true, viewValue: 'Si' },
-        { value: false, viewValue: 'No' }
-    ];
 
     get gestorResiduos() {
         return this.formManejoResiduosConstruccion.get( 'manejoResiduosConstruccionDemolicionGestor' ) as FormArray;
@@ -37,8 +32,8 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private dialog: MatDialog,
-        private avanceSemanalSvc: RegistrarAvanceSemanalService ) { }
+        private dialog: MatDialog )
+    { }
 
     ngOnInit(): void {
         if ( this.residuosConstruccion !== undefined && this.residuosConstruccion.length > 0 ) {
@@ -88,25 +83,6 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
                 );
             }
         }
-        if ( this.residuosConstruccion !== undefined && this.residuosConstruccion.length === 0 ) {
-            this.gestorResiduos.push(
-                this.fb.group(
-                    {
-                        manejoResiduosConstruccionDemolicionGestorId: [ 0 ],
-                        manejoResiduosConstruccionDemolicionId: [ 0 ],
-                        nombreGestorResiduos: [ '' ],
-                        tienePermisoAmbiental: [ null ],
-                        url: [ '' ]
-                    }
-                )
-            );
-        }
-    }
-
-    validateNumber( value: string, campoForm: string ) {
-        if ( isNaN( Number( value ) ) === true ) {
-            this.formManejoResiduosConstruccion.get( campoForm ).setValue( '' );
-        }
     }
 
     maxLength(e: any, n: number) {
@@ -128,58 +104,6 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
           width: '28em',
           data: { modalTitle, modalText }
         });
-    }
-
-    openDialogTrueFalse(modalTitle: string, modalText: string) {
-      const dialogRef = this.dialog.open( ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle, modalText, siNoBoton: true }
-      });
-      return dialogRef.afterClosed();
-    }
-
-    addGestor() {
-        this.gestorResiduos.push(
-            this.fb.group(
-                {
-                    manejoResiduosConstruccionDemolicionGestorId: [ 0 ],
-                    manejoResiduosConstruccionDemolicionId: [ 0 ],
-                    nombreGestorResiduos: [ '' ],
-                    tienePermisoAmbiental: [ null ],
-                    url: [ '' ]
-                }
-            )
-        );
-    }
-
-    deleteGestor( index: number ) {
-        if ( this.gestorResiduos.at( index ).get( 'manejoResiduosConstruccionDemolicionGestorId' ).value === 0 ) {
-            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
-                .subscribe(
-                    value => {
-                        if ( value === true ) {
-                            this.gestorResiduos.removeAt( index );
-                            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                        }
-                    }
-                );
-        } else {
-            this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
-                .subscribe(
-                    value => {
-                        if ( value === true ) {
-                            this.avanceSemanalSvc.deleteResiduosConstruccionDemolicionGestor( this.gestorResiduos.at( index ).get( 'manejoResiduosConstruccionDemolicionGestorId' ).value )
-                                .subscribe(
-                                    response => {
-                                        this.gestorResiduos.removeAt( index );
-                                        this.openDialog( '', `<b>${ response.message }</b>` );
-                                    },
-                                    err => this.openDialog( '', `<b>${ err.message }</b>` )
-                                );
-                        }
-                    }
-                );
-        }
     }
 
 }

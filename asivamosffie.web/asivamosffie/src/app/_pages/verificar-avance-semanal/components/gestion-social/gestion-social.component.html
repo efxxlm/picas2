@@ -1,0 +1,31 @@
+<section class="text-center" *ngIf="seguimientoSemanal !== undefined">
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>Cantidad de empleos directos generados</b>: {{ gestionSocial.cantidadEmpleosDirectos }} </p>
+              <p><b>Cantidad de empleos indirectos generados</b>: {{ gestionSocial.cantidadEmpleosIndirectos }} </p>
+              <p><b>Total de empleos generados</b>: {{ gestionSocial.cantidadTotalEmpleos }} </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="mt-1em" align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+                <p *ngIf="gestionSocial.seRealizaronReuniones === true"><b>¿Se realizaron reuniones, socializaciones o capacitaciones con la comunidad durante la semana?</b>: Si </p>
+                <p *ngIf="gestionSocial.seRealizaronReuniones === false"><b>¿Se realizaron reuniones, socializaciones o capacitaciones con la comunidad durante la semana?</b>: No </p>
+                <div *ngIf="gestionSocial.seRealizaronReuniones === true">
+                    <section>
+                        <b>Tema</b>:
+                        <div [innerHTML]="gestionSocial.temaComunidad"></div>
+                    </section>
+                    <section>
+                        <b>Conclusiones</b>:
+                        <div [innerHTML]="gestionSocial.conclusion"></div>
+                    </section>
+                    <p *ngIf="gestionSocial.urlSoporteGestion !== undefined"><b>URL con soporte</b>: {{ gestionSocial.urlSoporteGestion }} </p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</section>
