@@ -1,1 +1,28 @@
-<p>detalle-valid-listchq-vfsp works!</p>
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="item">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.item }}</b> </td>
+        </ng-container>
+        <ng-container matColumnDef="documento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.documento }} </td>
+        </ng-container>
+        <ng-container matColumnDef="revTecnica">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Revisión técnica </th>
+            <td mat-cell *matCellDef="let element" align="center"> 
+                {{ element.revTecnica }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="verificacionFinanciera">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Verificación financiera </th>
+            <td mat-cell *matCellDef="let element" align="center"> 
+                {{ element.verificacionFinanciera }}
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+</div>
+
