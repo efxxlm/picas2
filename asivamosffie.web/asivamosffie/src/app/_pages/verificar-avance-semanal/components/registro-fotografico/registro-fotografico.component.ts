@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-registro-fotografico',
@@ -12,8 +14,25 @@ export class RegistroFotograficoComponent implements OnInit {
     seguimientoSemanalId: number;
     seguimientoSemanalRegistroFotograficoId: number;
     reporteFotografico: any;
+    formRegistroFotografico: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    tablaHistorial = new MatTableDataSource();
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
+    dataHistorial: any[] = [
+        {
+            fechaRevision: new Date(),
+            responsable: 'Apoyo a la supervisión',
+            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
+        }
+    ];
     editorStyle = {
-        height: '45px'
+        height: '100px'
     };
     config = {
       toolbar: [
@@ -24,7 +43,7 @@ export class RegistroFotograficoComponent implements OnInit {
       ]
     };
 
-    constructor() { }
+    constructor( private fb: FormBuilder ) { }
 
     ngOnInit(): void {
         if ( this.seguimientoSemanal !== undefined ) {
@@ -35,6 +54,7 @@ export class RegistroFotograficoComponent implements OnInit {
             if ( this.seguimientoSemanal.seguimientoSemanalRegistroFotografico.length > 0 ) {
                 this.reporteFotografico = this.seguimientoSemanal.seguimientoSemanalRegistroFotografico[0];
             }
+            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -50,6 +70,10 @@ export class RegistroFotograficoComponent implements OnInit {
         } else {
             return 0;
         }
+    }
+
+    guardar() {
+        console.log( this.formRegistroFotografico.value );
     }
 
 }

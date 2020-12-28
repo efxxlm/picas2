@@ -1,3 +1,6 @@
+import { VerDetalleAvanceSemanalComponent } from './components/ver-detalle-avance-semanal/ver-detalle-avance-semanal.component';
+import { VerDetalleMuestrasComponent } from './../registrar-avance-semanal/components/ver-detalle-muestras/ver-detalle-muestras.component';
+import { ConsultarBitacoraComponent } from './components/consultar-bitacora/consultar-bitacora.component';
 import { FormVerificarSeguimientoSemanalComponent } from './components/form-verificar-seguimiento-semanal/form-verificar-seguimiento-semanal.component';
 import { VerificarAvanceSemanalComponent } from './components/verificar-avance-semanal/verificar-avance-semanal.component';
 import { NgModule } from '@angular/core';
@@ -11,6 +14,22 @@ const routes: Routes = [
   {
     path: 'verificarSeguimientoSemanal/:id',
     component: FormVerificarSeguimientoSemanalComponent
+  },
+  {
+    path: 'verificarSeguimientoSemanal/:id/verDetalleMuestras/:idEnsayo',
+    component: VerDetalleMuestrasComponent
+  },
+  {
+    path: 'consultarBitacora/:id',
+    component: ConsultarBitacoraComponent
+  },
+  {
+    path: 'consultarBitacora/:id/verDetalleAvanceSemanal/:idAvance',
+    component: VerDetalleAvanceSemanalComponent
+  },
+  {
+    path: 'consultarBitacora/:id/verDetalleAvanceSemanal/:idAvance/verDetalleMuestras/:idEnsayo',
+    component: VerDetalleMuestrasComponent
   }
 ];
 

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { delay } from 'rxjs/operators';
 import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
@@ -17,6 +18,39 @@ export class GestionAmbientalComponent implements OnInit {
     @Input() seguimientoSemanal: any;
     @Output() seRealizoPeticion = new EventEmitter<boolean>();
     formGestionAmbiental: FormGroup;
+    formGestionAmbientalObservacion: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    formMaterialObservacion: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    formResiduosConstruccion: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    formResiduosPeligrosos: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    formManejoOtra: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    tablaHistorial = new MatTableDataSource();
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
+    dataHistorial: any[] = [
+        {
+            fechaRevision: new Date(),
+            responsable: 'Apoyo a la supervisión',
+            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
+        }
+    ];
     tipoActividades: Dominio[] = [];
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
@@ -29,6 +63,17 @@ export class GestionAmbientalComponent implements OnInit {
         manejoResiduosConstruccion: '2',
         manejoResiduosPeligrosos: '3',
         otra: '4'
+    };
+    editorStyle = {
+        height: '100px'
+    };
+    config = {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ indent: '-1' }, { indent: '+1' }],
+        [{ align: [] }],
+      ]
     };
 
     get actividades() {
@@ -83,6 +128,7 @@ export class GestionAmbientalComponent implements OnInit {
                     this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( `${ this.cantidadActividades }` );
                 }
             }
+            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -442,6 +488,40 @@ export class GestionAmbientalComponent implements OnInit {
           width: '28em',
           data: { modalTitle, modalText }
         });
+    }
+
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
+
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
+        }
+    }
+
+    guardar() {
+        console.log( this.formGestionAmbientalObservacion.value );
+    }
+
+    guardarManejoMaterial() {
+        console.log( this.formMaterialObservacion.value );
+    }
+
+    guardarResiduosConstruccion() {
+        console.log( this.formResiduosConstruccion.value );
+    }
+
+    guardarResiduosPeligrosos() {
+        console.log( this.formResiduosPeligrosos.value );
+    }
+
+    guardarManejoOtra() {
+        console.log( this.formManejoOtra.value );
     }
 
 }

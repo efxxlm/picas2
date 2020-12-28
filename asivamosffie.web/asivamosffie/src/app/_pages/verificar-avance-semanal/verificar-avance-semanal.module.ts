@@ -30,10 +30,14 @@ import { ReporteActividadesComponent } from './components/reporte-actividades/re
 import { FormReporteActividadesRealizadasComponent } from './components/form-reporte-actividades-realizadas/form-reporte-actividades-realizadas.component';
 import { RegistroFotograficoComponent } from './components/registro-fotografico/registro-fotografico.component';
 import { ComiteObraComponent } from './components/comite-obra/comite-obra.component';
+import { ConsultarBitacoraComponent } from './components/consultar-bitacora/consultar-bitacora.component';
+import { VerDetalleMuestrasComponent } from './components/ver-detalle-muestras/ver-detalle-muestras.component';
+import { TablaConsultarBitacoraComponent } from './components/tabla-consultar-bitacora/tabla-consultar-bitacora.component';
+import { VerDetalleAvanceSemanalComponent } from './components/ver-detalle-avance-semanal/ver-detalle-avance-semanal.component';
 
 
 @NgModule({
-  declarations: [VerificarAvanceSemanalComponent, TablaVerificarAvanceSemanalComponent, FormVerificarSeguimientoSemanalComponent, VerificarAvanceFisicoComponent, TablaAvanceResumenAlertasComponent, DialogAvanceResumenAlertasComponent, TablaDisponibilidadMaterialComponent, TablaAvanceFisicoComponent, DialogAvanceAcumuladoComponent, AvanceFinancieroComponent, TablaAvanceFinancieroComponent, GestionDeObraComponent, GestionAmbientalComponent, GestionCalidadComponent, GestionSstComponent, GestionSocialComponent, AlertasRelevantesComponent, ManejoMaterialInsumoComponent, ManejoResiduosConstruccionComponent, ManejoResiduosPeligrososComponent, OtrosManejosComponent, ReporteActividadesComponent, FormReporteActividadesRealizadasComponent, RegistroFotograficoComponent, ComiteObraComponent],
+  declarations: [VerificarAvanceSemanalComponent, TablaVerificarAvanceSemanalComponent, FormVerificarSeguimientoSemanalComponent, VerificarAvanceFisicoComponent, TablaAvanceResumenAlertasComponent, DialogAvanceResumenAlertasComponent, TablaDisponibilidadMaterialComponent, TablaAvanceFisicoComponent, DialogAvanceAcumuladoComponent, AvanceFinancieroComponent, TablaAvanceFinancieroComponent, GestionDeObraComponent, GestionAmbientalComponent, GestionCalidadComponent, GestionSstComponent, GestionSocialComponent, AlertasRelevantesComponent, ManejoMaterialInsumoComponent, ManejoResiduosConstruccionComponent, ManejoResiduosPeligrososComponent, OtrosManejosComponent, ReporteActividadesComponent, FormReporteActividadesRealizadasComponent, RegistroFotograficoComponent, ComiteObraComponent, ConsultarBitacoraComponent, VerDetalleMuestrasComponent, TablaConsultarBitacoraComponent, VerDetalleAvanceSemanalComponent],
   imports: [
     CommonModule,
     MaterialModule,

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-alertas-relevantes',
@@ -10,13 +11,29 @@ export class AlertasRelevantesComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
-    formAlertasRelevantes: FormGroup;
+    formAlertasRelevantes: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+      });
+      tablaHistorial = new MatTableDataSource();
+      displayedColumnsHistorial: string[]  = [
+          'fechaRevision',
+          'responsable',
+          'historial'
+      ];
+      dataHistorial: any[] = [
+          {
+              fechaRevision: new Date(),
+              responsable: 'Apoyo a la supervisión',
+              historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
+          }
+      ];
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalGestionObraAlertaId = 0;
     gestionAlertas: any;
     editorStyle = {
-        height: '45px'
+        height: '100px'
     };
     config = {
         toolbar: [
@@ -27,7 +44,7 @@ export class AlertasRelevantesComponent implements OnInit {
         ]
     };
 
-    constructor() { }
+    constructor( private fb: FormBuilder ) { }
 
     ngOnInit(): void {
         if ( this.seguimientoSemanal !== undefined ) {
@@ -43,6 +60,7 @@ export class AlertasRelevantesComponent implements OnInit {
                     this.seguimientoSemanalGestionObraAlertaId = this.gestionAlertas.seguimientoSemanalGestionObraAlertaId;
                 }
             }
+            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -58,6 +76,10 @@ export class AlertasRelevantesComponent implements OnInit {
         } else {
             return 0;
         }
+    }
+
+    guardar() {
+        console.log( this.formAlertasRelevantes.value );
     }
 
 }

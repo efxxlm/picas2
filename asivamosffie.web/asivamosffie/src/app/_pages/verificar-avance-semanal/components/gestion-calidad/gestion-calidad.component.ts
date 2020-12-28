@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -14,15 +15,35 @@ export class GestionCalidadComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
-    formGestionCalidad: FormGroup;
+    formGestionCalidad: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    formEnsayo: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    tablaHistorial = new MatTableDataSource();
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
+    dataHistorial: any[] = [
+        {
+            fechaRevision: new Date(),
+            responsable: 'Apoyo a la supervisión',
+            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
+        }
+    ];
     seRealizoPeticion = false;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
-    SeguimientoSemanalGestionObraCalidadId = 0;
+    seguimientoSemanalGestionObraCalidadId = 0;
     gestionObraCalidad: any;
     tipoEnsayos: any[] = [];
     editorStyle = {
-        height: '45px'
+        height: '100px'
     };
     config = {
       toolbar: [
@@ -36,6 +57,7 @@ export class GestionCalidadComponent implements OnInit {
     constructor(
         private dialog: MatDialog,
         private routes: Router,
+        private fb: FormBuilder,
         private commonSvc: CommonService )
     {
         this.commonSvc.listaTipoEnsayos()
@@ -44,6 +66,7 @@ export class GestionCalidadComponent implements OnInit {
 
     ngOnInit(): void {
         this.getGestionCalidad();
+        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     getGestionCalidad() {
@@ -56,7 +79,7 @@ export class GestionCalidadComponent implements OnInit {
             {
                 this.gestionObraCalidad = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
                 if ( this.gestionObraCalidad.seRealizaronEnsayosLaboratorio !== undefined ) {
-                    this.SeguimientoSemanalGestionObraCalidadId = this.gestionObraCalidad.seguimientoSemanalGestionObraCalidadId;
+                    this.seguimientoSemanalGestionObraCalidadId = this.gestionObraCalidad.seguimientoSemanalGestionObraCalidadId;
                 }
             }
         }
@@ -92,6 +115,14 @@ export class GestionCalidadComponent implements OnInit {
 
     getVerDetalleMuestras( gestionObraCalidadEnsayoLaboratorioId: number ) {
         this.routes.navigate( [ `${ this.routes.url }/verDetalleMuestras`, gestionObraCalidadEnsayoLaboratorioId ] );
+    }
+
+    guardar() {
+        console.log( this.formGestionCalidad.value );
+    }
+
+    guardarEnsayo() {
+        console.log( this.formEnsayo.value );
     }
 
 }
