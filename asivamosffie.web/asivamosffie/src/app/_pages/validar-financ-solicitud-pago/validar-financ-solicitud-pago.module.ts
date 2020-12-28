@@ -8,11 +8,13 @@ import { ValidarFinancSolicitudPagoRoutingModule } from './validar-financ-solici
 import { ValidarFinancSolicitudPagoComponent } from './components/validar-financ-solicitud-pago/validar-financ-solicitud-pago.component';
 import { FormValidarSolicitudValidfspComponent } from './components/form-validar-solicitud-validfsp/form-validar-solicitud-validfsp.component';
 import { DialogProyectosAsociadosValidfspComponent } from './components/dialog-proyectos-asociados-validfsp/dialog-proyectos-asociados-validfsp.component';
+import { DetalleRegSolPagoValidfspComponent } from './components/detalle-reg-sol-pago-validfsp/detalle-reg-sol-pago-validfsp.component';
+import { FormValidListchequeoValidfspComponent } from './components/form-valid-listchequeo-validfsp/form-valid-listchequeo-validfsp.component';
 
 
 
 @NgModule({
-  declarations: [ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent],
+  declarations: [ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent],
   imports: [
     CommonModule,
     MaterialModule,
