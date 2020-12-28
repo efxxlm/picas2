@@ -195,7 +195,7 @@ const routes: Routes = [
         .then(m => m.FasePreconstruccionModule)
       },
       {
-        path: 'validarSolicitudDeNovedades',
+        path: 'verificarSolicitudDeNovedades',
         loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
         .then(m => m.VerificarSolicitudDeNovedadesModule)
       },
