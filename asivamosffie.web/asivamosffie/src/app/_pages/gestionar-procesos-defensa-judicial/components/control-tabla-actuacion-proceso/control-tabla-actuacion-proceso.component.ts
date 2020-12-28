@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 
 @Component({
   selector: 'app-control-tabla-actuacion-proceso',
@@ -23,20 +24,26 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
       id: 1
     },
   ]
-  constructor(private router: Router) { }
+
+  @Input() defensaJudicialID:number;
+
+  constructor(private router: Router, private defensaService:DefensaJudicialService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.defensaService.getActuaciones(this.defensaJudicialID).subscribe(response =>{
+      this.dataSource = new MatTableDataSource(response);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    });
+    
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   irNuevo() {
-    this.router.navigate(['/gestionarProcesoDefensaJudicial/registrarActuacionProceso']);
+    this.router.navigate(['/gestionarProcesoDefensaJudicial/registrarActuacionProceso',this.defensaJudicialID]);
   }
   verDetalle(id){
     this.router.navigate(['/gestionarProcesoDefensaJudicial/verDetalleActuacion',id]);

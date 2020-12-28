@@ -47,6 +47,20 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetActuacionesByDefensaJudicialID")]
+        public async Task<List<DefensaJudicialSeguimiento>> GetActuacionesByDefensaJudicialID(int pDefensaJudicialId)
+        {
+            try
+            {
+                return await _judicialDefense.GetActuacionesByDefensaJudicialID(pDefensaJudicialId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
 
         [HttpGet]
         [Route("GetPlantillaDefensaJudicial")]

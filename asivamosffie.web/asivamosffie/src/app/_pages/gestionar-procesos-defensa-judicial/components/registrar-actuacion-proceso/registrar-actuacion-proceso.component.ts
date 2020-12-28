@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
+import { DefensaJudicial, DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -33,12 +36,26 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
     urlSoporte: [null, Validators.required]
   });
   estadoAvanceProcesoArray = [
-    { name: 'Estado 1', value: '1' },
-    { name: 'Estado 2', value: '2' },
   ];
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  controlJudicialId: any;
+  defensaJudicial: DefensaJudicial={};
+  constructor(  private fb: FormBuilder, public dialog: MatDialog,
+    public commonServices: CommonService,
+    public judicialServices:DefensaJudicialService,
+    private activatedRoute: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe( param => {
+      this.controlJudicialId = param['id'];
+      this.judicialServices.GetDefensaJudicialById(this.controlJudicialId).subscribe(respose=>{
+        this.defensaJudicial=respose;
+      });
+    });
+    this.commonServices.getEstadoAvanceProcesosDefensa().subscribe(
+      response=>{
+        this.estadoAvanceProcesoArray=response;
+      }
+    );
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -57,15 +74,40 @@ export class RegistrarActuacionProcesoComponent implements OnInit {
       return texto.getLength() > n ? n : texto.getLength();
     }
   }
-  openDialog(modalTitle: string, modalText: string) {
-    this.dialog.open(ModalDialogComponent, {
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
     });
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+          if(id>0)
+          {
+            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarActuacionProceso/"+id], {});
+          }                  
+      });
+    }
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    let defensaJudicial=this.defensaJudicial;
+    
+    defensaJudicial.defensaJudicialSeguimiento.push({
+      estadoProcesoCodigo:this.addressForm.get("estadoAvanceProceso").value,
+      actuacionAdelantada:this.addressForm.get("actuacionAdelantada").value,
+      proximaActuacion:this.addressForm.get("proximaActuacionRequerida").value,
+      fechaVencimiento:this.addressForm.get("fechaVencimientoTerminos").value,
+      esRequiereSupervisor:this.addressForm.get("actuacionParticipaSupervisor").value,
+      observaciones:this.addressForm.get("observaciones").value,
+      esprocesoResultadoDefinitivo:this.addressForm.get("actuacionDefinitiva").value,
+      rutaSoporte:this.addressForm.get("urlSoporte").value
+    });
+      console.log(defensaJudicial);
+      this.judicialServices.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
+        response=>{
+          this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
+        }
+      );
   }
 }

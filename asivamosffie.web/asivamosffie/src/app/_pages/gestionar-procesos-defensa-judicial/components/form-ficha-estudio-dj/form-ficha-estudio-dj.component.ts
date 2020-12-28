@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -52,6 +52,10 @@ export class FormFichaEstudioDjComponent implements OnInit {
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
 
+  ngAngAfterViewInit(){
+    this.cargarRegistro();
+  }fter
+
   cargarRegistro() {
     //this.ngOnInit().then(() => {
       console.log("form");
@@ -93,7 +97,7 @@ export class FormFichaEstudioDjComponent implements OnInit {
     {
       dialogRef.afterClosed().subscribe(result => {
           if(id>0)
-          {
+          {            
             this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
           }                  
       });
@@ -111,7 +115,7 @@ export class FormFichaEstudioDjComponent implements OnInit {
       };
     }
 
-    defensaJudicial.fichaEstudio={
+    defensaJudicial.fichaEstudio=[{
       antecedentes:this.addressForm.get("antecedentes").value,
       hechosRelevantes:this.addressForm.get("hechosRelevantes").value,
       jurisprudenciaDoctrina:this.addressForm.get("jurisprudenciaDoctrina").value,
@@ -124,7 +128,7 @@ export class FormFichaEstudioDjComponent implements OnInit {
       esAprobadoAperturaProceso:this.addressForm.get("aperturaFormalProceso").value,
       tipoActuacionCodigo:this.addressForm.get("tipoActuacionRecomendada").value,
       esActuacionTramiteComite:this.addressForm.get("actuacionRecomendadaAlComite").value,
-    };
+    }];
     
       console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(

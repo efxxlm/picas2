@@ -201,19 +201,18 @@ export class FormContratosAsociadosDjComponent implements OnInit {
         esCompleto:true
       });
     });
-    
-    let defensaJudicial:DefensaJudicial={
-      defensaJudicialId:0,
-      legitimacionCodigo:'',
-      tipoProcesoCodigo:'',
-      numeroProceso:'',
-      cantContratos:this.formContratista.get( 'numeroContratos' ).value,
-      estadoProcesoCodigo:'',
-      solicitudId:0,
-      esLegitimacionActiva:null,
-      esCompleto:false,
-      defensaJudicialContratacionProyecto:defContraProyecto
-    };
+    let defensaJudicial=this.defensaJudicial;
+    if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
+    {
+      defensaJudicial={
+        defensaJudicialId:this.defensaJudicial.defensaJudicialId,
+        tipoProcesoCodigo:this.tipoProceso,
+        esLegitimacionActiva:this.legitimacion,  
+        cantContratos:this.formContratista.get( 'numeroContratos' ).value,
+        
+      };
+    }
+    defensaJudicial.defensaJudicialContratacionProyecto=defContraProyecto;
       console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
         response=>{

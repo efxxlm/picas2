@@ -156,7 +156,7 @@ namespace asivamosffie.services.Helpers
             //DefensaJudicial
             if (input == "DJ")
             {
-                return $"{"DJ"}{(++number).ToString("D4")}";
+                return $"{"DJ"}-{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
             }
 
             //Invitacion Abierta SA

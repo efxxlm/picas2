@@ -13,6 +13,7 @@ import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstrucc
 export class CommonService {
   
   
+  
     
   constructor(private http: HttpClient) { }
 
@@ -227,6 +228,14 @@ export class CommonService {
 
   getTipoActuacion() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=119`);
+  }
+
+  listaCanalIngreso(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=121`);
+  }
+
+  getEstadoAvanceProcesosDefensa() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=122`);
   }
 
   public listaUsuarios(){

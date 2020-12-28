@@ -23,5 +23,6 @@ namespace asivamosffie.services.Interfaces
         Task<List<GrillaProcesoDefensaJudicial>> ListGrillaProcesosDefensaJudicial();
         Task<List<Contrato>> GetListContract();
         Task<List<ProyectoGrilla>> GetListProyectsByContract(int pContratoId);
+        Task<List<DefensaJudicialSeguimiento>> GetActuacionesByDefensaJudicialID(int pDefensaJudicialId);
     }
 }

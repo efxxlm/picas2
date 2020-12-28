@@ -45,4 +45,18 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
   actualizarProceso(id){
     this.router.navigate(['/gestionarProcesoDefensaJudicial/actualizarProceso',id]);
   }
+  GetPlantillaDefensaJudicial(id)
+  {
+    this.defensaServices.GetPlantillaDefensaJudicial(id)
+    .subscribe(respuesta => {
+      const documento = 'ficha.pdf';
+      const text = documento,
+      blob = new Blob([respuesta], { type: 'application/pdf' }),
+      anchor = document.createElement('a');
+      anchor.download = documento;
+      anchor.href = window.URL.createObjectURL(blob);
+      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+      anchor.click();
+    });
+  }
 }

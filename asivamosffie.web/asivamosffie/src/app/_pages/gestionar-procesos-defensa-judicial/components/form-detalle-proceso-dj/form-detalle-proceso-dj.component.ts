@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
@@ -48,12 +48,23 @@ export class FormDetalleProcesoDjComponent implements OnInit {
   @Input() legitimacion:boolean;
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
+
+  ngAfterViewInit(){
+    this.cargarRegistro();
+  }
+
   cargarRegistro() {
     //this.ngOnInit().then(() => {
       console.log("form");
       console.log(this.defensaJudicial);
       console.log(this.legitimacion);
       console.log(this.tipoProceso);      
+      this.addressForm.get("tipoAccion").setValue(this.defensaJudicial.tipoAccionCodigo);
+      this.addressForm.get("jurisdiccion").setValue(this.defensaJudicial.jurisdiccionCodigo);
+      this.addressForm.get("pretensiones").setValue(this.defensaJudicial.pretensiones);
+      this.addressForm.get("cuantiaPerjuicios").setValue(this.defensaJudicial.cuantiaPerjuicios);
+      this.addressForm.get("requeridoParticipacionSupervisor").setValue(this.defensaJudicial.esRequiereSupervisor);
+
   }
   
   ngOnInit(): void {
@@ -117,6 +128,7 @@ export class FormDetalleProcesoDjComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
+        console.log("cerre ventana, redirecciono?"+id);
           if(id>0)
           {
             this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});

@@ -45,7 +45,7 @@ const routes: Routes = [
     component: ActualizarProcesoDjComponent
   },
   {
-    path: 'registrarActuacionProceso',
+    path: 'registrarActuacionProceso/:id',
     component: RegistrarActuacionProcesoComponent
   },
   {

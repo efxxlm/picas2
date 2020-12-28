@@ -10,6 +10,7 @@ import { Respuesta } from '../common/common.service';
 })
 export class DefensaJudicialService {
   
+  
 
   url: string = environment.apiUrl;
 
@@ -57,9 +58,14 @@ export class DefensaJudicialService {
   GetDefensaJudicialById(controlJudicialId: any) {
     return this.http.get<DefensaJudicial>(`${this.url}/JudicialDefense/GetVistaDatosBasicosProceso?pDefensaJudicialId=${ controlJudicialId }` );    
   }
+
+  getActuaciones(controlJudicialId:number) {
+    return this.http.get<any[]>(`${this.url}/JudicialDefense/GetActuacionesByDefensaJudicialID?pDefensaJudicialId=${ controlJudicialId }` );    
+  }
 }
 
 export interface DefensaJudicial{
+  
   defensaJudicialId?:number,
   legitimacionCodigo?:string,
   tipoProcesoCodigo?:string,
@@ -78,7 +84,25 @@ export interface DefensaJudicial{
   urlSoporteProceso?:string,
   defensaJudicialContratacionProyecto?:DefensaJudicialContratacionProyecto[],
   demandadoConvocado?:DemandadoConvocado[],
-  fichaEstudio?:FichaEstudio
+  fichaEstudio?:FichaEstudio[],
+  defensaJudicialSeguimiento?: DefensaJudicialSeguimiento[];
+  //not maped
+  jurisdiccionCodigoNombre?:string,
+  tipoAccionCodigoNombre?:string
+}
+
+export interface DefensaJudicialSeguimiento{
+  defensaJudicialSeguimientoId?:number,
+  defensaJudicialId?:number,
+  estadoProcesoCodigo?:string,
+  fechaActuacion?:Date,
+  actuacionAdelantada?:string,
+  proximaActuacion?:string,
+  fechaVencimiento?:Date,
+  esRequiereSupervisor?:boolean,
+  observaciones?:string,
+  esprocesoResultadoDefinitivo?:boolean,
+  rutaSoporte?:string,
 }
 export interface DefensaJudicialContratacionProyecto{
   defensaJudicialContratacionProyectoId?:number,

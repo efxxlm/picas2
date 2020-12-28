@@ -171,7 +171,7 @@ namespace asivamosffie.services
                     }
                     defensaJudicial.EstadoProcesoCodigo = "1";
                     defensaJudicial.LegitimacionCodigo = "";
-                    defensaJudicial.NumeroProceso = Helpers.Helpers.Consecutive("DF",_context.DefensaJudicial.Count());
+                    defensaJudicial.NumeroProceso = Helpers.Helpers.Consecutive("DJ",_context.DefensaJudicial.Count());
                     _context.DefensaJudicial.Add(defensaJudicial);
                 }
                 else
@@ -242,6 +242,19 @@ namespace asivamosffie.services
                         }
                         
                     }
+                    foreach (var defFicha in defensaJudicial.DefensaJudicialSeguimiento)
+                    {
+                        if (defFicha.DefensaJudicialSeguimientoId == 0)
+                        {
+                            defFicha.UsuarioCreacion = defensaJudicial.UsuarioCreacion;
+                            defFicha.FechaCreacion = DateTime.Now;
+                            defFicha.Eliminado = false;
+                            defFicha.EsCompleto = true;
+                            defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
+                            _context.DefensaJudicialSeguimiento.Add(defFicha);
+                        }                       
+                    }
+
                     _context.DefensaJudicial.Update(defensaJudicialBD);
 
                 }
@@ -332,7 +345,11 @@ namespace asivamosffie.services
                     string TipoIntervencionNombreTmp = string.Empty;
                     foreach (var contr in defensaJudicial.DefensaJudicialContratacionProyecto)
                     {
-                        var contratacionProyecto = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contr.ContratacionProyectoId).FirstOrDefault();
+                        var contratacionProyecto = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contr.ContratacionProyectoId).
+                             Include(y => y.Proyecto).
+                                ThenInclude(y => y.InstitucionEducativa).
+                            Include(y => y.Proyecto).
+                                ThenInclude(y => y.Sede).FirstOrDefault();
                         contr.numeroContrato = _context.Contrato.Where(x => x.ContratacionId == contratacionProyecto.ContratacionId).FirstOrDefault().NumeroContrato;
                     }
                     return defensaJudicial;
@@ -1343,6 +1360,11 @@ namespace asivamosffie.services
                 
             }
             return ListProyectoGrilla;
+        }
+
+        public async Task<List<DefensaJudicialSeguimiento>> GetActuacionesByDefensaJudicialID(int pDefensaJudicialId)
+        {
+            return _context.DefensaJudicialSeguimiento.Where(x=>x.DefensaJudicialId==pDefensaJudicialId).ToList();
         }
     }
 }

@@ -77,12 +77,13 @@
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title "
+                
                 [ngClass]="{'sin-diligenciar':detalle_class===0,'en-proceso':detalle_class===1,'completo':detalle_class===2}"
                 >
                     Detalle del proceso
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-detalle-proceso-dj #detalle
+            <app-form-detalle-proceso-dj #detalleproceso
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
                 [tipoProceso]="addressForm.get('tipoProceso').value" 
                 [defensaJudicial]="defensaJudicial"
@@ -148,11 +149,11 @@
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
                 <mat-panel-title class="expansion-style--title en-alerta"
-                (click)="ficha.cargarRegistro()">
+               >
                     Ficha de estudio
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-form-ficha-estudio-dj
+            <app-form-ficha-estudio-dj *ngIf="defensaJudicial && defensaJudicial.urlSoporteProceso!='' "
                 #ficha
                 [legitimacion]="addressForm.get('legitimacionActiva').value"
                 [tipoProceso]="addressForm.get('tipoProceso').value" 
