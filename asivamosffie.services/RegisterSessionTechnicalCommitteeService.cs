@@ -1887,33 +1887,6 @@ namespace asivamosffie.services
             return true;
         }
 
-        //public bool EjemploTransaction()
-        //{
-        //    using (DbContextTransaction transaction = (DbContextTransaction)_context.Database.BeginTransaction())
-        //    {
-        //        try
-        //        {
-        //            var standard = _context.ArchivoCargue.Add(new ArchivoCargue() { Activo = true });
-
-        //            _context.Usuario.Add(new Usuario()
-        //            {
-        //                NombreMaquina = "Rama",
-        //                Nombres = "Julian"
-        //            });
-        //            _context.SaveChanges();
-        //            // throw exectiopn to test roll back transaction
-
-        //            transaction.Commit();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            transaction.Rollback();
-        //            Console.WriteLine("Error occurred.");
-        //        }
-        //    }
-        //    return false;
-        //}
-
         #endregion
 
         #region Actas
