@@ -14,8 +14,7 @@ import { DialogCargarSitioWebCesmlComponent } from '../dialog-cargar-sitio-web-c
 })
 export class AcordionTablaListaProyectosCesmlComponent implements OnInit {
   public dataContrato;
-  public contSinD:number = 0;
-  public contCompleto:number = 0;
+  estadoAcordeon: string;
   loadDataItems: Subscription;
   constructor(public dialog: MatDialog, private services: MonitoringURLService) { }
 
@@ -35,8 +34,12 @@ export class AcordionTablaListaProyectosCesmlComponent implements OnInit {
   }
 
   loadData(data){
+    let incompleto = 0;
+    let completo = 0;
     this.dataContrato = data;
-    console.log(this.dataContrato);
+    for(let proyect of data){
+
+    }
   }
 
 }

@@ -7,7 +7,7 @@
 <mat-accordion>
     <mat-expansion-panel class="expansion-style" *ngFor="let cont of this.dataContrato; let i = index">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
+            <mat-panel-title class="expansion-style--title" [ngClass]="estadoAcordeon">
                {{cont.numeroContrato}}
             </mat-panel-title>
         </mat-expansion-panel-header>
