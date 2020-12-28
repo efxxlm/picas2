@@ -38,7 +38,7 @@
         </mat-card-header>
         <mat-card-content>
             <p style="margin-left: 2em;"><b>12/07/2020</b></p>
-            <p style="margin-left: 2em;"><b>¿Tiene observaciones a la gestión de la seguridad y dalud en el trabajo?</b>: Sí</p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones a la gestión de la seguridad y salud en el trabajo?</b>: Sí</p>
             <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
@@ -49,7 +49,7 @@
             <div class="col-md-12">
                 <div class="row justify-content-center align-items-center" style="width: 100%;">
                     <div class="pr-1">
-                        <label class="label-left" for="tieneObservaciones">¿Tiene observaciones a la gestión de la seguridad y dalud en el trabajo?</label>
+                        <label class="label-left" for="tieneObservaciones">¿Tiene observaciones a la gestión de la seguridad y salud en el trabajo?</label>
                     </div>
                     <div>
                         <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
@@ -66,7 +66,7 @@
             [class.color-secondaryColor]="formGestionSst.get('observaciones').invalid && formGestionSst.get('observaciones').touched || formGestionSst.get('observaciones').invalid">
                 <label  class="text-area-quill--label align-left-label"
                         [class.colorMainColor]="!(formGestionSst.get('observaciones').invalid && formGestionSst.get('observaciones').touched || formGestionSst.get('observaciones').invalid)">
-                        Observaciones a la gestión de la seguridad y dalud en el trabajo
+                        Observaciones a la gestión de la seguridad y salud en el trabajo
                 </label>
                 <quill-editor   class="quill-editor-style ml-1em"
                                 [styles]="editorStyle"
