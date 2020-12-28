@@ -6,11 +6,13 @@ import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
 import { ValidarFinancSolicitudPagoRoutingModule } from './validar-financ-solicitud-pago-routing.module';
 import { ValidarFinancSolicitudPagoComponent } from './components/validar-financ-solicitud-pago/validar-financ-solicitud-pago.component';
+import { FormValidarSolicitudValidfspComponent } from './components/form-validar-solicitud-validfsp/form-validar-solicitud-validfsp.component';
+import { DialogProyectosAsociadosValidfspComponent } from './components/dialog-proyectos-asociados-validfsp/dialog-proyectos-asociados-validfsp.component';
 
 
 
 @NgModule({
-  declarations: [ValidarFinancSolicitudPagoComponent],
+  declarations: [ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent],
   imports: [
     CommonModule,
     MaterialModule,
