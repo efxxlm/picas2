@@ -8,20 +8,24 @@
     <h1 class="title-menu--h1" *ngIf="estadoInterventoria === estadosInterventoria.sinAprobacionReqTecnicos">
       Gestionar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
     </h1>
-    <h1 class="title-menu--h1" *ngIf="estadoInterventoria === estadosInterventoria.enProcesoVerificacionReqTecnicos 
-                                      || estadoInterventoria === estadosInterventoria.conReqTecnicosVerificados
-                                      || estadoInterventoria === estadosInterventoria.enviadoAlSupervisor">
+    <h1 class="title-menu--h1" *ngIf="estadoInterventoria === estadosInterventoria.enProcesoVerificacionReqTecnicos || estadoInterventoria === estadosInterventoria.conReqTecnicosVerificados">
 			Ver detalle/Editar requisitos para inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
 		</h1>
-    <p class="colorMainColor" style="margin-top: 1em;">
+    <p class="text-primary">
       <span class="mx-2em">
-        <b>Fecha de aprobacion de póliza:</b> {{ fechaPoliza | date: 'dd/MM/yyyy' }}
+        Fecha de aprobacion de póliza:
+        <b>
+          {{ fechaPoliza | date: 'dd/MM/yyyy' }}
+        </b>
       </span>
       <span class="mx-2em">
-        <b>Proyectos asociados:</b> {{ contrato.contratacion.contratacionProyecto.length }}
+        Proyectos asociados:
+        <b>
+          {{ contrato.contratacion.contratacionProyecto.length }}
+        </b>
       </span>
     </p>
-    <p class="info-container" style="margin-top: 2em;">
+    <p class="info-container">
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
       <span class="info-text en-proceso">En proceso</span>
       <span class="info-text completo">Completo</span>
@@ -70,7 +74,6 @@
                         [proyectoId]="contratacion.proyectoId"
                         [tieneEstadoFase1EyD]="contratacion.proyecto['tieneEstadoFase1EyD']"
                         [tieneEstadoFase1Diagnostico]="contratacion.proyecto['tieneEstadoFase1Diagnostico']"
-                        (perfilEliminado)="getContrato( $event )"
                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
                         (perfilesCompletados)="estadoSemaforo( i, $event )">
       </app-form-perfil>

@@ -30,9 +30,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     private technicalCommitteSessionService: TechnicalCommitteSessionService
   ) { }
 
-  ngOnInit(): void { }
-
-  initTable() {
+  ngOnInit(): void {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -49,6 +47,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
+
   verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string) {
 
     //console.log(pTablaId, pRegistroId)
@@ -69,7 +68,6 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
 
   cargarRegistro() {
     this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
-    this.initTable();
   }
 
 }

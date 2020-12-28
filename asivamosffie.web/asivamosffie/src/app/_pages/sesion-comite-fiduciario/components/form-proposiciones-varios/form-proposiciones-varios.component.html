@@ -21,7 +21,7 @@
                   <input matInput #temaInput type="text" formControlName="tema" maxlength="1000" required>
                   <input type="hidden" formControlName="sesionTemaId" >
                 </mat-form-field>
-                <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{1000 - temaInput.value.length}}</span>
+                <span class="contador miles">{{1000 - temaInput.value.length}}</span>
               </div>
             </div>
             <div class="row">

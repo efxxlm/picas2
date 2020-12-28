@@ -6,7 +6,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 export class OchoDecimalesDirective {
 
   // Allow decimal numbers and negative values
-  private regex: RegExp = new RegExp(/^\-?[0-9]{1,7}\.?\d{0,8}$/);
+  private regex: RegExp = new RegExp(/^\d{1,7}\.?\d{0,8}$/);
   // Allow key codes for special events. Reflect :
   // Backspace, tab, end, home
   private specialKeys: Array<string> = ['Backspace', 'Tab', 'End', 'Home', '-', 'ArrowLeft', 'ArrowRight', 'Del', 'Delete'];

@@ -292,25 +292,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   borrarArray(j: number, i: number) {
-    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
-      .subscribe(
-        value => {
-          if ( value === true ) {
-            if ( this.componentes( j ).at( i ).get( 'componenteAportanteId' ).value !== null ) {
-              this.projectContractingService.deleteComponenteAportante( this.componentes( j ).at( i ).get( 'componenteAportanteId' ).value )
-                .subscribe(
-                  () => {
-                    this.componentes(j).removeAt( i );
-                    this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
-                  },
-                  err => this.openDialog( '', `<b>${ err.message }</b>` )
-                );
-            } else {
-              this.componentes(j).removeAt( i );
-            }
-          }
-        }
-      );
+    this.componentes(j).removeAt( i );
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -318,15 +300,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       width: '28em',
       data: { modalTitle, modalText }
     });
-  }
-
-  openDialogTrueFalse(modalTitle: string, modalText: string) {
-    const dialogRef = this.dialog.open(ModalDialogComponent, {
-      width: '28em',
-      data: { modalTitle, modalText, siNoBoton: true }
-    });
-
-    return dialogRef.afterClosed()
   }
 
   onSubmit() {
@@ -436,5 +409,6 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       this.openDialog('', '<b>La sumatoria de los componentes, no es igual el valor total del aporte.</b>');
     }
 
+    console.log(this.contratacionProyecto);
   }
 }

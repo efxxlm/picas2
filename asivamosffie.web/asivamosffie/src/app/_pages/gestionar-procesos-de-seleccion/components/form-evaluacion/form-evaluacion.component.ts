@@ -1,8 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { EstadosProcesoSeleccion, ProcesoSeleccion } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
-import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-evaluacion',
@@ -35,23 +33,7 @@ export class FormEvaluacionComponent {
     ]
   };
 
-  constructor(private fb: FormBuilder,public dialog: MatDialog) {}
-  noGuardado=true;
-  ngOnDestroy(): void {
-    if ( this.noGuardado===true && this.addressForm.dirty) {
-      let dialogRef =this.dialog.open(ModalDialogComponent, {
-        width: '28em',
-        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
-      });   
-      dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
-        if(result === true)
-        {
-            this.onSubmit();          
-        }           
-      });
-    }
-  };
+  constructor(private fb: FormBuilder) {}
 
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
@@ -59,26 +41,10 @@ export class FormEvaluacionComponent {
     }
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  textoLimpio(texto: string){
+    const textolimpio = texto.replace(/<[^>]*>/g, '');
+    return textolimpio.length;
     }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
-  }
 
   onSubmit() {
     console.log(this.addressForm.value);
@@ -88,7 +54,6 @@ export class FormEvaluacionComponent {
     this.procesoSeleccion.urlSoporteEvaluacion = this.addressForm.get('url').value,
     
     //console.log(procesoS);
-    this.noGuardado=false;
     this.guardar.emit(null);
   }
 

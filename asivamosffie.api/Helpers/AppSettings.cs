@@ -38,7 +38,7 @@
 
         public bool YearSiguienteEsVigente { get; set; }
 
-        public string  DirectoryBaseOrdeELegibilidad { get; set; }
+        public string DirectoryBaseOrdeELegibilidad { get; set; }
          
         public string DirectoryBaseContratacionMinuta { get; set; }
          
@@ -46,8 +46,6 @@
 
         public string DirectoryActaSuscritaContrato { get; set; }
 
-        public string DirectoryBaseProgramacionObra { get; set; }
-        public string DirectoryBaseFlujoInversion { get; set; }
     }
   
 }

@@ -23,12 +23,12 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
   listaSolicitudes: GrillaDisponibilidadPresupuestal[] = [];
 
   displayedColumns: string[] = [
-    'fechaSolicitud',
-    'tipoSolicitudText',
-    'numeroSolicitud',
-    'opcionContratar',
-    'valorSolicitud',
-    'estadoSolicitudText',
+    'fecha',
+    'tipo',
+    'numero',
+    'opcionPorContratar',
+    'valorSolicitado',
+    'estado',
     'id'
   ];
   dataSource = new MatTableDataSource();
@@ -57,7 +57,6 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
       this.budgetAvailabilityService.getReuestCommittee(),
 
     ]).subscribe( response => {
-      console.log(response)
         this.listaSolicitudes = response[0];
         this.dataSource = new MatTableDataSource( this.listaSolicitudes) ;
         console.log( response[0] );
@@ -66,9 +65,8 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
 
     }
     initPaginator() {
-      
-      this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
       this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
       this.paginator._intl.getRangeLabel = (page, pageSize, length) => {
         if (length === 0 || pageSize === 0) {

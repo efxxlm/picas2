@@ -9,19 +9,18 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
   providedIn: 'root'
 })
 export class ContratosModificacionesContractualesService {
-  
 
   url: string = environment.apiUrl;
 
-  constructor( private http: HttpClient ) { }
+  constructor ( private http: HttpClient ) { };
 
-  getGrilla() {
+  getGrilla () {
     return this.http.get( `${ this.url }/RegisterContractsAndContractualModifications/GetListSesionComiteSolicitud` )
       .pipe(
         map( ( resp: any ) => {
 
           const solicitudes = [];
-          for ( const solicitud of resp ) {
+          for ( let solicitud of resp ) {
             if ( solicitud.contratacion ) {
               solicitudes.push( solicitud );
             }
@@ -30,14 +29,15 @@ export class ContratosModificacionesContractualesService {
           return solicitudes;
 
         } )
-      );
-  }
+      )
+  };
 
-  getContratacionId( solicitudId: number ) {
+  getContratacionId ( solicitudId: number ) {
     return this.http.get( `${ this.url }/RegisterContractsAndContractualModifications/GetContratacionByContratacionId?ContratacionId=${ solicitudId }` );
-  }
+  };
 
-  postRegistroTramiteContrato( pContrato: FormData, pEstadoCodigo: string ) {
+  postRegistroTramiteContrato ( pContrato: FormData, pEstadoCodigo: string ) {
     return this.http.post<Respuesta>( `${ this.url }/RegisterContractsAndContractualModifications/RegistrarTramiteContrato?pEstadoCodigo=${ pEstadoCodigo }`, pContrato );
-  }
-}
+  };
+
+};

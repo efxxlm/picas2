@@ -42,31 +42,19 @@ export class TableCaracteristicasEspecialesComponent implements OnInit {
     this.routes.navigate( [ '/solicitarContratacion/definir-caracteristicas', id ], { state: {municipio: municipio} } )
   }
 
-  getSemaforo ( elemento: any, contratacionProyecto: any ) {
-    let caracteristicasconalgo=true;
-    if(contratacionProyecto[ 'tieneMonitoreoWeb' ] === undefined && 
-      contratacionProyecto[ 'esReasignacion' ] === undefined &&
-      contratacionProyecto[ 'esAvanceobra' ] === undefined &&
-      contratacionProyecto[ 'requiereLicencia' ] === undefined &&
-      contratacionProyecto[ 'licenciaVigente' ] === undefined)
-    {
-      caracteristicasconalgo=false;
-    }
+  getSemaforo ( elemento: any, tieneMonitoreoWeb: any ) {
     if ( elemento === undefined ) {
       return 'sin-diligenciar';
     }; 
     if ( elemento === true ) {
       return 'completo';
     };
-    if ( elemento === false && caracteristicasconalgo==true){// && tieneMonitoreoWeb !== undefined ) {
+    if ( elemento === false && tieneMonitoreoWeb !== undefined ) {
       return 'en-proceso';
     }
-    if ( elemento === false && caracteristicasconalgo==false){// && tieneMonitoreoWeb !== undefined ) {
+    if ( elemento === false && tieneMonitoreoWeb === undefined ) {
       return 'sin-diligenciar';
-    }
-    /*if ( elemento === false && tieneMonitoreoWeb === undefined ) {
-      return 'sin-diligenciar';
-    };*/
+    };
   };
 
 }

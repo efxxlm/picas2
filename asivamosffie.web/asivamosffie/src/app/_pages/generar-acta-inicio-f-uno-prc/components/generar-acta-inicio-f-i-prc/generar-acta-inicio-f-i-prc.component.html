@@ -13,9 +13,9 @@
         <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
             <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
         </button>
-        Bienvenida/o aquí podrá gestionar las actas de inicio para la fase de preconstrución para los contratos de obra
+        Bienvenida/o aquí podrá gestionar las actas de inicio para la fase de Preconstrución para los contratos de obra
         asignados a usted, que tienen aprobados los requisitos de inicio, y que serán ejecutados en el marco de la
-        gestión del FFIE.
+        gestión del FFIE
     </div>
     <app-tabla-generar-f-i-prc></app-tabla-generar-f-i-prc>
 </div>
@@ -33,22 +33,20 @@
         <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
             <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
         </button>
-        Bienvenida/o aquí podrá validar las actas de inicio para la fase de preconstrución para los contratos de obra y
-        gestionar las actas de inicio de los contratos de interventoría asignados a usted, que tienen aprobados los
-        requisitos de inicio, y que serán ejecutados en el marco de la gestión del FFIE.
+        Bienvenida/o aquí podrá validar las actas de inicio para la fase 1 - Preconstrución para los contratos de obra y
+        gestionar las actas de inicio de los contratos de interventoría asignados a usted, que tienen aprobados los requisitos de inicio, y que
+        serán ejecutados en el marco de la gestión del FFIE.
     </div>
-    <div class="tabs--actions">
-        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': contratoObra === true}"
-            (click)="contratoObra = true; contratoInterventoria = false;">
-            Actas de inicio de obra
-        </button>
-        <button mat-raised-button color="accent" class="tabs--btn"
-            [ngClass]="{'active': contratoInterventoria === true}"
-            (click)="contratoInterventoria = true; contratoObra = false;">
-            Actas de inicio de interventoría
-        </button>
+    <div class="botones">
+        <button mat-raised-button color="accent" (click)="this.cambiarTab(1)" *ngIf="this.selTab!=1">Actas de inicio de obra</button>
+        <div *ngIf="this.selTab==1" class="button-activated">Actas de inicio de obra</div>
+        <button mat-raised-button color="accent" (click)="this.cambiarTab(2)" *ngIf="this.selTab!=2">Actas de inicio de interventoría</button>
+        <div *ngIf="this.selTab==2" class="button-activated">Actas de inicio de interventoría</div>
     </div>
-    <app-tabla-actas-de-inicio-de-obra *ngIf="contratoObra"></app-tabla-actas-de-inicio-de-obra>
-    <app-tabla-actas-de-inicio-de-interventoria *ngIf="contratoInterventoria">
-    </app-tabla-actas-de-inicio-de-interventoria>
+    <div *ngIf="this.selTab==1">
+        <app-tabla-actas-de-inicio-de-obra></app-tabla-actas-de-inicio-de-obra>
+    </div>
+    <div *ngIf="this.selTab==2">
+        <app-tabla-actas-de-inicio-de-interventoria></app-tabla-actas-de-inicio-de-interventoria>
+    </div>
 </div>

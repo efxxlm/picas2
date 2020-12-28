@@ -16,6 +16,9 @@ export class ConsideracionesEspecialesComponent implements OnInit {
     reasignacion: ['', Validators.required],
     descripcion: [ null ]
   });
+  editorStyle = {
+    height: '45px'
+  };
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
@@ -50,7 +53,7 @@ export class ConsideracionesEspecialesComponent implements OnInit {
 
     this.guardar.emit(null);
     console.log( this.contratacion );
-
+    
   }
 
   cargarRegistros(){

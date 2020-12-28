@@ -8,15 +8,21 @@
     <h1 class="title-menu--h1">
       Validar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
     </h1>
-    <p class="colorMainColor" style="margin-top: 1em;">
+    <p class="text-primary">
       <span class="mx-2em">
-        <b> Fecha de aprobacion de póliza: </b> {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
+        Fecha de aprobacion de póliza:
+        <b>
+          {{ fechaPoliza | date: 'dd/MM/yyyy' }}
+        </b>
       </span>
-      <span style="margin-left: 2em;">
-        <b> Proyectos asociados: </b> {{ contrato.contratacion.contratacionProyecto.length }}
+      <span class="mx-2em">
+        Proyectos asociados:
+        <b>
+          {{ contrato.contratacion.contratacionProyecto.length }}
+        </b>
       </span>
     </p>
-    <p class="info-container" style="margin-top: 2em;">
+    <p class="info-container">
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
       <span class="info-text en-proceso">En proceso</span>
       <span class="info-text completo">Completo</span>
@@ -118,22 +124,21 @@
                 <mat-radio-button [value]="true" [checked]="perfil['tieneObservaciones'] === true">Sí</mat-radio-button>
                 <mat-radio-button [value]="false" [checked]="perfil['tieneObservaciones'] === false">No</mat-radio-button>
               </mat-radio-group>
-              <span class="required-form-group m-0">*</span>
             </div>
           </div>
           <div class="d-flex align-items-center" *ngIf="perfil['tieneObservaciones'] === true">
             <div class="text-area-quill">
-              <label for="alcanceParticular" class="text-area-quill--label size-label colorMainColor">
+              <label for="alcanceParticular" class="text-area-quill--label">
                 Observaciones a las hojas de vida del contratista de obra
               </label>
               <quill-editor class="quill-editor-style miles" [styles]="editorStyle" [modules]="config"
                 (onContentChanged)="maxLength($event, 1000)" [(ngModel)]="perfil['verificarObservacion']" required>
               </quill-editor>
             </div>
-            <span class="contador miles" *ngIf="perfil['verificarObservacion'] !== null && perfil['verificarObservacion'].length > 0">
+            <span class="contador" *ngIf="perfil['verificarObservacion'].length > 0">
               {{1000 - textoLimpio(perfil['verificarObservacion'])}}
             </span>
-            <span class="contador miles" *ngIf="perfil['verificarObservacion'] === null || perfil['verificarObservacion'].length === 0">
+            <span class="contador" *ngIf="perfil['verificarObservacion'].length === 0">
               1000
             </span>
           </div>

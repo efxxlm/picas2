@@ -23,7 +23,6 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CambiarEstadoPolizaByContratoId(int pContratoId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica);
 
-        Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId);
         Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza();
 
         Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId);
@@ -38,10 +37,8 @@ namespace asivamosffie.services.Interfaces
 
 
         Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario);
+        
 
-        Task EnviarCorreoSupervisor4dPolizaNoAprobada2(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
-
-        Task EnviarCorreoSupervisor4dPolizaNoAprobada(string dominioFront, string mailServer, int mailPort, bool enableSSL, string password, string sender);
 
         //getListPolizaGarantiaByContratoPolizaId    yaaaa y observ yaaaa
 
@@ -55,7 +52,7 @@ namespace asivamosffie.services.Interfaces
         //FechaRevision   datetime
         //EstadoRevisionCodigo    varchar
 
-        Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion, AppSettingsService appSettingsService);
+        Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion);
         Task<Respuesta> InsertEditPolizaGarantia(PolizaGarantia polizaGarantia);
         
 

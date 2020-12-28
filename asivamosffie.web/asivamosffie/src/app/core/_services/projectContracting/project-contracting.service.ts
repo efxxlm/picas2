@@ -64,10 +64,6 @@ export class ProjectContractingService {
 
   getContratacionByContratacionIdWithGrillaProyecto( id: number ){
     return this.http.get<Contratacion>(`${environment.apiUrl}/ProjectContracting/getContratacionByContratacionIdWithGrillaProyecto?pContratacionId=${ id }`);
-  }
-
-  deleteComponenteAportante( pComponenteAportanteId: number ) {
-    return this.http.post( `${ environment.apiUrl }/ProjectContracting/DeleteComponenteAportante`, pComponenteAportanteId );
-  }
+   }
 
 }

@@ -23,9 +23,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Gestionar_Procesos_Contractuales = 31,
 
-        Preconstruccion_Fase_1 = 37,
-
-        Registrar_Requisitos_Tecnicos_Construccion = 41,
+        Preconstruccion_Fase_1 = 37, 
  
 
         DisponibilidadPresupuestal = 30,
@@ -43,13 +41,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Gestionar_controversias_contractuales=47,
 
         Gestionar_procesos_Defensa_Judicial = 52,
-        Gestionar_acta_inicio_fase_2 = 42,
-        Verificar_Requisitos_Tecnicos_Construccion = 45,
-        Registrar_actuaciones_controversias_contractuales=57,
-
-
-        Cargar_enlace_monitoreo=43,
-
 
          Registrar_actuaciones_controversias_contractuales=57,
 

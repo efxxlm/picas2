@@ -1,12 +1,11 @@
 export interface GrillaFaseUnoPreconstruccion {
-  fechaAprobacion: string;
-  numeroContrato: string;
   cantidadProyectosAsociados: number;
-  cantidadProyectosRequisitosAprobados: number;
-  cantidadProyectosRequisitosPendientes: number;
-  estadoCodigo: string;
-  estadoNombre: string;
-  contratoId: number;
+  estadoVerificacionNombre: string;
+  fechaAprobacionPoliza: string;
+  idContrato: number;
+  numeroContrato: string;
+  proyectosCompletos: number;
+  proyectosNoCompletos: number;
   verBotonAprobarInicio: boolean;
 };
 
@@ -30,13 +29,12 @@ interface estadoCodigos {
 };
 
 export interface ContratoModificado {
-  contratacion: Contratacion;
-  fechaPoliza: string;
-  numeroContrato: string;
-}
+  contratacion: Contratacion,
+  fechaPoliza: string,
+  numeroContrato: string
+};
 
 export interface Contrato {
-  
   contratacionId: number;
   fechaTramite: string;
   tipoContratoCodigo: string;
@@ -68,7 +66,6 @@ export interface Contrato {
   contratoObservacion: any[];
   contratoPerfil: ContratoPerfil[];
   contratoPoliza: ContratoPoliza[];
-  fechaAprobacionRequisitosConstruccionInterventor?: string;
 }
 
 interface ContratoPoliza {
@@ -123,7 +120,6 @@ export interface ContratoPerfil {
   registroCompleto?: boolean;
   proyectoId?: number;
   contratoPerfilObservacion?: any[];
-  observaciones?: string;
 }
 
 interface Contratacion {
@@ -148,9 +144,6 @@ interface Contratacion {
 }
 
 export interface ContratacionProyecto2 {
-  
-  estadoSemaforo: string;
-  estadoSemaforoContratacion: string;
   contratacionProyectoId: number;
   contratacionId: number;
   proyectoId: number;
@@ -162,11 +155,9 @@ export interface ContratacionProyecto2 {
   proyecto: Proyecto2;
   contratacionProyectoAportante: any[];
   sesionSolicitudObservacionProyecto: any[];
-  fasePreConstruccionNotMapped?: any;
 }
 
 interface Proyecto2 {
-  
   departamento: string;
   municipio: string;
   proyectoId: number;
@@ -199,7 +190,6 @@ interface Proyecto2 {
   proyectoAportante: any[];
   proyectoPredio: any[];
   proyectoRequisitoTecnico: any[];
-  semaforoGeneral?: string;//just for class colors
 }
 
 interface LocalizacionIdMunicipioNavigation {
@@ -274,20 +264,3 @@ interface Contratista {
   usuarioModificacion: string;
   contratacion: any[];
 }
-
-
-interface TipoObservacionConstruccion{
-  Diagnostico: string;
-  PlanesProgramas: string;
-  ManejoAnticipo: string;
-  ProgramacionObra: string;
-  FlujoInversion: string;
-}
-
-export const TiposObservacionConstruccion: TipoObservacionConstruccion = {
-  Diagnostico: '1',
-  PlanesProgramas: '2',
-  ManejoAnticipo: '3',
-  ProgramacionObra: '4',
-  FlujoInversion: '5',
-};

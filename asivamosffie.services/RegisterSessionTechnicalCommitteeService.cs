@@ -1320,15 +1320,23 @@ namespace asivamosffie.services
 
             ComiteTecnico comiteTecnico = await _context.ComiteTecnico
                  .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
-                    .Include(r => r.SesionInvitado)
+                     .Include(r => r.SesionInvitado)
                      //Para Comite Tecnico
-                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                    .ThenInclude(r => r.SesionSolicitudVoto)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
-                    .ThenInclude(r => r.SesionSolicitudCompromiso)
+                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                     .ThenInclude(r => r.SesionSolicitudVoto)
+                     .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                     .ThenInclude(r => r.SesionSolicitudCompromiso)
                        .ThenInclude(r => r.ResponsableSesionParticipante)
                          .ThenInclude(r => r.Usuario)
-                    .Include(r => r.SesionComiteTema)
+                  //Para Comite Fiduciaria
+                //   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                //      .ThenInclude(r => r.SesionSolicitudVoto)
+                //   .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                //      .ThenInclude(r => r.SesionSolicitudCompromiso)
+                //        .ThenInclude(r => r.ResponsableSesionParticipante)
+                //          .ThenInclude(r => r.Usuario)
+
+                   .Include(r => r.SesionComiteTema)
                       .ThenInclude(r => r.SesionTemaVoto)
                    .Include(r => r.SesionComiteTema)
                       .ThenInclude(r => r.TemaCompromiso)
@@ -1336,8 +1344,6 @@ namespace asivamosffie.services
             //    comiteTecnico.SesionParticipante = sesionParticipantes;
 
             comiteTecnico.SesionComiteTema = comiteTecnico.SesionComiteTema.Where(r => r.Eliminado != true).ToList();
-
-            comiteTecnico.SesionInvitado = comiteTecnico.SesionInvitado.Where( r => r.Eliminado != true ).ToList();
 
             comiteTecnico.SesionComiteTema.ToList().ForEach(ct =>
             {
@@ -1355,6 +1361,12 @@ namespace asivamosffie.services
                 SesionComiteSolicitud.SesionSolicitudCompromiso = SesionComiteSolicitud.SesionSolicitudCompromiso.Where(r => !(bool)r.Eliminado).ToList();
             }
             List<SesionSolicitudVoto> ListSesionSolicitudVotos = _context.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+
+            // foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+            // {
+            //     //SesionComiteSolicitud.SesionSolicitudVoto = SesionComiteSolicitud.SesionSolicitudVoto.Where(r => !(bool)r.Eliminado).ToList();
+            //     SesionComiteSolicitud.SesionSolicitudVoto = ListSesionSolicitudVotos.Where(r => r.SesionComiteSolicitudId == SesionComiteSolicitud.SesionComiteSolicitudId).ToList();
+            // }
 
             foreach (var SesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
             {
@@ -1425,6 +1437,61 @@ namespace asivamosffie.services
 
                 sesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == sesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
             }
+
+            // foreach (SesionComiteSolicitud sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+            // {
+
+            //     switch (sesionComiteSolicitud.TipoSolicitudCodigo)
+            //     {
+            //         case ConstanCodigoTipoSolicitud.Contratacion:
+
+            //             Contratacion contratacion = ListContratacion.Where(r => r.ContratacionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+
+            //             sesionComiteSolicitud.FechaSolicitud = contratacion.FechaCreacion;
+
+            //             sesionComiteSolicitud.NumeroSolicitud = contratacion.NumeroSolicitud;
+
+            //             sesionComiteSolicitud.Contratacion = contratacion;
+
+            //             break;
+
+            //         case ConstanCodigoTipoSolicitud.Evaluación_De_Proceso:
+            //         case ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion:
+            //             sesionComiteSolicitud.FechaSolicitud = ListProcesoSeleccion
+            //               .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
+            //               .FirstOrDefault()
+            //               .FechaCreacion;
+
+            //             sesionComiteSolicitud.NumeroSolicitud = ListProcesoSeleccion
+            //               .Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId)
+            //               .FirstOrDefault()
+            //               .NumeroProceso;
+
+            //             sesionComiteSolicitud.ProcesoSeleccion = ListProcesoSeleccion.Where(r => r.ProcesoSeleccionId == sesionComiteSolicitud.SolicitudId).FirstOrDefault();
+
+            //             break;
+
+            //         case ConstanCodigoTipoSolicitud.Actualizacion_Cronograma_Proceso_Seleccion:
+
+            //             ProcesoSeleccionMonitoreo actualizacionCronograma = _context.ProcesoSeleccionMonitoreo
+            //                                                                     .Where(r => r.ProcesoSeleccionMonitoreoId == sesionComiteSolicitud.SolicitudId)
+            //                                                                     .Include(r => r.ProcesoSeleccion)
+            //                                                                     .FirstOrDefault();
+
+            //             sesionComiteSolicitud.FechaSolicitud = actualizacionCronograma.FechaCreacion;
+
+            //             sesionComiteSolicitud.NumeroSolicitud = actualizacionCronograma.ProcesoSeleccion.NumeroProceso;
+
+            //             sesionComiteSolicitud.ProcesoSeleccionMonitoreo = actualizacionCronograma;
+
+            //             sesionComiteSolicitud.NumeroHijo = actualizacionCronograma.NumeroProceso;
+
+            //             break;
+
+            //     }
+
+            //     sesionComiteSolicitud.TipoSolicitud = TipoComiteSolicitud.Where(r => r.Codigo == sesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre;
+            // }
 
             return comiteTecnico;
         }
@@ -2892,7 +2959,7 @@ namespace asivamosffie.services
 
                                         if (ContratacionProyectoAportante.ComponenteAportante.Count() > 0)
                                         {
-                                            string strTipoUso = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Usos && r.Codigo == ComponenteUso.TipoUsoCodigo)?.FirstOrDefault()?.Nombre;
+                                            string strTipoUso = ListaParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Usos && r.Codigo == ComponenteUso.TipoUsoCodigo).FirstOrDefault().Nombre;
 
                                             RegistrosFuentesUso = RegistrosFuentesUso.Replace("[USO_FUENTES_USO]", strTipoUso);
                                             RegistrosFuentesUso = RegistrosFuentesUso.Replace("[VALOR_USO_FUENTE_USO]", "$" + String.Format("{0:n0}", ComponenteUso.ValorUso.ToString()));
@@ -3203,7 +3270,7 @@ namespace asivamosffie.services
         public byte[] ConvertirPDF(Plantilla pPlantilla)
         {
             string strEncabezado = "";
-            if (!string.IsNullOrEmpty(pPlantilla?.Encabezado?.Contenido))
+            if (!string.IsNullOrEmpty(pPlantilla.Encabezado.Contenido))
             {
                 strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
             }
@@ -4011,33 +4078,14 @@ namespace asivamosffie.services
                                         break;
 
                                     case ConstanCodigoVariablesPlaceHolders.RESULTADO_VOTACION:
-                                        string TextoResultadoVotacion = "";
+                                        string TextoResultadoVotacion = PlantillaVotacionUnanime;
 
-                                        if (
-                                            SesionComiteSolicitud.RequiereVotacion != null && 
-                                            SesionComiteSolicitud.RequiereVotacion.Value == true
-                                            )
+                                        if (SesionComiteSolicitud.RequiereVotacion == null || !(bool)SesionComiteSolicitud.RequiereVotacion)
                                         {
 
-                                            int cantidadAprobado = 0;
-                                            int cantidadNoAprobado = 0;
-
-                                            SesionComiteSolicitud.SesionSolicitudVoto.Where( v => v.Eliminado != true && v.ComiteTecnicoFiduciarioId == null ).ToList().ForEach( ssv => {
-                                                if (ssv.EsAprobado == true)
-                                                    cantidadAprobado++;
-                                                else
-                                                    cantidadNoAprobado++;
-                                            });
-
-                                            if ( cantidadNoAprobado == 0){
-                                                TextoResultadoVotacion = PlantillaVotacionUnanime;
-                                            }else if ( cantidadAprobado > cantidadNoAprobado ){
-                                                TextoResultadoVotacion = PlantillaNoVotacionUnanime;
-                                            } 
-
-                                            TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
-
+                                            TextoResultadoVotacion = PlantillaNoVotacionUnanime;
                                         }
+                                        TextoResultadoVotacion = TextoResultadoVotacion.Replace("[URL_SOPORTES_VOTO]", SesionComiteSolicitud.RutaSoporteVotacion);
 
                                         registrosContratacion = registrosContratacion
                                         .Replace(placeholderDominio.Nombre, TextoResultadoVotacion);

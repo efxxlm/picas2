@@ -16,10 +16,10 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class TablaCrearSolicitudadministrativaComponent implements OnInit {
 
   displayedColumns: string[] = [
-    'fechaSolicitud',
-    'numeroSolicitud',
-    'valorSolicitud',
-    'estadoSolicitudNombre',
+    'fecha',
+    'numero',
+    'valorSolicitado',
+    'estadoSolicitud',
     'id'
   ];
   dataSource = new MatTableDataSource();

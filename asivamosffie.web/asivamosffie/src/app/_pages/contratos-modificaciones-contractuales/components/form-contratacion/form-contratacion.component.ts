@@ -55,6 +55,7 @@ export class FormContratacionComponent implements OnInit {
     this.contratosContractualesSvc.getContratacionId( id )
       .subscribe( ( resp: any ) => {
         this.contratacion = resp;
+        console.log( this.contratacion );
         if ( resp.contrato.length > 0 ) {
           let rutaDocumento;
           if ( resp.contrato[0].rutaDocumento !== undefined ) {
@@ -73,6 +74,7 @@ export class FormContratacionComponent implements OnInit {
             documento: rutaDocumento,
             rutaDocumento: resp.contrato[0].rutaDocumento !== undefined ? resp.contrato[0].rutaDocumento : null
           });
+          console.log( this.form.value );
         };
       } );
   };

@@ -215,7 +215,7 @@
   </form>
 </div>
 
-<div class="animatedDown" *ngIf="mostrarDocumentosDeApropiacion">
+<div *ngIf="mostrarDocumentosDeApropiacion">
   <div class="container text-center">
     <h2 class="title-menu--h2" style="color: var(--mainColor);">
       Valor total del acuerdo: <div *ngIf="valorTotalAcuerdo>0">{{valorTotalAcuerdo | currency:'':'symbol':'3.0'}}</div>

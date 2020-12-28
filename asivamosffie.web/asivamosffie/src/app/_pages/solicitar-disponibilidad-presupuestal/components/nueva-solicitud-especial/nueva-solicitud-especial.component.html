@@ -82,7 +82,7 @@
                                     <input matInput #numeroRadicado type="text" maxlength="15"
                                         formControlName="numeroRadicado" required>
                                 </mat-form-field>
-                                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{15 - numeroRadicado.value.length}}</span>
+                                <span class="contador">{{15 - numeroRadicado.value.length}}</span>
                             </div>
                         </div>
                     </div>
@@ -162,7 +162,7 @@
                                                 formControlName="llaveMEN"
                                                 required>
                                     </mat-form-field>
-                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{8 - llaveMEN.value.length}}</span>
+                                    <span class="contador">{{8 - llaveMEN.value.length}}</span>
                                 </div>
                             </div>
                         </div>
@@ -183,7 +183,7 @@
                                             type="text"
                                             maxlength="10"
                                             formControlName="numeroContrato">-->
-                                        <input matInput #nombre2 type="text" maxlength="10" [formControl]="myFilter" required
+                                        <input matInput #nombre2 type="text" maxlength="1000" [formControl]="myFilter" required
                                             [matAutocomplete]="auto2">
                                         <mat-autocomplete #auto2="matAutocomplete">
                                         <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredContrato  | async"

@@ -16,7 +16,6 @@ namespace asivamosffie.api.Controllers
     {
         private readonly IManagePreContructionActPhase1Service _managePreContruction;
         private readonly IOptions<AppSettings> _settings;
-        private readonly PublicController _publicController;
 
         public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings) {
             _managePreContruction = managePreContructionActPhase1Service;
@@ -34,8 +33,7 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<Contrato> GetContratoByContratoId([FromQuery] int pContratoId)
         {
-            int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-            return await _managePreContruction.GetContratoByContratoId(pContratoId , pUserId);
+            return await _managePreContruction.GetContratoByContratoId(pContratoId);
         }
 
         [HttpGet]
@@ -71,16 +69,14 @@ namespace asivamosffie.api.Controllers
         }
          
         [Route("LoadActa")]
-        [HttpPost]
-        public async Task<Respuesta> LoadActa([FromForm] Contrato pContrato)
+        [HttpPut]
+        public async Task<Respuesta> LoadActa([FromBody] Contrato pContrato, IFormFile pFile)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managePreContruction.LoadActa( pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato,
-                    ToAppSettingsService(_settings)
-                    );
+                respuesta = await _managePreContruction.LoadActa( pContrato, pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato);
                 return respuesta;
 
             }
@@ -99,7 +95,7 @@ namespace asivamosffie.api.Controllers
             try
             {  
                 respuesta = await _managePreContruction.CambiarEstadoActa(pContratoId, pEstadoContrato,
-               HttpContext.User.FindFirst("User").Value, ToAppSettingsService(_settings));
+               HttpContext.User.FindFirst("User").Value);
                 return respuesta;
 
             }
@@ -109,51 +105,14 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
-       
-        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
-        {
-            AppSettingsService appSettingsService = new AppSettingsService
-            {
-                MailPort = appSettings.Value.MailPort,
-                MailServer = appSettings.Value.MailServer,
-                Password = appSettings.Value.Password,
-                Sender = appSettings.Value.Sender
-            };
-            return appSettingsService;
-        }
+
         [HttpGet]
         [Route("GetActaByIdPerfil")]
         public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pPerfilId, int pContratoId)
         {
-            int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId , pUserId , ToAppSettingsService(_settings)), "application/pdf");
+            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId), "application/pdf");
         }
 
-        [HttpGet]
-        [Route("GetListContratoObservacionByContratoId")]
-        public async Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId([FromQuery] int pContratoId)
-        {
-            return await _managePreContruction.GetListContratoObservacionByContratoId(pContratoId);
-        }
-
-        [HttpPut]
-        [Route("CreateEditObservacionesActa")] 
-        public async Task<Respuesta> CreateEditObservacionesActa([FromBody] ContratoObservacion pcontratoObservacion)
-        { 
-            try
-            {
-                pcontratoObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                return await _managePreContruction.CreateEditObservacionesActa(pcontratoObservacion); 
-            }
-            catch (Exception ex)
-            {
-                Respuesta respuesta = new Respuesta
-                {
-                    Data = ex.InnerException.ToString()
-                };
-                return respuesta;
-            }
-        }
  
     }
 }

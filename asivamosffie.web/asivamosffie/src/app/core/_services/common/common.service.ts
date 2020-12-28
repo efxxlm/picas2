@@ -11,8 +11,6 @@ import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstrucc
   providedIn: 'root'
 })
 export class CommonService {
-  
-  
     
   constructor(private http: HttpClient) { }
 
@@ -205,30 +203,6 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=63`);
   }
 
-  listaEstadoRevision(){
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
-  }
-
-  listaProcesosJudiciales() {
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=105`);
-  }
-
-  listaTipoAccionJudicial() {
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=106`);
-  }
-
-  listaJurisdiccion() {
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=116`);
-  }
-
-  listaTipodocumento(){
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=30`);
-  }
-
-  getTipoActuacion() {
-    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=119`);
-  }
-
   public listaUsuarios(){
 
     let lista: Usuario[] = [];
@@ -317,14 +291,7 @@ export class CommonService {
 
     return vigencias;
   }
-
-  public getFileById(id: number) {   
-    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesById?pArchivoCargueId=${id}`, { responseType: "blob" });
-    return retorno;
-  }
 }
-
-
 
 export interface Dominio{
   descripcion?: string;

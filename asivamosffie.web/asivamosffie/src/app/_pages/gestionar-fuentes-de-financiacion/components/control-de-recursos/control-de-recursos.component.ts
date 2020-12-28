@@ -51,7 +51,7 @@ export class ControlDeRecursosComponent implements OnInit {
     this.addressForm = this.fb.group({
       controlRecursoId: [],
       nombreCuenta: [null, Validators.required],
-      numeroCuenta: [null, Validators.required],
+      numeroCuenta: [this.fb.array([]), Validators.required],
       rp: [null],
       vigencia: [null],
       fechaConsignacion: [null, Validators.required],

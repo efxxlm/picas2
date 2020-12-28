@@ -25,13 +25,14 @@ export class ProcesosContractualesService {
             procesos.push( proceso );
           };
         };
+        console.log( procesos );
         return procesos;
       } )
     );
   };
 
   getContratacion ( contratacionId: number ) {
-    return this.http.get<DataSolicitud>( `${ this.url }/GetContratacionByContratacionId?pContratacionId=${ contratacionId }` );
+    return this.http.get<DataSolicitud>( `${ this.url }/GetContratacionByContratacionId/?pContratacionId=${ contratacionId }` );
   };
 
   getDdp ( sesionComiteSolicitudId: number ) {

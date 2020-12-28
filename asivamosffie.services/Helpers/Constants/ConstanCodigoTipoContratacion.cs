@@ -7,11 +7,5 @@
         public const int Obra_Interventoria = 3;
     }
 
-    public static class ConstanCodigoTipoContratacionSTRING
-    {
-        public const string Obra = "obra";
-        public const string Interventoria = "interventoría"; 
-    }
-
-
+ 
 }

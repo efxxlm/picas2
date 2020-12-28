@@ -68,7 +68,7 @@
             </div>
             <div class="col">
               <mat-form-field class="select-width">
-                <mat-select required [(ngModel)]="proyecto.tipoIntervencionCodigo"> <!-- ese campo tiene que ser de selección multiple -->
+                <mat-select required [(ngModel)]="proyecto.tipoIntervencionCodigo">
                   <mat-option *ngFor="let listado of listadoTipoIntervencion" [value]="listado.codigo">
                     {{ listado.nombre }}
                   </mat-option>
@@ -91,7 +91,7 @@
                 <input matInput [(ngModel)]="proyecto.llaveMen" maxlength="8" required type="text"
                   (keypress)="validateKeypressLlave($event)">
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
               matTooltipClass="info-tooltip">{{8 - (proyecto.llaveMen?proyecto.llaveMen.length:0)}}</span>
             </div>
           </div>
@@ -187,7 +187,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput maxlength="15" required type="number" value="{{CodigoDaneIE}}" #codigoDane readonly
+                <input matInput maxlength="15" required type="number" value="{{CodigoDaneIE}}" #codigoDane
                   (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   [matTooltipPosition]="'above'" matTooltip="Espacio diligenciado por el sistema" matTooltipClass="info-tooltip">
               </mat-form-field>
@@ -221,7 +221,7 @@
             </div>
             <div class="col d-flex">
               <mat-form-field class="full-width">
-                <input matInput value="{{codigoDaneSede}}" maxlength="15" required type="number" #codigoDane2 readonly
+                <input matInput value="{{codigoDaneSede}}" maxlength="15" required type="number" required #codigoDane2
                   (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
                   [matTooltipPosition]="'above'" matTooltip="Espacio diligenciado por el sistema" matTooltipClass="info-tooltip">
               </mat-form-field>
@@ -392,7 +392,8 @@
           <mat-form-field class="full-width">
             <input matInput [(ngModel)]="proyecto.predioPrincipal.direccion" maxlength="20" required type="text">
           </mat-form-field>
-          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - (proyecto.predioPrincipal.direccion?proyecto.predioPrincipal.direccion.length:0)}}</span>
+          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
+          matTooltipClass="info-tooltip">{{20 - (proyecto.predioPrincipal.direccion?proyecto.predioPrincipal.direccion.length:0)}}</span>
         </div>
       </div>
       <div class="row">
@@ -424,7 +425,7 @@
                 <input matInput [(ngModel)]="proyecto.predioPrincipal.numeroDocumento" maxlength="20" required
                   type="text">
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
               matTooltipClass="info-tooltip">{{20 - (proyecto.predioPrincipal.numeroDocumento?proyecto.predioPrincipal.numeroDocumento.length:0)}}</span>
             </div>
           </div>
@@ -444,7 +445,7 @@
                   [disabled]="proyecto.predioPrincipal.documentoAcreditacionCodigo!='1'" maxlength="20" required
                   type="text">
               </mat-form-field>
-              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico"
+              <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanúmérico"
                 matTooltipClass="info-tooltip">{{20 - (proyecto.predioPrincipal.cedulaCatastral?proyecto.predioPrincipal.cedulaCatastral.toString().length:0)}}</span>
             </div>
           </div>
@@ -490,9 +491,8 @@
                   <mat-form-field class="full-width">
                     <input matInput [(ngModel)]="predios.predio.numeroDocumento" maxlength="20" required type="text">
                   </mat-form-field>
-                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">
-                    {{20 - (predios.predio.numeroDocumento?predios.predio.numeroDocumento.toString().length:0)}}
-                  </span>
+                  <span
+                    class="contador">{{20 - (predios.predio.numeroDocumento?predios.predio.numeroDocumento.toString().length:0)}}</span>
                 </div>
               </div>
             </div>
@@ -510,9 +510,8 @@
                     <input matInput [(ngModel)]="predios.predio.cedulaCatastral"
                       [disabled]="predios.predio.documentoAcreditacionCodigo!='1'" maxlength="20" required type="text">
                   </mat-form-field>
-                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">
-                    {{20 - (predios.predio.cedulaCatastral?predios.predio.cedulaCatastral.toString().length:0)}}
-                  </span>
+                  <span
+                    class="contador">{{20 - (predios.predio.cedulaCatastral?predios.predio.cedulaCatastral.toString().length:0)}}</span>
                 </div>
               </div>
             </div>

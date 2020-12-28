@@ -79,7 +79,7 @@
                 <mat-form-field class="full-width">
                   <input matInput type="number" min="1" max="100" formControlName="porcentajeAvanceObra" required>
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">%</span>
+                <span class="contador">%</span>
               </div>
             </div>
           </div>
@@ -129,7 +129,7 @@
                 <mat-form-field class="full-width">
                   <input matInput #numeroLicencia type="text" maxlength="12" formControlName="numeroLicencia" required>
                 </mat-form-field>
-                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{12 - numeroLicencia.value.length}}</span>
+                <span class="contador">{{12 - numeroLicencia.value.length}}</span>
               </div>
             </div>
           </div>
