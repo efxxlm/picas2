@@ -1,0 +1,14 @@
+<section class="text-center" *ngIf="seguimientoSemanal !== undefined">
+    <div align="left">
+      <mat-card class="border">
+          <mat-card-content class="mt-1em">
+            <p *ngIf="gestionAlertas.seIdentificaronAlertas === true"><b>¿Se identificaron alertas relevantes en desarrollo de la obra?</b>: Si </p>
+            <p *ngIf="gestionAlertas.seIdentificaronAlertas === false"><b>¿Se identificaron alertas relevantes en desarrollo de la obra?</b>: No </p>
+            <section *ngIf="gestionAlertas.seIdentificaronAlertas === true">
+              <p><b>Alertas relevantes identificadas</b></p>
+              <div [innerHTML]="gestionAlertas.alerta"></div>
+            </section>
+          </mat-card-content>
+      </mat-card>
+    </div>
+  </section>

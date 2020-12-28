@@ -1,0 +1,48 @@
+<section class="text-center" *ngIf="seguimientoSemanal !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b> {{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </b> </p>
+  
+    <div align="left">
+      <mat-card class="border">
+        <mat-card-content class="mt-1em">
+          <p *ngIf="gestionObraCalidad.seRealizaronEnsayosLaboratorio === true"><b>¿Se realizaron ensayos de laboratorio durante la semana?</b>: Si</p>
+          <p *ngIf="gestionObraCalidad.seRealizaronEnsayosLaboratorio === false"><b>¿Se realizaron ensayos de laboratorio durante la semana?</b>: No</p>
+          <p><b>Cantidad de ensayos de laboratorio realizados en la semana</b>: {{ gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length }} </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  
+    <mat-accordion *ngIf="gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0">
+      <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let ensayo of gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio; index as i">
+          <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                Ensayo de laboratorio {{ i + 1 }}
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+  
+          <div align="left">
+            <mat-card class="border">
+                <mat-card-content class="mt-1em">
+                  <p><b>Tipo de ensayo</b>: {{ getTipoEnsayo( ensayo.tipoEnsayoCodigo ) }} </p>
+                  <p><b>Número de muestras</b>: {{ ensayo.numeroMuestras }} </p>
+                  <p><b>Fecha de toma</b>: {{ ensayo.fechaTomaMuestras | date: 'dd/MM/yyyy' }} </p>
+                  <p><b>Fecha proyectada de entrega deresultados</b>: {{ ensayo.fechaEntregaResultados | date: 'dd/MM/yyyy' }} </p>
+                  <p *ngIf="ensayo.realizoControlMedicion === true"><b>¿Se realizó control a los equipos de medición durante la semana?</b>: Si</p>
+                  <p *ngIf="ensayo.realizoControlMedicion === false"><b>¿Se realizó control a los equipos de medición durante la semana?</b>: No</p>
+                  <section *ngIf="ensayo.realizoControlMedicion === true">
+                    <b>Observaciones</b>
+                    <div [innerHTML]="ensayo.observacion"></div>
+                  </section>
+                  <p *ngIf="ensayo.urlSoporteGestion !== undefined"><b>URL con soporte de la gestión de calidad</b>: {{ ensayo.urlSoporteGestion }}</p>
+                  <div class="d-flex justify-content-center mt-1em" *ngIf="ensayo.registroCompletoMuestras === true">
+                    <div style="width: 16%;">
+                        <button mat-raised-button color="accent" type="button" class="btn-table" (click)="getVerDetalleMuestras( ensayo.gestionObraCalidadEnsayoLaboratorioId )">
+                          <small>Ver resultados</small>
+                        </button>
+                    </div>
+                  </div>
+                </mat-card-content>
+            </mat-card>
+          </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </section>

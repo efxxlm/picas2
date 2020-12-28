@@ -4,11 +4,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-tabla-verificar-avance-semanal',
-  templateUrl: './tabla-verificar-avance-semanal.component.html',
-  styleUrls: ['./tabla-verificar-avance-semanal.component.scss']
+  selector: 'app-tabla-validar-avance-semanal',
+  templateUrl: './tabla-validar-avance-semanal.component.html',
+  styleUrls: ['./tabla-validar-avance-semanal.component.scss']
 })
-export class TablaVerificarAvanceSemanalComponent implements OnInit {
+export class TablaValidarAvanceSemanalComponent implements OnInit {
 
     tablaRegistro = new MatTableDataSource();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -21,7 +21,7 @@ export class TablaVerificarAvanceSemanalComponent implements OnInit {
         'institucionEducativa',
         'sede',
         'estadoObra',
-        'estadoVerificacion',
+        'estadoValidacion',
         'gestion'
     ];
     dataTable: any[] = [
@@ -33,8 +33,8 @@ export class TablaVerificarAvanceSemanalComponent implements OnInit {
             institucionEducativa: 'María Inmaculada',
             sede: 'Sede 2',
             estadoObra: 'Con ejecución normal',
-            estadoVerificacion: 'Avance semanal verificado',
-            contratacionProyectoId: 1
+            estadoValidacion: 'Sin validación del supervisor',
+            contratacionProyectoId: 131
         }
     ];
 
