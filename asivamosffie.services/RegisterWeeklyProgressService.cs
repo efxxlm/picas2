@@ -17,7 +17,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Microsoft.EntityFrameworkCore.Internal;
 using asivamosffie.services.Helpers.Constants;
-
+  
 namespace asivamosffie.services
 {
     public class RegisterWeeklyProgressService : IRegisterWeeklyProgressService
