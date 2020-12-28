@@ -1,0 +1,15 @@
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style" *ngFor="let cont of this.dataContrato; let i = index">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                {{cont.numeroContrato}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div align="center">
+            <p class="info-sub-title">
+                <span>Nombre del contratista: <b>{{cont.nombreContratista}}</b> Proyectos asociados: <b>{{cont.numeroProyectosAsociados}}</b></span>
+            </p>
+        </div>
+        <app-tabla-general-avance-obra [dataTableServ]="cont.lstProyectoGrilla"></app-tabla-general-avance-obra>
+    </mat-expansion-panel>
+</mat-accordion>

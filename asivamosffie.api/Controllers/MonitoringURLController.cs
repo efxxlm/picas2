@@ -25,13 +25,13 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
-        [Route("GetListProyects")]
-        [HttpGet]
-        public async Task<List<ProyectoGrilla>> GetListProyects()
-        {
-            var respuesta = await _monitoringURLService.GetListProyects();
-            return respuesta;
-        }
+        //[Route("GetListProyects")]
+        //[HttpGet]
+        //public async Task<List<ProyectoGrilla>> GetListProyects()
+        //{
+        //    var respuesta = await _monitoringURLService.GetListProyects();
+        //    return respuesta;
+        //}
 
         [Route("GetListContratoProyectos")]
         [HttpGet]
@@ -40,7 +40,6 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _monitoringURLService.GetListContratoProyectos();
             return respuesta;
         }
-
         [HttpPost]
         [Route("EditarURLMonitoreo")]        
         public async Task<IActionResult> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo)

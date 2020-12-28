@@ -294,3 +294,11 @@ div.mat-select-arrow {
 .mat-sin-borde .mat-form-field-underline {
   background-color: transparent;
 }
+
+.noBorderForm{
+    height: 0px;
+}
+
+.noBorderForm:focus{
+    height: 0px;
+}
