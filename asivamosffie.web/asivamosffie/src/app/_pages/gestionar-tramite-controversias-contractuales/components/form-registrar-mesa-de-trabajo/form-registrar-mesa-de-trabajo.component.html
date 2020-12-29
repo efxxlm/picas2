@@ -110,7 +110,7 @@
                                     formControlName="diasVencimientoTerminos" required>
                             </mat-form-field>
                             <span class="contador miles" *ngIf="addressForm.controls.diasVencimientoTerminos.value">
-                                {{7 - textoLimpio(addressForm.controls.diasVencimientoTerminos.value)}}
+                                {{7 - textoLimpio(addressForm.controls.diasVencimientoTerminos.value,7)}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.diasVencimientoTerminos.value">
                                 7
