@@ -5,7 +5,8 @@
     Cargar sitio web {{this.llaveMen}}
 </h1>
 <div class="centerIng2">
-    <p>{{this.departamento}} {{this.municipio}} {{this.instEdu}} {{this.sede}}</p>
+    <p><b>{{this.departamento}}&nbsp;&nbsp;{{this.municipio}}&nbsp;&nbsp;{{this.instEdu}}&nbsp;&nbsp;{{this.sede}}</b>
+    </p>
 </div>
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <div class="flex-editor mt-2em">
@@ -15,13 +16,20 @@
                     URL para monitoreo en línea
                 </mat-card-title>
             </mat-card-header>
-            <mat-card-content>
+            <mat-card-content style="height: 75px;">
                 <!--
                 <mat-form-field class="full-width noBorderForm">
-                    <input matInput #urlMonitoreo type="text" class="alignLeft" formControlName="urlMonitoreo" maxlength="300" required>
-                  </mat-form-field>
-                -->
-                <input matInput #urlMonitoreo type="text" class="alignLeft" formControlName="urlMonitoreo" maxlength="300"> 
+                    <textarea matInput formControlName="urlMonitoreo" #urlMonitoreo type="text" style="margin: 0px; width: 100%;border: none;height: auto;" maxlength="300" required>
+                    </textarea>
+                </mat-form-field>
+                <span class="required-form-group">*</span>
+            Area de texto, consultar con QA
+                <textarea matInput formControlName="urlMonitoreo" #urlMonitoreo type="text"
+                    style="margin: 0px; width: 100%;border: none;height: auto;" maxlength="300" required>
+                    </textarea>
+            -->
+                <input matInput #urlMonitoreo type="text" class="alignLeft" formControlName="urlMonitoreo"
+                    maxlength="300">
                 <span class="required-form-group">*</span>
             </mat-card-content>
         </mat-card>
@@ -34,9 +42,8 @@
     </div>
     <div class="text-center">
         <div class="mtop">
-            <button mat-raised-button color="accent"  type="submit" [disabled]="!addressForm.value.urlMonitoreo">Cargar</button>
+            <button mat-raised-button color="accent" type="submit"
+                [disabled]="!addressForm.value.urlMonitoreo">Cargar</button>
         </div>
     </div>
 </form>
-
-
