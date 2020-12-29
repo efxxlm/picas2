@@ -957,9 +957,18 @@ namespace asivamosffie.services
                 List<ControversiaContractual> ListControversiasContractuales = _context.ControversiaContractual
                     .Where(r => !(bool)r.Eliminado
                     && r.EsRequiereComite == true
-                    && r.EstadoCodigo == "6"
+                    && r.EstadoCodigo == ConstanCodigoEstadoControversiasContractuales.EnviadaAComite
                     && r.FechaSolicitud < pFechaOrdenDelDia
                     )
+                    .OrderByDescending(r => r.ControversiaContractualId).ToList();
+
+                List<ControversiaActuacion> ListControversiasActuaciones = _context.ControversiaActuacion
+                    .Where(r => !(bool)r.Eliminado
+                    && r.EsRequiereComite == true
+                    //&& r.EstadoAvanceTramiteCodigo EstadoCodigo == "6"
+                    && r.FechaActuacion < pFechaOrdenDelDia
+                    )
+                    .Include( r => r.ControversiaContractual )
                     .OrderByDescending(r => r.ControversiaContractualId).ToList();
 
                 //Quitar los que ya estan en sesionComiteSolicitud
@@ -1004,6 +1013,14 @@ namespace asivamosffie.services
                                                                  )
                                                             .Select(r => r.SolicitudId).Distinct().ToList();
 
+                List<int> ListIdControversiasActuaciones = _context.SesionComiteSolicitud
+                                                            .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales &&
+                                                                r.Eliminado != true &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico
+                                                                 )
+                                                            .Select(r => r.SolicitudId).Distinct().ToList();
+
                 //Se comentan ya que no esta listo el caso de uso
                 //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
                 //List<SesionComiteSolicitud> ListSesionComiteSolicitudNovedadContractual = _context.SesionComiteSolicitud.ToList();
@@ -1015,6 +1032,7 @@ namespace asivamosffie.services
                 ListProcesoSeleccionEvaluacion.RemoveAll(item => ListIdProcesosSeleccionEvaluacion.Contains(item.ProcesoSeleccionId));
                 ListActualizacionCronograma.RemoveAll(item => ListIdActualizacionCronograma.Contains(item.ProcesoSeleccionMonitoreoId));
                 ListControversiasContractuales.RemoveAll(item => ListIdControversiasContractuales.Contains(item.ControversiaContractualId));
+                ListControversiasActuaciones.RemoveAll(item => ListIdControversiasActuaciones.Contains(item.ControversiaActuacionId));
 
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
@@ -1076,6 +1094,18 @@ namespace asivamosffie.services
                         NumeroSolicitud = controversiaContractual.NumeroSolicitud,
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.ControversiasContractuales).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.ControversiasContractuales
+                    });
+                };
+
+                foreach (var controversiaActuacion in ListControversiasActuaciones)
+                {
+                    ListValidacionSolicitudesContractualesGrilla.Add(new
+                    {
+                        Id = controversiaActuacion.ControversiaActuacionId,
+                        FechaSolicitud = Convert.ToDateTime(controversiaActuacion.FechaActuacion.Value.ToString("yyyy-MM-dd")),
+                        NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud,
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales
                     });
                 };
 
@@ -1449,6 +1479,7 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.NumeroHijo = actualizacionCronograma.NumeroProceso;
 
                         break;
+                    
                     case ConstanCodigoTipoSolicitud.ControversiasContractuales:
 
                         ControversiaContractual controversiaContractual = _context.ControversiaContractual
@@ -1458,6 +1489,21 @@ namespace asivamosffie.services
                         sesionComiteSolicitud.FechaSolicitud = controversiaContractual.FechaSolicitud;
 
                         sesionComiteSolicitud.NumeroSolicitud = controversiaContractual.NumeroSolicitud;
+
+                    break;
+
+                    case ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales:
+
+                        ControversiaActuacion controversiaActuacion = _context.ControversiaActuacion
+                                                                                .Where(r => r.ControversiaActuacionId == sesionComiteSolicitud.SolicitudId)
+                                                                                .Include( r => r.ControversiaContractual )
+                                                                                .FirstOrDefault();
+
+                        sesionComiteSolicitud.FechaSolicitud = controversiaActuacion.FechaActuacion;
+
+                        sesionComiteSolicitud.NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud;
+
+                        sesionComiteSolicitud.NumeroHijo = "ACT controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000");
 
                     break;
 
@@ -2269,6 +2315,34 @@ namespace asivamosffie.services
                 }
 
                 #endregion
+
+                #region Actuaciones Controversia Contractual
+
+                if (pSesionComiteSolicitud.TipoSolicitud == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales)
+                {
+                    ControversiaActuacion controversiaActuacion= _context.ControversiaActuacion.Find(sesionComiteSolicitudOld.SolicitudId);
+
+                    if (controversiaActuacion != null)
+                    {
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Aprobada_por_comite_tecnico)
+                        {
+                            //controversiaActuacion.EstadoAvanceTramiteCodigo = ConstanCodigoEstadoControversiasContractuales.AprobadaPorComiteTecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Rechazada_por_comite_tecnico)
+                        {
+                            //controversiaActuacion.EstadoAvanceTramiteCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteTecnico;
+                        }
+                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
+                        {
+                            //controversiaActuacion.EstadoAvanceTramiteCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteTecnico;
+                        }
+
+                    }
+
+                }
+
+                #endregion
+
 
                 foreach (var SesionSolicitudCompromiso in pSesionComiteSolicitud.SesionSolicitudCompromiso)
                 {
