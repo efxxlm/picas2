@@ -12,6 +12,7 @@ namespace asivamosffie.model.Models
             SeguimientoSemanalAvanceFinanciero = new HashSet<SeguimientoSemanalAvanceFinanciero>();
             SeguimientoSemanalAvanceFisico = new HashSet<SeguimientoSemanalAvanceFisico>();
             SeguimientoSemanalGestionObra = new HashSet<SeguimientoSemanalGestionObra>();
+            SeguimientoSemanalObservacion = new HashSet<SeguimientoSemanalObservacion>();
             SeguimientoSemanalPersonalObra = new HashSet<SeguimientoSemanalPersonalObra>();
             SeguimientoSemanalRegistrarComiteObra = new HashSet<SeguimientoSemanalRegistrarComiteObra>();
             SeguimientoSemanalRegistroFotografico = new HashSet<SeguimientoSemanalRegistroFotografico>();
@@ -44,6 +45,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<SeguimientoSemanalAvanceFinanciero> SeguimientoSemanalAvanceFinanciero { get; set; }
         public virtual ICollection<SeguimientoSemanalAvanceFisico> SeguimientoSemanalAvanceFisico { get; set; }
         public virtual ICollection<SeguimientoSemanalGestionObra> SeguimientoSemanalGestionObra { get; set; }
+        public virtual ICollection<SeguimientoSemanalObservacion> SeguimientoSemanalObservacion { get; set; }
         public virtual ICollection<SeguimientoSemanalPersonalObra> SeguimientoSemanalPersonalObra { get; set; }
         public virtual ICollection<SeguimientoSemanalRegistrarComiteObra> SeguimientoSemanalRegistrarComiteObra { get; set; }
         public virtual ICollection<SeguimientoSemanalRegistroFotografico> SeguimientoSemanalRegistroFotografico { get; set; }

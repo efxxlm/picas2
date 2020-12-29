@@ -6,7 +6,6 @@ namespace asivamosffie.model.Models
     public partial class Temp
     {
         public string TipoContrato { get; set; }
-        public string LlaveMen { get; set; }
         public string NumeroContrato { get; set; }
         public int ContratacionProyectoId { get; set; }
         public string TipoIntervencion { get; set; }
