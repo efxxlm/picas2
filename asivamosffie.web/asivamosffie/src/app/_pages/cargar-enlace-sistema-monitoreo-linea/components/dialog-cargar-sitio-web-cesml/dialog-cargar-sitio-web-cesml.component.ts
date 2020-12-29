@@ -70,9 +70,6 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
   onSubmit(){
     this.services.EditarURLMonitoreo(this.idProyecto,this.addressForm.value.urlMonitoreo).subscribe(resp=>{
       if(resp.code=="200"){
-        this.services.GetListContratoProyectos().subscribe(data=>{
-          this.services.loadDataItems.next(data);
-        });
         this.openDialog('',resp.message);
         this.close();
       }
@@ -82,6 +79,6 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
     });
   }
   close(){
-    this.matDialogRef.close('cancel');
+    this.matDialogRef.close('aceptado');
   }
 }

@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { DialogCargarSitioWebCesmlComponent } from '../dialog-cargar-sitio-web-cesml/dialog-cargar-sitio-web-cesml.component';
 
 @Component({
@@ -26,7 +27,7 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
     'sede',
     'gestion'
   ];
-  constructor(public dialog: MatDialog) { }
+  constructor(private router: Router, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     let incompleto = 0;
@@ -62,5 +63,12 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
     dialogConfig.width = '45%';
     dialogConfig.data = { id: id, llaveMen: llaveMen, departamento: departamento, municipio: municipio, instEdu: instEdu, sede: sede, web: web };
     const dialogRef = this.dialog.open(DialogCargarSitioWebCesmlComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(value => {
+      if (value == 'aceptado') {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(
+          () => this.router.navigate(['/cargarEnlaceMonitoreoEnLinea'])
+        );
+      }
+    });
   }
 }
