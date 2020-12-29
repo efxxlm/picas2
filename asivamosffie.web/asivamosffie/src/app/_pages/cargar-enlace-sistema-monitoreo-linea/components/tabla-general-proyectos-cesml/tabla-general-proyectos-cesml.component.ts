@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,6 +12,7 @@ import { DialogCargarSitioWebCesmlComponent } from '../dialog-cargar-sitio-web-c
 })
 export class TablaGeneralProyectosCesmlComponent implements OnInit {
   @Input () dataTableServ:any;
+  @Output() estadoSemaforo = new EventEmitter<string>();
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -63,6 +64,22 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
+    let incompleto = 0;
+    let completo = 0;
+    for(let proy of this.dataTableServ){
+      if(proy.urlMonitoreo=="" || proy.urlMonitoreo==null || proy.urlMonitoreo==undefined){
+        incompleto++;
+      }
+      else{
+        completo++;
+      }
+    }
+    if(completo == this.dataTableServ.length){
+      this.estadoSemaforo.emit('completo');
+    }
+    else{
+      this.estadoSemaforo.emit('sin-diligenciar');
+    }
     this.dataSource = new MatTableDataSource(this.dataTableServ);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

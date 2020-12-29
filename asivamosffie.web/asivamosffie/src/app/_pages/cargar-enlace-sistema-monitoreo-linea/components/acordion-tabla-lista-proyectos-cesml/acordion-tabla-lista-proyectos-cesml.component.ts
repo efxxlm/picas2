@@ -34,12 +34,7 @@ export class AcordionTablaListaProyectosCesmlComponent implements OnInit {
   }
 
   loadData(data){
-    let incompleto = 0;
-    let completo = 0;
     this.dataContrato = data;
-    for(let proyect of data){
-
-    }
   }
 
 }
