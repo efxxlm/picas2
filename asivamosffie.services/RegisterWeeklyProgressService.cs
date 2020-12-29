@@ -125,6 +125,7 @@ namespace asivamosffie.services
 
                        .FirstOrDefaultAsync();
 
+                    seguimientoSemanal.SeguimientoSemanalObservacion = null;
 
                     List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
@@ -284,6 +285,7 @@ namespace asivamosffie.services
 
                        .FirstOrDefaultAsync();
 
+                    seguimientoSemanal.SeguimientoSemanalObservacion = null;
 
                     List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
