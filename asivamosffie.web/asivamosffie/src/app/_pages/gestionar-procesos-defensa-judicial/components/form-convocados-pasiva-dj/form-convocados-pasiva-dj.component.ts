@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { DefensaJudicial } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
+import { DefensaJudicial, DefensaJudicialService, DemandadoConvocado } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-form-convocados-pasiva-dj',
@@ -21,30 +25,20 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
     ]
   };
   tiposIdentificacionArray = [
-    { name: 'Cedula de ciudadanía', value: '1' },
-    { name: 'Cedula de extranjería', value: '2' },
   ];
   departamentoArray = [
-    { name: 'Antioquia', value: '1' },
-    { name: 'Atlantico', value: '2' },
   ];
   municipioArray = [
-    { name: 'Soledad', value: '1' },
-    { name: 'Amalfi', value: '2' },
   ];
   tipoAccionArray = [
-    { name: 'Reparacion Directa', value: '1' },
-    { name: 'Reparacion Indirecta', value: '2' },
   ];
   jurisdiccionArray = [
-    { name: 'Ordinaria', value: '1' },
-    { name: 'Extraordinaria', value: '2' },
   ];
   intanciasArray = [
-    { name: 'Primera instancia', value: '1' },
-    { name: 'Segunda instancia', value: '2' },
   ];
-  constructor ( private fb: FormBuilder ) {
+  constructor ( private fb: FormBuilder,public commonService:CommonService,
+    public defensaService:DefensaJudicialService,
+    public dialog: MatDialog, private router: Router  ) {
     this.crearFormulario();
   }
 
@@ -60,6 +54,18 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.commonService.listaTipodocumento().subscribe(response=>{
+      this.tiposIdentificacionArray=response;
+    });
+    this.commonService.listaDepartamentos().subscribe(response=>{
+      this.departamentoArray=response;
+    });
+    this.commonService.listaTipoAccionJudicial().subscribe(response=>{
+      this.tipoAccionArray=response;
+    });
+    this.commonService.listaEtapaJudicial().subscribe(response=>{
+      this.intanciasArray=response;
+    });
     this.formContratista.get( 'numeroContratos' ).valueChanges
       .subscribe( value => {
         this.perfiles.clear();
@@ -144,6 +150,69 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
 
   guardar () {
     console.log( this.formContratista );
+    let defContraProyecto:DemandadoConvocado[]=[];
+    for(let perfil of this.perfiles.controls){
+      defContraProyecto.push({
+        nombre:perfil.get("nomConvocado").value,
+        tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
+        numeroIdentificacion:perfil.get("numIdentificacion").value,
+        convocadoAutoridadDespacho:perfil.get("despacho").value,
+        localizacionIdMunicipio:perfil.get("municipio").value,
+        radicadoDespacho:perfil.get("radicadoDespacho").value,
+        fechaRadicado:perfil.get("fechaRadicadoDespacho").value,
+        medioControlAccion:perfil.get("accionAEvitar").value,
+        etapaProcesoFfiecodigo:perfil.get("etapaProcesoFFIE").value,
+        caducidadPrescripcion:perfil.get("caducidad").value,
+        esConvocado:true//lo es para este modulo
+      });
+    };
+    
+    let defensaJudicial=this.defensaJudicial;
+    if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
+    {
+      defensaJudicial={
+        defensaJudicialId:this.defensaJudicial.defensaJudicialId,
+        //legitimacionCodigo:this.legitimacion,
+        tipoProcesoCodigo:this.tipoProceso,
+        //cantContratos:this.formContratista.get( 'numeroContratos' ).value,
+        esLegitimacionActiva:this.legitimacion,
+        esCompleto:false,      
+      };
+    }
+    defensaJudicial.demandadoConvocado=defContraProyecto;
+    
+      console.log(defensaJudicial);
+      this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
+        response=>{
+          this.openDialog('', `<b>${response.message}</b>`,true,response.data?response.data.defensaJudicialId:0);
+        }
+      );
+
   }
+
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+          if(id>0)
+          {
+            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
+          }                  
+      });
+    }
+  }
+
+  changeDepartamento(id: string | number) {
+    console.log(this.perfiles.controls[id]);
+    this.commonService.listaMunicipiosByIdDepartamento(this.perfiles.controls[id]
+      .get('departamento').value).subscribe(mun => {
+        this.municipioArray=mun;
+        //this.perfiles.controls[id].get('municipios').setValue(mun);
+      });
+  }  
 
 }

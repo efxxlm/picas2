@@ -12,8 +12,6 @@ import { estadosPreconstruccion } from '../../../_interfaces/faseUnoPreconstrucc
 })
 export class CommonService {
   
-  
-  
     
   constructor(private http: HttpClient) { }
 
@@ -317,6 +315,11 @@ export class CommonService {
   listaProximaActuacionRequerida(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=103`);
   }
+
+  listaEtapaJudicial() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=124`);
+  }
+
   vigenciasDesde2015(): number[]{
     const fecha = new Date();
     let vigencias: number[]=[];

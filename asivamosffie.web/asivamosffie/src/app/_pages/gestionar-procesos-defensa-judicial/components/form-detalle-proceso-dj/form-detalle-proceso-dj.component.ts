@@ -64,6 +64,7 @@ export class FormDetalleProcesoDjComponent implements OnInit {
       this.addressForm.get("pretensiones").setValue(this.defensaJudicial.pretensiones);
       this.addressForm.get("cuantiaPerjuicios").setValue(this.defensaJudicial.cuantiaPerjuicios);
       this.addressForm.get("requeridoParticipacionSupervisor").setValue(this.defensaJudicial.esRequiereSupervisor);
+      
 
   }
   

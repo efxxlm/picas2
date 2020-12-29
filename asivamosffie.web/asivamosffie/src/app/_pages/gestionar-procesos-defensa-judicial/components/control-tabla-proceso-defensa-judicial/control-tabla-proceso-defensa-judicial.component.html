@@ -44,7 +44,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Gestión </th>
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoProcesoCodigo === '1'">
+                    *ngIf="element.estadoProcesoCodigo === '1' && element.vaAProcesoJudicial">
                     Enviar proceso a comité técnico
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
@@ -53,6 +53,7 @@
                     Ver detalle/Editar
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
+                (click)="eliminar(element.defensaJudicialId)"
                     *ngIf="element.estadoProcesoCodigo === '1'">
                     Eliminar
                 </button>

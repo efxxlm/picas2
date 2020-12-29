@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 @Component({
   selector: 'app-control-tabla-proceso-defensa-judicial',
   templateUrl: './control-tabla-proceso-defensa-judicial.component.html',
@@ -18,7 +20,7 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
     
   ]
   constructor(private router: Router,
-    private defensaServices:DefensaJudicialService) { }
+    private defensaServices:DefensaJudicialService,public dialog: MatDialog, ) { }
 
   ngOnInit(): void {
     this.defensaServices.GetListGrillaProcesosDefensaJudicial().subscribe(
@@ -59,4 +61,27 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
       anchor.click();
     });
   }
+
+  eliminar(id)
+  {
+    this.defensaServices.EliminarDefensaJudicial(id)
+    .subscribe(respuesta => {
+      this.openDialog("",respuesta.message,true);
+    });
+  }
+
+
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+          location.reload();             
+      });
+    }
+  }
+
 }

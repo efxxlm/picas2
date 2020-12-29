@@ -60,7 +60,7 @@
                                     formControlName="numeroRadicadoSAC" required>
                             </mat-form-field>
                             <span class="contador miles" *ngIf="addressForm.controls.numeroRadicadoSAC.value">
-                                {{10 - textoLimpio(addressForm.controls.numeroRadicadoSAC.value,10)}}
+                                {{10 - (addressForm.get('numeroRadicadoSAC').value?addressForm.get('numeroRadicadoSAC').value.toString().length:0)}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
                                 10

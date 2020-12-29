@@ -5,7 +5,9 @@ using System.Text;
 namespace asivamosffie.model.APIModels
 {
    public class GrillaProcesoDefensaJudicial
-    {        
+    {
+        public bool? VaAProcesoJudicial { get; set; }
+
         public int DefensaJudicialId { get; set; }
         public string FechaRegistro { get; set; }
         public string LegitimacionPasivaActiva { get; set; }

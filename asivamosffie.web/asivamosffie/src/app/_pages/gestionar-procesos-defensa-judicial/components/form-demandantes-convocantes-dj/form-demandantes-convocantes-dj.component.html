@@ -66,8 +66,8 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="tipoIdentificacion" required>
-                                            <mat-option *ngFor="let contr of tiposIdentificacionArray" [value]="contr.value">
-                                                {{ contr.name }}
+                                            <mat-option *ngFor="let contr of tiposIdentificacionArray" [value]="contr.codigo">
+                                                {{ contr.nombre }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -148,7 +148,8 @@
                 Demandados
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-demandados-dj></app-form-demandados-dj>
+        <app-form-demandados-dj [defensaJudicial]="defensaJudicial"
+        ></app-form-demandados-dj>
     </mat-expansion-panel>
 </mat-accordion>
 <mat-accordion  *ngIf="this.addressForm.value.demandaContraFFIE==false">
@@ -158,6 +159,6 @@
                 Convocados
             </mat-panel-title>
         </mat-expansion-panel-header>
-        <app-form-convocados-pasiva-dj></app-form-convocados-pasiva-dj>
+        <app-form-convocados-pasiva-dj [defensaJudicial]="defensaJudicial"></app-form-convocados-pasiva-dj>
     </mat-expansion-panel>
 </mat-accordion>

@@ -23,7 +23,8 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   detalle_class:number=0;
   convocados_class:number=0;
   soporte_class:number=0;
-  ficha_class:number=0;
+  ficha_class:number=3;
+  
 
   constructor(private fb: FormBuilder, public dialog: MatDialog, 
     public commonServices: CommonService,
@@ -64,13 +65,23 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   }
   estaIncompletoficha(defensaJudicial: DefensaJudicial): number {
     let retorno:number=0;
-    if(defensaJudicial>0)
+    if((this.estaIncompletocontratos(defensaJudicial)+
+    this.estaIncompletoconvocados(defensaJudicial)+
+    this.estaIncompletodetalle(defensaJudicial))==6)
+    {
+      if(defensaJudicial.fichaEstudio.length++>0)
       {
         retorno= 2;
       }
       else{       
       retorno=1;
       }    
+    }
+    else
+    {
+      retorno=3;
+    }
+    
     return retorno;
   }
   estaIncompletoconvocados(defensaJudicial: DefensaJudicial): number {

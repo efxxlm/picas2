@@ -46,8 +46,8 @@
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="tipoIdentificacion" required>
                                             <mat-option *ngFor="let contr of tiposIdentificacionArray"
-                                                [value]="contr.value">
-                                                {{ contr.name }}
+                                                [value]="contr.codigo">
+                                                {{ contr.nombre }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -97,9 +97,9 @@
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
-                                        <mat-select formControlName="departamento" required>
-                                            <mat-option *ngFor="let contr of departamentoArray" [value]="contr.value">
-                                                {{ contr.name }}
+                                        <mat-select formControlName="departamento" class="capitalize" (selectionChange)="changeDepartamento(i)" required>
+                                            <mat-option class="capitalize" *ngFor="let contr of departamentoArray" [value]="contr.localizacionId">
+                                                {{ contr.descripcion }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -116,8 +116,8 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="municipio" required>
-                                            <mat-option *ngFor="let contr of municipioArray" [value]="contr.value">
-                                                {{ contr.name }}
+                                            <mat-option class="capitalize"  *ngFor="let contr of municipioArray" [value]="contr.localizacionId">
+                                                {{ contr.descripcion }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -200,8 +200,8 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="etapaProcesoFFIE" required>
-                                            <mat-option *ngFor="let contr of intanciasArray" [value]="contr.value">
-                                                {{ contr.name }}
+                                            <mat-option *ngFor="let contr of intanciasArray" [value]="contr.codigo">
+                                                {{ contr.nombre }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>

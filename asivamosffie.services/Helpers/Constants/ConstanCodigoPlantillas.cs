@@ -72,6 +72,7 @@
 
         Controversia_Contractual = 59,
         Ficha_Estudio_Defensa_Judicial = 60,
-        Registro_Proyectos_Acta = 61
+        Registro_Proyectos_Acta = 61,
+        Ficha_estudio_tr_contratos=62
     }
 }

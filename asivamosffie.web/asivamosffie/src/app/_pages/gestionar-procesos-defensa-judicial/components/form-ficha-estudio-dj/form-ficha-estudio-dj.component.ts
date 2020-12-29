@@ -1,4 +1,4 @@
-import { Component, Input, OnInit,AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -52,16 +52,31 @@ export class FormFichaEstudioDjComponent implements OnInit {
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
 
-  ngAngAfterViewInit(){
-    this.cargarRegistro();
-  }fter
+  ngAfterViewInit(){
+    setTimeout(()=>{                       
+      this.cargarRegistro();}, 5000);
+  }
 
   cargarRegistro() {
     //this.ngOnInit().then(() => {
-      console.log("form");
+      console.log("form...");
       console.log(this.defensaJudicial);
       console.log(this.legitimacion);
       console.log(this.tipoProceso);      
+      this.addressForm.get("antecedentes").setValue(this.defensaJudicial.fichaEstudio[0].antecedentes);
+      this.addressForm.get("hechosRelevantes").setValue(this.defensaJudicial.fichaEstudio[0].hechosRelevantes);
+      this.addressForm.get("jurisprudenciaDoctrina").setValue(this.defensaJudicial.fichaEstudio[0].jurisprudenciaDoctrina);
+      this.addressForm.get("decisionComite").setValue(this.defensaJudicial.fichaEstudio[0].decisionComiteDirectrices);
+      this.addressForm.get("analisisJuridico").setValue(this.defensaJudicial.fichaEstudio[0].analisisJuridico);
+      this.addressForm.get("recomendaciones").setValue(this.defensaJudicial.fichaEstudio[0].recomendaciones);
+      this.addressForm.get("procesoFichaComite").setValue(this.defensaJudicial.fichaEstudio[0].esPresentadoAnteComiteFfie);
+      this.addressForm.get("fechaComiteDefensa").setValue(this.defensaJudicial.fichaEstudio[0].fechaComiteDefensa);
+      this.addressForm.get("recomendacionFinal").setValue(this.defensaJudicial.fichaEstudio[0].recomendacionFinalComite);
+      this.addressForm.get("aperturaFormalProceso").setValue(this.defensaJudicial.fichaEstudio[0].esAprobadoAperturaProceso);
+      this.addressForm.get("tipoActuacionRecomendada").setValue(this.defensaJudicial.fichaEstudio[0].tipoActuacionCodigo);
+      this.addressForm.get("actuacionRecomendadaAlComite").setValue(this.defensaJudicial.fichaEstudio[0].esActuacionTramiteComite);
+      this.addressForm.get("urlSoporte").setValue(this.defensaJudicial.fichaEstudio[0].rutaSoporte);
+
   }
 
   ngOnInit(): void {
@@ -128,6 +143,7 @@ export class FormFichaEstudioDjComponent implements OnInit {
       esAprobadoAperturaProceso:this.addressForm.get("aperturaFormalProceso").value,
       tipoActuacionCodigo:this.addressForm.get("tipoActuacionRecomendada").value,
       esActuacionTramiteComite:this.addressForm.get("actuacionRecomendadaAlComite").value,
+      rutaSoporte:this.addressForm.get("urlSoporte").value,
     }];
     
       console.log(defensaJudicial);

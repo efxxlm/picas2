@@ -207,11 +207,10 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       defensaJudicial={
         defensaJudicialId:this.defensaJudicial.defensaJudicialId,
         tipoProcesoCodigo:this.tipoProceso,
-        esLegitimacionActiva:this.legitimacion,  
-        cantContratos:this.formContratista.get( 'numeroContratos' ).value,
-        
+        esLegitimacionActiva:this.legitimacion,
       };
     }
+    defensaJudicial.cantContratos=this.formContratista.get( 'numeroContratos' ).value;
     defensaJudicial.defensaJudicialContratacionProyecto=defContraProyecto;
       console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(

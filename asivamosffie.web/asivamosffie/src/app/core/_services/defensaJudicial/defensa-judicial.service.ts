@@ -66,6 +66,7 @@ export class DefensaJudicialService {
 
 export interface DefensaJudicial{
   
+  
   defensaJudicialId?:number,
   legitimacionCodigo?:string,
   tipoProcesoCodigo?:string,
@@ -84,8 +85,12 @@ export interface DefensaJudicial{
   urlSoporteProceso?:string,
   defensaJudicialContratacionProyecto?:DefensaJudicialContratacionProyecto[],
   demandadoConvocado?:DemandadoConvocado[],
+  demandanteConvocante?:DemandanteConvocante[],
   fichaEstudio?:FichaEstudio[],
   defensaJudicialSeguimiento?: DefensaJudicialSeguimiento[];
+  canalIngresoCodigo?: string;
+  numeroRadicadoFFIE?: string;
+  fechaRadicadoFFIE?: Date;
   //not maped
   jurisdiccionCodigoNombre?:string,
   tipoAccionCodigoNombre?:string
@@ -126,6 +131,17 @@ export interface DemandadoConvocado{
   medioControlAccion?:string,
   etapaProcesoFfiecodigo?:string,
   caducidadPrescripcion?:Date,
+  defensaJudicialId?:number
+}
+
+export interface DemandanteConvocante{
+  demandanteConvocanteId?:number,
+  esConvocante?:boolean,
+  nombre?:string,
+  tipoIdentificacionCodigo?:string,
+  numeroIdentificacion?:string,
+  direccion?:string,
+  email?:string,  
   defensaJudicialId?:number
 }
 

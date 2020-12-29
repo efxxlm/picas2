@@ -148,7 +148,8 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta"
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'en-alerta':ficha_class===3,'sin-diligenciar':ficha_class===0,'en-proceso':ficha_class===1,'completo':ficha_class===2}"
                >
                     Ficha de estudio
                 </mat-panel-title>
