@@ -1,9 +1,12 @@
+import { Router } from '@angular/router';
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { DialogAvanceAcumuladoComponent } from './../dialog-avance-acumulado/dialog-avance-acumulado.component';
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-avance-fisico',
@@ -59,6 +62,8 @@ export class TablaAvanceFisicoComponent implements OnInit {
     constructor(
         private dialog: MatDialog,
         private datePipe: DatePipe,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
+        private routes: Router,
         private fb: FormBuilder )
     { }
 
@@ -206,8 +211,39 @@ export class TablaAvanceFisicoComponent implements OnInit {
         }
     }
 
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
     guardar() {
-        console.log( this.formAvanceFisico.value );
+		console.log( this.formAvanceFisico.value );
+		const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: 0,
+            seguimientoSemanalId: 1224,
+            tipoObservacionCodigo: '1',
+            observacionPadreId: 3,
+            observacion: this.formAvanceFisico.get( 'observaciones' ).value,
+            tieneObservacion: this.formAvanceFisico.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-form-reporte-actividades-realizadas',
@@ -11,10 +12,29 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     @Input() esSiguienteSemana: boolean;
     @Input() esVerDetalle = false;
     @Input() reporteActividad: any;
-    formActividadesRealizadas: FormGroup;
-    formActividadesRealizadasSiguienteSemana: FormGroup;
+    formActividadesRealizadas: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    formActividadesRealizadasSiguienteSemana: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
+    tablaHistorial = new MatTableDataSource();
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
+    dataHistorial: any[] = [
+        {
+            fechaRevision: new Date(),
+            responsable: 'Apoyo a la supervisión',
+            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
+        }
+    ];
     editorStyle = {
-        height: '45px'
+        height: '100px'
     };
     config = {
         toolbar: [
@@ -25,9 +45,10 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
         ]
     };
 
-    constructor() { }
+    constructor( private fb: FormBuilder ) { }
 
     ngOnInit(): void {
+		this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     maxLength(e: any, n: number) {
@@ -42,6 +63,14 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
         } else {
             return 0;
         }
+	}
+
+	guardar() {
+        console.log( this.formActividadesRealizadas.value );
+    }
+
+    guardarSemanaSiguiente() {
+        console.log( this.formActividadesRealizadasSiguienteSemana.value );
     }
 
 }

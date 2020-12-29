@@ -1,4 +1,6 @@
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-registro-fotografico',
@@ -12,19 +14,36 @@ export class RegistroFotograficoComponent implements OnInit {
     seguimientoSemanalId: number;
     seguimientoSemanalRegistroFotograficoId: number;
     reporteFotografico: any;
-    editorStyle = {
-        height: '45px'
-    };
-    config = {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-      ]
-    };
+    formRegistroFotografico: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+	});
+	tablaHistorial = new MatTableDataSource();
+	displayedColumnsHistorial: string[]  = [
+		'fechaRevision',
+		'responsable',
+		'historial'
+	];
+	dataHistorial: any[] = [
+		{
+			fechaRevision: new Date(),
+			responsable: 'Apoyo a la supervisión',
+			historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
+		}
+	];
+	editorStyle = {
+		height: '100px'
+	};
+	config = {
+		toolbar: [
+		  	['bold', 'italic', 'underline'],
+		  	[{ list: 'ordered' }, { list: 'bullet' }],
+		  	[{ indent: '-1' }, { indent: '+1' }],
+		  	[{ align: [] }],
+		]
+	};
 
-    constructor() { }
+    constructor( private fb: FormBuilder ) { }
 
     ngOnInit(): void {
         if ( this.seguimientoSemanal !== undefined ) {
@@ -34,7 +53,8 @@ export class RegistroFotograficoComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalRegistroFotografico.length > 0 ) {
                 this.reporteFotografico = this.seguimientoSemanal.seguimientoSemanalRegistroFotografico[0];
-            }
+			}
+			this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -50,6 +70,10 @@ export class RegistroFotograficoComponent implements OnInit {
         } else {
             return 0;
         }
+	}
+	
+	guardar() {
+        console.log( this.formRegistroFotografico.value );
     }
 
 }

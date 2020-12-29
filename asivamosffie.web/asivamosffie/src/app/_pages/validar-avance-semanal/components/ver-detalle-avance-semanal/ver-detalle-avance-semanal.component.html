@@ -1,6 +1,6 @@
 <section class="container" *ngIf="seguimientoSemanal !== undefined">
     <div class="text-right">
-        <a mat-button color="primary" class="btn-regresar" routerLink="/verificarAvanceSemanal">
+        <a mat-button color="primary" class="btn-regresar" (click)="getRutaAnterior()">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -55,7 +55,7 @@
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal"></app-verificar-avance-fisico>
+                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-verificar-avance-fisico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -65,7 +65,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0"></app-avance-financiero>
+                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [esVerDetalle]="true"></app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -85,7 +85,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal"></app-reporte-actividades>
+                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-reporte-actividades>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -95,7 +95,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal"></app-registro-fotografico>
+                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-registro-fotografico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -105,7 +105,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal"></app-comite-obra>
+                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
     </div>

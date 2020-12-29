@@ -1,3 +1,4 @@
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,6 +14,10 @@ export class TablaAvanceFisicoComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoDiario: any;
+    formAvanceFisico: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ]
+    });
     tablaAvanceFisico = new MatTableDataSource();
     avanceFisico: any[];
     seRealizoCambio = false;
@@ -27,14 +32,40 @@ export class TablaAvanceFisicoComponent implements OnInit {
         'avanceFisicoCapitulo',
         'avanceFisicoSemana'
     ];
+    tablaHistorial = new MatTableDataSource();
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
+    dataHistorial: any[] = [
+        {
+            fechaRevision: new Date(),
+            responsable: 'Apoyo a la supervisión',
+            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
+        }
+    ];
+    editorStyle = {
+        height: '100px'
+    };
+    config = {
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
+        ]
+    };
 
     constructor(
         private dialog: MatDialog,
-        private datePipe: DatePipe )
+        private datePipe: DatePipe,
+        private fb: FormBuilder )
     { }
 
     ngOnInit(): void {
         this.getDataTable();
+        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     verifyInteger( value: number, esAvanceCapitulo: boolean ) {
@@ -161,6 +192,24 @@ export class TablaAvanceFisicoComponent implements OnInit {
             width: '80em',
             data: { avanceAcumulado: this.seguimientoDiario.avanceAcumulado, seguimientoSemanal: this.seguimientoDiario }
         } );
+    }
+
+    maxLength(e: any, n: number) {
+        if (e.editor.getLength() > n) {
+            e.editor.deleteText(n - 1, e.editor.getLength());
+        }
+    }
+
+    textoLimpio( evento: any, n: number ) {
+        if ( evento !== undefined ) {
+            return evento.getLength() > n ? n : evento.getLength();
+        } else {
+            return 0;
+        }
+    }
+
+    guardar() {
+        console.log( this.formAvanceFisico.value );
     }
 
 }

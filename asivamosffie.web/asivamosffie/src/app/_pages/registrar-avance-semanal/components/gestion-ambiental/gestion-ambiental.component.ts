@@ -638,7 +638,6 @@ export class GestionAmbientalComponent implements OnInit {
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
                     this.seRealizoPeticion.emit( true );
-                    console.log( this.routes.url );
                     this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                         () =>   this.routes.navigate(
                                     [
