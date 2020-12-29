@@ -20,20 +20,20 @@ export class AcordionTablaListaProyectosCesmlComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDataItems = this.services.loadDataItems.subscribe((loadDataItems: any) => {
-      if(loadDataItems!=''){
-        this.dataContrato=loadDataItems;
+      if (loadDataItems != '') {
+        this.dataContrato = loadDataItems;
       }
-    }); 
+    });
     this.loadService();
   }
 
-  loadService(){
-    this.services.GetListContratoProyectos().subscribe(data=>{
+  loadService() {
+    this.services.GetListContratoProyectos().subscribe(data => {
       this.loadData(data);
     });
   }
 
-  loadData(data){
+  loadData(data) {
     this.dataContrato = data;
   }
 

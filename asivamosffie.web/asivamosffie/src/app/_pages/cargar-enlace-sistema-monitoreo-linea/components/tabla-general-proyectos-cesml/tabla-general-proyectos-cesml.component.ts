@@ -11,7 +11,7 @@ import { DialogCargarSitioWebCesmlComponent } from '../dialog-cargar-sitio-web-c
   styleUrls: ['./tabla-general-proyectos-cesml.component.scss']
 })
 export class TablaGeneralProyectosCesmlComponent implements OnInit {
-  @Input () dataTableServ:any;
+  @Input() dataTableServ: any;
   @Output() estadoSemaforo = new EventEmitter<string>();
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -26,60 +26,27 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
     'sede',
     'gestion'
   ];
-  dataTable: any[] = [
-    {
-      llaveMen: 'LJ776554',
-      tipoIntervencion: 'Remodelación',
-      region: 'Caribe',
-      departamento: 'Atlántico',
-      municipio: 'Malambo',
-      institucionEducativa: 'I.E. María Villa Campo',
-      sede: 'Única sede',
-      sitioWeb: '',
-      id: 1
-    },
-    {
-      llaveMen: 'LU990088',
-      tipoIntervencion: 'Remodelación',
-      region: 'Caribe',
-      departamento: 'Atlántico',
-      municipio: 'Baranoa',
-      institucionEducativa: 'María Inmaculada',
-      sede: 'Sede 2',
-      sitioWeb: '',
-      id: 2
-    },
-    {
-      llaveMen: 'LY665533',
-      tipoIntervencion: 'Remodelación',
-      region: 'Caribe',
-      departamento: 'Atlántico',
-      municipio: 'Soledad',
-      institucionEducativa: 'I.E. Primera de Mayo',
-      sede: 'Única sede',
-      sitioWeb: 'http://www.ffie.com',
-      id: 3
-    }
-  ];
   constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
     let incompleto = 0;
     let completo = 0;
-    for(let proy of this.dataTableServ){
-      if(proy.urlMonitoreo=="" || proy.urlMonitoreo==null || proy.urlMonitoreo==undefined){
+    for (let proy of this.dataTableServ) {
+      if (proy.urlMonitoreo == "") {
         incompleto++;
       }
-      else{
+      if (proy.urlMonitoreo != "") {
         completo++;
       }
     }
-    if(completo == this.dataTableServ.length){
-      this.estadoSemaforo.emit('completo');
-    }
-    else{
+    if (incompleto > 0 && completo < this.dataTableServ.length) {
       this.estadoSemaforo.emit('sin-diligenciar');
     }
+    else if (completo > 0 && incompleto == 0) {
+      this.estadoSemaforo.emit('completo');
+    }
+    console.log(incompleto);
+    console.log(completo);
     this.dataSource = new MatTableDataSource(this.dataTableServ);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -89,11 +56,11 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-  configuracionSitioWeb(id, llaveMen, departamento, municipio, instEdu, sede, web){
+  configuracionSitioWeb(id, llaveMen, departamento, municipio, instEdu, sede, web) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
     dialogConfig.width = '45%';
-    dialogConfig.data = {id:id, llaveMen:llaveMen, departamento:departamento, municipio:municipio, instEdu:instEdu, sede:sede, web:web};
+    dialogConfig.data = { id: id, llaveMen: llaveMen, departamento: departamento, municipio: municipio, instEdu: instEdu, sede: sede, web: web };
     const dialogRef = this.dialog.open(DialogCargarSitioWebCesmlComponent, dialogConfig);
   }
 }

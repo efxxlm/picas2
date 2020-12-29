@@ -73,11 +73,11 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
         this.services.GetListContratoProyectos().subscribe(data=>{
           this.services.loadDataItems.next(data);
         });
-        this.openDialog(resp.message, '');
+        this.openDialog('',resp.message);
         this.close();
       }
       else{
-        this.openDialog(resp.message, '');
+        this.openDialog('',resp.message);
       }
     });
   }
