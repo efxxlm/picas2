@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DialogRechazarSolicitudValidfspComponent } from '../dialog-rechazar-solicitud-validfsp/dialog-rechazar-solicitud-validfsp.component';
 
 @Component({
   selector: 'app-validar-financ-solicitud-pago',
@@ -20,7 +21,7 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
     'numeroSolicitud',
     'modalidadContrato',
     'numeroContrato',
-    'estadoVerificacion',
+    'estadoValidacion',
     'gestion'
   ];
   dataTable: any[] = [
@@ -29,7 +30,7 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoO0001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoVerificacion: 'Sin validación',
+      estadoValidacion: 'Rechazada por el equipo financiero',
       gestion: 1
     },
     {
@@ -37,7 +38,7 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
       numeroSolicitud: 'SolPagoEspecial0001',
       modalidadContrato: 'No Aplica',
       numeroContrato: 'N326326',
-      estadoVerificacion: 'Sin validación',
+      estadoValidacion: 'Sin validación',
       gestion: 2
     },
   ];
@@ -80,7 +81,7 @@ export class ValidarFinancSolicitudPagoComponent implements OnInit {
     dialogConfig.height = 'auto';
     dialogConfig.width = '1020px';
     //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    //const dialogRef = this.dialog.open(DialogRechazarSolicitudVfspComponent, dialogConfig);
+    const dialogRef = this.dialog.open(DialogRechazarSolicitudValidfspComponent, dialogConfig);
     //dialogRef.afterClosed().subscribe(value => {});
   }
 

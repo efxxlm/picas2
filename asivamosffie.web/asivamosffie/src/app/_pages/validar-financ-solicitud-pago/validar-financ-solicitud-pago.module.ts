@@ -12,11 +12,15 @@ import { DetalleRegSolPagoValidfspComponent } from './components/detalle-reg-sol
 import { FormValidListchequeoValidfspComponent } from './components/form-valid-listchequeo-validfsp/form-valid-listchequeo-validfsp.component';
 import { DetalleFactProcasValidfspComponent } from './components/detalle-fact-procas-validfsp/detalle-fact-procas-validfsp.component';
 import { FormEditValidarSolicitudValidfspComponent } from './components/form-edit-validar-solicitud-validfsp/form-edit-validar-solicitud-validfsp.component';
+import { DialogRechazarSolicitudValidfspComponent } from './components/dialog-rechazar-solicitud-validfsp/dialog-rechazar-solicitud-validfsp.component';
+import { VerdetalleValidfspComponent } from './components/verdetalle-validfsp/verdetalle-validfsp.component';
+import { DialogObservacionesValidfspComponent } from './components/dialog-observaciones-validfsp/dialog-observaciones-validfsp.component';
+import { DetalleValidListchqValidfspComponent } from './components/detalle-valid-listchq-validfsp/detalle-valid-listchq-validfsp.component';
 
 
 
 @NgModule({
-  declarations: [ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent],
+  declarations: [ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent, DialogRechazarSolicitudValidfspComponent, VerdetalleValidfspComponent, DialogObservacionesValidfspComponent, DetalleValidListchqValidfspComponent],
   imports: [
     CommonModule,
     MaterialModule,

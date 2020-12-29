@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { FormEditValidarSolicitudValidfspComponent } from "./components/form-edit-validar-solicitud-validfsp/form-edit-validar-solicitud-validfsp.component";
 import { FormValidarSolicitudValidfspComponent } from "./components/form-validar-solicitud-validfsp/form-validar-solicitud-validfsp.component";
 import { ValidarFinancSolicitudPagoComponent } from "./components/validar-financ-solicitud-pago/validar-financ-solicitud-pago.component";
+import { VerdetalleValidfspComponent } from "./components/verdetalle-validfsp/verdetalle-validfsp.component";
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'verDetalleEditarValidarFinancSolicitud/:id',
     component: FormEditValidarSolicitudValidfspComponent
+  },
+  {
+    path: 'verDetalleValidarFinancSolicitud/:id',
+    component: VerdetalleValidfspComponent
   }
 ];
 @NgModule({

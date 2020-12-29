@@ -34,31 +34,29 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
                 <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
             </ng-container>
-            <ng-container matColumnDef="estadoVerificacion">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la validación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoVerificacion }} </td>
+            <ng-container matColumnDef="estadoValidacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Estado de la validación </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoValidacion }} </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center"> 
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.validarSolicitud(element.gestion)"
-                    *ngIf="element.estadoVerificacion=='Sin validación'">
+                    *ngIf="element.estadoValidacion=='Sin validación'">
                         Verificar solicitud
                     </button>
-                     <!--
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.openRechazo()"
-                    *ngIf="element.estadoVerificacion=='Con verificación de la solicitud por el equipo financiero'">
+                    *ngIf="element.estadoValidacion=='Con validación de la solicitud por el equipo financiero'">
                         Rechazar solicitud
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEditar(element.gestion)"
-                    *ngIf="element.estadoVerificacion=='Con verificación de la solicitud por el equipo financiero'">
+                    *ngIf="element.estadoValidacion=='Con validación de la solicitud por el equipo financiero'">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalle(element.gestion)"
-                    *ngIf="element.estadoVerificacion=='Rechazada por el equipo financiero' || element.estadoVerificacion=='Con solicitud aprobada por el supervisor'">
+                    *ngIf="element.estadoValidacion=='Rechazada por el equipo financiero' || element.estadoValidacion=='Con solicitud aprobada por el supervisor'">
                         Ver detalle
                     </button>
-                    -->
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
