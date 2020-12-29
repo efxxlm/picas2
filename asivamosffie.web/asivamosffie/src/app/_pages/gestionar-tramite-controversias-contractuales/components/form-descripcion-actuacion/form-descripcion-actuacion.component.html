@@ -111,19 +111,18 @@
                 <div class="col-md-12">
                     <div class="row">
                         <div class="pr-1">
-                            <label class="label-left" for="diasVencimientoTerminos">
-                                Días de vencimiento de términos para la próxima actuación requerida
-                            </label>
+                            <label class="label-left" for="diasVencimientoTerminos">Días de vencimiento de términos para
+                                la próxima actuación requerida</label>
                         </div>
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="full-width">
                                 <input matInput #diasVencimientoTerminos type="text" maxlength="7"
                                     formControlName="diasVencimientoTerminos" required>
                             </mat-form-field>
-                            <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="addressForm.controls.diasVencimientoTerminos.value">
+                            <span class="contador miles" *ngIf="addressForm.controls.diasVencimientoTerminos.value">
                                 {{7 - textoLimpio(addressForm.controls.diasVencimientoTerminos.value)}}
                             </span>
-                            <span class="contador miles" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip" *ngIf="!addressForm.controls.diasVencimientoTerminos.value">
+                            <span class="contador miles" *ngIf="!addressForm.controls.diasVencimientoTerminos.value">
                                 7
                             </span>
                         </div>

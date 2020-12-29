@@ -30,24 +30,8 @@ export class FormSoporteActuacionActtramComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
-    }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
+    const textolimpio = texto.replace(/<[^>]*>/g, '');
+    return textolimpio.length;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -59,6 +43,6 @@ export class FormSoporteActuacionActtramComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    this.openDialog('', 'La información ha sido guardada exitosamente.');
   }
 }

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,12 +12,12 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   @Input() isEditable;
-
+  @Input() controversiaAct;
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   addressForm = this.fb.group({
-    requiereReclamacionAseguradora: [null, Validators.required],
     resumenReclamacionFiduciaria: [null, Validators.required],
     requereReclamacionComiteTecnico: [null, Validators.required],
-    definitivoyCerrado: [null, Validators.required],
+    urlSoporte: [null, Validators.required],
   });
   editorStyle = {
     height: '50px'
@@ -28,7 +30,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(private router: Router, private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
       this.addressForm.get('requiereReclamacionAseguradora').setValue(true);
@@ -49,26 +51,10 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       e.editor.deleteText(n-1, e.editor.getLength());
     }
   }
-
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  textoLimpio(texto,n) {
+    if (texto!=undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
     }
-  }
-
-  private contarSaltosDeLinea(cadena: string, subcadena: string) {
-    let contadorConcurrencias = 0;
-    let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
-      ++contadorConcurrencias;
-      posicion += subcadena.length;
-    }
-    return contadorConcurrencias;
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -80,7 +66,51 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+    let arrayReclam;
+    if(this.isEditable==true){
+      arrayReclam = {
+        "ControversiaContractualId":this.controversiaID,
+        "ActuacionAdelantadaCodigo": "2",
+        "ActuacionAdelantadaOtro": "2",
+         "ProximaActuacionCodigo": "2",
+        "ProximaActuacionOtro": "2",
+        "Observaciones": "" ,
+        "ResumenPropuestaFiduciaria": this.addressForm.value.resumenReclamacionFiduciaria,
+        "RutaSoporte":  this.addressForm.value.urlSoporte,
+        "EstadoAvanceTramiteCodigo": "2",
+       "FechaCreacion": "2020-3-3",
+       "UsuarioCreacion":"US CRE w",
+       "UsuarioModificacion": "US MODIF w",
+       "EsCompleto": true,
+       "EsRequiereComiteReclamacion": this.addressForm.value.requereReclamacionComiteTecnico,
+       "ControversiaActuacionId":this.controversiaAct
+      };
+      this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+      });
+    }
+    else{
+      arrayReclam = {
+        "ControversiaContractualId":this.controversiaID,
+        "ActuacionAdelantadaCodigo": "2",
+        "ActuacionAdelantadaOtro": "2",
+         "ProximaActuacionCodigo": "2",
+        "ProximaActuacionOtro": "2",
+        "Observaciones": "Observaciones w" ,
+        "ResumenPropuestaFiduciaria": this.addressForm.value.resumenReclamacionFiduciaria ,
+        "RutaSoporte":  this.addressForm.value.urlSoporte ,
+        "EstadoAvanceTramiteCodigo": "2",
+       "FechaCreacion": "2020-3-3",
+       "UsuarioCreacion":"US CRE w",
+       "UsuarioModificacion": "US MODIF w",
+       "EsCompleto": true,
+       "EsRequiereComiteReclamacion": this.addressForm.value.requereReclamacionComiteTecnico,
+      };
+      this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
+        this.openDialog('', 'La información ha sido guardada exitosamente.');
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+      });
+    }
   }
-
 }
