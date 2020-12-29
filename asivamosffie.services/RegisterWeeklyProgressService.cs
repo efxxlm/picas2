@@ -17,7 +17,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Microsoft.EntityFrameworkCore.Internal;
 using asivamosffie.services.Helpers.Constants;
-  
+
 namespace asivamosffie.services
 {
     public class RegisterWeeklyProgressService : IRegisterWeeklyProgressService
@@ -90,7 +90,10 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalAvanceFinanciero)
 
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
-
+                          .ThenInclude(r => r.ObservacionApoyo)
+                           
+                       .Include(r => r.SeguimientoSemanalAvanceFisico)
+                          .ThenInclude(r => r.ObservacionSupervisor)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -245,7 +248,11 @@ namespace asivamosffie.services
 
 
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
+                          .Include(r => r.SeguimientoSemanalAvanceFisico)
+                          .ThenInclude(r => r.ObservacionApoyo)
 
+                       .Include(r => r.SeguimientoSemanalAvanceFisico)
+                          .ThenInclude(r => r.ObservacionSupervisor)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -396,7 +403,7 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
-            List<SeguimientoSemanal> ListseguimientoSemanal = 
+            List<SeguimientoSemanal> ListseguimientoSemanal =
                 await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
                 .Include(r => r.ContratacionProyecto)
                    .ThenInclude(r => r.Proyecto)
@@ -414,7 +421,7 @@ namespace asivamosffie.services
 
             int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
 
-            foreach (var item in ListseguimientoSemanal.Where(r=> r.RegistroCompleto == true))
+            foreach (var item in ListseguimientoSemanal.Where(r => r.RegistroCompleto == true))
             {
                 decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
                 string strCodigoEstadoObra = string.Empty;
@@ -428,7 +435,7 @@ namespace asivamosffie.services
                         AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
 
                     if (!string.IsNullOrEmpty(item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo))
-                        strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre; 
+                        strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre;
                 }
 
                 if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
@@ -473,7 +480,7 @@ namespace asivamosffie.services
 
                 if (pEstadoMod == ConstanCodigoEstadoReporteSemanal.Enviado_a_verificacion)
                 {
-                    seguimientoSemanalMod.RegistroCompleto = true; 
+                    seguimientoSemanalMod.RegistroCompleto = true;
                 }
 
                 _context.SaveChanges();
@@ -604,7 +611,7 @@ namespace asivamosffie.services
 
                     seguimientoSemanalOld.FechaModificacion = DateTime.Now;
                     seguimientoSemanalOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
-                    seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras; 
+                    seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
                 }
 
                 _context.SaveChanges();
@@ -886,7 +893,7 @@ namespace asivamosffie.services
             int CantidadDeSeguimientosSemanales = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanal.ContratacionProyectoId).ToList().Count();
             decimal PrimerTercio = decimal.Round(CantidadDeSeguimientosSemanales / 3);
             decimal SegundoTercio = PrimerTercio * 2;
-    
+
 
             if (ProgramacionAcumuladaObra.HasValue && ProgramacionEjecutadaObra.HasValue)
             {
