@@ -717,7 +717,8 @@ namespace asivamosffie.services
                 Template TemplateConvocar = await _commonService.GetTemplateById((int)enumeratorTemplate.EnviarComiteAprobacion);
 
                 string template = TemplateConvocar.Contenido.Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
-                                                            .Replace("[FECHA_COMITE]", comiteTecnico.FechaOrdenDia.Value.ToString("dd/MM/yyyy"));
+                                                            .Replace("[FECHA_COMITE]", comiteTecnico.FechaOrdenDia.Value.ToString("dd/MM/yyyy"))
+                                                            .Replace("[URL_APLICACION]", pDominioFront + "compromisosActasComite");
 
 
 
