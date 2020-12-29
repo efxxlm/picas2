@@ -24,6 +24,8 @@ namespace asivamosffie.model.Models
         public int? ObservacionApoyoId { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
         public int? ObservacionSupervisorId { get; set; }
+        public bool? RegistroCompletoObservacionApoyo { get; set; }
+        public bool? RegistroCompletoObservacionSupervisor { get; set; }
 
         public virtual SeguimientoSemanalObservacion ObservacionApoyo { get; set; }
         public virtual SeguimientoSemanalObservacion ObservacionSupervisor { get; set; }

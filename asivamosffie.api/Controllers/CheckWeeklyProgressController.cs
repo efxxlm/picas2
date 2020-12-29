@@ -29,8 +29,8 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateEditEnsayoLaboratorioMuestra")]
-        public async Task<IActionResult> CreateEditEnsayoLaboratorioMuestra([FromBody] SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
+        [Route("CreateEditSeguimientoSemanalObservacion")]
+        public async Task<IActionResult> CreateEditSeguimientoSemanalObservacion([FromBody] SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
         {
             Respuesta respuesta = new Respuesta();
             try
