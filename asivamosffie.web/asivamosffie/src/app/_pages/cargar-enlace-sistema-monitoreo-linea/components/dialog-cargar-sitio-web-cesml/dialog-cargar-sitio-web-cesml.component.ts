@@ -12,6 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class DialogCargarSitioWebCesmlComponent implements OnInit {
 
+  public title;
   public idProyecto;
   public llaveMen;
   public departamento;
@@ -45,6 +46,9 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
     }
     if(data.web !=undefined){
       this.web = data.web;
+    }
+    if(data.title !=undefined){
+      this.title = data.title;
     }
   }
 

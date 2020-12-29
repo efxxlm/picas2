@@ -49,12 +49,12 @@
             <td mat-cell *matCellDef="let element">
                 <button mat-raised-button color="accent" class="btn-table"
                     *ngIf="element.urlMonitoreo==''"
-                    (click)="this.configuracionSitioWeb(element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede, element.urlMonitoreo)">
+                    (click)="this.configuracionSitioWeb('Cargar sitio web',element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede, element.urlMonitoreo)">
                     Cargar sitio web
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
                     *ngIf="element.urlMonitoreo!=''"
-                    (click)="this.configuracionSitioWeb(element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede, element.urlMonitoreo)">
+                    (click)="this.configuracionSitioWeb('Ver detalle/Editar',element.proyectoId,element.llaveMen,element.departamento, element.municipio, element.institucionEducativa, element.sede, element.urlMonitoreo)">
                     Ver detalle/Editar
                 </button>
             </td>
