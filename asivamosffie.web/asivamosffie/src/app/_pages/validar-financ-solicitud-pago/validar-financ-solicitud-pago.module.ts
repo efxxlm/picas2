@@ -10,11 +10,13 @@ import { FormValidarSolicitudValidfspComponent } from './components/form-validar
 import { DialogProyectosAsociadosValidfspComponent } from './components/dialog-proyectos-asociados-validfsp/dialog-proyectos-asociados-validfsp.component';
 import { DetalleRegSolPagoValidfspComponent } from './components/detalle-reg-sol-pago-validfsp/detalle-reg-sol-pago-validfsp.component';
 import { FormValidListchequeoValidfspComponent } from './components/form-valid-listchequeo-validfsp/form-valid-listchequeo-validfsp.component';
+import { DetalleFactProcasValidfspComponent } from './components/detalle-fact-procas-validfsp/detalle-fact-procas-validfsp.component';
+import { FormEditValidarSolicitudValidfspComponent } from './components/form-edit-validar-solicitud-validfsp/form-edit-validar-solicitud-validfsp.component';
 
 
 
 @NgModule({
-  declarations: [ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent],
+  declarations: [ValidarFinancSolicitudPagoComponent, FormValidarSolicitudValidfspComponent, DialogProyectosAsociadosValidfspComponent, DetalleRegSolPagoValidfspComponent, FormValidListchequeoValidfspComponent, DetalleFactProcasValidfspComponent, FormEditValidarSolicitudValidfspComponent],
   imports: [
     CommonModule,
     MaterialModule,
