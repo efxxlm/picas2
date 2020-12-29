@@ -60,7 +60,7 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
   configuracionSitioWeb(id, llaveMen, departamento, municipio, instEdu, sede, web) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.height = 'auto';
-    dialogConfig.width = '45%';
+    dialogConfig.width = '945px';
     dialogConfig.data = { id: id, llaveMen: llaveMen, departamento: departamento, municipio: municipio, instEdu: instEdu, sede: sede, web: web };
     const dialogRef = this.dialog.open(DialogCargarSitioWebCesmlComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(value => {
