@@ -28,8 +28,9 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
-        [HttpPost]
+
         [Route("CreateEditSeguimientoSemanalObservacion")]
+        [HttpPost]
         public async Task<IActionResult> CreateEditSeguimientoSemanalObservacion([FromBody] SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
         {
             Respuesta respuesta = new Respuesta();
