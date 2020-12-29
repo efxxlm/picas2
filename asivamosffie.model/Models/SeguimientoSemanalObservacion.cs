@@ -46,7 +46,7 @@ namespace asivamosffie.model.Models
         }
 
         public int SeguimientoSemanalObservacionId { get; set; }
-        public int? SeguimientoSemanalId { get; set; }
+        public int SeguimientoSemanalId { get; set; }
         public string TipoObservacionCodigo { get; set; }
         public int ObservacionPadreId { get; set; }
         public string Observacion { get; set; }
