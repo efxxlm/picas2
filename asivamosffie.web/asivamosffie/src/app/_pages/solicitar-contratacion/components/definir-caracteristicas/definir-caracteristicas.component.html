@@ -94,7 +94,7 @@
                 <label class="label-left" for="requiereLicencias">¿El proyecto requiere licencias?</label>
               </div>
               <div class="col d-flex">
-                <mat-radio-group class="radioInput d-flex" formControlName="requiereLicencias">
+                <mat-radio-group class="radioInput d-flex" formControlName="requiereLicencias" (change)="changeProyectoRequiereLicencia($event)">
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
@@ -110,7 +110,7 @@
                 <label class="label-left" for="licenciaVigente">¿El proyecto tiene licencia vigente?</label>
               </div>
               <div class="col d-flex">
-                <mat-radio-group class="radioInput d-flex" formControlName="licenciaVigente">
+                <mat-radio-group class="radioInput d-flex" formControlName="licenciaVigente" >
                   <mat-radio-button [value]="true" class="mr-1em">Sí</mat-radio-button>
                   <mat-radio-button [value]="false">No</mat-radio-button>
                 </mat-radio-group>
