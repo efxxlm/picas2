@@ -37,18 +37,7 @@ namespace asivamosffie.api.Controllers
         {
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
             return await _managePreContruction.GetContratoByContratoId(pContratoId, pUserId);
-        }
-
-        [Route("GetFiferenciaMesesDias")]
-        [HttpGet]
-        public async Task<dynamic> GetFiferenciaMesesDias([FromQuery] int pMesesContrato, int pDiasContrato, int PMesesFase1, int pDiasFase1)
-        {
-            pMesesContrato *= 30 + pDiasContrato;
-            PMesesFase1 *= +pDiasFase1;
-
-            return await _managePreContruction.GetContratoByContratoId(pContratoId, pUserId);
-        }
-
+        } 
         [HttpGet]
         [Route("GetListGrillaActaInicio")]
         public async Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio(int pPerfilId)
