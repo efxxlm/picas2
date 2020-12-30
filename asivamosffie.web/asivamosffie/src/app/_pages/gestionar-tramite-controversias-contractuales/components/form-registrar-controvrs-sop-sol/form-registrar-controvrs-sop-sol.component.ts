@@ -23,6 +23,7 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
   ngOnInit(): void {
     if (this.isEditable == true) {
       this.services.GetControversiaContractualById(this.idControversia).subscribe((resp: any) => {
+        console.log(resp.rutaSoporte);
         this.addressForm.get('urlSoporte').setValue(resp.rutaSoporte);
         this.loadSemaforo();
       });
@@ -30,10 +31,17 @@ export class FormRegistrarControvrsSopSolComponent implements OnInit {
   }
 
   loadSemaforo() {
+
     if (this.addressForm.value.urlSoporte != null) {  
       this.estadoSemaforo1.emit('completo');
     }
-    else {
+    if (this.addressForm.value.urlSoporte != "") {  
+      this.estadoSemaforo1.emit('completo');
+    }
+    if (this.addressForm.value.urlSoporte == null) {
+      this.estadoSemaforo1.emit('sin-diligenciar');
+    }
+    if (this.addressForm.value.urlSoporte == "") {
       this.estadoSemaforo1.emit('sin-diligenciar');
     }
   }
