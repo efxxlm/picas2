@@ -229,8 +229,13 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [max]="fechaMaxima" [matDatepicker]="picker" formControlName="fecha" readonly
-                      (click)="picker.open()" placeholder="DD/MM/AAAA">
+                    <input matInput 
+                            [min]="fechaComite"
+                            [matDatepicker]="picker" 
+                            formControlName="fecha" 
+                            readonly
+                            (click)="picker.open()" 
+                            placeholder="DD/MM/AAAA">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
