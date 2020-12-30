@@ -27,13 +27,20 @@ namespace asivamosffie.api.Controllers
 
         [Route("GetFiferenciaMesesDias")]
         [HttpGet]
-        public async Task<string> GetFiferenciaMesesDias([FromQuery] double pMesesContrato, double pDiasContrato, double pMesesFase1, double pDiasFase1)
+        public async Task<List<dynamic>> GetFiferenciaMesesDias([FromQuery] double pMesesContrato, double pDiasContrato, double pMesesFase1, double pDiasFase1)
         {
+
+            List<dynamic> Lista = new List<dynamic>();
             pMesesContrato = (30 * pMesesContrato) + pDiasContrato;
             pMesesFase1 = (30 * pMesesFase1) + pDiasFase1;
             int Meses = (int)Math.Truncate((pMesesContrato - pMesesFase1) / 30);
             double dias = (pMesesContrato - pMesesFase1) - (Meses * 30);
-            return Meses + " - " + dias;
+            Lista.Add(Meses);
+            Lista.Add(dias);
+            return Lista;
+           
+
+
         }
 
         [HttpGet]
