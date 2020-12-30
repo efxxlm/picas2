@@ -14,7 +14,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
- 
+
     public class CommonController : ControllerBase
     {
         public readonly ICommonService common;
@@ -29,13 +29,13 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         public async Task<string> GetFiferenciaMesesDias([FromQuery] double pMesesContrato, double pDiasContrato, double pMesesFase1, double pDiasFase1)
         {
-            pMesesContrato *= 30 + pDiasContrato;
-            pMesesFase1 *= 30 +pDiasFase1;
+            pMesesContrato = (30 * pMesesContrato) + pDiasContrato;
+            pMesesFase1 = (30 * pMesesFase1) + pDiasFase1;
             int Meses = (int)Math.Truncate((pMesesContrato - pMesesFase1) / 30);
             double dias = (pMesesContrato - pMesesFase1) - (Meses * 30);
             return Meses + " - " + dias;
         }
-         
+
         [HttpGet]
         [Route("CalculardiasLaborales")]
         public Task<DateTime> CalculardiasLaborales([FromQuery] int pDias, DateTime pFechaCalcular)
