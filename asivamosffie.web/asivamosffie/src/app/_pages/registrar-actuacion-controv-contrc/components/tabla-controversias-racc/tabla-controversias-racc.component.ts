@@ -1,8 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-controversias-racc',
@@ -24,32 +28,22 @@ export class TablaControversiasRaccComponent implements OnInit {
     'gestion'
   ];
   dataTable: any[] = [
-    {
-      numeroSolicitud: 'CO001',
-      numeroContrato: 'C223456789',
-      tipoControversia: 'Terminación anticipada por incumplimiento (TAI)',
-      actuacion: 'Actuación 1',
-      fechaActuacion: '17/08/2020',
-      estadoActuacion: 'Sin registro',
-      gestion: 1,
-    },
-    {
-      numeroSolicitud: 'CO002',
-      numeroContrato: 'C223456789',
-      tipoControversia: 'Terminación anticipada por imposibilidad de ejecucion (TAIE)',
-      actuacion: 'Actuación 2',
-      fechaActuacion: '17/08/2020',
-      estadoActuacion: 'Sin registro',
-      gestion: 2,
-    }
   ]
-  constructor(private router: Router) { }
+  constructor(private router: Router, private conServices:ContractualControversyService,
+    public dialog: MatDialog,
+    public commonServices: CommonService,
+    private activatedRoute: ActivatedRoute,) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.conServices.GetListGrillaControversiaActuaciones().subscribe(
+      result=>{
+        this.dataSource = new MatTableDataSource(result);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+      }
+    );
+    
   };
 
   applyFilter(event: Event) {
@@ -58,7 +52,7 @@ export class TablaControversiasRaccComponent implements OnInit {
   };
 
   descargarControversia(id){
-
+    this.router.navigate(['/registrarActuacionesControversiasContractuales/actualizarTramite', id]);
   }
 
   irActualizarTramite(id){
@@ -66,6 +60,23 @@ export class TablaControversiasRaccComponent implements OnInit {
   }
 
   finalizarActuacion(id){
-
+    this.conServices.FinalizarActuacion(id).subscribe(
+      result=>
+      {
+        this.openDialog("",result.message,true);
+      }
+    );
+  }
+  openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+    if(redirect)
+    {
+      dialogRef.afterClosed().subscribe(result => {
+          location.reload();             
+      });
+    }
   }
 }

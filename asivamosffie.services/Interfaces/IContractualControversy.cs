@@ -1,5 +1,6 @@
 ﻿using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -51,5 +52,8 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> ActualizarRutaSoporteControversiaActuacion(int pControversiaActuacionId, string pRutaSoporte, string pUsuarioModifica);
         Task<Respuesta> EliminarControversiaActuacion(int pControversiaActuacionId, string pUsuario);
         Task<Respuesta> EliminarControversiaContractual(int pControversiaContractualId, string pUsuario);
+        Task<List<GrillaTipoSolicitudControversiaContractual>> GetListGrillaControversiaActuaciones();
+        Task<Respuesta> FinalizarActuacion(int pControversiaActuacionId, string value);
+        Task<Respuesta> CreateEditarSeguimientoDerivado(SeguimientoActuacionDerivada actuacionSeguimiento);
     }
 }

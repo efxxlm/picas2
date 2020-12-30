@@ -9,15 +9,16 @@
         Registrar avance en actuaciones derivadas
     </h1>
     <p class="info-sub-title">
-        <span>Número de solicitud: <b>CO001</b></span>
-        <span>Número de contrato: <b>C223456789</b></span>
-        <span>Tipo de controversia: <b>Terminación anticipada por incumplimiento (TAI)</b></span>
+        <span>Número de solicitud: <b>{{controversia?.actuacionSeguimientoId}}</b></span>
+        <span>Número de contrato: <b>{{controversia?.numeroContrato}}</b></span>
+        <span>Tipo de controversia: <b>{{controversia?.tipoControversia}}</b></span>
     </p>
     <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
         <mat-card class="shipping-card">
             <mat-card-content align="left">
-                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong>Solicitar descargos al contratista de obra</p>
-                <p><strong>Fecha de la actuación adelantada: </strong>20/07/2020</p>
+                <p><strong>Actuación en la que se requiere participación o insumo de la fiduciaria: </strong></p>
+                <div [innerHtml]="controversia?.actuacionAdelantada"></div>
+                <p><strong>Fecha de la actuación adelantada: </strong>{{controversia?.fechaActuacionAdelantada}}</p>
                 <div class="row">
                     <div class="col-md-8">
                       <div class="row">

@@ -14,7 +14,8 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //quito el autorize porque las pruebas de frontend usan este controller 20201229
+    //[Authorize]
     public class CommonController : ControllerBase
     {
         public readonly ICommonService common;

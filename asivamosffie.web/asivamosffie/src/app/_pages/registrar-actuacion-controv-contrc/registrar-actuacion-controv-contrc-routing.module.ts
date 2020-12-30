@@ -16,7 +16,7 @@ const routes: Routes = [
     component: ActualizarTramiteRaccComponent
   },
   {
-    path:'registrarActuacionDerivada',
+    path:'registrarActuacionDerivada/:id/:editId',
     component: RegistrarAvanceActuaDerivadasComponent
   },
   {

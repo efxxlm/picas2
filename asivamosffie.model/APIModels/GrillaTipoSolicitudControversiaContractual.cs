@@ -21,5 +21,6 @@ namespace asivamosffie.model.APIModels
         public string? FechaActuacion { get; set; }
         public string? EstadoActuacion { get; set; }
         public string EstadoControversiaCodigo { get; set; }
+        public int ActuacionID { get; set; }
     }
 }

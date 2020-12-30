@@ -99,6 +99,28 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [HttpPost]
+        [Route("CreateEditarSeguimientoDerivado")]
+        public async Task<IActionResult> CreateEditarSeguimientoDerivado(SeguimientoActuacionDerivada actuacionSeguimiento)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (actuacionSeguimiento.SeguimientoActuacionDerivadaId == 0)
+                    actuacionSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    actuacionSeguimiento.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.CreateEditarSeguimientoDerivado(actuacionSeguimiento);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         //[Route("CreateEditNuevaActualizacionTramite")]
         //public async Task<IActionResult> CreateEditNuevaActualizacionTramite(ControversiaActuacion controversiaActuacion)
 
@@ -367,6 +389,42 @@ namespace asivamosffie.api.Controllers
             try
             {
                 respuesta = await _contractualControversy.CambiarEstadoControversiaActuacion(pControversiaActuacionId, pNuevoCodigoEstadoAvance, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+        /**4.4.1
+         * **/
+        [HttpGet]
+        [Route("GetListGrillaControversiaActuaciones")]
+
+        public async Task<List<GrillaTipoSolicitudControversiaContractual>> GetListGrillaControversiaActuaciones()
+        {
+            try
+            {
+                return await _contractualControversy.GetListGrillaControversiaActuaciones();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /*4.4.1*/
+        [HttpPut]
+        [Route("FinalizarActuacion")]
+        public async Task<IActionResult> FinalizarActuacion([FromQuery] int pControversiaActuacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.FinalizarActuacion(pControversiaActuacionId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)

@@ -154,9 +154,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_accion_judicial = 106,
         Estados_Actuacion_Reclamacion=110,
+        Estados_Actuacion_Derivada = 114,
 
 
-        Jurisdiccion=116,
+        Jurisdiccion =116,
         Actuaciones_Recomendadas=119,
         Estados_Defensa_Judicial=120
 

@@ -12,5 +12,9 @@ namespace asivamosffie.model.Models
         [NotMapped]
         public string NumeroReclamacion { get; set; }
 
+        [NotMapped] 
+        public string NumeroContrato { get; set; }
+        [NotMapped]
+        public string TipoControversia { get; set; }
     }
 }

@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService } from 'src/app/core/_services/common/common.service';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-actualizar-tramite-racc',
@@ -22,29 +25,30 @@ export class ActualizarTramiteRaccComponent implements OnInit {
     'gestion',
   ];
   dataTable: any[] = [
-    {
-      fechaActualizacion: '17/08/2020',
-      actuacion: 'Actuación 1',
-      numeroActuacion: 'ACT_derivada0001',
-      estadoRegistro: 'Completo',
-      estadoActuacion: 'Cumplida',
-      gestion: 1,
-    },
-    {
-      fechaActualizacion: '17/08/2020',
-      actuacion: 'Actuación 1',
-      numeroActuacion: 'ACT_derivada0002',
-      estadoRegistro: 'Completo',
-      estadoActuacion: 'Finalizada',
-      gestion: 2,
-    },
   ]
-  constructor(private router: Router) { }
+  actuacionid: any;
+  actuacion: any;
+  constructor(private router: Router, private conServices:ContractualControversyService,
+    public dialog: MatDialog,
+    public commonServices: CommonService,
+    private activatedRoute: ActivatedRoute,)
+     { }
+
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.activatedRoute.params.subscribe( param => {
+      this.actuacionid = param['id'];
+      this.conServices.GetActuacionSeguimientoById(this.actuacionid).subscribe(
+        response=>{
+          this.actuacion=response;
+          this.dataSource = new MatTableDataSource(response.controversiaActuacion.seguimientoActuacionDerivada);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        }
+      );
+    });
+
+    
   };
 
   applyFilter(event: Event) {
@@ -52,7 +56,7 @@ export class ActualizarTramiteRaccComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   irARegistro(){
-    this.router.navigate(['/registrarActuacionesControversiasContractuales/registrarActuacionDerivada']);
+    this.router.navigate(['/registrarActuacionesControversiasContractuales/registrarActuacionDerivada',this.actuacionid,0]);
   }
   verDetalleEditarActuacionDerivada(id){
     this.router.navigate(['/registrarActuacionesControversiasContractuales/verDetalleEditarActuacionDerivada',id]);

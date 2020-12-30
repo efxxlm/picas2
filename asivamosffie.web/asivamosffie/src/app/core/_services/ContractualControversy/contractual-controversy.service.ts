@@ -8,6 +8,7 @@ import { pid } from 'process';
   providedIn: 'root'
 })
 export class ContractualControversyService implements OnInit{
+  
 
   constructor(private http: HttpClient) { }
   ngOnInit(): void {
@@ -31,6 +32,11 @@ export class ContractualControversyService implements OnInit{
   CreateEditarActuacionSeguimiento(actuacionSeguimiento: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarActuacionSeguimiento`, actuacionSeguimiento);
   }
+
+  CreateEditarSeguimientoDerivado(actuacionSeguimiento: any){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarSeguimientoDerivado`, actuacionSeguimiento);
+  }
+
   CreateEditNuevaActualizacionTramite(controversiaActuacion: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditNuevaActualizacionTramite`, controversiaActuacion);
   }
@@ -43,6 +49,11 @@ export class ContractualControversyService implements OnInit{
   GetListGrillaActuacionSeguimiento(pControversiaActuacionId: number){
     return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaActuacionSeguimiento?pControversiaActuacionId=${pControversiaActuacionId}`);
   }
+  GetListGrillaControversiaActuaciones(){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuaciones`);
+  }
+
+
   GetVistaContratoContratista(pContratoId: number){
     return this.http.get<GetVistaContratoContratista>(`${environment.apiUrl}/ContractualControversy/GetVistaContratoContratista?pContratoId=${pContratoId}`);
   }
@@ -77,7 +88,11 @@ export class ContractualControversyService implements OnInit{
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoControversiaActuacion?pControversiaActuacionId=${pControversiaActuacionId}&pNuevoCodigoEstadoAvance=${pNuevoCodigoEstadoAvance}`, null);
   }
   GetActuacionSeguimientoById(Id:number){
-    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetActuacionSeguimientoById?Id=${Id}`);
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetActuacionSeguimientoById?Id=${Id}`);
+  }
+
+  FinalizarActuacion(id: any) {
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacion?pControversiaActuacionId=${id}`, null);
   }
 }
 
