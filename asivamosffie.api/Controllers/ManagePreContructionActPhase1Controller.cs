@@ -42,7 +42,8 @@ namespace asivamosffie.api.Controllers
         [Route("GetActaByIdPerfil")]
         public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pContratoId , bool pEsContruccion)
         {
-            int pUserId =  Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+            ///Temp
+            int pUserId = 38; // Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
             return File(await _managePreContruction.GetActaByIdPerfil(pContratoId, pUserId, ToAppSettingsService(_settings), pEsContruccion), "application/pdf");
         }
 

@@ -114,7 +114,7 @@ namespace asivamosffie.services
                 //Modificar Usuario 
                 //Ya que falta hacer caso de uso gestion usuarios
                 if (pUserId != null)
-                    contrato.UsuarioInterventoria = _context.Usuario.Find(pUserId);
+                    contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioModificacion).FirstOrDefault();
                 return contrato;
             }
             catch (Exception)
@@ -612,8 +612,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId)
-        {
-
+        { 
             return await _context.ContratoObservacion.Where(r => r.ContratoId == ContratoId).ToListAsync();
         }
 
