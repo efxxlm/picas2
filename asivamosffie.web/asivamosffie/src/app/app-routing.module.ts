@@ -204,6 +204,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/validar-solicitud-novedades/validar-solicitud-novedades.module')
         .then(m => m.ValidarSolicitudNovedadesModule)
       },
+      {
+        path: 'gestionarTramiteNovedadesContractualesAprobadas',
+        loadChildren: () => import('./_pages/gestionar-novedades-aprobadas/gestionar-novedades-aprobadas.module')
+        .then(m => m.GestionarNovedadesAprobadasModule)
+      }
     ]
 
   },
