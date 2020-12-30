@@ -102,7 +102,7 @@
             </mat-form-field>
           </div>
         </div>
-        <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+<!--    <div class="row"  *ngIf="tipoAportante.FFIE.includes(tipoAportanteId.toString())">
           <div class="pr-1">
             <label class="label-left"
             [ngClass]="{'color-secondaryColor' : addressForm.controls.numerodocumento.dirty && addressForm.controls.numerodocumento.value==''}"
@@ -110,14 +110,14 @@
           </div> 
           <div class="col">
             <mat-form-field class="select-width">
-              <mat-select formControlName="numerodocumento" required>
-                <mat-option *ngFor="let nombreAportantes of listaDocumentosApropiacion" [value]="nombreAportantes">
+              <mat-select formControlName="numerodocumento" (selectionChange)="mostrarDocumento()" required>
+                <mat-option *ngFor="let nombreAportantes of listaDocumentosApropiacion"  [value]="nombreAportantes">
                   {{ nombreAportantes.numeroAcuerdo}} {{ nombreAportantes.numeroActa}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
-        </div>
+        </div>-->
         <div class="row" *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
           <div class="pr-1">
             <label class="label-left"
@@ -171,7 +171,7 @@
     </mat-card>
 
     <mat-card class="shipping-card"
-      *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
+      >
       <mat-card-content>
         <div class="row mt-1em" *ngFor="let documento of listaDocumentos; let i = index">
           <div class="col-md-6">
@@ -208,7 +208,7 @@
           <div class="col">
             <mat-radio-group class="radioInput" formControlName="tieneRP">
               <mat-radio-button value="1" >Sí</mat-radio-button>
-              <mat-radio-button value="0">No</mat-radio-button>
+              <mat-radio-button value="0" (click)="sinRPS()">No</mat-radio-button>
             </mat-radio-group>
           </div>
         </div>

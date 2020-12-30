@@ -1,7 +1,7 @@
 <div class="container text-center">
     <div class="text-right">
         <!-- valor 1 es quemado-->
-        <a routerLink="/registrarActuacionesControversiasContractuales/actualizarTramite/1" mat-button color="primary" class="btn-regresar">
+        <a routerLink="/registrarActuacionesControversiasContractuales/actualizarTramite/{{this.controversiaID}}" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
@@ -9,7 +9,7 @@
         Registrar avance en actuaciones derivadas
     </h1>
     <p class="info-sub-title">
-        <span>Número de solicitud: <b>{{controversia?.actuacionSeguimientoId}}</b></span>
+        <span>Número de solicitud: <b>{{controversia?.numeroActuacionFormat}}</b></span>
         <span>Número de contrato: <b>{{controversia?.numeroContrato}}</b></span>
         <span>Tipo de controversia: <b>{{controversia?.tipoControversia}}</b></span>
     </p>
@@ -76,8 +76,8 @@
                             <div class="col">
                                 <mat-form-field class="select-width">
                                     <mat-select formControlName="estadoActuacionDerivada" required>
-                                        <mat-option *ngFor="let contr of estadoDerivadaArray" [value]="contr.value">
-                                            {{ contr.name }}
+                                        <mat-option *ngFor="let contr of estadoDerivadaArray" [value]="contr.codigo">
+                                            {{ contr.nombre }}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

@@ -55,5 +55,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<GrillaTipoSolicitudControversiaContractual>> GetListGrillaControversiaActuaciones();
         Task<Respuesta> FinalizarActuacion(int pControversiaActuacionId, string value);
         Task<Respuesta> CreateEditarSeguimientoDerivado(SeguimientoActuacionDerivada actuacionSeguimiento);
+        Task<Respuesta> FinalizarActuacionDerivada(int pControversiaActuacionId, string value);
+        Task<Respuesta> EliminacionActuacionDerivada(int pControversiaActuacionId, string value);
     }
 }

@@ -9,6 +9,7 @@ import { pid } from 'process';
 })
 export class ContractualControversyService implements OnInit{
   
+  
 
   constructor(private http: HttpClient) { }
   ngOnInit(): void {
@@ -67,7 +68,7 @@ export class ContractualControversyService implements OnInit{
     return this.http.get<GetControversiaContractualById>(`${environment.apiUrl}/ContractualControversy/GetControversiaContractualById?pControversiaContractualId=${pControversiaContractualId}`);
   }
   GetControversiaActuacionById(pControversiaActuacionId: number){
-    return this.http.get<GetControversiaContractualById>(`${environment.apiUrl}/ContractualControversy/GetControversiaActuacionById?pControversiaActuacionId=${pControversiaActuacionId}`);
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetControversiaActuacionById?pControversiaActuacionId=${pControversiaActuacionId}`);
   }
   GetListContratos(){
     return this.http.get<GetListContratos>(`${environment.apiUrl}/ContractualControversy/GetListContratos`);
@@ -93,6 +94,13 @@ export class ContractualControversyService implements OnInit{
 
   FinalizarActuacion(id: any) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacion?pControversiaActuacionId=${id}`, null);
+  }
+
+  EliminarActuacionDerivada(actuacionid: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/EliminacionActuacionDerivada?pControversiaActuacionId=${actuacionid}`, null);
+  }
+  FinalizarActuacionDerivada(actuacionid: any) {
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacionDerivada?pControversiaActuacionId=${actuacionid}`, null);
   }
 }
 

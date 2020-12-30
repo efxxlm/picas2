@@ -33,12 +33,11 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
     ]
   };
   estadoDerivadaArray = [
-    { name: 'Cumplida', value: '1' },
-    { name: 'Incumplida', value: '2' },
   ];
   controversiaID: any;
   actuacionDerivadaID: any;
   controversia: any;
+  actuacion: any;
   constructor(private fb: FormBuilder,private router: Router, private conServices:ContractualControversyService,
     public dialog: MatDialog,
     public commonServices: CommonService,
@@ -46,12 +45,32 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
      { }
 
   ngOnInit(): void {
+    this.commonServices.getEstadoActuacionDerivada().subscribe(
+      response=>{
+        this.estadoDerivadaArray=response;
+      }
+    );
     this.activatedRoute.params.subscribe( param => {
       this.controversiaID = param['id'];
       this.actuacionDerivadaID = param['editId'];
-      this.conServices.GetActuacionSeguimientoById(this.controversiaID).subscribe(
+      this.conServices.GetControversiaActuacionById(this.controversiaID).subscribe(
         response=>{
-          this.controversia=response;          
+          this.controversia=response;    
+          if(this.actuacionDerivadaID>0)
+          {
+            var seguimientos=this.controversia.controversiaActuacion.seguimientoActuacionDerivada;      
+            this.actuacion=seguimientos.filter(x=>x.seguimientoActuacionDerivadaId==this.actuacionDerivadaID)[0];
+            if(this.actuacion)
+            {
+              this.addressForm.get("fechaActuacionDerivada").setValue(this.actuacion.fechaActuacionDerivada);
+              this.addressForm.get("descripcionActuacionAdelantada").setValue(this.actuacion.descripciondeActuacionAdelantada);
+              this.addressForm.get("urlSoporte").setValue(this.actuacion.rutaSoporte);
+              this.addressForm.get("estadoActuacionDerivada").setValue(this.actuacion.estadoActuacionDerivadaCodigo);
+              this.addressForm.get("observaciones").setValue(this.actuacion.observaciones);
+            }
+          }
+          
+
         }
       );
     });
@@ -76,7 +95,7 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
   }
   onSubmit() {
     let obj={
-      seguimientoActuacionDerivadaId:0,
+      seguimientoActuacionDerivadaId:this.actuacionDerivadaID,
       controversiaActuacionId:this.controversia.controversiaActuacionId,
       esRequiereFiduciaria:false,
       fechaActuacionDerivada :this.addressForm.get("fechaActuacionDerivada").value,
@@ -86,7 +105,7 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
       observaciones :this.addressForm.get("observaciones").value,}
     this.conServices.CreateEditarSeguimientoDerivado(obj).subscribe(
       response=>{
-        this.controversia=response;          
+        this.openDialog("",response.message,true);        
       }
     );
 
@@ -100,7 +119,7 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-          location.reload();             
+        this.router.navigate(["/registrarActuacionesControversiasContractuales/actualizarTramite/"+this.controversiaID], {});          
       });
     }
   }

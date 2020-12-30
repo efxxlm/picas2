@@ -5,16 +5,16 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Actualizar trámite solicitud {{actuacion?.actuacionSeguimientoId}}
+        Actualizar trámite solicitud {{actuacion?.numeroActuacionFormat}}
     </h1>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
             <p><strong>Fecha de solicitud: </strong>{{actuacion?.fechaCreacion}}</p>
             <p><strong>Número del contrato: </strong>{{actuacion?.numeroContrato}}</p>
             <p><strong>Tipo de Controversia: </strong>{{actuacion?.tipoControversia}}</p>
-            <p><strong>Fecha de la actuación adelantada: </strong>{{actuacion?.fechaActuacionAdelantada}}</p>
+            <p><strong>Fecha de la actuación adelantada: </strong>{{actuacion?.fechaActuacion}}</p>
             <p><strong>Actuación adelantada: </strong></p>
-            <div [innerHtml]="actuacion?.actuacionAdelantada"></div>
+            <div [innerHtml]="actuacion?.estadoActuacionReclamacionString"></div>
         </mat-card-content>
     </mat-card>
     <div class="tabs--actions">
@@ -57,28 +57,29 @@
             </ng-container>
             <ng-container matColumnDef="estadoActuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoActuacionDerivadaCodigo }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoActuacionString }} </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
-                <td mat-cell *matCellDef="let element" align="center">
+                <td mat-cell *matCellDef="let element" align="center">                    
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.esCompleto"
-                        (click)="this.finalizarActuacionDerivada(element.gestion)">
+                        *ngIf="element.esCompleto && element.estadoActuacionString!='Finalizada'"
+                        (click)="this.finalizarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Finalizar actuación
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        
-                        (click)="this.verDetalleEditarActuacionDerivada(element.gestion)">
+                        *ngIf="element.estadoActuacionString!='Finalizada'"
+                        (click)="this.verDetalleEditarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        (click)="this.eliminarActuacionDerivada(element.gestion)">
+                    *ngIf="element.estadoActuacionString!='Finalizada'"
+                        (click)="this.eliminarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Eliminar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacion == 'Finalizada'"
-                        (click)="this.verDetalleActuacionDerivada(element.gestion)">
+                        *ngIf="element.estadoActuacionString == 'Finalizada'"
+                        (click)="this.verDetalleEditarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Ver detalle
                     </button>
                 </td>

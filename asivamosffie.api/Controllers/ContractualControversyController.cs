@@ -434,5 +434,39 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        /*4.4.1*/
+        [HttpPut]
+        [Route("FinalizarActuacionDerivada")]
+        public async Task<IActionResult> FinalizarActuacionDerivada([FromQuery] int pControversiaActuacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.FinalizarActuacionDerivada(pControversiaActuacionId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+        
+        [HttpPost]
+        [Route("EliminacionActuacionDerivada")]
+        public async Task<IActionResult> EliminacionActuacionDerivada([FromQuery] int pControversiaActuacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.EliminacionActuacionDerivada(pControversiaActuacionId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
     }
 }
