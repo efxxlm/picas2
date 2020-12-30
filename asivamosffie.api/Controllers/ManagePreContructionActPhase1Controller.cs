@@ -18,14 +18,15 @@ namespace asivamosffie.api.Controllers
         private readonly IOptions<AppSettings> _settings;
         private readonly PublicController _publicController;
 
-        public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings) {
+        public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings)
+        {
             _managePreContruction = managePreContructionActPhase1Service;
             _settings = settings;
         }
-         
+
         [Route("GetListContrato")]
         [HttpGet]
-        public async Task <List<dynamic>> GetListContrato()
+        public async Task<List<dynamic>> GetListContrato()
         {
             return await _managePreContruction.GetListContrato();
         }
@@ -35,7 +36,17 @@ namespace asivamosffie.api.Controllers
         public async Task<Contrato> GetContratoByContratoId([FromQuery] int pContratoId)
         {
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-            return await _managePreContruction.GetContratoByContratoId(pContratoId , pUserId);
+            return await _managePreContruction.GetContratoByContratoId(pContratoId, pUserId);
+        }
+
+        [Route("GetFiferenciaMesesDias")]
+        [HttpGet]
+        public async Task<dynamic> GetFiferenciaMesesDias([FromQuery] int pMesesContrato, int pDiasContrato, int PMesesFase1, int pDiasFase1)
+        {
+            pMesesContrato *= 30 + pDiasContrato;
+            PMesesFase1 *= +pDiasFase1;
+
+            return await _managePreContruction.GetContratoByContratoId(pContratoId, pUserId);
         }
 
         [HttpGet]
@@ -61,7 +72,7 @@ namespace asivamosffie.api.Controllers
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managePreContruction.EditContrato(pContrato);
-                return respuesta; 
+                return respuesta;
             }
             catch (Exception ex)
             {
@@ -69,7 +80,7 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
-         
+
         [Route("LoadActa")]
         [HttpPost]
         public async Task<Respuesta> LoadActa([FromForm] Contrato pContrato)
@@ -78,7 +89,7 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managePreContruction.LoadActa( pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato,
+                respuesta = await _managePreContruction.LoadActa(pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato,
                     ToAppSettingsService(_settings)
                     );
                 return respuesta;
@@ -97,7 +108,7 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {  
+            {
                 respuesta = await _managePreContruction.CambiarEstadoActa(pContratoId, pEstadoContrato,
                HttpContext.User.FindFirst("User").Value, ToAppSettingsService(_settings));
                 return respuesta;
@@ -109,7 +120,7 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
-       
+
         public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
         {
             AppSettingsService appSettingsService = new AppSettingsService
@@ -126,7 +137,7 @@ namespace asivamosffie.api.Controllers
         public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pPerfilId, int pContratoId)
         {
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId , pUserId , ToAppSettingsService(_settings)), "application/pdf");
+            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId, pUserId, ToAppSettingsService(_settings)), "application/pdf");
         }
 
         [HttpGet]
@@ -137,13 +148,13 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPut]
-        [Route("CreateEditObservacionesActa")] 
+        [Route("CreateEditObservacionesActa")]
         public async Task<Respuesta> CreateEditObservacionesActa([FromBody] ContratoObservacion pcontratoObservacion)
-        { 
+        {
             try
             {
                 pcontratoObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                return await _managePreContruction.CreateEditObservacionesActa(pcontratoObservacion); 
+                return await _managePreContruction.CreateEditObservacionesActa(pcontratoObservacion);
             }
             catch (Exception ex)
             {
@@ -154,6 +165,6 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
- 
+
     }
 }
