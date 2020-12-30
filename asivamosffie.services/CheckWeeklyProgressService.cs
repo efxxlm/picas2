@@ -36,7 +36,7 @@ namespace asivamosffie.services
             List<InstitucionEducativaSede> ListInstitucionEducativaSede = _context.InstitucionEducativaSede.ToList();
             List<Localizacion> ListLocalizacion = _context.Localizacion.ToList();
             try
-            { 
+            {
                 SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pSeguimientoSemanalId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
 
                    .Include(r => r.ContratacionProyecto)
@@ -200,7 +200,75 @@ namespace asivamosffie.services
 
         }
 
+        #region List
 
+        public async Task<dynamic> GetListReporteSemanal()
+        {
+            List<SeguimientoSemanal> ListseguimientoSemanal =
+                 await _context.SeguimientoSemanal.Where(r => !string.IsNullOrEmpty(r.EstadoSeguimientoSemanalCodigo))
+                 .Include(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.Proyecto)
+                 .Include(r => r.ContratacionProyecto)
+                    .ThenInclude(r => r.Contratacion)
+                        .ThenInclude(r => r.Contrato)
+                 .Include(r => r.SeguimientoSemanalAvanceFisico)
+
+                 .ToListAsync();
+
+            List<dynamic> ListBitaCora = new List<dynamic>();
+
+            List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
+            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
+
+            int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
+
+            foreach (var item in ListseguimientoSemanal.Where(r => r.RegistroCompleto == true))
+            {
+                decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
+                string strCodigoEstadoObra = string.Empty;
+                string strCodigoEstadoMuestas = string.Empty;
+                if (item.SeguimientoSemanalAvanceFisico.Count() > 0)
+                {
+                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal.HasValue)
+                        ProgramacionAcumulada = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
+
+                    if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal.HasValue)
+                        AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
+
+                    if (!string.IsNullOrEmpty(item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo))
+                        strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre;
+                }
+
+                if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
+                    strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
+
+                ListBitaCora.Add(new
+                {
+                    UltimoReporte = item.FechaModificacion,
+                    item.SeguimientoSemanalId,
+                    RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                    item.NumeroSemana,
+                    UltimaSemana,
+                    item.FechaInicio,
+                    item.FechaFin,
+                    EstadoObra = strCodigoEstadoObra,
+                    ProgramacionAcumulada = Math.Truncate((decimal)ProgramacionAcumulada),
+                    AvanceFisico = Math.Truncate((decimal)AvanceFisico),
+                    EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                    item.ContratacionProyecto?.Proyecto?.LlaveMen,
+                    item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
+                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
+                    EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
+
+                });
+            }
+            return ListBitaCora;
+        }
+        #endregion
+
+
+
+        #region Create update
         public async Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Observacion_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
@@ -259,12 +327,12 @@ namespace asivamosffie.services
 
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SOCIAL:
                         CreateOrEditObservacionGestionSocial(pSeguimientoSemanalObservacion);
-                        break;       
-                     
+                        break;
+
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.ALERTAS_RELEVANTES:
                         CreateOrEditObservacionAlertasRelevantes(pSeguimientoSemanalObservacion);
                         break;
-                         
+
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.REPORTE_ACTIVIDADES:
                         CreateOrEditObservacionReporteActividades(pSeguimientoSemanalObservacion);
                         break;
@@ -343,7 +411,7 @@ namespace asivamosffie.services
         private void CreateOrEditObservacionGestionSocial(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
         {
             SeguimientoSemanalGestionObraSocial seguimientoSemanalGestionObraSocialOld = _context.SeguimientoSemanalGestionObraSocial.Find(pSeguimientoSemanalObservacion.ObservacionPadreId);
-             
+
             seguimientoSemanalGestionObraSocialOld.FechaModificacion = DateTime.Now;
             seguimientoSemanalGestionObraSocialOld.UsuarioModificacion = pSeguimientoSemanalObservacion.UsuarioCreacion;
 
@@ -756,5 +824,7 @@ namespace asivamosffie.services
         {
             throw new NotImplementedException();
         }
+
+        #endregion
     }
 }

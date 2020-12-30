@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICheckWeeklyProgressService
     {
+        Task<dynamic> GetListReporteSemanal();
+
         Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion);
 
         Task<SeguimientoSemanal> GetSeguimientoSemanalBySeguimientoSemanalId(int pSeguimientoSemanalId);

@@ -55,5 +55,12 @@ namespace asivamosffie.api.Controllers
         {
             return await _checkWeeklyProgressService.GetSeguimientoSemanalBySeguimientoSemanalId(pSeguimientoSemanalId); 
         }
+    
+        [Route("GetListReporteSemanal")]
+        [HttpGet]
+        public async Task<dynamic> GetListReporteSemanal( )
+        {
+            return await _checkWeeklyProgressService.GetListReporteSemanal( ); 
+        }
     }
 }
