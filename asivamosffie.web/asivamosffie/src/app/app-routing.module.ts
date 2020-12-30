@@ -217,6 +217,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
         .then(m => m.FasePreconstruccionModule)
       },
+      {
+        path: 'generarOrdenDeGiro',
+        loadChildren: () => import('./_pages/generar-orden-giro/generar-orden-giro.module')
+        .then(m => m.GenerarOrdenGiroModule)
+      },
     ]
 
   },
