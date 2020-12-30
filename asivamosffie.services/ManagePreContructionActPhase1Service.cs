@@ -113,8 +113,7 @@ namespace asivamosffie.services
                     contrato.TieneFase2 = false;
                 //Modificar Usuario 
                 //Ya que falta hacer caso de uso gestion usuarios
-                if (pUserId != null)
-                    contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioModificacion).FirstOrDefault();
+                contrato.UsuarioInterventoria = _context.Usuario.Where(r => r.Email == contrato.UsuarioModificacion).FirstOrDefault();
                 return contrato;
             }
             catch (Exception)
@@ -431,7 +430,7 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE2_CONST]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2))) : " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_1]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1))) : " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_2]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2))) : " ");
-             decimal ValorActualDelContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
+            decimal ValorActualDelContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_ACTUAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorActualDelContrato)));
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_INICIAL_CONTRATO]", MesesFase1Contrato + DiasFase1Contrato);
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_EJECUCION_FASE_1]", MesesFase1 + DiasFase1);
@@ -612,7 +611,7 @@ namespace asivamosffie.services
         }
 
         public async Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId)
-        { 
+        {
             return await _context.ContratoObservacion.Where(r => r.ContratoId == ContratoId).ToListAsync();
         }
 
