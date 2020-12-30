@@ -3179,7 +3179,8 @@ namespace asivamosffie.services
             string strEncabezado = "";
             if (!string.IsNullOrEmpty(pPlantilla?.Encabezado?.Contenido))
             {
-                strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
+                pPlantilla.Encabezado.Contenido = pPlantilla.Encabezado.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
+              strEncabezado = Helpers.Helpers.HtmlStringLimpio(pPlantilla.Encabezado.Contenido);
             }
 
             var globalSettings = new GlobalSettings
@@ -3198,13 +3199,13 @@ namespace asivamosffie.services
                 },
                 DocumentTitle = DateTime.Now.ToString(),
             };
-
+            string rutaLogo = Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png");
             var objectSettings = new ObjectSettings
             {
                 PagesCount = true,
                 HtmlContent = pPlantilla.Contenido,
                 WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "assets", "pdf-styles.css") },
-                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18, },
+                HeaderSettings = { FontName = "Roboto", FontSize = 8, Center = strEncabezado, Line = false, Spacing = 18,  HtmUrl = rutaLogo },
                 FooterSettings = { FontName = "Ariel", FontSize = 10, Center = "[page]" },
             };
 
