@@ -13,17 +13,37 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize]
+ 
     public class ManagePreContructionActPhase1Controller : Controller
     {
         private readonly IManagePreContructionActPhase1Service _managePreContruction;
         private readonly IOptions<AppSettings> _settings;
-        private readonly PublicController _publicController;
-
+         
         public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings)
         {
             _managePreContruction = managePreContructionActPhase1Service;
             _settings = settings;
+        }
+
+        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService
+            {
+                MailPort = appSettings.Value.MailPort,
+                MailServer = appSettings.Value.MailServer,
+                Password = appSettings.Value.Password,
+                Sender = appSettings.Value.Sender
+            };
+            return appSettingsService;
+        }
+
+
+        [HttpGet]
+        [Route("GetActaByIdPerfil")]
+        public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pContratoId , bool pEsContruccion)
+        {
+            int pUserId =  Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+            return File(await _managePreContruction.GetActaByIdPerfil(pContratoId, pUserId, ToAppSettingsService(_settings), pEsContruccion), "application/pdf");
         }
 
         [Route("GetListContrato")]
@@ -40,6 +60,7 @@ namespace asivamosffie.api.Controllers
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
             return await _managePreContruction.GetContratoByContratoId(pContratoId, pUserId);
         } 
+
         [HttpGet]
         [Route("GetListGrillaActaInicio")]
         public async Task<ActionResult<List<GrillaActaInicio>>> GetListGrillaActaInicio(int pPerfilId)
@@ -112,25 +133,6 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
-        {
-            AppSettingsService appSettingsService = new AppSettingsService
-            {
-                MailPort = appSettings.Value.MailPort,
-                MailServer = appSettings.Value.MailServer,
-                Password = appSettings.Value.Password,
-                Sender = appSettings.Value.Sender
-            };
-            return appSettingsService;
-        }
-        [HttpGet]
-        [Route("GetActaByIdPerfil")]
-        public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pPerfilId, int pContratoId)
-        {
-            int pUserId = 38; //Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId, pUserId, ToAppSettingsService(_settings)), "application/pdf");
-        }
-
         [HttpGet]
         [Route("GetListContratoObservacionByContratoId")]
         public async Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId([FromQuery] int pContratoId)
@@ -155,7 +157,6 @@ namespace asivamosffie.api.Controllers
                 };
                 return respuesta;
             }
-        }
-
+        } 
     }
 }

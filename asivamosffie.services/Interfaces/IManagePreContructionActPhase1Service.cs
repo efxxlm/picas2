@@ -14,7 +14,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CreateEditObservacionesActa(ContratoObservacion pcontratoObservacion);
 
-        Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId );
+        Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId(int ContratoId);
 
         Task<dynamic> GetListContrato();
 
@@ -25,10 +25,10 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EditContrato(Contrato pContrato);
 
         Task<Respuesta> LoadActa(Contrato pContrato, IFormFile pFile, string pDirectorioBase, string pDirectorioActaContrato, AppSettingsService appSettingsService);
-         
+
         Task<Respuesta> CambiarEstadoActa(int pContratoId, string pEstadoContrato, string pUsuarioModificacion, AppSettingsService appSettingsService);
 
-        Task<byte[]> GetActaByIdPerfil(int pPerfilId, int pContratoId ,int pUserId, AppSettingsService pAppSettingsService);
+        Task<byte[]> GetActaByIdPerfil(int pContratoId, int pUserId, AppSettingsService pAppSettingsService, bool pEsContruccion);
 
         Task GetListContratoConActaSinDocumento(AppSettingsService appSettingsService);
     }

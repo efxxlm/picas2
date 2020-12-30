@@ -323,28 +323,39 @@ namespace asivamosffie.services
             Helpers.Helpers.EnviarCorreo(prmMail,
             "Acta Notificada", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
         }
-        public async Task<byte[]> GetActaByIdPerfil(int PIdPerfil, int pContratoId, int pUserId, AppSettingsService pAppSettingsService)
-        {
 
+        public async Task<byte[]> GetActaByIdPerfil(int pContratoId, int pUserId, AppSettingsService pAppSettingsService, bool pEsContruccion)
+        {
             Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).Include(r => r.Contratacion).FirstOrDefault();
+
             //Enviar correo
             await GetEnviarActaParaFirmar(pAppSettingsService, pContratoId);
+
             if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString())
-                //Obra
-                return await ReplacePlantillaObra(pContratoId, pUserId, pAppSettingsService);
+                return await ReplacePlantillaObra(pContratoId, pUserId, pEsContruccion);
             else
-                //Interventoria
-                return await ReplacePlantillaInterventoria(pContratoId, pUserId, pAppSettingsService);
+                return await ReplacePlantillaInterventoria(pContratoId, pUserId, pEsContruccion);
         }
 
-        public async Task<byte[]> ReplacePlantillaObra(int pContratoId, int pUserId, AppSettingsService pAppSettingsService)
+        public async Task<byte[]> ReplacePlantillaObra(int pContratoId, int pUserId, bool pEsContruccion)
         {
             Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
 
-            Plantilla plantilla = await _context.Plantilla
-                .Include(r => r.Encabezado)
-                .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Construccion)
-                .ToString()).FirstOrDefaultAsync();
+            Plantilla plantilla = new Plantilla();
+            if (pEsContruccion)
+            {
+                plantilla = await _context.Plantilla
+                   .Include(r => r.Encabezado)
+                   .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Obra_Construccion)
+                   .ToString()).FirstOrDefaultAsync();
+            }
+            else
+            {
+                plantilla = await _context.Plantilla
+                   .Include(r => r.Encabezado)
+                   .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Obra_Preconstruccion)
+                   .ToString()).FirstOrDefaultAsync();
+            }
 
             Usuario Supervisor = contrato.UsuarioInterventoria;
 
@@ -380,7 +391,7 @@ namespace asivamosffie.services
             string DiasFase1 = string.Empty;
             string MesesFase2 = string.Empty;
             string DiasFase2 = string.Empty;
-             
+
             MesesFase1 = contrato?.PlazoFase1PreMeses + (contrato?.PlazoFase1PreMeses == 1 ? " mes / " : " meses / ");
             DiasFase1 = contrato?.PlazoFase1PreDias + (contrato?.PlazoFase1PreDias == 1 ? " dia " : "dias ");
             MesesFase2 = contrato?.PlazoFase2ConstruccionMeses + (contrato?.PlazoFase2ConstruccionMeses == 1 ? " mes / " : " meses / ");
@@ -390,7 +401,7 @@ namespace asivamosffie.services
             string DiasFase1Contrato = string.Empty;
 
             MesesFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses == 1 ? " mes /" : " meses / ");
-            DiasFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias == 1 ? " día /" : " días / ");
+            DiasFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias == 1 ? " día " : " días  ");
 
 
             plantilla.Contenido = plantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
@@ -418,7 +429,9 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_INICIAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorInicialContrato)));
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE1_PREC]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1))) : " ");
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE2_CONST]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2))) : " ");
-            decimal ValorActualDelContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_1]", !string.IsNullOrEmpty(contrato.ValorFase1.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase1))) : " ");
+            plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_FASE_2]", !string.IsNullOrEmpty(contrato.ValorFase2.ToString()) ? ("$" + (String.Format("{0:n}", contrato.ValorFase2))) : " ");
+             decimal ValorActualDelContrato = !string.IsNullOrEmpty(contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud).ToString()) ? contrato.Contratacion.DisponibilidadPresupuestal.Sum(r => r.ValorSolicitud) : 0;
             plantilla.Contenido = plantilla.Contenido.Replace("[VALOR_ACTUAL_CONTRATO]", "$" + (String.Format("{0:n}", ValorActualDelContrato)));
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_INICIAL_CONTRATO]", MesesFase1Contrato + DiasFase1Contrato);
             plantilla.Contenido = plantilla.Contenido.Replace("[PLAZO_EJECUCION_FASE_1]", MesesFase1 + DiasFase1);
@@ -432,19 +445,28 @@ namespace asivamosffie.services
             plantilla.Contenido = plantilla.Contenido.Replace("[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion);
             plantilla.Contenido = plantilla.Contenido.Replace("[CC_REPRESENTANTE_LEGAL]", contrato?.Contratacion?.Contratista?.RepresentanteLegalNumeroIdentificacion ?? " ");
 
-           //   return Helpers.PDF.Convertir(plantilla);
-         return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
+            //   return Helpers.PDF.Convertir(plantilla);
+            return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
 
-        public async Task<byte[]> ReplacePlantillaInterventoria(int pContratoId, int pUserId, AppSettingsService pAppSettingsService)
+        public async Task<byte[]> ReplacePlantillaInterventoria(int pContratoId, int pUserId, bool pEsContruccion)
         {
             Contrato contrato = await GetContratoByContratoId(pContratoId, pUserId);
-
-            Plantilla plantilla = await _context.Plantilla
-              .Include(r=> r.Encabezado)
-               .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria)  
-                .ToString()).FirstOrDefaultAsync();
-
+            Plantilla plantilla = new Plantilla();
+            if (pEsContruccion)
+            {
+                plantilla = await _context.Plantilla
+                .Include(r => r.Encabezado)
+                 .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria_Construccion)
+                  .ToString()).FirstOrDefaultAsync();
+            }
+            else
+            {
+                plantilla = await _context.Plantilla
+                    .Include(r => r.Encabezado)
+                     .Where(r => r.Codigo == ((int)ConstanCodigoPlantillas.Contrato_Acta_Interventoria_Preconstruccion)
+                      .ToString()).FirstOrDefaultAsync();
+            }
 
             Usuario Supervisor = contrato.UsuarioInterventoria;
 
@@ -486,12 +508,12 @@ namespace asivamosffie.services
             DiasFase1 = contrato?.PlazoFase1PreDias + (contrato?.PlazoFase1PreDias == 1 ? " día " : " días ");
             MesesFase2 = contrato?.PlazoFase2ConstruccionMeses + (contrato?.PlazoFase2ConstruccionMeses == 1 ? " mes / " : " meses / ");
             DiasFase2 = contrato?.PlazoFase2ConstruccionDias + (contrato?.PlazoFase2ConstruccionDias == 1 ? " día " : " días ");
-             
+
             string MesesFase1Contrato = string.Empty;
             string DiasFase1Contrato = string.Empty;
-         
-            MesesFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses == 1 ? " mes /" : " meses / " );
-            DiasFase1Contrato =  contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias == 1 ? " día /" : " días / ");
+
+            MesesFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoMeses == 1 ? " mes /" : " meses / ");
+            DiasFase1Contrato = contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias + (contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().PlazoDias == 1 ? " día " : " días  ");
 
 
             plantilla.Contenido = plantilla.Contenido.Replace("[RUTA_ICONO]", Path.Combine(Directory.GetCurrentDirectory(), "assets", "img-FFIE.png"));
@@ -535,8 +557,8 @@ namespace asivamosffie.services
 
 
 
-       //   return Helpers.PDF.Convertir(plantilla);
-       return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
+            //   return Helpers.PDF.Convertir(plantilla);
+            return _registerSessionTechnicalCommitteeService.ConvertirPDF(plantilla);
         }
 
         public async Task<Respuesta> CreateEditObservacionesActa(ContratoObservacion pcontratoObservacion)
