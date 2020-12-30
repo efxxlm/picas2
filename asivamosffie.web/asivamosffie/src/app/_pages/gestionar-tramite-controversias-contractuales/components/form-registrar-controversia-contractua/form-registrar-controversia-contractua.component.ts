@@ -84,8 +84,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
     });
   }
 
-  onSubmit() {
-    console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+  contratoSearch(contrato){
+    
   }
 }

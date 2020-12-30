@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-control-y-tabla-cc-general',
@@ -23,7 +25,7 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
     'gestion',
   ];
   public dataTable;
-  constructor(private router: Router, private services: ContractualControversyService) {
+  constructor(public dialog: MatDialog, private router: Router, private services: ContractualControversyService) {
   }
   ngOnInit(): void {
     this.services.GetListGrillaTipoSolicitudControversiaContractual().subscribe(data => {
@@ -52,6 +54,7 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   }
 
   deleteControversia(id) {
+
     this.services.EliminarControversiaContractual(id).subscribe((dataEliminado: any) => {
       if (dataEliminado.isSuccessful == true) {
         this.ngOnInit();
@@ -88,6 +91,18 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
       anchor.href = window.URL.createObjectURL(blob);
       anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
       anchor.click();
+    });
+  }
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        this.deleteControversia(e);
+      }
     });
   }
 }
