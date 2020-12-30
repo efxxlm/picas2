@@ -189,7 +189,6 @@ namespace asivamosffie.services
             }
         }
 
-
         public async Task<Respuesta> EditarContratoObservacion(int pContratoId, int pPlazoFase2PreMeses, int pPlazoFase2PreDias, string pObservacion,
                                                              string pUsuarioModificacion, DateTime pFechaActaInicioFase1, DateTime pFechaTerminacionFase2,
                                                              bool pEsSupervisor, bool pEsActa)
@@ -532,7 +531,6 @@ namespace asivamosffie.services
             }
         }
 
-
         public async Task<Respuesta> EditarCargarActaSuscritaContrato(int pContratoId, DateTime pFechaFirmaContratista, DateTime pFechaFirmaActaContratistaInterventoria,
             string pUsuarioModificacion, IFormFile pFile, string pFilePatch
            //, AppSettingsService _appSettingsService
@@ -585,7 +583,6 @@ namespace asivamosffie.services
               };
             }
         }
-
 
         public async Task<Respuesta> EnviarCorreoSupervisorContratista(int pContratoId, AppSettingsService settings, int pPerfilId)
         {
@@ -682,6 +679,7 @@ namespace asivamosffie.services
             }
 
         }
+     
         private List<UsuarioPerfil> getCorreos(int perfilId)
         {
             //[Usuario], [UsuarioPerfil] , [Perfil]
@@ -697,7 +695,6 @@ namespace asivamosffie.services
 
             return lstUsuariosPerfil;
         }
-
 
         public async Task<byte[]> GetPlantillaActaInicio(int pContratoId)
         {
@@ -1154,7 +1151,6 @@ namespace asivamosffie.services
 
         }
 
-
         private decimal getSumVlrContratoComponente(int contratacionId, string FaseCodigo)
         {
 
@@ -1191,6 +1187,7 @@ namespace asivamosffie.services
                 return vlrFase2;
 
         }
+      
         public async Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId)
         {
             //            Número del contrato de obra DisponibilidadPresupuestal? contrato - numeroContrato
@@ -1457,7 +1454,6 @@ namespace asivamosffie.services
 
             return template;
         }
-
 
         private async Task enviarNotificaciones(Contrato pContrato, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
         {
@@ -2025,87 +2021,81 @@ namespace asivamosffie.services
             return actaInicio;
         }
 
-        
         public async Task GetDiasHabilesActaConstruccionEnviada(AppSettingsService appSettingsService)
         {
-            
-
             List<Contrato> contratos = _context.Contrato
                 .Where(r => (r.EstadoActaFase2 == "19" || r.EstadoActaFase2 == "6"))
                .ToList();
 
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ConActaSinDocumento319);
-            
-            
-                foreach (var contrato in contratos)
+
+
+            foreach (var contrato in contratos)
+            {
+                DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, contrato.FechaCambioEstadoFase2.HasValue ? contrato.FechaCambioEstadoFase2.Value : DateTime.Now);
+
+                if ((DateTime.Now - RangoFechaConDiasHabiles).TotalDays > 2)
                 {
-                    DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, contrato.FechaCambioEstadoFase2.HasValue ? contrato.FechaCambioEstadoFase2.Value : DateTime.Now );
+                    int Dias = 0, Meses = 0;
+                    Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
+                    Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
 
-                    if ((DateTime.Now - RangoFechaConDiasHabiles).TotalDays > 2){
-                        int Dias = 0, Meses = 0;
-                        Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
-                        Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
+                    string template = TemplateRecoveryPassword.Contenido
+                                .Replace("_LinkF_", appSettingsService.DominioFront)
+                                .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
+                                .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias).AddMonths(Meses)).ToString("dd-MM-yy"))
+                                .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
+                                .Replace("[FECHA_ACTA_INICIO]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy") : " ")
+                                .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
-                        string template = TemplateRecoveryPassword.Contenido
-                                    .Replace("_LinkF_", appSettingsService.DominioFront)
-                                    .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
-                                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                    .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias).AddMonths(Meses)).ToString("dd-MM-yy"))
-                                    .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
-                                    .Replace("[FECHA_ACTA_INICIO]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy") : " ")
-                                    .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-
-                        foreach (var item in usuarios)
-                        {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Tiene solicitudes pendientes por revisión", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
-                        }
+                    foreach (var item in usuarios)
+                    {
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Tiene solicitudes pendientes por revisión", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
                     }
-
                 }
-            
+
+            }
+
 
         }
 
         public async Task GetDiasHabilesActaRegistrada(AppSettingsService appSettingsService)
         {
-            
-
             List<Contrato> contratos = _context.Contrato
                 .Where(r => (r.EstadoActaFase2 == "14" || r.EstadoActaFase2 == "2" || r.EstadoActaFase2 == "3"))
                .ToList();
 
             var usuarios = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Interventor || x.PerfilId == (int)EnumeratorPerfil.Supervisor || x.PerfilId == (int)EnumeratorPerfil.Apoyo).Include(y => y.Usuario);
             Template TemplateRecoveryPassword = await _commonService.GetTemplateById((int)enumeratorTemplate.ConActaSinDocumento319);
-            
-            
-                foreach (var contrato in contratos)
+
+            foreach (var contrato in contratos)
+            {
+                DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, contrato.FechaCambioEstadoFase2.HasValue ? contrato.FechaCambioEstadoFase2.Value : DateTime.Now);
+
+                if ((DateTime.Now - RangoFechaConDiasHabiles).TotalDays > 2)
                 {
-                    DateTime RangoFechaConDiasHabiles = await _commonService.CalculardiasLaborales(2, contrato.FechaCambioEstadoFase2.HasValue ? contrato.FechaCambioEstadoFase2.Value : DateTime.Now );
+                    int Dias = 0, Meses = 0;
+                    Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
+                    Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
 
-                    if ((DateTime.Now - RangoFechaConDiasHabiles).TotalDays > 2){
-                        int Dias = 0, Meses = 0;
-                        Dias = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoDias ?? 0;
-                        Meses = contrato?.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().PlazoMeses ?? 0;
+                    string template = TemplateRecoveryPassword.Contenido
+                                .Replace("_LinkF_", appSettingsService.DominioFront)
+                                .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
+                                .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
+                                .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias).AddMonths(Meses)).ToString("dd-MM-yy"))
+                                .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
+                                .Replace("[FECHA_ACTA_INICIO]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy") : " ")
+                                .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
 
-                        string template = TemplateRecoveryPassword.Contenido
-                                    .Replace("_LinkF_", appSettingsService.DominioFront)
-                                    .Replace("[TIPO_CONTRATO]", contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContratacion.Obra.ToString() ? ConstanCodigoTipoContratacionSTRING.Obra : ConstanCodigoTipoContratacionSTRING.Interventoria)
-                                    .Replace("[NUMERO_CONTRATO]", contrato.NumeroContrato)
-                                    .Replace("[FECHA_PREVISTA_TERMINACION]", ((DateTime)contrato.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().FechaSolicitud.AddDays(Dias).AddMonths(Meses)).ToString("dd-MM-yy"))
-                                    .Replace("[FECHA_POLIZA]", ((DateTime)contrato.ContratoPoliza.FirstOrDefault().FechaAprobacion).ToString("dd-MM-yy"))
-                                    .Replace("[FECHA_ACTA_INICIO]", contrato.FechaActaInicioFase1.HasValue ? ((DateTime)contrato.FechaActaInicioFase1).ToString("dd-MM-yy") : " ")
-                                    .Replace("[CANTIDAD_PROYECTOS]", contrato.Contratacion.ContratacionProyecto.Where(r => !r.Eliminado).Count().ToString());
-
-                        foreach (var item in usuarios)
-                        {
-                            Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Tiene solicitudes pendientes por revisión", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
-                        }
+                    foreach (var item in usuarios)
+                    {
+                        Helpers.Helpers.EnviarCorreo(item.Usuario.Email, "Tiene solicitudes pendientes por revisión", template, appSettingsService.Sender, appSettingsService.Password, appSettingsService.MailServer, appSettingsService.MailPort);
                     }
-
                 }
-            
 
+            }
         }
 
     }

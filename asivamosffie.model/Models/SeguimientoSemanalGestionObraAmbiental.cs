@@ -22,11 +22,19 @@ namespace asivamosffie.model.Models
         public bool? TieneManejoResiduosPeligrososEspeciales { get; set; }
         public bool? TieneManejoResiduosConstruccionDemolicion { get; set; }
         public bool? TieneManejoOtro { get; set; }
+        public bool? TieneObservacionApoyo { get; set; }
+        public int? ObservacionApoyoId { get; set; }
+        public bool? TieneObservacionSupervisor { get; set; }
+        public int? ObservacionSupervisorId { get; set; }
+        public bool? RegistroCompletoObservacionApoyo { get; set; }
+        public bool? RegistroCompletoObservacionSupervisor { get; set; }
 
         public virtual ManejoMaterialesInsumos ManejoMaterialesInsumo { get; set; }
         public virtual ManejoOtro ManejoOtro { get; set; }
         public virtual ManejoResiduosConstruccionDemolicion ManejoResiduosConstruccionDemolicion { get; set; }
         public virtual ManejoResiduosPeligrososEspeciales ManejoResiduosPeligrososEspeciales { get; set; }
+        public virtual SeguimientoSemanalObservacion ObservacionApoyo { get; set; }
+        public virtual SeguimientoSemanalObservacion ObservacionSupervisor { get; set; }
         public virtual SeguimientoSemanalGestionObra SeguimientoSemanalGestionObra { get; set; }
     }
 }

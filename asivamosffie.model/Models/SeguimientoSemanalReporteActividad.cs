@@ -23,7 +23,31 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public bool? Eliminado { get; set; }
+        public bool? TieneObservacionApoyoEstadoContrato { get; set; }
+        public int? ObservacionApoyoIdEstadoContrato { get; set; }
+        public bool? TieneObservacionSupervisorEstadoContrato { get; set; }
+        public int? ObservacionSupervisorIdEstadoContrato { get; set; }
+        public bool? TieneObservacionApoyoActividad { get; set; }
+        public int? ObservacionApoyoIdActividad { get; set; }
+        public bool? TieneObservacionSupervisorActividad { get; set; }
+        public int? ObservacionSupervisorIdActividad { get; set; }
+        public bool? TieneObservacionApoyoActividadSiguiente { get; set; }
+        public int? ObservacionApoyoIdActividadSiguiente { get; set; }
+        public bool? TieneObservacionSupervisorActividadSiguiente { get; set; }
+        public int? ObservacionSupervisorIdActividadSiguiente { get; set; }
+        public bool? RegistroCompletoObservacionApoyoEstadoContrato { get; set; }
+        public bool? RegistroCompletoObservacionSupervisorEstadoContrato { get; set; }
+        public bool? RegistroCompletoObservacionApoyoActividad { get; set; }
+        public bool? RegistroCompletoObservacionSupervisorActividad { get; set; }
+        public bool? RegistroCompletoObservacionApoyoActividadSiguiente { get; set; }
+        public bool? RegistroCompletoObservacionSupervisorActividadSiguiente { get; set; }
 
+        public virtual SeguimientoSemanalObservacion ObservacionApoyoIdActividadNavigation { get; set; }
+        public virtual SeguimientoSemanalObservacion ObservacionApoyoIdActividadSiguienteNavigation { get; set; }
+        public virtual SeguimientoSemanalObservacion ObservacionApoyoIdEstadoContratoNavigation { get; set; }
+        public virtual SeguimientoSemanalObservacion ObservacionSupervisorIdActividadNavigation { get; set; }
+        public virtual SeguimientoSemanalObservacion ObservacionSupervisorIdActividadSiguienteNavigation { get; set; }
+        public virtual SeguimientoSemanalObservacion ObservacionSupervisorIdEstadoContratoNavigation { get; set; }
         public virtual SeguimientoSemanal SeguimientoSemanal { get; set; }
     }
 }
