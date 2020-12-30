@@ -461,6 +461,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region 
         public const string Error = "500";
+        public const string ErrorLLAVEMEN = "501";
         #endregion
     }
 

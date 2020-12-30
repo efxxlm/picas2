@@ -436,6 +436,22 @@ namespace asivamosffie.services
                 //CREAR PROYECTO 
                 if (pProyecto.ProyectoId == 0)
                 {
+                    //agrego una condición para validar llave MEN unica, si no estalla por bd
+                    var proyectoexistetne = _context.Proyecto.Where(x=>x.LlaveMen==pProyecto.LlaveMen).ToList();
+                    if(proyectoexistetne.Count()>0)
+                    {
+                        return respuesta =
+                          new Respuesta
+                          {
+                              IsSuccessful = false,
+                              IsException = false,
+                              IsValidation = true,
+                              Code = ConstantMessagesProyecto.ErrorLLAVEMEN,
+                              Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, 
+                                ConstantMessagesProyecto.ErrorLLAVEMEN, idAccionCrearProyecto, pProyecto.UsuarioCreacion, "LLAVE MEN EXISTENTE")
+                          };
+                    }
+
                     CrearEditar = "CREAR PROYECTO";
                     int? predioid = null;
                     Predio pPredioPrincipal = new Predio();
