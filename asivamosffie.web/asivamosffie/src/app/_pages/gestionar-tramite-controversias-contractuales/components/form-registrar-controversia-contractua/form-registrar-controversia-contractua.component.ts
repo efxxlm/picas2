@@ -36,7 +36,6 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadContractList();
-    
   }
 
   loadContractList(){
