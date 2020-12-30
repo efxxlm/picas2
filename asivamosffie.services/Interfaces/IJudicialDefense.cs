@@ -24,5 +24,9 @@ namespace asivamosffie.services.Interfaces
         Task<List<Contrato>> GetListContract();
         Task<List<ProyectoGrilla>> GetListProyectsByContract(int pContratoId);
         Task<List<DefensaJudicialSeguimiento>> GetActuacionesByDefensaJudicialID(int pDefensaJudicialId);
+        Task<Respuesta> EnviarAComite(int pDefensaJudicialId, string pUsuarioModifico);
+        Task<Respuesta> DeleteActuation(int pDefensaJudicialId, string pUsuarioModifico);
+        Task<Respuesta> FinalizeActuation(int pDefensaJudicialId, string pUsuarioModifico);
+        Task<Respuesta> CerrarProceso(int pDefensaJudicialId, string pUsuarioModifico);
     }
 }

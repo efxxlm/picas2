@@ -70,6 +70,22 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
     });
   }
 
+  enviarAComite(id)
+  {
+    this.defensaServices.EnviarAComite(id)
+    .subscribe(respuesta => {
+      this.openDialog("",respuesta.message,true);
+    });
+  }
+
+  cerrarProceso(id)
+  {
+    this.defensaServices.cerrarProceso(id)
+    .subscribe(respuesta => {
+      this.openDialog("",respuesta.message,true);
+    });
+  }
+
 
   openDialog(modalTitle: string, modalText: string,redirect?:boolean) {
     let dialogRef =this.dialog.open(ModalDialogComponent, {

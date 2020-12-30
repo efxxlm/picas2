@@ -1,9 +1,11 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { DefensaJudicialService } from 'src/app/core/_services/defensaJudicial/defensa-judicial.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-control-tabla-actuacion-proceso',
@@ -27,7 +29,8 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
 
   @Input() defensaJudicialID:number;
 
-  constructor(private router: Router, private defensaService:DefensaJudicialService) { }
+  constructor(private router: Router, private defensaService:DefensaJudicialService,
+    public dialog: MatDialog,) { }
 
   ngOnInit(): void {
     this.defensaService.getActuaciones(this.defensaJudicialID).subscribe(response =>{
@@ -50,5 +53,44 @@ export class ControlTablaActuacionProcesoComponent implements OnInit {
   }
   verDetalleEditar(id){
     this.router.navigate(['/gestionarProcesoDefensaJudicial/verDetalleEditarActuacionProceso',id]);
+  }
+
+  finalizarActuacion(id:number)
+  {
+    this.defensaService.finalizarActuacion(id).subscribe(response =>{
+      this.openDialog("",response.message);
+    });
+
+  }
+  eliminarActuacion(id:number)
+  {
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
+  }
+
+  eliminarActuacionConfirmado(id:number)
+  {
+    this.defensaService.eliminarActuacionJudicial(id).subscribe(response =>{
+      this.openDialog("",response.message);
+    });
+  }
+
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        this.eliminarActuacionConfirmado(e);
+      }
+    });
+  }
+
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
   }
 }

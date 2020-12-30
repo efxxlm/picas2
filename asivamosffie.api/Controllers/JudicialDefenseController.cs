@@ -234,5 +234,86 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+
+        
+        [Route("EnviarAComite")]
+        [HttpPost]
+        public async Task<IActionResult> EnviarAComite(int pDefensaJudicialId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _judicialDefense.EnviarAComite(pDefensaJudicialId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("CerrarProceso")]
+        [HttpPost]
+        public async Task<IActionResult> CerrarProceso(int pDefensaJudicialId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _judicialDefense.CerrarProceso(pDefensaJudicialId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+
+        [Route("DeleteActuation")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteActuation(int id)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _judicialDefense.DeleteActuation(id, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
+        /// <summary>
+        /// control el botón “Finalizar actuación”, el cual se habilitará una vez hayan sido diligenciados los campos obligatorios del formulario de actuaciones. 
+        /// Al dar clic, el registro no se podrá visualizar más en la grilla de control de las actuaciones. ............?¡?¡?¡?¡?¡¿
+        /// </summary>
+        /// <param name="pDefensaJudicialId"></param>
+        /// <returns></returns>
+        [Route("FinalizeActuation")]
+        [HttpPost]
+        public async Task<IActionResult> FinalizeActuation(int id)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _judicialDefense.FinalizeActuation(id, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
     }
 }

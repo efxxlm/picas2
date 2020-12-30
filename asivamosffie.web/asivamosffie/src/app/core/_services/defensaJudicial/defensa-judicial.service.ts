@@ -11,7 +11,6 @@ import { Respuesta } from '../common/common.service';
 export class DefensaJudicialService {
   
   
-
   url: string = environment.apiUrl;
 
   constructor( private http: HttpClient ) { }
@@ -33,6 +32,13 @@ export class DefensaJudicialService {
     return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/EliminarDefensaJudicial?pDefensaJudicialId=${ pDefensaJudicialId }`, null );
   }
 
+  EnviarAComite( pDefensaJudicialId:number ) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/EnviarAComite?pDefensaJudicialId=${ pDefensaJudicialId }`, null );
+  }
+
+  cerrarProceso(pDefensaJudicialId: any) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/CerrarProceso?pDefensaJudicialId=${ pDefensaJudicialId }`, null );
+  }
   
   CambiarEstadoDefensaJudicial( pDefensaJudicialId:number,pCodigoEstado:string ) {
     return this.http.put<Respuesta>( `${ this.url }/JudicialDefense/CambiarEstadoDefensaJudicial?pDefensaJudicialId=${ pDefensaJudicialId }&pCodigoEstado=${pCodigoEstado}`,null );
@@ -61,6 +67,13 @@ export class DefensaJudicialService {
 
   getActuaciones(controlJudicialId:number) {
     return this.http.get<any[]>(`${this.url}/JudicialDefense/GetActuacionesByDefensaJudicialID?pDefensaJudicialId=${ controlJudicialId }` );    
+  }
+
+  eliminarActuacionJudicial(id: number) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/DeleteActuation?id=${ id }`, null );
+  }
+  finalizarActuacion(id: number) {
+    return this.http.post<Respuesta>( `${ this.url }/JudicialDefense/FinalizeActuation?id=${ id }`, null );
   }
 }
 

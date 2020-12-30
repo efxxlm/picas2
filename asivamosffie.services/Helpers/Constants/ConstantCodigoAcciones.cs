@@ -200,6 +200,7 @@ public const string Inicio_de_sesion = "1";
         
         public const string Crear_Editar_Defensa_Judicial = "156";
         public const string Eliminar_Defensa_Judicial = "159";
+        public const string Enviar_Defensa_Judicial = "177";
 
         //4.4.1 Registrar actuaciones de controversias contractuales
         public const string  Crear_Editar_Novedad_Contractual= "163";

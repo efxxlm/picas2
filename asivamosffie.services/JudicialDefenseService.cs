@@ -265,7 +265,9 @@ namespace asivamosffie.services
                             defFicha.EsCompleto = true;
                             defFicha.DefensaJudicialId = defensaJudicialBD.DefensaJudicialId;
                             _context.DefensaJudicialSeguimiento.Add(defFicha);
-                        }                       
+                        }
+                        //si entra aqui, cambio el estado de la defensa judicial
+                        defensaJudicialBD.EstadoProcesoCodigo = "9";//en desaroolo
                     }
                     foreach (var defFicha in defensaJudicial.DemandadoConvocado)
                     {
@@ -1001,7 +1003,7 @@ namespace asivamosffie.services
                     IsValidation = false,
                     Data = defensaJudicial,
                     Code = ConstantMessagesJudicialDefense.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, defensaJudicial.UsuarioModificacion, strCrearEditar)
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.EliminacionExitosa, idAccion, defensaJudicial.UsuarioModificacion, strCrearEditar)
 
                 };
             }
@@ -1176,7 +1178,210 @@ namespace asivamosffie.services
 
         public async Task<List<DefensaJudicialSeguimiento>> GetActuacionesByDefensaJudicialID(int pDefensaJudicialId)
         {
-            return _context.DefensaJudicialSeguimiento.Where(x=>x.DefensaJudicialId==pDefensaJudicialId).ToList();
+            return _context.DefensaJudicialSeguimiento.Where(x=>x.DefensaJudicialId==pDefensaJudicialId && x.EstadoProcesoCodigo!="3").ToList();//diferente a finalizado
+        }
+
+        public async Task<Respuesta> EnviarAComite(int pDefensaJudicialId, string pUsuarioModifico)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+
+            DefensaJudicial defensaJudicial = null;
+
+            try
+            {
+                defensaJudicial = await _context.DefensaJudicial.Where(d => d.DefensaJudicialId == pDefensaJudicialId).FirstOrDefaultAsync();
+
+                if (defensaJudicial != null)
+                {
+                    strCrearEditar = "ENVIAR A COMITE DEFENSA JUDICIAL";
+                    defensaJudicial.FechaModificacion = DateTime.Now;
+                    defensaJudicial.UsuarioModificacion = pUsuarioModifico;
+                    defensaJudicial.EstadoProcesoCodigo = "2";//cambiar esto                    
+                    defensaJudicial.Eliminado = false;
+                    _context.DefensaJudicial.Update(defensaJudicial);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, pUsuarioModifico, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> DeleteActuation(int pId, string pUsuarioModifico)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+
+            DefensaJudicialSeguimiento defensaJudicial = null;
+
+            try
+            {
+                defensaJudicial = await _context.DefensaJudicialSeguimiento.Where(d => d.DefensaJudicialSeguimientoId == pId).FirstOrDefaultAsync();
+
+                if (defensaJudicial != null)
+                {
+                    strCrearEditar = "ELIMINAR ACTUACION DE COMITE DEFENSA JUDICIAL";
+                    defensaJudicial.FechaModificacion = DateTime.Now;
+                    defensaJudicial.UsuarioModificacion = pUsuarioModifico;                    
+                    defensaJudicial.Eliminado = true;
+                    _context.DefensaJudicialSeguimiento.Update(defensaJudicial);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.EliminacionExitosa, idAccion, pUsuarioModifico, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> FinalizeActuation(int pId, string pUsuarioModifico)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+
+            DefensaJudicialSeguimiento defensaJudicial = null;
+
+            try
+            {
+                defensaJudicial = await _context.DefensaJudicialSeguimiento.Where(d => d.DefensaJudicialSeguimientoId == pId).FirstOrDefaultAsync();
+
+                if (defensaJudicial != null)
+                {
+                    strCrearEditar = "FINALIZAR ACTUACION DE COMITE DEFENSA JUDICIAL";
+                    defensaJudicial.FechaModificacion = DateTime.Now;
+                    defensaJudicial.UsuarioModificacion = pUsuarioModifico;
+                    defensaJudicial.Eliminado = false;
+                    defensaJudicial.EstadoProcesoCodigo = "3";//cambiar
+                    _context.DefensaJudicialSeguimiento.Update(defensaJudicial);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, pUsuarioModifico, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
+
+        public async Task<Respuesta> CerrarProceso(int pDefensaJudicialId, string pUsuarioModifico)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Enviar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+
+            DefensaJudicial defensaJudicial = null;
+
+            try
+            {
+                defensaJudicial = await _context.DefensaJudicial.Where(d => d.DefensaJudicialId == pDefensaJudicialId).FirstOrDefaultAsync();
+
+                if (defensaJudicial != null)
+                {
+                    strCrearEditar = "CERRAR COMITE DEFENSA JUDICIAL";
+                    defensaJudicial.FechaModificacion = DateTime.Now;
+                    defensaJudicial.UsuarioModificacion = pUsuarioModifico;
+                    defensaJudicial.EstadoProcesoCodigo = "10";//cambiar esto                    
+                    defensaJudicial.Eliminado = false;
+                    _context.DefensaJudicial.Update(defensaJudicial);
+
+                    _context.SaveChanges();
+
+                }
+
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.OperacionExitosa, idAccion, pUsuarioModifico, strCrearEditar)
+
+                };
+            }
+
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = defensaJudicial,
+                    Code = ConstantMessagesJudicialDefense.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_procesos_Defensa_Judicial, ConstantMessagesJudicialDefense.Error, idAccion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
         }
     }
 }
