@@ -6,11 +6,16 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
 import { GenerarOrdenGiroComponent } from './components/generar-orden-giro/generar-orden-giro.component';
+import { FormGenerarOrdenGiroComponent } from './components/form-generar-orden-giro/form-generar-orden-giro.component';
+import { AccordionInfoGeneralGogComponent } from './components/accordion-info-general-gog/accordion-info-general-gog.component';
+import { AccordionDetalleGiroGogComponent } from './components/accordion-detalle-giro-gog/accordion-detalle-giro-gog.component';
+import { TablaDatosSolicitudGogComponent } from './components/tabla-datos-solicitud-gog/tabla-datos-solicitud-gog.component';
+import { TablaDatosDdpGogComponent } from './components/tabla-datos-ddp-gog/tabla-datos-ddp-gog.component';
 
 
 
 @NgModule({
-  declarations: [GenerarOrdenGiroComponent],
+  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent],
   imports: [
     GenerarOrdenGiroRoutingModule,
     CommonModule,
