@@ -105,9 +105,21 @@ export class RegistrarComponent implements OnInit {
         else{
           if(event==3)
           {
-            console.log(this.cuentasBancaria(i));
-            this.cuentasBancaria(i).removeAt(j);  
-            this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+            console.log(this.cuentasBancaria(i).value[j]);
+            if(this.cuentasBancaria(i).value[j].cuentaBancariaId!=null)
+            {
+              this.fuenteFinanciacionService.eliminarCuentaBancaria(this.cuentasBancaria(i).value[j].cuentaBancariaId).
+              subscribe( response =>{
+                this.cuentasBancaria(i).removeAt(j);                
+                this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+              });
+              
+            }
+            else{
+              this.cuentasBancaria(i).removeAt(j);  
+              this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+            }
+            
           }
           else{
             this.borrarVigencia(borrarForm,i);

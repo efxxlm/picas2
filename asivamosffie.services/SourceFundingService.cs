@@ -122,6 +122,7 @@ namespace asivamosffie.services
                 {
                     cb.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion == null ? fuentefinanciacion.UsuarioModificacion.ToUpper() : fuentefinanciacion.UsuarioCreacion.ToUpper();
                     cb.FechaCreacion = DateTime.Now;
+                    cb.Eliminado = false;
                     await bankAccountService.CreateEditarCuentasBancarias(cb);
                 };
 
@@ -318,10 +319,10 @@ namespace asivamosffie.services
             var res= await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
                         .Where(r => r.AportanteId == AportanteId)
                         .Include(r => r.ControlRecurso)
-                        .Include(r => r.CuentaBancaria)
                         .Include(r => r.CofinanciacionDocumento)
                         .Include(r => r.Aportante)
                         .ThenInclude(r => r.RegistroPresupuestal)
+                        .IncludeFilter(r => r.CuentaBancaria.Where(r => !(bool)r.Eliminado))
                         .IncludeFilter(r => r.VigenciaAporte.Where(r => !(bool)r.Eliminado))
                         .ToListAsync();            
             return res;
