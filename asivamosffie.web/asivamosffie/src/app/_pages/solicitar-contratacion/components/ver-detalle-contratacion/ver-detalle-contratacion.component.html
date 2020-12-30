@@ -122,7 +122,7 @@
       <p *ngIf="contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: Si</p>
       <p *ngIf="!contratacion.esObligacionEspecial"><b>¿Este contrato tiene alguna obligación especial?</b>: No</p>
 
-      <div align="left" class="div-center" *ngIf="contratacion.esObligacionEspecial === true">
+      <div align="left" *ngIf="contratacion.esObligacionEspecial === true">
         <mat-card class="border" style="margin-top: 2em;">
           <mat-card-title class="text-area-quill--label">Descripción</mat-card-title>
           <mat-card-content class="mt-1em">
