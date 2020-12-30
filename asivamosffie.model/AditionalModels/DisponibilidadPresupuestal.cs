@@ -15,5 +15,8 @@ namespace asivamosffie.model.Models
         public DateTime FechaComiteTecnicoNotMapped { get; set; }
         [NotMapped]
         public string stringAportante{ get; set; }
+
+        [NotMapped]
+        public string[] observacionesRechazo{ get; set; }
     }
 }

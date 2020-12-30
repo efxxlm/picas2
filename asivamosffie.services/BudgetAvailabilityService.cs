@@ -101,7 +101,9 @@ namespace asivamosffie.services
             var resultado= await _context.DisponibilidadPresupuestal.
                 Where(r => r.DisponibilidadPresupuestalId == pDisponibilidadPresupuestalId).
                 Include(r => r.DisponibilidadPresupuestalProyecto).
-                ThenInclude(r=>r.Proyecto).FirstOrDefaultAsync();
+                ThenInclude(r=>r.Proyecto).
+                Include(x=>x.DisponibilidadPresupuestalObservacion)
+                .FirstOrDefaultAsync();
             //busco comite técnico
             DateTime fechaComitetecnico = DateTime.Now;
             string numerocomietetecnico = "";
@@ -128,6 +130,7 @@ namespace asivamosffie.services
                 resultado.stringAportante = getNombreAportante(_context.CofinanciacionAportante.Find(resultado.AportanteId));
             }
             
+            
             return resultado;
 
         }
@@ -137,7 +140,8 @@ namespace asivamosffie.services
             try
             {
                 var dis= await _context.DisponibilidadPresupuestal.Where(d => d.DisponibilidadPresupuestalId == id)
-                                    .Include(r => r.DisponibilidadPresupuestalProyecto)                                    
+                                    .Include(r => r.DisponibilidadPresupuestalProyecto)  
+                                    .Include(x => x.DisponibilidadPresupuestalObservacion)
                                     .FirstOrDefaultAsync();
                 DateTime fechaComitetecnico = DateTime.Now;
                 string numerocomietetecnico = "";
@@ -807,11 +811,11 @@ namespace asivamosffie.services
                         .Replace("[INSTITUCION]", institucion)
                         .Replace("[SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
                         .Replace("[APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
-                        .Replace("[VALOR_APORTANTE]", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x=>x.ValorDocumento).ToString())
+                        .Replace("[VALOR_APORTANTE]", "$ "+String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x=>x.ValorDocumento)).ToString())
                         .Replace("[FUENTE]", fuenteNombre)
-                        .Replace("[SALDO_FUENTE]", saldototal.ToString())
-                        .Replace("[VALOR_FUENTE]", gestion.ValorSolicitado.ToString())
-                        .Replace("[NUEVO_SALDO_FUENTE]", (saldototal- gestion.ValorSolicitado).ToString());
+                        .Replace("[SALDO_FUENTE]", "$ "+String.Format("{0:n0}", saldototal).ToString())
+                        .Replace("[VALOR_FUENTE]", "$ "+String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
+                        .Replace("[NUEVO_SALDO_FUENTE]", "$ "+String.Format("{0:n0}", (saldototal - gestion.ValorSolicitado)).ToString());
                     tablafuentes += tr;                  
                 }
 
@@ -839,7 +843,7 @@ namespace asivamosffie.services
                             Replace("[FASE]", strFase.Nombre).
                             Replace("[COMPONENTE]", dom.FirstOrDefault().Nombre).
                             Replace("[USO]", usos.FirstOrDefault().Nombre).
-                            Replace("[VALOR_USO]", comp.ValorUso.ToString());
+                            Replace("[VALOR_USO]", "$ "+String.Format("{0:n0}", comp.ValorUso).ToString());
                         tablauso += fuentestring;
                     }                                        
                 }
@@ -885,17 +889,17 @@ namespace asivamosffie.services
                         .Replace("[DDP_INSTITUCION_EDUCATIVA]", institucion)
                         .Replace("[DDP_SEDE]", gestion.DisponibilidadPresupuestalProyecto.Proyecto.Sede.Nombre)
                         .Replace("[DDP_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
-                        .Replace("[VALOR_APORTANTE]", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento).ToString())
+                        .Replace("[VALOR_APORTANTE]", "$ "+String.Format("{0:n0}", gestion.FuenteFinanciacion.Aportante.CofinanciacionDocumento.Sum(x => x.ValorDocumento)).ToString())
                         .Replace("[DDP_FUENTE]", fuenteNombre)
-                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", saldototal.ToString())
-                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", gestion.ValorSolicitado.ToString())
-                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", (saldototal - gestion.ValorSolicitado).ToString());
+                        .Replace("[DDP_SALDO_ACTUAL_FUENTE]", "$ "+String.Format("{0:n0}", saldototal).ToString())
+                        .Replace("[DDP_VALOR_SOLICITADO_FUENTE]", "$ "+String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
+                        .Replace("[DDP_NUEVO_SALDO_FUENTE]", "$ "+String.Format("{0:n0}", (saldototal - gestion.ValorSolicitado)).ToString());
                     tablaproyecto += tr;
 
                     var tr2 = plantilla_fuentes
                         .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))                        
                         .Replace("[FUENTE_APORTANTE]", fuenteNombre)                       
-                        .Replace("[VALOR_NUMERO]", gestion.ValorSolicitado.ToString())
+                        .Replace("[VALOR_NUMERO]", "$ "+String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
                         .Replace("[VALOR_LETRAS]", CultureInfo.CurrentCulture.TextInfo
                                         .ToTitleCase(Helpers.Conversores
                                         .NumeroALetras(gestion.ValorSolicitado).ToLower()));
@@ -913,7 +917,7 @@ namespace asivamosffie.services
                     limitacionEspecial = limitacionEspecial.Replace(placeholders.Where(x => x.Codigo == ConstanCodigoVariablesPlaceHolders.DDP_LIMITACION_ESPECIAL).FirstOrDefault().Nombre
                         , limitacionEspecial);
                     tablaaportantes = plantilla_fuentecabecera.Replace("[TABLAAPORTANTES]", tablafuentes).
-                        Replace("[TOTAL_DE_RECURSOS]", total.ToString()).
+                        Replace("[TOTAL_DE_RECURSOS]", "$ "+String.Format("{0:n0}", total).ToString()).
                         Replace("[TOTAL_DE_RECURSOSLETRAS]", CultureInfo.CurrentCulture.TextInfo
                                         .ToTitleCase(Helpers.Conversores
                                         .NumeroALetras(total).ToLower()));
@@ -952,7 +956,7 @@ namespace asivamosffie.services
 
                             aportanteTrDato = aportanteTrDato.Replace("[NOMBRE_APORTANTE]", getNombreAportante(_context.CofinanciacionAportante.Find(font.FuenteFinanciacion.AportanteId)));
                             aportanteTrDato = aportanteTrDato.Replace("[FUENTE_APORTANTE]", fuenteNombre);
-                            aportanteTrDato = aportanteTrDato.Replace("[VALOR_NUMERO]", saldofuente.ToString());
+                            aportanteTrDato = aportanteTrDato.Replace("[VALOR_NUMERO]", "$ "+String.Format("{0:n0}", saldofuente).ToString());
                             aportanteTrDato = aportanteTrDato.Replace("[VALOR_LETRAS]", CultureInfo.CurrentCulture.TextInfo
                                         .ToTitleCase(Helpers.Conversores
                                         .NumeroALetras(saldofuente).ToLower()));
@@ -996,7 +1000,7 @@ namespace asivamosffie.services
                         var tr2 = plantilla_fuentes
                             .Replace("[NOMBRE_APORTANTE]", this.getNombreAportante(gestion.FuenteFinanciacion.Aportante))
                             .Replace("[FUENTE_APORTANTE]", fuenteNombre)
-                            .Replace("[VALOR_NUMERO]", gestion.ValorSolicitado.ToString())
+                            .Replace("[VALOR_NUMERO]", "$ "+String.Format("{0:n0}", gestion.ValorSolicitado).ToString())
                             .Replace("[VALOR_LETRAS]", CultureInfo.CurrentCulture.TextInfo
                                             .ToTitleCase(Helpers.Conversores
                                             .NumeroALetras(gestion.ValorSolicitado).ToLower()));
@@ -1010,7 +1014,7 @@ namespace asivamosffie.services
                     proyecto = "";
                     limitacionEspecial = "";
                     tablaaportantes = plantilla_fuentecabecera.Replace("[TABLAAPORTANTES]", tablafuentes).
-                       Replace("[TOTAL_DE_RECURSOS]", totales.ToString()).
+                       Replace("[TOTAL_DE_RECURSOS]", "$ "+String.Format("{0:n0}", totales).ToString()).
                        Replace("[TOTAL_DE_RECURSOSLETRAS]", CultureInfo.CurrentCulture.TextInfo
                                        .ToTitleCase(Helpers.Conversores
                                        .NumeroALetras(totales).ToLower()));
