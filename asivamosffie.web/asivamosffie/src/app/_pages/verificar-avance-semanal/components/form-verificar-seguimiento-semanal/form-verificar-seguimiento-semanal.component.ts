@@ -1,3 +1,4 @@
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
@@ -14,16 +15,18 @@ export class FormVerificarSeguimientoSemanalComponent implements OnInit {
 
     constructor(
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
-        private activatedRoute: ActivatedRoute )
+        private activatedRoute: ActivatedRoute,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     {
-        this.avanceSemanalSvc
-        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0, 1224 )
+        this.avanceSemanalSvc.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0, 1224 )
             .subscribe(
-              seguimiento => {
-                  this.seguimientoSemanal = seguimiento;
-                  console.log( this.seguimientoSemanal );
-              }
+                seguimiento => {
+                    this.seguimientoSemanal = seguimiento;
+                    console.log( this.seguimientoSemanal );
+                }
             );
+        this.verificarAvanceSemanalSvc.tipoObservaciones()
+            .subscribe( console.log );
     }
 
     ngOnInit(): void {

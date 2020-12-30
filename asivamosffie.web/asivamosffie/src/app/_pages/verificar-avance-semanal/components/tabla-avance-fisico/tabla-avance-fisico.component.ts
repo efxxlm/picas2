@@ -22,6 +22,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
         observaciones: [ null ]
     });
     avanceFisico: any[];
+    seguimientoSemanalAvanceFisico: any;
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFisicoId: number;
     tablaAvanceFisico = new MatTableDataSource();
@@ -90,6 +91,8 @@ export class TablaAvanceFisicoComponent implements OnInit {
             this.seguimientoSemanalAvanceFisicoId =  this.seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ?
             this.seguimientoDiario.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoId : 0;
             const flujoInversion = this.seguimientoDiario.flujoInversion;
+            this.seguimientoSemanalAvanceFisico = this.seguimientoDiario.seguimientoSemanalAvanceFisico[0];
+            console.log( this.seguimientoSemanalAvanceFisico );
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];
                 let totalDuracion = 0;
@@ -222,9 +225,9 @@ export class TablaAvanceFisicoComponent implements OnInit {
 		console.log( this.formAvanceFisico.value );
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: 0,
-            seguimientoSemanalId: 1224,
+            seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: '1',
-            observacionPadreId: 3,
+            observacionPadreId: this.seguimientoSemanalAvanceFisicoId,
             observacion: this.formAvanceFisico.get( 'observaciones' ).value,
             tieneObservacion: this.formAvanceFisico.get( 'tieneObservaciones' ).value,
             esSupervisor: false
