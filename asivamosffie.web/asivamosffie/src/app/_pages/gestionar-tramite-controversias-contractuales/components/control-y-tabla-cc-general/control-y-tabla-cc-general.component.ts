@@ -54,7 +54,9 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   }
 
   deleteControversia(id) {
-
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
+  }
+  deleteControversiaConfirmed(id){
     this.services.EliminarControversiaContractual(id).subscribe((dataEliminado: any) => {
       if (dataEliminado.isSuccessful == true) {
         this.ngOnInit();
@@ -101,7 +103,7 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(`Dialog result: ${result}`);
       if (result === true) {
-        this.deleteControversia(e);
+        this.deleteControversiaConfirmed(e);
       }
     });
   }

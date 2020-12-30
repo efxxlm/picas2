@@ -12,7 +12,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarControversiaContractuaComponent implements OnInit {
   addressForm = this.fb.group({
-    contrato: [null, Validators.required],
+    contrato: null,
   });
   /*
   contratosArray = [
@@ -36,6 +36,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadContractList();
+    
   }
 
   loadContractList(){
@@ -85,6 +86,6 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   }
 
   contratoSearch(contrato){
-    
+
   }
 }
