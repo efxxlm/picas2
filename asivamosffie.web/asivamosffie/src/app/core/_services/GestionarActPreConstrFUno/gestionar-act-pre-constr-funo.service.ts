@@ -57,6 +57,10 @@ export class GestionarActPreConstrFUnoService {
   CreateEditObservacionesActa(pcontratoObservacion: any){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CreateEditObservacionesActa`, pcontratoObservacion);
   }
+
+  getFiferenciaMesesDias( pMesesContrato: number, pDiasContrato: number, pMesesFase1: number, pDiasFase1: number ) {
+    return this.http.get( `${ environment.apiUrl }/Common/GetFiferenciaMesesDias?pMesesContrato=${ pMesesContrato }&pDiasContrato=${ pDiasContrato }&pMesesFase1=${ pMesesFase1 }&pDiasFase1=${ pDiasFase1 }` )
+  }
 }
 
 export interface Contrato {

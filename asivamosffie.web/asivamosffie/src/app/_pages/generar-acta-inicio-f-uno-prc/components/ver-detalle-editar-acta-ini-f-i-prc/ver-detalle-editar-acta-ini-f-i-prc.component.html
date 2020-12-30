@@ -149,7 +149,7 @@
                                             type="number" formControlName="mesPlazoEjFase1">
                                     </mat-form-field>
                                     <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
-                                    {{3 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}
+                                    {{2 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}
                                 </span>
                                     <label class="label-left sub-label"
                                         [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase1.invalid}">
@@ -188,7 +188,7 @@
                                             type="number" formControlName="mesPlazoEjFase2">
                                     </mat-form-field>
                                     <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
-                                        {{3 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}
+                                        {{2 - (addressForm.get('mesPlazoEjFase2').value !== null?addressForm.get('mesPlazoEjFase2').value.toString().length:0)}}
                                     </span>
                                     <label class="label-left sub-label"
                                         [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase2.invalid}">
@@ -201,7 +201,7 @@
                                             type="number" formControlName="diasPlazoEjFase2">
                                     </mat-form-field>
                                     <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 31 días" matTooltipClass="info-tooltip">
-                                        {{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}
+                                        {{2 - (addressForm.get('diasPlazoEjFase2').value !== null?addressForm.get('diasPlazoEjFase2').value.toString().length:0)}}
                                     </span>
                                 </div>
                             </div>
