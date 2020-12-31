@@ -31,7 +31,7 @@
             <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, identificado con cedula de ciudadanía No.
             <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, quien se desempeña como
             <i> [CARGO_SUPERVISOR] </i> de la UG del PA-FFIE en su calidad de supervisor y
-            <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, quien se desempeña en el cargo de representante legal de la firma
+            <i>[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i>, quien se desempeña en el cargo de representante legal de la firma
             <i>[ENTIDAD_CONTRATISTA_INTERVENTORIA]</i>,con NIT 
             <i>[NIT_CONTRATISTA_INTERVENTORIA]</i>, en su condición de Contratista de interventoría; identificados civilmente como aparece al pie de sus firmas, para suscribir el acta de Inicio fase 1 – preconstrucción, del contrato de interventoría No. 
             <i>[NUMERO_CONTRATO_OBRA]</i>, en las condiciones que se describen a continuación:
@@ -123,23 +123,25 @@
             </p>
             <p>
               C.C. No. <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>
+
             </p>
+            <p>[CARGO_SUPERVISOR]</p>
             <p>UG del PA-FFIE</p>
             <p>SUPERVISOR</p>
           </section>
           <section style="font-size:1em;margin-top:5em;margin-left:5em;width:100%;">
             <p>___________________________________________________</p>
             <p>
-              <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>
+              <i>[ENTIDAD_CONTRATISTA_INTERVENTORIA]</i>
             </p>
             <p>
-              NIT: <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>
+              NIT: <i>[NIT_CONTRATISTA_INTERVENTORIA]</i>
             </p>
             <p>
               Representante legal: <i>[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i>
             </p>
             <p>
-              C.C. No. <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>
+              C.C. No. <i>[NIT_CONTRATISTA_INTERVEENTORIA]</i>
             </p>
             <p>CONTRATISTA DE INTERVENTORÍA</p>
           </section>
