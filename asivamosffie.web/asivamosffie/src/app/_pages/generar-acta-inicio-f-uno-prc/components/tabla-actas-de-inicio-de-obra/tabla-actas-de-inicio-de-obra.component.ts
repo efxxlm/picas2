@@ -31,6 +31,7 @@ const ELEMENT_DATA: Contrato[] = [
   styleUrls: ['./tabla-actas-de-inicio-de-obra.component.scss']
 })
 export class TablaActasDeInicioDeObraComponent implements OnInit {
+  esSupervisor: boolean;
   displayedColumns: string[] = [ 'fechaAprobacionRequisitos', 'numeroContratoObra', 'estadoActa', 'contratoId'];
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -56,6 +57,16 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
       this.paginator._intl.nextPageLabel = 'Siguiente';
       this.paginator._intl.previousPageLabel = 'Anterior';
     });
+  }
+  cargarRol() {
+    const userRol = JSON.parse(localStorage.getItem("actualUser")).rol[0].perfilId;
+    //jflorez, el perfil 11 es interventor.....
+    if (userRol == 11) {
+      this.esSupervisor = false;
+    }
+    else {
+      this.esSupervisor = true;
+    }
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -93,7 +104,6 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
       });
     }
     /*this.service.EnviarCorreoSupervisorContratista(id,2).subscribe(resp=>{
-
     });*/
   }
   enviarInterventor(id){

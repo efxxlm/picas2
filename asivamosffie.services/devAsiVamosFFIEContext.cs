@@ -119,6 +119,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SeguimientoSemanalGestionObraCalidad> SeguimientoSemanalGestionObraCalidad { get; set; }
         public virtual DbSet<SeguimientoSemanalGestionObraSeguridadSalud> SeguimientoSemanalGestionObraSeguridadSalud { get; set; }
         public virtual DbSet<SeguimientoSemanalGestionObraSocial> SeguimientoSemanalGestionObraSocial { get; set; }
+        public virtual DbSet<SeguimientoSemanalObservacion> SeguimientoSemanalObservacion { get; set; }
         public virtual DbSet<SeguimientoSemanalPersonalObra> SeguimientoSemanalPersonalObra { get; set; }
         public virtual DbSet<SeguimientoSemanalRegistrarComiteObra> SeguimientoSemanalRegistrarComiteObra { get; set; }
         public virtual DbSet<SeguimientoSemanalRegistroFotografico> SeguimientoSemanalRegistroFotografico { get; set; }
@@ -149,6 +150,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<TipoDominio> TipoDominio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
+        public virtual DbSet<VListaProyectos> VListaProyectos { get; set; }
         public virtual DbSet<VProyectosXcontrato> VProyectosXcontrato { get; set; }
         public virtual DbSet<VRegistrarAvanceSemanal> VRegistrarAvanceSemanal { get; set; }
         public virtual DbSet<VRegistrarFase1> VRegistrarFase1 { get; set; }
@@ -2215,6 +2217,16 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.GestionObraCalidadEnsayoLaboratorioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_EnsayoLaboratorioMuestra_GestionObraCalidadEnsayoLaboratorio_1");
+
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.EnsayoLaboratorioMuestraObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_EnsayoLaboratorioMuestra_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.EnsayoLaboratorioMuestraObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_EnsayoLaboratorioMuestra_SeguimientoSemanalObservacionSupervisor");
             });
 
             modelBuilder.Entity<FichaEstudio>(entity =>
@@ -2424,6 +2436,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.GestionObraCalidadEnsayoLaboratorioObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_GestionObraCalidadEnsayoLaboratorio_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.GestionObraCalidadEnsayoLaboratorioObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_GestionObraCalidadEnsayoLaboratorio_SeguimientoSemanalObservacionSupervisor");
+
                 entity.HasOne(d => d.SeguimientoSemanalGestionObraCalidad)
                     .WithMany(p => p.GestionObraCalidadEnsayoLaboratorio)
                     .HasForeignKey(d => d.SeguimientoSemanalGestionObraCalidadId)
@@ -2553,6 +2575,16 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.ManejoMaterialesInsumosObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_ManejoMaterialesInsumos_SeguimientoSemanalApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.ManejoMaterialesInsumosObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_ManejoMaterialesInsumos_SeguimientoSemanalSupervisor");
             });
 
             modelBuilder.Entity<ManejoMaterialesInsumosProveedor>(entity =>
@@ -2601,6 +2633,16 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.ManejoOtroObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_ManejoOtro_SeguimientoSemanalApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.ManejoOtroObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_ManejoOtro_SeguimientoSemanalSupervisor");
             });
 
             modelBuilder.Entity<ManejoResiduosConstruccionDemolicion>(entity =>
@@ -2620,6 +2662,16 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.ManejoResiduosConstruccionDemolicionObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_ManejoResiduosConstruccionDemolicion_SeguimientoSemanalApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.ManejoResiduosConstruccionDemolicionObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_ManejoResiduosConstruccionDemolicion_SeguimientoSemanalSupervisor");
             });
 
             modelBuilder.Entity<ManejoResiduosConstruccionDemolicionGestor>(entity =>
@@ -2665,6 +2717,16 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.ManejoResiduosPeligrososEspecialesObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_ManejoResiduosPeligrososEspeciales_SeguimientoSemanalApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.ManejoResiduosPeligrososEspecialesObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_ManejoResiduosPeligrososEspeciales_SeguimientoSemanalSupervisor");
             });
 
             modelBuilder.Entity<MensajesValidaciones>(entity =>
@@ -3944,6 +4006,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalAvanceFinancieroObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("FK_SeguimientoSemanalAvanceFinanciero_SeguimientoSemanalApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalAvanceFinancieroObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("FK_SeguimientoSemanalAvanceFinanciero_SeguimientoSemanalSupervisor");
+
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalAvanceFinanciero)
                     .HasForeignKey(d => d.SeguimientoSemanalId)
@@ -3973,6 +4045,16 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(255)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalAvanceFisicoObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("FK_SeguimientoSemanalAvanceFisico_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalAvanceFisicoObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("FK_SeguimientoSemanalAvanceFisico_SeguimientoSemanalObservacionSupervisor");
 
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalAvanceFisico)
@@ -4017,6 +4099,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraAlertaObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("FK_SeguimientoSemanalGestionObraAlerta_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraAlertaObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("FK_SeguimientoSemanalGestionObraAlerta_SeguimientoSemanalObservacionSupervisor");
+
                 entity.HasOne(d => d.SeguimientoSemanalGestionObra)
                     .WithMany(p => p.SeguimientoSemanalGestionObraAlerta)
                     .HasForeignKey(d => d.SeguimientoSemanalGestionObraId)
@@ -4059,6 +4151,16 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ManejoResiduosPeligrososEspecialesId)
                     .HasConstraintName("fk_SeguimientoSemanalGestionObraAmbiental_ManejoResiduosPeligrososEspeciales_1");
 
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraAmbientalObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_SeguimientoSemanalAvanceGestionObraAmbiental_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraAmbientalObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_SeguimientoSemanalAvanceGestionObraAmbiental_SeguimientoSemanalObservacionSupervisor");
+
                 entity.HasOne(d => d.SeguimientoSemanalGestionObra)
                     .WithMany(p => p.SeguimientoSemanalGestionObraAmbiental)
                     .HasForeignKey(d => d.SeguimientoSemanalGestionObraId)
@@ -4079,6 +4181,16 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraCalidadObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("FK_SeguimientoSemanalGestionObraCalidad_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraCalidadObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("FK_SeguimientoSemanalGestionObraCalidad_SeguimientoSemanalObservacionSupervisor");
 
                 entity.HasOne(d => d.SeguimientoSemanalGestionObra)
                     .WithMany(p => p.SeguimientoSemanalGestionObraCalidad)
@@ -4105,6 +4217,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraSeguridadSaludObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_SeguimientoSemanalGestionObraSeguridadSalud_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraSeguridadSaludObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_SeguimientoSemanalGestionObraSeguridadSalud_SeguimientoSemanalObservacionSupervisor");
+
                 entity.HasOne(d => d.SeguimientoSemanalGestionObra)
                     .WithMany(p => p.SeguimientoSemanalGestionObraSeguridadSalud)
                     .HasForeignKey(d => d.SeguimientoSemanalGestionObraId)
@@ -4128,11 +4250,48 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.UsuarioModificacion).HasMaxLength(50);
 
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraSocialObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_SeguimientoSemanalGestionObraSocial_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalGestionObraSocialObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_SeguimientoSemanalGestionObraSocial_SeguimientoSemanalObservacionSupervisor");
+
                 entity.HasOne(d => d.SeguimientoSemanalGestionObra)
                     .WithMany(p => p.SeguimientoSemanalGestionObraSocial)
                     .HasForeignKey(d => d.SeguimientoSemanalGestionObraId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_SeguimientoSemanalGestionObraSocial_SeguimientoSemanalGestionObra_1");
+            });
+
+            modelBuilder.Entity<SeguimientoSemanalObservacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoObservacionCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SeguimientoSemanal)
+                    .WithMany(p => p.SeguimientoSemanalObservacion)
+                    .HasForeignKey(d => d.SeguimientoSemanalId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SeguimientoSemanalObervavion_SeguimientoSemanal");
             });
 
             modelBuilder.Entity<SeguimientoSemanalPersonalObra>(entity =>
@@ -4177,6 +4336,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalRegistrarComiteObraObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_SeguimientoSemanalRegistratComiteObra_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalRegistrarComiteObraObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_SeguimientoSemanalRegistratComiteObra_SeguimientoSemanalObservacionSupervisor");
+
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalRegistrarComiteObra)
                     .HasForeignKey(d => d.SeguimientoSemanalId)
@@ -4200,6 +4369,16 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(255)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.ObservacionApoyo)
+                    .WithMany(p => p.SeguimientoSemanalRegistroFotograficoObservacionApoyo)
+                    .HasForeignKey(d => d.ObservacionApoyoId)
+                    .HasConstraintName("fk_SeguimientoSemanalRegistroFotografico_SeguimientoSemanalObservacionApoyo");
+
+                entity.HasOne(d => d.ObservacionSupervisor)
+                    .WithMany(p => p.SeguimientoSemanalRegistroFotograficoObservacionSupervisor)
+                    .HasForeignKey(d => d.ObservacionSupervisorId)
+                    .HasConstraintName("fk_SeguimientoSemanalRegistroFotografico_SeguimientoSemanalObservacionSupervisor");
+
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalRegistroFotografico)
                     .HasForeignKey(d => d.SeguimientoSemanalId)
@@ -4220,6 +4399,36 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.ObservacionApoyoIdActividadNavigation)
+                    .WithMany(p => p.SeguimientoSemanalReporteActividadObservacionApoyoIdActividadNavigation)
+                    .HasForeignKey(d => d.ObservacionApoyoIdActividad)
+                    .HasConstraintName("fk_SeguimientoSemanalReporteActividad_SeguimientoSemanalObservacionApoyo_Actividad");
+
+                entity.HasOne(d => d.ObservacionApoyoIdActividadSiguienteNavigation)
+                    .WithMany(p => p.SeguimientoSemanalReporteActividadObservacionApoyoIdActividadSiguienteNavigation)
+                    .HasForeignKey(d => d.ObservacionApoyoIdActividadSiguiente)
+                    .HasConstraintName("fk_SeguimientoSemanalReporteActividad_SeguimientoSemanalObservacionApoyo_ActividadSiguiente");
+
+                entity.HasOne(d => d.ObservacionApoyoIdEstadoContratoNavigation)
+                    .WithMany(p => p.SeguimientoSemanalReporteActividadObservacionApoyoIdEstadoContratoNavigation)
+                    .HasForeignKey(d => d.ObservacionApoyoIdEstadoContrato)
+                    .HasConstraintName("fk_SeguimientoSemanalReporteActividad_SeguimientoSemanalObservacionApoyo_EstadoContrato");
+
+                entity.HasOne(d => d.ObservacionSupervisorIdActividadNavigation)
+                    .WithMany(p => p.SeguimientoSemanalReporteActividadObservacionSupervisorIdActividadNavigation)
+                    .HasForeignKey(d => d.ObservacionSupervisorIdActividad)
+                    .HasConstraintName("fk_SeguimientoSemanalReporteActividad_SeguimientoSemanalObservacionSupervisor_Actividad");
+
+                entity.HasOne(d => d.ObservacionSupervisorIdActividadSiguienteNavigation)
+                    .WithMany(p => p.SeguimientoSemanalReporteActividadObservacionSupervisorIdActividadSiguienteNavigation)
+                    .HasForeignKey(d => d.ObservacionSupervisorIdActividadSiguiente)
+                    .HasConstraintName("fk_SeguimientoSemanalReporteActividad_SeguimientoSemanalObservacionSupervisor_ActividadSiguiente");
+
+                entity.HasOne(d => d.ObservacionSupervisorIdEstadoContratoNavigation)
+                    .WithMany(p => p.SeguimientoSemanalReporteActividadObservacionSupervisorIdEstadoContratoNavigation)
+                    .HasForeignKey(d => d.ObservacionSupervisorIdEstadoContrato)
+                    .HasConstraintName("fk_SeguimientoSemanalReporteActividad_SeguimientoSemanalObservacionSupervisor_EstadoContrato");
 
                 entity.HasOne(d => d.SeguimientoSemanal)
                     .WithMany(p => p.SeguimientoSemanalReporteActividad)
@@ -4835,11 +5044,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LlaveMen)
-                    .HasColumnName("LlaveMEN")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.NumeroContrato)
                     .HasMaxLength(10)
                     .IsUnicode(false);
@@ -5300,6 +5504,50 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.UsuarioId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_usuario");
+            });
+
+            modelBuilder.Entity<VListaProyectos>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_ListaProyectos");
+
+                entity.Property(e => e.Departamento)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoJuridicoPredios)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoProyecto)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoRegistro)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Municipio)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sede)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<VProyectosXcontrato>(entity =>

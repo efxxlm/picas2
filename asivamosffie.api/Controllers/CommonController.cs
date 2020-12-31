@@ -24,25 +24,39 @@ namespace asivamosffie.api.Controllers
         {
             common = prmCommon;
             _settings = settings;
-        }  
+        }
+
+        [Route("GetFiferenciaMesesDias")]
+        [HttpGet]
+        public async Task<List<dynamic>> GetFiferenciaMesesDias([FromQuery] double pMesesContrato, double pDiasContrato, double pMesesFase1, double pDiasFase1)
+        {
+            List<dynamic> Lista = new List<dynamic>();
+            pMesesContrato = (30 * pMesesContrato) + pDiasContrato;
+            pMesesFase1 = (30 * pMesesFase1) + pDiasFase1;
+            Lista.Add((int)Math.Truncate((pMesesContrato - pMesesFase1) / 30));
+            Lista.Add(((pMesesContrato - pMesesFase1) - (Lista[0] * 30))); 
+            return Lista;
+        }
+
         [HttpGet]
         [Route("CalculardiasLaborales")]
-        public Task<DateTime> CalculardiasLaborales([FromQuery]int pDias, DateTime pFechaCalcular)
+        public Task<DateTime> CalculardiasLaborales([FromQuery] int pDias, DateTime pFechaCalcular)
         {
             return common.CalculardiasLaborales(pDias, pFechaCalcular);
         }
-         
+
         [HttpGet]
         [Route("GetUsuarioByPerfil")]
         public Task<List<dynamic>> GetUsuarioByPerfil(int idPerfil)
-        {  
-            return  common.GetUsuarioByPerfil(idPerfil);
-         }
+        {
+            return common.GetUsuarioByPerfil(idPerfil);
+        }
+
 
         [HttpGet]
         [Route("GetMenuByRol")]
         public async Task<ActionResult<List<MenuPerfil>>> GetMenuByRol()
-        { 
+        {
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
             var result = await common.GetMenuByRol(pUserId);
             return result;
@@ -75,7 +89,7 @@ namespace asivamosffie.api.Controllers
         public async Task<ActionResult<List<Dominio>>> GetDominioByIdDominioNotCode(int pIdDominio, string pMinCode)
         {
             var result = await common.GetListDominioByIdTipoDominio(pIdDominio);
-            return result.Where(x=>x.Codigo!=pMinCode).ToList();
+            return result.Where(x => x.Codigo != pMinCode).ToList();
         }
 
         [HttpGet]
@@ -163,7 +177,8 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetUsuariosByPerfil")]
-        public async Task<List<Usuario>> GetUsuariosByPerfil( int pIdPerfil ){
+        public async Task<List<Usuario>> GetUsuariosByPerfil(int pIdPerfil)
+        {
             var result = await common.GetUsuariosByPerfil(pIdPerfil);
             return result;
         }

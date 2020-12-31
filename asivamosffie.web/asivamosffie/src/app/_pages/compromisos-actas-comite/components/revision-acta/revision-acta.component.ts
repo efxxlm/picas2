@@ -17,7 +17,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
 export class RevisionActaComponent implements OnInit, OnDestroy {
 
   acta: any;
-  form:FormGroup;
+  form: FormGroup;
   comentarActa: boolean = false;
   comentarios: boolean = false;
   tablaDecisiones: any[] = [];
@@ -39,58 +39,58 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   proposicionesVarios: any[] = [];
   seRealizoPeticion: boolean = false;
 
-  constructor ( private routes: Router,
-                public dialog: MatDialog,
-                private fb: FormBuilder,
-                private activatedRoute: ActivatedRoute,
-                private commonSvc: CommonService,
-                private technicalCommitteeSessionSvc: TechnicalCommitteSessionService,
-                private compromisoSvc: CompromisosActasComiteService,
-                private projectContractingSvc: ProjectContractingService,
-                private comiteTecnicoSvc: TechnicalCommitteSessionService ) {
-    this.getActa( this.activatedRoute.snapshot.params.id );
+  constructor(private routes: Router,
+    public dialog: MatDialog,
+    private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
+    private commonSvc: CommonService,
+    private technicalCommitteeSessionSvc: TechnicalCommitteSessionService,
+    private compromisoSvc: CompromisosActasComiteService,
+    private projectContractingSvc: ProjectContractingService,
+    private comiteTecnicoSvc: TechnicalCommitteSessionService) {
+    this.getActa(this.activatedRoute.snapshot.params.id);
     this.crearFormulario();
   }
-  
+
   ngOnDestroy(): void {
-    if ( this.form.get( 'comentarioActa' ).value !== null && this.seRealizoPeticion === false ) {
-      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' )
+    if (this.form.get('comentarioActa').value !== null && this.seRealizoPeticion === false) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?')
     }
   }
 
   ngOnInit(): void {
   };
 
-  getActa ( comiteTecnicoId: number ) {
-    this.compromisoSvc.getActa( comiteTecnicoId )
-      .subscribe( ( resp: any ) => {
+  getActa(comiteTecnicoId: number) {
+    this.compromisoSvc.getActa(comiteTecnicoId)
+      .subscribe((resp: any) => {
         this.acta = resp[0];
-        console.log( this.acta );
+        console.log(this.acta);
 
-        for ( let temas of this.acta.sesionComiteTema ) {
-          if ( !temas.esProposicionesVarios ) {
-            this.temas.push( temas );
+        for (let temas of this.acta.sesionComiteTema) {
+          if (!temas.esProposicionesVarios) {
+            this.temas.push(temas);
           } else {
-            this.proposicionesVarios.push( temas );
+            this.proposicionesVarios.push(temas);
           }
         };
 
-        for ( let participantes of this.acta.sesionParticipante ) {
-          this.miembrosParticipantes.push( `${ participantes.usuario.nombres } ${ participantes.usuario.apellidos }` )
+        for (let participantes of this.acta.sesionParticipante) {
+          this.miembrosParticipantes.push(`${participantes.usuario.nombres} ${participantes.usuario.apellidos}`)
         };
 
-        this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId( this.activatedRoute.snapshot.params.id )
-        .subscribe( ( response: any ) => { 
-          this.acta.sesionComiteSolicitudComiteTecnico = response.sesionComiteSolicitudComiteTecnico;
-        } );
+        this.technicalCommitteeSessionSvc.getComiteTecnicoByComiteTecnicoId(this.activatedRoute.snapshot.params.id)
+          .subscribe((response: any) => {
+            this.acta.sesionComiteSolicitudComiteTecnico = response.sesionComiteSolicitudComiteTecnico;
+          });
 
-      } );
+      });
   };
 
   //Formulario comentario de actas
-  crearFormulario(){
+  crearFormulario() {
     this.form = this.fb.group({
-      comentarioActa: [ null, Validators.required ]
+      comentarioActa: [null, Validators.required]
     });
   };
 
@@ -101,10 +101,10 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
     };
   };
 
-  textoLimpio ( texto: string, maxLength: number ) {
+  textoLimpio(texto: string, maxLength: number) {
     if (texto !== undefined) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
-      console.log( textolimpio.length );
+      console.log(textolimpio.length);
       return textolimpio.length > maxLength ? maxLength : textolimpio.length;
     } else {
       return 0;
@@ -112,7 +112,7 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   };
 
   textoLimpioMessage(texto: string) {
-    if ( texto ){
+    if (texto) {
       const textolimpio = texto.replace(/<[^>]*>/g, '');
       return textolimpio;
     };
@@ -127,71 +127,93 @@ export class RevisionActaComponent implements OnInit, OnDestroy {
   openDialogConfirmar(modalTitle: string, modalText: string) {
     const confirmarDialog = this.dialog.open(ModalDialogComponent, {
       width: '30em',
-      data: { modalTitle, modalText, siNoBoton:true }
+      data: { modalTitle, modalText, siNoBoton: true }
     });
 
     confirmarDialog.afterClosed()
-      .subscribe( response => {
-        if ( response === true ) {
+      .subscribe(response => {
+        if (response === true) {
           this.onSubmit();
         }
-      } );
+      });
   };
   //Submit de la data
-  onSubmit () {
+  onSubmit() {
 
-    if ( this.form.invalid ) {
+    if (this.form.invalid) {
       this.observacionInvalida = true;
       this.openDialog('', '<b>Falta registrar información.</b>');
       return;
     };
 
-    const value = this.form.get( 'comentarioActa' ).value;
+    const value = this.form.get('comentarioActa').value;
     const observaciones = {
       comiteTecnicoId: this.acta.comiteTecnicoId,
       observaciones: value
     };
 
-    this.compromisoSvc.postComentariosActa( observaciones )
-      .subscribe( ( resp: any ) => {
+    this.compromisoSvc.postComentariosActa(observaciones)
+      .subscribe((resp: any) => {
         this.seRealizoPeticion = true;
-        this.openDialog( '', `<b>${ resp.message }</b>` );
-        this.routes.navigate( ['/compromisosActasComite'] );
-      } );
+        this.openDialog('', `<b>${resp.message}</b>`);
+        this.routes.navigate(['/compromisosActasComite']);
+      });
 
   };
 
-  innerObservacion ( observacion: string ) {
-    if ( observacion !== undefined ) {
-      const observacionHtml = observacion.replace( '"', '' );
-      return `<b>${ observacionHtml }</b>`;
+  innerObservacion(observacion: string) {
+    if (observacion !== undefined) {
+      const observacionHtml = observacion.replace('"', '');
+      return `<b>${observacionHtml}</b>`;
     };
   };
   //Aprobar acta
-  aprobarActa ( comiteTecnicoId ) {
+  aprobarActa(comiteTecnicoId) {
     //Al aprobar acta redirige al componente principal
-    this.compromisoSvc.aprobarActa( comiteTecnicoId )
-      .subscribe( ( resp: any ) => {
+    this.compromisoSvc.aprobarActa(comiteTecnicoId)
+      .subscribe((resp: any) => {
         this.seRealizoPeticion = true;
-        this.openDialog( '', `<b>${ resp.message }</b>` );
-        this.routes.navigate( ['/compromisosActasComite'] );
-      } )
+        this.openDialog('', `<b>${resp.message}</b>`);
+        this.routes.navigate(['/compromisosActasComite']);
+      })
   };
-  //Descargar acta en formato pdf
-  getActaPdf( comiteTecnicoId, numeroComite ) {
-    this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudId( comiteTecnicoId )
-    .subscribe( ( resp: any ) => {
 
-      const documento = `Acta Preliminar ${ numeroComite }.pdf`;
-      const text = documento,
-      blob = new Blob([resp], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
-      anchor.download = documento;
-      anchor.href = window.URL.createObjectURL(blob);
-      anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
-      anchor.click();
-      
-    } )
-  };
+  //Descargar acta en formato pdf
+  getActaPdf(comiteTecnicoId, numeroComite) {
+
+    if (this.acta.esComiteFiduciario === true) {
+      this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudFiduciarioId(comiteTecnicoId)
+        .subscribe((resp: any) => {
+
+          const documento = `Acta Preliminar ${numeroComite}.pdf`;
+          const text = documento,
+            blob = new Blob([resp], { type: 'application/pdf' }),
+            anchor = document.createElement('a');
+          anchor.download = documento;
+          anchor.href = window.URL.createObjectURL(blob);
+          anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+          anchor.click();
+
+        })
+
+    } else {
+
+      this.comiteTecnicoSvc.getPlantillaActaBySesionComiteSolicitudId(comiteTecnicoId)
+        .subscribe((resp: any) => {
+
+          const documento = `Acta Preliminar ${numeroComite}.pdf`;
+          const text = documento,
+            blob = new Blob([resp], { type: 'application/pdf' }),
+            anchor = document.createElement('a');
+          anchor.download = documento;
+          anchor.href = window.URL.createObjectURL(blob);
+          anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+          anchor.click();
+
+        })
+
+
+    }
+  }
 
 };

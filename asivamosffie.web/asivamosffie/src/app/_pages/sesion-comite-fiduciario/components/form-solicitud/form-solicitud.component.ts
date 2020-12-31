@@ -20,6 +20,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
   @Input() fechaMaxima: any;
+  @Input() fechaComite: Date;
+
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   tiposSolicitud = TiposSolicitud;

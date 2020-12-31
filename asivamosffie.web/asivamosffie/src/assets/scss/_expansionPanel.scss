@@ -65,9 +65,12 @@
 .expansion-style {
     box-shadow: none !important;
     &--header {
-        width: 28em;
+        width: 32em;
+        height: auto !important;
+        padding: .6em 24px !important;
+        box-sizing: border-box;
         max-width: 100%;
-        min-width: max-content;
+        min-width: auto;
         background-color: transparent;
         margin-left: auto;
         margin-right: auto;

@@ -28,9 +28,7 @@
         Tabla_Solicitud_Proceso_de_Seleccion = 19,
         Votacion_Unanime = 20,
         Votacion_No_Unanime = 21,
-        Registros_Temas = 22,
-
-
+        Registros_Temas = 22, 
         DDP_Contratacion_Rubro_Administrativo = 23,
         DDP_Registros_Tabla_Aportante = 24,
         Registros_Proyectos_Contratacion_DDP = 25,
@@ -60,8 +58,8 @@
         DDP_TR_Fuente = 46,
         DDP_TR_Proyecto = 47,
         Descargar_Acta_Comite_Fiduciario = 35,
-        Contrato_Acta_Interventoria = 36,
-        Contrato_Acta_Construccion = 37,
+        Contrato_Acta_Interventoria_Preconstruccion = 36,
+        Contrato_Acta_Obra_Preconstruccion = 37,
 
         DDP_limitacion = 50,
         DDP_Aportante_principal = 51,
@@ -69,10 +67,11 @@
         DRP_TABLA_FUENTES = 53,
         DRP_TABLA_USOS = 54,
         DDP_Cabecera_Proyecto=55,
-
         Controversia_Contractual = 59,
         Ficha_Estudio_Defensa_Judicial = 60,
         Registro_Proyectos_Acta = 61,
-        Ficha_estudio_tr_contratos=62
+        Ficha_estudio_tr_contratos=62,
+        Contrato_Acta_Interventoria_Construccion = 63,
+        Contrato_Acta_Obra_Construccion = 64
     }
 }

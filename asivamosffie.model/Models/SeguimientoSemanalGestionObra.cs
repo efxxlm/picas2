@@ -23,6 +23,8 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public bool Eliminado { get; set; }
+        public bool? TieneObservacionApoyo { get; set; }
+        public bool? TieneObservacionSupervisor { get; set; }
 
         public virtual SeguimientoSemanal SeguimientoSemanal { get; set; }
         public virtual ICollection<SeguimientoSemanalGestionObraAlerta> SeguimientoSemanalGestionObraAlerta { get; set; }

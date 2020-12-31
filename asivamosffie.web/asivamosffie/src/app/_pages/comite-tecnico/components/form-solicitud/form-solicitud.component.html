@@ -146,7 +146,7 @@
         </div>
         <div class="col pr-3em">
           <mat-form-field class="full-width">
-            <input matInput type="url" formControlName="url" maxlength="1000">
+            <input matInput type="url" required formControlName="url" maxlength="1000">
           </mat-form-field>
           <span class="info-url">Indique la ruta del soporte de esta información</span>
         </div>
@@ -231,7 +231,13 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()" placeholder="DD/MM/AAAA" [min]="minDate" required>
+                    <input matInput 
+                            [matDatepicker]="picker" 
+                            formControlName="fecha" 
+                            readonly 
+                            (click)="picker.open()" 
+                            placeholder="DD/MM/AAAA" 
+                            [min]="fechaComite" required>
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
