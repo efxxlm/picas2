@@ -51,6 +51,10 @@
               <b>Fecha DRP:</b>
               <i>[FECHA_GENERACION_DRP]</i>
             </p>
+	    <p>
+	      <b>Numero de póliza:</b> 
+	      <i>[NUMERO_POLIZA]</i>
+            </p>
             <p>
               <b>Fecha de aprobación de pólizas:</b>
               <i>[FECHA_APROBACION_POLIZAS]</i>

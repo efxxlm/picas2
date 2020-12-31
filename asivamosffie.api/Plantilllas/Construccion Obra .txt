@@ -36,6 +36,7 @@
       <section style="font-size:1em;margin-top:1.5em;margin-left:5em;width:100%;">
         <p><b>DRP No:</b> <i>[NUMERO_DRP]</i> </p>
         <p><b>Fecha DRP:</b> <i>[FECHA_GENERACION_DRP]</i> </p>
+	<p><b>Numero de póliza:</b> <i>[NUMERO_POLIZA]</i> </p>
         <p><b>Fecha de aprobación de pólizas:</b> <i>[FECHA_APROBACION_POLIZAS]</i> </p>
         <p><b>Objeto:</b> <i>[OBJETO]</i> </p>
         <p><b>Contratista:</b> <i>[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]</i> </p>
