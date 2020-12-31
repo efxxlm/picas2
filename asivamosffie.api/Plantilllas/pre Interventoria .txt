@@ -61,7 +61,7 @@
             </p>
             <p>
               <b>Contratista:</b>
-              <i>[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]</i>
+              <i>[ENTIDAD_CONTRATISTA_INTERVENTORIA]</i>
             </p>
             <p>
               <b>Valor inicial:</b>
