@@ -24,14 +24,7 @@ namespace asivamosffie.api.Controllers
             
             _documentService = documentService;
         }
-
-        //[Route("GetListProyects")]
-        //[HttpGet]
-        //public async Task<List<ProyectoGrilla>> GetListProyects()
-        //{
-        //    var respuesta = await _monitoringURLService.GetListProyects();
-        //    return respuesta;
-        //}
+  
 
         [Route("GetListContratoProyectos")]
         [HttpGet]
@@ -47,9 +40,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                //cuentaBancaria.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                //string UsuarioModificacion= HttpContext.User.FindFirst("User").Value;
-                string UsuarioModificacion= "user";
+                string UsuarioModificacion= HttpContext.User.FindFirst("User").Value;                
                 respuesta = await _monitoringURLService.EditarURLMonitoreo( pProyectoId,  URLMonitoreo,  UsuarioModificacion);
                 return Ok(respuesta);
             }

@@ -33,7 +33,7 @@ namespace asivamosffie.services
             List<VistaContratoProyectos> lstVistaContratoProyectos = new List<VistaContratoProyectos>();
             VistaContratoProyectos vistaContratoProyectos = new VistaContratoProyectos();
 
-            List<Contrato> ListContratos = await _context.Contrato.Where(r => (bool)r.Estado).Distinct().ToListAsync();
+            List<Contrato> ListContratos = await _context.Contrato.Where(r => (r.EstadoActa==ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada || r.EstadoActa == "20")).Distinct().ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
@@ -60,35 +60,43 @@ namespace asivamosffie.services
 
                     if (contratacion != null)
                     {
-                        contratacionProyecto =  _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
+                        contratacionProyecto =  _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacion.ContratacionId && (bool)r.TieneMonitoreoWeb).FirstOrDefault();
 
 
                     }
-
-                    List<ProyectoGrilla> listProyectoGrilla = new List<ProyectoGrilla>();
-                    listProyectoGrilla = await GetListProyects(contratacionProyecto.ProyectoId );
-
-                    int NumProyectosAsociados = 0;
+                   
 
                     if (contratacionProyecto != null)
                     {
-                        listProyectoGrilla = listProyectoGrilla.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).ToList();
+                            List<ProyectoGrilla> listProyectoGrilla = new List<ProyectoGrilla>();
+                            listProyectoGrilla = await GetListProyects(contratacionProyecto.ProyectoId);
+
+                            int NumProyectosAsociados = 0;
+                            listProyectoGrilla = listProyectoGrilla.Where(r => r.ProyectoId == contratacionProyecto.ProyectoId).ToList();
                         NumProyectosAsociados = listProyectoGrilla.Count();
 
                         contratacionProyectoId = contratacionProyecto.ProyectoId;
+                        
+                        var semaforo = 0;
+                        foreach (var proy in listProyectoGrilla)
+                        {
+                            semaforo += String.IsNullOrEmpty(proy.URLMonitoreo) ? 0 : 1;
+                        }
+                        vistaContratoProyectos = new VistaContratoProyectos
+                        {
+                            NumeroContrato = contrato.NumeroContrato,
+                            //NombreContratista = contratista.Nombre,
+                            NombreContratista = strNombreContratista,
+                            ProyectoId = contratacionProyectoId,
+                            lstProyectoGrilla = listProyectoGrilla,
+                            NumeroProyectosAsociados = NumProyectosAsociados,
+                            Semaforo = (semaforo == listProyectoGrilla.Count() ? 1 : semaforo== 0 ? 0 : 2),
+                        };
+
+                        lstVistaContratoProyectos.Add(vistaContratoProyectos);
                     }
 
-                    vistaContratoProyectos = new VistaContratoProyectos
-                    {
-                        NumeroContrato = contrato.NumeroContrato,
-                        //NombreContratista = contratista.Nombre,
-                        NombreContratista = strNombreContratista,
-                        ProyectoId = contratacionProyectoId ,
-                        lstProyectoGrilla = listProyectoGrilla,
-                        NumeroProyectosAsociados = NumProyectosAsociados
-                    };
-
-                    lstVistaContratoProyectos.Add(vistaContratoProyectos);
+                    
                 }
 
 
@@ -97,8 +105,8 @@ namespace asivamosffie.services
                     //VistaGenerarActaInicioContrato actaInicio = new VistaGenerarActaInicioContrato
                     vistaContratoProyectos = new VistaContratoProyectos
                     {
-                        NumeroContrato = e.InnerException.ToString(),
-                        NombreContratista = e.ToString(),
+                        NumeroContrato = "Error",
+                        NombreContratista = "Error",
                         ProyectoId = 0,
                         lstProyectoGrilla = null,
                         NumeroProyectosAsociados = -1

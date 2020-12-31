@@ -12,8 +12,7 @@ namespace asivamosffie.model.APIModels
         public Int32 NumeroProyectosAsociados { get; set; }
 
        public List<ProyectoGrilla> lstProyectoGrilla { get; set; }
-
-
+        public int Semaforo { get; set; }
     }
         
 
