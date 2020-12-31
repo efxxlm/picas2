@@ -26,7 +26,15 @@
         </p>
         <div style="width:90%;">
           <section style="font-size:1em;margin-top:1.5em;margin-left:5em;width:100%;text-align: justify;">
-            En Bogotá D.C. el día <i>[FECHA_ACTA_INICIO_OBRA]</i>, se reunieron las siguientes personas <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, identificado con cedula de ciudadanía No. <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, quien se desempeña como <i> [CARGO_SUPERVISOR] </i> de la UG del PA-FFIE en su calidad de supervisor y <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, quien se desempeña en el cargo de representante legal de la firma <i>[ENTIDAD_CONTRATISTA_INTERVENTORIA]</i>,con NIT <i>[NIT_CONTRATISTA_INTERVENTORIA]</i>, en su condición de Contratista de interventoría; identificados civilmente como aparece al pie de sus firmas, para suscribir el acta de Inicio fase 1 – preconstrucción, del contrato de interventoría No. <i>[NUMERO_CONTRATO_OBRA]</i>, en las condiciones que se describen a continuación:
+            En Bogotá D.C. el día 
+            <i>[FECHA_ACTA_INICIO_OBRA]</i>, se reunieron las siguientes personas 
+            <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, identificado con cedula de ciudadanía No.
+            <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, quien se desempeña como
+            <i> [CARGO_SUPERVISOR] </i> de la UG del PA-FFIE en su calidad de supervisor y
+            <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>, quien se desempeña en el cargo de representante legal de la firma
+            <i>[ENTIDAD_CONTRATISTA_INTERVENTORIA]</i>,con NIT 
+            <i>[NIT_CONTRATISTA_INTERVENTORIA]</i>, en su condición de Contratista de interventoría; identificados civilmente como aparece al pie de sus firmas, para suscribir el acta de Inicio fase 1 – preconstrucción, del contrato de interventoría No. 
+            <i>[NUMERO_CONTRATO_OBRA]</i>, en las condiciones que se describen a continuación:
           </section>
           <table align="center" style="margin-left:8em;width: 90%; padding: 0; border-spacing: 0px;margin-top:1.5em;" border="1">
             <thead>
@@ -122,10 +130,10 @@
           <section style="font-size:1em;margin-top:5em;margin-left:5em;width:100%;">
             <p>___________________________________________________</p>
             <p>
-              <i>[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]</i>
+              <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>
             </p>
             <p>
-              NIT: <i>[NIT_ENTIDAD_CONTRATISTA_OBRA]</i>
+              NIT: <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>
             </p>
             <p>
               Representante legal: <i>[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i>
