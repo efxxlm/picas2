@@ -948,7 +948,7 @@ namespace asivamosffie.services
 
             try
             {
-                ListContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado).ToListAsync();
+                ListContratos = await _context.Contrato.Where(r => !(bool)r.Eliminado && (r.EstadoActa=="5"|| r.EstadoActa == "20")).ToListAsync();//no encontré el 20 en constante
 
                 return ListContratos.OrderByDescending(r => r.ContratoId).ToList();
             }
