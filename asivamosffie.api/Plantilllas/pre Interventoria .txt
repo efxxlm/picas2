@@ -122,7 +122,7 @@
               <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>
             </p>
             <p>
-              C.C. No. <i>[CEDULA_SUPERVISOR]</i>
+              C.C. No. <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i>
             </p>
             <p>UG del PA-FFIE</p>
             <p>SUPERVISOR</p>

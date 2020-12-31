@@ -62,9 +62,9 @@
       <div style="column-count: 1;width:100%" align="center">
         <section style="font-size:1em;margin-top:5em;width:50%;float:left;">
           <p>___________________________________________</p>
-          <p><i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i></p>
-          <p>NIT: <i>[NIT_CONTRATISTA_INTERVENTORIA]</i></p>
-          <p>Representante legal: <i>[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i></p>
+          <p><i>[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i></p>
+          <p>NIT: <i>[NIT_ENTIDAD_CONTRATISTA_OBRA]</i></p>
+          <p>Representante legal: <i>[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]</i></p>
           <p>C.C. No. <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i></p>
           <p>CONTRATISTA DE OBRA</p>
         </section>
