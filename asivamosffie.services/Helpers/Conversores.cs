@@ -64,15 +64,15 @@ namespace asivamosffie.services.Helpers
             }
             else if (value == 1000000)
             {
-                num2Text = "UN MILLON";
+                num2Text = "UN MILLON DE ";
             }
             else if (value < 2000000)
             {
-                num2Text = "UN MILLON " + NumeroALetras(value % 1000000);
+                num2Text = "UN MILLON DE " + NumeroALetras(value % 1000000);
             }
             else if (value < 1000000000000)
             {
-                num2Text = NumeroALetras(Math.Truncate(value / 1000000)) + " MILLONES ";
+                num2Text = NumeroALetras(Math.Truncate(value / 1000000)) + " MILLONES DE ";
                 if ((value - Math.Truncate(value / 1000000) * 1000000) > 0)
                 {
                     num2Text = num2Text + " " + NumeroALetras(value - Math.Truncate(value / 1000000) * 1000000);
@@ -82,7 +82,7 @@ namespace asivamosffie.services.Helpers
             else if (value < 2000000000000) num2Text = "UN BILLON " + NumeroALetras(value - Math.Truncate(value / 1000000000000) * 1000000000000);
             else
             {
-                num2Text = NumeroALetras(Math.Truncate(value / 1000000000000)) + " BILLONES";
+                num2Text = NumeroALetras(Math.Truncate(value / 1000000000000)) + " BILLONES DE ";
                 if ((value - Math.Truncate(value / 1000000000000) * 1000000000000) > 0)
                 {
                     num2Text = num2Text + " " + NumeroALetras(value - Math.Truncate(value / 1000000000000) * 1000000000000);

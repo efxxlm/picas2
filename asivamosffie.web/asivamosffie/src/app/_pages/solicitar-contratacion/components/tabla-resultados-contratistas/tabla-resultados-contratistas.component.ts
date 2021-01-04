@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -14,7 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   templateUrl: './tabla-resultados-contratistas.component.html',
   styleUrls: ['./tabla-resultados-contratistas.component.scss']
 })
-export class TablaResultadosContratistasComponent implements OnInit {
+export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
 
   @Input() contratacion: Contratacion;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
@@ -45,6 +45,21 @@ export class TablaResultadosContratistasComponent implements OnInit {
              )
   {
     this.declararUnionTemporal();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    
+    if ( changes.contratacion ){
+      if (this.contratacion[ 'contratista' ] !== undefined)
+        this.nombreContratista.setValue( this.contratacion[ 'contratista'].nombre );
+
+      if (this.contratacion[ 'contratista' ] !== undefined)
+         this.unionTemporal.setValue( this.contratacion[ 'contratista'].tipoProponenteCodigo === '4' ? true : false );
+      
+      //  if (this.contratacion[ 'contratista' ] !== undefined)
+      //     this.numeroDocumento.setValue( this.contratacion[ 'contratista'].numeroIdentificacion );
+      
+    }
+
   }
 
   private declararUnionTemporal() {

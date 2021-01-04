@@ -117,31 +117,33 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
       this.fechaSesion = new Date(fecha);
       this.fechaSesionString = `${this.fechaSesion.getFullYear()}/${this.fechaSesion.getMonth() + 1}/${this.fechaSesion.getDate()}`;
       this.contratacion.fechaEnvioDocumentacion = this.fechaSesionString;
-      const documento: any = document.getElementById('file');
-      if (this.dataFormulario.get('minutaFile').value.size > 1048576) {
-        this.openDialog('', '<b>El tamaño del archivo es superior al permitido, debe subir un archivo máximo de 1MB.</b>');
-        return;
-      }
-      if (documento !== null) {
-        let pFile = this.dataFormulario.get('minutaFile').value;
-        pFile = pFile.name.split('.');
-        pFile = pFile[pFile.length - 1];
-        console.log(pFile);
-        if (pFile === 'docx' || pFile === 'doc') {
-          this.procesosContractualesSvc.sendTramite(this.contratacion, documento.files[0])
-            .subscribe(
-              response => {
-                this.seRealizoPeticion = true;
-                this.openDialog('', response.message);
-                this.routes.navigate(['/procesosContractuales']);
-              },
-              err => this.openDialog('', err.message)
-            );
-        } else {
-          this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .doc y .docx</b>');
-          return;
-        }
-      } else {
+      this.contratacion.rutaMinuta = this.dataFormulario.get('rutaDocumento').value;
+
+      // const documento: any = document.getElementById('file');
+      // if (this.dataFormulario.get('minutaFile').value.size > 1048576) {
+      //   this.openDialog('', '<b>El tamaño del archivo es superior al permitido, debe subir un archivo máximo de 1MB.</b>');
+      //   return;
+      // }
+      // if (documento !== null) {
+      //   let pFile = this.dataFormulario.get('minutaFile').value;
+      //   pFile = pFile.name.split('.');
+      //   pFile = pFile[pFile.length - 1];
+      //   console.log(pFile);
+      //   if (pFile === 'docx' || pFile === 'doc') {
+      //     this.procesosContractualesSvc.sendTramite(this.contratacion, documento.files[0])
+      //       .subscribe(
+      //         response => {
+      //           this.seRealizoPeticion = true;
+      //           this.openDialog('', response.message);
+      //           this.routes.navigate(['/procesosContractuales']);
+      //         },
+      //         err => this.openDialog('', err.message)
+      //       );
+      //   } else {
+      //     this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .doc y .docx</b>');
+      //     return;
+      //   }
+      // } else {
         this.procesosContractualesSvc.sendTramite(this.contratacion, undefined)
           .subscribe(
             response => {
@@ -151,7 +153,7 @@ export class FormRegistroTramiteComponent implements OnInit, OnDestroy {
             },
             err => this.openDialog('', err.message)
           );
-      }
+      //}
 
     }
     else {

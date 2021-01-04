@@ -1,3 +1,4 @@
+import { delay } from 'rxjs/operators';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
   styleUrls: ['./ver-detalle-editar-acta-ini-f-i-prc.component.scss']
 })
 export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit, OnDestroy {
+  contrato: any;
   maxDate: Date;
   maxDate2: Date;
   public idContrato;
@@ -75,19 +77,69 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   esActa: any;
   anotacionesSupervisor: boolean;
   observacionSupervisor: any;
+  plazoDiasContrato = 0;
+  plazoMesesFase1 = 0;
+  plazoMesesFase2 = 0;
+
   constructor(private router: Router, public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
-  }
-  ngOnInit(): void {
     this.addressForm = this.crearFormulario();
     this.addressForm2 = this.crearFormulario2();
+
     this.cargarRol();
     this.activatedRoute.params.subscribe(param => {
       this.loadData(param.id);
       this.loadObservaciones(param.id);
       this.idContrato = param.id;
     });
+
+    this.addressForm.get( 'mesPlazoEjFase1' ).valueChanges
+      .pipe(
+        delay( 1000 )
+      )
+      .subscribe(
+        value => {
+          if ( this.contrato !== undefined && value !== null ) {
+            const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+            const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+            this.plazoMesesFase1 = value;
+            this.plazoMesesFase2 = this.addressForm.get( 'diasPlazoEjFase1' ).value;
+            this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
+              .subscribe(
+                response => {
+                  this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+                  this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+                }
+              );
+          }
+        }
+      );
+    this.addressForm.get( 'diasPlazoEjFase1' ).valueChanges
+      .pipe(
+        delay( 1000 )
+      )
+      .subscribe(
+        value => {
+          if ( this.contrato !== undefined && value !== null ) {
+            const mesesPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+            const diasPlazoInicial = this.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+            this.plazoMesesFase1 = this.addressForm.get( 'mesPlazoEjFase1' ).value;
+            this.plazoMesesFase2 = value;
+            if ( this.plazoMesesFase1 > 0 ) {
+              this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, this.plazoMesesFase1, this.plazoMesesFase2 )
+                .subscribe(
+                  response => {
+                    this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+                    this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+                  }
+                );
+            }
+          }
+        }
+      );
+  }
+  ngOnInit(): void {
   }
   ngOnDestroy(): void {
     if (this.addressForm.dirty === true && this.realizoPeticion === false) {
@@ -109,6 +161,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   };
   loadData(id) {
     this.service.GetContratoByContratoId(id).subscribe((data: any) => {
+      this.contrato = data;
+      console.log( this.contrato );
       this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
       //Datos correspondientes al formulario
@@ -116,8 +170,6 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaTerminacion);
       this.addressForm.get('mesPlazoEjFase1').setValue(data.plazoFase1PreMeses);
       this.addressForm.get('diasPlazoEjFase1').setValue(data.plazoFase1PreDias);
-      this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
-      this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
     });
     this.idContrato = id;
   }
@@ -247,8 +299,8 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       fechaPrevistaTerminacion: [Date(), Validators.required],
       mesPlazoEjFase1: ["", Validators.required],
       diasPlazoEjFase1: ["", Validators.required],
-      mesPlazoEjFase2: ["", Validators.required],
-      diasPlazoEjFase2: ["", Validators.required],
+      mesPlazoEjFase2: [{ value: "", disabled: true }, Validators.required],
+      diasPlazoEjFase2: [{ value: "", disabled: true }, Validators.required],
       observacionesEspeciales: [""]
     })
   }

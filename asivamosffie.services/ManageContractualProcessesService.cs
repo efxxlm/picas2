@@ -784,8 +784,9 @@ namespace asivamosffie.services
                 contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
                 contratacionOld.FechaEnvioDocumentacion = pContratacion.FechaEnvioDocumentacion;
                 contratacionOld.Observaciones = pContratacion.Observaciones;
-                if (pFile != null && pFile.Length > 0)
-                    contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
+                
+                //if (pFile != null && pFile.Length > 0)
+                contratacionOld.RutaMinuta = pContratacion.RutaMinuta;
                 contratacionOld.RegistroCompleto1 = ValidarCamposContratacion(contratacionOld);
 
                 await _context.SaveChangesAsync();
@@ -856,7 +857,7 @@ namespace asivamosffie.services
                         .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MMMM-yy") : " ")
                         .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MMMM-yy") : " ")
                         .Replace("[NUMERO_SOLICITUD]", pSesionComiteSolicitud.Contratacion.NumeroSolicitud ?? " ");
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisión", template, pSender, pPassword, pMailServer, pMailPort);
+                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisiï¿½n", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
                 return blEnvioCorreo;

@@ -22,6 +22,8 @@ export class FormOtrosTemasComponent implements OnInit {
 
   @Input() sesionComiteTema: SesionComiteTema;
   @Input() listaMiembros: SesionParticipante[];
+  @Input() fechaComite: Date;
+
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   listaResponsables: Dominio[] = [];
