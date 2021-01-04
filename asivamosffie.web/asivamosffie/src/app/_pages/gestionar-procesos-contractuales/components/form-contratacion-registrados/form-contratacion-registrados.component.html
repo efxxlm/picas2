@@ -1,0 +1,97 @@
+<div class="container text-center mt-2em" *ngIf="contratacion !== null">
+  <div class="text-right">
+    <a routerLink="/contratosModificacionesContractuales" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+
+  <div class="text-center">
+    <h1 class="title-menu--h1">
+      Gestionar solicitud {{ contratacion?.numeroSolicitud }}
+    </h1>
+  </div>
+  <div class="text-center flex">
+    <p class="color-titulo mr-right-8em">Fecha de solicitud: <b>{{ contratacion?.fechaCreacion | date: 'dd/MM/yyyy' }}</b></p>
+    <p class="color-titulo"><b>Contratación</b></p>
+  </div>
+  <div align="left">
+    <mat-card class="border">
+      <mat-card-content>
+        <div>
+          <p><b>Número de comité técnico</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnico.numeroComite }} </p>
+          <p><b>Fecha de comité técnico</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
+        </div>
+        <div >
+          <p><b>Número de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnicoFiduciario.numeroComite }} </p>
+          <p><b>Fecha de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
+        </div>
+      </mat-card-content>
+  </mat-card>
+  </div>
+  <div class="text-center">
+    <mat-accordion>
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos de contratista
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Nombre del contratista</b>: {{ contratacion?.contratista.nombre }} </p>
+              <p><b>Tipo de identificación</b>: {{ contratacion?.contratista.tipoIdentificacionCodigo }} </p>
+              <p><b>Número de identificación</b>: {{ contratacion?.contratista.numeroIdentificacion }} </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Datos del contrato
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Tipo de contrato</b>: {{ contratacion?.contrato[0].tipoContratoCodigo }} </p>
+              <p><b>Valor del contrato</b>: {{ contratacion?.disponibilidadPresupuestal[0].valorSolicitud | currency:'COP':'symbol-narrow':'.0-0' }}</p>
+              <p><b>Plazo</b>: {{ contratacion?.disponibilidadPresupuestal[0].plazoMeses }} meses / {{ contratacion?.disponibilidadPresupuestal[0].plazoDias }} días</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+
+      <mat-expansion-panel class="expansion-style" *ngIf="estadoCodigo === estadoCodigos.firmado">
+        <mat-expansion-panel-header class="expansion-style--header w-50">
+          <mat-panel-title class="expansion-style--title">
+            Detalle de modificación
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div align="left">
+          <mat-card class="border">
+            <mat-card-content>
+              <p><b>Fecha del trámite</b>: {{ contratacion?.fechaTramite | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Número del contrato</b>: {{ form.get( 'numeroContrato' ).value }} </p>
+              <p><b>Fecha de envío para firma del contratista</b>: {{ form.get( 'fechaEnvioParaFirmaContratista' ).value | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Fecha de firma por parte del contratista</b>: {{ form.get( 'fechaFirmaPorParteContratista' ).value | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Fecha de envío para la firma de la fiduciaria</b>: {{ form.get( 'fechaEnvioParaFirmaFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Fecha de de firma por parte de la fiduciaria</b>: {{ form.get( 'fechaFirmaPorParteFiduciaria' ).value | date: 'dd/MM/yyyy' }} </p>
+              <p><b>Observaciones</b>: {{ form.get( 'observaciones' ).value}} </p>
+              <p><b>Adjuntar documento suscrito</b>: {{ form.get( 'rutaDocumento' ).value }} </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+</div>
