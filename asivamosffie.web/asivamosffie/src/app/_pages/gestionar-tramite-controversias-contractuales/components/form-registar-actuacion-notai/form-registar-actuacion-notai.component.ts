@@ -28,7 +28,9 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     participacionFiduciaria: [null, Validators.required],
     requiereComiteTecnico: [null, Validators.required],
     observaciones: [null, Validators.required],
-    urlSoporte: [null, Validators.required]
+    urlSoporte: [null, Validators.required],
+    requiereMesaDeTrabajo: [null, Validators.required],
+    resultadoDefinitivoyCerrado:  [null, Validators.required]
   });
   estadoAvanceTramiteArrayDom: Dominio[] = [];
   proximaActuacionRequeridaArrayDom: Dominio[] = [];
@@ -136,8 +138,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "EsRequiereComite": this.addressForm.value.requiereComiteTecnico,
         "EsRequiereAseguradora": "",
         "EsRequiereComiteReclamacion": "",
-        "EsprocesoResultadoDefinitivo": "",
-        "EsRequiereMesaTrabajo": "",
+        "EsprocesoResultadoDefinitivo": this.addressForm.value.resultadoDefinitivoyCerrado,
+        "EsRequiereMesaTrabajo": this.addressForm.value.requiereMesaDeTrabajo,
         "Eliminado": false,
         "ControversiaActuacionId": 7
       }
@@ -168,8 +170,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "EsRequiereComite": this.addressForm.value.requiereComiteTecnico,
         "EsRequiereAseguradora": "",
         "EsRequiereComiteReclamacion": "",
-        "EsprocesoResultadoDefinitivo": "",
-        "EsRequiereMesaTrabajo": "",
+        "EsprocesoResultadoDefinitivo": this.addressForm.value.resultadoDefinitivoyCerrado,
+        "EsRequiereMesaTrabajo": this.addressForm.value.requiereMesaDeTrabajo,
         "Eliminado": false
       }
     }
