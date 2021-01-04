@@ -68,6 +68,12 @@ export class FormPerfilComponent implements OnInit {
     });
   }
 
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
+
   perfilesProyecto() {
     let observacionSupervisorSemaforo = null;
     if ( this.perfilProyecto.length === 0 ) {
