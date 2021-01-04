@@ -34,22 +34,25 @@
     <div class="d-flex">
       <label class="mr-3em"
         [class.color-secondaryColor]="dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched || dataFormulario.get('minuta').invalid && camposFaltantes">
-        Minuta adjunta</label>
+        Minuta </label>
       <div class="input" style="width: 90%;">
-        <span class="input-file-text text-center required" (click)="fileInput.click()"
+        <!-- <span class="linput-file-text text-center required" (click)="fileInput.click()"
           [class.color-secondaryColor]="dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched || dataFormulario.get('minuta').invalid && camposFaltantes">
           {{archivo}}
-        </span>
-        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
+        </span> -->
+        <div class="col pr-3em">
+          <mat-form-field class="full-width">
+            <input matInput type="url" required formControlName="rutaDocumento" maxlength="1000">
+          </mat-form-field>
+          <span class="info-url">Indique la ruta del soporte de esta información</span>
+        </div>
+        <!-- <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
           Adjuntar
         </button>
         <input required hidden (change)="fileName( $event )" #fileInput type="file" id="file" formControlName="minuta"
           [placeholder]="archivo"
-          accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+          accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"> -->
       </div>
-    </div>
-    <div class="container text-center">
-      <p class="align-text"><small>Adjunte el documento que contenga la minuta del contrato</small></p>
     </div>
 
     <div class="text-center">
