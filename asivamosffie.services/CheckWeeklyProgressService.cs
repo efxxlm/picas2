@@ -204,15 +204,7 @@ namespace asivamosffie.services
 
         public async Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
         {
-            List<VVerificarValidarSeguimientoSemanal> vVerificarValidarSeguimientoSemanals = new List<VVerificarValidarSeguimientoSemanal>();
-
-            foreach (var item in strListCodEstadoSeguimientoSemanal)
-            {
-                vVerificarValidarSeguimientoSemanals.AddRange(
-                   _context.VVerificarValidarSeguimientoSemanal.Where(r => r.EstadoSeguimientoSemanalCodigo == item).ToList()
-                   );
-            } 
-            return vVerificarValidarSeguimientoSemanals;
+            return _context.VVerificarValidarSeguimientoSemanal.ToList();
         }
 
         public async Task<dynamic> GetListReporteSemanal()
