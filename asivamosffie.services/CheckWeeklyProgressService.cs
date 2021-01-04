@@ -202,6 +202,19 @@ namespace asivamosffie.services
 
         #region List
 
+        public async Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
+        {
+            List<VVerificarValidarSeguimientoSemanal> vVerificarValidarSeguimientoSemanals = new List<VVerificarValidarSeguimientoSemanal>();
+
+            foreach (var item in strListCodEstadoSeguimientoSemanal)
+            {
+                vVerificarValidarSeguimientoSemanals.AddRange(
+                   _context.VVerificarValidarSeguimientoSemanal.Where(r => r.EstadoSeguimientoSemanalCodigo == item).ToList()
+                   );
+            } 
+            return vVerificarValidarSeguimientoSemanals;
+        }
+
         public async Task<dynamic> GetListReporteSemanal()
         {
             List<SeguimientoSemanal> ListseguimientoSemanal =
@@ -825,6 +838,7 @@ namespace asivamosffie.services
             throw new NotImplementedException();
         }
 
+        
         #endregion
     }
 }
