@@ -42,9 +42,8 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
-  moduleChange(){
-  }
   seleccionAutocomplete(id:any){
+    this.contratoId = id;
     this.addressForm.value.contrato = id;
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(resp_0=>{
       this.nombreContratista = resp_0[0].nombreContratista;

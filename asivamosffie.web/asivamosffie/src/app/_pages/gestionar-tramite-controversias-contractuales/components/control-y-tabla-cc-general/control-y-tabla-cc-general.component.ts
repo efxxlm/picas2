@@ -76,9 +76,36 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
       this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
     });
   }
+  actualizarTramiteButtonNoTAI(id) {
+    localStorage.setItem("controversiaID", id);
+    this.services.CambiarEstadoControversiaContractual(id, "4").subscribe((dataUpdt: any) => {
+      this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+    });
+  }
   consultarActualizaciones(id){
     localStorage.setItem("controversiaID", id);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+  }
+  cerrarTramite(id){
+    this.services.CambiarEstadoControversiaContractual(id, "11").subscribe((dataUpdt: any) => {
+      if (dataUpdt.isSuccessful == true) {
+        this.ngOnInit();
+      }
+    });
+  }
+  cerrarTramiteNoTAI(id){
+    this.services.CambiarEstadoControversiaContractual(id, "5").subscribe((dataUpdt: any) => {
+      if (dataUpdt.isSuccessful == true) {
+        this.ngOnInit();
+      }
+    });
+  }
+  registrarControversia(id){
+    this.services.CambiarEstadoControversiaContractual(id, "3").subscribe((dataUpdt: any) => {
+      if (dataUpdt.isSuccessful == true) {
+        this.ngOnInit();
+      }
+    });
   }
   verDetalleButton(id) {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleControversia', id]);
