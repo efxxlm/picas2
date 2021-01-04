@@ -191,6 +191,8 @@ namespace asivamosffie.services
             {
                 foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado))
                 {
+                    ProyectoAportante.Aportante.FuenteFinanciacion = _context.FuenteFinanciacion.Where( ff => ff.AportanteId == ProyectoAportante.Aportante.CofinanciacionAportanteId ).ToList();
+
                     TotalPlantillaRegistrosAportante += PlantillaRegistrosAportante;
                     foreach (Dominio placeholderDominio in placeholders)
                     {
@@ -201,12 +203,34 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_APORTANTE:
 
                                 string NombreAportante = "";
-                                if (ProyectoAportante.Aportante.NombreAportanteId > 0)
+
+                                if ( ProyectoAportante.Aportante.TipoAportanteId.Equals( ConstanTipoAportante.Ffie ) ){
+                                    NombreAportante = ConstanStringTipoAportante.Ffie;
+                                }else if (ProyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
                                 {
-                                    NombreAportante = LisParametricas
+                                    NombreAportante = ProyectoAportante.Aportante.NombreAportanteId == null
+                                        ? "Error" :
+                                        NombreAportante = LisParametricas
                                         .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
                                         .FirstOrDefault().Nombre;
+
                                 }
+                                else
+                                {
+                                    if (ProyectoAportante.Aportante.MunicipioId == null)
+                                    {
+                                        NombreAportante = ProyectoAportante.Aportante.DepartamentoId == null
+                                        ? "Error" :
+                                        "Gobernación " + _context.Localizacion.Find(ProyectoAportante.Aportante.DepartamentoId).Descripcion;
+                                    }
+                                    else
+                                    {
+                                        NombreAportante = ProyectoAportante.Aportante.MunicipioId == null
+                                        ? "Error" :
+                                        "Alcaldía " + _context.Localizacion.Find(ProyectoAportante.Aportante.MunicipioId).Descripcion;
+                                    }
+                                }
+
                                 TotalPlantillaRegistrosAportante = TotalPlantillaRegistrosAportante
                                     .Replace(placeholderDominio.Nombre, NombreAportante);
                                 break;
@@ -284,6 +308,8 @@ namespace asivamosffie.services
                 foreach (Dominio placeholderDominio in placeholders)
                 {
 
+                    ProyectoAportante proyectoAportante = ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado).FirstOrDefault();
+                    
                     switch (placeholderDominio.Codigo)
                     {
                         case ConstanCodigoVariablesPlaceHolders.LLAVE_MEN:
@@ -318,28 +344,32 @@ namespace asivamosffie.services
 
                             try
                             {
-                                string strNombreAportante = string.Empty;
-                                switch (ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.TipoAportanteId)
+
+                                if ( proyectoAportante.Aportante.TipoAportanteId.Equals( ConstanTipoAportante.Ffie ) ){
+                                    nombreAportante = ConstanStringTipoAportante.Ffie;
+                                }else if (proyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
                                 {
+                                    nombreAportante = proyectoAportante.Aportante.NombreAportanteId == null
+                                        ? "Error" :
+                                        nombreAportante = LisParametricas
+                                        .Where(r => r.DominioId == proyectoAportante.Aportante.NombreAportanteId)
+                                        .FirstOrDefault().Nombre;
 
-                                    case ConstanTipoAportante.Ffie:
-                                        strNombreAportante = ConstanStringTipoAportante.Ffie;
-                                        break;
-
-                                    case ConstanTipoAportante.ET:
-
-                                        if (ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Departamento != null)
-                                        {
-                                            strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Departamento.Descripcion;
-                                        }
-                                        else
-                                        {
-                                            strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Municipio.Descripcion;
-                                        }
-                                        break;
-                                    case ConstanTipoAportante.Tercero:
-                                        strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.NombreAportante.Nombre;
-                                        break;
+                                }
+                                else
+                                {
+                                    if (proyectoAportante.Aportante.MunicipioId == null)
+                                    {
+                                        nombreAportante = proyectoAportante.Aportante.DepartamentoId == null
+                                        ? "Error" :
+                                        "Gobernación " + _context.Localizacion.Find(proyectoAportante.Aportante.DepartamentoId).Descripcion;
+                                    }
+                                    else
+                                    {
+                                        nombreAportante = proyectoAportante.Aportante.MunicipioId == null
+                                        ? "Error" :
+                                        "Alcaldía " + _context.Localizacion.Find(proyectoAportante.Aportante.MunicipioId).Descripcion;
+                                    }
                                 }
                             }
                             catch (Exception)
@@ -351,13 +381,14 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.SALDO_ACTUAL_FUENTE:
 
-                            if (ContratacionProyecto.Proyecto.ProyectoAportante
-                                                  .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
+                            proyectoAportante.Aportante.FuenteFinanciacion = _context.FuenteFinanciacion.Where( ff => ff.AportanteId == proyectoAportante.Aportante.CofinanciacionAportanteId ).ToList();
+
+                            if (proyectoAportante.Aportante.FuenteFinanciacion.Count() > 0)
                             {
                                 TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
                                     .Replace(placeholderDominio.Nombre, string
-                                    .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
-                                    .FirstOrDefault().Aportante.FuenteFinanciacion
+                                    .Format("{0:#,0}", proyectoAportante
+                                    .Aportante.FuenteFinanciacion
                                     .FirstOrDefault().GestionFuenteFinanciacion
                                     .Sum(r => r.SaldoActual)));
                             }
