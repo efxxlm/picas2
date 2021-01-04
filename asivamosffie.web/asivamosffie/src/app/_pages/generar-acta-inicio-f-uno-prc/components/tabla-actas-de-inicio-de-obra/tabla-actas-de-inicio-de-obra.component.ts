@@ -128,12 +128,12 @@ export class TablaActasDeInicioDeObraComponent implements OnInit {
     dialogConfig.width = '865px';
     const dialogRef = this.dialog.open(CargarActaSuscritaActaIniFIPreconstruccionComponent, dialogConfig);
   }
-  descargarActaDesdeTabla(id){
-    this.service.GetActaByIdPerfil(8,id).subscribe(resp=>{
-      const documento = `Prueba.pdf`; // Valor de prueba
+  descargarActaDesdeTabla(id, numContrato){
+    this.service.GetActaByIdPerfil(id, 'False').subscribe(resp => {
+      const documento = `Acta contrato ${numContrato}.pdf`; // Valor de prueba
       const text = documento,
-      blob = new Blob([resp], { type: 'application/pdf' }),
-      anchor = document.createElement('a');
+        blob = new Blob([resp], { type: 'application/pdf' }),
+        anchor = document.createElement('a');
       anchor.download = documento;
       anchor.href = window.URL.createObjectURL(blob);
       anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
