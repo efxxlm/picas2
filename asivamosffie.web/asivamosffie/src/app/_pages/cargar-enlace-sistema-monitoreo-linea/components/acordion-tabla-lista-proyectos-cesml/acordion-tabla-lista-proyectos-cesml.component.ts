@@ -14,7 +14,6 @@ import { DialogCargarSitioWebCesmlComponent } from '../dialog-cargar-sitio-web-c
 })
 export class AcordionTablaListaProyectosCesmlComponent implements OnInit {
   public dataContrato;
-  estadoAcordeon: string;
   loadDataItems: Subscription;
   constructor(public dialog: MatDialog, private services: MonitoringURLService) { }
 

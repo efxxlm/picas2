@@ -7,15 +7,17 @@
 <mat-accordion>
     <mat-expansion-panel class="expansion-style" *ngFor="let cont of this.dataContrato; let i = index">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title " [ngClass]="estadoAcordeon">
-               {{cont.numeroContrato}}
+            <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar': cont.semaforo==0, 'completo': cont.semaforo==1}">
+                {{cont.numeroContrato}}
             </mat-panel-title>
         </mat-expansion-panel-header>
         <div align="center">
             <p class="info-sub-title">
-                <span>Nombre del contratista: <b>{{cont.nombreContratista}}</b>&nbsp;&nbsp;Proyectos asociados: <b>{{cont.lstProyectoGrilla.length}}</b></span>
+                <span>Nombre del contratista: <b>{{cont.nombreContratista}}</b>&nbsp;&nbsp;Proyectos asociados:
+                    <b>{{cont.lstProyectoGrilla.length}}</b></span>
             </p>
         </div>
-        <app-tabla-general-proyectos-cesml [dataTableServ]="cont.lstProyectoGrilla" (estadoSemaforo)="estadoAcordeon = $event"></app-tabla-general-proyectos-cesml>
+        <app-tabla-general-proyectos-cesml [dataTableServ]="cont.lstProyectoGrilla"></app-tabla-general-proyectos-cesml>
     </mat-expansion-panel>
 </mat-accordion>

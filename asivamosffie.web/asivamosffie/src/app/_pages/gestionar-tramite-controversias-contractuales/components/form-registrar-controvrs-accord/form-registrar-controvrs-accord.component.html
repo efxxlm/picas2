@@ -59,10 +59,10 @@
                                 <input matInput #numeroRadicadoSAC type="text" maxlength="10"
                                     formControlName="numeroRadicadoSAC" required>
                             </mat-form-field>
-                            <span class="contador miles" *ngIf="addressForm.controls.numeroRadicadoSAC.value">
+                            <span class="contador" *ngIf="addressForm.controls.numeroRadicadoSAC.value">
                                 {{10 - (addressForm.get('numeroRadicadoSAC').value?addressForm.get('numeroRadicadoSAC').value.toString().length:0)}}
                             </span>
-                            <span class="contador miles" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
+                            <span class="contador" *ngIf="!addressForm.controls.numeroRadicadoSAC.value">
                                 10
                             </span>
                         </div>

@@ -13,7 +13,6 @@ import { DialogCargarSitioWebCesmlComponent } from '../dialog-cargar-sitio-web-c
 })
 export class TablaGeneralProyectosCesmlComponent implements OnInit {
   @Input() dataTableServ: any;
-  @Output() estadoSemaforo = new EventEmitter<string>();
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -30,24 +29,6 @@ export class TablaGeneralProyectosCesmlComponent implements OnInit {
   constructor(private router: Router, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    let incompleto = 0;
-    let completo = 0;
-    for (let proy of this.dataTableServ) {
-      if (proy.urlMonitoreo == "") {
-        incompleto++;
-      }
-      if (proy.urlMonitoreo != "") {
-        completo++;
-      }
-    }
-    if (incompleto > 0 && completo < this.dataTableServ.length) {
-      this.estadoSemaforo.emit('sin-diligenciar');
-    }
-    else if (completo > 0 && incompleto == 0) {
-      this.estadoSemaforo.emit('completo');
-    }
-    console.log(incompleto);
-    console.log(completo);
     this.dataSource = new MatTableDataSource(this.dataTableServ);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

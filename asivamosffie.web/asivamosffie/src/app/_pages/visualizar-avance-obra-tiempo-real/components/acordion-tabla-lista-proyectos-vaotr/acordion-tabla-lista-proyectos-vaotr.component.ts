@@ -11,7 +11,7 @@ import { MonitoringURLService } from 'src/app/core/_services/monitoringURL/monit
   styleUrls: ['./acordion-tabla-lista-proyectos-vaotr.component.scss']
 })
 export class AcordionTablaListaProyectosVaotrComponent implements OnInit {
-  public dataContrato;
+  dataContrato: any = [];
   constructor(public dialog: MatDialog, private services: MonitoringURLService) { }
 
   ngOnInit(): void {
@@ -24,8 +24,11 @@ export class AcordionTablaListaProyectosVaotrComponent implements OnInit {
   }
 
   loadData(data){
-    this.dataContrato = data;
-    console.log(this.dataContrato);
+    for (let projects of data){
+      if(projects.semaforo==1){
+        this.dataContrato.push(projects);
+      }
+    }
   }
 
 

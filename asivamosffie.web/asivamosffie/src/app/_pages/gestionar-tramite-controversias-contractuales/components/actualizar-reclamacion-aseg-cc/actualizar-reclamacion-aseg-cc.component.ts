@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { PolizaGarantiaService } from 'src/app/core/_services/polizaGarantia/poliza-garantia.service';
 
 @Component({
   selector: 'app-actualizar-reclamacion-aseg-cc',
@@ -24,7 +25,10 @@ export class ActualizarReclamacionAsegCcComponent implements OnInit {
   plazo: any;
   fechaFinContrato: any;
   fechaInicioContrato: any;
-  constructor(private activatedRoute: ActivatedRoute, private services: ContractualControversyService) { }
+  numPoliza: any;
+  numRadicacionAseguradora: any;
+  fechaRadicacion: any;
+  constructor(private activatedRoute: ActivatedRoute, private services: ContractualControversyService, private polService: PolizaGarantiaService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
@@ -53,6 +57,11 @@ export class ActualizarReclamacionAsegCcComponent implements OnInit {
         this.plazo = data1.plazoFormat;
         this.fechaInicioContrato = data1.fechaInicioContrato;
         this.fechaFinContrato = data1.fechaFinContrato;
+      });
+      this.polService.GetContratoPolizaByIdContratoId(data.contratoId).subscribe((data2:any)=>{
+        this.numPoliza = data2.numeroPoliza;
+        this.numRadicacionAseguradora = data2.numeroCertificado;
+        this.fechaRadicacion = data2.vigencia;
       });
     })
 
