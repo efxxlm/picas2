@@ -24,12 +24,16 @@ namespace asivamosffie.services
     {
         private readonly ICommonService _commonService;
         private readonly devAsiVamosFFIEContext _context;
+        private readonly IRegisterWeeklyProgressService _registerWeeklyProgressService;
 
-        public CheckWeeklyProgressService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public CheckWeeklyProgressService(devAsiVamosFFIEContext context, ICommonService commonService, IRegisterWeeklyProgressService registerWeeklyProgressService)
         {
             _commonService = commonService;
+            _registerWeeklyProgressService = registerWeeklyProgressService;
             _context = context;
         }
+
+
         public async Task<SeguimientoSemanal> GetSeguimientoSemanalBySeguimientoSemanalId(int pSeguimientoSemanalId)
         {
             List<Dominio> TipoIntervencion = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Intervencion).ToList();
@@ -200,6 +204,44 @@ namespace asivamosffie.services
 
         }
 
+        #region Business
+
+        private async Task<bool> ValidarRegistroCompletoObservacion(int pSeguimientoSemanalId, bool pEsSupervisor)
+        {
+            bool RegistroCompleto = true;
+
+            SeguimientoSemanal seguimientoSemanal = await _registerWeeklyProgressService.GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(0, pSeguimientoSemanalId);
+
+            if (seguimientoSemanal.NumeroSemana % 5 == 0)
+            { 
+                RegistroCompleto = ValidarComentarioCompletoAvanceFisico(seguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault(), pEsSupervisor);
+            }
+            return RegistroCompleto;
+        }
+
+        private bool ValidarComentarioCompletoAvanceFisico(SeguimientoSemanalAvanceFinanciero seguimientoSemanalAvanceFinanciero, bool pEsSupervisor)
+        {
+            if (pEsSupervisor)
+            {
+                if (!seguimientoSemanalAvanceFinanciero.TieneObservacionSupervisor.HasValue
+                || (seguimientoSemanalAvanceFinanciero.TieneObservacionSupervisor == true &&
+                string.IsNullOrEmpty(seguimientoSemanalAvanceFinanciero.ObservacionSupervisor.Observacion)))
+                    return false;
+                return true;
+            }
+            else
+            {
+                if (!seguimientoSemanalAvanceFinanciero.TieneObservacionApoyo.HasValue
+                || (seguimientoSemanalAvanceFinanciero.TieneObservacionApoyo == true &&
+                string.IsNullOrEmpty(seguimientoSemanalAvanceFinanciero.ObservacionApoyo.Observacion)))
+                    return false;
+                return true;
+            }
+        }
+
+
+        #endregion
+
         #region List
 
         public async Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
@@ -270,8 +312,6 @@ namespace asivamosffie.services
             return ListBitaCora;
         }
         #endregion
-
-
 
         #region Create update
         public async Task<Respuesta> CreateEditSeguimientoSemanalObservacion(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
@@ -830,7 +870,7 @@ namespace asivamosffie.services
             throw new NotImplementedException();
         }
 
-        
+
         #endregion
     }
 }
