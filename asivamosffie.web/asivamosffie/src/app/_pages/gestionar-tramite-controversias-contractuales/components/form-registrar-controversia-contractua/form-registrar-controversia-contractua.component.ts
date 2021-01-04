@@ -14,14 +14,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   addressForm = this.fb.group({
     contrato: null,
   });
-  /*
-  contratosArray = [
-    { name: 'C223456789', value: '1' },
-    { name: 'C223456999', value: '2' },
-  ];
-  */
-  contratosArray:any;
-
+  contratosArray:any = [];
   nombreContratista: any;
   tipoIdentificacion: any;
   numIdentificacion: any;
@@ -30,7 +23,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   plazoContrato: any;
   fechaInicioContrato: any;
   fechaFinalizacionContrato: any;
-  contratoId: number;
+  contratoId: any;
 
   constructor(  private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private polizaService: PolizaGarantiaService) { }
 
@@ -49,10 +42,10 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
     const inputChar = String.fromCharCode(event.charCode);
     return alphanumeric.test(inputChar) ? true : false;
   }
-
+  moduleChange(){
+  }
   seleccionAutocomplete(id:any){
     this.addressForm.value.contrato = id;
-    this.contratoId = id;
     this.polizaService.GetListVistaContratoGarantiaPoliza(id).subscribe(resp_0=>{
       this.nombreContratista = resp_0[0].nombreContratista;
       this.tipoIdentificacion = resp_0[0].tipoDocumento;
