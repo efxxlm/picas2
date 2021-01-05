@@ -1,3 +1,4 @@
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -40,6 +41,7 @@ export class GestionCalidadComponent implements OnInit {
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalGestionObraCalidadId = 0;
+    seguimientoSemanalObservacionId = 0;
     gestionObraCalidad: any;
     tipoEnsayos: any[] = [];
     editorStyle = {
@@ -58,7 +60,8 @@ export class GestionCalidadComponent implements OnInit {
         private dialog: MatDialog,
         private routes: Router,
         private fb: FormBuilder,
-        private commonSvc: CommonService )
+        private commonSvc: CommonService,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     {
         this.commonSvc.listaTipoEnsayos()
             .subscribe( tipo => this.tipoEnsayos = tipo );
@@ -118,11 +121,57 @@ export class GestionCalidadComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formGestionCalidad.value );
+        const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '9',
+            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            observacion: this.formEnsayo.get( 'observaciones' ).value,
+            tieneObservacion: this.formEnsayo.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
-    guardarEnsayo() {
-        console.log( this.formEnsayo.value );
+    guardarEnsayo( ObsEnsayoId?: number ) {
+		const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: ObsEnsayoId !== undefined ? ObsEnsayoId : 0,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '10',
+            observacionPadreId: this.seguimientoSemanalGestionObraCalidadId,
+            observacion: this.formEnsayo.get( 'observaciones' ).value,
+            tieneObservacion: this.formEnsayo.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

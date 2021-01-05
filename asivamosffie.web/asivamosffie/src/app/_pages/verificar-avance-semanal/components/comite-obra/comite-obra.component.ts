@@ -1,6 +1,10 @@
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-comite-obra',
@@ -14,6 +18,7 @@ export class ComiteObraComponent implements OnInit {
     numeroComiteObra: string;
     seguimientoSemanalId: number;
     seguimientoSemanalRegistrarComiteObraId: number;
+    seguimientoSemanalObservacionId = 0;
     gestionComiteObra: any;
     formComiteObra: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
@@ -44,7 +49,12 @@ export class ComiteObraComponent implements OnInit {
       ]
     };
 
-    constructor( private fb: FormBuilder ) { }
+    constructor(
+        private fb: FormBuilder,
+        private dialog: MatDialog,
+        private routes: Router,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
+    { }
 
     ngOnInit(): void {
         if ( this.seguimientoSemanal !== undefined ) {
@@ -77,8 +87,39 @@ export class ComiteObraComponent implements OnInit {
         }
     }
 
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
     guardar() {
         console.log( this.formComiteObra.value );
+		const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '20',
+            observacionPadreId: this.seguimientoSemanalRegistrarComiteObraId,
+            observacion: this.formComiteObra.get( 'observaciones' ).value,
+            tieneObservacion: this.formComiteObra.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

@@ -69,7 +69,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 for ( const flujo of flujoInversion ) {
                     flujo.programacion.avanceFisicoCapitulo =   flujo.programacion.avanceFisicoCapitulo !== undefined ?
                         String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), false ) )
-                        : '';
+                        : null;
                     avancePorCapitulo.push(
                         {
                             programacionId: flujo.programacion.programacionId,
@@ -78,9 +78,9 @@ export class TablaAvanceFisicoComponent implements OnInit {
                                                                         this.seguimientoDiario.cantidadTotalDiasActividades * 100,
                                                                         false ),
                             avanceFisicoCapitulo:   flujo.programacion.avanceFisicoCapitulo !== undefined
-                                                    && flujo.programacion.avanceFisicoCapitulo.length > 0 ?
+                                                    && flujo.programacion.avanceFisicoCapitulo !== null ?
                                                     String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) )
-                                                    : ''
+                                                    : null
                         }
                     );
                 }
@@ -114,9 +114,10 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
             }
             if ( Number( value ) < 0 ) {
-                registro.avanceFisicoCapitulo = '';
+                registro.avanceFisicoCapitulo = null;
             }
             for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
+                
                 let avanceValue;
                 if ( capitulo.avanceFisicoCapitulo > 0 ) {
                     avanceValue = this.verifyInteger( Number( capitulo.avanceFisicoCapitulo ), false );
@@ -124,7 +125,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 if ( capitulo.avanceFisicoCapitulo === 0 ) {
                     avanceValue = 0;
                 }
-                if ( capitulo.avanceFisicoCapitulo === null ) {
+                if ( capitulo.avanceFisicoCapitulo === null || capitulo.avanceFisicoCapitulo === undefined ) {
                     avanceValue = 0;
                 }
                 totalAvanceFisicoSemana += Number( avanceValue );

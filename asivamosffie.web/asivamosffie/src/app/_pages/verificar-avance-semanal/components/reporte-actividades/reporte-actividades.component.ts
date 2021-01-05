@@ -1,6 +1,10 @@
+import { Router } from '@angular/router';
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-reporte-actividades',
@@ -30,6 +34,7 @@ export class ReporteActividadesComponent implements OnInit {
     ];
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
+    seguimientoSemanalObservacionId = 0;
     reporteActividad: any;
     semaforoReporte = 'sin-diligenciar';
     semaforoActividad = 'sin-diligenciar';
@@ -46,7 +51,12 @@ export class ReporteActividadesComponent implements OnInit {
         ]
     };
 
-    constructor( private fb: FormBuilder ) { }
+    constructor(
+        private fb: FormBuilder,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
+        private dialog: MatDialog,
+        private routes: Router )
+    { }
 
     ngOnInit(): void {
         if ( this.seguimientoSemanal !== undefined ) {
@@ -75,8 +85,38 @@ export class ReporteActividadesComponent implements OnInit {
         }
     }
 
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
     guardar() {
-        console.log( this.formResumenGeneral.value );
+		const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '16',
+            observacionPadreId: this.seguimientoSemanalReporteActividadId,
+            observacion: this.formResumenGeneral.get( 'observaciones' ).value,
+            tieneObservacion: this.formResumenGeneral.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

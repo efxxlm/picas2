@@ -1,3 +1,4 @@
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -54,6 +55,12 @@ export class GestionAmbientalComponent implements OnInit {
     tipoActividades: Dominio[] = [];
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
+    obsGestionAmbientalId = 0; // ID de la observacion a gestion ambiental
+    gestionAmbientalId = 0; // ID gestion ambiental
+    manejoMaterialInsumoObsId = 0; // ID de la observacion a manejo de materiales e insumos
+    residuosConstruccionObsId = 0; // ID de la observacion a residuos de construccion
+    residuosPeligrososObsId = 0; // ID de la observacion a residuos peligrosos
+    manejoOtrosObsId = 0; // ID de la observacion al manejo de otros
     gestionAmbiental: boolean;
     gestionObraAmbiental: any;
     cantidadActividades = 0;
@@ -84,6 +91,7 @@ export class GestionAmbientalComponent implements OnInit {
         private fb: FormBuilder,
         private commonSvc: CommonService,
         private dialog: MatDialog,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private routes: Router )
     {
         this.crearFormulario();
@@ -102,6 +110,7 @@ export class GestionAmbientalComponent implements OnInit {
                 this.cantidadActividades = 0;
                 this.gestionObraAmbiental =     this.seguimientoSemanal.seguimientoSemanalGestionObra[0]
                                                 .seguimientoSemanalGestionObraAmbiental[0];
+                this.gestionAmbientalId = this.gestionObraAmbiental.seguimientoSemanalGestionObraAmbientalId;
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
                     this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' )
                         .setValue( this.gestionObraAmbiental.seEjecutoGestionAmbiental );
@@ -505,23 +514,138 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formGestionAmbientalObservacion.value );
+        const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.obsGestionAmbientalId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '4',
+            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            observacion: this.formGestionAmbientalObservacion.get( 'observaciones' ).value,
+            tieneObservacion: this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
     guardarManejoMaterial() {
-        console.log( this.formMaterialObservacion.value );
+        const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.manejoMaterialInsumoObsId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '5',
+            observacionPadreId: this.gestionAmbientalId,
+            observacion: this.formMaterialObservacion.get( 'observaciones' ).value,
+            tieneObservacion: this.formMaterialObservacion.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
     guardarResiduosConstruccion() {
-        console.log( this.formResiduosConstruccion.value );
+        const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.residuosConstruccionObsId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '6',
+            observacionPadreId: this.gestionAmbientalId,
+            observacion: this.formResiduosConstruccion.get( 'observaciones' ).value,
+            tieneObservacion: this.formResiduosConstruccion.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
     guardarResiduosPeligrosos() {
-        console.log( this.formResiduosPeligrosos.value );
+        const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.residuosPeligrososObsId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '7',
+            observacionPadreId: this.gestionAmbientalId,
+            observacion: this.formResiduosPeligrosos.get( 'observaciones' ).value,
+            tieneObservacion: this.formResiduosPeligrosos.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
     guardarManejoOtra() {
-        console.log( this.formManejoOtra.value );
+        const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.manejoOtrosObsId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '8',
+            observacionPadreId: this.gestionAmbientalId,
+            observacion: this.formManejoOtra.get( 'observaciones' ).value,
+            tieneObservacion: this.formManejoOtra.get( 'tieneObservaciones' ).value,
+            esSupervisor: false
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
