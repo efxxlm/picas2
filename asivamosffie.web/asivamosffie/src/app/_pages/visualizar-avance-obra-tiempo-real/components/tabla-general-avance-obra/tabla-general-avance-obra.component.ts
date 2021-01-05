@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MonitoringURLService } from 'src/app/core/_services/monitoringURL/monitoring-url.service';
 
 @Component({
   selector: 'app-tabla-general-avance-obra',
@@ -59,7 +60,7 @@ export class TablaGeneralAvanceObraComponent implements OnInit {
       id: 3
     }
   ];
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private services: MonitoringURLService) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTableServ);
@@ -74,6 +75,9 @@ export class TablaGeneralAvanceObraComponent implements OnInit {
   };
 
   irSitioWeb(web){
+    this.services.VisitaURLMonitoreo(web).subscribe((data0:any)=>{
+
+    });
     window.open(web,'_blank');
   }
 
