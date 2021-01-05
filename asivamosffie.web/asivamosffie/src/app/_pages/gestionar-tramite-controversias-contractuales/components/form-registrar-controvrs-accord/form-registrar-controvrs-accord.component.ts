@@ -75,8 +75,8 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
         this.addressForm.get('conclusionComitePretecnico').setValue(resp.conclusionComitePreTecnico);
         this.addressForm.get('procedeSolicitud').setValue(resp.esProcede);
         this.addressForm.get('requeridoComite').setValue(resp.esRequiereComite);
-        this.addressForm.get('fechaRadicadoSAC').setValue(resp.esRequiereComite);
-        this.addressForm.get('numeroRadicadoSAC').setValue(resp.esRequiereComite);
+        this.addressForm.get('fechaRadicadoSAC').setValue(resp.numeroRadicadoSac);
+        this.addressForm.get('numeroRadicadoSAC').setValue(resp.numeroRadicadoSac);
         if (resp.esProcede == false) {
           this.addressForm.get('motivosRechazo').setValue(resp.motivoJustificacionRechazo);
         }
@@ -227,13 +227,13 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    
+
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n-1, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
-  textoLimpio(texto,n) {
-    if (texto!=undefined) {
+  textoLimpio(texto, n) {
+    if (texto != undefined) {
       return texto.getLength() > n ? n : texto.getLength();
     }
   }
@@ -459,7 +459,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "RutaSoporte": "",
           "EstadoCodigo": estadoControversiaContratista,
           "EsCompleto": this.estaCompleto,
-          "ContratoId": this.contratoId,
+          "ContratoId": this.idContrato,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           "UsuarioCreacion": "us cre",
@@ -617,7 +617,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "RutaSoporte": "",
           "EstadoCodigo": estadoControversiaContratante,
           "EsCompleto": this.estaCompleto,
-          "ContratoId": this.contratoId,
+          "ContratoId": this.idContrato,
           "ConclusionComitePreTecnico": '',
           "MotivoJustificacionRechazo": this.addressForm.value.resumenJustificacionSolicitud,
           "UsuarioCreacion": "us cre",

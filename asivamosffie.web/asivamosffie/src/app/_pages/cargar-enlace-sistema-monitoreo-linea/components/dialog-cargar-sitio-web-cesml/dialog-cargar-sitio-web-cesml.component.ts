@@ -74,11 +74,11 @@ export class DialogCargarSitioWebCesmlComponent implements OnInit {
   onSubmit(){
     this.services.EditarURLMonitoreo(this.idProyecto,this.addressForm.value.urlMonitoreo).subscribe(resp=>{
       if(resp.code=="200"){
-        this.openDialog('',resp.message);
+        this.openDialog( '', `<b>${ resp.message }</b>` );
         this.close();
       }
       else{
-        this.openDialog('',resp.message);
+        this.openDialog( '', `<b>${ resp.message }</b>` );
       }
     });
   }

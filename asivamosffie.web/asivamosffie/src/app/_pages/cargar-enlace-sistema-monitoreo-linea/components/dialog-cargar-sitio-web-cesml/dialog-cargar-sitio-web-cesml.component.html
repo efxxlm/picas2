@@ -5,14 +5,14 @@
     {{this.title}} {{this.llaveMen}}
 </h1>
 <div class="centerIng2">
-    <p><b>{{this.departamento}}&nbsp;&nbsp;{{this.municipio}}&nbsp;&nbsp;{{this.instEdu}}&nbsp;&nbsp;{{this.sede}}</b>
+    <p><b>{{this.departamento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.municipio}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.instEdu}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.sede}}</b>
     </p>
 </div>
 <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
     <div class="flex-editor mt-2em">
         <mat-card class="shipping-card w-85" style="padding: 1em 2em;">
             <mat-card-header class="header-card header-card--margin">
-                <mat-card-title class="header-card--text">
+                <mat-card-title class="header-card--text f16">
                     URL para monitoreo en línea
                 </mat-card-title>
             </mat-card-header>
@@ -33,10 +33,10 @@
                 <span class="required-form-group">*</span>
             </mat-card-content>
         </mat-card>
-        <span class="contador miles mb-2em" *ngIf="addressForm.value.urlMonitoreo">
+        <span class="contador miles mt-2em mb-2em" *ngIf="addressForm.value.urlMonitoreo">
             {{300 - textoLimpio(addressForm.get('urlMonitoreo').value)}}
         </span>
-        <span class="contador miles mb-2em" *ngIf="!addressForm.value.urlMonitoreo">
+        <span class="contador miles mt-2em mb-2em" *ngIf="!addressForm.value.urlMonitoreo">
             300
         </span>
     </div>

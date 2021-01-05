@@ -29,9 +29,27 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
         case '1':
           this.tipoControversia = 'Terminación anticipada por incumplimiento (TAI)';
         break;
+        case '2':
+          this.tipoControversia = 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratista';
+        break;
+        case '3':
+          this.tipoControversia = 'Arreglo Directo (AD) a solicitud del contratista';
+        break;
+        case '4':
+          this.tipoControversia = 'Otras controversias contractuales (OCC) a solicitud del contratista';
+        break;
+        case '5':
+          this.tipoControversia = 'Terminación anticipada por imposibilidad de ejecución (TAIE) a solicitud del contratante';
+        break;
+        case '6':
+          this.tipoControversia = 'Arreglo Directo (AD) a solicitud del contratante';
+        break;
+        case '7':
+          this.tipoControversia = 'Otras controversias contractuales (OCC) a solicitud del contratante';
+        break;
       };
       this.fechaSolicitud = data.fechaSolicitud;
-      this.codigoSolicitud = data.numeroSolicitud;
+      this.codigoSolicitud = data.numeroSolicitudFormat;
       this.numeroContrato = data.contrato.numeroContrato;
     });
   }
