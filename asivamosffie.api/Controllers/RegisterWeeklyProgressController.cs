@@ -28,6 +28,21 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [Route("GetObservacionSeguimientoSemanal")]
+        [HttpGet]
+        public async Task<dynamic> GetObservacionBy([FromQuery] int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo)
+        {
+            try
+            {
+                return await _registerWeeklyProgressService.GetObservacionBy(pSeguimientoSemanalId, pPadreId, pTipoCodigo);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         [Route("GetEnsayoLaboratorioMuestras")]
         [HttpGet]
         public async Task<ActionResult<GestionObraCalidadEnsayoLaboratorio>> GetEnsayoLaboratorioMuestras([FromQuery] int pGestionObraCalidadEnsayoLaboratorioId)

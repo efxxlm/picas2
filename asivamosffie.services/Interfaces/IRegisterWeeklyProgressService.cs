@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterWeeklyProgressService
     {
+        Task<dynamic> GetObservacionBy(int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo);
+
         Task<Respuesta> ChangueStatusMuestrasSeguimientoSemanal(int pSeguimientoSemanalID, string pEstadoMod, string pUsuarioMod);
 
         Task<Respuesta> ChangueStatusSeguimientoSemanal(int pContratacionProyectoId, string pEstadoMod, string pUsuarioMod);

@@ -32,6 +32,33 @@ namespace asivamosffie.services
         }
 
         #region Get
+        public async Task<dynamic> GetObservacionBy(int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo)
+        {
+            try
+            {
+                return await _context.SeguimientoSemanalObservacion
+                    .Where(
+                           r => r.SeguimientoSemanalId == pSeguimientoSemanalId
+                           && r.ObservacionPadreId == pPadreId
+                           && r.TipoObservacionCodigo == pTipoCodigo)
+                        .Select(r =>
+                                new {
+                                    r.SeguimientoSemanalObservacionId,
+                                    r.Observacion,
+                                    r.EsSupervisor,
+                                    r.FechaCreacion,
+                                    r.Archivada
+                                }
+                            ).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+                var result = new { };
+                return result;
+            }
+        }
+
         public async Task<GestionObraCalidadEnsayoLaboratorio> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId)
         {
             GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorio = await _context.GestionObraCalidadEnsayoLaboratorio
@@ -62,7 +89,7 @@ namespace asivamosffie.services
             }
             return GestionObraCalidadEnsayoLaboratorio;
         }
-
+         
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
             return await _context.VRegistrarAvanceSemanal.ToListAsync();
@@ -79,7 +106,7 @@ namespace asivamosffie.services
                 {
                     SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
 
-                       .Include(r => r.ContratacionProyecto)
+                    .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
                               .ThenInclude(r => r.Contrato)
                        .Include(r => r.ContratacionProyecto)
@@ -88,19 +115,11 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
 
-                       //Financiero + Observaciones
-                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                            .ThenInclude(r => r.ObservacionApoyo)
-                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                            .ThenInclude(r => r.ObservacionSupervisor)
-
-                       //Fisico + Observaciones
+                          //Financiero
+                          .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                       //Fisico
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
-                          .ThenInclude(r => r.ObservacionApoyo)
-                       .Include(r => r.SeguimientoSemanalAvanceFisico)
-                          .ThenInclude(r => r.ObservacionSupervisor)
 
-                    
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -252,17 +271,12 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.InstitucionEducativa)
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-                              //Financiero
-                              .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                            .ThenInclude(r => r.ObservacionApoyo)
-                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-                            .ThenInclude(r => r.ObservacionSupervisor)
+
+                          //Financiero
+                          .Include(r => r.SeguimientoSemanalAvanceFinanciero)
                        //Fisico
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
-                          .ThenInclude(r => r.ObservacionApoyo)
 
-                       .Include(r => r.SeguimientoSemanalAvanceFisico)
-                          .ThenInclude(r => r.ObservacionSupervisor)
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -347,16 +361,12 @@ namespace asivamosffie.services
                             }
                         }
                     }
-
                     seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
 
                     foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
                     {
                         FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
                     }
-
-
-
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
