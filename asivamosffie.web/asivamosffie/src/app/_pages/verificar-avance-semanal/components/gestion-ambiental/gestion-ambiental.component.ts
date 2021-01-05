@@ -142,6 +142,54 @@ export class GestionAmbientalComponent implements OnInit {
                 if ( this.gestionObraAmbiental.manejoOtro !== undefined ) {
                     this.manejoOtrosId = this.gestionObraAmbiental.manejoOtro.manejoOtroId;
                 }
+                // IDs observaciones ambientales y actividades
+                /*
+                    obsGestionAmbientalId
+                    manejoMaterialInsumoObsId
+                    residuosConstruccionObsId
+                    residuosPeligrososObsId
+                    manejoOtrosObsId
+                */
+                // ID gestion ambiental
+                if ( this.gestionObraAmbiental.observacionApoyoId !== undefined ) {
+                    this.obsGestionAmbientalId = this.gestionObraAmbiental.observacionApoyoId;
+                    // GET observacion gestion ambiental
+                    const obsApoyoAmbiental = this.gestionObraAmbiental.observacionApoyo;
+                    this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.tieneObservacionApoyo );
+                    this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( obsApoyoAmbiental.observacion );
+                }
+                // ID manejo de materiales e insumos
+                if ( this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId !== undefined ) {
+                    this.manejoMaterialInsumoObsId = this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId;
+                    // GET observacion manejo de materiales e insumos
+                    const obsManejoMateriales = this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyo;
+                    this.formMaterialObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoMaterialesInsumo.tieneObservacionApoyo );
+                    this.formMaterialObservacion.get( 'observaciones' ).setValue( obsManejoMateriales.observacion );
+                }
+                // ID residuos de construccion
+                if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId !== undefined ) {
+                    this.residuosConstruccionObsId = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId;
+                    // GET observacion residuos de construccion
+                    const obsResiduosConstruccion = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyo;
+                    this.formResiduosConstruccion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.tieneObservacionApoyo );
+                    this.formResiduosConstruccion.get( 'observaciones' ).setValue( obsResiduosConstruccion.observacion );
+                }
+                // ID residuos peligrosos
+                if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId !== undefined ) {
+                    this.residuosPeligrososObsId = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId;
+                    // GET observacion residuos peligrosos
+                    const obsResiduosPeligrosos = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyo;
+                    this.formResiduosPeligrosos.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.tieneObservacionApoyo );
+                    this.formResiduosPeligrosos.get( 'observaciones' ).setValue( obsResiduosPeligrosos.observacion );
+                }
+                // ID manejo de otros
+                if ( this.gestionObraAmbiental.manejoOtro.observacionApoyoId !== undefined ) {
+                    this.manejoOtrosObsId = this.gestionObraAmbiental.manejoOtro.observacionApoyoId;
+                    // GET observacion manejo de otros
+                    const obsOtros = this.gestionObraAmbiental.manejoOtro.observacionApoyo;
+                    this.formManejoOtra.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoOtro.tieneObservacionApoyo );
+                    this.formManejoOtra.get( 'observaciones' ).setValue( obsOtros.observacion );
+                }
 
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
                     this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' )
