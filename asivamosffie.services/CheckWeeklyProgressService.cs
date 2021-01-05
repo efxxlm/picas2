@@ -745,11 +745,11 @@ namespace asivamosffie.services
 
                 //Validar Registro Completo  
 
-                if (pSeguimientoSemanalObservacion.EsSupervisor)
-                    seguimientoSemanal.RegistroCompletoAvalar = await ValidarRegistroCompletoObservacion(seguimientoSemanal.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
+                //if (pSeguimientoSemanalObservacion.EsSupervisor)
+                //    seguimientoSemanal.RegistroCompletoAvalar = await ValidarRegistroCompletoObservacion(seguimientoSemanal.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
 
-                else
-                    seguimientoSemanal.RegistroCompletoVerificar = await ValidarRegistroCompletoObservacion(seguimientoSemanal.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
+                //else
+                //    seguimientoSemanal.RegistroCompletoVerificar = await ValidarRegistroCompletoObservacion(seguimientoSemanal.SeguimientoSemanalId, pSeguimientoSemanalObservacion.EsSupervisor);
 
 
                 return new Respuesta
