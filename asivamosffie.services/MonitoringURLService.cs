@@ -458,7 +458,7 @@ namespace asivamosffie.services
         {
             Respuesta respuesta = new Respuesta();
 
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Disponibilidad_Presupuestal, (int)EnumeratorTipoDominio.Acciones);
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Editar_crear_url, (int)EnumeratorTipoDominio.Acciones);
 
             string strCrearEditar = "";
             Proyecto proyecto = null;

@@ -205,8 +205,10 @@ public const string Inicio_de_sesion = "1";
         //4.4.1 Registrar actuaciones de controversias contractuales
         public const string  Crear_Editar_Novedad_Contractual= "163";
         public const string  Notificación_Novedad_Contractual= "164";
-        public const string  Eliminar_Novedad_Contractual= "165";          	
-	
-	
+        public const string  Eliminar_Novedad_Contractual= "165";
+
+
+        //4.1.1
+        public const string Editar_crear_url = "178";
     }
 }
