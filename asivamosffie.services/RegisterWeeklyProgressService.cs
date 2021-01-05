@@ -87,8 +87,12 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.InstitucionEducativa)
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
+                      //Financiero
+                              .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                            .ThenInclude(r => r.ObservacionApoyo)
                        .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-
+                            .ThenInclude(r => r.ObservacionSupervisor)
+                       //Fisico
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.ObservacionApoyo)
                            
@@ -237,7 +241,7 @@ namespace asivamosffie.services
                 {
                     SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
 
-                      .Include(r => r.ContratacionProyecto)
+                         .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
                               .ThenInclude(r => r.Contrato)
                        .Include(r => r.ContratacionProyecto)
@@ -245,11 +249,13 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.InstitucionEducativa)
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
+                              //Financiero
+                              .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                            .ThenInclude(r => r.ObservacionApoyo)
                        .Include(r => r.SeguimientoSemanalAvanceFinanciero)
-
-
+                            .ThenInclude(r => r.ObservacionSupervisor)
+                       //Fisico
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
-                          .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.ObservacionApoyo)
 
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
