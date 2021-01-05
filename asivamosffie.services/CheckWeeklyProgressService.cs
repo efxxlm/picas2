@@ -431,9 +431,13 @@ namespace asivamosffie.services
                           .ThenInclude(r => r.ObservacionSupervisor)
 
                        //Gestion Obra
-                       //Gestion Obra Ambiental 
+                       //Gestion Obra Ambiental + Observaciones
                        .Include(r => r.SeguimientoSemanalGestionObra)
                             .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                                  .ThenInclude(r => r.ObservacionApoyo)
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAmbiental)
+                                  .ThenInclude(r => r.ObservacionSupervisor)
 
                          // Gestion Obra Calidad 
                          //Observaciones Ensayo Laboratorio + Observaciones
