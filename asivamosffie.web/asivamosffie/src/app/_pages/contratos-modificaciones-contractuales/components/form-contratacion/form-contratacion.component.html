@@ -22,8 +22,8 @@
           <p><b>Fecha de comité técnico</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnico.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
         </div>
         <div >
-          <p><b>Número de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnicoFiduciario.numeroComite }} </p>
-          <p><b>Fecha de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0].comiteTecnicoFiduciario.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
+          <p><b>Número de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0]?.comiteTecnicoFiduciario?.numeroComite }} </p> 
+          <p><b>Fecha de comité fiduciario</b>: {{ contratacion?.sesionComiteSolicitud[0]?.comiteTecnicoFiduciario?.fechaOrdenDia | date: 'dd/MM/yyyy' }} </p>
         </div>
       </mat-card-content>
   </mat-card>
@@ -103,6 +103,15 @@
 
       </mat-expansion-panel>
     </mat-accordion>
+  </div>
+
+  <div class="text-center w-15">
+    <a [href]="contratacion.rutaMinuta" mat-raised-button color="accent" rel="noopener" 
+    class="btn-table" target="_blank">Ver minuta</a>
+    <button mat-raised-button color="accent" class="btn-table" type="button"
+      (click)="goToLink( contratacion.rutaMinuta )">
+      Ver minuta
+    </button>
   </div>
 
   <div class="mt-2em" align="left" *ngIf="estadoCodigo !== estadoCodigos.firmado">
