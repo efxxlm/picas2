@@ -2042,11 +2042,6 @@ namespace asivamosffie.services
 
             foreach (var contrato in ListContratos)
             {
-                if(contrato.NumeroContrato == "B/LLA 002")
-                {
-
-
-                }
                 try
                 {
                     Contratacion contratacion = null;
