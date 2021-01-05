@@ -239,7 +239,7 @@ namespace asivamosffie.services
                     prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
             }
             
-            controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+            //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
             return controversiaContractual;
         }
 
@@ -631,10 +631,10 @@ namespace asivamosffie.services
 
             if (controversiaContractual != null)
             {
-                controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+                //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
 
                 strContenido = strContenido.Replace("Modificación 1", "");
-                strContenido = strContenido.Replace("_Numero_solicitud_", controversiaContractual.NumeroSolicitudFormat);
+                strContenido = strContenido.Replace("_Numero_solicitud_", controversiaContractual.NumeroSolicitud);
             }
 
             if (novedadContractual != null)
@@ -1491,13 +1491,13 @@ namespace asivamosffie.services
                             else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
                                 prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
                         }
-                        
 
+                        controversiaContractual.NumeroSolicitud = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
                         //controversiaContractual.Eliminado = false;
                         _context.ControversiaContractual.Add(controversiaContractual);
                         await _context.SaveChangesAsync();
 
-                        controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+                        //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
 
                     }
                     else
@@ -1512,7 +1512,7 @@ namespace asivamosffie.services
                                 prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
                         }
 
-                        controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+                        //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
 
                         strCrearEditar = "EDITAR CONTROVERSIA CONTRACTUAL";
                         controversiaContractual.MotivoJustificacionRechazo = Helpers.Helpers.CleanStringInput(controversiaContractual.MotivoJustificacionRechazo);

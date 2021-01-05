@@ -17,9 +17,6 @@ namespace asivamosffie.services.Interfaces
 
 
         Task<Respuesta> EditarURLMonitoreo(Int32 pProyectoId, string URLMonitoreo, string UsuarioModificacion);
-
-
-
-
+        Task<Respuesta> VisitaURLMonitoreo(string uRLMonitoreo, string usuarioModificacion);
     }
 }

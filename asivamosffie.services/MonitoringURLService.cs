@@ -516,6 +516,41 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<Respuesta> VisitaURLMonitoreo(string uRLMonitoreo, string usuarioModificacion)
+        {
+            Respuesta respuesta = new Respuesta();
 
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Visita_url, (int)EnumeratorTipoDominio.Acciones);
+
+            string strCrearEditar = "";
+            try { 
+                strCrearEditar = "VISITA URL MONITOREO "+uRLMonitoreo;
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Data = uRLMonitoreo,
+                    Code = ConstantMessagesCargarEnlaceMonitoreo.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cargar_enlace_monitoreo, ConstantMessagesCargarEnlaceMonitoreo.OperacionExitosa, idAccion, usuarioModificacion, strCrearEditar)
+                };
+
+                //}
+
+
+            }
+            catch (Exception ex)
+            {
+                return respuesta = new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Data = null,
+                    Code = ConstantMessagesCargarEnlaceMonitoreo.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cargar_enlace_monitoreo, ConstantMessagesDisponibilidadPresupuesta.Error, idAccion, usuarioModificacion, ex.InnerException.ToString().Substring(0, 500))
+                };
+            }
+        }
     }
 }

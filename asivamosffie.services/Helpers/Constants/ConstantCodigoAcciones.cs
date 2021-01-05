@@ -210,5 +210,6 @@ public const string Inicio_de_sesion = "1";
 
         //4.1.1
         public const string Editar_crear_url = "178";
+        public const string Visita_url = "179";
     }
 }
