@@ -87,19 +87,20 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.InstitucionEducativa)
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-                    
-                       //Financiero
-                              .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+
+                       //Financiero + Observaciones
+                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
                             .ThenInclude(r => r.ObservacionApoyo)
                        .Include(r => r.SeguimientoSemanalAvanceFinanciero)
                             .ThenInclude(r => r.ObservacionSupervisor)
-                       //Fisico
+
+                       //Fisico + Observaciones
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.ObservacionApoyo)
-                           
-
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.ObservacionSupervisor)
+
+                    
                        //Gestion Obra
                        //Gestion Obra Ambiental
                        .Include(r => r.SeguimientoSemanalGestionObra)
@@ -115,21 +116,39 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
                                 .ThenInclude(r => r.SeguridadSaludCausaAccidente)
 
-                        //Gestion Obra Social
+                        //Gestion Obra Social + Observaciones
                         .Include(r => r.SeguimientoSemanalGestionObra)
                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
+                             .ThenInclude(r => r.ObservacionApoyo)
 
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
+                             .ThenInclude(r => r.ObservacionSupervisor)
+
+                      //Alertas Relevantes  + Observaciones
                        .Include(r => r.SeguimientoSemanalGestionObra)
                            .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
+                                 .ThenInclude(r => r.ObservacionApoyo)
 
+                        .Include(r => r.SeguimientoSemanalGestionObra)
+                           .ThenInclude(r => r.SeguimientoSemanalGestionObraAlerta)
+                                 .ThenInclude(r => r.ObservacionSupervisor)
 
                        .Include(r => r.SeguimientoSemanalReporteActividad)
 
+                       //Registro Fotografico + Observaciones
                        .Include(r => r.SeguimientoSemanalRegistroFotografico)
+                            .ThenInclude(r => r.ObservacionApoyo)
+                       .Include(r => r.SeguimientoSemanalRegistroFotografico)
+                            .ThenInclude(r => r.ObservacionSupervisor)
 
+                       //Comite Obra + Observaciones 
                        .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
-
-                       .FirstOrDefaultAsync();
+                           .ThenInclude(r => r.ObservacionApoyo)
+                       .Include(r => r.SeguimientoSemanalRegistrarComiteObra)
+                           .ThenInclude(r => r.ObservacionSupervisor)
+                      .FirstOrDefaultAsync();
+                     
 
                     seguimientoSemanal.SeguimientoSemanalObservacion = null;
 
