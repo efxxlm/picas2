@@ -17,17 +17,17 @@
 
             <ng-container matColumnDef="actuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.actuacion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.descripcionActuacion }} </td>
             </ng-container>
 
             <ng-container matColumnDef="numActuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroActuacionFormat }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroActuacion }} </td>
             </ng-container>
 
             <ng-container matColumnDef="numReclamacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de reclamación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroReclamacion }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroActuacionReclamacion }} </td>
             </ng-container>
 
             <ng-container matColumnDef="estadoReclamacion">
