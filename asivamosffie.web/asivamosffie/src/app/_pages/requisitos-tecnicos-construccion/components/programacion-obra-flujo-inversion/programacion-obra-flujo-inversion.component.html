@@ -7,6 +7,13 @@
           >
           Cargar programación
   </button>
+  <button mat-button 
+          color="warn" 
+          class="btn-descargar-plantilla mb-1em" 
+          (click)="descargaPlantillaProgramacion()">
+        <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar-plantilla--img">
+        Descargar plantilla 
+  </button>
 </section>
 <section *ngIf="esFlujoInversion && contrato !== undefined" class="mt-2em">
   <button mat-raised-button 
@@ -26,6 +33,14 @@
           >
           Cargar flujo de inversión de recursos 
   </button>
+  <button mat-button 
+          color="warn" 
+          class="btn-descargar-plantilla mb-1em" 
+          (click)="descargaPlantillaFlujoInversion()">
+        <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar-plantilla--img">
+        Descargar plantilla 
+  </button>
+  
 </section>
 <div *ngIf="!esFlujoInversion && contrato">
         <app-tabla-programacion-obra  [contratoConstruccionId]="contratoConstruccionId"

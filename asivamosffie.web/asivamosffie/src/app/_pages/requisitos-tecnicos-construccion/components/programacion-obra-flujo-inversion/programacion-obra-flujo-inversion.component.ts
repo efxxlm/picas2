@@ -36,6 +36,16 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  descargaPlantillaProgramacion()
+  {
+    location.href ="./assets/files/Programacion_De_Obra.xlsx";
+  }
+
+  descargaPlantillaFlujoInversion()
+  {
+    location.href ="./assets/files/Flujo_De_Inversion.xlsx";
+  }
+
   openDialog (modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '40em',
