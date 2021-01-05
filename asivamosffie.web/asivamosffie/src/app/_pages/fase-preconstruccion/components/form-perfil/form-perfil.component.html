@@ -304,17 +304,6 @@
         </button>
       </div>
 
-      <div class="text-center">
-        <button mat-button
-                color="warn"
-                class="btn-guardar"
-                type="button"
-                (click)="guardar()"
-                [disabled]="formContratista.dirty === false">
-                <img  src="assets/img/icon/guardar.svg">
-        </button>
-      </div>
-
       <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="perfil.get( 'observacionSupervisor' ).value !== null">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text">
@@ -330,6 +319,19 @@
           </p>
         </mat-card-content>
       </mat-card>
+
+      <div class="text-center">
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
+                type="button"
+                (click)="guardar()"
+                [disabled]="formContratista.dirty === false">
+                <img  src="assets/img/icon/guardar.svg">
+        </button>
+      </div>
+
+      
     </mat-expansion-panel>
   </mat-accordion>
 
