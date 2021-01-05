@@ -736,7 +736,7 @@ namespace asivamosffie.services
                         blEnvioCorreo = Helpers.Helpers.EnviarCorreo(participante.Usuario.Email, comiteTecnico.EsComiteFiduciario.Value ? "Aprobacion acta comité fiduciario" : "Aprobacion acta comité técnico", template, pSentender, pPassword, pMailServer, pMailPort);
                     }
                 }
-
+ 
                 _context.SaveChanges();
                 return
                    new Respuesta
