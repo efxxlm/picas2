@@ -12,6 +12,7 @@ export class FormVerificarSeguimientoSemanalComponent implements OnInit {
 
     seguimientoSemanal: any;
     semaforoAvanceFisico = 'sin-diligenciar';
+    tipoObservaciones: any;
 
     constructor(
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
@@ -26,7 +27,10 @@ export class FormVerificarSeguimientoSemanalComponent implements OnInit {
                 }
             );
         this.verificarAvanceSemanalSvc.tipoObservaciones()
-            .subscribe( console.log );
+            .subscribe( response => {
+                this.tipoObservaciones = response;
+                console.log( this.tipoObservaciones );
+            } );
     }
 
     ngOnInit(): void {

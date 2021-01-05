@@ -18,11 +18,24 @@ export class VerificarAvanceSemanalService {
     }
 
     tipoObservaciones() {
-        return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=112` )
+        return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=123` )
             .pipe(
                 map(
                     response => {
+                        const tipoObservacion: any = {};
                         console.log( response );
+                        for ( const dominio of response ) {
+                            if ( dominio.codigo === '1' ) {
+                                tipoObservacion.avanceFisico = dominio.codigo;
+                            }
+                            if ( dominio.codigo === '2' ) {
+                                tipoObservacion.avanceFinanciero = dominio.codigo;
+                            }
+                            if ( dominio.codigo === '3' ) {
+                                tipoObservacion.gestionObra = dominio.codigo;
+                            }
+                        }
+                        return tipoObservacion;
                     }
                 )
             );

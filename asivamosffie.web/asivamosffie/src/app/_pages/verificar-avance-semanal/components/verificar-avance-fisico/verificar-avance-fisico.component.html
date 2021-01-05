@@ -1,4 +1,4 @@
-<section class="text-center" *ngIf="seguimientoSemanal !== undefined">
+<section class="text-center" *ngIf="seguimientoSemanal !== undefined && avanceFisicoObs !== undefined">
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
@@ -47,7 +47,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
-            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoSemanal" [esVerDetalle]="esVerDetalle"></app-tabla-avance-fisico>
+            <app-tabla-avance-fisico [seguimientoDiario]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [avanceFisicoObs]="avanceFisicoObs"></app-tabla-avance-fisico>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

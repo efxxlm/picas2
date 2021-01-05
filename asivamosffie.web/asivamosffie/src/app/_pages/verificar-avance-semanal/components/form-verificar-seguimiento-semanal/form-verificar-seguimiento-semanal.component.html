@@ -1,4 +1,4 @@
-<section class="container" *ngIf="seguimientoSemanal !== undefined">
+<section class="container" *ngIf="seguimientoSemanal !== undefined && tipoObservaciones !== undefined">
     <div class="text-right">
         <a mat-button color="primary" class="btn-regresar" routerLink="/verificarAvanceSemanal">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -55,7 +55,7 @@
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal"></app-verificar-avance-fisico>
+                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="tipoObservaciones.avanceFisico"></app-verificar-avance-fisico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">

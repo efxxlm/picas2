@@ -17,6 +17,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
 
     @Input() esVerDetalle;
     @Input() seguimientoDiario: any;
+    @Input() avanceFisicoObs: string;
     formAvanceFisico: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null ]
@@ -25,6 +26,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     seguimientoSemanalAvanceFisico: any;
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFisicoId: number;
+    seguimientoSemanalObservacionId = 0;
     tablaAvanceFisico = new MatTableDataSource();
     tablaHistorial = new MatTableDataSource();
     displayedColumns: string[]  = [
@@ -91,8 +93,14 @@ export class TablaAvanceFisicoComponent implements OnInit {
             this.seguimientoSemanalAvanceFisicoId =  this.seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ?
             this.seguimientoDiario.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoId : 0;
             const flujoInversion = this.seguimientoDiario.flujoInversion;
+            //Get Observacion Apoyo
             this.seguimientoSemanalAvanceFisico = this.seguimientoDiario.seguimientoSemanalAvanceFisico[0];
-            console.log( this.seguimientoSemanalAvanceFisico );
+            if ( this.seguimientoSemanalAvanceFisico.observacionApoyo !== undefined ) {
+                const observacionApoyo = this.seguimientoSemanalAvanceFisico.observacionApoyo;
+                this.seguimientoSemanalObservacionId = this.seguimientoSemanalAvanceFisico.observacionApoyo.seguimientoSemanalObservacionId;
+                this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( observacionApoyo.tieneObservacion );
+                this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo.observacion !== undefined || observacionApoyo.observacion.length > 0 ? observacionApoyo.observacion : null );
+            }
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];
                 let totalDuracion = 0;
@@ -222,11 +230,10 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     guardar() {
-		console.log( this.formAvanceFisico.value );
 		const pSeguimientoSemanalObservacion = {
-			seguimientoSemanalObservacionId: 0,
+			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '1',
+            tipoObservacionCodigo: this.avanceFisicoObs,
             observacionPadreId: this.seguimientoSemanalAvanceFisicoId,
             observacion: this.formAvanceFisico.get( 'observaciones' ).value,
             tieneObservacion: this.formAvanceFisico.get( 'tieneObservaciones' ).value,
