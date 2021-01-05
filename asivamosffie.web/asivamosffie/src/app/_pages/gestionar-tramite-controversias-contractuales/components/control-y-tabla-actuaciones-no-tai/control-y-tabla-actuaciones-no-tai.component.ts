@@ -47,7 +47,9 @@ export class ControlYTablaActuacionesNoTaiComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarActuacionNoTai',id]);
   }
   eliminarActuacion(id){
-
+    this.services.EliminarControversiaActuacion(id).subscribe((data0:any)=>{
+      this.ngOnInit();
+    });
   }
   verDetalleActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionNoTai',id]);

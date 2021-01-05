@@ -81,6 +81,8 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         this.addressForm.get('requiereComiteTecnico').setValue(data.esRequiereComite);
         this.addressForm.get('observaciones').setValue(data.observaciones);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+        this.addressForm.get('requiereMesaDeTrabajo').setValue(data.esRequiereMesaTrabajo);
+        this.addressForm.get('resultadoDefinitivoyCerrado').setValue(data.esprocesoResultadoDefinitivo);
         this.numReclamacion = data.numeroReclamacion;
       });
     }
@@ -112,6 +114,14 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
 
   onSubmit() {
     let actuacionTaiArray;
+    let completo: boolean;
+    if (this.addressForm.valid){
+      completo = true;
+    }
+    else
+    {
+      completo = false;
+    }
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaContractualId": this.controversiaID,
@@ -126,7 +136,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "FechaCreacion": "2020-3-3",
         "UsuarioCreacion": "US CRE w",
         "UsuarioModificacion": "US MODIF w",
-        "EsCompleto": true,
+        "EsCompleto": completo,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -158,7 +168,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "FechaCreacion": "2020-3-3",
         "UsuarioCreacion": "US CRE w",
         "UsuarioModificacion": "US MODIF w",
-        "EsCompleto": true,
+        "EsCompleto": completo,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
