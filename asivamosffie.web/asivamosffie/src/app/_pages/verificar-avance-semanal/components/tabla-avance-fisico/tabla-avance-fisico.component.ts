@@ -98,7 +98,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
             if ( this.seguimientoSemanalAvanceFisico.observacionApoyo !== undefined ) {
                 const observacionApoyo = this.seguimientoSemanalAvanceFisico.observacionApoyo;
                 this.seguimientoSemanalObservacionId = this.seguimientoSemanalAvanceFisico.observacionApoyo.seguimientoSemanalObservacionId;
-                this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( observacionApoyo.tieneObservacion );
+                this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( this.seguimientoSemanalAvanceFisico.registroCompletoObservacionApoyo );
                 this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo.observacion );
             }
             if ( flujoInversion.length > 0 ) {

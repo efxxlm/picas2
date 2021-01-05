@@ -21,23 +21,23 @@ export class GestionAmbientalComponent implements OnInit {
     formGestionAmbiental: FormGroup;
     formGestionAmbientalObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ]
     });
     formMaterialObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ]
     });
     formResiduosConstruccion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ]
     });
     formResiduosPeligrosos: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ]
     });
     formManejoOtra: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ]
     });
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
@@ -55,12 +55,18 @@ export class GestionAmbientalComponent implements OnInit {
     tipoActividades: Dominio[] = [];
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
-    obsGestionAmbientalId = 0; // ID de la observacion a gestion ambiental
-    gestionAmbientalId = 0; // ID gestion ambiental
-    manejoMaterialInsumoObsId = 0; // ID de la observacion a manejo de materiales e insumos
-    residuosConstruccionObsId = 0; // ID de la observacion a residuos de construccion
-    residuosPeligrososObsId = 0; // ID de la observacion a residuos peligrosos
-    manejoOtrosObsId = 0; // ID de la observacion al manejo de otros
+    // Ids gestion ambiental y manejos.
+    gestionAmbientalId = 0; // ID gestion ambiental.
+    manejoMaterialInsumoId = 0; // ID manejo de materiales  e insumos.
+    residuosConstruccionId = 0; // ID residuos de construccion.
+    residuosPeligrososId = 0; // ID residuos peligrosos.
+    manejoOtrosId = 0; // ID manejo de otros.
+    // Ids observaciones gestion ambiental y manejos.
+    obsGestionAmbientalId = 0; // ID de la observacion a gestion ambiental.
+    manejoMaterialInsumoObsId = 0; // ID de la observacion a manejo de materiales e insumos.
+    residuosConstruccionObsId = 0; // ID de la observacion a residuos de construccion.
+    residuosPeligrososObsId = 0; // ID de la observacion a residuos peligrosos.
+    manejoOtrosObsId = 0; // ID de la observacion al manejo de otros.
     gestionAmbiental: boolean;
     gestionObraAmbiental: any;
     cantidadActividades = 0;
@@ -110,7 +116,33 @@ export class GestionAmbientalComponent implements OnInit {
                 this.cantidadActividades = 0;
                 this.gestionObraAmbiental =     this.seguimientoSemanal.seguimientoSemanalGestionObra[0]
                                                 .seguimientoSemanalGestionObraAmbiental[0];
+                // ID gestionAmbiental
                 this.gestionAmbientalId = this.gestionObraAmbiental.seguimientoSemanalGestionObraAmbientalId;
+                
+                // IDs manejos
+                /*
+                    manejoMaterialInsumoId
+                    residuosConstruccionId
+                    residuosPeligrososId
+                    manejoOtrosId
+                */
+                // ID manejo de materiales e insumos
+                if ( this.gestionObraAmbiental.manejoMaterialesInsumo !== undefined ) {
+                    this.manejoMaterialInsumoId = this.gestionObraAmbiental.manejoMaterialesInsumo.manejoMaterialesInsumosId;
+                }
+                // ID residuos construccion
+                if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion !== undefined ) {
+                    this.residuosConstruccionId = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.manejoResiduosConstruccionDemolicionId;
+                }
+                // ID residuos peligrosos
+                if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales !== undefined ) {
+                    this.residuosPeligrososId = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.manejoResiduosPeligrososEspecialesId;
+                }
+                // ID manejo de otros
+                if ( this.gestionObraAmbiental.manejoOtro !== undefined ) {
+                    this.manejoOtrosId = this.gestionObraAmbiental.manejoOtro.manejoOtroId;
+                }
+
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
                     this.formGestionAmbiental.get( 'seEjecutoGestionAmbiental' )
                         .setValue( this.gestionObraAmbiental.seEjecutoGestionAmbiental );
@@ -518,7 +550,7 @@ export class GestionAmbientalComponent implements OnInit {
 			seguimientoSemanalObservacionId: this.obsGestionAmbientalId,
             seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: '4',
-            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            observacionPadreId: this.gestionAmbientalId,
             observacion: this.formGestionAmbientalObservacion.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value,
             esSupervisor: false
@@ -545,7 +577,7 @@ export class GestionAmbientalComponent implements OnInit {
 			seguimientoSemanalObservacionId: this.manejoMaterialInsumoObsId,
             seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: '5',
-            observacionPadreId: this.gestionAmbientalId,
+            observacionPadreId: this.manejoMaterialInsumoId,
             observacion: this.formMaterialObservacion.get( 'observaciones' ).value,
             tieneObservacion: this.formMaterialObservacion.get( 'tieneObservaciones' ).value,
             esSupervisor: false
@@ -572,7 +604,7 @@ export class GestionAmbientalComponent implements OnInit {
 			seguimientoSemanalObservacionId: this.residuosConstruccionObsId,
             seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: '6',
-            observacionPadreId: this.gestionAmbientalId,
+            observacionPadreId: this.residuosConstruccionId,
             observacion: this.formResiduosConstruccion.get( 'observaciones' ).value,
             tieneObservacion: this.formResiduosConstruccion.get( 'tieneObservaciones' ).value,
             esSupervisor: false
@@ -599,7 +631,7 @@ export class GestionAmbientalComponent implements OnInit {
 			seguimientoSemanalObservacionId: this.residuosPeligrososObsId,
             seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: '7',
-            observacionPadreId: this.gestionAmbientalId,
+            observacionPadreId: this.residuosPeligrososId,
             observacion: this.formResiduosPeligrosos.get( 'observaciones' ).value,
             tieneObservacion: this.formResiduosPeligrosos.get( 'tieneObservaciones' ).value,
             esSupervisor: false
@@ -626,7 +658,7 @@ export class GestionAmbientalComponent implements OnInit {
 			seguimientoSemanalObservacionId: this.manejoOtrosObsId,
             seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: '8',
-            observacionPadreId: this.gestionAmbientalId,
+            observacionPadreId: this.manejoOtrosId,
             observacion: this.formManejoOtra.get( 'observaciones' ).value,
             tieneObservacion: this.formManejoOtra.get( 'tieneObservaciones' ).value,
             esSupervisor: false
