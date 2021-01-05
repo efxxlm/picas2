@@ -194,8 +194,8 @@ namespace asivamosffie.services
                                     _context.ManejoMaterialesInsumos
                                     .Where(r => r.ManejoMaterialesInsumosId == ManejoMaterialesInsumoId)
                                     .Include(r => r.ManejoMaterialesInsumosProveedor)
-                                    .Include(r => r.ObservacionApoyo)
-                                    .Include(r => r.ObservacionSupervisor)
+                                    //.Include(r => r.ObservacionApoyo)
+                                    //.Include(r => r.ObservacionSupervisor)
                                     .FirstOrDefault();
                             }
 
@@ -203,16 +203,16 @@ namespace asivamosffie.services
                             {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosConstruccionDemolicion = _context.ManejoResiduosConstruccionDemolicion
                                     .Include(r => r.ManejoResiduosConstruccionDemolicionGestor)
-                                    .Include(r => r.ObservacionApoyo)
-                                    .Include(r => r.ObservacionSupervisor)
+                                    //.Include(r => r.ObservacionApoyo)
+                                    //.Include(r => r.ObservacionSupervisor)
                                     .Where(r => r.ManejoResiduosConstruccionDemolicionId == ManejoResiduosConstruccionDemolicionId).FirstOrDefault();
                             }
 
                             if (ManejoResiduosPeligrososEspecialesId != null)
                             {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosPeligrososEspeciales = _context.ManejoResiduosPeligrososEspeciales.Where(r => r.ManejoResiduosPeligrososEspecialesId == ManejoResiduosPeligrososEspecialesId)
-                                    .Include(r => r.ObservacionApoyo)
-                                    .Include(r => r.ObservacionSupervisor)
+                                    //.Include(r => r.ObservacionApoyo)
+                                    //.Include(r => r.ObservacionSupervisor)
                                     .FirstOrDefault(); 
                             }
 
@@ -220,8 +220,8 @@ namespace asivamosffie.services
                             {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoOtro = _context.ManejoOtro
                                     .Where(r=> r.ManejoOtroId == ManejoOtroId)
-                                    .Include(r => r.ObservacionApoyo)
-                                    .Include(r => r.ObservacionSupervisor)
+                                    //.Include(r => r.ObservacionApoyo)
+                                    //.Include(r => r.ObservacionSupervisor)
                                     .FirstOrDefault();
                             }
                         }
@@ -400,8 +400,8 @@ namespace asivamosffie.services
                                     _context.ManejoMaterialesInsumos
                                     .Where(r => r.ManejoMaterialesInsumosId == ManejoMaterialesInsumoId)
                                     .Include(r => r.ManejoMaterialesInsumosProveedor)
-                                    .Include(r => r.ObservacionApoyo)
-                                    .Include(r => r.ObservacionSupervisor)
+                                    //.Include(r => r.ObservacionApoyo)
+                                    //.Include(r => r.ObservacionSupervisor)
                                     .FirstOrDefault();
                             }
 
@@ -409,16 +409,16 @@ namespace asivamosffie.services
                             {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosConstruccionDemolicion = _context.ManejoResiduosConstruccionDemolicion
                                     .Include(r => r.ManejoResiduosConstruccionDemolicionGestor)
-                                    .Include(r => r.ObservacionApoyo)
-                                    .Include(r => r.ObservacionSupervisor)
+                                    //.Include(r => r.ObservacionApoyo)
+                                    //.Include(r => r.ObservacionSupervisor)
                                     .Where(r => r.ManejoResiduosConstruccionDemolicionId == ManejoResiduosConstruccionDemolicionId).FirstOrDefault();
                             }
 
                             if (ManejoResiduosPeligrososEspecialesId != null)
                             {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoResiduosPeligrososEspeciales = _context.ManejoResiduosPeligrososEspeciales.Where(r => r.ManejoResiduosPeligrososEspecialesId == ManejoResiduosPeligrososEspecialesId)
-                                    .Include(r => r.ObservacionApoyo)
-                                    .Include(r => r.ObservacionSupervisor)
+                                    //.Include(r => r.ObservacionApoyo)
+                                    //.Include(r => r.ObservacionSupervisor)
                                     .FirstOrDefault();
                             }
 
@@ -426,8 +426,8 @@ namespace asivamosffie.services
                             {
                                 seguimientoSemanal.SeguimientoSemanalGestionObra.FirstOrDefault().SeguimientoSemanalGestionObraAmbiental.FirstOrDefault().ManejoOtro = _context.ManejoOtro
                                     .Where(r => r.ManejoOtroId == ManejoOtroId)
-                                    .Include(r => r.ObservacionApoyo)
-                                    .Include(r => r.ObservacionSupervisor)
+                                    //.Include(r => r.ObservacionApoyo)
+                                    //.Include(r => r.ObservacionSupervisor)
                                     .FirstOrDefault();
                             }
                         }
