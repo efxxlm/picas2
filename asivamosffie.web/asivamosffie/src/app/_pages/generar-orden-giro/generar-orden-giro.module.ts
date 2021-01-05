@@ -11,11 +11,14 @@ import { AccordionInfoGeneralGogComponent } from './components/accordion-info-ge
 import { AccordionDetalleGiroGogComponent } from './components/accordion-detalle-giro-gog/accordion-detalle-giro-gog.component';
 import { TablaDatosSolicitudGogComponent } from './components/tabla-datos-solicitud-gog/tabla-datos-solicitud-gog.component';
 import { TablaDatosDdpGogComponent } from './components/tabla-datos-ddp-gog/tabla-datos-ddp-gog.component';
+import { FormTerceroGiroGogComponent } from './components/form-tercero-giro-gog/form-tercero-giro-gog.component';
+import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-partic-gog/tabla-porcntj-partic-gog.component';
+import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
 
 
 
 @NgModule({
-  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent],
+  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent],
   imports: [
     GenerarOrdenGiroRoutingModule,
     CommonModule,
