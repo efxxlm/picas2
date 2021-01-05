@@ -192,6 +192,21 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetListGrillaControversiaReclamacion")]
+
+        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaReclamacion(int id = 0)
+        {
+            try
+            {
+                return await _contractualControversy.GetListGrillaControversiaReclamacion(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
         [Route("GetVistaContratoContratista")]
         public async Task<ActionResult<VistaContratoContratista>> GetVistaContratoContratista(int pContratoId)
         {
@@ -466,6 +481,84 @@ namespace asivamosffie.api.Controllers
             {
                 respuesta.Data = ex.ToString();
                 return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("CreateEditarReclamacion")]
+        public async Task<IActionResult> CreateEditarReclamacion(ControversiaActuacion prmReclamacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (prmReclamacion.ControversiaContractualId == 0)
+                    prmReclamacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    prmReclamacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.CreateEditarReclamaciones(prmReclamacion);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        //*4.4.1//
+        [HttpPost]
+        [Route("CreateEditarMesa")]
+        public async Task<IActionResult> CreateEditarMesa(ControversiaActuacionMesa prmMesa)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (prmMesa.ControversiaActuacionMesaId == 0)
+                    prmMesa.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    prmMesa.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.CreateEditarMesa(prmMesa);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        /*4.4.1*/
+        [HttpPut]
+        [Route("FinalizarMesa")]
+        public async Task<IActionResult> FinalizarMesa([FromQuery] int pControversiaActuacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.FinalizarMesa(pControversiaActuacionId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        /*4.4.1*/
+        [HttpGet]
+        [Route("GetMesasByControversiaActuacionId")]
+        public async Task<List<ControversiaActuacionMesa>> GetMesasByControversiaActuacionId([FromQuery] int pControversiaActuacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                return await _contractualControversy.GetMesasByControversiaActuacionId(pControversiaActuacionId);
+                
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }
