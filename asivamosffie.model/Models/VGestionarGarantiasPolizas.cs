@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class VGestionarGarantiasPolizas
     {
         public int ContratoId { get; set; }
-        public int ContratoPolizaId { get; set; }
+        public int? ContratoPolizaId { get; set; }
         public DateTime? FechaFirma { get; set; }
         public DateTime? FechaCreacionContrato { get; set; }
         public string NumeroContrato { get; set; }
