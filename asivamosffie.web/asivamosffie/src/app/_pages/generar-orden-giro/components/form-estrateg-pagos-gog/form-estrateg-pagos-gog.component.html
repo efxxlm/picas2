@@ -1,2 +1,29 @@
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-    </form>
+    <mat-card class="shipping-card">
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="estrategiaPago">Estrategia de pagos</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="select-width">
+                                <mat-select formControlName="estrategiaPago" required>
+                                    <mat-option *ngFor="let contr of estrategiaPagoArray" [value]="contr.value">
+                                        {{ contr.name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+    </div>
+</form>

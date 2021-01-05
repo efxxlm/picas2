@@ -9,7 +9,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 export class FormEstrategPagosGogComponent implements OnInit {
 
   estrategiaPagoArray = [
-    { name: 'Transferencia electrónica', value: '1' }
+    { name: 'Entidad Territorial - Tercero', value: '1' }
   ];
   addressForm = this.fb.group({});
   constructor(private fb: FormBuilder) { }

@@ -15,11 +15,12 @@ import { FormTerceroGiroGogComponent } from './components/form-tercero-giro-gog/
 import { TablaPorcntjParticGogComponent } from './components/tabla-porcntj-partic-gog/tabla-porcntj-partic-gog.component';
 import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuenterec-gog/tabla-info-fuenterec-gog.component';
 import { FormEstrategPagosGogComponent } from './components/form-estrateg-pagos-gog/form-estrateg-pagos-gog.component';
+import { DescDirTecnicaGogComponent } from './components/desc-dir-tecnica-gog/desc-dir-tecnica-gog.component';
 
 
 
 @NgModule({
-  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent],
+  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent],
   imports: [
     GenerarOrdenGiroRoutingModule,
     CommonModule,
