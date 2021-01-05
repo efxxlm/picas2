@@ -87,7 +87,8 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.InstitucionEducativa)
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-                      //Financiero
+                    
+                       //Financiero
                               .Include(r => r.SeguimientoSemanalAvanceFinanciero)
                             .ThenInclude(r => r.ObservacionApoyo)
                        .Include(r => r.SeguimientoSemanalAvanceFinanciero)
@@ -96,6 +97,7 @@ namespace asivamosffie.services
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.ObservacionApoyo)
                            
+
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
                           .ThenInclude(r => r.ObservacionSupervisor)
                        //Gestion Obra
