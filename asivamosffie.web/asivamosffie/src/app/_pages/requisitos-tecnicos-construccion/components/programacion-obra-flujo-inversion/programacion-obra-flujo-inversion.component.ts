@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { FaseUnoConstruccionService } from 'src/app/core/_services/faseUnoConstruccion/fase-uno-construccion.service';
 import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 import { Proyecto } from 'src/app/core/_services/project/project.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-programacion-obra-flujo-inversion',
@@ -20,6 +21,7 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   @Input() observacionDevolucionFlujoInversion: number;
   @Input() archivoCargueIdProgramacionObra: number;
   @Input() archivoCargueIdFlujoInversion: number;
+  
   @Output() terminoCarga = new EventEmitter();
   @Output() realizoObservacion = new EventEmitter();
   tieneRegistrosObra = true;
@@ -34,11 +36,27 @@ export class ProgramacionObraFlujoInversionComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  openDialog (modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '40em',
+      data : { modalTitle, modalText }
+    });
+  };
+
   cargarProgramacion() {
+
+    if ( this.archivoCargueIdProgramacionObra === undefined && this.esFlujoInversion ){
+      this.openDialog( '', 'Se requiere cargar primero la programación de obra' )
+      return false;
+
+    }
+
+
     const dialogCargarProgramacion = this.dialog.open( DialogCargarProgramacionComponent, {
       width: '75em',
       data: { esFlujoInversion: this.esFlujoInversion, contratoConstruccionId: this.contratoConstruccionId,
-              contratoId: this.contrato.contratoId, proyectoId: this.proyectoId }
+              contratoId: this.contrato.contratoId, proyectoId: this.proyectoId, 
+              archivoCargueIdProgramacionObra: this.archivoCargueIdProgramacionObra }
     });
 
     dialogCargarProgramacion.afterClosed().subscribe( response => {

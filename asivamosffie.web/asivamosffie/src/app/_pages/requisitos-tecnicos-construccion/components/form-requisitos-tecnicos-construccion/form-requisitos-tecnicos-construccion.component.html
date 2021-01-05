@@ -184,6 +184,7 @@
                                                     [proyectoId]="contratacion.proyecto.proyectoId"
                                                     (terminoCarga)="getCargaMasiva( $event )"
                                                     [observacionDevolucionFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionFlujoInversion"
+                                                    [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
                                                     [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion : undefined"
                                                     (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion>
@@ -194,6 +195,7 @@
                                                     [contrato]="contrato" 
                                                     [proyectoId]="contratacion.proyecto.proyectoId"
                                                     [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion : undefined"
+                                                    [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
                                                     (terminoCarga)="getCargaMasiva( $event )"
                                                     (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion> 
