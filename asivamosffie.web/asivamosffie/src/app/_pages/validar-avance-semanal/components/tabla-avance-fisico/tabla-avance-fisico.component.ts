@@ -1,9 +1,12 @@
+import { Router } from '@angular/router';
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogAvanceAcumuladoComponent } from '../dialog-avance-acumulado/dialog-avance-acumulado.component';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-tabla-avance-fisico',
@@ -23,6 +26,8 @@ export class TablaAvanceFisicoComponent implements OnInit {
     seRealizoCambio = false;
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFisicoId: number;
+    seguimientoSemanalObservacionId = 0;
+    seguimientoSemanalAvanceFisico: any;
     displayedColumns: string[]  = [
         'semanaNumero',
         'periodoReporte',
@@ -60,7 +65,9 @@ export class TablaAvanceFisicoComponent implements OnInit {
     constructor(
         private dialog: MatDialog,
         private datePipe: DatePipe,
-        private fb: FormBuilder )
+        private fb: FormBuilder,
+        private routes: Router,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     { }
 
     ngOnInit(): void {
@@ -86,6 +93,14 @@ export class TablaAvanceFisicoComponent implements OnInit {
             this.seguimientoSemanalAvanceFisicoId =  this.seguimientoDiario.seguimientoSemanalAvanceFisico.length > 0 ?
             this.seguimientoDiario.seguimientoSemanalAvanceFisico[0].seguimientoSemanalAvanceFisicoId : 0;
             const flujoInversion = this.seguimientoDiario.flujoInversion;
+            //Get Observacion Apoyo
+            this.seguimientoSemanalAvanceFisico = this.seguimientoDiario.seguimientoSemanalAvanceFisico[0];
+            if ( this.seguimientoSemanalAvanceFisico.observacionApoyo !== undefined ) {
+                const observacionApoyo = this.seguimientoSemanalAvanceFisico.observacionApoyo;
+                this.seguimientoSemanalObservacionId = this.seguimientoSemanalAvanceFisico.observacionApoyo.seguimientoSemanalObservacionId;
+                this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( observacionApoyo.tieneObservacion );
+                this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo.observacion !== undefined || observacionApoyo.observacion.length > 0 ? observacionApoyo.observacion : null );
+            }
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];
                 let totalDuracion = 0;
@@ -208,8 +223,38 @@ export class TablaAvanceFisicoComponent implements OnInit {
         }
     }
 
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
     guardar() {
-        console.log( this.formAvanceFisico.value );
+		const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: '1',
+            observacionPadreId: this.seguimientoSemanalAvanceFisicoId,
+            observacion: this.formAvanceFisico.get( 'observaciones' ).value,
+            tieneObservacion: this.formAvanceFisico.get( 'tieneObservaciones' ).value,
+            esSupervisor: true
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () =>   this.routes.navigate(
+                                    [
+                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
+                                    ]
+                                )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

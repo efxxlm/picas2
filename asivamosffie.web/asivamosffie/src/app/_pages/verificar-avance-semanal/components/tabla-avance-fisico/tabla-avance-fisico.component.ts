@@ -20,7 +20,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     @Input() avanceFisicoObs: string;
     formAvanceFisico: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ]
     });
     avanceFisico: any[];
     seguimientoSemanalAvanceFisico: any;
@@ -99,7 +99,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 const observacionApoyo = this.seguimientoSemanalAvanceFisico.observacionApoyo;
                 this.seguimientoSemanalObservacionId = this.seguimientoSemanalAvanceFisico.observacionApoyo.seguimientoSemanalObservacionId;
                 this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( observacionApoyo.tieneObservacion );
-                this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo.observacion !== undefined || observacionApoyo.observacion.length > 0 ? observacionApoyo.observacion : null );
+                this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo.observacion );
             }
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];

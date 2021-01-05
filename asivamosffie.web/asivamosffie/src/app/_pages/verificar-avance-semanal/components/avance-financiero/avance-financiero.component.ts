@@ -18,7 +18,7 @@ export class AvanceFinancieroComponent implements OnInit {
     @Input() avanceFinancieroObs: string;
     formAvanceFinanciero: FormGroup = this.fb.group({
       tieneObservaciones: [ null, Validators.required ],
-      observaciones: [ null ]
+      observaciones: [ '' ]
     });
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
@@ -64,6 +64,10 @@ export class AvanceFinancieroComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
                 this.avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
+                if ( this.avanceFinanciero.observacionApoyo !== undefined ) {
+                    this.formAvanceFinanciero.get( 'tieneObservaciones' ).setValue( this.avanceFinanciero.observacionApoyo.tieneObservacion );
+                    this.formAvanceFinanciero.get( 'observaciones' ).setValue( this.avanceFinanciero.observacionApoyo.observacion );
+                }
             }
             this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
