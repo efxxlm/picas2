@@ -1999,10 +1999,7 @@ namespace asivamosffie.services
                             strEstadoCodigoControversia = EstadoCodigoControversia.Codigo;
                         }
 
-                        if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
-                            prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
-                        else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
-                            prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
+                        
 
                         //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         //if (EstadoSolicitudCodigoContratoPoliza != null)
@@ -2016,7 +2013,7 @@ namespace asivamosffie.services
                          ControversiaContractualId=controversia.ControversiaContractualId,
                          //NumeroSolicitud=controversia.NumeroSolicitud,
                         //NumeroSolicitud = string.Format("0000"+ controversia.ControversiaContractualId.ToString()),
-                        NumeroSolicitud = prefijo+controversia.ControversiaContractualId.ToString("000"),
+                        NumeroSolicitud = controversia.NumeroSolicitud,
                         //FechaSolicitud=controversia.FechaSolicitud,
                         FechaSolicitud =controversia.FechaSolicitud != null ? Convert.ToDateTime(controversia.FechaSolicitud).ToString("dd/MM/yyyy") : controversia.FechaSolicitud.ToString(),
                          TipoControversia =strTipoControversia,
