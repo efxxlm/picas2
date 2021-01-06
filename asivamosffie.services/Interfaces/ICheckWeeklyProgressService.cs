@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface ICheckWeeklyProgressService
     {
+        Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor);
+
         Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal);
 
         Task<dynamic> GetListReporteSemanal();

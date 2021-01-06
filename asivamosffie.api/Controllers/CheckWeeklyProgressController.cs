@@ -28,6 +28,12 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [Route("GetValidarRegistroCompletoObservaciones")]
+        [HttpGet]
+        public async Task<bool> GetValidarRegistroCompletoObservaciones([FromQuery] int pSeguimientoSemanalId , bool esSupervisor)
+        {
+            return await _checkWeeklyProgressService.GetValidarRegistroCompletoObservaciones(pSeguimientoSemanalId, esSupervisor);
+        }
 
         [Route("CreateEditSeguimientoSemanalObservacion")]
         [HttpPost]

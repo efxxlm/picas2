@@ -36,6 +36,10 @@ namespace asivamosffie.services
         #endregion region 
 
         #region Business
+        public async Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor)
+        {
+            return await ValidarRegistroCompletoObservacion(pSeguimientoSemanalId, esSupervisor);
+        }
 
         private async Task<bool> ValidarRegistroCompletoObservacion(int pSeguimientoSemanalId, bool pEsSupervisor)
         {
@@ -391,7 +395,7 @@ namespace asivamosffie.services
             {
                 if (!seguimientoSemanalAvanceFisico.TieneObservacionApoyo.HasValue
                 || (seguimientoSemanalAvanceFisico.TieneObservacionApoyo == true &&
-                string.IsNullOrEmpty(seguimientoSemanalAvanceFisico.ObservacionApoyo.Observacion)))
+                string.IsNullOrEmpty(seguimientoSemanalAvanceFisico?.ObservacionApoyo?.Observacion)))
                     return false;
                 return true;
             }
@@ -1286,6 +1290,7 @@ namespace asivamosffie.services
             throw new NotImplementedException();
         }
 
+  
 
         #endregion
     }
