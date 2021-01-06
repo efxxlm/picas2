@@ -1,0 +1,40 @@
+<section *ngIf="registroSemanas">
+    <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
+      <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+    </button>
+    
+    <div class="text-center">
+      <h1 class="title-menu--h1">
+        Registrar programación del personal {{ dataContrato.contrato.llaveMen }}
+      </h1>
+    
+      <div class="d-flex text-center justify-center">
+        <p class="p">
+            {{ dataContrato.contrato.departamento }}
+        </p>
+      
+        <p class="p ml-2em">
+          {{ dataContrato.contrato.municipio }}
+        </p>
+
+        <p class="p ml-2em">
+          {{ dataContrato.contrato.institucionEducativa }}
+        </p>
+
+        <p class="p ml-2em">
+            {{ dataContrato.contrato.sede }}
+        </p>
+
+        <p class="p ml-2em">
+            Plazo del proyecto: <b>{{ registroSemanas.length }} semanas</b>
+        </p>
+      </div>
+
+      <mat-dialog-content>
+        <app-tabla-registro-semanas [contratoConstruccionId]="dataContrato.contrato.contratoConstruccionId"
+                                    [registroSemanas]="registroSemanas"
+                                    (seRealizoPeticion)="seRealizoPeticion( $event )">
+        </app-tabla-registro-semanas>
+      </mat-dialog-content>
+    </div>
+</section>

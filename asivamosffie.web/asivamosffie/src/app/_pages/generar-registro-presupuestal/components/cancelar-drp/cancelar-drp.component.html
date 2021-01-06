@@ -1,14 +1,16 @@
 <button mat-button mat-dialog-close class="modal--btn-cerrar">
     <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
-<h1 class="title-menu--h1">
-    Cancelar DRP
-</h1>
-<p class="info-sub-title">
-    <span>{{fecha| date:'dd/MM/yyyy'}}</span>
-    <span>{{nSolicitud}}</span>
-    <span>{{tipo}}</span>
-</p>
+<div class="text-center">
+  <h1 class="title-menu--h1">
+      Cancelar DRP
+  </h1>
+  <p class="info-sub-title">
+      <span>{{fecha| date:'dd/MM/yyyy'}}</span>
+      <span>{{nSolicitud}}</span>
+      <span>{{tipo}}</span>
+  </p>
+</div>
 <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
     <div class="d-flex align-items-center">
         <div class="text-area-quill izqTitle">
@@ -16,10 +18,10 @@
           <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
             (onContentChanged)="maxLength($event, 2000)" formControlName="objeto"></quill-editor>
         </div>
-        <span class="contador" *ngIf="addressForm.get('objeto').value">
-          {{2000 - addressForm.get('objeto').value.length}}
+        <span class="contador miles" *ngIf="addressForm.get('objeto').value">
+          {{2000 - (textoLimpio(addressForm.get('objeto').value)>2000?2000:textoLimpio(addressForm.get('objeto').value))}}
         </span>
-        <span class="contador" *ngIf="addressForm.get('objeto').value === null">
+        <span class="contador miles" *ngIf="addressForm.get('objeto').value === null">
           2000
         </span>
       </div>

@@ -42,7 +42,7 @@ namespace asivamosffie.api.Controllers
                 return File(stream, "application/octet-stream");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return BadRequest("Archivo no encontrado");
             }

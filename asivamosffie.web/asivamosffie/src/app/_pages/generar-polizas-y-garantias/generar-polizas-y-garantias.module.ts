@@ -16,6 +16,7 @@ import { GestionarPolizasComponent } from './components/gestionar-polizas/gestio
 import { EditarEnRevisionComponent } from './components/editar-en-revision/editar-en-revision.component';
 import { EditarObservadaODevueltaComponent } from './components/editar-observada-o-devuelta/editar-observada-o-devuelta.component';
 import { VerDetallePolizaComponent } from './components/ver-detalle-poliza/ver-detalle-poliza.component';
+import { TablaHistorialObservacionesPolizaComponent } from './components/tabla-historial-observaciones-poliza/tabla-historial-observaciones-poliza.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { VerDetallePolizaComponent } from './components/ver-detalle-poliza/ver-d
     GestionarPolizasComponent,
     EditarEnRevisionComponent,
     EditarObservadaODevueltaComponent,
-    VerDetallePolizaComponent
+    VerDetallePolizaComponent,
+    TablaHistorialObservacionesPolizaComponent
   ],
   imports: [
     CommonModule,

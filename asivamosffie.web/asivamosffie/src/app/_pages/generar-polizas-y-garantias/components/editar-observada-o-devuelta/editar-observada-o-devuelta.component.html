@@ -10,7 +10,7 @@
     <p class="info-sub-title">
       <span>Fecha de firma del contrato <b>{{this.fechaFirmaContrato}}</b></span>
       <span><b>{{this.tipoSolicitud}}</b></span>
-      <span>Estado: <b>Sin radicación de pólizas</b></span>
+      <span>Estado: <b>Con póliza observada y devuelta</b></span>
     </p>
 
   </section>
@@ -470,7 +470,7 @@
           2000
         </span>
       </div>
-
+      <app-tabla-historial-observaciones-poliza></app-tabla-historial-observaciones-poliza>
       <div class="text-center mb-2em">
         <button mat-button color="warn" class="btn-guardar" type="submit">
           <img src="assets/img/icon/guardar.svg" alt="Regresar">

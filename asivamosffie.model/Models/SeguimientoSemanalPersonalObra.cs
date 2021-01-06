@@ -13,6 +13,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
+        public bool? RegistroCompleto { get; set; }
 
         public virtual SeguimientoSemanal SeguimientoSemanal { get; set; }
     }

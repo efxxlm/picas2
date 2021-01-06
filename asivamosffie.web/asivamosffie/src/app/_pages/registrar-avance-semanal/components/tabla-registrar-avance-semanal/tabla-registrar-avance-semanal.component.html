@@ -1,0 +1,110 @@
+<section class="busqueda">
+    <mat-form-field appearance="outline" class="busqueda--input">
+      <mat-label>Buscador / Filtro</mat-label>
+      <input matInput #filtro (keyup)="applyFilter($event)">
+    </mat-form-field>
+    <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+      <img src="assets/img/icon/lupa.svg" alt="Buscar">
+    </button>
+</section>
+
+<section class="table-responsive">
+  <table mat-table [dataSource]="tablaRegistro" matSort>
+
+    <ng-container matColumnDef="llaveMen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
+      <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.llaveMen }} </b> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numeroContrato">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato de obra </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato  }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tipoIntervencion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="institucionEducativa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución Educativa </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sede">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fechaUltimoReporte">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del último reporte </th>
+        <td mat-cell *matCellDef="let element" align="center">
+          <section *ngIf="element.fechaUltimoReporte === 'Sin registro'"> {{ element.fechaUltimoReporte }} </section>
+          <section *ngIf="element.fechaUltimoReporte !== 'Sin registro'"> {{ element.fechaUltimoReporte | date: 'dd/MM/yyyy' }} </section>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="estadoObra">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la obra </th>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoObra }} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="gestion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+      <td mat-cell *matCellDef="let element">
+  
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
+                Registrar seguimiento semanal
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
+                Consultar/Editar bitacora
+        </button>
+        <!--
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
+                Enviar a verificación
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table"
+                (click)="openDialogCargarActa( element )">
+                Cargar acta de terminación de contrato
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
+                Ver detalle/Editar
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
+                Consultar bitácora
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
+                Enviar para registrar informe final
+        </button>
+        <button mat-raised-button
+                color="accent" 
+                class="btn-table">
+                Eliminar
+        </button>
+        -->
+
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</section>

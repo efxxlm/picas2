@@ -857,7 +857,7 @@ namespace asivamosffie.services
                         .Replace("_LinkF_", pDominioFront)
                         .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r=> r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
                         .Replace("[NUMERO_DDP]", pSesionComiteSolicitud.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp ?? " ")
-                        //.Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().Objeto ?? " ")
+                        .Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto ?? " ")
                         .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MMMM-yy") : " ")
                         .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MMMM-yy") : " ")
                         .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MMMM-yy") : " ")

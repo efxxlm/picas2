@@ -1,0 +1,218 @@
+<form autocomplete="off" [formGroup]="formManejoMaterialInsumo" *ngIf="proveedores.length > 0 && esVerDetalle === false">
+    <section *ngFor="let proveedor of proveedores.controls; index as i" [formGroup]="proveedor">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <h3 class="colorMainColor"> <b> Proveedor {{ i+1 }} </b> </h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="pr-1">
+                        <label class="label-left">Proveedor</label>
+                    </div>
+                    <div class="col d-flex">
+                        <section style="width: 100%;">
+                            <mat-form-field>
+                                <input matInput type="text" maxlength="50" formControlName="proveedor" required>
+                            </mat-form-field>
+                        </section>
+                        <span class="contador">{{50 - proveedor.get( 'proveedor' ).value.length}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left" style="margin-top: 1.5em;">¿Requiere permisos ambientales y/o mineros?</label>
+                </div>
+                <div class="col d-flex">
+                    <section style="width: 100%;">
+                        <mat-form-field appearance="fill">
+                          <mat-select class="padding-left" formControlName="requierePermisosAmbientalesMineros" required>
+                            <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
+                              {{requisito.viewValue}}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </section>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left">Campo URL</label>
+                </div>
+                <div class="col d-flex">
+                    <mat-form-field style="width: 98%;">
+                        <input  matInput
+                                type="text"
+                                formControlName="urlRegistroFotografico">
+                    </mat-form-field>
+                </div>
+                <div class="d-flex justify-content-center size-text-descriptivo">
+                    <p class="color-text-descriptivo">
+                        <i> 
+                            Indique la ruta el permiso ambiental y/o minero correspondiente.
+                        </i>
+                    </p>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col d-flex justify-content-flex-end">
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                class="btn-eliminar"
+                                (click)="deleteProveedor( i )"
+                                *ngIf="proveedores.length > 1">
+                                <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                                Eliminar proveedor
+                        </button>
+                        <button mat-button
+                                color="warn"
+                                type="button"
+                                class="btn-eliminar"
+                                (click)="addProveedor()">
+                                <img src="assets/img/icon/mas.svg">
+                                Agregar otro proveedor
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="row mt-1em">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" style="margin-top: 1.5em;">¿Los materiales de construcción se encontraron protegidos y demarcados correctamente?</label>
+            </div>
+            <div class="col d-flex">
+                <section style="width: 100%;">
+                    <mat-form-field appearance="fill">
+                      <mat-select class="padding-left" formControlName="estanProtegidosDemarcadosMateriales" required>
+                        <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
+                          {{requisito.viewValue}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </section>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" style="margin-top: 1.5em;">¿Requiere hacer una observación acerca del estado de los materiales de construcción?</label>
+            </div>
+            <div class="col d-flex">
+                <section style="width: 100%;">
+                    <mat-form-field appearance="fill">
+                      <mat-select class="padding-left" formControlName="requiereObservacion" required>
+                        <mat-option *ngFor="let requisito of booleanosActividadRelacionada" [value]="requisito.value">
+                          {{requisito.viewValue}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </section>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="formManejoMaterialInsumo.get( 'requiereObservacion' ).value === true">
+        <div class="col-md-12">
+          <div>
+            <div class="pr-1">
+              <label class="label-left">Observaciones</label>
+            </div>
+            <div class="col d-flex" style="width: 100%;">
+                <quill-editor   class="quill-editor-style card-80em position-relative"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 400)"
+                                formControlName="observacion"
+                                #obsMaterialInsumo
+                                required>
+                </quill-editor>
+                <span class="contador miles" *ngIf="formManejoMaterialInsumo.get('observacion').value !== null" style="margin-top: 3.5em;">
+                    {{400 - textoLimpio( obsMaterialInsumo.quillEditor, 400 )}}
+                </span>
+                <span class="contador miles" *ngIf="formManejoMaterialInsumo.get('observacion').value === null" style="margin-top: 3.5em;">
+                    400
+                </span>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div class="row mt-1em">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left">URL con soporte</label>
+            </div>
+            <div class="col d-flex">
+                <mat-form-field style="width: 98%;">
+                    <input  matInput
+                            type="text"
+                            formControlName="url">
+                </mat-form-field>
+            </div>
+            <div class="d-flex justify-content-center size-text-descriptivo">
+                <p class="color-text-descriptivo">
+                    <i> 
+                        Indique la ruta de los documentos de soporte de la actividad realizada.
+                    </i>
+                </p>
+            </div>
+          </div>
+        </div>
+    </div>
+</form>
+
+<!-- Ver Detalle -->
+<section *ngIf="proveedores.length > 0 && esVerDetalle === true">
+  <div *ngFor="let proveedor of proveedores.controls; index as i">
+    <div class="row">
+      <div class="col-md-12">
+          <div class="row">
+              <h3> <b> Proveedor {{ i+1 }} </b> </h3>
+          </div>
+      </div>
+  </div>
+    <p><b>Proveedor</b>: {{ proveedor.get( 'proveedor' ).value }} </p>
+    <p *ngIf="proveedor.get( 'requierePermisosAmbientalesMineros' ).value === true"><b>¿Requiere permisos ambientales y/o mineros?</b>: Si</p>
+    <p *ngIf="proveedor.get( 'requierePermisosAmbientalesMineros' ).value === false"><b>¿Requiere permisos ambientales y/o mineros?</b>: No</p>
+    <p *ngIf="proveedor.get( 'urlRegistroFotografico' ).value.length > 0"><b>Campo URL</b>: {{ proveedor.get( 'urlRegistroFotografico' ).value }} </p>
+  </div>
+  <p class="mt-1em" *ngIf="formManejoMaterialInsumo.get( 'estanProtegidosDemarcadosMateriales' ).value === true"><b>¿Los materiales de construcción se encontraron protegidos y demarcados correctamente?</b>: Si</p>
+  <p class="mt-1em" *ngIf="formManejoMaterialInsumo.get( 'estanProtegidosDemarcadosMateriales' ).value === false"><b>¿Los materiales de construcción se encontraron protegidos y demarcados correctamente?</b>: No</p>
+  <p *ngIf="formManejoMaterialInsumo.get( 'requiereObservacion' ).value === true"><b>¿Requiere hacer una observación acerca del estado de los materiales de construcción?</b>: Si</p>
+  <p *ngIf="formManejoMaterialInsumo.get( 'requiereObservacion' ).value === false"><b>¿Requiere hacer una observación acerca del estado de los materiales de construcción?</b>: No</p>
+  <section *ngIf="formManejoMaterialInsumo.get( 'requiereObservacion' ).value === true">
+    <b>Observacion</b>:
+    <div [innerHTML]="formManejoMaterialInsumo.get( 'observacion' ).value"></div>
+  </section>
+  <p *ngIf="formManejoMaterialInsumo.get( 'url' ).value !== null"><b>URL con soporte</b>: {{ formManejoMaterialInsumo.get( 'url' ).value }} </p>
+</section>
