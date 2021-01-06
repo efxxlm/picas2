@@ -1504,7 +1504,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
                 entity.Property(e => e.Observaciones)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ProximaActuacionCodigo)
@@ -1516,7 +1516,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ResumenPropuestaFiduciaria)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
@@ -1590,7 +1590,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<ControversiaContractual>(entity =>
             {
                 entity.Property(e => e.ConclusionComitePreTecnico)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoCodigo)
@@ -1607,7 +1607,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
                 entity.Property(e => e.MotivoJustificacionRechazo)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicadoSac)
