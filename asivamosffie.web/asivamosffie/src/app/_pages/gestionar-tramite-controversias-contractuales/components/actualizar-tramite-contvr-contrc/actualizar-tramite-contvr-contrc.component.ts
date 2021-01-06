@@ -49,7 +49,7 @@ export class ActualizarTramiteContvrContrcComponent implements OnInit {
         break;
       };
       this.fechaSolicitud = data.fechaSolicitud;
-      this.codigoSolicitud = data.numeroSolicitudFormat;
+      this.codigoSolicitud = data.numeroSolicitud;
       this.numeroContrato = data.contrato.numeroContrato;
     });
   }

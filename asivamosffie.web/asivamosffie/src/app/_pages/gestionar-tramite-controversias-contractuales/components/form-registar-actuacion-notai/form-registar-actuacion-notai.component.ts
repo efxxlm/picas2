@@ -133,10 +133,10 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        "FechaCreacion": "2020-3-3",
-        "UsuarioCreacion": "US CRE w",
-        "UsuarioModificacion": "US MODIF w",
-        "EsCompleto": completo,
+        //"FechaCreacion": "2020-3-3",
+        //"UsuarioCreacion": "US CRE w",
+       // "UsuarioModificacion": "US MODIF w",
+        //"EsCompleto": completo,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -151,7 +151,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "EsprocesoResultadoDefinitivo": this.addressForm.value.resultadoDefinitivoyCerrado,
         "EsRequiereMesaTrabajo": this.addressForm.value.requiereMesaDeTrabajo,
         "Eliminado": false,
-        "ControversiaActuacionId": 7
+        "ControversiaActuacionId": parseInt(this.idActuacionFromEdit)
       }
     }
     else {
@@ -165,10 +165,10 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "ResumenPropuestaFiduciaria": "ResumenPropuestaFiduciaria w",
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        "FechaCreacion": "2020-3-3",
-        "UsuarioCreacion": "US CRE w",
-        "UsuarioModificacion": "US MODIF w",
-        "EsCompleto": completo,
+        //"FechaCreacion": "2020-3-3",
+        //"UsuarioCreacion": "US CRE w",
+        //"UsuarioModificacion": "US MODIF w",
+        //"EsCompleto": completo,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -187,11 +187,11 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {
       if(data.isSuccessful==true){
-        this.openDialog("",data.message);
+        this.openDialog("",`<b>${ data.message }</b>`);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       }
       else{
-        this.openDialog("",data.message);
+        this.openDialog("",`<b>${ data.message }</b>`);
       }
     });
   }
