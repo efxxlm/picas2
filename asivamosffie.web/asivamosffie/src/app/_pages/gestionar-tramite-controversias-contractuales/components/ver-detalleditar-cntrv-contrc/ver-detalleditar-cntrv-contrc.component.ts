@@ -37,7 +37,7 @@ export class VerDetalleditarCntrvContrcComponent implements OnInit {
 
   loadData(id) {
     this.services.GetControversiaContractualById(id).subscribe((resp:any)=>{
-      this.numeroSolicitud = resp.numeroSolicitudFormat;
+      this.numeroSolicitud = resp.numeroSolicitud;
       this.polizaService.GetListVistaContratoGarantiaPoliza(resp.contratoId).subscribe(resp_0=>{
         this.nombreContratista = resp_0[0].nombreContratista;
         this.tipoIdentificacion = resp_0[0].tipoDocumento;

@@ -287,15 +287,16 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
       if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == false && this.addressForm.value.requeridoComite) {
         estadoControversia = "2";
       }
-      else if (this.estaCompleto == false && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == null) {
+      if (this.estaCompleto == false && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == null) {
         estadoControversia = "3";
       }
-      else if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == true) {
+      if (this.estaCompleto == true && this.addressForm.value.procedeSolicitud == true && this.addressForm.value.requeridoComite == true) {
         estadoControversia = "4";
       }
-      else if (this.estaCompleto == false) {
+      if (this.estaCompleto == false) {
         estadoControversia = "1";
       }
+      //alert(estadoControversia);
       if (this.isEditable == true) {
         formArrayTai = {
           "TipoControversiaCodigo": this.addressForm.value.tipoControversia.codigo,
@@ -317,6 +318,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           "ControversiaContractualId": parseInt(this.idControversia),
           //"FechaCreacion": this.fechaSesionString2
         };
+
       }
       else {
         formArrayTai = {
@@ -339,8 +341,11 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           //"FechaCreacion":this.fechaSesionString2
         };
       }
-      this.services.CreateEditarControversiaTAI(formArrayTai).subscribe(resp_0 => {
+      this.services.CreateEditarControversiaTAI(formArrayTai).subscribe((resp_0:any) => {
         if (resp_0.isSuccessful == true) {
+          this.services.CambiarEstadoControversiaContractual(resp_0.data.controversiaContractualId,estadoControversia).subscribe(c=>{
+
+          });
           this.openDialog( '', `<b>${ this.sucessInfo }</b>` );
           if (this.isEditable == true) {
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
@@ -497,8 +502,11 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           //"FechaCreacion": "2020-11-01"
         };
       }
-      this.services.CreateEditarControversiaTAI(formArrayNoTaiContratista).subscribe(resp_0 => {
+      this.services.CreateEditarControversiaTAI(formArrayNoTaiContratista).subscribe((resp_0:any) => {
         if (resp_0.isSuccessful == true) {
+          this.services.CambiarEstadoControversiaContractual(resp_0.data.controversiaContractualId,estadoControversiaContratista).subscribe(c=>{
+
+          });
           this.openDialog( '', `<b>${ this.sucessInfo }</b>` );
           if (this.isEditable == true) {
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
@@ -654,9 +662,12 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
           //"FechaCreacion": "2020-11-01"
         };
       }
-      this.services.CreateEditarControversiaTAI(formArrayNoTaiContratante).subscribe(resp_0 => {
+      this.services.CreateEditarControversiaTAI(formArrayNoTaiContratante).subscribe((resp_0:any) => {
         if (resp_0.isSuccessful == true) {
           this.openDialog( '', `<b>${ this.sucessInfo }</b>` );
+          this.services.CambiarEstadoControversiaContractual(resp_0.data.controversiaContractualId,estadoControversiaContratante).subscribe(c=>{
+
+          });
           if (this.isEditable == true) {
             if (this.addressForm.value.motivosSolicitud != undefined || this.addressForm.value.motivosSolicitud != null) {
               for (let i = 0; i < motivosList2.length; i++) {
