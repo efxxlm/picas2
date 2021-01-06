@@ -7,6 +7,7 @@ import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.servi
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DatePipe } from '@angular/common';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 
 @Component({
   selector: 'app-form-generar-acta-inicio-const-tecnico',
@@ -81,7 +82,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   realizoPeticion: boolean = false;
   esRojo: boolean = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
   }
@@ -161,9 +162,23 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       if (this.editable == true) {
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase2DateTime);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaPrevistaTerminacionDateTime);
-        this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
-        this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
         this.addressForm.get('observacionesEspeciales').setValue(data.observacionOConsideracionesEspeciales);
+        if ( data.plazoFase1PreMeses !== undefined && data.plazoFase1PreDias !== undefined ) {
+          const mesesPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+          const diasPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+          this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, data.plazoFase1PreMeses, data.plazoFase1PreDias )
+            .subscribe(
+              response => {
+                this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+                this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+              }
+            );
+            this.addressForm.get('mesPlazoEjFase2').disable();
+            this.addressForm.get('diasPlazoEjFase2').disable();
+        } else {
+          this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
+          this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
+        }
       }
     });
     this.idContrato = id;

@@ -29,42 +29,22 @@
             <ng-container matColumnDef="contratoId">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-25"> Gestión </th>
                 <td mat-cell *matCellDef="let element">
-                    <ng-container *ngIf="esSupervisor === true; else noEsSupervisor">
-                        <button mat-raised-button color="accent" class="btn-table"
+                    <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Sin revisión'"
                         (click)="this.validarActaParaInicio(element.contratoId)">Validar acta de inicio</button>
-                        <button mat-raised-button color="accent" class="btn-table"
+                    <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"
                         (click)="this.enviarRevision(element.contratoId,element.estadoActa)">Notificar al interventor</button>
-                        <button mat-raised-button color="accent" class="btn-table"
+                    <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"
                         (click)="this.verDetalleEditar(element.contratoId)">Ver detalle/Editar</button>
-                        <button mat-raised-button color="accent" class="btn-table"
+                    <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con notificación al interventor'"
                         (click)="this.enviarInterventor(element.contratoId)">Enviar para revisión y aprobación</button>
-                        <button mat-raised-button color="accent" class="btn-table"
+                    <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActa=='Con notificación al interventor' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con acta suscrita y cargada'"
                         (click)="this.verDetalle(element.contratoId)">Ver detalle</button>
-                    </ng-container>
-                    <ng-template #noEsSupervisor>
-                        <button mat-raised-button color="accent" class="btn-table"
-                                *ngIf="element.estadoActa=='Sin revisión'"
-                                (click)="this.validarActaParaInicio(element.contratoId)">Validar acta de inicio</button>
-                        <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita()"
-                                *ngIf="element.estadoActa=='Con acta en proceso de firma'"> Cargar Acta Suscrita</button>
-                        <button mat-raised-button color="accent" class="btn-table"
-                                (click)="this.descargarActaDesdeTabla(element.contratoId)"
-                                *ngIf="element.estadoActa=='Con acta en proceso de firma'">Descargar Acta</button>
-                        <button mat-raised-button color="accent" class="btn-table"
-                                *ngIf="element.estadoActa=='Con revisión sin observaciones' || element.estadoActa=='Con revisión con observaciones'"
-                                (click)="this.verDetalleEditar(element.contratoId)">Ver detalle/Editar</button>
-                        <button mat-raised-button color="accent" class="btn-table"
-                                *ngIf="element.estadoActa=='Con notificación al interventor'"
-                                (click)="this.enviarInterventor(element.contratoId)">Enviar para revisión y aprobación</button>
-                        <button mat-raised-button color="accent" class="btn-table"
-                                *ngIf="element.estadoActa=='Con notificación al interventor' || element.estadoActa=='Con acta generada' || element.estadoActa=='Con acta en proceso de firma' || element.estadoActa=='Con acta suscrita y cargada'"
-                                (click)="this.verDetalle(element.contratoId)">Ver detalle</button>
-                    </ng-template>
+
                 </td>
             </ng-container>
 

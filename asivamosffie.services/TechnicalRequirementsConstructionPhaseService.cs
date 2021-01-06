@@ -330,6 +330,8 @@ namespace asivamosffie.services
 
                     contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == cc.ProyectoId).FirstOrDefault().Proyecto.FechaInicioEtapaObra = proyectoTemp.FechaInicioEtapaObra;
                     contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == cc.ProyectoId).FirstOrDefault().Proyecto.FechaFinEtapaObra = proyectoTemp.FechaFinEtapaObra;
+                    contrato.Contratacion.ContratacionProyecto.Where(cp => cp.ProyectoId == cc.ProyectoId).FirstOrDefault().Proyecto.PlazoEnSemanas = proyectoTemp.PlazoEnSemanas;
+                    
 
                 });
 
@@ -1606,6 +1608,8 @@ namespace asivamosffie.services
             // calcula la fecha final del contrato
             DateTime fechaFinalContrato = proyecto.FechaInicioEtapaObra.AddMonths(contratoConstruccion.Proyecto.PlazoMesesObra.Value);
             proyecto.FechaFinEtapaObra = fechaFinalContrato.AddDays(contratoConstruccion.Proyecto.PlazoDiasObra.Value);
+
+            proyecto.PlazoEnSemanas = ( proyecto.FechaFinEtapaObra - proyecto.FechaInicioEtapaObra ).TotalDays / 7;
 
             return proyecto;
         }

@@ -15,10 +15,10 @@ namespace asivamosffie.model.Models
         public string TipoSolicitudCodigo { get; set; }
         public string TipoSolicitudCodigoContratacion { get; set; }
         public string TipoSolicitudContratacion { get; set; }
-        public bool? RegistroCompleto { get; set; }
-        public bool? RegistroCompletoPoliza { get; set; }
         public string EstadoPoliza { get; set; }
         public string EstadoPolizaCodigo { get; set; }
+        public bool? RegistroCompleto { get; set; }
+        public bool? RegistroCompletoPoliza { get; set; }
         public string RegistroCompletoNombre { get; set; }
         public string RegistroCompletoPolizaNombre { get; set; }
     }

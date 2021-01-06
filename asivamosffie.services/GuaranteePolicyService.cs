@@ -44,8 +44,6 @@ namespace asivamosffie.services
             return await _context.PolizaGarantia.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
         }
 
-
-
         public async Task<NotificacionMensajeGestionPoliza> GetNotificacionContratoPolizaByIdContratoId(int pContratoId)
         {
             NotificacionMensajeGestionPoliza msjNotificacion = new NotificacionMensajeGestionPoliza();
@@ -193,14 +191,10 @@ namespace asivamosffie.services
             return contratoPoliza;
         }
 
-
-        //public async Task<ActionResult<List<PolizaObservacion>>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
         public async Task<List<PolizaObservacion>> GetListPolizaObservacionByContratoPolizaId(int pContratoPolizaId)
         {
-
             return await _context.PolizaObservacion.Where(r => r.ContratoPolizaId == pContratoPolizaId).ToListAsync();
         }
-
 
         public async Task<Respuesta> InsertEditPolizaGarantia(PolizaGarantia polizaGarantia)
         {
@@ -292,6 +286,7 @@ namespace asivamosffie.services
             }
 
         }
+
         public async Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion, AppSettingsService appSettingsService)
         {
             Respuesta _response = new Respuesta();
@@ -422,7 +417,6 @@ namespace asivamosffie.services
             }
 
         }
-
 
         public async Task<Respuesta> EditarContratoPoliza(ContratoPoliza contratoPoliza)
         {
@@ -1243,14 +1237,14 @@ namespace asivamosffie.services
         {
             Respuesta respuesta = new Respuesta();
             string fechaFirmaContrato = "";
-            DateTime? FechaFirmaContrato_dt ;
+            DateTime? FechaFirmaContrato_dt;
             string correo = "cdaza@ivolucion.com";
             VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
 
             List<Contrato> lstContrato;
             List<ContratoPoliza> lstContratoPoliza;
 
-            lstContrato = _context.Contrato.Where(r => !(bool)r.Eliminado 
+            lstContrato = _context.Contrato.Where(r => !(bool)r.Eliminado
             && r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados.ToString()
             ).ToList();
 
@@ -1265,10 +1259,10 @@ namespace asivamosffie.services
                 //.Where(r => r.TipoSolicitudCodigo != ((int)EnumeratorEstadoPoliza.Con_aprobacion_de_polizas)
                 //.ToString() && (bool)r.Eliminado == false).ToList();
 
-                if(cntPolizas==0)
+                if (cntPolizas == 0)
                 {
-                    RangoFechaConDiasHabiles = await _commonService.CalculardiasLaboralesTranscurridos(4, DateTime.Now);                    
-                    
+                    RangoFechaConDiasHabiles = await _commonService.CalculardiasLaboralesTranscurridos(4, DateTime.Now);
+
                     FechaFirmaContrato_dt = contrato != null ? contrato.FechaFirmaContrato : null;
 
                     if (FechaFirmaContrato_dt != null)
@@ -1402,12 +1396,12 @@ namespace asivamosffie.services
                                 //return respuesta;
                             }
 
-                        }                        
+                        }
 
                 }
 
-            }      
-          
+            }
+
 
         }
 
@@ -1483,15 +1477,15 @@ namespace asivamosffie.services
                 TipoGarantiaSeguroContratoPoliza = await _commonService.GetListDominioByIdTipoDominio(Convert.ToInt32(EnumeratorTipoDominio.Tipo_Garantia_Poliza));
 
             }
-            int cntSi=0;
+            int cntSi = 0;
 
-            
+
             //jflorez, las polizas pueden estar en no, lo importante es que tenga almenos una
-            if(lstPolizaGarantia.Count()>0)
+            if (lstPolizaGarantia.Count() > 0)
             {
                 return true;
             }
-            
+
             //tienen el mismo numero de seguros parametrizados a los disponibles
             /*if (lstPolizaGarantia.Count() == TipoGarantiaSeguroContratoPoliza.Count())
             {
@@ -1519,21 +1513,21 @@ namespace asivamosffie.services
             //si es devuelta no validar: FechaAprobacion, ResponsableAprobacion
             //jflorez, cambio la condición porque no entiendo que tiene que ver el contrato devuelto con el contrato poliza devuelto
             //if (!EsContratoDevuelto)
-            if (contratoPoliza.EstadoPolizaCodigo== ConstanCodigoEstadoRevision.aprobada)
+            if (contratoPoliza.EstadoPolizaCodigo == ConstanCodigoEstadoRevision.aprobada)
             {
                 if (string.IsNullOrEmpty(contratoPoliza.FechaAprobacion.ToString()))
                 {
                     return false;
                 }
-                if(contratoPoliza.ResponsableAprobacion!=null)
+                if (contratoPoliza.ResponsableAprobacion != null)
                 {
                     if (string.IsNullOrEmpty(contratoPoliza.ResponsableAprobacion.ToString()))
                     {
                         return false;
                     }
-                }                
+                }
 
-            }               
+            }
 
             if (string.IsNullOrEmpty(contratoPoliza.NombreAseguradora.ToString()))
             {
@@ -1589,7 +1583,7 @@ namespace asivamosffie.services
             {
                 return false;
             }
-         
+
             else if (string.IsNullOrEmpty(contratoPoliza.EstadoPolizaCodigo.ToString()))
             {
                 return false;
@@ -1602,11 +1596,11 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId)        
+        public async Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId)
         {
-            bool respuesta=false; 
+            bool respuesta = false;
             ContratoPoliza contratoPoliza = null;
-            
+
             //return respuesta;
 
             contratoPoliza = await _context.ContratoPoliza.Where(r => r.ContratoPolizaId == ContratoPolizaId).FirstOrDefaultAsync();
@@ -1614,15 +1608,15 @@ namespace asivamosffie.services
             if (contratoPoliza != null)
             {
                 if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosAsegurado.ToString()))
-                {                    
+                {
                     return respuesta;
                 }
                 else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosBeneficiario.ToString()))
-                {                    
+                {
                     return respuesta;
                 }
                 else if (string.IsNullOrEmpty(contratoPoliza.CumpleDatosTomador.ToString()))
-                {                    
+                {
                     return respuesta;
                 }
                 else
@@ -1636,10 +1630,9 @@ namespace asivamosffie.services
             {
                 respuesta = false;
                 return respuesta;
-            }                
+            }
 
         }
-
 
         public async Task<Respuesta> AprobarContratoByIdContrato(int pIdContrato, AppSettingsService settings, string pUsuario)
         {
@@ -1667,10 +1660,10 @@ namespace asivamosffie.services
             //y al interventor para que revise el gestor de tareas,
             int perfilId = 0;
 
-            perfilId = (int)EnumeratorPerfil.Interventor; 
+            perfilId = (int)EnumeratorPerfil.Interventor;
             correo = getCorreos(perfilId);
 
-            perfilId = (int) EnumeratorPerfil.Juridica; //  Jurídica
+            perfilId = (int)EnumeratorPerfil.Juridica; //  Jurídica
             correo = getCorreos(perfilId);
 
             perfilId = (int)EnumeratorPerfil.Supervisor; //    Supervisor
@@ -1695,7 +1688,7 @@ namespace asivamosffie.services
                     contrato.EstaDevuelto = false;
                     _context.Update(contrato);
                     _context.SaveChanges();
-                }                    
+                }
 
                 //contratoPoliza = _context.ContratoPoliza.Where(r => !(bool)r.Eliminado && r.ContratoPolizaId == pContratoPolizaId).FirstOrDefault();
                 contratoPoliza = _context.ContratoPoliza.Where(r => r.ContratoId == contrato.ContratoId)
@@ -1774,7 +1767,7 @@ namespace asivamosffie.services
                             template = template.Replace("_Nombre_Aseguradora_", msjNotificacion.NombreAseguradora);
                             template = template.Replace("_Numero_Poliza_", msjNotificacion.NumeroPoliza);
                             template = template.Replace("_Fecha_Revision_", msjNotificacion.FechaRevision);
-                            template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == msjNotificacion.EstadoRevision).Select(x => x.Nombre).FirstOrDefault()); 
+                            template = template.Replace("_Estado_Revision_", _context.Dominio.Where(x => x.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Revision_Poliza && x.Codigo == msjNotificacion.EstadoRevision).Select(x => x.Nombre).FirstOrDefault());
                             template = template.Replace("_Observaciones_", msjNotificacion.Observaciones);
 
                             template = template.Replace("_Fecha_Aprobacion_Poliza", msjNotificacion.FechaAprobacion);
@@ -1807,31 +1800,31 @@ namespace asivamosffie.services
                             }
                         }
 
-                        perfilId = (int)EnumeratorPerfil.Interventor;                        
+                        perfilId = (int)EnumeratorPerfil.Interventor;
 
                         lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
-                                                
+
 
                         foreach (var item in lstUsuariosPerfil)
                         {
                             lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
 
                             foreach (var usuario in lstUsuarios)
-                            {                                
+                            {
                                 blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
                             }
                         }
 
                         perfilId = (int)EnumeratorPerfil.Juridica; //  Jurídica                      
-                                         
-                        lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();                                               
+
+                        lstUsuariosPerfil = _context.UsuarioPerfil.Where(r => r.Activo == true && r.PerfilId == perfilId).ToList();
 
                         foreach (var item in lstUsuariosPerfil)
                         {
                             lstUsuarios = _context.Usuario.Where(r => r.UsuarioId == item.UsuarioId).ToList();
 
                             foreach (var usuario in lstUsuarios)
-                            {                                
+                            {
                                 blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario.Email, "Gestión Poliza", template, settings.Sender, settings.Password, settings.MailServer, settings.MailPort);
                             }
                         }
@@ -1928,7 +1921,6 @@ namespace asivamosffie.services
             }
             return lstCorreos;
         }
-
 
         //public async Task<Respuesta> RecoverPasswordByEmailAsync(Usuario pUsuario, string pDominio, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender)
         public async Task<Respuesta> EnviarCorreoGestionPoliza(string lstMails, string pMailServer, int pMailPort, string pPassword,
@@ -2029,7 +2021,11 @@ namespace asivamosffie.services
 
         }
 
-
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz()
+        { 
+            return await _context.VGestionarGarantiasPolizas.ToListAsync(); 
+        }
+       
         public async Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza()
         {
             //await AprobarContratoByIdContrato(1);
@@ -2042,7 +2038,7 @@ namespace asivamosffie.services
 
 
             //List <Contrato> ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-            List<Contrato> ListContratos = await _context.Contrato.Where(r => r.Contratacion.TipoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Firmado.ToString()&& !(bool)r.Eliminado).ToListAsync();
+            List<Contrato> ListContratos = await _context.Contrato.Where(r => r.Contratacion.EstadoSolicitudCodigo == ConstanCodigoEstadoSolicitudContratacion.Registrados.ToString() && !(bool)r.Eliminado).ToListAsync();
 
             foreach (var contrato in ListContratos)
             {
@@ -2051,10 +2047,10 @@ namespace asivamosffie.services
                     Contratacion contratacion = null;
                     contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
 
-                    string strNumeroSolicitudContratacion="";
+                    string strNumeroSolicitudContratacion = "";
                     string strTipoConContratacion = "";
 
-                    Dominio TipoSolicitudCodigoContratacion= null;
+                    Dominio TipoSolicitudCodigoContratacion = null;
                     string strTipoSolicitudContratacion = "";
                     string strTipoSolicitudCodigoContratacion = "";
 
@@ -2067,18 +2063,18 @@ namespace asivamosffie.services
                         {
                             strTipoSolicitudCodigoContratacion = TipoSolicitudCodigoContratacion.Codigo;
                             strTipoSolicitudContratacion = TipoSolicitudCodigoContratacion.Nombre;
-                        }                                             
-                                                    
+                        }
 
-                    }                        
 
-                    ContratoPoliza contratoPoliza=null;
+                    }
+
+                    ContratoPoliza contratoPoliza = null;
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
                     int ContratoPolizaIdValor = 0;
 
                     //tiposol contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
-                    string strTipoSolicitudCodigoContratoPoliza = (Convert.ToInt32( ConstanCodigoTipoSolicitud.Contratacion)).ToString();
+                    string strTipoSolicitudCodigoContratoPoliza = (Convert.ToInt32(ConstanCodigoTipoSolicitud.Contratacion)).ToString();
                     string strTipoSolicitudNombreContratoPoliza = ConstanStringTipoSolicitudContratacion.contratacion; //contratacion o modif contractual - 
 
                     string strEstadoSolicitudCodigoContratoPoliza = ((int)EnumeratorEstadoPoliza.Sin_radicacion_polizas).ToString();
@@ -2089,26 +2085,27 @@ namespace asivamosffie.services
                     Dominio EstadoSolicitudCodigoContratoPoliza;
 
                     string strRegistroCompletoPolizaNombre = "Incompleto";
-                    bool bRegistroCompletoPoliza= false;
+                    bool bRegistroCompletoPoliza = false;
 
                     if (contratoPoliza != null)
                     {
-                       if(contrato.EstaDevuelto != null )
-                        {                        
-                                if ((bool)contrato.EstaDevuelto==false)
+                        if (contrato.EstaDevuelto != null)
+                        {
+                            if ((bool)contrato.EstaDevuelto == false)
+                            {
+                                if (contratoPoliza.RegistroCompleto != null)
                                 {
-                                    if (contratoPoliza.RegistroCompleto != null) {
-                                        strRegistroCompletoPolizaNombre = (bool)contratoPoliza.RegistroCompleto ? "Completo" : "Incompleto";
-                                        bRegistroCompletoPoliza = (bool)contratoPoliza.RegistroCompleto;
-                                     }
-                                    else
-                                    {
-                                        strRegistroCompletoPolizaNombre = "Incompleto";
-                                        bRegistroCompletoPoliza = false;
-                                    }
+                                    strRegistroCompletoPolizaNombre = (bool)contratoPoliza.RegistroCompleto ? "Completo" : "Incompleto";
+                                    bRegistroCompletoPoliza = (bool)contratoPoliza.RegistroCompleto;
                                 }
+                                else
+                                {
+                                    strRegistroCompletoPolizaNombre = "Incompleto";
+                                    bRegistroCompletoPoliza = false;
+                                }
+                            }
                         }
-                       else /*if (contrato.EstaDevuelto == null)*/
+                        else /*if (contrato.EstaDevuelto == null)*/
                         {
                             if (contratoPoliza.RegistroCompleto != null)
                             {
@@ -2117,25 +2114,25 @@ namespace asivamosffie.services
                             }
                             else
                             {
-                                strRegistroCompletoPolizaNombre =  "Incompleto";
+                                strRegistroCompletoPolizaNombre = "Incompleto";
                                 bRegistroCompletoPoliza = false;
 
                             }
                         }
-                        
-                          
-                           ContratoPolizaIdValor = contratoPoliza.ContratoPolizaId;
+
+
+                        ContratoPolizaIdValor = contratoPoliza.ContratoPolizaId;
                         if (contratoPoliza.TipoSolicitudCodigo != null)
                         {
                             //TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Modificacion_Contrato_Poliza);
                             TipoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo.Trim(), (int)EnumeratorTipoDominio.Tipo_Solicitud);
-                        
-                        if (TipoSolicitudCodigoContratoPoliza != null)
+
+                            if (TipoSolicitudCodigoContratoPoliza != null)
                             {
                                 strTipoSolicitudCodigoContratoPoliza = TipoSolicitudCodigoContratoPoliza.Codigo;
-                                strTipoSolicitudNombreContratoPoliza= TipoSolicitudCodigoContratoPoliza.Nombre;
-                            }                            
-                    }                    
+                                strTipoSolicitudNombreContratoPoliza = TipoSolicitudCodigoContratoPoliza.Nombre;
+                            }
+                        }
 
                         EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.EstadoPolizaCodigo.Trim(), (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                         if (EstadoSolicitudCodigoContratoPoliza != null)
@@ -2143,17 +2140,17 @@ namespace asivamosffie.services
                             strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Codigo;
                             strEstadoSolicitudNombreContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
 
-                        }                            
+                        }
 
                     }
-                    bool bRegistroCompleto=false;
-                    string strRegistroCompleto= "Incompleto";
+                    bool bRegistroCompleto = false;
+                    string strRegistroCompleto = "Incompleto";
 
                     if (contrato.RegistroCompleto != null)
                     {
                         strRegistroCompleto = (bool)contrato.RegistroCompleto ? "Completo" : "Incompleto";
 
-                    }                         
+                    }
 
                     //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     GrillaContratoGarantiaPoliza contratoGrilla = new GrillaContratoGarantiaPoliza
@@ -2167,7 +2164,7 @@ namespace asivamosffie.services
                         NumeroContrato = contrato.NumeroContrato,
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
                         //EstadoRegistro { get; set; }
-                        NumeroSolicitudContratacion=strNumeroSolicitudContratacion,
+                        NumeroSolicitudContratacion = strNumeroSolicitudContratacion,
                         //Departamento = departamento.Descripcion,
                         //Municipio = municipio.Descripcion,
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
@@ -2176,19 +2173,19 @@ namespace asivamosffie.services
                         TipoSolicitud = ConstanStringTipoSolicitudContratacion.contratacion,
                         TipoSolicitudCodigo = strTipoSolicitudCodigoContratoPoliza,
 
-                        TipoSolicitudCodigoContratacion=strTipoSolicitudCodigoContratacion,
+                        TipoSolicitudCodigoContratacion = strTipoSolicitudCodigoContratacion,
 
 
-                        TipoSolicitudContratacion=strTipoSolicitudContratacion,
+                        TipoSolicitudContratacion = strTipoSolicitudContratacion,
 
                         EstadoPoliza = strEstadoSolicitudNombreContratoPoliza
                         ,
-                        EstadoPolizaCodigo= strEstadoSolicitudCodigoContratoPoliza,
+                        EstadoPolizaCodigo = strEstadoSolicitudCodigoContratoPoliza,
                         RegistroCompleto = contrato.RegistroCompleto,
                         RegistroCompletoNombre = strRegistroCompleto,
 
                         RegistroCompletoPoliza = bRegistroCompletoPoliza,
-                        RegistroCompletoPolizaNombre = strRegistroCompletoPolizaNombre,                        
+                        RegistroCompletoPolizaNombre = strRegistroCompletoPolizaNombre,
 
                         //Fecha = contrato.FechaCreacion != null ? Convert.ToDateTime(contrato.FechaCreacion).ToString("yyyy-MM-dd") : proyecto.FechaCreacion.ToString(),
                         //,EstadoRegistro = "COMPLETO"
@@ -2206,7 +2203,7 @@ namespace asivamosffie.services
                     {
 
                         ContratoId = contrato.ContratoId,
-                        ContratoPolizaId= 0,
+                        ContratoPolizaId = 0,
                         FechaFirma = e.ToString(),
                         NumeroContrato = e.InnerException.ToString(),
                         //TipoSolicitud= contratoPoliza.TipoSolicitudCodigo
@@ -2217,20 +2214,19 @@ namespace asivamosffie.services
                         //InstitucionEducativa = _context.InstitucionEducativaSede.Find(contrato.InstitucionEducativaId).Nombre,
                         //Sede = _context.InstitucionEducativaSede.Find(contrato.SedeId).Nombre,
                         TipoSolicitud = "ERROR",
-                        FechaCreacionContrato=DateTime.Now,
+                        FechaCreacionContrato = DateTime.Now,
                         RegistroCompleto = false,
-                        RegistroCompletoNombre="ERROR",
+                        RegistroCompletoNombre = "ERROR",
 
                     };
                     ListContratoGrilla.Add(proyectoGrilla);
                 }
             }
-            return ListContratoGrilla.OrderByDescending(r => r.FechaFirma).ToList(); 
+            return ListContratoGrilla.OrderByDescending(r => r.FechaFirma).ToList();
 
         }
 
-
-        public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId=0)
+        public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId = 0)
         {
             List<VistaContratoGarantiaPoliza> ListContratoGrilla = new List<VistaContratoGarantiaPoliza>();
             //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
@@ -2248,17 +2244,17 @@ namespace asivamosffie.services
 
             if (pContratoId == 0)
             {
-                ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado==false).Distinct()
+                ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado == false).Distinct()
             .ToListAsync();
 
             }
             else
             {
-                ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado==false && r.ContratoId == pContratoId).Distinct()
+                ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado == false && r.ContratoId == pContratoId).Distinct()
           .ToListAsync();
 
-            }     
-                     
+            }
+
 
             //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado)               
 
@@ -2272,10 +2268,10 @@ namespace asivamosffie.services
             {
                 try
                 {
-                    ContratoPoliza contratoPoliza=null;
+                    ContratoPoliza contratoPoliza = null;
                     contratoPoliza = await _commonService.GetLastContratoPolizaByContratoId(contrato.ContratoId);
 
-                    Dominio TipoSolicitudCodigoContratoPoliza=null;
+                    Dominio TipoSolicitudCodigoContratoPoliza = null;
                     string strTipoSolicitudCodigoContratoPoliza = "Sin radicación de pólizas";
                     string strFechaFirmaContrato = string.Empty;
                     int contratacionIdValor = 0;
@@ -2292,7 +2288,7 @@ namespace asivamosffie.services
                     }
                     strFechaFirmaContrato = contrato.FechaFirmaContrato != null ? Convert.ToDateTime(contrato.FechaFirmaContrato).ToString("dd/MM/yyyy") : contrato.FechaFirmaContrato.ToString();
 
-                   //ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
+                    //ContratoPoliza contratoPoliza = await _commonService.GetContratoPolizaByContratoId(contrato.ContratoId);
                     Contratacion contratacion = null;
                     contratacion = await _commonService.GetContratacionByContratacionId(contrato.ContratacionId);
 
@@ -2302,15 +2298,15 @@ namespace asivamosffie.services
                     Dominio TipoDocumentoCodigoContratista;
                     string strTipoDocumentoContratista = string.Empty;
 
-                    Dominio TipoContratoCodigoContrato=null;
+                    Dominio TipoContratoCodigoContrato = null;
 
-                    Contratista contratista=null;
+                    Contratista contratista = null;
                     decimal vlrContratoComponenteUso = 0;
 
                     if (contratacion != null)
                     {
-                        if(contratacion.ContratistaId!=null)
-                        contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
+                        if (contratacion.ContratistaId != null)
+                            contratista = await _commonService.GetContratistaByContratistaId((Int32)contratacion.ContratistaId);
 
                         if (contratista != null)
                         {
@@ -2322,16 +2318,16 @@ namespace asivamosffie.services
                             //TipoDocumentoCodigoContratista = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratista.TipoIdentificacionCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud);
 
                             if (TipoDocumentoCodigoContratista != null)
-                                strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;                            
+                                strTipoDocumentoContratista = TipoDocumentoCodigoContratista.Nombre;
                         }
                         //jflorez -20201124 ajusto tipo dominio
                         //TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Solicitud);
                         TipoContratoCodigoContrato = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratacion.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Opcion_por_contratar);
-                        
+
                         contratacionIdValor = contratacion.ContratacionId;
 
-                        vlrContratoComponenteUso =  getSumVlrContratoComponente(contratacion.ContratacionId);
-                        
+                        vlrContratoComponenteUso = getSumVlrContratoComponente(contratacion.ContratacionId);
+
                     }
 
                     DisponibilidadPresupuestal disponibilidadPresupuestal = null;
@@ -2341,7 +2337,7 @@ namespace asivamosffie.services
                         disponibilidadPresupuestal = _context.DisponibilidadPresupuestal.Where(r => r.ContratacionId == contratacion.ContratacionId).FirstOrDefault();
                     }
                     string contratoObjeto = "";
-                   
+
                     //contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
 
                     //TipoContrato = contrato.TipoContratoCodigo   ??? Obra  ????
@@ -2379,7 +2375,7 @@ namespace asivamosffie.services
                         //else
                         //    plazoMeses = Convert.ToInt32(contrato.PlazoFase2ConstruccionMeses);
 
-                         PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
+                        PlazoContratoFormat = plazoMeses.ToString("00") + " meses / " + plazoDias.ToString("00") + " dias ";
 
                     }
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
@@ -2402,14 +2398,14 @@ namespace asivamosffie.services
                         NumeroContrato = contrato.NumeroContrato,
                         ObjetoContrato = contratoObjeto,
                         NombreContratista = strContratistaNombre,
-                        TipoDocumento= strTipoDocumentoContratista,
+                        TipoDocumento = strTipoDocumentoContratista,
 
                         //Nit  
                         NumeroIdentificacion = strContratistaNumeroIdentificacion,
 
                         //ValorContrato = contrato.Valor.ToString(),
                         ValorContrato = vlrContratoComponenteUso,
-                        
+
 
                         PlazoContrato = PlazoContratoFormat,
 
@@ -2461,8 +2457,8 @@ namespace asivamosffie.services
                         //TipoSolicitud = contratoPoliza.EstadoPolizaCodigo
 
                         DescripcionModificacion = "ERROR",
-                        TipoModificacion = "ERROR", 
-                        TipoDocumento="ERROR"
+                        TipoModificacion = "ERROR",
+                        TipoDocumento = "ERROR"
 
                     };
                     ListContratoGrilla.Add(proyectoGrilla);
@@ -2474,7 +2470,7 @@ namespace asivamosffie.services
 
         //private async Task<decimal> getSumVlrContratoComponente(int contratacionId)
         /*jflorez, ajusto la suma*/
-        private  decimal getSumVlrContratoComponente(int contratacionId)
+        private decimal getSumVlrContratoComponente(int contratacionId)
         {
             /* ContratacionProyecto contratacionProyecto = null;
              contratacionProyecto = _context.ContratacionProyecto.Where(r => r.ContratacionId == contratacionId).FirstOrDefault();
@@ -2496,7 +2492,7 @@ namespace asivamosffie.services
              return SumVlrContratoComponente;
              */
 
-            var sum = _context.ComponenteUso.Where(x=>x.ComponenteAportante.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId== contratacionId).Sum(x=>x.ValorUso);
+            var sum = _context.ComponenteUso.Where(x => x.ComponenteAportante.ContratacionProyectoAportante.ContratacionProyecto.ContratacionId == contratacionId).Sum(x => x.ValorUso);
             return sum;
 
         }

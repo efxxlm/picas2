@@ -290,12 +290,26 @@ namespace asivamosffie.api.Controllers
         }
          
         [HttpGet]
-        [Route("GetListGrillaContratoGarantiaPoliza")]
+        [Route("GetListGrillaContratoGarantiaPolizaOld")]
         public async Task<ActionResult<List<GrillaContratoGarantiaPoliza>>> GetListGrillaContratoGarantiaPoliza()
         {
             try
             {
                 return await _guaranteePolicy.ListGrillaContratoGarantiaPoliza();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListGrillaContratoGarantiaPoliza")]
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz()
+        {
+            try
+            {
+                return await _guaranteePolicy.ListGrillaContratoGarantiaPolizaOptz();
             }
             catch (Exception ex)
             {
