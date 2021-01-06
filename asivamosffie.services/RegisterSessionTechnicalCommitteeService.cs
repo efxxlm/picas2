@@ -958,7 +958,8 @@ namespace asivamosffie.services
                 List<ControversiaContractual> ListControversiasContractuales = _context.ControversiaContractual
                     .Where(r => !(bool)r.Eliminado
                     && r.EsRequiereComite == true
-                    && r.EstadoCodigo == ConstanCodigoEstadoControversiasContractuales.EnviadaAComite
+                    && r.EstadoCodigo == ConstanCodigoEstadoControversiasContractuales.EnviadaComiteTecnico
+                    && r.TipoControversiaCodigo == "1" // TAI
                     && r.FechaSolicitud < pFechaOrdenDelDia
                     )
                     .OrderByDescending(r => r.ControversiaContractualId).ToList();
@@ -2279,10 +2280,10 @@ namespace asivamosffie.services
                         {
                             controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.RechazadaPorComiteTecnico;
                         }
-                        if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
-                        {
-                            controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteTecnico;
-                        }
+                        // if (sesionComiteSolicitudOld.EstadoCodigo == ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico)
+                        // {
+                        //     controversiaContractual.EstadoCodigo = ConstanCodigoEstadoControversiasContractuales.DevueltaPorComiteTecnico;
+                        // }
 
                     }
 
