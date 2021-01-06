@@ -15,7 +15,7 @@
         <mat-card class="shipping-card mainGris">
             <mat-card-content>
                 <p><b>Estado de avance del trámite:</b> {{this.estadoAvanceTramite}}</p>
-                <p><b>Fecha de la actuación adelantada:</b> {{this.fechaActuacionAdelantada}}</p>
+                <p><b>Fecha de la actuación adelantada:</b> {{this.fechaActuacionAdelantada | date:'dd/MM/yyyy'}}</p>
                 <p><b>Actuación adelantada:</b> {{this.actuacionAdelantada}}</p>
                 <p><b>Próxima actuación requerida:</b>{{this.actuacionRequerida}}</p>
                 <p *ngIf="this.actuacionRequerida=='Otra'"><b>Cual:</b></p>
@@ -23,7 +23,7 @@
                     <div [innerHtml]="this.detalleOtra"></div>
                 </div>
                 <p><b>Días de vencimiento de términos para la próxima actuación requerida:</b> {{this.diasVencimiento}}</p>
-                <p><b>Fecha de vencimiento de términos para la próxima actuación requerida:</b> {{this.fechaVencimiento}}</p>
+                <p><b>Fecha de vencimiento de términos para la próxima actuación requerida:</b> {{this.fechaVencimiento | date:'dd/MM/yyyy'}}</p>
                 <p><b>¿Está actuación requiere la participación o insumo del contratista?:</b> {{this.requiereContratista}}</p>
                 <p><b>¿Está actuación requiere la participación o insumo del interventor del contrato?:</b> {{this.requiereInterventor}}</p>
                 <p><b>¿Está actuación requiere la participación o insumo del supervisor del contrato?:</b> {{this.requiereSupervisor}}</p>

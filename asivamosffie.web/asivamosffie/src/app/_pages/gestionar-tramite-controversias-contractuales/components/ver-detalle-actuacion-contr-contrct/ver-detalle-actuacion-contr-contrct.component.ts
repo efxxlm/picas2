@@ -50,40 +50,49 @@ export class VerDetalleActuacionContrContrctComponent implements OnInit {
       this.actuacionNum = data.numeroActuacionFormat;
       switch(data.estadoAvanceTramiteCodigo){
         case '1':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Proyección de Comunicación de Inicio de TAI";
         break;
         case '2':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Aprobación de Comunicación de Inicio de TAI por el Director Jurídico";
         break;
         case '3':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Remisión de Comunicación de Inicio de TAI a Alianza Fiduciaria";
         break;
         case '4':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Remisión de Comunicación de Inicio de TAI por Alianza Fiduciaria al contratista";
         break;
         case '5':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite =  "Recepción de descargos por Alianza Fiduciaria";
         break;
         case '6':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Traslado para pronunciamiento de la interventoría o supervisión del contrato";
         break;
         case '7':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Remisión de pronunciamiento de interventoría frente a descargos a la UG PAFFIE";
         break;
         case '8':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Proyección de documento de decisión TAI";
         break;
         case '9':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Aprobación de documento de decisión TAI por el Director Jurídico";
         break;
         case '10':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Presentación de decisión TAI ante el Comité Técnico";
         break;
         case '11':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Presentación de decisión TAI ante el Comité Fiduciario";
         break;
         case '12':
-          this.estadoAvanceTramite = 'Terminación anticipada por incumplimiento (TAI)';
+          this.estadoAvanceTramite = "Remisión de decisión de TAI a Alianza Fiduciaria";
+        break;
+        case '13':
+          this.estadoAvanceTramite = "Remisión de Comunicación de decisión de TAI por Alianza Fiduciaria al contratista ";
+        break;
+        case '14':
+          this.estadoAvanceTramite = "Remisión de Comunicación de decisión de TAI por Alianza Fiduciaria a la  Aseguradora";
+        break;
+        case '15':
+          this.estadoAvanceTramite = " Envío de decisiones Comunicadas a la UG-PA FFIE ";
         break;
       }
       this.fechaActuacionAdelantada= data.fechaActuacion;

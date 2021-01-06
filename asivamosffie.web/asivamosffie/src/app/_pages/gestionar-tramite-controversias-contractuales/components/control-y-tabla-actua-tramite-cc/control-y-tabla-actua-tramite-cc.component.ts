@@ -51,7 +51,9 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarTramite',id]);
   }
   eliminarActuacion(id){
-
+    this.services.EliminarControversiaActuacion(id).subscribe((data:any)=>{
+      this.ngOnInit();
+    });
   }
   verDetalleActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionTramite',id]);
