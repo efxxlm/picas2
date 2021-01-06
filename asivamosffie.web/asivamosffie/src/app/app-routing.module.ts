@@ -213,6 +213,11 @@ const routes: Routes = [
         path: 'registratAjusteProgramacion',
         loadChildren: () => import('./_pages/registrar-ajuste-programacion/registrar-ajuste-programacion.module')
         .then(m => m.RegistrarAjusteProgramacionModule)
+      },
+      {
+        path: 'validarAjusteProgramacion',
+        loadChildren: () => import('./_pages/validar-ajuste-programacion/validar-ajuste-programacion.module')
+        .then(m => m.ValidarAjusteProgramacionModule)
       }
     ]
 
