@@ -12,6 +12,7 @@ namespace asivamosffie.model.Models
             SeguimientoSemanalAvanceFinanciero = new HashSet<SeguimientoSemanalAvanceFinanciero>();
             SeguimientoSemanalAvanceFisico = new HashSet<SeguimientoSemanalAvanceFisico>();
             SeguimientoSemanalGestionObra = new HashSet<SeguimientoSemanalGestionObra>();
+            SeguimientoSemanalObservacion = new HashSet<SeguimientoSemanalObservacion>();
             SeguimientoSemanalPersonalObra = new HashSet<SeguimientoSemanalPersonalObra>();
             SeguimientoSemanalRegistrarComiteObra = new HashSet<SeguimientoSemanalRegistrarComiteObra>();
             SeguimientoSemanalRegistroFotografico = new HashSet<SeguimientoSemanalRegistroFotografico>();
@@ -30,13 +31,13 @@ namespace asivamosffie.model.Models
         public DateTime? FechaFin { get; set; }
         public bool? RegistroCompleto { get; set; }
         public string EstadoSeguimientoSemanalCodigo { get; set; }
-        public string EstadoMuestrasCodigo { get; set; }
         public bool? RegistroCompletoMuestras { get; set; }
         public DateTime? FechaEnvioSupervisor { get; set; }
         public bool? TieneObservacionApoyo { get; set; }
         public bool? RegistroCompletoVerificar { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
         public bool? RegistroCompletoAvalar { get; set; }
+        public string EstadoMuestrasCodigo { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }
@@ -44,6 +45,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<SeguimientoSemanalAvanceFinanciero> SeguimientoSemanalAvanceFinanciero { get; set; }
         public virtual ICollection<SeguimientoSemanalAvanceFisico> SeguimientoSemanalAvanceFisico { get; set; }
         public virtual ICollection<SeguimientoSemanalGestionObra> SeguimientoSemanalGestionObra { get; set; }
+        public virtual ICollection<SeguimientoSemanalObservacion> SeguimientoSemanalObservacion { get; set; }
         public virtual ICollection<SeguimientoSemanalPersonalObra> SeguimientoSemanalPersonalObra { get; set; }
         public virtual ICollection<SeguimientoSemanalRegistrarComiteObra> SeguimientoSemanalRegistrarComiteObra { get; set; }
         public virtual ICollection<SeguimientoSemanalRegistroFotografico> SeguimientoSemanalRegistroFotografico { get; set; }

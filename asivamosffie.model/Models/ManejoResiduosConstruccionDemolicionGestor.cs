@@ -6,7 +6,7 @@ namespace asivamosffie.model.Models
     public partial class ManejoResiduosConstruccionDemolicionGestor
     {
         public int ManejoResiduosConstruccionDemolicionGestorId { get; set; }
-        public int ManejoResiduosConstruccionDemolicionId { get; set; }
+        public int? ManejoResiduosConstruccionDemolicionId { get; set; }
         public string NombreGestorResiduos { get; set; }
         public bool? TienePermisoAmbiental { get; set; }
         public string Url { get; set; }
