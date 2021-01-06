@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Form, FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -18,7 +18,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormContratosAsociadosDjComponent implements OnInit {
   displayedColumns: string[] = ['nombreContratista', 'institucionEducativa', 'codigoDane', 'sede', 'sedeCodigo', 'contratacionProyectoId'];
-  dataSource = new MatTableDataSource();
+  dataSource = new MatTableDataSource([]);
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -28,7 +28,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
 
   dataTable: any[] = [
   ];
-  myControl = new FormControl();
+  myControl= new FormArray([]);
   filteredName: Observable<string[]>;
   formContratista: FormGroup;
   editorStyle = {
@@ -63,6 +63,29 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       if(Object.keys(this.defensaJudicial).length>0)
       {
         this.formContratista.get( 'numeroContratos' ).setValue(this.defensaJudicial.cantContratos);
+        let i=0;
+        this.defensaJudicial.defensaJudicialContratacionProyecto.forEach(element => {
+          this.myControl.controls[i].setValue(element.numeroContrato);
+          console.log(this.myControl.controls[i]);
+
+          let contrato=this.contratos.filter(x=>x.numeroContrato==element.numeroContrato);
+          this.perfiles.value.contrato = contrato[0].contratoId;
+          console.log(this.perfiles.value.contrato);
+        this.defensaService.GetListProyectsByContract(contrato[0].contratoId).subscribe(response=>{
+          this.listProyectosSeleccion=response;
+          this.dataTable=response;      
+          this.dataTable.forEach(element2 => {
+            if(element2.proyectoId==element.contratacionProyecto.proyectoId)
+            element2.checked=true;
+          });
+          this.dataSource[i] = new MatTableDataSource(this.dataTable);
+          this.dataSource[i].paginator = this.paginator;
+          this.dataSource[i].sort = this.sort;
+          console.log(this.dataSource);
+        });
+        
+          i++;
+        });
       }  
     //});
   }
@@ -84,13 +107,17 @@ export class FormContratosAsociadosDjComponent implements OnInit {
               }
             ) 
           )
+          let control=new FormControl();
+          
+          this.filteredName = control.valueChanges.pipe(
+            startWith(''),
+            map(values => this._filter(values))
+          );
+          this.myControl.push(control);
         }
       } );
 
-      this.filteredName = this.myControl.valueChanges.pipe(
-        startWith(''),
-        map(value => this._filter(value))
-      );
+      
   };
 
 	  get perfiles () {
@@ -134,15 +161,16 @@ export class FormContratosAsociadosDjComponent implements OnInit {
     
   }
 
-  seleccionAutocomplete(id:any){
+  seleccionAutocomplete(id:any,i:number){
     this.perfiles.value.contrato = id;
     let contrato=this.contratos.filter(x=>x.numeroContrato==id);
     this.defensaService.GetListProyectsByContract(contrato[0].contratoId).subscribe(response=>{
       this.listProyectosSeleccion=response;
-      this.dataTable=response;
-      this.dataSource = new MatTableDataSource(this.dataTable);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataTable=response;      
+      this.dataSource[i] = new MatTableDataSource(this.dataTable);
+      this.dataSource[i].paginator = this.paginator;
+      this.dataSource[i].sort = this.sort;
+      console.log(this.dataSource);
     });
     
     
