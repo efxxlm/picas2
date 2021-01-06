@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
@@ -18,7 +19,8 @@ export class AvanceFinancieroComponent implements OnInit {
     @Input() avanceFinancieroObs: string;
     formAvanceFinanciero: FormGroup = this.fb.group({
       tieneObservaciones: [ null, Validators.required ],
-      observaciones: [ '' ]
+      observaciones: [ '' ],
+      fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
@@ -26,13 +28,7 @@ export class AvanceFinancieroComponent implements OnInit {
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    dataHistorial: any[] = [];
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFinancieroId: number;
     seguimientoSemanalObservacionId = 0;
@@ -53,7 +49,8 @@ export class AvanceFinancieroComponent implements OnInit {
         private fb: FormBuilder,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private dialog: MatDialog,
-        private routes: Router )
+        private routes: Router,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService )
     { }
 
     ngOnInit(): void {
@@ -64,12 +61,21 @@ export class AvanceFinancieroComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
                 this.avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
-                if ( this.avanceFinanciero.observacionApoyo !== undefined ) {
-                    this.formAvanceFinanciero.get( 'tieneObservaciones' ).setValue( this.avanceFinanciero.tieneObservacionApoyo );
-                    this.formAvanceFinanciero.get( 'observaciones' ).setValue( this.avanceFinanciero.observacionApoyo.observacion );
+                if ( this.avanceFinanciero.observacionApoyoId !== undefined ) {
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFinancieroId, this.avanceFinancieroObs )
+                        .subscribe(
+                            response => {
+                                const obsFinanciero = response.filter( obs => obs.archivada === false );
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                this.seguimientoSemanalObservacionId = obsFinanciero[0].seguimientoSemanalObservacionId;
+                                this.formAvanceFinanciero.get( 'tieneObservaciones' ).setValue( this.avanceFinanciero.tieneObservacionApoyo );
+                                this.formAvanceFinanciero.get( 'observaciones' ).setValue( obsFinanciero[0].observacion );
+                                this.formAvanceFinanciero.get( 'fechaCreacion' ).setValue( obsFinanciero[0].fechaCreacion );
+                            }
+                        )
                 }
             }
-            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 

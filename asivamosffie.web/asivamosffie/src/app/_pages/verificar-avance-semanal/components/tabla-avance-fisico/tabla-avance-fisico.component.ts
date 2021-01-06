@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -20,7 +21,8 @@ export class TablaAvanceFisicoComponent implements OnInit {
     @Input() avanceFisicoObs: string;
     formAvanceFisico: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     avanceFisico: any[];
     seguimientoSemanalAvanceFisico: any;
@@ -43,13 +45,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    dataHistorial: any[] = [];
     editorStyle = {
         height: '100px'
     };
@@ -66,13 +62,13 @@ export class TablaAvanceFisicoComponent implements OnInit {
         private dialog: MatDialog,
         private datePipe: DatePipe,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
         private routes: Router,
         private fb: FormBuilder )
     { }
 
     ngOnInit(): void {
         this.getDataTable();
-        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     verifyInteger( value: number, esAvanceCapitulo: boolean ) {
@@ -95,11 +91,19 @@ export class TablaAvanceFisicoComponent implements OnInit {
             const flujoInversion = this.seguimientoDiario.flujoInversion;
             //Get Observacion Apoyo
             this.seguimientoSemanalAvanceFisico = this.seguimientoDiario.seguimientoSemanalAvanceFisico[0];
-            if ( this.seguimientoSemanalAvanceFisico.observacionApoyo !== undefined ) {
-                const observacionApoyo = this.seguimientoSemanalAvanceFisico.observacionApoyo;
-                this.seguimientoSemanalObservacionId = this.seguimientoSemanalAvanceFisico.observacionApoyo.seguimientoSemanalObservacionId;
-                this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( this.seguimientoSemanalAvanceFisico.registroCompletoObservacionApoyo );
-                this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo.observacion );
+            if ( this.seguimientoSemanalAvanceFisico.observacionApoyoId !== undefined ) {
+                this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
+                    .subscribe(
+                        response => {
+                            const observacionApoyo = response.filter( obs => obs.archivada === false );
+                            this.dataHistorial = response.filter( obs => obs.archivada === true );
+                            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                            this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( this.seguimientoSemanalAvanceFisico.registroCompletoObservacionApoyo );
+                            this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                            this.formAvanceFisico.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
+                        }
+                    );
             }
             if ( flujoInversion.length > 0 ) {
                 const avancePorCapitulo = [];

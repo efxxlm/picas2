@@ -65,10 +65,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <!--
-                    <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
-                -->
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
+                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
