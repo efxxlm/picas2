@@ -28,7 +28,7 @@ export class ControlYTablaActuacionesNoTaiComponent implements OnInit {
    }
 
    ngOnInit(): void {
-    this.services.GetListGrillaControversiaActuacion(this.controversiaID,false).subscribe(data=>{
+    this.services.GetListGrillaControversiaActuacion(this.controversiaID).subscribe(data=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;
@@ -47,7 +47,9 @@ export class ControlYTablaActuacionesNoTaiComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarActuacionNoTai',id]);
   }
   eliminarActuacion(id){
-
+    this.services.EliminarControversiaActuacion(id).subscribe((data0:any)=>{
+      this.ngOnInit();
+    });
   }
   verDetalleActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionNoTai',id]);

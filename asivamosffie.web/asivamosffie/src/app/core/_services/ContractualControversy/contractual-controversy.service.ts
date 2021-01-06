@@ -44,8 +44,8 @@ export class ContractualControversyService implements OnInit{
   GetListGrillaTipoSolicitudControversiaContractual(){
     return this.http.get<GetListGrillaTipoSolicitudControversiaContractual>(`${environment.apiUrl}/ContractualControversy/GetListGrillaTipoSolicitudControversiaContractual`);
   }
-  GetListGrillaControversiaActuacion(Id:number, esActuacionReclamacion:boolean){
-    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuacion?Id=${Id}&esActuacionReclamacion=${esActuacionReclamacion}`);
+  GetListGrillaControversiaActuacion(Id:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuacion?pControversiaContractualId=${Id}`);
   }
   GetListGrillaActuacionSeguimiento(pControversiaActuacionId: number){
     return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaActuacionSeguimiento?pControversiaActuacionId=${pControversiaActuacionId}`);
@@ -53,8 +53,9 @@ export class ContractualControversyService implements OnInit{
   GetListGrillaControversiaActuaciones(){
     return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuaciones`);
   }
-
-
+  GetListGrillaControversiaReclamacion(id:number){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaReclamacion?id=${id}`);
+  }
   GetVistaContratoContratista(pContratoId: number){
     return this.http.get<GetVistaContratoContratista>(`${environment.apiUrl}/ContractualControversy/GetVistaContratoContratista?pContratoId=${pContratoId}`);
   }
@@ -74,7 +75,7 @@ export class ContractualControversyService implements OnInit{
     return this.http.get<GetListContratos>(`${environment.apiUrl}/ContractualControversy/GetListContratos`);
   }
   EliminarControversiaActuacion(pControversiaActuacionId:number){
-    return this.http.get<EliminarControversiaActuacion>(`${environment.apiUrl}/ContractualControversy/EliminarControversiaActuacion?pControversiaActuacionId=${pControversiaActuacionId}`);
+    return this.http.post<EliminarControversiaActuacion>(`${environment.apiUrl}/ContractualControversy/EliminarControversiaActuacion?pControversiaActuacionId=${pControversiaActuacionId}`,null);
   }
   ActualizarRutaSoporteControversiaContractual(pControversiaContractualId:number, pRutaSoporte:string){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/ActualizarRutaSoporteControversiaContractual?pControversiaContractualId=${pControversiaContractualId}&pRutaSoporte=${pRutaSoporte}`, null);
@@ -91,17 +92,28 @@ export class ContractualControversyService implements OnInit{
   GetActuacionSeguimientoById(Id:number){
     return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetActuacionSeguimientoById?Id=${Id}`);
   }
-
+  CreateEditarReclamacion(prmReclamacion: any){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarReclamacion`, prmReclamacion);
+  }
+  CreateEditarMesa(prmMesa: any){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarMesa`, prmMesa);
+  }
+  FinalizarMesa(pControversiaActuacionId: any){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarMesa?pControversiaActuacionId=${pControversiaActuacionId}`, null);
+  }
+  GetMesasByControversiaActuacionId(pControversiaActuacionId: number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetMesasByControversiaActuacionId?pControversiaActuacionId=${pControversiaActuacionId}`);
+  }
   FinalizarActuacion(id: any) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacion?pControversiaActuacionId=${id}`, null);
   }
-
   EliminarActuacionDerivada(actuacionid: any) {
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/EliminacionActuacionDerivada?pControversiaActuacionId=${actuacionid}`, null);
   }
   FinalizarActuacionDerivada(actuacionid: any) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacionDerivada?pControversiaActuacionId=${actuacionid}`, null);
   }
+
 }
 
 export interface GetListGrillaTipoSolicitudControversiaContractual{

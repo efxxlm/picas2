@@ -67,48 +67,29 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   onSubmit() {
     console.log(this.addressForm.value);
     let arrayReclam;
+
     if(this.isEditable==true){
-      arrayReclam = {
-        "ControversiaContractualId":this.controversiaID,
-        "ActuacionAdelantadaCodigo": "2",
-        "ActuacionAdelantadaOtro": "2",
-         "ProximaActuacionCodigo": "2",
-        "ProximaActuacionOtro": "2",
-        "Observaciones": "" ,
-        "ResumenPropuestaFiduciaria": this.addressForm.value.resumenReclamacionFiduciaria,
-        "RutaSoporte":  this.addressForm.value.urlSoporte,
-        "EstadoAvanceTramiteCodigo": "2",
-       "FechaCreacion": "2020-3-3",
-       "UsuarioCreacion":"US CRE w",
-       "UsuarioModificacion": "US MODIF w",
-       "EsCompleto": true,
-       "EsRequiereComiteReclamacion": this.addressForm.value.requereReclamacionComiteTecnico,
-       "ControversiaActuacionId":this.controversiaAct
-      };
-      this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
+      arrayReclam = { 
+        "controversiaActuacionId":this.controversiaAct,
+        "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
+        "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
+        "esprocesoResultadoDefinitivo":true,
+        "rutaSoporte":this.addressForm.value.urlSoporte,
+        };
+      this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       });
     }
     else{
-      arrayReclam = {
-        "ControversiaContractualId":this.controversiaID,
-        "ActuacionAdelantadaCodigo": "2",
-        "ActuacionAdelantadaOtro": "2",
-         "ProximaActuacionCodigo": "2",
-        "ProximaActuacionOtro": "2",
-        "Observaciones": "Observaciones w" ,
-        "ResumenPropuestaFiduciaria": this.addressForm.value.resumenReclamacionFiduciaria ,
-        "RutaSoporte":  this.addressForm.value.urlSoporte ,
-        "EstadoAvanceTramiteCodigo": "2",
-       "FechaCreacion": "2020-3-3",
-       "UsuarioCreacion":"US CRE w",
-       "UsuarioModificacion": "US MODIF w",
-       "EsCompleto": true,
-       "EsRequiereComiteReclamacion": this.addressForm.value.requereReclamacionComiteTecnico,
-      };
-      this.services.CreateEditControversiaOtros(arrayReclam).subscribe((data:any)=>{
-        this.openDialog('', 'La información ha sido guardada exitosamente.');
+      arrayReclam = { 
+        "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
+        "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
+        "esprocesoResultadoDefinitivo":true,
+        "rutaSoporte":this.addressForm.value.urlSoporte,
+        };
+      this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       });
     }

@@ -27,7 +27,7 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
   constructor(private router: Router, private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.services.GetListGrillaActuacionSeguimiento(this.controversiaID).subscribe((data:any)=>{
+    this.services.GetListGrillaControversiaReclamacion(this.controversiaID).subscribe((data:any)=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;

@@ -9,12 +9,13 @@ import { ActivatedRoute } from '@angular/router';
 export class VerDetalleeditarActuacionNotaiComponent implements OnInit {
 
   idControversia: any;
+  idActuacion: any;
 
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
-      this.idControversia = param.id;
+      this.idActuacion = param.id;
     });
   }
 }
