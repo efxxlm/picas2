@@ -21,6 +21,10 @@ export class VerificarAvanceSemanalService {
         return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditSeguimientoSemanalObservacion`, pSeguimientoSemanalObservacion );
     }
 
+    getValidarRegistroCompletoObservaciones( pSeguimientoSemanalId: number, esSupervisor: string ) {
+        return this.http.get( `${ this.urlApi }/GetValidarRegistroCompletoObservaciones?pSeguimientoSemanalId=${ pSeguimientoSemanalId }&esSupervisor=${ esSupervisor }` );
+    }
+
     tipoObservaciones() {
         return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=123` )
             .pipe(

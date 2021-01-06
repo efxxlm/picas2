@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
@@ -16,13 +17,15 @@ export class GestionSstComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservacionSst: any;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     seguimientoSemanalObservacionId = 0;
     gestionObraSst: any;
     formGestionSst: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
@@ -30,13 +33,7 @@ export class GestionSstComponent implements OnInit {
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    dataHistorial: any[] = [];
     editorStyle = {
         height: '100px'
     };
@@ -54,6 +51,7 @@ export class GestionSstComponent implements OnInit {
         private dialog: MatDialog,
         private commonSvc: CommonService,
         private fb: FormBuilder,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private routes: Router )
     { }
@@ -91,6 +89,20 @@ export class GestionSstComponent implements OnInit {
                 {
                     this.gestionObraSst =
                         this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+                    if ( this.gestionObraSst.observacionApoyoId !== undefined ) {
+                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.gestionObraSst )
+                            .subscribe(
+                                response => {
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                    this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                    this.formGestionSst.get( 'tieneObservaciones' ).setValue( this.gestionObraSst.tieneObservacionApoyo );
+                                    this.formGestionSst.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    this.formGestionSst.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
+                                }
+                            );
+                    }
                 }
             }
         } );
@@ -118,11 +130,10 @@ export class GestionSstComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formGestionSst.value );
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '12',
+            tipoObservacionCodigo: this.gestionObraSst,
             observacionPadreId: this.seguimientoSemanalGestionObraId,
             observacion: this.formGestionSst.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionSst.get( 'tieneObservaciones' ).value,
@@ -133,13 +144,18 @@ export class GestionSstComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-                                    ]
-                                )
-                    );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

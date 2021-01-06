@@ -248,13 +248,18 @@ export class TablaAvanceFisicoComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
-                                    ]
-                                )
-                    );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
