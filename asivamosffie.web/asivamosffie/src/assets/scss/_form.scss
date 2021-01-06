@@ -91,11 +91,16 @@ mat-form-field {
 .mat-select-value {
   color: $mainColor;
   text-align: center;
+  padding-right: 1em;
+}
+
+.mat-select-trigger {
+  width: calc(100% + 2.5em);
 }
 
 .mat-select-arrow-wrapper {
   position: relative;
-  right: -2.7em;
+  right: 0;
   top: 0.3em;
 
   &:hover::before {
