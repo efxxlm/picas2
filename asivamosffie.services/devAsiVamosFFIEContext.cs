@@ -63,6 +63,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<DocumentoApropiacion> DocumentoApropiacion { get; set; }
         public virtual DbSet<Dominio> Dominio { get; set; }
         public virtual DbSet<EnsayoLaboratorioMuestra> EnsayoLaboratorioMuestra { get; set; }
+        public virtual DbSet<FaseComponenteUso> FaseComponenteUso { get; set; }
         public virtual DbSet<FichaEstudio> FichaEstudio { get; set; }
         public virtual DbSet<FlujoInversion> FlujoInversion { get; set; }
         public virtual DbSet<FuenteFinanciacion> FuenteFinanciacion { get; set; }
@@ -1502,7 +1503,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
 
                 entity.Property(e => e.Observaciones)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ProximaActuacionCodigo)
@@ -1514,7 +1515,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.ResumenPropuestaFiduciaria)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.RutaSoporte)
@@ -1588,7 +1589,7 @@ namespace asivamosffie.model.Models
             modelBuilder.Entity<ControversiaContractual>(entity =>
             {
                 entity.Property(e => e.ConclusionComitePreTecnico)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoCodigo)
@@ -1605,7 +1606,7 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaSolicitud).HasColumnType("datetime");
 
                 entity.Property(e => e.MotivoJustificacionRechazo)
-                    .HasMaxLength(1000)
+                    .HasMaxLength(3000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.NumeroRadicadoSac)
@@ -1623,7 +1624,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoControversiaCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -2279,6 +2279,21 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("fk_EnsayoLaboratorioMuestra_SeguimientoSemanalObservacionSupervisor");
             });
 
+            modelBuilder.Entity<FaseComponenteUso>(entity =>
+            {
+                entity.Property(e => e.ComponenteId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FaseId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsoId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<FichaEstudio>(entity =>
             {
                 entity.Property(e => e.Abogado)
@@ -2659,7 +2674,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ManejoMaterialesInsumos)
                     .WithMany(p => p.ManejoMaterialesInsumosProveedor)
                     .HasForeignKey(d => d.ManejoMaterialesInsumosId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_ManejoMaterialesInsumosProveedor_ManejoMaterialesInsumosId_1");
             });
 
@@ -2745,7 +2759,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ManejoResiduosConstruccionDemolicion)
                     .WithMany(p => p.ManejoResiduosConstruccionDemolicionGestor)
                     .HasForeignKey(d => d.ManejoResiduosConstruccionDemolicionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_ManejoResiduosConstruccionDemolicionGestor_ManejoResiduosConstruccionDemolicion_1");
             });
 
@@ -5715,10 +5728,6 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.EstadoObraCodigo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.FechaUltimoReporte)
                     .HasMaxLength(30)
                     .IsUnicode(false);
@@ -5961,6 +5970,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoObra)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 

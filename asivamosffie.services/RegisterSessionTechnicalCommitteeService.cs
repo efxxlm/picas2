@@ -1092,7 +1092,7 @@ namespace asivamosffie.services
                     ListValidacionSolicitudesContractualesGrilla.Add(new
                     {
                         Id = controversiaContractual.ControversiaContractualId,
-                        FechaSolicitud = Convert.ToDateTime(controversiaContractual.FechaSolicitud.ToString("yyyy-MM-dd")),
+                        FechaSolicitud = Convert.ToDateTime(controversiaContractual.FechaSolicitud).ToString("yyyy-MM-dd"),
                         NumeroSolicitud = controversiaContractual.NumeroSolicitud,
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.ControversiasContractuales).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.ControversiasContractuales
