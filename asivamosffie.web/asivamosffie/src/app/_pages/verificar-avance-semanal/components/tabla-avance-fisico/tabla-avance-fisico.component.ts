@@ -99,7 +99,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                             this.dataHistorial = response.filter( obs => obs.archivada === true );
                             this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                             this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
-                            this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( this.seguimientoSemanalAvanceFisico.registroCompletoObservacionApoyo );
+                            this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( this.seguimientoSemanalAvanceFisico.tieneObservacionApoyo );
                             this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                             this.formAvanceFisico.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                         }

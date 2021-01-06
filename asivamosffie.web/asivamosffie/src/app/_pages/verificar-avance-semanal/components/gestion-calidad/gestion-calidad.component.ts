@@ -1,6 +1,7 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -16,27 +17,24 @@ export class GestionCalidadComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservacionCalidad: any;
     formGestionCalidad: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
-    formEnsayo: FormGroup = this.fb.group({
-        tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
-    });
+    formEnsayo: FormGroup = this.fb.group(
+        {
+            ensayos: this.fb.array( [] )
+        }
+    );
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
         'fechaRevision',
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    dataHistorial: any[] = [];
     seRealizoPeticion = false;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
@@ -55,12 +53,16 @@ export class GestionCalidadComponent implements OnInit {
         [{ align: [] }],
       ]
     };
+    get ensayos() {
+        return this.formEnsayo.get( 'ensayos' ) as FormArray;
+    }
 
     constructor(
         private dialog: MatDialog,
         private routes: Router,
         private fb: FormBuilder,
         private commonSvc: CommonService,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     {
         this.commonSvc.listaTipoEnsayos()
@@ -83,9 +85,58 @@ export class GestionCalidadComponent implements OnInit {
                 this.gestionObraCalidad = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
                 if ( this.gestionObraCalidad.seRealizaronEnsayosLaboratorio !== undefined ) {
                     this.seguimientoSemanalGestionObraCalidadId = this.gestionObraCalidad.seguimientoSemanalGestionObraCalidadId;
+                    //GET gestion de calidad
+                    if ( this.gestionObraCalidad.observacionApoyoId !== undefined ) {
+                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraCalidadId, this.tipoObservacionCalidad.gestionCalidadCodigo )
+                            .subscribe(
+                                response => {
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                    this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                    this.formGestionCalidad.get( 'tieneObservaciones' ).setValue( this.gestionObraCalidad.tieneObservacionApoyo );
+                                    this.formGestionCalidad.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    this.formGestionCalidad.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
+                                }
+                            );
+                    }
+                }
+                // GET ensayos de laboratorio
+                if ( this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0 ) {
+                    for ( const ensayo of this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio ) {
+                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
+                            .subscribe(
+                                response => {
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    const historial = response.filter( obs => obs.archivada === true );
+                                    this.ensayos.push( this.fb.group(
+                                        {
+                                            tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo,
+                                            numeroMuestras: ensayo.numeroMuestras,
+                                            fechaTomaMuestras: ensayo.fechaTomaMuestras,
+                                            fechaEntregaResultados: ensayo.fechaEntregaResultados,
+                                            realizoControlMedicion: ensayo.realizoControlMedicion,
+                                            observacion: ensayo.observacion,
+                                            urlSoporteGestion: ensayo.urlSoporteGestion,
+                                            registroCompletoMuestras: ensayo.registroCompletoMuestras,
+                                            gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
+                                            tieneObservaciones: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
+                                            observacionEnsayo: observacionApoyo.length > 0 ? observacionApoyo[0].observacion : '',
+                                            fechaCreacion: observacionApoyo.length > 0 ? observacionApoyo[0].fechaCreacion : null,
+                                            seguimientoSemanalObservacionId: ensayo.observacionApoyoId !== undefined ? ensayo.observacionApoyoId : 0,
+                                            historial: [ historial ]
+                                        }
+                                    ) );
+                                }
+                            );
+                    }
                 }
             }
         }
+    }
+
+    getHistorialEnsayo( historial: any[] ) {
+        return new MatTableDataSource( historial );
     }
 
     getTipoEnsayo( tipoEnsayoCodigo: string ) {
@@ -124,7 +175,7 @@ export class GestionCalidadComponent implements OnInit {
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '9',
+            tipoObservacionCodigo: this.tipoObservacionCalidad.gestionCalidadCodigo,
             observacionPadreId: this.seguimientoSemanalGestionObraId,
             observacion: this.formEnsayo.get( 'observaciones' ).value,
             tieneObservacion: this.formEnsayo.get( 'tieneObservaciones' ).value,
@@ -147,14 +198,14 @@ export class GestionCalidadComponent implements OnInit {
             );
     }
 
-    guardarEnsayo( ObsEnsayoId?: number ) {
+    guardarEnsayo( ensayo?: FormGroup ) {
 		const pSeguimientoSemanalObservacion = {
-			seguimientoSemanalObservacionId: ObsEnsayoId !== undefined ? ObsEnsayoId : 0,
+			seguimientoSemanalObservacionId: ensayo.get( 'seguimientoSemanalObservacionId' ).value,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '10',
-            observacionPadreId: this.seguimientoSemanalGestionObraCalidadId,
-            observacion: this.formEnsayo.get( 'observaciones' ).value,
-            tieneObservacion: this.formEnsayo.get( 'tieneObservaciones' ).value,
+            tipoObservacionCodigo: this.tipoObservacionCalidad.ensayosLaboratorio,
+            observacionPadreId: ensayo.get( 'gestionObraCalidadEnsayoLaboratorioId' ).value,
+            observacion: ensayo.get( 'observacionEnsayo' ).value,
+            tieneObservacion: ensayo.get( 'tieneObservaciones' ).value,
             esSupervisor: false
         }
         console.log( pSeguimientoSemanalObservacion );
