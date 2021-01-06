@@ -1481,14 +1481,14 @@ namespace asivamosffie.services
                         controversiaContractual.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
 
                         controversiaContractual.EsCompleto = ValidarRegistroCompletoControversiaContractual(controversiaContractual);
-                                                
-                        contrato = await _context.Contrato.FindAsync(controversiaContractual.ContratoId);
+                        controversiaContractual.EstadoCodigo = "1";                                                
+                        contrato = _context.Contrato.Where(x=>x.ContratoId==controversiaContractual.ContratoId).Include(x=>x.Contratacion).FirstOrDefault();
 
                         if (contrato != null)
                         {
-                            if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
+                            if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Obra)
                                 prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
-                            else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
+                            else if (contrato.Contratacion.TipoSolicitudCodigo == ConstanCodigoTipoContrato.Interventoria)
                                 prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
                         }
 
@@ -1496,7 +1496,8 @@ namespace asivamosffie.services
                         //controversiaContractual.Eliminado = false;
                         _context.ControversiaContractual.Add(controversiaContractual);
                         await _context.SaveChangesAsync();
-
+                        controversiaContractual.NumeroSolicitud = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
+                        await _context.SaveChangesAsync();
                         //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
 
                     }
@@ -1524,7 +1525,7 @@ namespace asivamosffie.services
                         //NumeroRadicadoSac { get; set; }
                         controversiaeditar.EsRequiereComite = controversiaContractual.EsRequiereComite;
                         controversiaeditar.RutaSoporte = controversiaContractual.RutaSoporte;
-
+                        controversiaeditar.EstadoCodigo = controversiaContractual.EstadoCodigo;
                         controversiaeditar.FechaModificacion = DateTime.Now;
                         controversiaeditar.UsuarioModificacion = controversiaContractual.UsuarioModificacion;
                         controversiaeditar.EsCompleto = ValidarRegistroCompletoControversiaContractual(controversiaeditar);
@@ -2598,11 +2599,7 @@ namespace asivamosffie.services
                                     strEstadoCodigoControversia = EstadoCodigoControversia.Codigo;
                                 }
 
-                                if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Obra)
-                                    prefijo = ConstanPrefijoNumeroSolicitudControversia.Obra;
-                                else if (contrato.TipoContratoCodigo == ConstanCodigoTipoContrato.Interventoria)
-                                    prefijo = ConstanPrefijoNumeroSolicitudControversia.Interventoria;
-
+                               
                                 //EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                                 //if (EstadoSolicitudCodigoContratoPoliza != null)
                                 //    strEstadoSolicitudCodigoContratoPoliza = EstadoSolicitudCodigoContratoPoliza.Nombre;
