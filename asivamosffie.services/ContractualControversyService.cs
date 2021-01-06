@@ -86,24 +86,39 @@ namespace asivamosffie.services
 
                     else
                     {
+                        
+                        var controversiaActuacionActualizar = _context.ControversiaActuacion.Find(controversiaActuacion.ControversiaActuacionId);
                         strCrearEditar = "EDIT CONTROVERSIA ACTUACION";
+                        //controversiaActuacionActualizar.Observaciones = Helpers.Helpers.CleanStringInput(controversiaActuacion.Observaciones);
+                        //controversiaActuacionActualizar.ResumenPropuestaFiduciaria = Helpers.Helpers.CleanStringInput(controversiaActuacion.ResumenPropuestaFiduciaria);
+                        controversiaActuacionActualizar.FechaModificacion = DateTime.Now;
+                        controversiaActuacionActualizar.FechaActuacion = controversiaActuacion.FechaActuacion;
+                        controversiaActuacionActualizar.ActuacionAdelantadaCodigo = controversiaActuacion.ActuacionAdelantadaCodigo;
+                        controversiaActuacionActualizar.ActuacionAdelantadaOtro = controversiaActuacion.ActuacionAdelantadaOtro;
+                        controversiaActuacionActualizar.ProximaActuacionCodigo = controversiaActuacion.ProximaActuacionCodigo;
+                        controversiaActuacionActualizar.ProximaActuacionOtro = controversiaActuacion.ProximaActuacionOtro;
+                        controversiaActuacionActualizar.CantDiasVencimiento = controversiaActuacion.CantDiasVencimiento;
+                        controversiaActuacionActualizar.FechaVencimiento = controversiaActuacion.FechaVencimiento;
+                        controversiaActuacionActualizar.EsRequiereContratista = controversiaActuacion.EsRequiereContratista;
+                        controversiaActuacionActualizar.EsRequiereInterventor = controversiaActuacion.EsRequiereInterventor;
+                        controversiaActuacionActualizar.EsRequiereSupervisor = controversiaActuacion.EsRequiereSupervisor;
+                        controversiaActuacionActualizar.EsRequiereJuridico = controversiaActuacion.EsRequiereJuridico;
+                        controversiaActuacionActualizar.EsRequiereFiduciaria = controversiaActuacion.EsRequiereFiduciaria;
+                        controversiaActuacionActualizar.EsRequiereComite = controversiaActuacion.EsRequiereComite;
+                        controversiaActuacionActualizar.Observaciones = controversiaActuacion.Observaciones;
+                        controversiaActuacionActualizar.EsRequiereAseguradora = controversiaActuacion.EsRequiereAseguradora;
+                        controversiaActuacionActualizar.ResumenPropuestaFiduciaria = controversiaActuacion.ResumenPropuestaFiduciaria;
+                        controversiaActuacionActualizar.EsRequiereComiteReclamacion = controversiaActuacion.EsRequiereComiteReclamacion;
+                        controversiaActuacionActualizar.EsprocesoResultadoDefinitivo = controversiaActuacion.EsprocesoResultadoDefinitivo;
+                        controversiaActuacionActualizar.RutaSoporte = controversiaActuacion.RutaSoporte;
+                        controversiaActuacionActualizar.EstadoAvanceTramiteCodigo = controversiaActuacion.EstadoAvanceTramiteCodigo;
+                        controversiaActuacionActualizar.EsRequiereMesaTrabajo = controversiaActuacion.EsRequiereMesaTrabajo;
 
-                        controversiaActuacion.Observaciones = Helpers.Helpers.CleanStringInput(controversiaActuacion.Observaciones);
-                        controversiaActuacion.ResumenPropuestaFiduciaria = Helpers.Helpers.CleanStringInput(controversiaActuacion.ResumenPropuestaFiduciaria);
 
-                        controversiaActuacion.FechaCreacion = DateTime.Now;
-                        //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                        //controversiaActuacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
 
-                        //_context.Add(contratoPoliza);
-
-                        controversiaActuacion.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaActuacion);
-                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
-
-                        //LimpiarEntradasContratoPoliza(ref contratoPoliza);
-
-                        //_context.ContratoPoliza.Add(contratoPoliza);
-                        _context.ControversiaActuacion.Update(controversiaActuacion);
+                        controversiaActuacionActualizar.EsCompleto = ValidarRegistroCompletoControversiaActuacion(controversiaActuacion);
+                        controversiaActuacionActualizar.UsuarioModificacion = controversiaActuacion.UsuarioModificacion;
+                        _context.ControversiaActuacion.Update(controversiaActuacionActualizar);
 
                     }
 
@@ -490,7 +505,7 @@ namespace asivamosffie.services
 
             if (controversiaContractual != null) {
                 strContenido = strContenido.Replace("_Numero_Solicitud_", controversiaContractual.NumeroSolicitud);
-                strContenido = strContenido.Replace("_Fecha_Solicitud_", controversiaContractual.FechaSolicitud.ToString("dd/MM/yyyy")); }
+                strContenido = strContenido.Replace("_Fecha_Solicitud_", controversiaContractual.FechaSolicitud==null?"": Convert.ToDateTime(controversiaContractual.FechaSolicitud).ToString("dd/MM/yyyy")); }
 
             strContenido = strContenido.Replace("_Tipo_Controversia_", strTipoControversia);
 
@@ -1479,7 +1494,7 @@ namespace asivamosffie.services
                         //controversiaActuacion.UsuarioCreacion = compromisoSeguimiento.UsuarioCreacion;
                         controversiaContractual.MotivoJustificacionRechazo = Helpers.Helpers.CleanStringInput(controversiaContractual.MotivoJustificacionRechazo);
                         controversiaContractual.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
-
+                        controversiaContractual.Eliminado = false;
                         controversiaContractual.EsCompleto = ValidarRegistroCompletoControversiaContractual(controversiaContractual);
                         controversiaContractual.EstadoCodigo = "1";                                                
                         contrato = _context.Contrato.Where(x=>x.ContratoId==controversiaContractual.ContratoId).Include(x=>x.Contratacion).FirstOrDefault();
@@ -2446,7 +2461,7 @@ namespace asivamosffie.services
 
                     }
 
-                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estado_controversia_contractual_TAI);
+                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Reclamacion);
                     if (EstadoAvanceCodigo != null)
                     {
                         strEstadoAvanceTramite = EstadoAvanceCodigo.Nombre;
@@ -2481,7 +2496,7 @@ namespace asivamosffie.services
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
                         ControversiaContractualId = controversia.ControversiaContractualId,
-                        FechaActualizacion = controversia.FechaModificacion != null ? Convert.ToDateTime(controversia.FechaModificacion).ToString("dd/MM/yyyy") : controversia.FechaModificacion.ToString(),
+                        FechaActualizacion = controversia.FechaActuacion != null ? Convert.ToDateTime(controversia.FechaActuacion).ToString("dd/MM/yyyy") : "",// controversia.FechaModificacion.ToString("dd/MM/yyyy"),
                         DescripcionActuacion = "Actuación " + controversia.ControversiaActuacionId.ToString(),
                         //DescripcionActuacion = "ACT" + controversia.ControversiaActuacionId.ToString(),
                         ActuacionId = controversia.ControversiaActuacionId,
