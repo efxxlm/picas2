@@ -139,21 +139,27 @@ export class FormDetalleProcesoDjComponent implements OnInit {
   }
 
   onSubmit() {
-    let defensaJudicial:DefensaJudicial={
-      defensaJudicialId:this.defensaJudicial.defensaJudicialId,
+    let defensaJudicial=this.defensaJudicial;
+    if(!this.defensaJudicial.defensaJudicialId||this.defensaJudicial.defensaJudicialId==0)
+    {
+      defensaJudicial={
+        defensaJudicialId:this.defensaJudicial.defensaJudicialId,
+        //legitimacionCodigo:this.legitimacion,
+        tipoProcesoCodigo:this.tipoProceso,
+        //cantContratos:this.formContratista.get( 'numeroContratos' ).value,
+        esLegitimacionActiva:this.legitimacion,
+        
+      };
+    }
+    
+    
+    defensaJudicial.localizacionIdMunicipio=this.addressForm.get("municipioInicio").value;
+    defensaJudicial.tipoAccionCodigo=this.addressForm.get("tipoAccion").value;
+    defensaJudicial.jurisdiccionCodigo=this.addressForm.get("jurisdiccion").value;
+    defensaJudicial.pretensiones=this.addressForm.get("pretensiones").value;
+    defensaJudicial.cuantiaPerjuicios=this.addressForm.get("cuantiaPerjuicios").value;
+    defensaJudicial.esRequiereSupervisor=this.addressForm.get("requeridoParticipacionSupervisor").value;
       
-      tipoProcesoCodigo:this.tipoProceso,
-      numeroProceso:'',
-      solicitudId:0,
-      esLegitimacionActiva:this.legitimacion,
-      localizacionIdMunicipio:this.addressForm.get("municipioInicio").value,
-      tipoAccionCodigo:this.addressForm.get("tipoAccion").value,
-      jurisdiccionCodigo:this.addressForm.get("jurisdiccion").value,
-      pretensiones:this.addressForm.get("pretensiones").value,
-      cuantiaPerjuicios:this.addressForm.get("cuantiaPerjuicios").value,
-      esRequiereSupervisor:this.addressForm.get("requeridoParticipacionSupervisor").value,
-      
-    };
       console.log(defensaJudicial);
       this.defensaService.CreateOrEditDefensaJudicial(defensaJudicial).subscribe(
         response=>{

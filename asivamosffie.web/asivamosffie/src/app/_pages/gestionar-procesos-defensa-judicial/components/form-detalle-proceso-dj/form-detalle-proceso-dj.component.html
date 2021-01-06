@@ -9,9 +9,9 @@
                                 proceso</label>
                         </div>
                         <div class="col">
-                            <mat-form-field class="select-width">
+                            <mat-form-field class="select-width capitalize">
                                 <mat-select formControlName="departamentoInicio" (selectionChange)="getMunicipio($event)" required>
-                                    <mat-option *ngFor="let contr of departamentoArray" [value]="contr.localizacionId">
+                                    <mat-option *ngFor="let contr of departamentoArray" [value]="contr.localizacionId" class="capitalize">
                                         {{ contr.descripcion }}
                                     </mat-option>
                                 </mat-select>
@@ -27,9 +27,9 @@
                             <label class="label-left" for="municipioInicio">Municipio donde se inició el proceso</label>
                         </div>
                         <div class="col">
-                            <mat-form-field class="select-width">
+                            <mat-form-field class="select-width capitalize">
                                 <mat-select formControlName="municipioInicio" required>
-                                    <mat-option *ngFor="let contr of municipioArray" [value]="contr.localizacionId">
+                                    <mat-option *ngFor="let contr of municipioArray" [value]="contr.localizacionId" class="capitalize">
                                         {{ contr.descripcion }}
                                     </mat-option>
                                 </mat-select>

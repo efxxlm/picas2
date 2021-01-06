@@ -123,6 +123,8 @@ export interface DefensaJudicialSeguimiento{
   rutaSoporte?:string,
 }
 export interface DefensaJudicialContratacionProyecto{
+  contratacionProyecto?: any;//not mapped
+  numeroContrato?:string;//nnot mapped
   defensaJudicialContratacionProyectoId?:number,
   contratacionProyectoId?:number,
   esCompleto?:boolean
