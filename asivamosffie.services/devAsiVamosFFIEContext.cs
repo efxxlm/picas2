@@ -2746,7 +2746,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ManejoResiduosConstruccionDemolicion)
                     .WithMany(p => p.ManejoResiduosConstruccionDemolicionGestor)
                     .HasForeignKey(d => d.ManejoResiduosConstruccionDemolicionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_ManejoResiduosConstruccionDemolicionGestor_ManejoResiduosConstruccionDemolicion_1");
             });
 
