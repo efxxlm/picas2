@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
@@ -15,9 +16,11 @@ export class GestionSocialComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservacionSocial: any;
     formGestionSocial: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
@@ -25,13 +28,7 @@ export class GestionSocialComponent implements OnInit {
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    dataHistorial: any[] = [];
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
     gestionSocial: any;
@@ -53,6 +50,7 @@ export class GestionSocialComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     { }
 
@@ -68,6 +66,20 @@ export class GestionSocialComponent implements OnInit {
                 this.gestionSocial = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSocial[0];
                 if ( this.gestionSocial !== undefined ) {
                     this.seguimientoSemanalGestionObraSocialId = this.gestionSocial.seguimientoSemanalGestionObraSocialId;
+                    if ( this.gestionSocial.observacionApoyoId !== undefined ) {
+                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraSocialId, this.tipoObservacionSocial )
+                            .subscribe(
+                                response => {
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                    this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                    this.formGestionSocial.get( 'tieneObservaciones' ).setValue( this.gestionSocial.tieneObservacionApoyo );
+                                    this.formGestionSocial.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    this.formGestionSocial.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
+                                }
+                            );
+                    }
                 }
             }
             this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
@@ -99,8 +111,8 @@ export class GestionSocialComponent implements OnInit {
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '13',
-            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            tipoObservacionCodigo: this.tipoObservacionSocial,
+            observacionPadreId: this.seguimientoSemanalGestionObraSocialId,
             observacion: this.formGestionSocial.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionSocial.get( 'tieneObservaciones' ).value,
             esSupervisor: false
@@ -110,13 +122,18 @@ export class GestionSocialComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-                                    ]
-                                )
-                    );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

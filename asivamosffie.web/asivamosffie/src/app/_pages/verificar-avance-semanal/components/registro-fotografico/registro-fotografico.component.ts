@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
@@ -15,13 +16,15 @@ export class RegistroFotograficoComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoRegistroFotografico: any;
     seguimientoSemanalId: number;
     seguimientoSemanalRegistroFotograficoId: number;
     seguimientoSemanalObservacionId = 0;
     reporteFotografico: any;
     formRegistroFotografico: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
@@ -29,13 +32,7 @@ export class RegistroFotograficoComponent implements OnInit {
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    dataHistorial: any[] = [];
     editorStyle = {
         height: '100px'
     };
@@ -52,6 +49,7 @@ export class RegistroFotograficoComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     { }
 
@@ -63,8 +61,21 @@ export class RegistroFotograficoComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalRegistroFotografico.length > 0 ) {
                 this.reporteFotografico = this.seguimientoSemanal.seguimientoSemanalRegistroFotografico[0];
+                if ( this.reporteFotografico.observacionApoyoId !== undefined ) {
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.reporteFotografico.seguimientoSemanalRegistroFotograficoId, this.tipoRegistroFotografico )
+                        .subscribe(
+                            response => {
+                                const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                this.formRegistroFotografico.get( 'tieneObservaciones' ).setValue( this.reporteFotografico.tieneObservacionApoyo );
+                                this.formRegistroFotografico.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                this.formRegistroFotografico.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
+                            }
+                        );
+                }
             }
-            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -94,7 +105,7 @@ export class RegistroFotograficoComponent implements OnInit {
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '19',
+            tipoObservacionCodigo: this.tipoRegistroFotografico,
             observacionPadreId: this.seguimientoSemanalRegistroFotograficoId,
             observacion: this.formRegistroFotografico.get( 'observaciones' ).value,
             tieneObservacion: this.formRegistroFotografico.get( 'tieneObservaciones' ).value,
@@ -105,13 +116,18 @@ export class RegistroFotograficoComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-                                    ]
-                                )
-                    );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

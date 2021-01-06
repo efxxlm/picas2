@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
@@ -15,9 +16,11 @@ export class ReporteActividadesComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoReporteActividad: any;
     formResumenGeneral: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
@@ -25,13 +28,7 @@ export class ReporteActividadesComponent implements OnInit {
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    dataHistorial: any[] = [];
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
     seguimientoSemanalObservacionId = 0;
@@ -53,6 +50,7 @@ export class ReporteActividadesComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private dialog: MatDialog,
         private routes: Router )
@@ -66,8 +64,23 @@ export class ReporteActividadesComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ) {
                 this.reporteActividad = this.seguimientoSemanal.seguimientoSemanalReporteActividad[0];
+                if ( this.reporteActividad !== undefined ) {
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
+                        .subscribe(
+                            response => {
+                                if ( response.length > 0 ) {
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                    this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                    this.formResumenGeneral.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoEstadoContrato );
+                                    this.formResumenGeneral.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    this.formResumenGeneral.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
+                                }
+                            }
+                        );
+                }
             }
-            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -96,7 +109,7 @@ export class ReporteActividadesComponent implements OnInit {
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '16',
+            tipoObservacionCodigo: this.tipoReporteActividad.actividadEstadoObra,
             observacionPadreId: this.seguimientoSemanalReporteActividadId,
             observacion: this.formResumenGeneral.get( 'observaciones' ).value,
             tieneObservacion: this.formResumenGeneral.get( 'tieneObservaciones' ).value,
@@ -107,13 +120,18 @@ export class ReporteActividadesComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-                                    ]
-                                )
-                    );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -15,6 +16,7 @@ export class ComiteObraComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoComiteObra: any;
     numeroComiteObra: string;
     seguimientoSemanalId: number;
     seguimientoSemanalRegistrarComiteObraId: number;
@@ -22,7 +24,8 @@ export class ComiteObraComponent implements OnInit {
     gestionComiteObra: any;
     formComiteObra: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
@@ -30,13 +33,7 @@ export class ComiteObraComponent implements OnInit {
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    dataHistorial: any[] = [];
     editorStyle = {
         height: '100px'
     };
@@ -53,6 +50,7 @@ export class ComiteObraComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     { }
 
@@ -68,8 +66,21 @@ export class ComiteObraComponent implements OnInit {
             if ( this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra.length > 0 ) {
                 this.gestionComiteObra = this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra[0];
                 this.numeroComiteObra = this.gestionComiteObra.numeroComite;
+                if ( this.gestionComiteObra.observacionApoyoId !== undefined ) {
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalRegistrarComiteObraId, this.tipoComiteObra )
+                        .subscribe(
+                            response => {
+                                const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
+                                this.formComiteObra.get( 'tieneObservaciones' ).setValue( this.gestionComiteObra.tieneObservacionApoyo );
+                                this.formComiteObra.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                this.formComiteObra.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
+                            }
+                        );
+                }
             }
-            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -99,7 +110,7 @@ export class ComiteObraComponent implements OnInit {
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '20',
+            tipoObservacionCodigo: this.tipoComiteObra,
             observacionPadreId: this.seguimientoSemanalRegistrarComiteObraId,
             observacion: this.formComiteObra.get( 'observaciones' ).value,
             tieneObservacion: this.formComiteObra.get( 'tieneObservaciones' ).value,

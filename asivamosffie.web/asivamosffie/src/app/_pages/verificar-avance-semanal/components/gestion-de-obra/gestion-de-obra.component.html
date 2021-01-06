@@ -36,7 +36,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle"></app-gestion-social>
+        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionSocial]="tipoObservaciones.gestionSocial"></app-gestion-social>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">
@@ -46,6 +46,6 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle"></app-alertas-relevantes>
+        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionAlertas]="tipoObservaciones.alertasRelevantes"></app-alertas-relevantes>
     </mat-expansion-panel>
 </mat-accordion>
