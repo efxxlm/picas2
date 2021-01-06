@@ -8,39 +8,41 @@
     </button>
 </div>
 <div class="tabla-expansion-panel">
-    <table mat-table [dataSource]="dataSource" matSort class="tabla mat-elevation-z8 text-center">
-
-        <ng-container matColumnDef="fechaFirma">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha firma del contrato </th>
-            <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma}}</b> </td>
-        </ng-container>
-
-        <ng-container matColumnDef="numeroContrato">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
-            <td mat-cell *matCellDef="let element"> {{element.numeroContrato}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="tipoSolicitud">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de solicitud </th>
-            <td mat-cell *matCellDef="let element"> {{element.tipoSolicitud}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="estadoPoliza">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
-            <td mat-cell *matCellDef="let element"> <span class="info-text info-text__table"  [ngClass]="{'sin-diligenciar' : element.registroCompletoPolizaNombre=='Incompleto', 'completo' : element.registroCompletoPolizaNombre=='Completo'}"></span>
-                {{element.registroCompletoPolizaNombre}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="contratoId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-            <td mat-cell *matCellDef="let element">
-                <a [routerLink]="['observadaODevuelta', element.contratoId]" mat-raised-button color="accent"
-                    class="btn-table">Ver detalle/Editar </a>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="tabla mat-elevation-z8 text-center">
+    
+            <ng-container matColumnDef="fechaFirma">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha firma del contrato </th>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma}}</b> </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="numeroContrato">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato </th>
+                <td mat-cell *matCellDef="let element"> {{element.numeroContrato}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="tipoSolicitud">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de solicitud </th>
+                <td mat-cell *matCellDef="let element"> {{element.tipoSolicitud}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="estadoPoliza">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
+                <td mat-cell *matCellDef="let element"> <span class="info-text info-text__table"  [ngClass]="{'sin-diligenciar' : element.registroCompletoPolizaNombre=='Incompleto', 'completo' : element.registroCompletoPolizaNombre=='Completo'}"></span>
+                    {{element.registroCompletoPolizaNombre}} </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="contratoId">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element">
+                    <a [routerLink]="['observadaODevuelta', element.contratoId]" mat-raised-button color="accent"
+                        class="btn-table">Ver detalle/Editar </a>
+                </td>
+            </ng-container>
+    
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>
