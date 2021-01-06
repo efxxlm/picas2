@@ -15,7 +15,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
   addressForm = this.fb.group({
     fechaActuacionDerivada: [null, Validators.required],
-    descripcionActuacionAdelantada: [null, Validators.required],
+    proximaActuacionRequerida: [null, Validators.required],
     estadoActuacionDerivada: [null, Validators.required],
     observaciones: [null, Validators.required],
     urlSoporte: [null, Validators.required]
@@ -63,7 +63,7 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
             if(this.actuacion)
             {
               this.addressForm.get("fechaActuacionDerivada").setValue(this.actuacion.fechaActuacionDerivada);
-              this.addressForm.get("descripcionActuacionAdelantada").setValue(this.actuacion.descripciondeActuacionAdelantada);
+              this.addressForm.get("proximaActuacionRequerida").setValue(this.actuacion.descripciondeActuacionAdelantada);
               this.addressForm.get("urlSoporte").setValue(this.actuacion.rutaSoporte);
               this.addressForm.get("estadoActuacionDerivada").setValue(this.actuacion.estadoActuacionDerivadaCodigo);
               this.addressForm.get("observaciones").setValue(this.actuacion.observaciones);
@@ -99,13 +99,13 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
       controversiaActuacionId:this.controversia.controversiaActuacionId,
       esRequiereFiduciaria:false,
       fechaActuacionDerivada :this.addressForm.get("fechaActuacionDerivada").value,
-      descripciondeActuacionAdelantada :this.addressForm.get("descripcionActuacionAdelantada").value,
+      descripciondeActuacionAdelantada :this.addressForm.get("proximaActuacionRequerida").value,
       rutaSoporte :this.addressForm.get("urlSoporte").value,
       estadoActuacionDerivadaCodigo :this.addressForm.get("estadoActuacionDerivada").value,
       observaciones :this.addressForm.get("observaciones").value,}
     this.conServices.CreateEditarSeguimientoDerivado(obj).subscribe(
       response=>{
-        this.openDialog("",response.message,true);        
+        this.openDialog( '', `<b>${ response.message }</b>`,true);   
       }
     );
 

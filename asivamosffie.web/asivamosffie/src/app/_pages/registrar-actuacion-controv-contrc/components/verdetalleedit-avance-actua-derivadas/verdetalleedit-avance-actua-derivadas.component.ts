@@ -88,7 +88,7 @@ export class VerdetalleeditAvanceActuaDerivadasComponent implements OnInit {
       observaciones :this.addressForm.get("observaciones").value,}
     this.conServices.CreateEditarSeguimientoDerivado(obj).subscribe(
       response=>{
-        this.openDialog("",response.message,true);        
+        this.openDialog( '', `<b>${ response.message }</b>`,true);        
       }
     );
 

@@ -9,12 +9,14 @@
     </h1>
     <mat-card class="shipping-card var-main-gris">
         <mat-card-content align="left">
-            <p><strong>Fecha de solicitud: </strong>{{actuacion?.fechaCreacion}}</p>
-            <p><strong>Número del contrato: </strong>{{actuacion?.numeroContrato}}</p>
-            <p><strong>Tipo de Controversia: </strong>{{actuacion?.tipoControversia}}</p>
-            <p><strong>Fecha de la actuación adelantada: </strong>{{actuacion?.fechaActuacion}}</p>
+            <p><strong>Fecha de solicitud: </strong><em>{{actuacion?.fechaCreacion | date: 'dd/MM/yyyy'}}</em></p>
+            <p><strong>Número del contrato: </strong><em>{{actuacion?.numeroContrato}}</em></p>
+            <p><strong>Tipo de Controversia: </strong><em>{{actuacion?.tipoControversia}}</em></p>
+            <p><strong>Fecha de la actuación adelantada: </strong><em>{{actuacion?.fechaActuacion | date: 'dd/MM/yyyy'}}</em></p>
             <p><strong>Actuación adelantada: </strong></p>
-            <div [innerHtml]="actuacion?.estadoActuacionReclamacionString"></div>
+            <em>
+                <div [innerHtml]="actuacion?.estadoActuacionReclamacionString"></div>
+            </em>
         </mat-card-content>
     </mat-card>
     <div class="tabs--actions">
@@ -35,15 +37,18 @@
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
             <ng-container matColumnDef="fechaActualizacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de solicitud </th>
-                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.controversiaActuacionId }}</b> </td>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.controversiaActuacionId }}</b>
+                </td>
             </ng-container>
             <ng-container matColumnDef="actuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.descripciondeActuacionAdelantada }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.descripciondeActuacionAdelantada }}
+                </td>
             </ng-container>
             <ng-container matColumnDef="numeroActuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de actuación </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.seguimientoActuacionDerivadaId }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.seguimientoActuacionDerivadaId }}
+                </td>
             </ng-container>
             <ng-container matColumnDef="estadoRegistro">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado del registro </th>
@@ -61,7 +66,7 @@
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
-                <td mat-cell *matCellDef="let element" align="center">                    
+                <td mat-cell *matCellDef="let element" align="center">
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.esCompleto && element.estadoActuacionString!='Finalizada'"
                         (click)="this.finalizarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
@@ -73,13 +78,13 @@
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="element.estadoActuacionString!='Finalizada'"
+                        *ngIf="element.estadoActuacionString!='Finalizada'"
                         (click)="this.eliminarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Eliminar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActuacionString == 'Finalizada'"
-                        (click)="this.verDetalleEditarActuacionDerivada(element.seguimientoActuacionDerivadaId)">
+                        (click)="this.verDetalleActuacionDerivada(element.seguimientoActuacionDerivadaId)">
                         Ver detalle
                     </button>
                 </td>

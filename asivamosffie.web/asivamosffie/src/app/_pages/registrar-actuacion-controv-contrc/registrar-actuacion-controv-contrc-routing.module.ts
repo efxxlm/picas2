@@ -24,7 +24,7 @@ const routes: Routes = [
     component: VerdetalleeditAvanceActuaDerivadasComponent
   },
   {
-    path:'verDetalleActuacionDerivada/:id',
+    path:'verDetalleActuacionDerivada/:id/:editId',
     component: DetalleAvanceActuaDerivadasComponent
   },
 ];

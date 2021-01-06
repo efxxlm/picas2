@@ -106,7 +106,9 @@
       }
     }
   }
-
+  &.card.color-secondaryColor .ql-container.ql-snow{
+    border-bottom: $secondaryColor solid 1px;
+  }
   &.card-80em {
     width: 100%;
     .ql-container.ql-snow {

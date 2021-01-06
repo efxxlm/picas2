@@ -76,7 +76,7 @@ export class ActualizarTramiteRaccComponent implements OnInit {
       });
   }
   verDetalleActuacionDerivada(id){
-    this.router.navigate(['/registrarActuacionesControversiasContractuales/verDetalleActuacionDerivada',id]);
+    this.router.navigate(['/registrarActuacionesControversiasContractuales/verDetalleActuacionDerivada',this.actuacionid,id]);
   }
 
   openDialog(modalTitle: string, modalText: string,redirect?:boolean,id?:number) {
