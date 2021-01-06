@@ -18,7 +18,7 @@
         </mat-card>
 
         <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-            <mat-card class="shipping-card var-main-gris" align="left">
+            <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formActividadesRealizadas.get( 'fechaCreacion' ).value !== null">
                 <mat-card-header class="header-card">
                   <mat-card-title class="header-card--text">
                     Verificación del apoyo a la supervisión
@@ -138,7 +138,7 @@
         </mat-card>
 
         <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-            <mat-card class="shipping-card var-main-gris" align="left">
+            <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formActividadesRealizadasSiguienteSemana.get( 'fechaCreacion' ).value !== null">
                 <mat-card-header class="header-card">
                   <mat-card-title class="header-card--text">
                     Verificación del apoyo a la supervisión

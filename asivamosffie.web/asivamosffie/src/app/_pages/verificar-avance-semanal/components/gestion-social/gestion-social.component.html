@@ -31,7 +31,7 @@
 </section>
 
 <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-    <mat-card class="shipping-card var-main-gris" align="left">
+    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formGestionSocial.get( 'fechaCreacion' ).value !== null">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text">
             Verificación del apoyo a la supervisión
@@ -88,7 +88,7 @@
         </div>
         <div class="text-center mt-1em">
             <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formGestionSocial.get('tieneObservaciones').value === null">
-                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                <img src="assets/img/icon/guardar.svg">
             </button>
         </div>
     </form>

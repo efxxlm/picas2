@@ -85,7 +85,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-reporte-actividades>
+                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoReporteActividad]="tipoObservaciones.reporteActividades"></app-reporte-actividades>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -95,7 +95,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-registro-fotografico>
+                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"></app-registro-fotografico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -105,7 +105,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-comite-obra>
+                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" [tipoComiteObra]="tipoObservaciones.comiteObra"></app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
