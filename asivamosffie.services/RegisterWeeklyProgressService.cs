@@ -40,16 +40,17 @@ namespace asivamosffie.services
                     .Where(
                            r => r.SeguimientoSemanalId == pSeguimientoSemanalId
                            && r.ObservacionPadreId == pPadreId
-                           && r.TipoObservacionCodigo == pTipoCodigo)
+                           && r.TipoObservacionCodigo == pTipoCodigo
+                          )
                         .Select(r =>
                                 new {
-                                    r.SeguimientoSemanalObservacionId,
-                                    r.Observacion,
-                                    r.EsSupervisor,
-                                    r.FechaCreacion,
-                                    r.Archivada
-                                }
-                            ).ToListAsync();
+                                        r.SeguimientoSemanalObservacionId,
+                                        r.Observacion,
+                                        r.EsSupervisor,
+                                        r.FechaCreacion,
+                                        r.Archivada
+                                   }
+                               ).ToListAsync();
 
             }
             catch (Exception e)
