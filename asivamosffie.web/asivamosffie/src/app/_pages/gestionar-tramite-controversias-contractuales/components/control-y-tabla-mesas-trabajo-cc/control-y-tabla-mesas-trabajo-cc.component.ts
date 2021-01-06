@@ -46,7 +46,9 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajo',id]);
   }
   finalizarMesaTrabajo(id){
+    this.services.FinalizarMesa(id).subscribe((data:any)=>{
 
+    });
   }
   verDetalleMesaTrabajo(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajo',id]);

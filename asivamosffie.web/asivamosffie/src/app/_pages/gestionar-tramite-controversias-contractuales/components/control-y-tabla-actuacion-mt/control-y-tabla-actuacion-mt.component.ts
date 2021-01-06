@@ -24,11 +24,11 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
     'gestion',
   ];
   dataTable: any[] = [];  
-  public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
+  public idMesaTrabajo = parseInt(localStorage.getItem("idMesaTrabajo"));
   constructor(private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.services.GetListGrillaControversiaActuacion(this.reclamacionId).subscribe((data:any)=>{
+    this.services.GetListGrillaControversiaActuacion(this.idMesaTrabajo).subscribe((data:any)=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;
