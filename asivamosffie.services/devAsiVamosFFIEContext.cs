@@ -2661,7 +2661,6 @@ namespace asivamosffie.model.Models
                 entity.HasOne(d => d.ManejoMaterialesInsumos)
                     .WithMany(p => p.ManejoMaterialesInsumosProveedor)
                     .HasForeignKey(d => d.ManejoMaterialesInsumosId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_ManejoMaterialesInsumosProveedor_ManejoMaterialesInsumosId_1");
             });
 
@@ -5959,6 +5958,7 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoObra)
+                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
