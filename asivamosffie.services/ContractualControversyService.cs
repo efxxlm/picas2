@@ -1513,23 +1513,23 @@ namespace asivamosffie.services
                         }
 
                         //controversiaContractual.NumeroSolicitudFormat = prefijo + controversiaContractual.ControversiaContractualId.ToString("000");
-
+                        var controversiaeditar = _context.ControversiaContractual.Find(controversiaContractual.ControversiaContractualId);
                         strCrearEditar = "EDITAR CONTROVERSIA CONTRACTUAL";
-                        controversiaContractual.MotivoJustificacionRechazo = Helpers.Helpers.CleanStringInput(controversiaContractual.MotivoJustificacionRechazo);
-                        controversiaContractual.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
-                        //ControversiaContractual.FechaCreacion = DateTime.Now;
-                        //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
-                        //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                        controversiaeditar.MotivoJustificacionRechazo = Helpers.Helpers.CleanStringInput(controversiaContractual.MotivoJustificacionRechazo);
+                        controversiaeditar.ConclusionComitePreTecnico = Helpers.Helpers.CleanStringInput(controversiaContractual.ConclusionComitePreTecnico);
+                        controversiaeditar.TipoControversiaCodigo = controversiaContractual.TipoControversiaCodigo;
+                        controversiaeditar.FechaSolicitud = controversiaContractual.FechaSolicitud;
+                        controversiaeditar.FechaComitePreTecnico= controversiaContractual.FechaComitePreTecnico;
+                        controversiaeditar.EsProcede= controversiaContractual.EsProcede;
+                        //NumeroRadicadoSac { get; set; }
+                        controversiaeditar.EsRequiereComite = controversiaContractual.EsRequiereComite;
+                        controversiaeditar.RutaSoporte = controversiaContractual.RutaSoporte;
 
-                        //_context.Add(contratoPoliza);
-
-                        //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
-                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
-
-                        //LimpiarEntradasContratoPoliza(ref contratoPoliza);
-                        controversiaContractual.FechaModificacion = DateTime.Now;
+                        controversiaeditar.FechaModificacion = DateTime.Now;
+                        controversiaeditar.UsuarioModificacion = controversiaContractual.UsuarioModificacion;
+                        controversiaeditar.EsCompleto = ValidarRegistroCompletoControversiaContractual(controversiaeditar);
                         //_context.ContratoPoliza.Add(contratoPoliza);
-                        _context.ControversiaContractual.Update(controversiaContractual);
+                        _context.ControversiaContractual.Update(controversiaeditar);
                         await _context.SaveChangesAsync();
                     }
 
