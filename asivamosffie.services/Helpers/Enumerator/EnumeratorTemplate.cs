@@ -47,5 +47,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         EnviarActaCargada319 = 46,
         Notificarinterventor=48,
         ObservacionesActaInicioFase2=50,
+        NotificacionCompromisos=53,
     }
 }

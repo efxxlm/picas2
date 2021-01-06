@@ -4,6 +4,7 @@ import { ProcesosContractualesComponent } from './components/procesos-contractua
 import { FormContratacionComponent } from './components/form-contratacion/form-contratacion.component';
 import { FormModificacionContractualComponent } from './components/form-modificacion-contractual/form-modificacion-contractual.component';
 import { FormLiquidacionComponent } from './components/form-liquidacion/form-liquidacion.component';
+import { FormContratacionRegistradosComponent } from './components/form-contratacion-registrados/form-contratacion-registrados.component';
 
 
 const routes: Routes = [
@@ -14,6 +15,10 @@ const routes: Routes = [
   {
     path: 'contratacion/:id',
     component: FormContratacionComponent
+  },
+  {
+    path: 'contratacionRegistrados/:id',
+    component: FormContratacionRegistradosComponent
   },
   {
     path: 'modificacionContractual/:id',

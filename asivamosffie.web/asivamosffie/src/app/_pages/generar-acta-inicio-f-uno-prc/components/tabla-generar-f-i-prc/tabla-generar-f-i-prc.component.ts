@@ -141,7 +141,7 @@ export class TablaGenerarFIPreconstruccionComponent implements OnInit {
     });
   }
   descargarActaDesdeTabla(id,numContrato) {
-    this.service.GetActaByIdPerfil(2, id).subscribe(resp => {
+    this.service.GetActaByIdPerfil(id, 'False').subscribe(resp => {
       const documento = `Acta contrato ${numContrato}.pdf`; // Valor de prueba
       const text = documento,
         blob = new Blob([resp], { type: 'application/pdf' }),

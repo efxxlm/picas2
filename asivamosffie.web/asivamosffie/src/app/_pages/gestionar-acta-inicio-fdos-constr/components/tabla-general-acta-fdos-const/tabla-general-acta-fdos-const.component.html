@@ -68,7 +68,7 @@
 
                     <button mat-raised-button color="accent" 
                                                             class="btn-table" 
-                                                            (click)="descargarActaDesdeTabla(element.contratoId)"
+                                                            (click)="descargarActaDesdeTabla(element.contratoId,element.numeroContratoObra)"
                                                             *ngIf="element.estadoActa=='Con acta en proceso de firma' && element.tipoContrato=='Obra'"> 
                     Descargar acta preliminar
                     </button>

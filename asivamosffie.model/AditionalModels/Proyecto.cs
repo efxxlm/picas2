@@ -44,6 +44,9 @@ namespace asivamosffie.model.Models
         public DateTime FechaFinEtapaObra { get; set; }
 
         [NotMapped]
+        public double PlazoEnSemanas { get; set; }
+
+        [NotMapped]
         public decimal? ValorFaseConstruccion { get; set; }
     }
 }

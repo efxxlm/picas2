@@ -493,23 +493,27 @@ namespace asivamosffie.services
                     foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
                     {
                         ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
-                        contratoPerfilOld.FechaModificacion = DateTime.Now;
-                        contratoPerfilOld.RegistroCompleto = false;
-                        contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
+
+                        if (contratoPerfilOld.TieneObservacionSupervisor == true)
+                        {
+                            contratoPerfilOld.FechaModificacion = DateTime.Now;
+                            contratoPerfilOld.RegistroCompleto = false;
+                            contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
+                        }
 
                         _context.Update(contratoPerfilOld);
                     }
-                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender); 
+                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
 
 
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo) 
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
                 {
                     //se reinicia los contadores 
                     contratoMod.RegistroCompleto = false;
                     await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                 }
-            
+
 
                 ///Logica para devoluciones
                 ///

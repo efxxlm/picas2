@@ -13,7 +13,7 @@
     
             <ng-container matColumnDef="fechaFirma">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha firma del contrato </th>
-                <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma}}</b> </td>
+                <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma | date: 'dd/MM/yyyy'}}</b> </td>
             </ng-container>
     
             <ng-container matColumnDef="numeroContrato">

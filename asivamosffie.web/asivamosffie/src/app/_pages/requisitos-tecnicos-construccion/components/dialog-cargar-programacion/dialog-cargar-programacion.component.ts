@@ -98,6 +98,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
     };
     console.log( inputNode.files[0] );
     if ( this.esFlujoInversion ) {
+
       this.faseUnoConstruccionSvc.uploadFileToValidateInvestmentFlow( this.contratoConstruccionId, this.data.contratoId, this.data.proyectoId, inputNode.files[0] )
       .subscribe(
         ( response: any ) => {

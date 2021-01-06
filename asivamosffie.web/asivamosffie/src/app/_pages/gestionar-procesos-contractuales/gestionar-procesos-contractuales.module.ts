@@ -22,6 +22,8 @@ import { FormEjecucionFinancieraComponent } from './components/form-ejecucion-fi
 import { FormRegistroTramiteComponent } from './components/form-registro-tramite/form-registro-tramite.component';
 import { TablaSolicitudesEnviadasComponent } from './components/tabla-solicitudes-enviadas/tabla-solicitudes-enviadas.component';
 import { DomSafePipe } from '../../_pipes/dom-safe.pipe';
+import { TablaRegistradosComponent } from './components/tabla-registrados/tabla-registrados.component';
+import { FormContratacionRegistradosComponent } from './components/form-contratacion-registrados/form-contratacion-registrados.component';
 
 @NgModule({
   declarations: [ 
@@ -40,6 +42,8 @@ import { DomSafePipe } from '../../_pipes/dom-safe.pipe';
     TablaOtrosDescuentosComponent,
     FormEjecucionFinancieraComponent,
     FormRegistroTramiteComponent,
+    TablaRegistradosComponent,
+    FormContratacionRegistradosComponent,
     TablaSolicitudesEnviadasComponent,
     DomSafePipe
   ],
