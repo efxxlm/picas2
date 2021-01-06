@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -17,41 +18,51 @@ export class GestionAmbientalComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservacionAmbiental: any;
     @Output() seRealizoPeticion = new EventEmitter<boolean>();
     formGestionAmbiental: FormGroup;
     formGestionAmbientalObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     formMaterialObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     formResiduosConstruccion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     formResiduosPeligrosos: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
     formManejoOtra: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ]
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
     });
-    tablaHistorial = new MatTableDataSource();
+    // MatTable historial de observaciones
+    tablaHistorialgestionAmbiental = new MatTableDataSource();
+    tablaHistorialManejoMateriales = new MatTableDataSource();
+    tablaHistorialResiduosConstruccion = new MatTableDataSource();
+    tablaHistorialResiduosPeligrosos = new MatTableDataSource();
+    tablaHistorialManejoOtros = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
         'fechaRevision',
         'responsable',
         'historial'
     ];
-    dataHistorial: any[] = [
-        {
-            fechaRevision: new Date(),
-            responsable: 'Apoyo a la supervisión',
-            historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-        }
-    ];
+    // Arreglos historial de observaciones
+    historialGestionAmbiental: any[] = [];
+    historialManejoMateriales: any[] = [];
+    historialResiduosConstruccion: any[] = [];
+    historialResiduosPeligrosos: any[] = [];
+    historialManejoOtros: any[] = [];
     tipoActividades: Dominio[] = [];
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
@@ -97,6 +108,7 @@ export class GestionAmbientalComponent implements OnInit {
         private fb: FormBuilder,
         private commonSvc: CommonService,
         private dialog: MatDialog,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
         private routes: Router )
     {
@@ -154,41 +166,81 @@ export class GestionAmbientalComponent implements OnInit {
                 if ( this.gestionObraAmbiental.observacionApoyoId !== undefined ) {
                     this.obsGestionAmbientalId = this.gestionObraAmbiental.observacionApoyoId;
                     // GET observacion gestion ambiental
-                    const obsApoyoAmbiental = this.gestionObraAmbiental.observacionApoyo;
-                    this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.tieneObservacionApoyo );
-                    this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( obsApoyoAmbiental.observacion );
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionAmbientalId, this.tipoObservacionAmbiental.gestionAmbientalCodigo )
+                        .subscribe(
+                            response => {
+                                console.log( response );
+                                const obsApoyoAmbiental = response.filter( obs => obs.archivada === false );
+                                this.historialGestionAmbiental = response.filter( obs => obs.archivada === true );
+                                this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.tieneObservacionApoyo );
+                                this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( obsApoyoAmbiental[0].observacion );
+                                this.formGestionAmbientalObservacion.get( 'fechaCreacion' ).setValue( obsApoyoAmbiental[0].fechaCreacion );
+                            }
+                        );
                 }
                 // ID manejo de materiales e insumos
                 if ( this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId !== undefined ) {
                     this.manejoMaterialInsumoObsId = this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId;
                     // GET observacion manejo de materiales e insumos
-                    const obsManejoMateriales = this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyo;
-                    this.formMaterialObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoMaterialesInsumo.tieneObservacionApoyo );
-                    this.formMaterialObservacion.get( 'observaciones' ).setValue( obsManejoMateriales.observacion );
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoMaterialInsumoId, this.tipoObservacionAmbiental.manejoMateriales )
+                        .subscribe(
+                            response => {
+                                const obsManejoMateriales = response.filter( obs => obs.archivada === false );
+                                this.historialManejoMateriales = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorialManejoMateriales = new MatTableDataSource( this.historialManejoMateriales );
+                                this.formMaterialObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoMaterialesInsumo.tieneObservacionApoyo );
+                                this.formMaterialObservacion.get( 'observaciones' ).setValue( obsManejoMateriales[0].observacion );
+                                this.formMaterialObservacion.get( 'fechaCreacion' ).setValue( obsManejoMateriales[0].fechaCreacion );
+                            }
+                        );
                 }
                 // ID residuos de construccion
                 if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId !== undefined ) {
                     this.residuosConstruccionObsId = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId;
                     // GET observacion residuos de construccion
-                    const obsResiduosConstruccion = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyo;
-                    this.formResiduosConstruccion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.tieneObservacionApoyo );
-                    this.formResiduosConstruccion.get( 'observaciones' ).setValue( obsResiduosConstruccion.observacion );
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosConstruccionId, this.tipoObservacionAmbiental.residuosConstruccion )
+                        .subscribe(
+                            response => {
+                                const obsResiduosConstruccion = response.filter( obs => obs.archivada === false );
+                                this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorialResiduosConstruccion = new MatTableDataSource( this.historialResiduosConstruccion );
+                                this.formResiduosConstruccion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.tieneObservacionApoyo );
+                                this.formResiduosConstruccion.get( 'observaciones' ).setValue( obsResiduosConstruccion[0].observacion );
+                                this.formResiduosConstruccion.get( 'fechaCreacion' ).setValue( obsResiduosConstruccion[0].fechaCreacion );
+                            }
+                        );
                 }
                 // ID residuos peligrosos
                 if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId !== undefined ) {
                     this.residuosPeligrososObsId = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId;
                     // GET observacion residuos peligrosos
-                    const obsResiduosPeligrosos = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyo;
-                    this.formResiduosPeligrosos.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.tieneObservacionApoyo );
-                    this.formResiduosPeligrosos.get( 'observaciones' ).setValue( obsResiduosPeligrosos.observacion );
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosPeligrososId, this.tipoObservacionAmbiental.residuosPeligrosos )
+                        .subscribe(
+                            response => {
+                                const obsResiduosPeligrosos = response.filter( obs => obs.archivada === false );
+                                this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorialResiduosPeligrosos = new MatTableDataSource( this.historialResiduosPeligrosos );
+                                this.formResiduosPeligrosos.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.tieneObservacionApoyo );
+                                this.formResiduosPeligrosos.get( 'observaciones' ).setValue( obsResiduosPeligrosos[0].observacion );
+                                this.formResiduosPeligrosos.get( 'fechaCreacion' ).setValue( obsResiduosPeligrosos[0].fechaCreacion );
+                            }
+                        )
                 }
                 // ID manejo de otros
                 if ( this.gestionObraAmbiental.manejoOtro.observacionApoyoId !== undefined ) {
                     this.manejoOtrosObsId = this.gestionObraAmbiental.manejoOtro.observacionApoyoId;
                     // GET observacion manejo de otros
-                    const obsOtros = this.gestionObraAmbiental.manejoOtro.observacionApoyo;
-                    this.formManejoOtra.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoOtro.tieneObservacionApoyo );
-                    this.formManejoOtra.get( 'observaciones' ).setValue( obsOtros.observacion );
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoOtrosId, this.tipoObservacionAmbiental.manejoOtra )
+                        .subscribe(
+                            response => {
+                                const obsOtros = response.filter( obs => obs.archivada === false );
+                                this.historialManejoOtros = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorialManejoOtros = new MatTableDataSource( this.historialManejoOtros );
+                                this.formManejoOtra.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoOtro.tieneObservacionApoyo );
+                                this.formManejoOtra.get( 'observaciones' ).setValue( obsOtros[0].observacion );
+                                this.formManejoOtra.get( 'fechaCreacion' ).setValue( obsOtros[0].fechaCreacion );
+                            }
+                        )
                 }
 
                 if ( this.gestionObraAmbiental.seEjecutoGestionAmbiental !== undefined ) {
@@ -217,7 +269,6 @@ export class GestionAmbientalComponent implements OnInit {
                     this.formGestionAmbiental.get( 'cantidadActividad' ).setValue( `${ this.cantidadActividades }` );
                 }
             }
-            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -597,7 +648,7 @@ export class GestionAmbientalComponent implements OnInit {
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.obsGestionAmbientalId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '4',
+            tipoObservacionCodigo: this.tipoObservacionAmbiental.gestionAmbientalCodigo,
             observacionPadreId: this.gestionAmbientalId,
             observacion: this.formGestionAmbientalObservacion.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value,
@@ -624,7 +675,7 @@ export class GestionAmbientalComponent implements OnInit {
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.manejoMaterialInsumoObsId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '5',
+            tipoObservacionCodigo: this.tipoObservacionAmbiental.manejoMateriales,
             observacionPadreId: this.manejoMaterialInsumoId,
             observacion: this.formMaterialObservacion.get( 'observaciones' ).value,
             tieneObservacion: this.formMaterialObservacion.get( 'tieneObservaciones' ).value,
@@ -651,7 +702,7 @@ export class GestionAmbientalComponent implements OnInit {
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.residuosConstruccionObsId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '6',
+            tipoObservacionCodigo: this.tipoObservacionAmbiental.residuosConstruccion,
             observacionPadreId: this.residuosConstruccionId,
             observacion: this.formResiduosConstruccion.get( 'observaciones' ).value,
             tieneObservacion: this.formResiduosConstruccion.get( 'tieneObservaciones' ).value,
@@ -678,7 +729,7 @@ export class GestionAmbientalComponent implements OnInit {
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.residuosPeligrososObsId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '7',
+            tipoObservacionCodigo: this.tipoObservacionAmbiental.residuosPeligrosos,
             observacionPadreId: this.residuosPeligrososId,
             observacion: this.formResiduosPeligrosos.get( 'observaciones' ).value,
             tieneObservacion: this.formResiduosPeligrosos.get( 'tieneObservaciones' ).value,
@@ -705,7 +756,7 @@ export class GestionAmbientalComponent implements OnInit {
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.manejoOtrosObsId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: '8',
+            tipoObservacionCodigo: this.tipoObservacionAmbiental.manejoOtra,
             observacionPadreId: this.manejoOtrosId,
             observacion: this.formManejoOtra.get( 'observaciones' ).value,
             tieneObservacion: this.formManejoOtra.get( 'tieneObservaciones' ).value,

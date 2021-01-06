@@ -1,4 +1,4 @@
-<mat-accordion *ngIf="seguimientoSemanal !== undefined">
+<mat-accordion *ngIf="seguimientoSemanal !== undefined && tipoObservaciones !== undefined">
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
             <mat-panel-title class="expansion-style--title">
@@ -6,7 +6,7 @@
             </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle"></app-gestion-ambiental>
+        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"></app-gestion-ambiental>
     </mat-expansion-panel>
 
     <mat-expansion-panel class="expansion-style sub-expansion">

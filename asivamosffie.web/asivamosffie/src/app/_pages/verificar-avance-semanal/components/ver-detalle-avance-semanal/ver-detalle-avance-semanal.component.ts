@@ -1,3 +1,4 @@
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
@@ -12,11 +13,13 @@ export class VerDetalleAvanceSemanalComponent implements OnInit {
 
     seguimientoSemanal: any;
     semaforoGestionObra = 'sin-diligenciar';
+    tipoObservaciones: any;
 
     constructor(
         private location: Location,
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
-        private activatedRoute: ActivatedRoute )
+        private activatedRoute: ActivatedRoute,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     {
         this.avanceSemanalSvc
         .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0,  this.activatedRoute.snapshot.params.idAvance )
@@ -26,6 +29,11 @@ export class VerDetalleAvanceSemanalComponent implements OnInit {
                   console.log( this.seguimientoSemanal );
               }
             );
+        this.verificarAvanceSemanalSvc.tipoObservaciones()
+            .subscribe( response => {
+                this.tipoObservaciones = response;
+                console.log( this.tipoObservaciones );
+            } );
     }
 
     ngOnInit(): void {

@@ -9,6 +9,7 @@ export class GestionDeObraComponent implements OnInit {
 
     @Input() seguimientoSemanal: any;
     @Input() esVerDetalle = false;
+    @Input() tipoObservaciones: any;
 
     constructor() { }
 

@@ -61,6 +61,10 @@ export class RegistrarAvanceSemanalService {
     return this.http.post<Respuesta>( `${ this.urlApi }/ChangueStatusMuestrasSeguimientoSemanal?pSeguimientoSemanalID=${ pSeguimientoSemanalID }&pEstadoMod=${ pEstadoMod }`, '' );
   }
 
+  getObservacionSeguimientoSemanal ( pSeguimientoSemanalId: number, pPadreId: number, pTipoCodigo: string ) {
+    return this.http.get<any[]>( `${ this.urlApi }/GetObservacionSeguimientoSemanal?pSeguimientoSemanalId=${ pSeguimientoSemanalId }&pPadreId=${ pPadreId }&pTipoCodigo=${ pTipoCodigo }` );
+  }
+
   estadosAvanceSemanal() {
     return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=112` )
       .pipe(
