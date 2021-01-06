@@ -12,6 +12,10 @@ export class VerificarAvanceSemanalService {
     private urlApi = `${ environment.apiUrl }/CheckWeeklyProgress`;
 
     constructor( private http: HttpClient ) { }
+
+    getListReporteSemanalView() {
+        return this.http.get<any[]>( `${ this.urlApi }/GetListReporteSemanalView` );
+    }
     
     seguimientoSemanalObservacion( pSeguimientoSemanalObservacion: any ) {
         return this.http.post<Respuesta>( `${ this.urlApi }/CreateEditSeguimientoSemanalObservacion`, pSeguimientoSemanalObservacion );

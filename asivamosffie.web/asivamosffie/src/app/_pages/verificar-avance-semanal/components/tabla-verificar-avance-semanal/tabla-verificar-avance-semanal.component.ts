@@ -1,3 +1,4 @@
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -24,27 +25,20 @@ export class TablaVerificarAvanceSemanalComponent implements OnInit {
         'estadoVerificacion',
         'gestion'
     ];
-    dataTable: any[] = [
-        {
-            fechaReporte: new Date(),
-            llaveMen: 'LU990088',
-            numeroContrato: 'CC223456789',
-            tipoIntervencion: 'Remodelación',
-            institucionEducativa: 'María Inmaculada',
-            sede: 'Sede 2',
-            estadoObra: 'Con ejecución normal',
-            estadoVerificacion: 'Avance semanal verificado',
-            contratacionProyectoId: 1
-        }
-    ];
 
-    constructor() { }
+    constructor( private verificarAvanceSemanalSvc: VerificarAvanceSemanalService ) {}
 
     ngOnInit(): void {
-        this.tablaRegistro = new MatTableDataSource( this.dataTable );
-        this.tablaRegistro.sort = this.sort;
-        this.tablaRegistro.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.verificarAvanceSemanalSvc.getListReporteSemanalView()
+            .subscribe(
+                response => {
+                    console.log( response );
+                    this.tablaRegistro = new MatTableDataSource( response );
+                    this.tablaRegistro.sort = this.sort;
+                    this.tablaRegistro.paginator = this.paginator;
+                    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+                }
+            );
     }
 
     applyFilter( event: Event ) {
