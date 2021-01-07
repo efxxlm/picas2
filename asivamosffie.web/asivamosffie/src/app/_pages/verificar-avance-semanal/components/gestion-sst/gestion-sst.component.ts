@@ -24,7 +24,7 @@ export class GestionSstComponent implements OnInit {
     gestionObraSst: any;
     formGestionSst: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
@@ -93,12 +93,16 @@ export class GestionSstComponent implements OnInit {
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.gestionObraSst )
                             .subscribe(
                                 response => {
-                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    if ( observacionApoyo[0].observacion !== undefined ) {
+                                        if ( observacionApoyo[0].observacion.length > 0 ) {
+                                            this.formGestionSst.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        }
+                                    }
                                     this.dataHistorial = response.filter( obs => obs.archivada === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                     this.formGestionSst.get( 'tieneObservaciones' ).setValue( this.gestionObraSst.tieneObservacionApoyo );
-                                    this.formGestionSst.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                     this.formGestionSst.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
                             );
@@ -130,10 +134,8 @@ export class GestionSstComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formGestionSst.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formGestionSst.get( 'observaciones' ).value.length > 0 ) {
-                this.formGestionSst.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formGestionSst.get( 'tieneObservaciones' ).value === false && this.formGestionSst.get( 'observaciones' ).value !== null ) {
+            this.formGestionSst.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,

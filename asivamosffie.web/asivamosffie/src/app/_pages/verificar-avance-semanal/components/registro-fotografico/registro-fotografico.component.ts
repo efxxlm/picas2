@@ -23,7 +23,7 @@ export class RegistroFotograficoComponent implements OnInit {
     reporteFotografico: any;
     formRegistroFotografico: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
@@ -65,12 +65,17 @@ export class RegistroFotograficoComponent implements OnInit {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.reporteFotografico.seguimientoSemanalRegistroFotograficoId, this.tipoRegistroFotografico )
                         .subscribe(
                             response => {
-                                const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( observacionApoyo[0].observacion !== undefined ) {
+                                    if ( observacionApoyo[0].observacion.length > 0 ) {
+                                        this.formRegistroFotografico.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    }
+                                }
                                 this.dataHistorial = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                console.log( observacionApoyo[0] );
                                 this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                 this.formRegistroFotografico.get( 'tieneObservaciones' ).setValue( this.reporteFotografico.tieneObservacionApoyo );
-                                this.formRegistroFotografico.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                 this.formRegistroFotografico.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                             }
                         );
@@ -101,10 +106,8 @@ export class RegistroFotograficoComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formRegistroFotografico.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formRegistroFotografico.get( 'observaciones' ).value.length > 0 ) {
-                this.formRegistroFotografico.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formRegistroFotografico.get( 'tieneObservaciones' ).value === false && this.formRegistroFotografico.get( 'observaciones' ).value !== null ) {
+            this.formRegistroFotografico.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,

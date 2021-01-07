@@ -21,7 +21,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     @Input() avanceFisicoObs: string;
     formAvanceFisico: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     avanceFisico: any[];
@@ -95,12 +95,16 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFisicoId, this.avanceFisicoObs )
                     .subscribe(
                         response => {
-                            const observacionApoyo = response.filter( obs => obs.archivada === false );
+                            const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                             this.dataHistorial = response.filter( obs => obs.archivada === true );
                             this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                            if ( observacionApoyo[0].observacion !== undefined ) {
+                                if ( observacionApoyo[0].observacion.length > 0 ) {
+                                    this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                }
+                            }
                             this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                             this.formAvanceFisico.get( 'tieneObservaciones' ).setValue( this.seguimientoSemanalAvanceFisico.tieneObservacionApoyo );
-                            this.formAvanceFisico.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                             this.formAvanceFisico.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                         }
                     );
@@ -234,10 +238,8 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formAvanceFisico.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formAvanceFisico.get( 'observaciones' ).value.length > 0 ) {
-                this.formAvanceFisico.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formAvanceFisico.get( 'tieneObservaciones' ).value === false && this.formAvanceFisico.get( 'observaciones' ).value !== null ) {
+            this.formAvanceFisico.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,

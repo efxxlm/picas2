@@ -19,7 +19,7 @@ export class AvanceFinancieroComponent implements OnInit {
     @Input() avanceFinancieroObs: string;
     formAvanceFinanciero: FormGroup = this.fb.group({
       tieneObservaciones: [ null, Validators.required ],
-      observaciones: [ '' ],
+      observaciones: [ null ],
       fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
@@ -65,12 +65,16 @@ export class AvanceFinancieroComponent implements OnInit {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFinancieroId, this.avanceFinancieroObs )
                         .subscribe(
                             response => {
-                                const obsFinanciero = response.filter( obs => obs.archivada === false );
+                                const obsFinanciero = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( obsFinanciero[0].observacion !== undefined ) {
+                                    if ( obsFinanciero[0].observacion.length > 0 ) {
+                                        this.formAvanceFinanciero.get( 'observaciones' ).setValue( obsFinanciero[0].observacion );
+                                    }
+                                }
                                 this.dataHistorial = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                 this.seguimientoSemanalObservacionId = obsFinanciero[0].seguimientoSemanalObservacionId;
                                 this.formAvanceFinanciero.get( 'tieneObservaciones' ).setValue( this.avanceFinanciero.tieneObservacionApoyo );
-                                this.formAvanceFinanciero.get( 'observaciones' ).setValue( obsFinanciero[0].observacion );
                                 this.formAvanceFinanciero.get( 'fechaCreacion' ).setValue( obsFinanciero[0].fechaCreacion );
                             }
                         )
@@ -101,10 +105,8 @@ export class AvanceFinancieroComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formAvanceFinanciero.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formAvanceFinanciero.get( 'observaciones' ).value.length > 0 ) {
-                this.formAvanceFinanciero.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formAvanceFinanciero.get( 'tieneObservaciones' ).value === false && this.formAvanceFinanciero.get( 'observaciones' ).value !== null ) {
+            this.formAvanceFinanciero.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,

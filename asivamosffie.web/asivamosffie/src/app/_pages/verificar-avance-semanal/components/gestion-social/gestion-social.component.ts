@@ -19,7 +19,7 @@ export class GestionSocialComponent implements OnInit {
     @Input() tipoObservacionSocial: any;
     formGestionSocial: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
@@ -70,12 +70,16 @@ export class GestionSocialComponent implements OnInit {
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraSocialId, this.tipoObservacionSocial )
                             .subscribe(
                                 response => {
-                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    if ( observacionApoyo[0].observacion !== undefined ) {
+                                        if ( observacionApoyo[0].observacion.length > 0 ) {
+                                            this.formGestionSocial.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        }
+                                    }
                                     this.dataHistorial = response.filter( obs => obs.archivada === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                     this.formGestionSocial.get( 'tieneObservaciones' ).setValue( this.gestionSocial.tieneObservacionApoyo );
-                                    this.formGestionSocial.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                     this.formGestionSocial.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
                             );
@@ -108,10 +112,8 @@ export class GestionSocialComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formGestionSocial.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formGestionSocial.get( 'observaciones' ).value.length > 0 ) {
-                this.formGestionSocial.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formGestionSocial.get( 'tieneObservaciones' ).value === false && this.formGestionSocial.get( 'observaciones' ).value !== null ) {
+            this.formGestionSocial.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,

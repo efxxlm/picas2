@@ -23,27 +23,27 @@ export class GestionAmbientalComponent implements OnInit {
     formGestionAmbiental: FormGroup;
     formGestionAmbientalObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     formMaterialObservacion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     formResiduosConstruccion: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     formResiduosPeligrosos: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     formManejoOtra: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     // MatTable historial de observaciones
@@ -169,11 +169,14 @@ export class GestionAmbientalComponent implements OnInit {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionAmbientalId, this.tipoObservacionAmbiental.gestionAmbientalCodigo )
                         .subscribe(
                             response => {
-                                console.log( response );
-                                const obsApoyoAmbiental = response.filter( obs => obs.archivada === false );
+                                const obsApoyoAmbiental = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( obsApoyoAmbiental[0].observacion !== undefined ) {
+                                    if ( obsApoyoAmbiental[0].observacion.length > 0 ) {
+                                        this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( obsApoyoAmbiental[0].observacion );
+                                    }
+                                }
                                 this.historialGestionAmbiental = response.filter( obs => obs.archivada === true );
                                 this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.tieneObservacionApoyo );
-                                this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( obsApoyoAmbiental[0].observacion );
                                 this.formGestionAmbientalObservacion.get( 'fechaCreacion' ).setValue( obsApoyoAmbiental[0].fechaCreacion );
                             }
                         );
@@ -185,11 +188,15 @@ export class GestionAmbientalComponent implements OnInit {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoMaterialInsumoId, this.tipoObservacionAmbiental.manejoMateriales )
                         .subscribe(
                             response => {
-                                const obsManejoMateriales = response.filter( obs => obs.archivada === false );
+                                const obsManejoMateriales = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( obsManejoMateriales[0].observacion !== undefined ) {
+                                    if ( obsManejoMateriales[0].observacion.length > 0 ) {
+                                        this.formMaterialObservacion.get( 'observaciones' ).setValue( obsManejoMateriales[0].observacion );
+                                    }
+                                }
                                 this.historialManejoMateriales = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorialManejoMateriales = new MatTableDataSource( this.historialManejoMateriales );
                                 this.formMaterialObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoMaterialesInsumo.tieneObservacionApoyo );
-                                this.formMaterialObservacion.get( 'observaciones' ).setValue( obsManejoMateriales[0].observacion );
                                 this.formMaterialObservacion.get( 'fechaCreacion' ).setValue( obsManejoMateriales[0].fechaCreacion );
                             }
                         );
@@ -201,11 +208,15 @@ export class GestionAmbientalComponent implements OnInit {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosConstruccionId, this.tipoObservacionAmbiental.residuosConstruccion )
                         .subscribe(
                             response => {
-                                const obsResiduosConstruccion = response.filter( obs => obs.archivada === false );
+                                const obsResiduosConstruccion = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( obsResiduosConstruccion[0].observacion !== undefined ) {
+                                    if ( obsResiduosConstruccion[0].observacion.length > 0 ) {
+                                        this.formResiduosConstruccion.get( 'observaciones' ).setValue( obsResiduosConstruccion[0].observacion );
+                                    }
+                                }
                                 this.historialResiduosConstruccion = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorialResiduosConstruccion = new MatTableDataSource( this.historialResiduosConstruccion );
                                 this.formResiduosConstruccion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.tieneObservacionApoyo );
-                                this.formResiduosConstruccion.get( 'observaciones' ).setValue( obsResiduosConstruccion[0].observacion );
                                 this.formResiduosConstruccion.get( 'fechaCreacion' ).setValue( obsResiduosConstruccion[0].fechaCreacion );
                             }
                         );
@@ -217,11 +228,15 @@ export class GestionAmbientalComponent implements OnInit {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosPeligrososId, this.tipoObservacionAmbiental.residuosPeligrosos )
                         .subscribe(
                             response => {
-                                const obsResiduosPeligrosos = response.filter( obs => obs.archivada === false );
+                                const obsResiduosPeligrosos = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( obsResiduosPeligrosos[0].observacion !== undefined ) {
+                                    if ( obsResiduosPeligrosos[0].observacion.length > 0 ) {
+                                        this.formResiduosPeligrosos.get( 'observaciones' ).setValue( obsResiduosPeligrosos[0].observacion );
+                                    }
+                                }
                                 this.historialResiduosPeligrosos = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorialResiduosPeligrosos = new MatTableDataSource( this.historialResiduosPeligrosos );
                                 this.formResiduosPeligrosos.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.tieneObservacionApoyo );
-                                this.formResiduosPeligrosos.get( 'observaciones' ).setValue( obsResiduosPeligrosos[0].observacion );
                                 this.formResiduosPeligrosos.get( 'fechaCreacion' ).setValue( obsResiduosPeligrosos[0].fechaCreacion );
                             }
                         )
@@ -233,11 +248,15 @@ export class GestionAmbientalComponent implements OnInit {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoOtrosId, this.tipoObservacionAmbiental.manejoOtra )
                         .subscribe(
                             response => {
-                                const obsOtros = response.filter( obs => obs.archivada === false );
+                                const obsOtros = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( obsOtros[0].observacion !== undefined ) {
+                                    if ( obsOtros[0].observacion.length > 0 ) {
+                                        this.formManejoOtra.get( 'observaciones' ).setValue( obsOtros[0].observacion );
+                                    }
+                                }
                                 this.historialManejoOtros = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorialManejoOtros = new MatTableDataSource( this.historialManejoOtros );
                                 this.formManejoOtra.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.manejoOtro.tieneObservacionApoyo );
-                                this.formManejoOtra.get( 'observaciones' ).setValue( obsOtros[0].observacion );
                                 this.formManejoOtra.get( 'fechaCreacion' ).setValue( obsOtros[0].fechaCreacion );
                             }
                         )
@@ -597,10 +616,8 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formGestionAmbientalObservacion.get( 'observaciones' ).value.length > 0 ) {
-                this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === false && this.formGestionAmbientalObservacion.get( 'observaciones' ).value !== null ) {
+            this.formGestionAmbientalObservacion.get( 'observaciones' ).setValue( '' );
         }
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.obsGestionAmbientalId,
@@ -634,10 +651,8 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardarManejoMaterial() {
-        if ( this.formMaterialObservacion.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formMaterialObservacion.get( 'observaciones' ).value.length > 0 ) {
-                this.formMaterialObservacion.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formMaterialObservacion.get( 'tieneObservaciones' ).value === false && this.formMaterialObservacion.get( 'observaciones' ).value !== null ) {
+            this.formMaterialObservacion.get( 'observaciones' ).setValue( '' );
         }
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.manejoMaterialInsumoObsId,
@@ -671,10 +686,8 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardarResiduosConstruccion() {
-        if ( this.formResiduosConstruccion.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formResiduosConstruccion.get( 'observaciones' ).value.length > 0 ) {
-                this.formResiduosConstruccion.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formResiduosConstruccion.get( 'tieneObservaciones' ).value === false && this.formResiduosConstruccion.get( 'observaciones' ).value !== null ) {
+            this.formResiduosConstruccion.get( 'observaciones' ).setValue( '' );
         }
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.residuosConstruccionObsId,
@@ -708,10 +721,8 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardarResiduosPeligrosos() {
-        if ( this.formResiduosPeligrosos.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formResiduosPeligrosos.get( 'observaciones' ).value.length > 0 ) {
-                this.formResiduosPeligrosos.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formResiduosPeligrosos.get( 'tieneObservaciones' ).value === false && this.formResiduosPeligrosos.get( 'observaciones' ).value !== null ) {
+            this.formResiduosPeligrosos.get( 'observaciones' ).setValue( '' );
         }
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.residuosPeligrososObsId,
@@ -745,10 +756,8 @@ export class GestionAmbientalComponent implements OnInit {
     }
 
     guardarManejoOtra() {
-        if ( this.formManejoOtra.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formManejoOtra.get( 'observaciones' ).value.length > 0 ) {
-                this.formManejoOtra.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formManejoOtra.get( 'tieneObservaciones' ).value === false && this.formManejoOtra.get( 'observaciones' ).value !== null ) {
+            this.formManejoOtra.get( 'observaciones' ).setValue( '' );
         }
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.manejoOtrosObsId,

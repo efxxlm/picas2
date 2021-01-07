@@ -24,7 +24,7 @@ export class ComiteObraComponent implements OnInit {
     gestionComiteObra: any;
     formComiteObra: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
@@ -70,12 +70,16 @@ export class ComiteObraComponent implements OnInit {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalRegistrarComiteObraId, this.tipoComiteObra )
                         .subscribe(
                             response => {
-                                const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( observacionApoyo[0].observacion !== undefined ) {
+                                    if ( observacionApoyo[0].observacion.length > 0 ) {
+                                        this.formComiteObra.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    }
+                                }
                                 this.dataHistorial = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                 this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                 this.formComiteObra.get( 'tieneObservaciones' ).setValue( this.gestionComiteObra.tieneObservacionApoyo );
-                                this.formComiteObra.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                 this.formComiteObra.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                             }
                         );
@@ -106,10 +110,8 @@ export class ComiteObraComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formComiteObra.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formComiteObra.get( 'observaciones' ).value.length > 0 ) {
-                this.formComiteObra.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formComiteObra.get( 'tieneObservaciones' ).value === false && this.formComiteObra.get( 'observaciones' ).value !== null ) {
+            this.formComiteObra.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,

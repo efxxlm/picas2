@@ -20,7 +20,7 @@ export class GestionCalidadComponent implements OnInit {
     @Input() tipoObservacionCalidad: any;
     formGestionCalidad: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     formEnsayo: FormGroup = this.fb.group(
@@ -90,12 +90,16 @@ export class GestionCalidadComponent implements OnInit {
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraCalidadId, this.tipoObservacionCalidad.gestionCalidadCodigo )
                             .subscribe(
                                 response => {
-                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    if ( observacionApoyo[0].observacion !== undefined ) {
+                                        if ( observacionApoyo[0].observacion.length > 0 ) {
+                                            this.formGestionCalidad.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        }
+                                    }
                                     this.dataHistorial = response.filter( obs => obs.archivada === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                     this.formGestionCalidad.get( 'tieneObservaciones' ).setValue( this.gestionObraCalidad.tieneObservacionApoyo );
-                                    this.formGestionCalidad.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                     this.formGestionCalidad.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
                             );
@@ -107,7 +111,7 @@ export class GestionCalidadComponent implements OnInit {
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
                             .subscribe(
                                 response => {
-                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                     const historial = response.filter( obs => obs.archivada === true );
                                     let estadoSemaforo = 'sin-diligenciar';
                                     if ( ensayo.registroCompletoObservacionApoyo === false ) {
@@ -129,7 +133,7 @@ export class GestionCalidadComponent implements OnInit {
                                             registroCompletoMuestras: ensayo.registroCompletoMuestras,
                                             gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
                                             tieneObservaciones: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
-                                            observacionEnsayo: observacionApoyo.length > 0 ? observacionApoyo[0].observacion : '',
+                                            observacionEnsayo: observacionApoyo[0].observacion !== undefined ? ( observacionApoyo[0].observacion.length > 0 ? observacionApoyo[0].observacion : null ) : null,
                                             fechaCreacion: observacionApoyo.length > 0 ? observacionApoyo[0].fechaCreacion : null,
                                             seguimientoSemanalObservacionId: ensayo.observacionApoyoId !== undefined ? ensayo.observacionApoyoId : 0,
                                             historial: [ historial ]
@@ -180,10 +184,8 @@ export class GestionCalidadComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formGestionCalidad.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formGestionCalidad.get( 'observaciones' ).value.length > 0 ) {
-                this.formGestionCalidad.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formGestionCalidad.get( 'tieneObservaciones' ).value === false && this.formGestionCalidad.get( 'observaciones' ).value !== null ) {
+            this.formGestionCalidad.get( 'observaciones' ).setValue( '' );
         }
         const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
@@ -217,10 +219,8 @@ export class GestionCalidadComponent implements OnInit {
     }
 
     guardarEnsayo( ensayo: FormGroup ) {
-        if ( ensayo.get( 'tieneObservaciones' ).value === false ) {
-            if ( ensayo.get( 'observacionEnsayo' ).value.length > 0 ) {
-                ensayo.get( 'observacionEnsayo' ).setValue( '' );
-            }
+        if ( ensayo.get( 'tieneObservaciones' ).value === false && ensayo.get( 'observacionEnsayo' ).value !== null ) {
+            ensayo.get( 'observacionEnsayo' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: ensayo.get( 'seguimientoSemanalObservacionId' ).value,
