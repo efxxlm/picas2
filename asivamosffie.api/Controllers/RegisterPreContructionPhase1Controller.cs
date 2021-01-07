@@ -20,10 +20,11 @@ namespace asivamosffie.api.Controllers
     public class RegisterPreContructionPhase1Controller : ControllerBase
     {
         public readonly IRegisterPreContructionPhase1Service _registerPreContructionPhase1Service;
+        private readonly IOptions<AppSettings> _settings;
 
-
-        public RegisterPreContructionPhase1Controller(IRegisterPreContructionPhase1Service registerPreContructionPhase1Service)
+        public RegisterPreContructionPhase1Controller(IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IOptions<AppSettings> settings)
         {
+            _settings = settings;
             _registerPreContructionPhase1Service = registerPreContructionPhase1Service;
         }
 
@@ -72,8 +73,12 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            { 
-                respuesta = await _registerPreContructionPhase1Service.ChangeStateContrato(pContratoId ,HttpContext.User.FindFirst("User").Value, pEstadoVerificacionContratoCodigo);
+            {
+                respuesta = await _registerPreContructionPhase1Service.ChangeStateContrato(pContratoId, HttpContext.User.FindFirst("User").Value, pEstadoVerificacionContratoCodigo
+                   , _settings.Value.DominioFront, _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender
+
+
+                    );
                 return Ok(respuesta);
             }
             catch (Exception ex)

@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
-import { Contrato, ContratoParaActa, EditContrato, GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 
 @Component({
   selector: 'app-cargar-acta-suscrita-acta-ini-f-i-prc',
@@ -11,20 +11,25 @@ import { Contrato, ContratoParaActa, EditContrato, GestionarActPreConstrFUnoServ
   styleUrls: ['./cargar-acta-suscrita-acta-ini-f-i-prc.component.scss']
 })
 export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnInit {
-  boton:string="Cargar";
+  addressForm = new FormGroup({
+    fechaFirmaContratistaObra: new FormControl(),
+    fechaFirmaContratistaInterventoria: new FormControl(),
+    documentoFile: new FormControl()
+  })
+
+  boton: string = "Cargar";
   archivo: string;
-  fileListaProyectos: FormControl;
   maxDate: Date;
   maxDate2: Date;
 
 
   public idContrato;
+  public idRol;
   public contratacionId;
   public fechaTramite;
   public tipoContratoCodigo;
   public estadoDocumentoCodigo;
   public fechaEnvioFirma;
-  public fechaFirmaContratista;
   public fechaFirmaFiduciaria;
   public numContrato;
   public fechaFirmaContrato;
@@ -43,46 +48,35 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
   fechaSesionString2: string;
   fechaSesion2: Date;
 
+  public fechaFirmaContratistaObra;
+  public fechaFirmaContratistaInterventoria;
 
-  constructor(private router: Router,public dialog: MatDialog, public matDialogRef: MatDialogRef<CargarActaSuscritaActaIniFIPreconstruccionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private service: GestionarActPreConstrFUnoService) { 
-    this.declararInputFile();
+  public fecha1Titulo;
+  public fecha2Titulo;
+
+  prueba: any;
+  esRojo: boolean = false;
+
+  constructor(private router: Router, public dialog: MatDialog, private fb: FormBuilder, public matDialogRef: MatDialogRef<CargarActaSuscritaActaIniFIPreconstruccionComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
     if (data.id != undefined) {
       this.idContrato = data.id;
     }
-  }
-
-  ngOnInit(): void {
-    this.loadData(this.idContrato);
-  }
-  loadData(id){
-    this.service.GetContratoByContratoId(id).subscribe(data=>{
-      this.cargarDataParaInsercion(data);
-    });
-    this.idContrato = id;
-  }
-  cargarDataParaInsercion(data){
-    this.numContrato = data.numeroContrato;
-    this.fechaFirmaContrato = data.fechaFirmaContrato;
-    this.contratacionId = data.contratacionId;
-    this.fechaTramite = data.fechaTramite;
-    this.tipoContratoCodigo = data.tipoContratoCodigo;
-    this.estadoDocumentoCodigo = data.estadoDocumentoCodigo;
-    this.fechaEnvioFirma = data.fechaEnvioFirma;
-    this.fechaFirmaContratista = data.fechaFirmaContratista;
-    this.fechaFirmaFiduciaria = data.fechaFirmaFiduciaria;
-    this.fechaActaInicioFase1 = data.fechaActaInicioFase1;
-    this.fechaTerminacion = data.fechaTerminacion;
-    this.plazoFase1PreMeses = data.plazoFase1PreMeses;
-    this.plazoFase1PreDias = data.plazoFase1PreDias;
-    this.plazoFase2ConstruccionMeses = data.plazoFase2ConstruccionMeses;
-    this.plazoFase2ConstruccionDias = data.plazoFase2ConstruccionDias;
-    this.observaciones = data.observaciones;
-    this.rutaDocumento = "https://meet.google.com/pwd-mgvi-egp?pli=1&authuser=1";
+    if (data.idRol != undefined) {
+      this.idRol = data.idRol;
     }
-  private declararInputFile() {
-    this.fileListaProyectos = new FormControl('', [Validators.required]);
+    if (data.numContrato != undefined) {
+      this.numContrato = data.numContrato;
+    }
+    if (data.fecha1Titulo != undefined) {
+      this.fecha1Titulo = data.fecha1Titulo;
+    }
+    if (data.fecha2Titulo != undefined) {
+      this.fecha2Titulo = data.fecha2Titulo;
+    }
+  }
+  ngOnInit(): void {
   }
   openDialog(modalTitle: string, modalText: string) {
     let dialogRef = this.dialog.open(ModalDialogComponent, {
@@ -90,49 +84,54 @@ export class CargarActaSuscritaActaIniFIPreconstruccionComponent implements OnIn
       data: { modalTitle, modalText }
     });
   }
-  fileName() {
-    const inputNode: any = document.getElementById('file');
-    this.archivo = inputNode.files[0].name;
+  fileName(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.archivo = event.target.files[0].name;
+      this.addressForm.patchValue({
+        documentoFile: file
+      });
+    }
   }
-  cargarActa(){
-    const inputNode: any = document.getElementById('file');
-    this.archivo = inputNode.files[0].name;
+  onSubmit() {
+    const pContrato = new FormData();
+    this.fechaSesion = new Date(this.addressForm.value.fechaFirmaContratistaObra);
+    this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
+    this.fechaSesion2 = new Date(this.addressForm.value.fechaFirmaContratistaInterventoria);
+    this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}-${this.fechaSesion2.getMonth() + 1}-${this.fechaSesion2.getDate()}`;
+    let pFile = this.addressForm.get('documentoFile').value;
+    pFile = pFile.name.split('.');
+    pFile = pFile[pFile.length - 1];
+    if (pFile === 'pdf') {
+      pContrato.append('ContratoId', this.idContrato);
+      pContrato.append('FechaActaInicioFase1', this.fechaSesionString);
+      pContrato.append('FechaTerminacion', this.fechaSesionString2);
+      pContrato.append('pFile', this.addressForm.get('documentoFile').value);
+      if (this.fechaSesionString == 'NaN-NaN-NaN' || this.fechaSesionString2 == 'NaN-NaN-NaN' || this.archivo == undefined) {
+        this.openDialog('', '<b>Falta registrar información.</b>');
+        this.esRojo = true;
+      }
+      else {
+        this.service.LoadActa(pContrato).subscribe((data: any) => {
 
-    const arraycontrato: ContratoParaActa ={
-      contratoId: this.idContrato,
-      contratacionId: this.contratacionId,
-      fechaTramite: this.fechaTramite,
-      tipoContratoCodigo: this.tipoContratoCodigo,
-      numeroContrato: this.numContrato,
-      estadoDocumentoCodigo: this.estadoDocumentoCodigo,
-      estado: false,
-      fechaEnvioFirma: this.fechaEnvioFirma,
-      fechaFirmaContratista: this.fechaFirmaContratista,
-      fechaFirmaFiduciaria: this.fechaFirmaFiduciaria,
-      fechaFirmaContrato: this.fechaFirmaContrato,
-      fechaActaInicioFase1: this.fechaActaInicioFase1,
-      fechaTerminacion: this.fechaTerminacion,
-      fechaFirmaActaContratista: this.maxDate,
-      fechaFirmaActaContratistaInterventoria: this.maxDate2,
-      plazoFase1PreMeses: this.plazoFase1PreMeses,
-      plazoFase1PreDias: this.plazoFase1PreDias,
-      plazoFase2ConstruccionMeses: this.plazoFase2ConstruccionMeses,
-      plazoFase2ConstruccionDias: this.plazoFase2ConstruccionDias,
-      observaciones: this.observaciones,
-      conObervacionesActa: false,
-      registroCompleto: false,
-      contratoConstruccion: [],
-      contratoObservacion: [],
-      contratoPerfil: [],
-      contratoPoliza: []
-    };
-    this.service.LoadActa(arraycontrato,inputNode.files[0],this.rutaDocumento,this.rutaDocumento).subscribe(data=>{
-      this.openDialog('La información ha sido guardada exitosamente.', "");
-      this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
-      this.close();
-    });
+          if (data.code == "200") {
+            this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+            this.close();
+          }
+          else {
+            this.openDialog("", data.message);
+          }
+        });
+      }
+    } else {
+      this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .pdf</b>');
+      return;
+    }
+
+
+
   }
-  close(){
-    this.matDialogRef.close('cancel');
-}
+  close() {
+    this.matDialogRef.close('aceptado');
+  }
 }

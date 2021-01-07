@@ -18,7 +18,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<dynamic> GetListContrato();
 
-        Task<Contrato> GetContratoByContratoId(int pContratoId);
+        Task<Contrato> GetContratoByContratoId(int pContratoId, int? pUserId);
 
         Task<List<GrillaActaInicio>> GetListGrillaActaInicio(int pPerfilId);
 

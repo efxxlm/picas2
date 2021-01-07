@@ -55,7 +55,7 @@ namespace asivamosffie.services.Interfaces
         //FechaRevision   datetime
         //EstadoRevisionCodigo    varchar
 
-        Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion);
+        Task<Respuesta> InsertEditPolizaObservacion(PolizaObservacion polizaObservacion, AppSettingsService appSettingsService);
         Task<Respuesta> InsertEditPolizaGarantia(PolizaGarantia polizaGarantia);
         
 

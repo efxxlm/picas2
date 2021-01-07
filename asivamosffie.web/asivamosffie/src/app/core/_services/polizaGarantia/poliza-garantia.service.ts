@@ -187,6 +187,7 @@ export interface GetContratoPolizaByIdContratoId {
   valorAmparo: number;
   vigencia:  any;
   vigenciaAmparo:  any;
+  usuarioCreacion: any;
 }
 
 export interface GetNotificacionContratoPolizaByIdContratoId{

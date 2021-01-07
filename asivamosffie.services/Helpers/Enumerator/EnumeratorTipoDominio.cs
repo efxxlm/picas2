@@ -116,6 +116,8 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_Del_Acta_Contrato = 60,
 
+        Estado_Revision_Poliza = 61,
+
         Estado_Proyecto = 63,
 
         PlaceHolderDDP = 66,
@@ -150,6 +152,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_controversia_contractual_TAI = 90,
 
         Estado_avance_reclamacion = 91,
+        Estados_acta_Interventoria_319 = 107,
 
         Tipo_Actividad = 109,
 
@@ -158,5 +161,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Reporte_Semanal_Y_Muestras = 112,
 
         Tipo_Observacion_Seguimiento_Semanal = 123,
+        
     }
 }

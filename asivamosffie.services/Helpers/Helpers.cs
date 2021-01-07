@@ -233,8 +233,7 @@ namespace asivamosffie.services.Helpers
             }
         }
 
-        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml, string pCorreoLocal, string pPassword, string pStrSmtpServerV, int pSmtpPort, bool pMailHighPriority = false)
-
+        public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort, bool pMailHighPriority=false, string pFileNamePath="")
         {
             try
             {
@@ -246,7 +245,14 @@ namespace asivamosffie.services.Helpers
                 mail.Subject = pAsunto;
                 mail.IsBodyHtml = true;
 
-                if (pMailHighPriority)
+                Attachment item;
+                if(pFileNamePath != "")
+                {
+                    item = new Attachment(pFileNamePath);
+                    mail.Attachments.Add(item);
+                }                    
+
+                if(pMailHighPriority)
                     mail.Priority = MailPriority.High;
                 mail.Body = pMensajeHtml;
                 SmtpServer.Port = pSmtpPort;

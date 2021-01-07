@@ -46,6 +46,9 @@
 
         public string DirectoryActaSuscritaContrato { get; set; }
 
+        public string DirectoryBaseProgramacionObra { get; set; }
+        public string DirectoryBaseFlujoInversion { get; set; }
+
     }
   
 }
