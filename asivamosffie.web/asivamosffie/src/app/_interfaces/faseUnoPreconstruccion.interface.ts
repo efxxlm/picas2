@@ -120,6 +120,7 @@ export interface ContratoPerfil {
   registroCompleto?: boolean;
   proyectoId?: number;
   contratoPerfilObservacion?: any[];
+  observaciones?: string;
 }
 
 interface Contratacion {

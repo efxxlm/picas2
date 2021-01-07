@@ -1,0 +1,80 @@
+﻿<!--Titulo del acta-->
+<div style="column-count: 1;" align="center">
+	<div style="width: 85%;float: left;">
+		<p style="font-size:.8em;">FONDO DE FINANCIAMIENTO DE INFRAESTRUCTURA EDUCATIVA - FFIE</p>
+		<p style="font-size:.8em;">MINISTERIO DE EDUCACIÓN</p>
+		<p style="font-size:1.2em;"><b>ACTA DE INICIO FASE 1 – PRECONSTRUCCIÓN - CONTRATO DE OBRA</b></p>
+    </div>
+    <div style="width:15%;float: right;">
+      <p style="text-align: left; margin: 0;"><img src="[RUTA_ICONO]"  alt="Red dot" height="100" /></p>
+    </div>
+  </div> 
+    </div>
+    <!--Subtitulo del acta-->
+    <br><br><br><br> 
+    <!-- Body del acta -->
+    <p align="center" style="font-size:1em;margin-top:1.5em;margin-left:8em;width:80%;"><b>CONTRATO DE OBRA No.</b> <i>[NUMERO_CONTRATO_OBRA]</i> </p>
+    <div style="width:100%;">
+      <section style="font-size:1em;margin-top:1.5em;width:100%;text-align:justify;">
+      En Bogotá D.C. el día 
+          <i>[FECHA_ACTA_INICIO_OBRA]</i>, se reunieron las siguientes personas
+          <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA] </i>, quien se desempeña como representante legal de la firma 
+          <i>[ENTIDAD_CONTRATISTA_INTERVENTORIA]</i>,con NIT
+          <i>[NIT_CONTRATISTA_INTERVENTORIA]</i>, en su calidad de contratista de interventoría y
+          <i>[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i>, quien se desempeña en el cargo de representante legal de la firma 
+          <i>[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]</i>,con NIT 
+          <i>[NIT_ENTIDAD_CONTRATISTA_OBRA]</i>, en su condición de contratista de obra; identificados civilmente como aparece al pie de sus firmas, para suscribir el acta de Inicio fase 1 – preconstrucción, del contrato de obra No. 
+          <i>[NUMERO_CONTRATO_OBRA]</i> en las condiciones que se transcriben a continuación:
+      </section>
+      <table align="center" style="margin-left:8em;width: 80%; padding: 0; border-spacing: 0px;margin-top:1.5em;" border="1">
+        <thead>
+          <tr>
+            <th style="font-size: 1em">LLAVE MEN</th>
+            <th style="font-size: 1em">INSTITUCIÓN EDUCATIVA</th>
+            <th style="font-size: 1em">DEPARTAMENTO/MUNICIPIO</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            [REGISTROS_PROYECTOS]
+          </tr>
+        </tbody>
+      </table>
+      <section style="font-size:1em;margin-top:1.5em;width:100%;text-align:justify;">
+        <p><b>DRP No:</b> <i>[NUMERO_DRP]</i> </p>
+        <p><b>Fecha DRP:</b> <i>[FECHA_GENERACION_DRP]</i> </p>
+	      <p><b>Numero de póliza:</b> <i>[NUMERO_POLIZA]</i> </p>
+        <p><b>Fecha de aprobación de pólizas:</b> <i>[FECHA_APROBACION_POLIZAS]</i> </p>
+        <p style="text-align:justify;"><b>Objeto:</b> <i>[OBJETO]</i> </p>
+        <p><b>Contratista:</b> <i>[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]</i> </p>
+        <p><b>Valor inicial:</b> <i>[VALOR_INICIAL_CONTRATO]</i> </p>
+        <p><b>Valor fase 1 preconstrucción:</b> <i>[VALOR_FASE_1]</i> </p>
+        <p><b>Valor fase 2 construcción:</b> <i>[VALOR_FASE_2]</i> </p>
+        <p><b>Valor actual del contrato:</b> <i>[VALOR_ACTUAL_CONTRATO]</i> </p>
+        <p><b>Plazo inicial del contrato:</b> <i>[PLAZO_INICIAL_CONTRATO]</i> </p>
+        <p><b>Plazo fase 1 preconstrucción:</b> <i>[PLAZO_EJECUCION_FASE_1]</i> </p>
+        <p><b>Plazo fase 2 construcción:</b> <i>[PLAZO_EJECUCION_FASE_2]</i> </p>
+        <p><b>Fecha prevista de terminación:</b> <i>[FECHA_PREVISTA_TERMINACION]</i> </p>
+        <p style="text-align:justify;"><b>OBSERVACIONES O CONSIDERACIONES ESPECIALES:</b> <i>[OBSERVACIONES]</i> </p>
+        <p style="margin-top:4em;text-align:justify;"><b>La interventoría, verificó para efectos del inicio, el cumplimiento de las obligaciones respecto del sistema de seguridad social integral, lo cual incluye la vigencia de la afiliación en riesgos laborales</b></p>
+        <p style="margin-top:1em;text-align:justify;">Para constancia se firma por quienes en ella intervinieron.</p>
+      </section>
+      <div style="column-count: 1;width:100%" align="center">
+        <section style="font-size:1em;margin-top:5em;width:50%;float:left;">
+          <p>___________________________________________</p>
+          <p><i>[REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i></p>
+          <p>NIT: <i>[NIT_ENTIDAD_CONTRATISTA_OBRA]</i></p>
+          <p>Representante legal: <i>[NOMBRE_ENTIDAD_CONTRATISTA_OBRA]</i></p>
+          <p>C.C. No. <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_OBRA]</i></p>
+          <p>CONTRATISTA DE OBRA</p>
+        </section>
+        <section style="font-size:1em;margin-top:5em;width:50%;float:right;">
+          <p>___________________________________________</p>
+          <p><i>[ENTIDAD_CONTRATISTA_INTERVENTORIA]</i></p>
+          <p>NIT: <i>[NIT_CONTRATISTA_INTERVENTORIA]</i></p>
+          <p>Representante legal: <i>[REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i></p>
+          <p>C.C. No. <i>[CEDULA_REPRESENTANTE_LEGAL_CONTRATISTA_INTERVENTORIA]</i></p>
+          <p>CONTRATISTA DE INTERVENTORÍA</p>
+        </section>
+      </div>
+    </div>

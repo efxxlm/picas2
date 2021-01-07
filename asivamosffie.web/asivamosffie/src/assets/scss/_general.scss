@@ -151,6 +151,11 @@ strong {
   padding-right: 0.5em;
 }
 
+.px-2em {
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
 .pt-1 {
   padding-top: 0.5em;
 }
@@ -194,6 +199,10 @@ strong {
 
 .opaco {
   opacity: 0.6;
+}
+
+.left-1-7 {
+  left: 1.7em;
 }
 
 input[type="number"]::-webkit-inner-spin-button,

@@ -20,6 +20,8 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   @Input() sesionComiteSolicitud: SesionComiteSolicitud;
   @Input() listaMiembros: SesionParticipante[];
+  @Input() fechaComite: Date;
+
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   minDate: Date;
@@ -114,10 +116,24 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   textoLimpioString(texto: string) {

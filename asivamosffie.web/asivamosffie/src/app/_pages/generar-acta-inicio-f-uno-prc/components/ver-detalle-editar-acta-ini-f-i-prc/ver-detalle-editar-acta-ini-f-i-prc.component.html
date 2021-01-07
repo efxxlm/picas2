@@ -8,53 +8,101 @@
         Ver detalle/Editar contrato {{this.numContrato}} fase 1 - Preconstrucción
     </h1>
     <p class="info-sub-title">
-        <span>Fecha de aprobación de requisitos: <b>{{this.fechaContrato}}</b></span>
+        <span>Fecha de aprobación de requisitos: <b>{{this.fechaAprobacionRequisitos  | date:'dd/MM/yyyy' }}</b></span>
     </p>
 </section>
 <section class="container">
     <mat-card class="shipping-card mainGris">
         <mat-card-content>
-            <p><strong>Vigencia del contrato: </strong>2020</p>
-            <p><strong>Fecha de firma del contrato: </strong>18/06/2020</p>
-            <p><strong>Número del DRP. </strong>DRP_015</p>
-            <p><strong>Fecha de generación de DRP. </strong>28/06/2020</p>
-            <p><strong>Fecha de aprobación de la garantía / póliza: </strong>02/07/2020</p>
+            <p><strong>Vigencia del contrato: </strong>{{this.vigenciaContrato | date:'dd/MM/yyyy' }} </p>
+            <p><strong>Fecha de firma del contrato: </strong>{{ this.fechaFirmaContrato | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Número del DRP. </strong>{{this.numDRP}}</p>
+            <p><strong>Fecha de generación de DRP. </strong>{{this.fechaDRP | date:'dd/MM/yyyy' }}</p>
+            <p><strong>Fecha de aprobación de la garantía / póliza:
+                </strong>{{this.fechaAprobGarantiaPoliza | date:'dd/MM/yyyy' }}</p>
             <p><strong>Objeto:</strong></p>
-            <p>Contrato de obra que compromete el diagnóstico y/o actualización y/o complementación y/o elaboración de
-                estudios y diseños y ejecución
-                de las obras necesarias para la adecuación y mejoramiento de las instituciones rurales.</p>
-            <p><strong>Valor inicial del contrato: </strong>$88.000.000</p>
-            <p><strong>Valor fase 1 - Preconstrucción: Estudios y diseños: </strong>$20.000.000</p>
-            <p><strong>Valor fase 2 - Construcción: Obra: </strong>$68.000.000</p>
-            <p><strong>Número de identificación del representante legal del contratista de inteventoría:
-                </strong>86.786.546</p>
-            <p><strong>Nombre del representante legal del contratista de interventoría: </strong>Juan Pablo Aparicio
-                Gómez</p>
-            <p><strong>Número de identificación del contratista de interventoría: </strong>870.876.977-4</p>
-            <p><strong>Nombre de la entidad contratista de interventoría: </strong>C & M Constructora Ltda.</p>
-            <p><strong>Número de identificación del representante legal del contratista de obra: </strong>93.876.987</p>
-            <p><strong>Nombre del representante legal del contratista de obra: </strong>María Mercedez Aristizabal</p>
-            <p><strong>Número de identificación de la entidad contratista de obra: </strong>900.564.768-5</p>
-            <p><strong>Nombre entidad contratista de obra: </strong>Constructora Colpatria</p>
+            <div [innerHtml]="this.objeto"></div>
+            <p><strong>Valor inicial del contrato: </strong>{{this.valorIni | currency}}</p>
+            <p><strong>Valor fase 1 - Preconstrucción: Estudios y diseños: </strong>{{this.valorFUno | currency}}</p>
+            <div *ngIf="this.valorFDos!=0">
+                <p><strong>Valor fase 2 - Construcción: Obra: </strong>{{this.valorFDos | currency}}</p>
+            </div>
+            <div *ngIf="this.tipoCodigo == '1' && this.opcion == 1">
+                <!--
+                    Campos pendientes - No se puede traer la informacion del representante legal de interventoria y obra
+                    <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                    </strong></p>
+                    <p><strong>Nombre del representante legal del contratista de interventoría:
+                    </strong> </p>
+                -->
+            <p><strong>Número de identificación del contratista de interventoría:
+                </strong> {{this.numIdentifiacionSupervisor }}</p>
+            <p><strong>Nombre de la entidad contratista de interventoría:
+                </strong>{{this.nomSupervisor}}
+            </p>
+                <p><strong>Número de identificación del representante legal del contratista de obra:
+                    </strong>{{this.numIdRepresentanteLegal }}</p>
+                <p><strong>Nombre del representante legal del contratista de obra:
+                    </strong>{{this.nomRepresentanteLegal}}</p>
+                <p><strong>Número de identificación de la entidad contratista de obra:
+                    </strong>{{this.nitContratistaInterventoria}}</p>
+                <p><strong>Nombre entidad contratista de obra: </strong>{{this.nomEntidadContratistaIntervn}}</p>
+                <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
+                    {{this.diasPlazoIni}}</p>
+            </div>
+            <div *ngIf="this.tipoCodigo == '1' && this.opcion == 2">
+                <p><strong>Número de identificación del Supervisor:
+                </strong>{{this.numIdentifiacionSupervisor }}</p>
+            <p><strong>Nombre del Supervisor:
+                </strong>{{this.nomSupervisor}}</p>
+                <p><strong>Número de identificación del representante legal del contratista de obra:
+                </strong>{{this.numIdRepresentanteLegal }}</p>
+            <p><strong>Nombre del representante legal del contratista de obra:
+                </strong>{{this.nomRepresentanteLegal}}</p>
+            <p><strong>Número de identificación de la entidad contratista de obra:
+                </strong>{{this.nitContratistaInterventoria}}</p>
+            <p><strong>Nombre entidad contratista de obra: </strong>{{this.nomEntidadContratistaIntervn}}</p>
             <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
                 {{this.diasPlazoIni}}</p>
+            </div>
+            <div *ngIf="this.tipoCodigo == '2' && this.opcion == 2">
+                <p><strong>Número de identificación del Supervisor:
+                </strong>{{this.numIdentifiacionSupervisor }}</p>
+            <p><strong>Nombre del Supervisor:
+                </strong>{{this.nomSupervisor}}</p>
+                <p><strong>Número de identificación del representante legal del contratista de inteventoría:
+                </strong></p>
+            <p><strong>Nombre del representante legal del contratista de interventoría:
+                </strong></p>
+            <p><strong>Número de identificación del contratista de interventoría:
+                </strong>{{this.nitContratistaInterventoria}}</p>
+            <p><strong>Nombre de la entidad contratista de interventoría:
+                </strong>{{this.nomEntidadContratistaIntervn}}
+            </p>
+            <p><strong>Plazo inicial del contrato: Meses:</strong> {{this.mesPlazoIni}} <strong>Días:</strong>
+                {{this.diasPlazoIni}}</p>
+            </div>
         </mat-card-content>
     </mat-card>
-    <div *ngIf="this.opcion==1">
+    <div>
         <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
             <mat-card class="shipping-card mainGris">
                 <mat-card-content>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-9 pl0">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="fechaActaInicioFUnoPreconstruccion">Fecha del acta de
+                                    <label class="label-left" for="fechaActaInicioFUnoPreconstruccion"
+                                        [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaActaInicioFUnoPreconstruccion.invalid}">Fecha
+                                        del acta de
                                         inicio de la fase 1 - Preconstrucción</label>
                                 </div>
                                 <div class="col d-flex align-items-center">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput [matDatepicker]="picker" required [max]="maxDate" readonly
-                                            (click)="picker.open()" formControlName="fechaActaInicioFUnoPreconstruccion">
+                                        <input matInput [matDatepicker]="picker" required
+                                            [min]="this.fechaAprobacionRequisitos" readonly (click)="picker.open()"
+                                            formControlName="fechaActaInicioFUnoPreconstruccion"
+                                            (dateInput)="generarFechaRestante()">
                                         <mat-datepicker #picker></mat-datepicker>
                                     </mat-form-field>
                                     <button mat-button color="primary" type="button" (click)="picker.open()"
@@ -66,101 +114,115 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-7" style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="fechaPrevistaTerminacion">Fecha prevista de
+                                    <label class="label-left" for="fechaPrevistaTerminacion"
+                                        [ngClass]="{'color-secondaryColor' : addressForm.controls.fechaPrevistaTerminacion.invalid}">Fecha
+                                        prevista de
                                         terminación</label>
                                 </div>
                                 <div class="col d-flex align-items-center">
                                     <mat-form-field class="example-full-width">
-                                        <input matInput [matDatepicker]="picker2" required [max]="maxDate2" readonly
-                                            (click)="picker2.open()" formControlName="fechaPrevistaTerminacion">
+                                        <input matInput [matDatepicker]="picker2" required readonly
+                                            formControlName="fechaPrevistaTerminacion">
                                         <mat-datepicker #picker2></mat-datepicker>
                                     </mat-form-field>
-                                    <button mat-button color="primary" type="button" (click)="picker2.open()"
-                                        class="btn-calendario">
-                                        <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="col-md-9" style="padding-left: 0px;">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left">Plazo de ejecución fase 1 – Preconstrucción:</label>
+                                    <label class="label-left"
+                                        [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid}">Plazo
+                                        de ejecución fase 1 – Preconstrucción:</label>
                                 </div>
                                 <div class="col d-flex d-flex-row">
-                                    <label class="label-left sub-label" for="mesPlazoEjFase1">
+                                    <label class="label-left sub-label" for="mesPlazoEjFase1"
+                                        [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase1.invalid}">
                                         Meses
                                     </label>
-                                    <mat-form-field class="w-8em">
-                                        <input matInput maxlength="2" min="1" max="99" required (keypress)="number($event)"
-                                            onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
-                                            formControlName="mesPlazoEjFase1">
+                                    <mat-form-field class="w97">
+                                        <input matInput maxlength="2" min="1" max="99" required
+                                            (keypress)="number($event)"
+                                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                            type="number" formControlName="mesPlazoEjFase1">
                                     </mat-form-field>
-                                    <span
-                                        class="contador">{{3 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                    <label class="label-left sub-label">
+                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+                                    {{2 - (addressForm.get('mesPlazoEjFase1').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}
+                                </span>
+                                    <label class="label-left sub-label"
+                                        [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase1.invalid}">
                                         Días
                                     </label>
-                                    <mat-form-field class="w-8em">
-                                        <input matInput maxlength="2" min="1" max="31" required (keypress)="number($event)"
+                                    <mat-form-field class="w97">
+                                        <input matInput maxlength="2" min="1" max="31" required
+                                            (keypress)="number($event)"
                                             onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
                                             type="number" formControlName="diasPlazoEjFase1">
                                     </mat-form-field>
-                                    <span
-                                        class="contador">{{2 - (addressForm.get('diasPlazoEjFase1').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}</span>
+                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 31 días" matTooltipClass="info-tooltip">
+                                    {{2 - (addressForm.get('diasPlazoEjFase1').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}
+                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="this.valorFDos!=0">
+                        <div class="col-md-9" style="padding-left: 0px;">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left"
+                                        [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase2.invalid}">Plazo
+                                        de ejecución fase 2 – Construcción:</label>
+                                </div>
+                                <div class="col d-flex d-flex-row">
+                                    <label class="label-left sub-label" for="mesPlazoEjFase2"
+                                        [ngClass]="{'color-secondaryColor' : addressForm.controls.mesPlazoEjFase2.invalid}">
+                                        Meses
+                                    </label>
+                                    <mat-form-field class="w-8em">
+                                        <input matInput maxlength="2" min="1" max="99" required
+                                            (keypress)="number($event)"
+                                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                            type="number" formControlName="mesPlazoEjFase2">
+                                    </mat-form-field>
+                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+                                        {{2 - (addressForm.get('mesPlazoEjFase2').value !== null?addressForm.get('mesPlazoEjFase2').value.toString().length:0)}}
+                                    </span>
+                                    <label class="label-left sub-label"
+                                        [ngClass]="{'color-secondaryColor' : addressForm.controls.diasPlazoEjFase2.invalid}">
+                                        Días
+                                    </label>
+                                    <mat-form-field class="w-8em">
+                                        <input matInput maxlength="2" min="1" max="31" required
+                                            (keypress)="number($event)"
+                                            onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
+                                            type="number" formControlName="diasPlazoEjFase2">
+                                    </mat-form-field>
+                                    <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico igual o menor a 31 días" matTooltipClass="info-tooltip">
+                                        {{2 - (addressForm.get('diasPlazoEjFase2').value !== null?addressForm.get('diasPlazoEjFase2').value.toString().length:0)}}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-9">
-                            <div class="row">
-                                <div class="pr-1">
-                                    <label class="label-left">Plazo de ejecución fase 2 – Construcción:</label>
-                                </div>
-                                <div class="col d-flex d-flex-row">
-                                    <label class="label-left sub-label" for="mesPlazoEjFase2">
-                                        Meses
-                                    </label>
-                                    <mat-form-field class="w-8em">
-                                        <input matInput maxlength="2" min="1" max="99" required (keypress)="number($event)"
-                                            onKeyPress="if(this.value.length>=this.maxLength) return false;" type="number"
-                                            formControlName="mesPlazoEjFase2">
-                                    </mat-form-field>
-                                    <span
-                                        class="contador">{{3 - (addressForm.get('mesPlazoEjFase2').value?addressForm.get('mesPlazoEjFase1').value.toString().length:0)}}</span>
-                                    <label class="label-left sub-label">
-                                        Días
-                                    </label>
-                                    <mat-form-field class="w-8em">
-                                        <input matInput maxlength="2" min="1" max="31" required (keypress)="number($event)"
-                                            onKeyPress="if(this.value.length>=this.maxLength) return false;if(this.value>=this.max) return false;"
-                                            type="number" formControlName="diasPlazoEjFase2">
-                                    </mat-form-field>
-                                    <span
-                                        class="contador">{{2 - (addressForm.get('diasPlazoEjFase2').value?addressForm.get('diasPlazoEjFase1').value.toString().length:0)}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-start">
                         <div class="text-area-quill noDecorated">
                             <label class="label-left" for="observacionesEspeciales">Observaciones o
                                 consideraciones especiales</label>
-                            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                                (onContentChanged)="maxLength($event, 500)"
-                                formControlName="observacionesEspeciales"></quill-editor>
+                            <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                (onContentChanged)="maxLength($event, 500)" formControlName="observacionesEspeciales">
+                            </quill-editor>
                         </div>
                         <span class="contador auxMarg" *ngIf="addressForm.get('observacionesEspeciales').value">
-                            {{500 - addressForm.get('fechaActaInicioFUnoPreconstruccion').value.length}}
+                            {{500 - textoLimpio(addressForm.get('observacionesEspeciales').value)}}
                         </span>
                         <span class="contador auxMarg"
-                            *ngIf="addressForm.get('observacionesEspeciales').value === null">
+                            *ngIf="addressForm.get('observacionesEspeciales').value === null || addressForm.get('observacionesEspeciales').value === ''">
                             500
                         </span>
                     </div>
@@ -173,18 +235,8 @@
             </div>
         </form>
     </div>
-    <mat-card class="shipping-card mainGris" *ngIf="this.opcion==2">
-        <mat-card-content>
-            <p><strong>Fecha del acta de inicio de la fase 1 - Preconstrucción: </strong>09/08/2020</p>
-            <p><strong>Fecha prevista de terminación: </strong>24/10/2020</p>
-            <p><strong>Plazo de ejecución fase 1 – Preconstrucción: Meses:</strong> 2 <strong>Días:</strong> 15</p>
-            <p><strong>Plazo de ejecución fase 2 – Construcción:</strong> 8 <strong>Días:</strong> 10</p>
-            <p><strong>Observaciones o consideraciones especiales: </strong></p>
-            <p>-----</p>
-        </mat-card-content>
-    </mat-card>
     <!--
-    <div *ngIf="this.conObservaciones==true">
+    <div *ngIf="this.anotacionesSupervisor==true">
         <mat-card class="shipping-card mainGris">
             <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text textoGris">
@@ -192,13 +244,10 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <p><strong>20/07/2020</strong></p>
-                <p>La fecha prevista de terminación no es correcta, verificar la información.</p>
+                <p><strong>{{this.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></p>
+                <div [innerHtml]="this.observacionSupervisor"></div>
             </mat-card-content>
         </mat-card>
     </div>
     -->
-    <div *ngIf="this.opcion==2">
-        <app-formulario-tiene-observaciones></app-formulario-tiene-observaciones>
-    </div>
 </section>

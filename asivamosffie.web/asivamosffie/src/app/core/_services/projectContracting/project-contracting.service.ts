@@ -66,4 +66,8 @@ export class ProjectContractingService {
     return this.http.get<Contratacion>(`${environment.apiUrl}/ProjectContracting/getContratacionByContratacionIdWithGrillaProyecto?pContratacionId=${ id }`);
    }
 
+  getListFaseComponenteUso( ){
+    return this.http.get<any>( `${ environment.apiUrl }/ProjectContracting/getListFaseComponenteUso` );
+  }
+
 }

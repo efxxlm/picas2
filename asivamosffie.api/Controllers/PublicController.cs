@@ -19,14 +19,31 @@ namespace asivamosffie.api.Controllers
         public readonly ISourceFundingService _sourceFunding;
         public readonly ISelectionProcessService _selectionProcess;
         public readonly IManagementCommitteeReportService _managementCommitteeReportService;
-        private readonly IOptions<AppSettings> _settings;
+        public readonly IOptions<AppSettings> _settings;
+        public readonly IManagePreContructionActPhase1Service _managePreContructionActPhase1Service;
+        public readonly IActBeginService _actBeginService;
+        public readonly IGuaranteePolicyService _guaranteePolicy;
 
-        public PublicController(IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings)
+        public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy, IActBeginService actBeginService)
         {
             _sourceFunding = sourceFunding;
             _settings = settings;
             _selectionProcess = selectionProcess;
             _managementCommitteeReportService = managementCommitteeReportService;
+            _guaranteePolicy = guaranteePolicy;
+            _actBeginService = actBeginService;
+        }
+
+        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService
+            {
+                MailPort = appSettings.Value.MailPort,
+                MailServer = appSettings.Value.MailServer,
+                Password = appSettings.Value.Password,
+                Sender = appSettings.Value.Sender
+            };
+            return appSettingsService;
         }
 
         [HttpGet("GetConsignationValue")]
@@ -75,6 +92,34 @@ namespace asivamosffie.api.Controllers
             }
             catch (Exception ex)
             { 
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetDiasHabilesActaConstruccionEnviada")]
+        public async Task GetDiasHabilesActaConstruccionEnviada()
+        {
+            try
+            {
+                AppSettingsService appSettingsService = ToAppSettingsService(_settings);
+                await _actBeginService.GetDiasHabilesActaConstruccionEnviada(appSettingsService);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetDiasHabilesActaRegistrada")]
+        public async Task GetDiasHabilesActaRegistrada()
+        {
+            try
+            {
+                AppSettingsService appSettingsService = ToAppSettingsService(_settings);
+                await _actBeginService.GetDiasHabilesActaRegistrada(appSettingsService);
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
         }

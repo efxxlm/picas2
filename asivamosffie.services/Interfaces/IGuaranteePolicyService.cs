@@ -23,6 +23,9 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CambiarEstadoPolizaByContratoId(int pContratoId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica);
 
+        Task<bool> ConsultarRegistroCompletoCumple(int ContratoPolizaId);
+
+        Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz();
         Task<List<GrillaContratoGarantiaPoliza>> ListGrillaContratoGarantiaPoliza();
 
         Task<List<PolizaGarantia>> GetListPolizaGarantiaByContratoPolizaId(int pContratoPolizaId);

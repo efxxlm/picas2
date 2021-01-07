@@ -1,0 +1,59 @@
+<section *ngIf="esFlujoInversion === false">
+
+        <div class="separate">
+                <button mat-button color="warn" class="btn-descargar-plantilla mb-1em"
+                        (click)="descargaPlantillaProgramacion()">
+                        <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar-plantilla--img">
+                        Descargar plantilla
+                </button>
+        </div>
+
+        <div>
+                <button mat-raised-button color="accent" type="submit" (click)="cargarProgramacion()"
+                        [disabled]="archivoCargueIdProgramacionObra !== undefined">
+                        Cargar programación
+                </button>
+        </div>
+
+
+</section>
+<section *ngIf="esFlujoInversion && contrato !== undefined" class="mt-2em">
+
+        <div class="separate">
+                <button mat-button color="warn" class="btn-descargar-plantilla mb-1em"
+                        (click)="descargaPlantillaFlujoInversion()">
+                        <img src="assets/img/icon/descarga.svg" alt="Descargar" class="btn-descargar-plantilla--img">
+                        Descargar plantilla
+                </button>
+        </div>
+
+        <div>
+
+                <button mat-raised-button color="accent" type="submit" class="mr-2em" (click)="descargarDRPBoton()">
+                        Ver documento de registro presupuestal
+                </button>
+
+                <button mat-raised-button color="accent" type="submit" (click)="cargarProgramacion()"
+                        [disabled]="archivoCargueIdFlujoInversion !== undefined">
+                        Cargar flujo de inversión de recursos
+                </button>
+        </div>
+
+
+</section>
+<div *ngIf="!esFlujoInversion && contrato">
+        <app-tabla-programacion-obra [contratoConstruccionId]="contratoConstruccionId" [proyectoId]="proyectoId"
+                [contratoId]="contrato.contratoId" (tieneRegistros)="tieneRegistrosObra = $event"
+                (realizoObservacion)="esObservacion( $event )"
+                [observacionDevolucionProgramacionObra]="observacionDevolucionProgramacionObra"
+                *ngIf="tieneRegistrosObra">
+        </app-tabla-programacion-obra>
+</div>
+<div *ngIf="esFlujoInversion && contrato">
+        <app-tabla-inversion-recursos [contratoConstruccionId]="contratoConstruccionId" [proyectoId]="proyectoId"
+                [contratoId]="contrato.contratoId" (tieneRegistros)="tieneRegistrosInversion = $event"
+                (realizoObservacion)="esObservacion( $event )"
+                [observacionDevolucionFlujoInversion]="observacionDevolucionFlujoInversion"
+                *ngIf="tieneRegistrosInversion">
+        </app-tabla-inversion-recursos>
+</div>

@@ -11,6 +11,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IProjectService
     {
+        Task<List<VListaProyectos>> ListProyectoOpt();
+
        Task<ProyectoGrilla> GetProyectoGrillaByProyectoId(int idProyecto);
 
         Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto);

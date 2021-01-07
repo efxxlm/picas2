@@ -499,6 +499,7 @@ namespace asivamosffie.services
                     {
                         comiteTecnico.EstadoComiteCodigo = ConstanCodigoEstadoComite.Con_Acta_De_Sesion_Aprobada;
                         await EnviarActaAprobada(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                        await NotificarCompromisos(comiteTecnicoId, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
                     }
 
                     //Validar sesionComentario 
@@ -506,10 +507,46 @@ namespace asivamosffie.services
                     {
                         SesionComentario.ValidacionVoto = true;
                     }
+                    //valido si el comite tiene relacionado un proceso de selección, solo para fiduciario
+                    if (comiteTecnico.TipoTemaFiduciarioCodigo != null)
+                    {
+                        var pSesionComite = _context.SesionComiteSolicitud.Where(x => x.ComiteTecnicoFiduciarioId == comiteTecnico.ComiteTecnicoId).ToList();
+                        foreach (var pses in pSesionComite)
+                        {
+                            if (pses.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Inicio_De_Proceso_De_Seleccion)
+                            {
+                                //obtengo el proponente y lo convierto en contratista
+                                var proponentes = _context.ProcesoSeleccionProponente.Where(x => x.ProcesoSeleccionId == pses.SolicitudId).Include(x => x.ProcesoSeleccion).ToList();
+                                foreach (var p in proponentes)
+                                {
+                                    Contratista contratista = new Contratista();
+                                    //verifico que no exista
+                                    var existecotraticsta = _context.Contratista.Where(x => x.NumeroIdentificacion == p.NumeroIdentificacion).FirstOrDefault();
+                                    if (existecotraticsta == null)
+                                    {
+                                        contratista.TipoIdentificacionCodigo = (p.TipoProponenteCodigo == "4" || p.TipoProponenteCodigo == "2") ? "3" : "1"; //Nit - cedula
+                                        contratista.NumeroIdentificacion = string.IsNullOrEmpty(p.NumeroIdentificacion) ? "0" : p.NumeroIdentificacion;
+                                        contratista.Nombre = p.NombreProponente;
+                                        contratista.RepresentanteLegal = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? p.NombreProponente : p.NombreRepresentanteLegal;
+                                        contratista.RepresentanteLegalNumeroIdentificacion = string.IsNullOrEmpty(p.NombreRepresentanteLegal) ? "" : p.CedulaRepresentanteLegal;
+                                        contratista.NumeroInvitacion = p.ProcesoSeleccion.NumeroProceso;
+                                        contratista.TipoProponenteCodigo = p.TipoProponenteCodigo;
+                                        contratista.Activo = true;
+                                        contratista.FechaCreacion = DateTime.Now;
+                                        contratista.UsuarioCreacion = pUser.Email.ToUpper();
+                                        contratista.ProcesoSeleccionProponenteId = p.ProcesoSeleccionProponenteId;
+
+                                        _context.Contratista.Add(contratista);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
                 _context.SaveChanges();
                 return new Respuesta
                 {
+
                     IsSuccessful = true,
                     IsException = false,
                     IsValidation = false,
@@ -560,7 +597,7 @@ namespace asivamosffie.services
                     .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
                     .Include(r => r.SesionParticipante)
                       .ThenInclude(r => r.Usuario)
-                         .ThenInclude(r => r.SesionComentario) 
+                         .ThenInclude(r => r.SesionComentario)
                     .FirstOrDefault();
 
                 string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
@@ -571,15 +608,15 @@ namespace asivamosffie.services
                 {
                     TotalRegistros += Registros;
 
-                    TotalRegistros = TotalRegistros.Replace("[FECHA_APROBACION]", (SesionParticipante.Usuario.SesionComentario.Where(r=> r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Select(r=> r.Fecha).FirstOrDefault()).ToString("dd-MM-yyyy"))
-                                  .Replace("[RESPONSABLE]", myTI.ToTitleCase(SesionParticipante.Usuario.Nombres.ToLower() + " "+ SesionParticipante.Usuario.Apellidos.ToLower()));
+                    TotalRegistros = TotalRegistros.Replace("[FECHA_APROBACION]", (SesionParticipante.Usuario.SesionComentario.Where(r => r.EstadoActaVoto == ConstantCodigoActas.Aprobada).Select(r => r.Fecha).FirstOrDefault()).ToString("dd-MM-yyyy"))
+                                  .Replace("[RESPONSABLE]", myTI.ToTitleCase(SesionParticipante.Usuario.Nombres.ToLower() + " " + SesionParticipante.Usuario.Apellidos.ToLower()));
 
                 }
-                Tabla =  Tabla.Replace("[REGISTROS]", TotalRegistros);
+                Tabla = Tabla.Replace("[REGISTROS]", TotalRegistros);
 
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Secretario_Comite).Select(x => x.Usuario.Email).ToList();
-                 
+
                 foreach (var usuario in usuariosecretario)
                 {
                     Template TemplateActaAprobada = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionActaAprobacion);
@@ -587,11 +624,83 @@ namespace asivamosffie.services
                         TemplateActaAprobada.Contenido
                         .Replace("_LinkF_", pDominioFront)
                         .Replace("[TIPO_COMITE]", (bool)comiteTecnico.EsComiteFiduciario ? ConstanStringTipoComite.Fiduciario : ConstanStringTipoComite.Tecnico)
-                        .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite) 
+                        .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
                         .Replace("[TABLA_RESPONSABLE_APROBACION]", Tabla)
                         .Replace("[FECHA_COMITE]", ((DateTime.Now).ToString("dd-MM-yyyy")));
-                  
+
                     blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Aprobación de acta", template, pSender, pPassword, pMailServer, pMailPort);
+                }
+
+                return blEnvioCorreo;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> NotificarCompromisos(int pComiteTecnicoId, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender)
+        {
+            try
+            {
+                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+
+                ComiteTecnico comiteTecnico = _context.ComiteTecnico
+                    .Where(r => r.ComiteTecnicoId == pComiteTecnicoId)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnico)
+                        .ThenInclude(r => r.SesionSolicitudCompromiso)
+                            .ThenInclude(r => r.ResponsableSesionParticipante)
+                                .ThenInclude(r => r.Usuario)
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                        .ThenInclude(r => r.SesionSolicitudCompromiso)
+                            .ThenInclude(r => r.ResponsableSesionParticipante)
+                                .ThenInclude(r => r.Usuario)
+                    .FirstOrDefault();
+
+                string Tabla = _context.Template.Find((int)enumeratorTemplate.TablaAprobacionParticipanteActa).Contenido;
+                string Registros = _context.Template.Find((int)enumeratorTemplate.RegistrosTablaAprobacionParticipanteActa).Contenido;
+                string TotalRegistros = string.Empty;
+
+                bool blEnvioCorreo = false;
+
+                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnico)
+                {
+                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso)
+                    {
+                        if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
+                        {
+                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
+                            string template =
+                                TemplateNotificacionCompromisos.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[URL]", pDominioFront)
+                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
+                                .Replace("[COMPROMISO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
+                                
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
+                }
+
+                foreach (var sesionComiteSolicitud in comiteTecnico.SesionComiteSolicitudComiteTecnicoFiduciario)
+                {
+                    foreach (var sesionSolicitudCompromiso in sesionComiteSolicitud.SesionSolicitudCompromiso)
+                    {
+                        if (!string.IsNullOrEmpty(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email))
+                        {
+                            Template TemplateNotificacionCompromisos = await _commonService.GetTemplateById((int)enumeratorTemplate.NotificacionCompromisos);
+                            string template =
+                                TemplateNotificacionCompromisos.Contenido
+                                .Replace("_LinkF_", pDominioFront)
+                                .Replace("[URL]", pDominioFront)
+                                .Replace("[NUMERO_COMITE]", comiteTecnico.NumeroComite)
+                                .Replace("[COMPROMISO]", sesionSolicitudCompromiso.Tarea)
+                                .Replace("[FECHA_CUMPLIMIENTO]", sesionSolicitudCompromiso.FechaCumplimiento.HasValue ? sesionSolicitudCompromiso.FechaCumplimiento.Value.ToString("dd-MM-yyyy") : null);
+                                
+                            blEnvioCorreo = Helpers.Helpers.EnviarCorreo(sesionSolicitudCompromiso?.ResponsableSesionParticipante?.Usuario?.Email, "Notificación Compromisos", template, pSender, pPassword, pMailServer, pMailPort);
+                        }
+                    }
                 }
 
                 return blEnvioCorreo;

@@ -63,6 +63,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<DocumentoApropiacion> DocumentoApropiacion { get; set; }
         public virtual DbSet<Dominio> Dominio { get; set; }
         public virtual DbSet<EnsayoLaboratorioMuestra> EnsayoLaboratorioMuestra { get; set; }
+        public virtual DbSet<FaseComponenteUso> FaseComponenteUso { get; set; }
         public virtual DbSet<FichaEstudio> FichaEstudio { get; set; }
         public virtual DbSet<FlujoInversion> FlujoInversion { get; set; }
         public virtual DbSet<FuenteFinanciacion> FuenteFinanciacion { get; set; }
@@ -162,7 +163,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VVerificarValidarSeguimientoSemanal> VVerificarValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -1624,7 +1624,6 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.TipoControversiaCodigo)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -2278,6 +2277,21 @@ namespace asivamosffie.model.Models
                     .WithMany(p => p.EnsayoLaboratorioMuestraObservacionSupervisor)
                     .HasForeignKey(d => d.ObservacionSupervisorId)
                     .HasConstraintName("fk_EnsayoLaboratorioMuestra_SeguimientoSemanalObservacionSupervisor");
+            });
+
+            modelBuilder.Entity<FaseComponenteUso>(entity =>
+            {
+                entity.Property(e => e.ComponenteId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FaseId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsoId)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<FichaEstudio>(entity =>

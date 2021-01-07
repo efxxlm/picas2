@@ -6,6 +6,7 @@ import { ProjectContractingService } from 'src/app/core/_services/projectContrac
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { MatRadioChange } from '@angular/material/radio';
 
 @Component({
   selector: 'app-definir-caracteristicas',
@@ -125,6 +126,15 @@ export class DefinirCaracteristicasComponent implements OnInit {
 
       });
 
+  }
+
+  changeProyectoRequiereLicencia( estado: MatRadioChange ){
+    if ( estado.value === false ) {
+      this.addressForm.get('licenciaVigente').setValue( null );
+      this.addressForm.get('numeroLicencia').setValue( null );
+      this.addressForm.get('fechaVigencia').setValue( null );
+    }
+    //console.log( estado );
   }
 
 }

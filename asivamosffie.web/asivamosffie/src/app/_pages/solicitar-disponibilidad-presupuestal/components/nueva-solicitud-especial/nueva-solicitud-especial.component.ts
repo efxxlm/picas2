@@ -350,9 +350,25 @@ export class NuevaSolicitudEspecialComponent implements OnInit {
   };
 
   textoLimpio(texto: string) {
-    let textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
-  };
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
+  }
 
   onSubmit() {
     //if (this.addressForm.valid) {

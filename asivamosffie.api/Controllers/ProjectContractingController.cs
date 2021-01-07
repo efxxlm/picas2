@@ -208,5 +208,12 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectContractingService.GetContratacionProyectoById(idContratacionProyecto);
             return respuesta;
         }
+
+        [Route("GetListFaseComponenteUso")]
+        [HttpGet]
+        public async Task<List<FaseComponenteUso>> GetListFaseComponenteUso()
+        {
+            return await _projectContractingService.GetListFaseComponenteUso();
+        }
     }
 }

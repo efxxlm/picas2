@@ -344,6 +344,10 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<List<VListaProyectos>> ListProyectoOpt() 
+        {
+            return await _context.VListaProyectos.OrderByDescending(r => r.ProyectoId).ToListAsync(); 
+        }
         public async Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto)
         {
             if (!(bool)pProyecto.Eliminado)

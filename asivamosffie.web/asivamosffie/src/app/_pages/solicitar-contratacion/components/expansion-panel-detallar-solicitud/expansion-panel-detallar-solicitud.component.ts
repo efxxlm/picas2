@@ -80,28 +80,78 @@ export class ExpansionPanelDetallarSolicitudComponent implements OnInit {
       let cantidadProyectosSinDiligenciar = 0;
       if (this.contratacion.contratacionProyecto) {
         for (const contratacionProyecto of this.contratacion.contratacionProyecto) {
-          if (contratacionProyecto[ 'registroCompleto' ] === undefined) {
+          // if (contratacionProyecto[ 'registroCompleto' ] === undefined) {
+          //   cantidadProyectosSinDiligenciar++;
+          // }
+          // if ( contratacionProyecto[ 'registroCompleto' ] === true ) {
+          //   cantProyectosCompletos++;
+          // }
+          //podria tener algun otro campo lleno, no solo tiene monitoreo, por lo que toca 
+          let caracteristicasconalgo=false;
+
+          if (
+            contratacionProyecto['tieneMonitoreoWeb'] !== undefined ||
+            contratacionProyecto['esReasignacion'] !== undefined ||
+            contratacionProyecto['esAvanceobra'] !== undefined ||
+            contratacionProyecto['porcentajeAvanceObra'] !== undefined || 
+            contratacionProyecto['requiereLicencia'] !== undefined ||
+            contratacionProyecto['numeroLicencia'] !== undefined ||
+            contratacionProyecto['licenciaVigente'] != undefined || 
+            contratacionProyecto['fechaVigencia'] !== undefined
+            
+          ) 
+          {
+            caracteristicasconalgo = true;
+          }
+
+          let registroCompleto: boolean = true;
+
+          if( 
+              contratacionProyecto[ 'tieneMonitoreoWeb' ] === undefined || 
+              contratacionProyecto[ 'esReasignacion' ] === undefined ||
+              ( contratacionProyecto[ 'esReasignacion' ] === true && contratacionProyecto[ 'esAvanceobra' ] === undefined ) ||
+              ( contratacionProyecto[ 'esAvanceobra' ] === true && contratacionProyecto[ 'porcentajeAvanceObra' ] === undefined ) ||
+              ( contratacionProyecto[ 'porcentajeAvanceObra' ] !== undefined && contratacionProyecto[ 'requiereLicencia' ] === undefined ) ||
+              ( contratacionProyecto[ 'requiereLicencia' ] === true && contratacionProyecto[ 'licenciaVigente' ] === undefined ) ||
+              ( contratacionProyecto[ 'licenciaVigente' ] === true && contratacionProyecto[ 'numeroLicencia' ] === undefined ) ||
+              ( contratacionProyecto[ 'licenciaVigente' ] === true && contratacionProyecto[ 'fechaVigencia' ] === undefined ) ||
+
+              ( contratacionProyecto[ 'esReasignacion' ] === false && contratacionProyecto[ 'requiereLicencia' ] === undefined ) ||
+              ( contratacionProyecto[ 'esAvanceobra' ] === false && contratacionProyecto[ 'requiereLicencia' ] === undefined ) 
+            )
+            {
+              registroCompleto = false;
+            }
+
+            console.log( caracteristicasconalgo, registroCompleto )
+
+          if ( registroCompleto === false && caracteristicasconalgo===false) {
             cantidadProyectosSinDiligenciar++;
           }
-          if ( contratacionProyecto[ 'registroCompleto' ] === true ) {
-            cantProyectosCompletos++;
-          }
-          if ( contratacionProyecto[ 'registroCompleto' ] === false && contratacionProyecto[ 'tieneMonitoreoWeb' ] === undefined ) {
-            cantidadProyectosSinDiligenciar++;
-          }
-          if ( contratacionProyecto[ 'registroCompleto' ] === false && contratacionProyecto[ 'tieneMonitoreoWeb' ] !== undefined ) {
+          if ( registroCompleto === false && caracteristicasconalgo===true ) {
             cantProyectosEnProceso++;
           }
+          if ( registroCompleto === true ) {
+            cantProyectosCompletos++;
+          }
+        }
+
+        console.log( cantProyectosCompletos, this.contratacion.contratacionProyecto.length, cantidadProyectosSinDiligenciar )
+
+        let respuesta: string;
+        
+        if ( cantProyectosEnProceso > 0 || cantProyectosCompletos > 0 ) {
+          respuesta = this.estadoSemaforos.enProceso;
         }
         if ( cantidadProyectosSinDiligenciar === this.contratacion.contratacionProyecto.length ) {
-          return this.estadoSemaforos.sinDiligenciar;
+          respuesta = this.estadoSemaforos.sinDiligenciar;
         }
         if ( cantProyectosCompletos === this.contratacion.contratacionProyecto.length ) {
-          return this.estadoSemaforos.completo;
+          respuesta = this.estadoSemaforos.completo;
         }
-        if ( cantProyectosEnProceso < cantProyectosCompletos || cantProyectosEnProceso > cantidadProyectosSinDiligenciar ) {
-          return this.estadoSemaforos.enProceso;
-        }
+        
+
+        return respuesta;
       }
     } else if ( acordeon === 'fuentesUso' ) {
       let contratacionProyectoAportanteCompleto = 0;
