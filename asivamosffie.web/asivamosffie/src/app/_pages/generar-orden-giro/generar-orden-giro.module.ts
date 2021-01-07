@@ -17,11 +17,14 @@ import { TablaInfoFuenterecGogComponent } from './components/tabla-info-fuentere
 import { FormEstrategPagosGogComponent } from './components/form-estrateg-pagos-gog/form-estrateg-pagos-gog.component';
 import { DescDirTecnicaGogComponent } from './components/desc-dir-tecnica-gog/desc-dir-tecnica-gog.component';
 import { FormCostoVariableGogComponent } from './components/form-costo-variable-gog/form-costo-variable-gog.component';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { FormTipopago3GogComponent } from './components/form-tipopago3-gog/form-tipopago3-gog.component';
+import { TerceroCausacionGogComponent } from './components/tercero-causacion-gog/tercero-causacion-gog.component';
 
 
 
 @NgModule({
-  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent],
+  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent],
   imports: [
     GenerarOrdenGiroRoutingModule,
     CommonModule,
@@ -30,6 +33,7 @@ import { FormCostoVariableGogComponent } from './components/form-costo-variable-
     MatAutocompleteModule,
     FormsModule,
     QuillModule.forRoot(),
+    CurrencyMaskModule
   ]
 })
 export class GenerarOrdenGiroModule { }
