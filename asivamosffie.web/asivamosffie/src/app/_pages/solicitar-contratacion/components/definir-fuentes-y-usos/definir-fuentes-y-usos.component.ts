@@ -176,7 +176,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                     grupoAportante.get('estadoSemaforo').setValue('en-proceso')
                   };
 
-                  let usos = this.listaFaseUsosComponentes.filter(p => p.faseId === faseSeleccionada.codigo && p.componenteId === componenteSeleccionado.codigo);
+                  let usos = this.listaFaseUsosComponentes.filter(p => p.faseId === faseSeleccionada?.codigo && p.componenteId === componenteSeleccionado?.codigo);
                   let listaDeUsos: Dominio[] = [];
 
                   if (this.usosSelect.length > 0) {
@@ -240,29 +240,32 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       control.get('usoDescripcion').setValue(null);
     })
 
-    // if ( faseCodigo !== undefined) {
-    //   let componente = this.listaFaseUsosComponentes.filter( p => p.faseId === faseCodigo);
-    //   if ( this.usosSelect.length > 0 ) {
-    //     let listaDeUsos: Dominio[] = [];
-    //     usos.forEach( u => {
-    //       listaDeUsos.push( this.usosSelect.find( uso => u.usoId == uso.codigo));
-    //     });
-    //     this.listaUsos = listaDeUsos;
-    //   };
-    // };
-
   }
 
-  getListaUsosFiltrado(posicionAportante, posicionComponente) {
+  getListaUsosFiltrado(posicionAportante, posicionComponente, posicionUso) {
 
-    let listaUsos = this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value;
-    console.log(listaUsos)
-    // this.usos( posicionAportante,posicionComponente ).controls.forEach( u => {
-    //   if ( listaUsos !== undefined )
-    //     listaUsos = listaUsos.filter( uso => uso.codigo != u.value.usoDescripcion.codigo );
+    let usoSeleccionado = this.usos(posicionAportante, posicionComponente).controls[posicionUso];
 
-    // });
-    this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').setValue(listaUsos);
+    //let listaUsos =this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value.map((x) => x);
+    let listaUsos: any[] = [];
+
+    this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value.forEach(u => {
+        listaUsos.push(u)
+    });
+
+    console.log(usoSeleccionado);
+
+    this.usos(posicionAportante, posicionComponente).controls.forEach(u => {
+      console.log(u.value.usoDescripcion?.codigo, usoSeleccionado?.value?.usoDescripcion?.codigo, usoSeleccionado)
+
+      if (listaUsos !== undefined && u.value.usoDescripcion)
+        listaUsos = listaUsos.filter(uso => uso.codigo != u.value.usoDescripcion.codigo);
+
+    });
+
+    if (usoSeleccionado?.value?.usoDescripcion)
+      listaUsos.push(usoSeleccionado?.value?.usoDescripcion)
+
     return listaUsos;
   }
 
@@ -282,7 +285,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           listaDeUsos.push(this.usosSelect.find(uso => u.usoId == uso.codigo));
         });
         this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').setValue(listaDeUsos)
-        this.listaUsos = listaDeUsos;
+        //this.listaUsos = listaDeUsos;
       };
     };
   };
@@ -310,7 +313,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   };
 
   addUso(j: number, i: number) {
-    if (this.listaUsos.length === 0) {
+    this.componentes(j).controls[i].get('listaUsos').value.length
+    if (this.componentes(j).controls[i].get('listaUsos').value.length === this.usos(j, i).controls.length) {
       this.openDialog('', `<b>No se encuentran usos disponibles para el componente de ${this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra'}.</b>`);
       return;
     };
@@ -331,7 +335,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       valorUso: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)])
       ],
-
+      listaUsos: []
     });
   }
 

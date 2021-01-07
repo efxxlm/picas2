@@ -145,7 +145,7 @@
                                   <mat-form-field class="select-width" >
                                     <mat-select required formControlName="usoDescripcion">
                                       <section>
-                                        <mat-option *ngFor="let u of getListaUsosFiltrado(j,i)" [value]="u" >
+                                        <mat-option *ngFor="let u of getListaUsosFiltrado(j,i,k)" [value]="u" >
                                           {{ u.nombre }}
                                         </mat-option>
                                       </section>
