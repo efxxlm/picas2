@@ -33,7 +33,13 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string sedeString { get; set; }
+        
         [NotMapped]
         public string institucionEducativaString { get; set; }
+
+        [NotMapped]
+        public VProyectosXcontrato InfoProyecto { get; set; }
+
+        
     }
 }

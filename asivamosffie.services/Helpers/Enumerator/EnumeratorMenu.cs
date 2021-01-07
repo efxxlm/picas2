@@ -22,10 +22,17 @@ namespace asivamosffie.services.Helpers.Enumerator
         RegistrarSesionComiteFiduciario = 29,
         DisponibilidadPresupuestal = 30,
         Gestionar_Procesos_Contractuales = 31,
-        GestionarGarantias = 35,
-        Generar_Registro_Presupuestal = 36,
+
+        
+       GestionarGarantias= 35,
+ 
+        Generar_Registro_Presupuestal=36,
+        Registrar_contratos_modificaciones_contractuales = 46,
+
+        Registrar_seguimiento_diario = 53,
+        Verificar_seguimiento_diario = 54,
+
         Preconstruccion_Fase_1 = 37,   
-        Registrar_contratos_modificaciones_contractuales = 46, 
      	Registrar_Programacion_Personal_Obra = 48,
         Gestionar_controversias_contractuales=47, 
         Gestionar_procesos_Defensa_Judicial = 52,

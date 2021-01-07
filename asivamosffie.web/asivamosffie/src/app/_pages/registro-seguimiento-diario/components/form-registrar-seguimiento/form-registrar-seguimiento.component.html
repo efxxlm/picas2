@@ -1,0 +1,544 @@
+<div class="container" >
+  <div class="text-right">
+    <a routerLink="../../" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <div class="text-center" *ngIf="proyecto">
+    <h1 class="title-menu--h1">
+      Registrar seguimiento diario {{ proyecto.llaveMen }}
+    </h1>
+    <p class="colorMainColor mt-05em">
+      <span class="mx-1em">{{ proyecto.fechaRegistroProyecto | date: 'dd/MM/yyyy' }}</span>      
+      <span class="mx-1em">{{ proyecto.tipoIntervencion }}</span>
+      <span class="mx-1em">{{ proyecto.departamento }}</span>
+      <span class="mx-1em">{{ proyecto.municipio }}</span>
+      <span class="mx-1em">{{ proyecto.institucionEducativa }}</span>
+      <!-- <span class="mx-1em">Inmaculada</span> -->
+      <span class="mx-1em">{{ proyecto.sede }}</span>
+    </p>
+  </div>
+
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="proyecto">
+    <mat-card class="shipping-card">
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('fechaSeguimiento').invalid && addressForm.get('fechaSeguimiento').touched">
+                  Fecha de seguimiento
+                </label>
+              </div>
+              <div class="col d-flex align-items-center">
+                <mat-form-field class="example-full-width">
+                  <input matInput 
+                    [matDatepicker]="picker" 
+                    [matDatepickerFilter]="filtroCalendario"
+                    placeholder="DD/MM/AAAA" 
+                    formControlName="fechaSeguimiento"
+                    required 
+                    readonly 
+                    (click)="picker.open()">
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
+                  <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-title class="header-card--text sub-text">
+          Personal (obreros/técnicos)
+        </mat-card-title>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadPersonal"
+                  [class.color-secondaryColor]="addressForm.get('disponibilidadPersonal').invalid && addressForm.get('disponibilidadPersonal').touched">
+                  Disponibilidad de personal
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="disponibilidadPersonal">
+                    <mat-option *ngFor="let selectValue of personalArray" [value]="selectValue.value">
+                      {{ selectValue.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('cantidadPersonalOperativoProgramado').invalid && addressForm.get('cantidadPersonalOperativoProgramado').touched">
+                  Cantidad de personal operativo programado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #cantidadPersonalOperativoProgramado type="number"
+                    formControlName="cantidadPersonalOperativoProgramado" maxlength="3" min="1" max="999" required
+                    (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoProgramado.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('cantidadPersonalOperativoTrabajando').invalid && addressForm.get('cantidadPersonalOperativoTrabajando').touched">
+                  Cantidad de personal operativo trabajando
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #cantidadPersonalOperativoTrabajando type="number"
+                    formControlName="cantidadPersonalOperativoTrabajando" maxlength="3" min="1" max="999" required
+                    (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{3 - cantidadPersonalOperativoTrabajando.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadPersonal').value === false">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="retrasoPersonal"
+                  [class.color-secondaryColor]="addressForm.get('retrasoPersonal').invalid && addressForm.get('retrasoPersonal').touched">
+                  ¿Se generó retraso en la obra?
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="retrasoPersonal">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('retrasoPersonal').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('horasRetrasoPersonal').invalid && addressForm.get('horasRetrasoPersonal').touched">
+                  Número de horas de retraso generado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #horasRetrasoPersonal type="number" formControlName="horasRetrasoPersonal"
+                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{1 - horasRetrasoPersonal.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span class="label-left"
+              [class.color-secondaryColor]="addressForm.get('disponibilidadPersonalObservaciones').invalid && addressForm.get('disponibilidadPersonalObservaciones').touched">
+              Observaciones
+            </span>
+          </div>
+          <div class="col d-flex">
+            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadPersonalObservaciones"
+              [class.invalid]="addressForm.get('disponibilidadPersonalObservaciones').invalid && addressForm.get('disponibilidadPersonalObservaciones').touched"
+              required>
+            </quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadPersonalObservaciones').value">
+                {{500 - (textoLimpio(addressForm.get('disponibilidadPersonalObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadPersonalObservaciones').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadPersonalObservaciones').value">
+                500
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-title class="header-card--text sub-text">
+          Material
+        </mat-card-title>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadMaterial"
+                  [class.color-secondaryColor]="addressForm.get('disponibilidadMaterial').invalid && addressForm.get('disponibilidadMaterial').touched">
+                  Disponibilidad de material
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="disponibilidadMaterial">
+                    <mat-option *ngFor="let selectValue of materialArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="causaMaterial"
+                  [class.color-secondaryColor]="addressForm.get('causaMaterial').invalid && addressForm.get('causaMaterial').touched">
+                  Causa de baja disponibilidad
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="causaMaterial">
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadMaterial" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadMaterial').value === '2' || addressForm.get('disponibilidadMaterial').value === '3'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="retrasoMaterial"
+                  [class.color-secondaryColor]="addressForm.get('retrasoMaterial').invalid && addressForm.get('retrasoMaterial').touched">
+                  ¿Se generó retraso en la obra?
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="retrasoMaterial">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('retrasoMaterial').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('horasRetrasoMaterial').invalid && addressForm.get('horasRetrasoMaterial').touched">
+                  Número de horas de retraso generado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #horasRetrasoMaterial type="number" formControlName="horasRetrasoMaterial"
+                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{1 - horasRetrasoMaterial.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span class="label-left"
+              [class.color-secondaryColor]="addressForm.get('disponibilidadMaterialObservaciones').invalid && addressForm.get('disponibilidadMaterialObservaciones').touched">
+              Observaciones
+            </span>
+          </div>
+          <div class="col d-flex">
+            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadMaterialObservaciones"
+              [class.invalid]="addressForm.get('disponibilidadMaterialObservaciones').invalid && addressForm.get('disponibilidadMaterialObservaciones').touched"
+              required>
+            </quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadMaterialObservaciones').value">
+                {{500 - (textoLimpio(addressForm.get('disponibilidadMaterialObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadMaterialObservaciones').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadMaterialObservaciones').value">
+                500
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-title class="header-card--text sub-text">
+          Equipo
+        </mat-card-title>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="disponibilidadEquipo"
+                  [class.color-secondaryColor]="addressForm.get('disponibilidadEquipo').invalid && addressForm.get('disponibilidadEquipo').touched">
+                  Disponibilidad de equipo
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="disponibilidadEquipo">
+                    <mat-option *ngFor="let selectValue of equipolArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="causaEquipo"
+                  [class.color-secondaryColor]="addressForm.get('causaEquipo').invalid && addressForm.get('causaEquipo').touched">
+                  Causa de baja disponibilidad
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="causaEquipo">
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadEquipo" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('disponibilidadEquipo').value === '2' || addressForm.get('disponibilidadEquipo').value === '3'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="retrasoEquipo"
+                  [class.color-secondaryColor]="addressForm.get('retrasoEquipo').invalid && addressForm.get('retrasoEquipo').touched">
+                  ¿Se generó retraso en la obra?
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="retrasoEquipo">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('retrasoEquipo').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('horasRetrasoEquipo').invalid && addressForm.get('horasRetrasoEquipo').touched">
+                  Número de horas de retraso generado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #horasRetrasoEquipo type="number" formControlName="horasRetrasoEquipo"
+                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{1 - horasRetrasoEquipo.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span class="label-left"
+              [class.color-secondaryColor]="addressForm.get('disponibilidadEquipoObservaciones').invalid && addressForm.get('disponibilidadEquipoObservaciones').touched">
+              Observaciones
+            </span>
+          </div>
+          <div class="col d-flex">
+            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="disponibilidadEquipoObservaciones"
+              [class.invalid]="addressForm.get('disponibilidadEquipoObservaciones').invalid && addressForm.get('disponibilidadEquipoObservaciones').touched"
+              required>
+            </quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('disponibilidadEquipoObservaciones').value">
+                {{500 - (textoLimpio(addressForm.get('disponibilidadEquipoObservaciones').value)>5000?5000:textoLimpio(addressForm.get('disponibilidadEquipoObservaciones').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('disponibilidadEquipoObservaciones').value">
+                500
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <mat-card-title class="header-card--text sub-text">
+          Productividad
+        </mat-card-title>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="Productividad"
+                  [class.color-secondaryColor]="addressForm.get('Productividad').invalid && addressForm.get('Productividad').touched">
+                  Productividad
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="Productividad">
+                    <mat-option *ngFor="let selectValue of productividadArray" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === '3'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="causaProductividad"
+                  [class.color-secondaryColor]="addressForm.get('causaProductividad').invalid && addressForm.get('causaProductividad').touched">
+                  Causa
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="causaProductividad">
+                    <mat-option *ngFor="let selectValue of causaBajaDisponibilidadProductividad" [value]="selectValue.codigo">
+                      {{ selectValue.nombre }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('Productividad').value === '3'">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left" for="retrasoProductividad"
+                  [class.color-secondaryColor]="addressForm.get('retrasoProductividad').invalid && addressForm.get('retrasoProductividad').touched">
+                  ¿Se generó retraso en la obra?
+                </label>
+              </div>
+              <div class="col">
+                <mat-form-field class="select-width">
+                  <mat-select required formControlName="retrasoProductividad">
+                    <mat-option [value]="true">Sí</mat-option>
+                    <mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row animatedDown" *ngIf="addressForm.get('retrasoProductividad').value === true">
+          <div class="col-md-8">
+            <div class="row">
+              <div class="pr-1">
+                <label class="label-left"
+                  [class.color-secondaryColor]="addressForm.get('horasRetrasoProductividad').invalid && addressForm.get('horasRetrasoProductividad').touched">
+                  Número de horas de retraso generado
+                </label>
+              </div>
+              <div class="col d-flex">
+                <mat-form-field class="full-width">
+                  <input matInput #horasRetrasoProductividad type="number" formControlName="horasRetrasoProductividad"
+                    maxlength="1" min="1" max="9" required (keypress)="validateNumberKeypress($event)"
+                    onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                </mat-form-field>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"
+                  matTooltipClass="info-tooltip">{{1 - horasRetrasoProductividad.value.length}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div>
+            <span class="label-left"
+              [class.color-secondaryColor]="addressForm.get('ProductividadObservaciones').invalid && addressForm.get('ProductividadObservaciones').touched">
+              Observaciones
+            </span>
+          </div>
+          <div class="col d-flex">
+            <quill-editor class="quill-editor-style card position-relative" [styles]="editorStyle" [modules]="config"
+              (onContentChanged)="maxLength($event, 500)" formControlName="ProductividadObservaciones"
+              [class.invalid]="addressForm.get('ProductividadObservaciones').invalid && addressForm.get('ProductividadObservaciones').touched"
+              required>
+            </quill-editor>
+            <div class="d-flex align-items-center">
+              <span class="contador miles mt-3em" *ngIf="addressForm.get('ProductividadObservaciones').value">
+                {{500 - (textoLimpio(addressForm.get('ProductividadObservaciones').value)>5000?5000:textoLimpio(addressForm.get('ProductividadObservaciones').value))}}
+              </span>
+              <span class="contador miles mt-3em" *ngIf="!addressForm.get('ProductividadObservaciones').value">
+                500
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </mat-card-content>
+      
+    </mat-card>
+    <div class="text-center mb-2em">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      </button>
+    </div>
+    <mat-card class="shipping-card var-main-gris" *ngIf=" seguimiento !== undefined && seguimiento.observacionDevolucion !== undefined">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          Observaciones de la supervisión
+        </mat-card-title>
+    </mat-card-header>
+      <mat-card-content>
+    
+        ¿Tiene observaciones al registro del seguimiento diario?: <span>{{ 'Si' }}</span>
+        <br>
+        <p>
+          {{ seguimiento.observacionDevolucion.observaciones }}
+        </p>
+    
+      </mat-card-content>
+    </mat-card>
+    
+  </form>
+</div>
+

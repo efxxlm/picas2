@@ -43,6 +43,7 @@
   .ql-toolbar.ql-snow,
   .ql-container.ql-snow {
     border: 0;
+    padding-left: 0;
   }
   .ql-editor {
     color: $mainColor !important;
@@ -80,6 +81,13 @@
 
   &.card {
     width: 100%;
+
+    &.invalid {
+      .ql-container.ql-snow {
+        max-width: 70em;
+        border-bottom: $secondaryColor solid 1px;
+      }
+    }
     .ql-container.ql-snow {
       max-width: 70em;
       border-bottom: $fontColor solid 1px;
@@ -91,6 +99,10 @@
       .w-quill & {
         max-width: 30em;
         margin: auto;
+      }
+
+      .mat-card & {
+        max-width: initial;
       }
     }
   }

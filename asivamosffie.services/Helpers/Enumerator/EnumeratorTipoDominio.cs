@@ -127,8 +127,17 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipos_De_Ensayos_De_Laboratorio = 74,
 
         Causas_De_Accidentes_Laborales = 75,
-
+         
         Tiempo_Aprobar_Acta = 84,
+
+        Disponibilidad_Material = 92,
+        Disponibilidad_Equipo = 93,
+
+        Productividad = 94,
+        Causa_Baja_Disponibilidad_Material = 95,
+        Causa_Baja_Disponibilidad_Equipo = 96,
+        Causa_Baja_Disponibilidad_Productividad = 97,
+        Estados_Seguimiento_Diario = 98,
 
         Estados_actas_inicio_obra = 85,
 
@@ -141,12 +150,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_controversia_contractual_TAI = 90,
 
         Estado_avance_reclamacion = 91,
-
-        Causa_Baja_Disponibilidad_Material = 95,
-
-        Causa_Baja_Disponibilidad_Equipo = 96,
-
-        Causa_Baja_Disponibilidad_Productividad = 97,
 
         Tipo_Actividad = 109,
 
