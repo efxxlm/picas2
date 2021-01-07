@@ -1045,13 +1045,13 @@ namespace asivamosffie.services
             {
                 SeguimientoSemanalRegistrarComiteObraOld.TieneObservacionSupervisor = pSeguimientoSemanalObservacion.TieneObservacion;
                 SeguimientoSemanalRegistrarComiteObraOld.ObservacionSupervisorId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
-                // SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionSupervisor = CompleteRecordObservation(pSeguimientoSemanalObservacion);
             }
             else
             {
                 SeguimientoSemanalRegistrarComiteObraOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
                 SeguimientoSemanalRegistrarComiteObraOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
-                // SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+                 SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
             }
         }
 

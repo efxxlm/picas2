@@ -93,7 +93,7 @@ namespace asivamosffie.services
          
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
-            return await _context.VRegistrarAvanceSemanal.OrderByDescending(r=> r.NumeroSemana).ToListAsync();
+            return await _context.VRegistrarAvanceSemanal.OrderByDescending(r=> r.FechaUltimoReporte).ToListAsync();
         }
 
         public async Task<SeguimientoSemanal> GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(int pContratacionProyectoId, int pSeguimientoSemanalId)
