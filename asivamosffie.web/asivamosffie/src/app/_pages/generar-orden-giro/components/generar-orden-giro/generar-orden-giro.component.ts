@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DialogDevolverSolPagoGogComponent } from '../dialog-devolver-sol-pago-gog/dialog-devolver-sol-pago-gog.component';
 
 @Component({
   selector: 'app-generar-orden-giro',
@@ -30,8 +31,8 @@ export class GenerarOrdenGiroComponent implements OnInit {
       numeroSolicitud: 'Sol Pago O 001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoGeneracion: 'Sin generación',
-      estadoRegistro: 'Incompleto',
+      estadoGeneracion: 'Solicitud enviada a verificación',
+      estadoRegistro: 'Completo',
       gestion: 1
     },
     {
@@ -79,5 +80,19 @@ export class GenerarOrdenGiroComponent implements OnInit {
   };
   generarOrden(id){
     this.routes.navigate(['/generarOrdenDeGiro/generacionOrdenGiro',id]);
+  }
+  verDetalleEdit(id){
+    this.routes.navigate(['/generarOrdenDeGiro/verDetalleEditarOrdenGiro',id]);
+  }
+  verDetalle(id){
+    this.routes.navigate(['/generarOrdenDeGiro/verDetalleOrdenGiro',id]);
+  }
+  devolverSolicitud(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '1020px';
+    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
+    const dialogRef = this.dialog.open(DialogDevolverSolPagoGogComponent, dialogConfig);
+    //dialogRef.afterClosed().subscribe(value => {});
   }
 }

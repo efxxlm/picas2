@@ -1,0 +1,52 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <div style="padding: 30px 20px; text-align: center;">
+        <h1 class="title-menu--h1 centerTrick">
+            Devolver Sol Pago O 001
+        </h1>
+        <p class="info-sub-title">
+            <span>Modalidad de contrato: <b>Tipo B</b></span>
+            <span>Número de contrato: <b>N801801</b></span>
+        </p>
+    </div>
+    <div class="row" style="padding-left: 2.7em;">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="pr-1">
+                    <label class="label-left" for="usuarioADevolver">Tipo de aportante</label>
+                </div>
+                <div class="col">
+                    <mat-form-field class="select-width">
+                        <mat-select formControlName="usuarioADevolver" required>
+                            <mat-option *ngFor="let contr of usuarioDevolverArray" [value]="contr.value">
+                                {{ contr.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex align-items-center mt-2em">
+        <div class="text-area-quill izqTitle">
+            <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required 
+                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+        </div>
+        <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+        </span>
+        <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+            1000
+        </span>
+    </div>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+    </div>
+</form>
+
+

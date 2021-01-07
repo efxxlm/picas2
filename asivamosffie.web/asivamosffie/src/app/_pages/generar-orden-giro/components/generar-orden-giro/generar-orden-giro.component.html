@@ -52,6 +52,18 @@
                     *ngIf="element.estadoGeneracion=='Sin generación'">
                         Generar orden de giro
                     </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.devolverSolicitud()"
+                    *ngIf="element.estadoGeneracion=='En proceso de generación'">
+                        Devolver solicitud de pago
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEdit(element.gestion)"
+                    *ngIf="element.estadoGeneracion=='En proceso de generación'">
+                        Ver detalle/Editar
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.verDetalleEdit(element.gestion)"
+                    *ngIf="element.estadoGeneracion=='Solicitud enviada a verificación'">
+                        Ver detalle
+                    </button>
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
