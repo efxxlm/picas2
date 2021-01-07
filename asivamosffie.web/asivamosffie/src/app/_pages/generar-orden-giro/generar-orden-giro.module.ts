@@ -20,11 +20,13 @@ import { FormCostoVariableGogComponent } from './components/form-costo-variable-
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { FormTipopago3GogComponent } from './components/form-tipopago3-gog/form-tipopago3-gog.component';
 import { TerceroCausacionGogComponent } from './components/tercero-causacion-gog/tercero-causacion-gog.component';
+import { FormTipopago3TercGogComponent } from './components/form-tipopago3-terc-gog/form-tipopago3-terc-gog.component';
+import { FormCostoVariableTercGogComponent } from './components/form-costo-variable-terc-gog/form-costo-variable-terc-gog.component';
 
 
 
 @NgModule({
-  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent],
+  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent, FormTipopago3TercGogComponent, FormCostoVariableTercGogComponent],
   imports: [
     GenerarOrdenGiroRoutingModule,
     CommonModule,
