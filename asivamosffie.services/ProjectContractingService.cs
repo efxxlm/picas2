@@ -1262,5 +1262,10 @@ namespace asivamosffie.services
             }
         }
 
+        public async Task<List<FaseComponenteUso>> GetListFaseComponenteUso()
+        {
+            return _context.FaseComponenteUso.ToList();
+        }
+
     }
 }

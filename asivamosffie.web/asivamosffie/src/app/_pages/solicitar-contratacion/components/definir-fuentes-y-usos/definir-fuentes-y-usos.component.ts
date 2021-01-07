@@ -28,6 +28,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   usosSelect: Dominio[] = [];
   realizoPeticion: boolean = false;
   esSaldoPermitido: boolean = false;
+  listaFaseUsosComponentes: any[] = [];
 
   createFormulario() {
     return this.fb.group({
@@ -62,8 +63,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if ( this.addressForm.dirty && this.realizoPeticion === false && this.esSaldoPermitido === true ) {
-      this.openDialogConfirmar( '', '¿Desea guardar la información registrada?' );
+    if (this.addressForm.dirty && this.realizoPeticion === false && this.esSaldoPermitido === true) {
+      this.openDialogConfirmar('', '¿Desea guardar la información registrada?');
     }
   };
 
@@ -74,18 +75,18 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     });
 
     confirmarDialog.afterClosed()
-      .subscribe( response => {
-        if ( response === true ) {
+      .subscribe(response => {
+        if (response === true) {
           this.onSubmit();
         }
-      } );
+      });
   };
 
   createAportante() {
     return this.fb.group({
       nombreAportante: [],
-      estadoSemaforo: [ null ],
-      saldoDisponible: [ null ],
+      estadoSemaforo: [null],
+      saldoDisponible: [null],
       contratacionProyectoAportanteId: [],
       proyectoAportanteId: [],
       valorAportanteProyecto: [null, Validators.compose([
@@ -106,7 +107,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         this.commonService.listaFases(),
         this.commonService.listaComponentes(),
         this.commonService.listaUsos(),
-        this.projectContractingService.getContratacionProyectoById(id)
+        this.projectContractingService.getContratacionProyectoById(id),
+        this.projectContractingService.getListFaseComponenteUso(),
       ])
 
         .subscribe(response => {
@@ -115,11 +117,13 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
           this.componentesSelect = response[1];
           this.usosSelect = response[2];
           this.contratacionProyecto = response[3];
-          console.log( this.contratacionProyecto );
+          this.listaFaseUsosComponentes = response[4];
+
+          console.log(this.contratacionProyecto);
           setTimeout(() => {
 
-            if ( this.componentesSelect.length > 0 ) {
-              this.listaComponentes = this.componentesSelect.filter( value => this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === value.codigo );
+            if (this.componentesSelect.length > 0) {
+              this.listaComponentes = this.componentesSelect.filter(value => this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === value.codigo);
             };
 
             this.idSolicitud = this.contratacionProyecto.contratacionId;
@@ -140,18 +144,18 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
               grupoAportante.get('contratacionProyectoAportanteId').setValue(apo.contratacionProyectoAportanteId);
               grupoAportante.get('proyectoAportanteId').setValue(apo.proyectoAportanteId);
-              if ( apo.valorAporte !== 0 ) {
+              if (apo.valorAporte !== 0) {
                 this.esSaldoPermitido = true;
               }
-              grupoAportante.get('valorAportanteProyecto').setValue( apo.valorAporte );
-              grupoAportante.get( 'saldoDisponible' ).setValue( apo['saldoDisponible'] ? apo['saldoDisponible'] : 0 );
+              grupoAportante.get('valorAportanteProyecto').setValue(apo.valorAporte);
+              grupoAportante.get('saldoDisponible').setValue(apo['saldoDisponible'] ? apo['saldoDisponible'] : 0);
               if (apo['cofinanciacionAportante'].tipoAportanteId === 6) {
                 grupoAportante.get('nombreAportante').setValue('FFIE');
               } else if (apo['cofinanciacionAportante'].tipoAportanteId === 9) {
-                if ( apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio === undefined ) {
+                if (apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio === undefined) {
                   grupoAportante.get('nombreAportante').setValue(`Gobernación de ${apo['cofinanciacionAportante'].departamento.descripcion}`);
                 };
-                if ( apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio !== undefined ) {
+                if (apo['cofinanciacionAportante'].departamento !== undefined && apo['cofinanciacionAportante'].municipio !== undefined) {
                   grupoAportante.get('nombreAportante').setValue(`Alcaldía de ${apo['cofinanciacionAportante'].municipio.descripcion}`);
                 };
               } else if (apo['cofinanciacionAportante'].tipoAportanteId === 10) {
@@ -165,17 +169,28 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                   const faseSeleccionada = this.fasesSelect.find(f => f.codigo == compoApo.faseCodigo);
                   const componenteSeleccionado = this.componentesSelect.find(c => c.codigo == compoApo.tipoComponenteCodigo);
 
-                  if ( compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === true ) {
-                    grupoAportante.get( 'estadoSemaforo' ).setValue( 'completo' )
+                  if (compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === true) {
+                    grupoAportante.get('estadoSemaforo').setValue('completo')
                   };
-                  if ( compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === false ) {
-                    grupoAportante.get( 'estadoSemaforo' ).setValue( 'en-proceso' )
+                  if (compoApo['registroCompleto'] !== undefined && compoApo['registroCompleto'] === false) {
+                    grupoAportante.get('estadoSemaforo').setValue('en-proceso')
+                  };
+
+                  let usos = this.listaFaseUsosComponentes.filter(p => p.faseId === faseSeleccionada.codigo && p.componenteId === componenteSeleccionado.codigo);
+                  let listaDeUsos: Dominio[] = [];
+
+                  if (this.usosSelect.length > 0) {
+                    usos.forEach(u => {
+                      listaDeUsos.push(this.usosSelect.find(uso => u.usoId == uso.codigo));
+                    });
+
                   };
 
                   grupoComponente.get('componenteAportanteId').setValue(compoApo.componenteAportanteId);
                   grupoComponente.get('contratacionProyectoAportanteId').setValue(compoApo.contratacionProyectoAportanteId);
                   grupoComponente.get('fase').setValue(faseSeleccionada);
                   grupoComponente.get('componente').setValue(componenteSeleccionado);
+                  grupoComponente.get('listaUsos').setValue(listaDeUsos)
 
                   compoApo.componenteUso.forEach(uso => {
                     const grupoUso = this.createUso();
@@ -186,9 +201,9 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
                     grupoUso.get('usoDescripcion').setValue(usoSeleccionado);
                     grupoUso.get('valorUso').setValue(uso.valorUso);
 
-                    if ( grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0 ) {
-                      grupoAportante.get( 'estadoSemaforo' ).setValue( 'sin-diligenciar' );
-                    } 
+                    if (grupoAportante.get('valorAportanteProyecto').value === 0 && grupoUso.get('valorUso').value === 0) {
+                      grupoAportante.get('estadoSemaforo').setValue('sin-diligenciar');
+                    }
 
                     listaUsos.push(grupoUso);
                   });
@@ -203,7 +218,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
                 listaUsos.push(grupoUso);
 
-                listaComponentes.push( grupoComponente );
+                listaComponentes.push(grupoComponente);
               }
 
               this.aportantes.push(grupoAportante);
@@ -217,28 +232,73 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
   }
 
-  getlistaUsos ( fase?: string, componente?: string ) {
-    if ( fase !== undefined && componente !== undefined ) {
-      const descripcionLista = `${fase}-${componente}`;
-      if ( this.usosSelect.length > 0 ) {
-        const listaDeUsos = this.usosSelect.filter( uso => uso.descripcion === descripcionLista );
+  changeFase(posicionAportante, posicionComponente) {
+    console.log(this.componentes(posicionAportante).controls[posicionComponente].get('fase').value);
+
+    this.componentes(posicionAportante).controls[posicionComponente].get('componente').setValue(null);
+    this.usos(posicionAportante, posicionComponente).controls.forEach(control => {
+      control.get('usoDescripcion').setValue(null);
+    })
+
+    // if ( faseCodigo !== undefined) {
+    //   let componente = this.listaFaseUsosComponentes.filter( p => p.faseId === faseCodigo);
+    //   if ( this.usosSelect.length > 0 ) {
+    //     let listaDeUsos: Dominio[] = [];
+    //     usos.forEach( u => {
+    //       listaDeUsos.push( this.usosSelect.find( uso => u.usoId == uso.codigo));
+    //     });
+    //     this.listaUsos = listaDeUsos;
+    //   };
+    // };
+
+  }
+
+  getListaUsosFiltrado(posicionAportante, posicionComponente) {
+
+    let listaUsos = this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value;
+    console.log(listaUsos)
+    // this.usos( posicionAportante,posicionComponente ).controls.forEach( u => {
+    //   if ( listaUsos !== undefined )
+    //     listaUsos = listaUsos.filter( uso => uso.codigo != u.value.usoDescripcion.codigo );
+
+    // });
+    this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').setValue(listaUsos);
+    return listaUsos;
+  }
+
+  getlistaUsos(posicionAportante, posicionComponente) {
+
+    if (posicionAportante !== undefined && posicionComponente !== undefined) {
+
+      let fase = this.componentes(posicionAportante).controls[posicionComponente].get('fase').value;
+      let componente = this.componentes(posicionAportante).controls[posicionComponente].get('componente').value;
+
+      console.log(fase, componente)
+
+      let usos = this.listaFaseUsosComponentes.filter(p => p.faseId === fase.codigo && p.componenteId === componente.codigo);
+      if (this.usosSelect.length > 0) {
+        let listaDeUsos: Dominio[] = [];
+        usos.forEach(u => {
+          listaDeUsos.push(this.usosSelect.find(uso => u.usoId == uso.codigo));
+        });
+        this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').setValue(listaDeUsos)
         this.listaUsos = listaDeUsos;
       };
     };
   };
-  
-  validarSaldoDisponible ( saldoIngresado: number, saldoDisponible: number, nombreAportante: string ) {
-    if (  saldoIngresado > saldoDisponible ) {
-      this.openDialog( '', `<b>El valor del aportante ${ nombreAportante } al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>` );
+
+  validarSaldoDisponible(saldoIngresado: number, saldoDisponible: number, nombreAportante: string) {
+    if (saldoIngresado > saldoDisponible) {
+      this.openDialog('', `<b>El valor del aportante ${nombreAportante} al proyecto es superior al valor disponible, verifique por favor con él área financiera.</b>`);
       this.esSaldoPermitido = false;
-    } else if ( saldoIngresado <= saldoDisponible ) {
+    } else if (saldoIngresado <= saldoDisponible) {
       this.esSaldoPermitido = true;
     };
   };
 
-  deleteUsoSeleccionado ( usoCodigo: any ) {
-    console.log( usoCodigo );
-    this.listaUsos = this.listaUsos.filter( uso => uso.codigo !== usoCodigo );
+  deleteUsoSeleccionado(usoCodigo: any) {
+    console.log(usoCodigo);
+    this.listaUsos = this.listaUsos.filter(uso => uso.codigo !== usoCodigo);
   };
 
   getMunicipio() {
@@ -250,15 +310,15 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
   };
 
   addUso(j: number, i: number) {
-    if ( this.listaUsos.length === 0 ) {
-      this.openDialog( '', `<b>No se encuentran usos disponibles para el componente de ${ this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra' }.</b>` );
+    if (this.listaUsos.length === 0) {
+      this.openDialog('', `<b>No se encuentran usos disponibles para el componente de ${this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' ? 'Interventoria' : 'Obra'}.</b>`);
       return;
     };
     const listaUsos = this.componentes(j).controls[i].get('usos') as FormArray;
     listaUsos.push(this.createUso());
   }
 
-  deleteUso ( borrarForm: any, i: number ) {
+  deleteUso(borrarForm: any, i: number) {
     borrarForm.removeAt(i);
   }
 
@@ -270,7 +330,8 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
         Validators.required, Validators.minLength(4), Validators.maxLength(20)])],
       valorUso: [null, Validators.compose([
         Validators.required, Validators.minLength(4), Validators.maxLength(20)])
-      ]
+      ],
+
     });
   }
 
@@ -287,26 +348,27 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
       contratacionProyectoAportanteId: [],
       fase: [null, Validators.required],
       componente: [null, Validators.required],
-      usos: this.fb.array([])
+      usos: this.fb.array([]),
+      listaUsos: this.listaUsos,
     });
   }
 
   borrarArray(j: number, i: number) {
-    this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
+    this.openDialogTrueFalse('', '<b>¿Está seguro de eliminar esta información?</b>')
       .subscribe(
         value => {
-          if ( value === true ) {
-            if ( this.componentes( j ).at( i ).get( 'componenteAportanteId' ).value !== null ) {
-              this.projectContractingService.deleteComponenteAportante( this.componentes( j ).at( i ).get( 'componenteAportanteId' ).value )
+          if (value === true) {
+            if (this.componentes(j).at(i).get('componenteAportanteId').value !== null) {
+              this.projectContractingService.deleteComponenteAportante(this.componentes(j).at(i).get('componenteAportanteId').value)
                 .subscribe(
                   () => {
-                    this.componentes(j).removeAt( i );
-                    this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                    this.componentes(j).removeAt(i);
+                    this.openDialog('', '<b>La información se ha eliminado correctamente.</b>');
                   },
-                  err => this.openDialog( '', `<b>${ err.message }</b>` )
+                  err => this.openDialog('', `<b>${err.message}</b>`)
                 );
             } else {
-              this.componentes(j).removeAt( i );
+              this.componentes(j).removeAt(i);
             }
           }
         }
@@ -340,7 +402,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     this.aportantes.controls.forEach(controlAportante => {
       const listaComponentes = controlAportante.get('componentes') as FormArray;
 
-      if ( controlAportante.get('valorAportanteProyecto').value !== 0 ) {
+      if (controlAportante.get('valorAportanteProyecto').value !== 0) {
         totalAportantes++;
       };
 
@@ -394,25 +456,25 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
 
       this.contratacionProyecto.contratacionProyectoAportante.push(aportante);
     });
-    
-    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorObra && totalAportantes !== this.aportantes.controls.length ) {
+
+    if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '1' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorObra && totalAportantes !== this.aportantes.controls.length) {
       this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
       return;
     };
-    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorInterventoria && totalAportantes !== this.aportantes.controls.length ) {
+    if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' && this.aportantes.controls[0].get('valorAportanteProyecto').value === this.contratacionProyecto.proyecto.valorInterventoria && totalAportantes !== this.aportantes.controls.length) {
       this.openDialog('', '<b>Debe distribuir el valor total del proyecto entre todo los aportantes.</b>');
       return;
     };
-    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length ) {
-      if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorInterventoria  ) {
+    if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '2' && totalAportantes === this.aportantes.controls.length) {
+      if (valorTotalSumado !== this.contratacionProyecto.proyecto.valorInterventoria) {
         this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de interventoría.</b>');
         return;
       };
     };
 
-    if ( this.contratacionProyecto[ 'contratacion' ].tipoSolicitudCodigo === '1' && totalAportantes === this.aportantes.controls.length ) {
-      console.log( valorTotalSumado );
-      if ( valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra  ) {
+    if (this.contratacionProyecto['contratacion'].tipoSolicitudCodigo === '1' && totalAportantes === this.aportantes.controls.length) {
+      console.log(valorTotalSumado);
+      if (valorTotalSumado !== this.contratacionProyecto.proyecto.valorObra) {
         this.openDialog('', '<b>El valor del aporte no corresponde con el valor requerido en la solicitud de obra.</b>');
         return;
       };

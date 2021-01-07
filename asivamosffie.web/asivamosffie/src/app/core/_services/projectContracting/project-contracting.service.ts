@@ -70,4 +70,8 @@ export class ProjectContractingService {
     return this.http.post( `${ environment.apiUrl }/ProjectContracting/DeleteComponenteAportante`, pComponenteAportanteId );
   }
 
+  getListFaseComponenteUso( ){
+    return this.http.get<any>( `${ environment.apiUrl }/ProjectContracting/getListFaseComponenteUso` );
+  }
+
 }
