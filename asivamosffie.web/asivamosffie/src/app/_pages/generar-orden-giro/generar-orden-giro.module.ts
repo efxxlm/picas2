@@ -22,11 +22,13 @@ import { FormTipopago3GogComponent } from './components/form-tipopago3-gog/form-
 import { TerceroCausacionGogComponent } from './components/tercero-causacion-gog/tercero-causacion-gog.component';
 import { FormTipopago3TercGogComponent } from './components/form-tipopago3-terc-gog/form-tipopago3-terc-gog.component';
 import { FormCostoVariableTercGogComponent } from './components/form-costo-variable-terc-gog/form-costo-variable-terc-gog.component';
+import { ObservacionesOrdenGiroGogComponent } from './components/observaciones-orden-giro-gog/observaciones-orden-giro-gog.component';
+import { SoporteOrdenGiroGogComponent } from './components/soporte-orden-giro-gog/soporte-orden-giro-gog.component';
 
 
 
 @NgModule({
-  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent, FormTipopago3TercGogComponent, FormCostoVariableTercGogComponent],
+  declarations: [GenerarOrdenGiroComponent, FormGenerarOrdenGiroComponent, AccordionInfoGeneralGogComponent, AccordionDetalleGiroGogComponent, TablaDatosSolicitudGogComponent, TablaDatosDdpGogComponent, FormTerceroGiroGogComponent, TablaPorcntjParticGogComponent, TablaInfoFuenterecGogComponent, FormEstrategPagosGogComponent, DescDirTecnicaGogComponent, FormCostoVariableGogComponent, FormTipopago3GogComponent, TerceroCausacionGogComponent, FormTipopago3TercGogComponent, FormCostoVariableTercGogComponent, ObservacionesOrdenGiroGogComponent, SoporteOrdenGiroGogComponent],
   imports: [
     GenerarOrdenGiroRoutingModule,
     CommonModule,
