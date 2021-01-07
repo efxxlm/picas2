@@ -94,14 +94,16 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
             this.reporteDeActividades.emit(
                 {
                     esSiguienteSemana: this.esSiguienteSemana,
-                    reporteActividades: this.formActividadesRealizadasSiguienteSemana.value
+                    reporteActividadSiguiente: this.formActividadesRealizadasSiguienteSemana.value,
+                    reporteActividad: this.formActividadesRealizadas.value
                 }
             );
         } else {
             this.reporteDeActividades.emit(
                 {
                     esSiguienteSemana: this.esSiguienteSemana,
-                    reporteActividades: this.formActividadesRealizadas.value
+                    reporteActividadSiguiente: this.formActividadesRealizadasSiguienteSemana.value,
+                    reporteActividad: this.formActividadesRealizadas.value
                 }
             );
         }

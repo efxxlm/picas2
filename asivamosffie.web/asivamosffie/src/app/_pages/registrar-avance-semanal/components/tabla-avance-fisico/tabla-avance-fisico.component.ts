@@ -30,17 +30,6 @@ export class TablaAvanceFisicoComponent implements OnInit {
         'avanceFisicoCapitulo',
         'avanceFisicoSemana'
     ];
-    dataTable: any[] = [
-        {
-            semanaNumero: 1,
-            periodoReporte: '04/07/2020 - 11/07/2020',
-            programacionSemana: '2',
-            capitulo: 'Preliminares',
-            programacionCapitulo: '2',
-            avanceFisicoCapitulo: null,
-            avanceFisicoSemana: ''
-        }
-    ];
 
     constructor(
         private dialog: MatDialog,
@@ -80,7 +69,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                 for ( const flujo of flujoInversion ) {
                     flujo.programacion.avanceFisicoCapitulo =   flujo.programacion.avanceFisicoCapitulo !== undefined ?
                         String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), false ) )
-                        : '';
+                        : null;
                     avancePorCapitulo.push(
                         {
                             programacionId: flujo.programacion.programacionId,
@@ -89,9 +78,9 @@ export class TablaAvanceFisicoComponent implements OnInit {
                                                                         this.seguimientoDiario.cantidadTotalDiasActividades * 100,
                                                                         false ),
                             avanceFisicoCapitulo:   flujo.programacion.avanceFisicoCapitulo !== undefined
-                                                    && flujo.programacion.avanceFisicoCapitulo.length > 0 ?
+                                                    && flujo.programacion.avanceFisicoCapitulo !== null ?
                                                     String( this.verifyInteger( Number( flujo.programacion.avanceFisicoCapitulo ), true ) )
-                                                    : ''
+                                                    : null
                         }
                     );
                 }
@@ -111,31 +100,38 @@ export class TablaAvanceFisicoComponent implements OnInit {
         this.tablaAvanceFisico = new MatTableDataSource( this.avanceFisico );
     }
 
-    valuePending( value: string, registro: any ) {
-        this.seRealizoCambio = true;
-        this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] = 0;
-        let totalAvanceFisicoSemana = 0;
-        if ( Number( value ) > 100 ) {
-            registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
-        }
-        if ( Number( value ) > Number( registro.programacionCapitulo ) ) {
-            registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
-        }
-        if ( Number( value ) < 0 ) {
-            registro.avanceFisicoCapitulo = '';
-        }
-        for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
-            let avanceValue;
-            if ( capitulo.avanceFisicoCapitulo.length > 0 ) {
-                avanceValue = this.verifyInteger( Number( capitulo.avanceFisicoCapitulo ), false );
+    valuePending( value: number, registro: any ) {
+        if ( isNaN( Number( value ) ) === true ) {
+            registro.avanceFisicoCapitulo = '0';
+        } else {
+            this.seRealizoCambio = true;
+            this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] = 0;
+            let totalAvanceFisicoSemana = 0;
+            if ( Number( value ) > 100 ) {
+                registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
             }
-            if ( capitulo.avanceFisicoCapitulo.length === 0 ) {
-                avanceValue = 0;
+            if ( Number( value ) > Number( registro.programacionCapitulo ) ) {
+                registro.avanceFisicoCapitulo = `${ this.verifyInteger( Number( registro.programacionCapitulo ), true ) }`;
             }
-            totalAvanceFisicoSemana += Number( avanceValue );
+            if ( Number( value ) < 0 ) {
+                registro.avanceFisicoCapitulo = null;
+            }
+            for ( const capitulo of this.tablaAvanceFisico.data[0]['avancePorCapitulo'] ) {
+                
+                let avanceValue;
+                if ( capitulo.avanceFisicoCapitulo > 0 ) {
+                    avanceValue = this.verifyInteger( Number( capitulo.avanceFisicoCapitulo ), false );
+                }
+                if ( capitulo.avanceFisicoCapitulo === 0 ) {
+                    avanceValue = 0;
+                }
+                if ( capitulo.avanceFisicoCapitulo === null || capitulo.avanceFisicoCapitulo === undefined ) {
+                    avanceValue = 0;
+                }
+                totalAvanceFisicoSemana += Number( avanceValue );
+            }
+            this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] =  this.verifyInteger( totalAvanceFisicoSemana, false );
         }
-        console.log( totalAvanceFisicoSemana );
-        this.tablaAvanceFisico.data[0]['avanceFisicoSemana'] =  this.verifyInteger( totalAvanceFisicoSemana, false );
     }
 
     valuePendingProgramacionObra() {
@@ -176,9 +172,18 @@ export class TablaAvanceFisicoComponent implements OnInit {
     openDialogObservaciones( ) {
         this.dialog.open( DialogAvanceAcumuladoComponent, {
             width: '80em',
-            data: { avanceAcumulado: this.seguimientoDiario.avanceAcumulado }
+            data: { avanceAcumulado: this.seguimientoDiario.avanceAcumulado, seguimientoSemanal: this.seguimientoDiario }
         } );
     }
+
+    textoLimpio(texto: number) {
+        if (texto !== null) {
+          const textolimpio = texto.toString().replace(/[^\w\s]/gi, '');
+          return textolimpio.length;
+        } else {
+            return 0;
+        }
+      }
 
     guardar() {
         const pSeguimientoSemanal = this.seguimientoDiario;

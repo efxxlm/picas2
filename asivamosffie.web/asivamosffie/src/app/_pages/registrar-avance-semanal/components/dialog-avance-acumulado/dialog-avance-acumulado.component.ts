@@ -19,16 +19,8 @@ export class DialogAvanceAcumuladoComponent implements OnInit {
       'programacion',
       'avanceAcumulado'
     ];
-    dataTable: any[] = [
-        {
-            nombreCapitulo: 'Preliminares',
-            programacion: '8%',
-            avanceAcumulado: '0%'
-        }
-    ];
 
     constructor( @Inject(MAT_DIALOG_DATA) public data ) {
-      console.log( this.data );
     }
 
     ngOnInit(): void {

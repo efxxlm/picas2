@@ -46,7 +46,7 @@
                       class="btn-table expansion-style--title btn-color h-2em"
                       style="width: 90%;"
                       [disabled]="resumen.seguimientoDiarioObservaciones.length === 0"
-                      (click)="openDialogObservaciones( resumen.seguimientoDiarioObservaciones[0].observaciones )">
+                      (click)="openDialogObservaciones( resumen.seguimientoDiarioObservaciones[0].observaciones, resumen )">
                       <small>Observaciones</small>
               </button>
             </div>

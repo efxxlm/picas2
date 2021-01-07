@@ -14,5 +14,5 @@
         <p style="margin-left: 2em;">Fecha de último reporte: <b> {{ ultimaBitacora.ultimoReporte | date: 'dd/MM/yyyy' }} </b> </p>
     </div>
 
-    <app-tabla-consultar-editar-bitacora [consultarBitacora]="consultarBitacora"></app-tabla-consultar-editar-bitacora>
+    <app-tabla-consultar-editar-bitacora [consultarBitacora]="consultarBitacora" (seRealizoPeticion)="valuePendingBitacora( $event )"></app-tabla-consultar-editar-bitacora>
 </section>

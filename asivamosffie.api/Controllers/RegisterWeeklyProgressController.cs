@@ -28,6 +28,21 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [Route("GetObservacionSeguimientoSemanal")]
+        [HttpGet]
+        public async Task<dynamic> GetObservacionBy([FromQuery] int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo)
+        {
+            try
+            {
+                return await _registerWeeklyProgressService.GetObservacionBy(pSeguimientoSemanalId, pPadreId, pTipoCodigo);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         [Route("GetEnsayoLaboratorioMuestras")]
         [HttpGet]
         public async Task<ActionResult<GestionObraCalidadEnsayoLaboratorio>> GetEnsayoLaboratorioMuestras([FromQuery] int pGestionObraCalidadEnsayoLaboratorioId)
@@ -115,9 +130,16 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("ChangueStatusSeguimientoSemanal")]
-        public async Task<IActionResult> ChangueStatusSeguimientoSemanal([FromQuery] int pSeguimientoSemanalId, string pEstadoMod)
+        public async Task<IActionResult> ChangueStatusSeguimientoSemanal([FromQuery] int pContratacionProyectoId, string pEstadoMod)
         {
-            return Ok(await _registerWeeklyProgressService.ChangueStatusSeguimientoSemanal(pSeguimientoSemanalId, pEstadoMod, HttpContext.User.FindFirst("User").Value));
+            return Ok(await _registerWeeklyProgressService.ChangueStatusSeguimientoSemanal(pContratacionProyectoId, pEstadoMod, HttpContext.User.FindFirst("User").Value));
+        }
+   
+        [HttpPost]
+        [Route("ChangueStatusMuestrasSeguimientoSemanal")]
+        public async Task<IActionResult> ChangueStatusMuestrasSeguimientoSemanal([FromQuery] int pSeguimientoSemanalID, string pEstadoMod)
+        {
+            return Ok(await _registerWeeklyProgressService.ChangueStatusMuestrasSeguimientoSemanal(pSeguimientoSemanalID, pEstadoMod, HttpContext.User.FindFirst("User").Value));
         }
 
         [HttpPost]

@@ -47,8 +47,8 @@
     </ng-container>
 
     <ng-container matColumnDef="estadoVerificacion">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la obra </th>
-        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoVerificacion }} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoSeguimientoSemanal }} </td>
     </ng-container>
   
     <ng-container matColumnDef="gestion">
@@ -63,12 +63,14 @@
         </button>
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
+                class="btn-table"
+                [routerLink]="[ 'consultarBitacora', element.contratacionProyectoId ]">
                 Consultar bitacora
         </button>
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
+                class="btn-table"
+                [routerLink]="[ 'verificarSeguimientoSemanal', element.contratacionProyectoId ]">
                 Ver detalle/Editar
         </button>
         <button mat-raised-button

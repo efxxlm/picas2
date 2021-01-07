@@ -164,7 +164,6 @@ export class ManejoResiduosConstruccionComponent implements OnInit {
                     }
                 );
         } else {
-            // Servicio por integrar
             this.openDialogTrueFalse( '', '¿Está seguro de eliminar esta información?' )
                 .subscribe(
                     value => {

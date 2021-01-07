@@ -1,0 +1,587 @@
+<section class="text-center" *ngIf="gestionObraAmbiental !== undefined">
+  <p class="colorMainColor">Periodo del reporte: <b> {{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </b> </p>
+
+  <div class="mt-1em" align="left">
+    <mat-card class="border">
+        <mat-card-content class="mt-1em">
+          <p *ngIf="gestionObraAmbiental.seEjecutoGestionAmbiental === true"><b>¿Se ejecutó alguna actividad relacionada con la gestión ambiental durante la semana?</b>: Si</p>
+          <p *ngIf="gestionObraAmbiental.seEjecutoGestionAmbiental === false"><b>¿Se ejecutó alguna actividad relacionada con la gestión ambiental durante la semana?</b>: No</p>
+          <p *ngIf="gestionObraAmbiental.seEjecutoGestionAmbiental === true"><b>¿Cuántas actividades se ejecutarón?</b>: {{ cantidadActividades }} </p>
+        </mat-card-content>
+    </mat-card>
+
+    <ng-container *ngIf="gestionObraAmbiental.seEjecutoGestionAmbiental === false || cantidadActividades === 0; else elseTemplate">
+        <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+            <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formGestionAmbientalObservacion.get( 'fechaCreacion' ).value !== null">
+                <mat-card-header class="header-card">
+                  <mat-card-title class="header-card--text">
+                    Verificación del apoyo a la supervisión
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <p style="margin-left: 2em;"><b> {{ formGestionAmbientalObservacion.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                    <p style="margin-left: 2em;" *ngIf="formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === true"><b>¿Tiene observaciones a la gestión ambiental?</b>: Si</p>
+                    <p style="margin-left: 2em;" *ngIf="formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === false"><b>¿Tiene observaciones a la gestión ambiental?</b>: No</p>
+                    <section [innerHTML]="formGestionAmbientalObservacion.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === true"></section>
+                </mat-card-content>
+            </mat-card>
+        </ng-container>
+        <ng-template #noEsVerDetalle>
+            <form [formGroup]="formGestionAmbientalObservacion" novalidate>
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-md-12">
+                        <div class="row justify-content-center align-items-center" style="width: 100%;">
+                            <div class="pr-1">
+                                <label class="label-left" for="tieneObservaciones">¿Tiene observaciones a la gestión ambiental?</label>
+                            </div>
+                            <div>
+                                <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                    <mat-radio-button [value]="true" [checked]="formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                    <mat-radio-button [value]="false" [checked]="formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                            <span class="required-form-group m-0">*</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formGestionAmbientalObservacion.value.tieneObservaciones == true" align="left">
+                    <div class="text-area-quill"
+                    [class.color-secondaryColor]="formGestionAmbientalObservacion.get('observaciones').invalid && formGestionAmbientalObservacion.get('observaciones').touched || formGestionAmbientalObservacion.get('observaciones').invalid">
+                        <label  class="text-area-quill--label align-left-label"
+                                [class.colorMainColor]="!(formGestionAmbientalObservacion.get('observaciones').invalid && formGestionAmbientalObservacion.get('observaciones').touched || formGestionAmbientalObservacion.get('observaciones').invalid)">
+                                Observaciones a la gestión ambiental
+                        </label>
+                        <quill-editor   class="quill-editor-style ml-1em"
+                                        [styles]="editorStyle"
+                                        [modules]="config"
+                                        (onContentChanged)="maxLength($event, 1000)"
+                                        formControlName="observaciones"
+                                        #obsGestionAmbiental
+                                        required>
+                        </quill-editor>
+                    </div>
+                    <span class="contador miles" *ngIf="formGestionAmbientalObservacion.get('observaciones').value !== null">
+                      {{1000 - textoLimpio( obsGestionAmbiental.quillEditor, 1000 )}}
+                    </span>
+                    <span class="contador miles" *ngIf="formGestionAmbientalObservacion.get('observaciones').value === null">
+                      1000
+                    </span>
+                </div>
+                <div class="text-center mt-1em">
+                    <button mat-button
+                            color="warn"
+                            class="btn-guardar"
+                            type="button"
+                            (click)="guardar()"
+                            [disabled]="formGestionAmbientalObservacion.get('tieneObservaciones').value === null">
+                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                    </button>
+                </div>
+            </form>
+        
+            <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialGestionAmbiental.length > 0">
+                <table mat-table [dataSource]="tablaHistorialgestionAmbiental" matSort>
+              
+                    <ng-container matColumnDef="fechaRevision">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                      <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                    </ng-container>
+              
+                    <ng-container matColumnDef="responsable">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                        <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                            <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                <p>Supervisor</p>
+                            </ng-container>
+                            <ng-template #noEsSupervisor>
+                                <p>Apoyo a la supervisión</p>
+                            </ng-template> 
+                        </td>
+                    </ng-container>
+              
+                    <ng-container matColumnDef="historial">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                      <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                          <section [innerHTML]="element.observacion"></section>
+                      </td>
+                    </ng-container>
+                
+                  <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                </table>
+            </section>
+        </ng-template>
+    </ng-container>
+    <ng-template #elseTemplate>
+        <mat-accordion *ngIf="actividades.length > 0">
+            <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let actividad of actividades.controls; index as i" [formGroup]="actividad">
+                <mat-expansion-panel-header class="expansion-style--header">
+                    <mat-panel-title class="expansion-style--title">
+                        Actividad {{ i + 1 }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+    
+                <mat-card class="border">
+                    <mat-card-content class="mt-1em">
+                        <p><b>Tipo de actividad</b>: {{ actividad.get( 'tipoActividad' ).value.nombre }} </p>
+                        <!-- Manejo de materiales e insumos -->
+                        <app-manejo-material-insumo [formManejoMaterialInsumo]="actividad.get( 'manejoMaterialInsumo' )"
+                                                    [materialInsumo]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
+                                                    *ngIf=" actividad.get( 'tipoActividad' ).value !== null
+                                                            && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
+                                                            && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoMaterialInsumo"
+                                                    class="mt-1em">
+                        </app-manejo-material-insumo>
+            
+                        <!-- Manejo de residuos de construcción y demolición -->
+                        <app-manejo-residuos-construccion   [formManejoResiduosConstruccion]="actividad.get( 'manejoResiduosConstruccion' )"
+                                                            [residuosConstruccion]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
+                                                            *ngIf=" actividad.get( 'tipoActividad' ).value !== null
+                                                                    && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
+                                                                    && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosConstruccion"
+                                                            class="mt-1em">
+                        </app-manejo-residuos-construccion>
+            
+                        <!-- Manejo de residuos peligrosos y especiales -->
+                        <app-manejo-residuos-peligrosos [formManejoResiduosPeligrosos]="actividad.get( 'manejoResiduosPeligrosos' )"
+                                                        [residuosPeligrosos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
+                                                        *ngIf=" actividad.get( 'tipoActividad' ).value !== null
+                                                                && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
+                                                                && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosPeligrosos"
+                                                        class="mt-1em">
+                        </app-manejo-residuos-peligrosos>
+    
+                        <!-- Otros manejos -->
+                        <app-otros-manejos  [formOtrosManejos]="actividad.get( 'otra' )"
+                                            [otrosManejos]="seguimientoSemanal.seguimientoSemanalGestionObra.length > 0 ? seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraAmbiental : []"
+                                            *ngIf=" actividad.get( 'tipoActividad' ).value !== null
+                                                    && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
+                                                    && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.otra"
+                                            class="mt-1em">
+                        </app-otros-manejos>
+                    </mat-card-content>
+                </mat-card>
+
+                <section *ngIf="actividad.get( 'tipoActividad' ).value !== null
+                                && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
+                                && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoMaterialInsumo">
+                    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                        <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formMaterialObservacion.get( 'fechaCreacion' ).value !== null">
+                            <mat-card-header class="header-card">
+                              <mat-card-title class="header-card--text">
+                                Verificación del apoyo a la supervisión
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p style="margin-left: 2em;"><b> {{ formMaterialObservacion.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="formMaterialObservacion.get( 'tieneObservaciones' ).value === true"><b>¿Tiene observaciones al manejo de materiales e insumos?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="formMaterialObservacion.get( 'tieneObservaciones' ).value === false"><b>¿Tiene observaciones al manejo de materiales e insumos?</b>: No</p>
+                                <section [innerHTML]="formMaterialObservacion.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formMaterialObservacion.get( 'tieneObservaciones' ).value === true"></section>
+                            </mat-card-content>
+                        </mat-card>
+                      </ng-container>
+                      <ng-template #noEsVerDetalle>
+                        <form [formGroup]="formMaterialObservacion" novalidate>
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tieneObservaciones">¿Tiene observaciones al manejo de materiales e insumos?</label>
+                                        </div>
+                                        <div>
+                                            <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                                <mat-radio-button [value]="true" [checked]="formMaterialObservacion.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                                <mat-radio-button [value]="false" [checked]="formMaterialObservacion.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <span class="required-form-group m-0">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formMaterialObservacion.value.tieneObservaciones == true" align="left">
+                                <div class="text-area-quill"
+                                [class.color-secondaryColor]="formMaterialObservacion.get('observaciones').invalid && formMaterialObservacion.get('observaciones').touched || formMaterialObservacion.get('observaciones').invalid">
+                                    <label  class="text-area-quill--label align-left-label"
+                                            [class.colorMainColor]="!(formMaterialObservacion.get('observaciones').invalid && formMaterialObservacion.get('observaciones').touched || formMaterialObservacion.get('observaciones').invalid)">
+                                            Observaciones al manejo de materiales e insumos
+                                    </label>
+                                    <quill-editor   class="quill-editor-style ml-1em"
+                                                    [styles]="editorStyle"
+                                                    [modules]="config"
+                                                    (onContentChanged)="maxLength($event, 1000)"
+                                                    formControlName="observaciones"
+                                                    #obsManejoMaterialInsumo
+                                                    required>
+                                    </quill-editor>
+                                </div>
+                                <span class="contador miles" *ngIf="formMaterialObservacion.get('observaciones').value !== null">
+                                  {{1000 - textoLimpio( obsManejoMaterialInsumo.quillEditor, 1000 )}}
+                                </span>
+                                <span class="contador miles" *ngIf="formMaterialObservacion.get('observaciones').value === null">
+                                  1000
+                                </span>
+                            </div>
+                            <div class="text-center mt-1em">
+                                <button mat-button
+                                        color="warn"
+                                        class="btn-guardar"
+                                        type="submit"
+                                        [disabled]="formMaterialObservacion.get('tieneObservaciones').value === null"
+                                        (click)="guardarManejoMaterial()">
+                                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                                </button>
+                            </div>
+                        </form>
+                      
+                        <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialManejoMateriales.length > 0">
+                            <table mat-table [dataSource]="tablaHistorialManejoMateriales" matSort>
+                          
+                                <ng-container matColumnDef="fechaRevision">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                                  <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="responsable">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                                    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                        <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                            <p>Supervisor</p>
+                                        </ng-container>
+                                        <ng-template #noEsSupervisor>
+                                            <p>Apoyo a la supervisión</p>
+                                        </ng-template> 
+                                    </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="historial">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                                  <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                      <section [innerHTML]="element.observacion"></section>
+                                  </td>
+                                </ng-container>
+                            
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                            </table>
+                        </section>
+                      </ng-template>
+                </section>
+                <section *ngIf="actividad.get( 'tipoActividad' ).value !== null
+                                && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
+                                && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosConstruccion">
+                    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                        <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formResiduosConstruccion.get( 'fechaCreacion' ).value !== null">
+                            <mat-card-header class="header-card">
+                              <mat-card-title class="header-card--text">
+                                Verificación del apoyo a la supervisión
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p style="margin-left: 2em;"><b> {{ formResiduosConstruccion.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="formResiduosConstruccion.get( 'tieneObservaciones' ).value === true"><b>¿Tiene observaciones a los residuos de construcción y demolición?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="formResiduosConstruccion.get( 'tieneObservaciones' ).value === false"><b>¿Tiene observaciones a los residuos de construcción y demolición?</b>: No</p>
+                                <section [innerHTML]="formResiduosConstruccion.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formResiduosConstruccion.get( 'tieneObservaciones' ).value === true"></section>
+                            </mat-card-content>
+                        </mat-card>
+                      </ng-container>
+                      <ng-template #noEsVerDetalle>
+                        <form [formGroup]="formResiduosConstruccion" novalidate>
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tieneObservaciones">¿Tiene observaciones a los residuos de construcción y demolición?</label>
+                                        </div>
+                                        <div>
+                                            <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                                <mat-radio-button [value]="true" [checked]="formResiduosConstruccion.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                                <mat-radio-button [value]="false" [checked]="formResiduosConstruccion.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <span class="required-form-group m-0">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formResiduosConstruccion.value.tieneObservaciones == true" align="left">
+                                <div class="text-area-quill"
+                                [class.color-secondaryColor]="formResiduosConstruccion.get('observaciones').invalid && formResiduosConstruccion.get('observaciones').touched || formResiduosConstruccion.get('observaciones').invalid">
+                                    <label  class="text-area-quill--label align-left-label"
+                                            [class.colorMainColor]="!(formResiduosConstruccion.get('observaciones').invalid && formResiduosConstruccion.get('observaciones').touched || formResiduosConstruccion.get('observaciones').invalid)">
+                                            Observaciones a los residuos de construcción y demolición
+                                    </label>
+                                    <quill-editor   class="quill-editor-style ml-1em"
+                                                    [styles]="editorStyle"
+                                                    [modules]="config"
+                                                    (onContentChanged)="maxLength($event, 1000)"
+                                                    formControlName="observaciones"
+                                                    #obsResiduosConstruccion
+                                                    required>
+                                    </quill-editor>
+                                </div>
+                                <span class="contador miles" *ngIf="formResiduosConstruccion.get('observaciones').value !== null">
+                                  {{1000 - textoLimpio( obsResiduosConstruccion.quillEditor, 1000 )}}
+                                </span>
+                                <span class="contador miles" *ngIf="formResiduosConstruccion.get('observaciones').value === null">
+                                  1000
+                                </span>
+                            </div>
+                            <div class="text-center mt-1em">
+                                <button mat-button
+                                        color="warn"
+                                        class="btn-guardar"
+                                        type="button"
+                                        [disabled]="formResiduosConstruccion.get('tieneObservaciones').value === null"
+                                        (click)="guardarResiduosConstruccion()">
+                                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                                </button>
+                            </div>
+                        </form>
+                      
+                        <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialResiduosConstruccion.length > 0">
+                            <table mat-table [dataSource]="tablaHistorialResiduosConstruccion" matSort>
+                          
+                                <ng-container matColumnDef="fechaRevision">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                                  <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="responsable">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                                    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                        <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                            <p>Supervisor</p>
+                                        </ng-container>
+                                        <ng-template #noEsSupervisor>
+                                            <p>Apoyo a la supervisión</p>
+                                        </ng-template> 
+                                    </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="historial">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                                  <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                      <section [innerHTML]="element.observacion"></section>
+                                  </td>
+                                </ng-container>
+                            
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                            </table>
+                        </section>
+                      </ng-template>
+                </section>
+
+                <section *ngIf="actividad.get( 'tipoActividad' ).value !== null
+                                && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
+                                && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosPeligrosos">
+                    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                        <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formResiduosPeligrosos.get( 'fechaCreacion' ).value !== null">
+                            <mat-card-header class="header-card">
+                              <mat-card-title class="header-card--text">
+                                Verificación del apoyo a la supervisión
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p style="margin-left: 2em;"><b> {{ formResiduosPeligrosos.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="formResiduosPeligrosos.get( 'tieneObservaciones' ).value === true"><b>¿Tiene observaciones al manejo de residuos peligrosos y especiales?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="formResiduosPeligrosos.get( 'tieneObservaciones' ).value === false"><b>¿Tiene observaciones al manejo de residuos peligrosos y especiales?</b>: No</p>
+                                <section [innerHTML]="formResiduosPeligrosos.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formResiduosPeligrosos.get( 'tieneObservaciones' ).value === true"></section>
+                            </mat-card-content>
+                        </mat-card>
+                      </ng-container>
+                      <ng-template #noEsVerDetalle>
+                        <form [formGroup]="formResiduosPeligrosos" novalidate>
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tieneObservaciones">¿Tiene observaciones al manejo de residuos peligrosos y especiales?</label>
+                                        </div>
+                                        <div>
+                                            <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                                <mat-radio-button [value]="true" [checked]="formResiduosPeligrosos.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                                <mat-radio-button [value]="false" [checked]="formResiduosPeligrosos.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <span class="required-form-group m-0">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formResiduosPeligrosos.value.tieneObservaciones == true" align="left">
+                                <div class="text-area-quill"
+                                [class.color-secondaryColor]="formResiduosPeligrosos.get('observaciones').invalid && formResiduosPeligrosos.get('observaciones').touched || formResiduosPeligrosos.get('observaciones').invalid">
+                                    <label  class="text-area-quill--label align-left-label"
+                                            [class.colorMainColor]="!(formResiduosPeligrosos.get('observaciones').invalid && formResiduosPeligrosos.get('observaciones').touched || formResiduosPeligrosos.get('observaciones').invalid)">
+                                            Observaciones al manejo de residuos peligrosos y especiales
+                                    </label>
+                                    <quill-editor   class="quill-editor-style ml-1em"
+                                                    [styles]="editorStyle"
+                                                    [modules]="config"
+                                                    (onContentChanged)="maxLength($event, 1000)"
+                                                    formControlName="observaciones"
+                                                    #obsResiduosPeligrosos
+                                                    required>
+                                    </quill-editor>
+                                </div>
+                                <span class="contador miles" *ngIf="formResiduosPeligrosos.get('observaciones').value !== null">
+                                  {{1000 - textoLimpio( obsResiduosPeligrosos.quillEditor, 1000 )}}
+                                </span>
+                                <span class="contador miles" *ngIf="formResiduosPeligrosos.get('observaciones').value === null">
+                                  1000
+                                </span>
+                            </div>
+                            <div class="text-center mt-1em">
+                                <button mat-button
+                                        color="warn"
+                                        class="btn-guardar"
+                                        type="button"
+                                        [disabled]="formResiduosPeligrosos.get('tieneObservaciones').value === null"
+                                        (click)="guardarResiduosPeligrosos()">
+                                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                                </button>
+                            </div>
+                        </form>
+                      
+                        <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialResiduosPeligrosos.length > 0">
+                            <table mat-table [dataSource]="tablaHistorialResiduosPeligrosos" matSort>
+                          
+                                <ng-container matColumnDef="fechaRevision">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                                  <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="responsable">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                                    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                        <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                            <p>Supervisor</p>
+                                        </ng-container>
+                                        <ng-template #noEsSupervisor>
+                                            <p>Apoyo a la supervisión</p>
+                                        </ng-template> 
+                                    </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="historial">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                                    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                        <section [innerHTML]="element.observacion"></section>
+                                    </td>
+                                </ng-container>
+                            
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                            </table>
+                        </section>
+                    </ng-template>
+                </section>
+
+                <section *ngIf="actividad.get( 'tipoActividad' ).value !== null
+                                && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
+                                && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.otra">
+                    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                        <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formManejoOtra.get( 'fechaCreacion' ).value !== null">
+                            <mat-card-header class="header-card">
+                              <mat-card-title class="header-card--text">
+                                Verificación del apoyo a la supervisión
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p style="margin-left: 2em;"><b> {{ formManejoOtra.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="formManejoOtra.get( 'tieneObservaciones' ).value === true"><b>¿Tiene observaciones a otra?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="formManejoOtra.get( 'tieneObservaciones' ).value === false"><b>¿Tiene observaciones a otra?</b>: No</p>
+                                <section [innerHTML]="formManejoOtra.get( 'fechaCreacion' ).value" style="margin-left: 2em;" *ngIf="formManejoOtra.get( 'tieneObservaciones' ).value === true"></section>
+                            </mat-card-content>
+                        </mat-card>
+                      </ng-container>
+                      <ng-template #noEsVerDetalle>
+                        <form [formGroup]="formManejoOtra" novalidate>
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-md-12">
+                                    <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                        <div class="pr-1">
+                                            <label class="label-left" for="tieneObservaciones">¿Tiene observaciones a otra?</label>
+                                        </div>
+                                        <div>
+                                            <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                                <mat-radio-button [value]="true" [checked]="formManejoOtra.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                                <mat-radio-button [value]="false" [checked]="formManejoOtra.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                            </mat-radio-group>
+                                        </div>
+                                        <span class="required-form-group m-0">*</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formManejoOtra.value.tieneObservaciones == true" align="left">
+                                <div class="text-area-quill"
+                                [class.color-secondaryColor]="formManejoOtra.get('observaciones').invalid && formManejoOtra.get('observaciones').touched || formManejoOtra.get('observaciones').invalid">
+                                    <label  class="text-area-quill--label align-left-label"
+                                            [class.colorMainColor]="!(formManejoOtra.get('observaciones').invalid && formManejoOtra.get('observaciones').touched || formManejoOtra.get('observaciones').invalid)">
+                                            Observaciones a otra
+                                    </label>
+                                    <quill-editor   class="quill-editor-style ml-1em"
+                                                    [styles]="editorStyle"
+                                                    [modules]="config"
+                                                    (onContentChanged)="maxLength($event, 1000)"
+                                                    formControlName="observaciones"
+                                                    #obsManejoOtra
+                                                    required>
+                                    </quill-editor>
+                                </div>
+                                <span class="contador miles" *ngIf="formManejoOtra.get('observaciones').value !== null">
+                                  {{1000 - textoLimpio( obsManejoOtra.quillEditor, 1000 )}}
+                                </span>
+                                <span class="contador miles" *ngIf="formManejoOtra.get('observaciones').value === null">
+                                  1000
+                                </span>
+                            </div>
+                            <div class="text-center mt-1em">
+                                <button mat-button
+                                        color="warn"
+                                        class="btn-guardar"
+                                        type="button"
+                                        [disabled]="formManejoOtra.get('tieneObservaciones').value === null"
+                                        (click)="guardarManejoOtra()">
+                                        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                                </button>
+                            </div>
+                        </form>
+                      
+                        <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="historialManejoOtros.length > 0">
+                            <table mat-table [dataSource]="tablaHistorialManejoOtros" matSort>
+                          
+                                <ng-container matColumnDef="fechaRevision">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                                  <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="responsable">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                                    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                        <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                            <p>Supervisor</p>
+                                        </ng-container>
+                                        <ng-template #noEsSupervisor>
+                                            <p>Apoyo a la supervisión</p>
+                                        </ng-template> 
+                                    </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="historial">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                                    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                        <section [innerHTML]="element.observacion"></section>
+                                    </td>
+                                </ng-container>
+                            
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                            </table>
+                        </section>
+                    </ng-template>
+                </section>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </ng-template>
+  </div>
+</section>

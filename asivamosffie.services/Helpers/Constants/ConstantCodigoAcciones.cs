@@ -152,20 +152,20 @@
 
         public const string Cambiar_Estado_Programacion_Especial = "139";
         public const string Crear_Editar_Controversia_Contractual = "128";
-       	public const string Crear_Editar_Controversia_Actuacion= "129";
-        public const string Eliminar_Controversia_Contractual= "130";
-        public const string Eliminar_Controversia_Actuacion= "131";
-        public const string Crear_Editar_Actuacion_Seguimiento = "148";        
+        public const string Crear_Editar_Controversia_Actuacion = "129";
+        public const string Eliminar_Controversia_Contractual = "130";
+        public const string Eliminar_Controversia_Actuacion = "131";
+        public const string Crear_Editar_Actuacion_Seguimiento = "148";
 
         public const string Cambiar_estado_Controversia_Actuacion = "136";
-        public const string  Cambiar_estado_Controversia_Contractual = "137";
-        public const string  Notificacion_Controversia_Contractual= "140";
-        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";        	
+        public const string Cambiar_estado_Controversia_Contractual = "137";
+        public const string Notificacion_Controversia_Contractual = "140";
+        public const string Cambiar_estado_Actuacion_Seguimiento = "150";
 
         //4.2.2 Gestionar procesos de Defensa Judicial
-        public const string  Crear_Editar_Ficha_Estudio= "145";
-        public const string  Crear_Editar_Demandado_Convocado= "146";
-        public const string  Cambiar_Estado_Proceso= "147";
+        public const string Crear_Editar_Ficha_Estudio = "145";
+        public const string Crear_Editar_Demandado_Convocado = "146";
+        public const string Cambiar_Estado_Proceso = "147";
 
         // 4.1.12
         public const string Crear_Editar_Seguimiento_Semanal = "160";
@@ -179,5 +179,9 @@
         public const string Eliminar_Gestion_Obra_Calidad_Ensayo_Laboratorio = "167";
 
         public const string Cambiar_Estado_Seguimiento_Semanal = "174";
+
+        public const string Cambiar_Estado_Muestras_Seguimiento_Semanal = "175";
+
+        public const string Crear_Editar_Observacion_Seguimiento_Semanal = "176";
     }
 }

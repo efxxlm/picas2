@@ -69,11 +69,11 @@
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionObra">
                         Gestión de la obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-gestion-de-obra>
+                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true" (estadoSemaforoGestionObra)="valuePendingSemaforo( $event, 'gestionObra' )"></app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">

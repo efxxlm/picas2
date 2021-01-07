@@ -52,7 +52,7 @@
                 </mat-card-content>
             </mat-card>
 
-            <mat-accordion *ngIf="actividades.length > 0">
+            <mat-accordion *ngIf="actividades.length > 0 && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true">
                 <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let actividad of actividades.controls; index as i" [formGroup]="actividad">
                     <mat-expansion-panel-header class="expansion-style--header">
                         <mat-panel-title class="expansion-style--title" [ngClass]="actividad.get( 'estadoSemaforo' ).value">
@@ -140,6 +140,15 @@
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
+            <div class="text-center" style="margin-top: 2em;" *ngIf="formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === false">
+              <button mat-button
+                      color="warn"
+                      class="btn-guardar"
+                      type="submit"
+                      [disabled]="formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).dirty === false">
+                      <img  src="assets/img/icon/guardar.svg">
+              </button>
+            </div>
         </div>
     </form>
 </section>

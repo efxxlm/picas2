@@ -1,0 +1,129 @@
+<section class="text-center" *ngIf="gestionComiteObra !== undefined">
+    <div class="d-flex justify-content-center colorMainColor">
+        <p>Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+        <p style="margin-left: 2em;">Número de comité de obra: <b> {{ numeroComiteObra }} </b> </p>
+    </div>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>Fecha de comité de obra</b>: {{ gestionComiteObra.fechaComite | date: 'dd/MM/yyyy' }} </p>
+              <p><b>URL con soporte</b>: {{ gestionComiteObra.urlSoporteComite }} </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</section>
+
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+	<mat-card class="shipping-card var-main-gris mt-1em" align="left">
+        <mat-card-header class="header-card">
+          	<mat-card-title class="header-card--text">
+          	  	Verificación del apoyo a la supervisión
+          	</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b>12/07/2020</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al comité de obra?</b>: Sí</p>
+            <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
+        </mat-card-content>
+	</mat-card>
+	
+    <mat-card class="shipping-card var-main-gris mt-1em" align="left">
+        <mat-card-header class="header-card">
+          	<mat-card-title class="header-card--text">
+				Validación de la supervisión
+          	</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b>12/07/2020</b></p>
+            <p style="margin-left: 2em;"><b>¿Desde la supervisión tiene observaciones al comité de obra?</b>: Sí</p>
+            <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+<ng-template #noEsVerDetalle>
+    <mat-card class="shipping-card var-main-gris" align="left">
+        <mat-card-header class="header-card">
+          	<mat-card-title class="header-card--text">
+          	  	Verificación del apoyo a la supervisión
+          	</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b>12/07/2020</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al comité de obra?</b>: Sí</p>
+            <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
+        </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="formComiteObra" novalidate (ngSubmit)="guardar()">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-12">
+                <div class="row justify-content-center align-items-center" style="width: 100%;">
+                    <div class="pr-1">
+                        <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones al comité de obra?</label>
+                    </div>
+                    <div>
+                        <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                            <mat-radio-button [value]="true" [checked]="formComiteObra.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="formComiteObra.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <span class="required-form-group m-0">*</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formComiteObra.value.tieneObservaciones == true" align="left">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="formComiteObra.get('observaciones').invalid && formComiteObra.get('observaciones').touched || formComiteObra.get('observaciones').invalid">
+                <label  class="text-area-quill--label align-left-label"
+                        [class.colorMainColor]="!(formComiteObra.get('observaciones').invalid && formComiteObra.get('observaciones').touched || formComiteObra.get('observaciones').invalid)">
+                        Observaciones al comité de obra
+                </label>
+                <quill-editor   class="quill-editor-style ml-1em"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)"
+                                formControlName="observaciones"
+                                #obsComiteObra
+                                required>
+                </quill-editor>
+            </div>
+            <span class="contador miles" *ngIf="formComiteObra.get('observaciones').value !== null">
+              {{1000 - textoLimpio( obsComiteObra.quillEditor, 1000 )}}
+            </span>
+            <span class="contador miles" *ngIf="formComiteObra.get('observaciones').value === null">
+              1000
+            </span>
+        </div>
+        <div class="text-center mt-1em">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formComiteObra.get('tieneObservaciones').value === null">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
+
+    <section class="text-center table-responsive size-table" style="margin-top: 2em;">
+        <table mat-table [dataSource]="tablaHistorial" matSort>
+      
+            <ng-container matColumnDef="fechaRevision">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaRevision | date: 'dd/MM/yyyy' }}</b> </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="responsable">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.responsable }} </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="historial">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                  <section [innerHTML]="element.historial"></section>
+              </td>
+            </ng-container>
+        
+          	<tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+          	<tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+        </table>
+    </section>
+</ng-template>

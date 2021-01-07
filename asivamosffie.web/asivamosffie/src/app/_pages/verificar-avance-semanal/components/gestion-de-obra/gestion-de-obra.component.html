@@ -1,0 +1,51 @@
+<mat-accordion *ngIf="seguimientoSemanal !== undefined && tipoObservaciones !== undefined">
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Gestión ambiental
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"></app-gestion-ambiental>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Gestión de calidad
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-calidad [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle"></app-gestion-calidad>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Gestión de seguridad y salud en el trabajo
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-sst [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle"></app-gestion-sst>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Gestión social
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle"></app-gestion-social>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Alertas relevantes
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle"></app-alertas-relevantes>
+    </mat-expansion-panel>
+</mat-accordion>

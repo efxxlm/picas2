@@ -21,7 +21,6 @@ export class VerDetalleMuestrasComponent implements OnInit {
         .subscribe(
           response => {
               this.ensayoLaboratorio = response;
-              console.log( this.ensayoLaboratorio );
           }
         );
     }

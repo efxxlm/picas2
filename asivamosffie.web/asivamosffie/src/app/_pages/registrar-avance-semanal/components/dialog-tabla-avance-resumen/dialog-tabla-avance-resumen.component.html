@@ -8,13 +8,13 @@
     </h1>
     
     <div class="d-flex justify-content-center mt-1em">
-        <p> Fecha del reporte: <b>05/07/2020</b> </p>
-        <p class="ml-2em"> Disponibilidad personal: <b>Insuficiente</b> </p>
+        <p> Fecha del reporte: <b> {{ observaciones.registro.fechaSeguimiento | date: 'dd/MM/yyyy' }} </b> </p>
+        <p class="ml-2em"> Disponibilidad personal: <b>Por integrar</b> </p>
     </div>
 
     <mat-card class="border mt-1em" align="left">
         <mat-card-content>
-            <section class="mt-3em" [innerHTML]="innerObservacion( observaciones )"></section>
+            <section class="mt-3em" [innerHTML]="innerObservacion( observaciones.observacion )"></section>
         </mat-card-content>
     </mat-card>
 </section>

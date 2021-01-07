@@ -228,6 +228,11 @@ const routes: Routes = [
         path: 'verificarAvanceSemanal',
         loadChildren: () => import( './_pages/verificar-avance-semanal/verificar-avance-semanal.module' )
           .then( module => module.VerificarAvanceSemanalModule )
+      },
+      {
+        path: 'validarAvanceSemanal',
+        loadChildren: () => import( './_pages/validar-avance-semanal/validar-avance-semanal.module' )
+          .then( module => module.ValidarAvanceSemanalModule )
       }
     ]
 

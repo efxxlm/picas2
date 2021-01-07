@@ -32,6 +32,34 @@ namespace asivamosffie.services
         }
 
         #region Get
+        public async Task<dynamic> GetObservacionBy(int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo)
+        {
+            try
+            {
+                return await _context.SeguimientoSemanalObservacion
+                    .Where(
+                           r => r.SeguimientoSemanalId == pSeguimientoSemanalId
+                           && r.ObservacionPadreId == pPadreId
+                           && r.TipoObservacionCodigo == pTipoCodigo
+                          )
+                        .Select(r =>
+                                new {
+                                        r.SeguimientoSemanalObservacionId,
+                                        r.Observacion,
+                                        r.EsSupervisor,
+                                        r.FechaCreacion,
+                                        r.Archivada
+                                   }
+                               ).ToListAsync();
+
+            }
+            catch (Exception e)
+            {
+                var result = new { };
+                return result;
+            }
+        }
+
         public async Task<GestionObraCalidadEnsayoLaboratorio> GetEnsayoLaboratorioMuestras(int pGestionObraCalidadEnsayoLaboratorioId)
         {
             GestionObraCalidadEnsayoLaboratorio GestionObraCalidadEnsayoLaboratorio = await _context.GestionObraCalidadEnsayoLaboratorio
@@ -62,7 +90,7 @@ namespace asivamosffie.services
             }
             return GestionObraCalidadEnsayoLaboratorio;
         }
-
+         
         public async Task<List<VRegistrarAvanceSemanal>> GetVRegistrarAvanceSemanal()
         {
             return await _context.VRegistrarAvanceSemanal.ToListAsync();
@@ -79,7 +107,7 @@ namespace asivamosffie.services
                 {
                     SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && !(bool)r.Eliminado && !(bool)r.RegistroCompleto)
 
-                       .Include(r => r.ContratacionProyecto)
+                    .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
                               .ThenInclude(r => r.Contrato)
                        .Include(r => r.ContratacionProyecto)
@@ -87,9 +115,10 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.InstitucionEducativa)
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
 
-
+                          //Financiero
+                          .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                       //Fisico
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
 
                        //Gestion Obra
@@ -123,6 +152,7 @@ namespace asivamosffie.services
 
                        .FirstOrDefaultAsync();
 
+                    seguimientoSemanal.SeguimientoSemanalObservacion = null;
 
                     List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
@@ -234,7 +264,7 @@ namespace asivamosffie.services
                 {
                     SeguimientoSemanal seguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId)
 
-                      .Include(r => r.ContratacionProyecto)
+                         .Include(r => r.ContratacionProyecto)
                           .ThenInclude(r => r.Contratacion)
                               .ThenInclude(r => r.Contrato)
                        .Include(r => r.ContratacionProyecto)
@@ -242,9 +272,10 @@ namespace asivamosffie.services
                               .ThenInclude(r => r.InstitucionEducativa)
                        .Include(r => r.SeguimientoDiario)
                               .ThenInclude(r => r.SeguimientoDiarioObservaciones)
-                       .Include(r => r.SeguimientoSemanalAvanceFinanciero)
 
-
+                          //Financiero
+                          .Include(r => r.SeguimientoSemanalAvanceFinanciero)
+                       //Fisico
                        .Include(r => r.SeguimientoSemanalAvanceFisico)
 
                        //Gestion Obra
@@ -278,6 +309,7 @@ namespace asivamosffie.services
 
                        .FirstOrDefaultAsync();
 
+                    seguimientoSemanal.SeguimientoSemanalObservacion = null;
 
                     List<Dominio> CausaBajaDisponibilidadMaterial = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Causa_Baja_Disponibilidad_Material).ToList();
 
@@ -330,16 +362,12 @@ namespace asivamosffie.services
                             }
                         }
                     }
-
                     seguimientoSemanal.FlujoInversion = _context.FlujoInversion.Include(r => r.Programacion).Where(r => r.SeguimientoSemanalId == seguimientoSemanal.SeguimientoSemanalId && r.Programacion.TipoActividadCodigo == "C").ToList();
 
                     foreach (var FlujoInversion in seguimientoSemanal.FlujoInversion)
                     {
                         FlujoInversion.Programacion.RangoDias = (FlujoInversion.Programacion.FechaFin - FlujoInversion.Programacion.FechaInicio).TotalDays;
                     }
-
-
-
                     List<int> ListSeguimientoSemanalId = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == seguimientoSemanal.ContratacionProyectoId).Select(r => r.SeguimientoSemanalId).ToList();
 
                     List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + seguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
@@ -411,14 +439,15 @@ namespace asivamosffie.services
             List<dynamic> ListBitaCora = new List<dynamic>();
 
             List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
-            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal).ToList();
+            List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
 
             int UltimaSemana = ListseguimientoSemanal.OrderBy(r => r.SeguimientoSemanalId).LastOrDefault().NumeroSemana;
 
-            foreach (var item in ListseguimientoSemanal)
+            foreach (var item in ListseguimientoSemanal.Where(r => r.RegistroCompleto == true))
             {
                 decimal? ProgramacionAcumulada = 0, AvanceFisico = 0;
-
+                string strCodigoEstadoObra = string.Empty;
+                string strCodigoEstadoMuestas = string.Empty;
                 if (item.SeguimientoSemanalAvanceFisico.Count() > 0)
                 {
                     if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal.HasValue)
@@ -427,22 +456,31 @@ namespace asivamosffie.services
                     if (item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal.HasValue)
                         AvanceFisico = item.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
 
+                    if (!string.IsNullOrEmpty(item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo))
+                        strCodigoEstadoObra = ListEstadoObra.Where(r => r.Codigo == item.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo).FirstOrDefault().Nombre;
                 }
+
+                if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
+                    strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
+
                 ListBitaCora.Add(new
                 {
                     UltimoReporte = item.FechaModificacion,
                     item.SeguimientoSemanalId,
+                    RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
                     item.NumeroSemana,
                     UltimaSemana,
                     item.FechaInicio,
                     item.FechaFin,
-                    EstadoObra = !string.IsNullOrEmpty(item.ContratacionProyecto.EstadoObraCodigo) ? ListEstadoObra.Where(r => r.Codigo == item.ContratacionProyecto.EstadoObraCodigo).FirstOrDefault().Nombre : "---",
+                    EstadoObra = strCodigoEstadoObra,
                     ProgramacionAcumulada = Math.Truncate((decimal)ProgramacionAcumulada),
                     AvanceFisico = Math.Truncate((decimal)AvanceFisico),
                     EstadoRegistro = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
                     item.ContratacionProyecto?.Proyecto?.LlaveMen,
                     item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
-                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoObra.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
+                    EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
+                    EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
+
                 });
             }
             return ListBitaCora;
@@ -450,13 +488,13 @@ namespace asivamosffie.services
         #endregion
 
         #region Save Edit
-        public async Task<Respuesta> ChangueStatusSeguimientoSemanal(int pSeguimientoSemanalId, string pEstadoMod, string pUsuarioMod)
+        public async Task<Respuesta> ChangueStatusSeguimientoSemanal(int pContratacionProyectoId, string pEstadoMod, string pUsuarioMod)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
-                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
+                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && r.RegistroCompleto == false).FirstOrDefault();
 
                 seguimientoSemanalMod.EstadoSeguimientoSemanalCodigo = pEstadoMod;
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
@@ -469,7 +507,50 @@ namespace asivamosffie.services
 
                 _context.SaveChanges();
 
-                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal).FirstOrDefault().Nombre;
+                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).FirstOrDefault().Nombre;
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioMod, "EL ESTADO DEL SEGUIMIENTO SEMANAL CAMBIO A: " + strNombreSEstadoObraCodigo.ToUpper())
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pUsuarioMod, ex.InnerException.ToString())
+                };
+            }
+        }
+
+        public async Task<Respuesta> ChangueStatusMuestrasSeguimientoSemanal(int pSeguimientoSemanalID, string pEstadoMod, string pUsuarioMod)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_Estado_Muestras_Seguimiento_Semanal, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Find(pSeguimientoSemanalID);
+
+                seguimientoSemanalMod.EstadoMuestrasCodigo = pEstadoMod;
+                seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
+                seguimientoSemanalMod.FechaModificacion = DateTime.Now;
+
+                if (pEstadoMod == ConstanCodigoEstadoReporteSemanal.Enviado_a_verificacion)
+                {
+                    seguimientoSemanalMod.RegistroCompleto = true;
+                }
+
+                _context.SaveChanges();
+
+                string strNombreSEstadoObraCodigo = _context.Dominio.Where(r => r.Codigo == pEstadoMod && r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).FirstOrDefault().Nombre;
 
                 return new Respuesta
                 {
@@ -541,14 +622,19 @@ namespace asivamosffie.services
                     .Include(r => r.SeguimientoSemanalGestionObraCalidad)
                         .ThenInclude(r => r.SeguimientoSemanalGestionObra)
                         .FirstOrDefault();
+
                 gestionObraCalidadEnsayoLaboratorioOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
                 gestionObraCalidadEnsayoLaboratorioOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
                 gestionObraCalidadEnsayoLaboratorioOld.FechaModificacion = DateTime.Now;
 
-                //if (RegistroCompletoMuestras)
-                //{
-                //    SeguimientoSemanal seguimientoSemanalOld = _context.SeguimientoSemanal.Find(gestionObraCalidadEnsayoLaboratorioOld.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanalId);
-                //}
+                if (RegistroCompletoMuestras)
+                {
+                    SeguimientoSemanal seguimientoSemanalOld = _context.SeguimientoSemanal.Find(gestionObraCalidadEnsayoLaboratorioOld.SeguimientoSemanalGestionObraCalidad.SeguimientoSemanalGestionObra.SeguimientoSemanalId);
+
+                    seguimientoSemanalOld.FechaModificacion = DateTime.Now;
+                    seguimientoSemanalOld.UsuarioModificacion = pGestionObraCalidadEnsayoLaboratorio.UsuarioCreacion;
+                    seguimientoSemanalOld.RegistroCompletoMuestras = RegistroCompletoMuestras;
+                }
 
                 _context.SaveChanges();
 
@@ -743,8 +829,6 @@ namespace asivamosffie.services
 
             try
             {
-
-
                 if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.Count() > 0)
                     SaveUpdateAvanceFisico(pSeguimientoSemanal, pSeguimientoSemanal.UsuarioCreacion);
 
@@ -770,6 +854,8 @@ namespace asivamosffie.services
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
                 if (ValidarRegistroCompletoSeguimientoSemanal(seguimientoSemanalMod))
                     seguimientoSemanalMod.FechaEnvioSupervisor = DateTime.Now;
+                else
+                    seguimientoSemanalMod.FechaEnvioSupervisor = null;
 
                 _context.Update(seguimientoSemanalMod);
                 _context.SaveChanges();
@@ -813,31 +899,9 @@ namespace asivamosffie.services
                     RegistroCompleto = false;
                 }
             }
-
-            if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId == 0)
-            {
-                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = RegistroCompleto;
-                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion = usuarioCreacion;
-                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().FechaCreacion = DateTime.Now;
-                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().Eliminado = false;
-                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
-
-            }
-            else
-            {
-                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId);
-
-                seguimientoSemanalAvanceFisicoOld.RegistroCompleto = RegistroCompleto;
-                seguimientoSemanalAvanceFisicoOld.UsuarioModificacion = usuarioCreacion;
-                seguimientoSemanalAvanceFisicoOld.FechaModificacion = DateTime.Now;
-
-                seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
-                seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
-            }
-
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
             ///Validar Estado De obra 
-        //Actualizar estado obra
+            //Actualizar estado obra
             List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + pSeguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
 
             decimal? ProgramacionAcumuladaObra = ListProgramacion.Sum(r => r.ProgramacionCapitulo);
@@ -852,6 +916,7 @@ namespace asivamosffie.services
             decimal PrimerTercio = decimal.Round(CantidadDeSeguimientosSemanales / 3);
             decimal SegundoTercio = PrimerTercio * 2;
 
+
             if (ProgramacionAcumuladaObra.HasValue && ProgramacionEjecutadaObra.HasValue)
             {
                 /////Programación acumulada de la obra: == Avance acumulado ejecutado de la obra:   = normal
@@ -859,12 +924,12 @@ namespace asivamosffie.services
                     contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_normal;
 
                 /////Programación acumulada de la obra: <  Avance acumulado ejecutado de la obra:   = avanzada
-                if (ProgramacionAcumuladaObra > ProgramacionEjecutadaObra)
+                if (ProgramacionAcumuladaObra < ProgramacionEjecutadaObra)
                     contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_avanzada;
 
 
                 /////Programación acumulada de la obra: >  Avance acumulado ejecutado de la obra:   = retrazado
-                if (ProgramacionAcumuladaObra < ProgramacionEjecutadaObra)
+                if (ProgramacionAcumuladaObra > ProgramacionEjecutadaObra)
                     contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_retrazada;
 
                 //primer tercio  => avance del proyecto no debe ser menor al 20%   = critico
@@ -876,13 +941,35 @@ namespace asivamosffie.services
                 if (pSeguimientoSemanal.NumeroSemana >= SegundoTercio)
                     if (ProgramacionEjecutadaObra < 60)
                         contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.Con_ejecucion_critica;
-
-
-
             }
             else
             {
                 contratacionProyectoValidarEstadoObra.EstadoObraCodigo = ConstanCodigoEstadoObraSeguimientoSemanal.En_ejecucion;
+            }
+
+            //Guardar Seguimiento Semanal Avance Fisico
+
+            if (pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId == 0)
+            {
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = RegistroCompleto;
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().UsuarioCreacion = usuarioCreacion;
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().FechaCreacion = DateTime.Now;
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().Eliminado = false;
+                pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = contratacionProyectoValidarEstadoObra.EstadoObraCodigo;
+                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
+
+            }
+            else
+            {
+                SeguimientoSemanalAvanceFisico seguimientoSemanalAvanceFisicoOld = _context.SeguimientoSemanalAvanceFisico.Find(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().SeguimientoSemanalAvanceFisicoId);
+
+                seguimientoSemanalAvanceFisicoOld.RegistroCompleto = RegistroCompleto;
+                seguimientoSemanalAvanceFisicoOld.UsuarioModificacion = usuarioCreacion;
+                seguimientoSemanalAvanceFisicoOld.FechaModificacion = DateTime.Now;
+
+                seguimientoSemanalAvanceFisicoOld.EstadoObraCodigo = contratacionProyectoValidarEstadoObra.EstadoObraCodigo;
+                seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
+                seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
             }
 
         }
@@ -1200,7 +1287,7 @@ namespace asivamosffie.services
                             //New
                             if (SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.ManejoMaterialesInsumosId == 0)
                             {
-                               
+
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.UsuarioCreacion = pUsuarioCreacion;
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.Eliminado = false;
                                 SeguimientoSemanalGestionObraAmbiental.ManejoMaterialesInsumo.FechaCreacion = DateTime.Now;
@@ -1890,7 +1977,7 @@ namespace asivamosffie.services
                     return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoResiduosPeligrososEspeciales == true)
-                if (ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales)== false)
+                if (ValidarRegistroCompletoManejoResiduosPeligrososEspeciales(pSeguimientoSemanalGestionObraAmbiental.ManejoResiduosPeligrososEspeciales) == false)
                     return false;
 
             if (pSeguimientoSemanalGestionObraAmbiental.TieneManejoOtro == true)
@@ -1902,6 +1989,8 @@ namespace asivamosffie.services
 
         private bool ValidarRegistroCompletoManejoMaterialesInsumo(ManejoMaterialesInsumos pManejoMaterialesInsumo)
         {
+            if (pManejoMaterialesInsumo == null)
+                return false;
             if (!pManejoMaterialesInsumo.EstanProtegidosDemarcadosMateriales.HasValue
                 || !pManejoMaterialesInsumo.RequiereObservacion.HasValue
                 || (pManejoMaterialesInsumo.RequiereObservacion.HasValue && string.IsNullOrEmpty(pManejoMaterialesInsumo.Observacion))
@@ -1928,7 +2017,7 @@ namespace asivamosffie.services
         {
             if (!pManejoResiduosConstruccionDemolicion.EstaCuantificadoRcd.HasValue
                    || !pManejoResiduosConstruccionDemolicion.RequiereObservacion.HasValue
-                   || (pManejoResiduosConstruccionDemolicion.RequiereObservacion.HasValue == true && string.IsNullOrEmpty(pManejoResiduosConstruccionDemolicion.Observacion)))
+                   || (pManejoResiduosConstruccionDemolicion.RequiereObservacion == true && string.IsNullOrEmpty(pManejoResiduosConstruccionDemolicion.Observacion)))
                 return false;
 
             foreach (var ManejoResiduosConstruccionDemolicionGestor in pManejoResiduosConstruccionDemolicion.ManejoResiduosConstruccionDemolicionGestor)
@@ -1967,7 +2056,6 @@ namespace asivamosffie.services
             if (
                 !pManejoOtro.FechaActividad.HasValue
                 || string.IsNullOrEmpty(pManejoOtro.Actividad)
-                || string.IsNullOrEmpty(pManejoOtro.UrlSoporteGestion)
                 )
             {
                 return false;

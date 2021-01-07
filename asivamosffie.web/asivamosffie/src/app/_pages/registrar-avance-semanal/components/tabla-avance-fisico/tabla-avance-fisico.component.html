@@ -59,15 +59,17 @@
                 <section class="d-flex justify-content-center">
                   <mat-form-field style="width: 3em;">
                       <input  matInput
-                              type="text"
-                              maxlength="3"
+                              type="number"
+                              min="0"
+                              [max]="avanceFisicoCapitulo.programacionCapitulo"
                               [(ngModel)]="avanceFisicoCapitulo.avanceFisicoCapitulo"
                               required
                               style="width: 2em;"
+                              autocomplete="off"
                               (ngModelChange)="valuePending( $event, avanceFisicoCapitulo )">
                   </mat-form-field>
                   <span style="margin: .5em;">%</span>
-                  <span class="contador">{{3 - avanceFisicoCapitulo.avanceFisicoCapitulo.length}}</span>
+                  <span class="contador">{{3 - textoLimpio( avanceFisicoCapitulo.avanceFisicoCapitulo ) }}</span>
               </section>
               </div>
             </td>
