@@ -108,6 +108,11 @@ export class GestionSocialComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.formGestionSocial.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formGestionSocial.get( 'observaciones' ).value.length > 0 ) {
+                this.formGestionSocial.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,

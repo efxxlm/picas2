@@ -234,6 +234,11 @@ export class TablaAvanceFisicoComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.formAvanceFisico.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formAvanceFisico.get( 'observaciones' ).value.length > 0 ) {
+                this.formAvanceFisico.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,

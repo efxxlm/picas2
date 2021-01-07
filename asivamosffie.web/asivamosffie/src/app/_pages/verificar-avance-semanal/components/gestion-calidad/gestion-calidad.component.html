@@ -118,7 +118,7 @@
             <form [formGroup]="formEnsayo" novalidate>
                 <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let ensayo of ensayos.controls; index as i" [formGroup]="ensayo">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="ensayo.get( 'estadoSemaforo' ).value">
                           Ensayo de laboratorio {{ i + 1 }}
                         </mat-panel-title>
                     </mat-expansion-panel-header>

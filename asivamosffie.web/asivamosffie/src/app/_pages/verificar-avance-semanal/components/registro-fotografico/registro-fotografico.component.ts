@@ -37,12 +37,12 @@ export class RegistroFotograficoComponent implements OnInit {
         height: '100px'
     };
     config = {
-      toolbar: [
-        ['bold', 'italic', 'underline'],
-        [{ list: 'ordered' }, { list: 'bullet' }],
-        [{ indent: '-1' }, { indent: '+1' }],
-        [{ align: [] }],
-      ]
+        toolbar: [
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
+        ]
     };
 
     constructor(
@@ -101,7 +101,11 @@ export class RegistroFotograficoComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formRegistroFotografico.value );
+        if ( this.formRegistroFotografico.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formRegistroFotografico.get( 'observaciones' ).value.length > 0 ) {
+                this.formRegistroFotografico.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,

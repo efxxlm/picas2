@@ -107,7 +107,11 @@ export class AlertasRelevantesComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formAlertasRelevantes.value );
+        if ( this.formAlertasRelevantes.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formAlertasRelevantes.get( 'observaciones' ).value.length > 0 ) {
+                this.formAlertasRelevantes.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,

@@ -119,6 +119,11 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.formActividadesRealizadas.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formActividadesRealizadas.get( 'observaciones' ).value.length > 0 ) {
+                this.formActividadesRealizadas.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.reporteActividadId,
             seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,
@@ -152,7 +157,11 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     guardarSemanaSiguiente() {
-        console.log( this.formActividadesRealizadasSiguienteSemana.value );
+        if ( this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).value.length > 0 ) {
+                this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.reporteActividadSiguienteId,
             seguimientoSemanalId: this.seguimientoSemanal.seguimientoSemanalId,

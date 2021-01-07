@@ -101,6 +101,11 @@ export class AvanceFinancieroComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.formAvanceFinanciero.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formAvanceFinanciero.get( 'observaciones' ).value.length > 0 ) {
+                this.formAvanceFinanciero.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,

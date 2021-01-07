@@ -1,7 +1,7 @@
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,17 +17,8 @@ export class ReporteActividadesComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() tipoReporteActividad: any;
-    formResumenGeneral: FormGroup = this.fb.group({
-        tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
-        fechaCreacion: [ null ]
-    });
+    @Output() estadoSemaforo = new EventEmitter<number>();
     tablaHistorial = new MatTableDataSource();
-    displayedColumnsHistorial: string[]  = [
-        'fechaRevision',
-        'responsable',
-        'historial'
-    ];
     dataHistorial: any[] = [];
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
@@ -36,6 +27,16 @@ export class ReporteActividadesComponent implements OnInit {
     semaforoReporte = 'sin-diligenciar';
     semaforoActividad = 'sin-diligenciar';
     semaforoActividadSiguiente = 'sin-diligenciar';
+    formResumenGeneral: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ '' ],
+        fechaCreacion: [ null ]
+    });
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
     editorStyle = {
         height: '100px'
     };
@@ -65,6 +66,32 @@ export class ReporteActividadesComponent implements OnInit {
             if ( this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ) {
                 this.reporteActividad = this.seguimientoSemanal.seguimientoSemanalReporteActividad[0];
                 if ( this.reporteActividad !== undefined ) {
+                    let totalReportes = 0;
+                    // Semaforo resumen general
+                    if ( this.reporteActividad.registroCompletoObservacionApoyoEstadoContrato === false ) {
+                        this.semaforoReporte = 'en-proceso';
+                    }
+                    if ( this.reporteActividad.registroCompletoObservacionApoyoEstadoContrato === true ) {
+                        this.semaforoReporte = 'completo';
+                        totalReportes++;
+                    }
+                    // Semaforo actividad
+                    if ( this.reporteActividad.registroCompletoObservacionApoyoActividad === false ) {
+                        this.semaforoActividad = 'en-proceso';
+                    }
+                    if ( this.reporteActividad.registroCompletoObservacionApoyoActividad === true ) {
+                        this.semaforoActividad = 'completo';
+                        totalReportes++;
+                    }
+                    // Semaforo actividad siguiente
+                    if ( this.reporteActividad.registroCompletoObservacionApoyoActividadSiguiente === false ) {
+                        this.semaforoActividadSiguiente = 'en-proceso';
+                    }
+                    if ( this.reporteActividad.registroCompletoObservacionApoyoActividadSiguiente === true ) {
+                        this.semaforoActividadSiguiente = 'completo';
+                        totalReportes++;
+                    }
+                    this.estadoSemaforo.emit( totalReportes );
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
                         .subscribe(
                             response => {
@@ -106,6 +133,11 @@ export class ReporteActividadesComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.formResumenGeneral.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formResumenGeneral.get( 'observaciones' ).value.length > 0 ) {
+                this.formResumenGeneral.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,

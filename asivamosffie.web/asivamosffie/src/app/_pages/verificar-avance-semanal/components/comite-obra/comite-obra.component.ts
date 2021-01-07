@@ -106,7 +106,11 @@ export class ComiteObraComponent implements OnInit {
     }
 
     guardar() {
-        console.log( this.formComiteObra.value );
+        if ( this.formComiteObra.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formComiteObra.get( 'observaciones' ).value.length > 0 ) {
+                this.formComiteObra.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,

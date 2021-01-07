@@ -1,7 +1,7 @@
 <mat-accordion *ngIf="seguimientoSemanal !== undefined && tipoObservaciones !== undefined">
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionAmbiental">
                 Gestión ambiental
             </mat-panel-title>
         </mat-expansion-panel-header>
@@ -11,7 +11,7 @@
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionCalidad">
                 Gestión de calidad
             </mat-panel-title>
         </mat-expansion-panel-header>
@@ -21,7 +21,7 @@
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionSst">
                 Gestión de seguridad y salud en el trabajo
             </mat-panel-title>
         </mat-expansion-panel-header>
@@ -31,7 +31,7 @@
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionSocial">
                 Gestión social
             </mat-panel-title>
         </mat-expansion-panel-header>
@@ -41,7 +41,7 @@
 
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAlertasRelevantes">
                 Alertas relevantes
             </mat-panel-title>
         </mat-expansion-panel-header>

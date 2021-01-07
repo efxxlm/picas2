@@ -130,6 +130,11 @@ export class GestionSstComponent implements OnInit {
     }
 
     guardar() {
+        if ( this.formGestionSst.get( 'tieneObservaciones' ).value === false ) {
+            if ( this.formGestionSst.get( 'observaciones' ).value.length > 0 ) {
+                this.formGestionSst.get( 'observaciones' ).setValue( '' );
+            }
+        }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,

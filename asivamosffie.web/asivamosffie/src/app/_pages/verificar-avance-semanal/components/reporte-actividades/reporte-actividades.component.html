@@ -2,7 +2,7 @@
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoReporte">
                     Resumen general del estado del contrato
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -119,7 +119,7 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoActividad">
                     Actividades realizadas
                 </mat-panel-title>
             </mat-expansion-panel-header>
@@ -135,7 +135,7 @@
 
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoActividadSiguiente">
                     Actividades a realizar la siguiente semana
                 </mat-panel-title>
             </mat-expansion-panel-header>
