@@ -58,7 +58,6 @@ export class GestionSstComponent implements OnInit {
 
     ngOnInit(): void {
         this.getGestionSst();
-        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     maxLength(e: any, n: number) {
@@ -88,12 +87,10 @@ export class GestionSstComponent implements OnInit {
                     && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud.length > 0 )
                 {
                     this.gestionObraSst = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
-                    console.log( this.gestionObraSst );
                     if ( this.gestionObraSst.observacionApoyoId !== undefined ) {
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.tipoObservacionSst )
                             .subscribe(
                                 response => {
-                                    console.log( response );
                                     const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                     if ( observacionApoyo[0].observacion !== undefined ) {
                                         if ( observacionApoyo[0].observacion.length > 0 ) {

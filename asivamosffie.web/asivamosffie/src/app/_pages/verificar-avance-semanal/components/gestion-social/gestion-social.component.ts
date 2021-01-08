@@ -86,7 +86,6 @@ export class GestionSocialComponent implements OnInit {
                     }
                 }
             }
-            this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
