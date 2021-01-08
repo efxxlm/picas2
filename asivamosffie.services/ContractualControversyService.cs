@@ -3104,7 +3104,7 @@ namespace asivamosffie.services
                     actuacionold.ProximaActuacionRequerida = prmMesa.ProximaActuacionRequerida;
                     actuacionold.RutaSoporte = prmMesa.RutaSoporte;
                     actuacionold.EsCompleto = prmMesa.EsCompleto;
-                    _context.ControversiaActuacionMesa.Update(prmMesa);
+                    _context.ControversiaActuacionMesa.Update(actuacionold);
                 }
                 else
                 {
@@ -3141,9 +3141,16 @@ namespace asivamosffie.services
             }
         }
 
-        public Task<List<ControversiaActuacionMesa>> GetMesasByControversiaActuacionId(int pControversiaActuacionId)
+        public async Task<List<ControversiaActuacionMesa>> GetMesasByControversiaActuacionId(int pControversiaId)
         {
-            throw new NotImplementedException();
+            var mesas = _context.ControversiaActuacionMesa.Where(x=>x.ControversiaContractualId== pControversiaId).ToList();
+            foreach(var mesa in mesas)
+            {
+               var  EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(mesa.EstadoAvanceMesaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
+                mesa.EstadoRegistroString = mesa.EsCompleto ? "Completo" : "Incompleto";
+                mesa.EstadoAvanceMesaString = EstadoActuacionReclamacion==null?"": EstadoActuacionReclamacion.Nombre;
+            }
+            return mesas;
         }
 
         public async Task<Respuesta> FinalizarMesa(int pControversiaActuacionId, string pUsuarioModifica)

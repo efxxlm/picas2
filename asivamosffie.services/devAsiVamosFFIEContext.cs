@@ -1579,9 +1579,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.ControversiaActuacion)
+                entity.HasOne(d => d.ControversiaContractual)
                     .WithMany(p => p.ControversiaActuacionMesa)
-                    .HasForeignKey(d => d.ControversiaActuacionId)
+                    .HasForeignKey(d => d.ControversiaContractualId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Controver__Contr__23DE44F1");
             });
