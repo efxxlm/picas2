@@ -267,7 +267,7 @@ namespace asivamosffie.services
                 Include(x=>x.SeguimientoActuacionDerivada).FirstOrDefault();
             controversiaActuacion.NumeroActuacionFormat = "ACT controversia " + controversiaActuacion.ControversiaActuacionId.ToString("000");
 
-            var estado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Reclamacion);
+            var estado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
             var vTipoControversiaCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ControversiaContractual.TipoControversiaCodigo, (int)EnumeratorTipoDominio.Tipo_de_controversia);
             controversiaActuacion.NumeroContrato = controversiaActuacion.ControversiaContractual.Contrato.NumeroContrato;
 
@@ -2461,7 +2461,7 @@ namespace asivamosffie.services
 
                     }
 
-                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Reclamacion);
+                    EstadoAvanceCodigo = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
                     if (EstadoAvanceCodigo != null)
                     {
                         strEstadoAvanceTramite = EstadoAvanceCodigo.Nombre;
@@ -2476,7 +2476,7 @@ namespace asivamosffie.services
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio EstadoActuacionReclamacion;
 
-                    EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Reclamacion);
+                    EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
                     if (EstadoActuacionReclamacion != null)
                     {
                         EstadoActuacionReclamacionTmp = EstadoActuacionReclamacion.Nombre;
@@ -2618,9 +2618,12 @@ namespace asivamosffie.services
 
                             }
                             var dmActuacion=  await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.ProximaActuacionCodigo, (int)EnumeratorTipoDominio.Proxima_actuacion_requerida);
-                            var dmActuacionEstado =  await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
+                            var dmActuacionEstado =  await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoAvanceTramiteCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Derivada);
+                            var dmReclamacionEstado = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiaActuacion.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
                             string actuacion = dmActuacion==null?"":dmActuacion.Nombre;
                             string estado = dmActuacionEstado==null?"":dmActuacionEstado.Nombre;
+
+                            string estadoReclamacion = dmReclamacionEstado == null ? "" : dmReclamacionEstado.Nombre;
                             //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                             GrillaTipoSolicitudControversiaContractual RegistroControversiaContractual = new GrillaTipoSolicitudControversiaContractual
                             {
@@ -2644,8 +2647,8 @@ namespace asivamosffie.services
                                 Actuacion = actuacion,
                                 FechaActuacion = controversiaActuacion.FechaActuacion!=null?Convert.ToDateTime(controversiaActuacion.FechaActuacion).ToString("dd/MM/yyyy"):"",
                                 EstadoActuacion = estado,
-                                ActuacionID =controversiaActuacion.ControversiaActuacionId
-
+                                ActuacionID =controversiaActuacion.ControversiaActuacionId,
+                                EstadoReclamacion = estadoReclamacion,
 
 
                             };
@@ -2911,7 +2914,7 @@ namespace asivamosffie.services
                     //Localizacion departamento = await _commonService.GetDepartamentoByIdMunicipio(proyecto.LocalizacionIdMunicipio);
                     Dominio EstadoActuacionReclamacion;
 
-                    EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion_Reclamacion);
+                    EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversia.EstadoActuacionReclamacionCodigo, (int)EnumeratorTipoDominio.Estados_Reclamacion);
                     if (EstadoActuacionReclamacion != null)
                     {
                         EstadoActuacionReclamacionTmp = EstadoActuacionReclamacion.Nombre;
@@ -2987,6 +2990,7 @@ namespace asivamosffie.services
                     controversiaActuacionActual.ResumenPropuestaFiduciaria = prmControversiaActuacion.ResumenPropuestaFiduciaria;
                     controversiaActuacionActual.RutaSoporte = prmControversiaActuacion.RutaSoporte;
                     controversiaActuacionActual.FechaModificacion = DateTime.Now;
+                    
                     _context.ControversiaActuacion.Update(controversiaActuacionActual);                    
                     _context.SaveChanges();
 
