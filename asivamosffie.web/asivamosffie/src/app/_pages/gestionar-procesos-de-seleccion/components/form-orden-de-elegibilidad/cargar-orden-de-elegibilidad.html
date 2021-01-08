@@ -10,7 +10,7 @@
     <span class="input-file--text">{{archivo}}</span>
     <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">Explorar</button>
     <input required hidden (change)="fileName()" #fileInput type="file" id="file" [formControl]="fileElegibilidad"
-        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+        accept=".xlsx, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
 </div>
 <p class="fontColor">
     Explore en su computador o dispositivo y seleccione el documento Excelque desea cargar

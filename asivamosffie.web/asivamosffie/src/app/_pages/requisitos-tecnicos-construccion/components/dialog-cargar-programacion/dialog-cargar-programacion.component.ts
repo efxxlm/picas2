@@ -11,6 +11,7 @@ import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoCo
 })
 export class DialogCargarProgramacionComponent implements OnInit {
 
+  loading = false;
   archivo: string;
   boton: string= 'Cargar';
   formCargarProgramacion: FormGroup;
@@ -92,6 +93,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
 
   guardar () {
     //console.log( this.formCargarProgramacion );
+    this.loading = true;
     const inputNode: any = document.getElementById('file');
     if ( inputNode.files[0] === undefined ) {
       return;
@@ -122,6 +124,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
                 <b>No se permite el cargue, ya que el archivo tiene registros inválidos. Ajuste el archivo y cargue de nuevo</b>
               `
             );
+            this.loading = false;
             this.dialogRef.close( { terminoCarga: true } );
           }
         }
@@ -150,6 +153,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
                 <b>No se permite el cargue, ya que el archivo tiene registros inválidos. Ajuste el archivo y cargue de nuevo</b>
               `
             );
+            this.loading = false;
             this.dialogRef.close( { terminoCarga: true } );
           }
         }
