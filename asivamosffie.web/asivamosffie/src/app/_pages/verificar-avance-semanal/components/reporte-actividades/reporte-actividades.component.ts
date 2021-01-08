@@ -29,7 +29,7 @@ export class ReporteActividadesComponent implements OnInit {
     semaforoActividadSiguiente = 'sin-diligenciar';
     formResumenGeneral: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     displayedColumnsHistorial: string[]  = [
@@ -96,12 +96,16 @@ export class ReporteActividadesComponent implements OnInit {
                         .subscribe(
                             response => {
                                 if ( response.length > 0 ) {
-                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    if ( observacionApoyo[0].observacion !== undefined ) {
+                                        if ( observacionApoyo[0].observacion.length > 0 ) {
+                                            this.formResumenGeneral.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        }
+                                    }
                                     this.dataHistorial = response.filter( obs => obs.archivada === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                     this.formResumenGeneral.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoEstadoContrato );
-                                    this.formResumenGeneral.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                     this.formResumenGeneral.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
                             }
@@ -133,10 +137,8 @@ export class ReporteActividadesComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formResumenGeneral.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formResumenGeneral.get( 'observaciones' ).value.length > 0 ) {
-                this.formResumenGeneral.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formResumenGeneral.get( 'tieneObservaciones' ).value === false && this.formResumenGeneral.get( 'observaciones' ).value !== null ) {
+            this.formResumenGeneral.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,

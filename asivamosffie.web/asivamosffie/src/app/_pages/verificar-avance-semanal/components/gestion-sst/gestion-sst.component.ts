@@ -24,7 +24,7 @@ export class GestionSstComponent implements OnInit {
     gestionObraSst: any;
     formGestionSst: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
@@ -58,7 +58,6 @@ export class GestionSstComponent implements OnInit {
 
     ngOnInit(): void {
         this.getGestionSst();
-        this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
     }
 
     maxLength(e: any, n: number) {
@@ -87,18 +86,21 @@ export class GestionSstComponent implements OnInit {
                 if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
                     && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud.length > 0 )
                 {
-                    this.gestionObraSst =
-                        this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+                    this.gestionObraSst = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
                     if ( this.gestionObraSst.observacionApoyoId !== undefined ) {
-                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.gestionObraSst )
+                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.tipoObservacionSst )
                             .subscribe(
                                 response => {
-                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    if ( observacionApoyo[0].observacion !== undefined ) {
+                                        if ( observacionApoyo[0].observacion.length > 0 ) {
+                                            this.formGestionSst.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        }
+                                    }
                                     this.dataHistorial = response.filter( obs => obs.archivada === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                     this.formGestionSst.get( 'tieneObservaciones' ).setValue( this.gestionObraSst.tieneObservacionApoyo );
-                                    this.formGestionSst.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                     this.formGestionSst.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
                             );
@@ -130,16 +132,14 @@ export class GestionSstComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formGestionSst.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formGestionSst.get( 'observaciones' ).value.length > 0 ) {
-                this.formGestionSst.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formGestionSst.get( 'tieneObservaciones' ).value === false && this.formGestionSst.get( 'observaciones' ).value !== null ) {
+            this.formGestionSst.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: this.gestionObraSst,
-            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            tipoObservacionCodigo: this.tipoObservacionSst,
+            observacionPadreId: this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId,
             observacion: this.formGestionSst.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionSst.get( 'tieneObservaciones' ).value,
             esSupervisor: false

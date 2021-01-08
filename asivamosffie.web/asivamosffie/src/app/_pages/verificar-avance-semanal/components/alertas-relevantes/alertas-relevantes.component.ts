@@ -19,7 +19,7 @@ export class AlertasRelevantesComponent implements OnInit {
     @Input() tipoObservacionAlertas: any;
     formAlertasRelevantes: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
@@ -70,12 +70,16 @@ export class AlertasRelevantesComponent implements OnInit {
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraAlertaId, this.tipoObservacionAlertas )
                             .subscribe(
                                 response => {
-                                    const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    if ( observacionApoyo[0].observacion !== undefined ) {
+                                        if ( observacionApoyo[0].observacion.length > 0 ) {
+                                            this.formAlertasRelevantes.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        }
+                                    }
                                     this.dataHistorial = response.filter( obs => obs.archivada === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                     this.formAlertasRelevantes.get( 'tieneObservaciones' ).setValue( this.gestionAlertas.tieneObservacionApoyo );
-                                    this.formAlertasRelevantes.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                     this.formAlertasRelevantes.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                                 }
                             );
@@ -107,10 +111,8 @@ export class AlertasRelevantesComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formAlertasRelevantes.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formAlertasRelevantes.get( 'observaciones' ).value.length > 0 ) {
-                this.formAlertasRelevantes.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formAlertasRelevantes.get( 'tieneObservaciones' ).value === false && this.formAlertasRelevantes.get( 'observaciones' ).value !== null ) {
+            this.formAlertasRelevantes.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,

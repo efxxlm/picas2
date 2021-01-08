@@ -24,12 +24,12 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     reporteActividadSiguienteId = 0;
     formActividadesRealizadas: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     formActividadesRealizadasSiguienteSemana: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ '' ],
+        observaciones: [ null ],
         fechaCreacion: [ null ]
     });
     tablaHistorial = new MatTableDataSource();
@@ -69,12 +69,16 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                     .subscribe(
                         response => {
                             if ( response.length > 0 ) {
-                                const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( observacionApoyo[0].observacion !== undefined ) {
+                                    if ( observacionApoyo[0].observacion.length > 0 ) {
+                                        this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    }
+                                }
                                 this.dataHistorial = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                 this.reporteActividadId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                 this.formActividadesRealizadas.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoActividad );
-                                this.formActividadesRealizadas.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                 this.formActividadesRealizadas.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                             }
                         }
@@ -83,12 +87,16 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                     .subscribe(
                         response => {
                             if ( response.length > 0 ) {
-                                const observacionApoyo = response.filter( obs => obs.archivada === false );
+                                const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                if ( observacionApoyo[0].observacion !== undefined ) {
+                                    if ( observacionApoyo[0].observacion.length > 0 ) {
+                                        this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                    }
+                                }
                                 this.dataHistorialSiguiente = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorialSiguiente = new MatTableDataSource( this.dataHistorialSiguiente );
                                 this.reporteActividadSiguienteId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                 this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).setValue( this.reporteActividad.tieneObservacionApoyoActividadSiguiente );
-                                this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                 this.formActividadesRealizadasSiguienteSemana.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );
                             }
                         }
@@ -119,10 +127,8 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     guardar() {
-        if ( this.formActividadesRealizadas.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formActividadesRealizadas.get( 'observaciones' ).value.length > 0 ) {
-                this.formActividadesRealizadas.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formActividadesRealizadas.get( 'tieneObservaciones' ).value === false && this.formActividadesRealizadas.get( 'observaciones' ).value !== null ) {
+            this.formActividadesRealizadas.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.reporteActividadId,
@@ -157,10 +163,8 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     }
 
     guardarSemanaSiguiente() {
-        if ( this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).value === false ) {
-            if ( this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).value.length > 0 ) {
-                this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( '' );
-            }
+        if ( this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).value === false && this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).value !== null ) {
+            this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( '' );
         }
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.reporteActividadSiguienteId,

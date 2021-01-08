@@ -28,3 +28,127 @@
         </mat-card>
     </div>
 </section>
+
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="observacionApoyo !== undefined">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Verificación del apoyo a la supervisión
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b> {{ observacionApoyo[0].fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="gestionObraSst.tieneObservacionApoyo === true"><b>¿Tiene observaciones a la gestión de la seguridad y salud en el trabajo?</b>: Si</p>
+            <p style="margin-left: 2em;" *ngIf="gestionObraSst.tieneObservacionApoyo === false"><b>¿Tiene observaciones a la gestión de la seguridad y salud en el trabajo?</b>: No</p>
+            <section [innerHTML]="observacionApoyo[0].observacion" style="margin-left: 2em;" *ngIf="gestionObraSst.tieneObservacionApoyo === true"></section>
+        </mat-card-content>
+    </mat-card>
+
+    <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="formGestionSst.get( 'fechaCreacion' ).value !== null">
+        <mat-card-header class="header-card">
+          	<mat-card-title class="header-card--text">
+				Validación de la supervisión
+          	</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b> {{ formGestionSst.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="formGestionSst.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones a la gestión de la seguridad y salud en el trabajo?</b>: Si</p>
+            <p style="margin-left: 2em;" *ngIf="formGestionSst.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones a la gestión de la seguridad y salud en el trabajo?</b>: No</p>
+            <section [innerHTML]="formGestionSst.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formGestionSst.get( 'tieneObservaciones' ).value === true"></section>
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+<ng-template #noEsVerDetalle>
+    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="observacionApoyo !== undefined">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Verificación del apoyo a la supervisión
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b> {{ observacionApoyo[0].fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="gestionObraSst.tieneObservacionApoyo === true"><b>¿Tiene observaciones a la gestión de la seguridad y salud en el trabajo?</b>: Si</p>
+            <p style="margin-left: 2em;" *ngIf="gestionObraSst.tieneObservacionApoyo === false"><b>¿Tiene observaciones a la gestión de la seguridad y salud en el trabajo?</b>: No</p>
+            <section [innerHTML]="observacionApoyo[0].observacion" style="margin-left: 2em;" *ngIf="gestionObraSst.tieneObservacionApoyo === true"></section>
+        </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="formGestionSst" novalidate (ngSubmit)="guardar()">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-12">
+                <div class="row justify-content-center align-items-center" style="width: 100%;">
+                    <div class="pr-1">
+                        <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones a la gestión de la seguridad y salud en el trabajo?</label>
+                    </div>
+                    <div>
+                        <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                            <mat-radio-button [value]="true" [checked]="formGestionSst.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="formGestionSst.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <span class="required-form-group m-0">*</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formGestionSst.value.tieneObservaciones == true" align="left">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="formGestionSst.get('observaciones').invalid && formGestionSst.get('observaciones').touched || formGestionSst.get('observaciones').invalid">
+                <label  class="text-area-quill--label align-left-label"
+                        [class.colorMainColor]="!(formGestionSst.get('observaciones').invalid && formGestionSst.get('observaciones').touched || formGestionSst.get('observaciones').invalid)">
+                        Observaciones a la gestión de la seguridad y salud en el trabajo
+                </label>
+                <quill-editor   class="quill-editor-style ml-1em"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)"
+                                formControlName="observaciones"
+                                #obsGestionSst
+                                required>
+                </quill-editor>
+            </div>
+            <span class="contador miles" *ngIf="formGestionSst.get('observaciones').value !== null">
+              {{1000 - textoLimpio( obsGestionSst.quillEditor, 1000 )}}
+            </span>
+            <span class="contador miles" *ngIf="formGestionSst.get('observaciones').value === null">
+              1000
+            </span>
+        </div>
+        <div class="text-center mt-1em">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formGestionSst.get('tieneObservaciones').value === null">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
+
+    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
+        <table mat-table [dataSource]="tablaHistorial" matSort>
+      
+            <ng-container matColumnDef="fechaRevision">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="responsable">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                    <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                        <p>Supervisor</p>
+                    </ng-container>
+                    <ng-template #noEsSupervisor>
+                        <p>Apoyo a la supervisión</p>
+                    </ng-template>
+                </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="historial">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                  <section [innerHTML]="element.observacion"></section>
+              </td>
+            </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+        </table>
+    </section>
+</ng-template>

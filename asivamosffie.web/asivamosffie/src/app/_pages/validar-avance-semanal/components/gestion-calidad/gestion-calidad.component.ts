@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
+import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -14,15 +17,34 @@ export class GestionCalidadComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
-    formGestionCalidad: FormGroup;
+    @Input() tipoObservacionCalidad: any;
+    formGestionCalidad: FormGroup = this.fb.group({
+        tieneObservaciones: [ null, Validators.required ],
+        observaciones: [ null ],
+        fechaCreacion: [ null ]
+    });
+    formEnsayo: FormGroup = this.fb.group(
+        {
+            ensayos: this.fb.array( [] )
+        }
+    );
+    tablaHistorial = new MatTableDataSource();
+    displayedColumnsHistorial: string[]  = [
+        'fechaRevision',
+        'responsable',
+        'historial'
+    ];
+    dataHistorial: any[] = [];
     seRealizoPeticion = false;
     seguimientoSemanalId: number;
     seguimientoSemanalGestionObraId: number;
-    SeguimientoSemanalGestionObraCalidadId = 0;
+    seguimientoSemanalGestionObraCalidadId = 0;
+    seguimientoSemanalObservacionId = 0;
     gestionObraCalidad: any;
     tipoEnsayos: any[] = [];
+    observacionApoyo: any;
     editorStyle = {
-        height: '45px'
+        height: '100px'
     };
     config = {
       toolbar: [
@@ -32,11 +54,17 @@ export class GestionCalidadComponent implements OnInit {
         [{ align: [] }],
       ]
     };
+    get ensayos() {
+        return this.formEnsayo.get( 'ensayos' ) as FormArray;
+    }
 
     constructor(
         private dialog: MatDialog,
+        private fb: FormBuilder,
         private routes: Router,
-        private commonSvc: CommonService )
+        private commonSvc: CommonService,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     {
         this.commonSvc.listaTipoEnsayos()
             .subscribe( tipo => this.tipoEnsayos = tipo );
@@ -56,7 +84,81 @@ export class GestionCalidadComponent implements OnInit {
             {
                 this.gestionObraCalidad = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraCalidad[0];
                 if ( this.gestionObraCalidad.seRealizaronEnsayosLaboratorio !== undefined ) {
-                    this.SeguimientoSemanalGestionObraCalidadId = this.gestionObraCalidad.seguimientoSemanalGestionObraCalidadId;
+                    this.seguimientoSemanalGestionObraCalidadId = this.gestionObraCalidad.seguimientoSemanalGestionObraCalidadId;
+                    //GET gestion de calidad
+                    if ( this.gestionObraCalidad.observacionApoyoId !== undefined || this.gestionObraCalidad.observacionSupervisorId !== undefined ) {
+                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalGestionObraCalidadId, this.tipoObservacionCalidad.gestionCalidadCodigo )
+                            .subscribe(
+                                response => {
+                                    this.observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
+                                    console.log( this.observacionApoyo, observacionSupervisor );
+                                    this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                    this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                    if ( observacionSupervisor.length > 0 ) {
+                                        if ( observacionSupervisor[0].observacion !== undefined ) {
+                                            if ( observacionSupervisor[0].observacion.length > 0 ) {
+                                                this.formGestionCalidad.get( 'observaciones' ).setValue( observacionSupervisor[0].observacion );
+                                            }
+                                        }
+                                        this.seguimientoSemanalObservacionId = observacionSupervisor[0].seguimientoSemanalObservacionId;
+                                        this.formGestionCalidad.get( 'tieneObservaciones' ).setValue( this.gestionObraCalidad.tieneObservacionSupervisor );
+                                        this.formGestionCalidad.get( 'fechaCreacion' ).setValue( observacionSupervisor[0].fechaCreacion );
+                                    }
+                                }
+                            );
+                    }
+                }
+                // GET ensayos de laboratorio
+                if ( this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0 ) {
+                    for ( const ensayo of this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio ) {
+                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
+                            .subscribe(
+                                response => {
+                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                    const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
+                                    let observacion: string;
+                                    let fechaCreacion: Date;
+                                    if ( observacionSupervisor.length > 0 ) {
+                                        fechaCreacion = observacionSupervisor[0].fechaCreacion;
+                                        if ( observacionSupervisor[0].observacion !== undefined ) {
+                                            if ( observacionSupervisor[0].observacion.length > 0 ) {
+                                                observacion = observacionSupervisor[0].observacion;
+                                            }
+                                        }
+                                    }
+                                    const historial = response.filter( obs => obs.archivada === true );
+                                    let estadoSemaforo = 'sin-diligenciar';
+                                    if ( ensayo.registroCompletoObservacionSupervisor === false ) {
+                                        estadoSemaforo = 'en-proceso';
+                                    }
+                                    if ( ensayo.registroCompletoObservacionSupervisor === true ) {
+                                        estadoSemaforo = 'completo';
+                                    }
+                                    this.ensayos.push( this.fb.group(
+                                        {
+                                            estadoSemaforo,
+                                            tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo,
+                                            numeroMuestras: ensayo.numeroMuestras,
+                                            fechaTomaMuestras: ensayo.fechaTomaMuestras,
+                                            fechaEntregaResultados: ensayo.fechaEntregaResultados,
+                                            realizoControlMedicion: ensayo.realizoControlMedicion,
+                                            observacion: ensayo.observacion,
+                                            urlSoporteGestion: ensayo.urlSoporteGestion,
+                                            registroCompletoMuestras: ensayo.registroCompletoMuestras,
+                                            observacionApoyo: observacionApoyo.length > 0 ? observacionApoyo[0] : null,
+                                            gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
+                                            tieneObservaciones: [ ensayo.tieneObservacionSupervisor !== undefined ? ensayo.tieneObservacionSupervisor : null, Validators.required ],
+                                            tieneObservacionApoyo: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
+                                            observacionEnsayo: observacion !== undefined ? observacion : null,
+                                            fechaCreacion: fechaCreacion !== undefined ? fechaCreacion : null,
+                                            seguimientoSemanalObservacionId: ensayo.observacionSupervisorId !== undefined ? ensayo.observacionSupervisorId : 0,
+                                            historial: [ historial ]
+                                        }
+                                    ) );
+                                }
+                            );
+                    }
                 }
             }
         }
@@ -67,6 +169,10 @@ export class GestionCalidadComponent implements OnInit {
             const tipoEnsayo = this.tipoEnsayos.filter( ensayo => ensayo.codigo === tipoEnsayoCodigo );
             return tipoEnsayo[0].nombre;
         }
+    }
+
+    getHistorialEnsayo( historial: any[] ) {
+        return new MatTableDataSource( historial );
     }
 
     maxLength(e: any, n: number) {
@@ -92,6 +198,76 @@ export class GestionCalidadComponent implements OnInit {
 
     getVerDetalleMuestras( gestionObraCalidadEnsayoLaboratorioId: number ) {
         this.routes.navigate( [ `${ this.routes.url }/verDetalleMuestras`, gestionObraCalidadEnsayoLaboratorioId ] );
+    }
+
+    guardar() {
+        if ( this.formGestionCalidad.get( 'tieneObservaciones' ).value === false && this.formGestionCalidad.get( 'observaciones' ).value !== null ) {
+            this.formGestionCalidad.get( 'observaciones' ).setValue( '' );
+        }
+        const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: this.tipoObservacionCalidad.gestionCalidadCodigo,
+            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            observacion: this.formGestionCalidad.get( 'observaciones' ).value,
+            tieneObservacion: this.formGestionCalidad.get( 'tieneObservaciones' ).value,
+            esSupervisor: true
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
+    }
+
+    guardarEnsayo( ensayo: FormGroup ) {
+        if ( ensayo.get( 'tieneObservaciones' ).value === false && ensayo.get( 'observacionEnsayo' ).value !== null ) {
+            ensayo.get( 'observacionEnsayo' ).setValue( '' );
+        }
+		const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: ensayo.get( 'seguimientoSemanalObservacionId' ).value,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: this.tipoObservacionCalidad.ensayosLaboratorio,
+            observacionPadreId: ensayo.get( 'gestionObraCalidadEnsayoLaboratorioId' ).value,
+            observacion: ensayo.get( 'observacionEnsayo' ).value,
+            tieneObservacion: ensayo.get( 'tieneObservaciones' ).value,
+            esSupervisor: true
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

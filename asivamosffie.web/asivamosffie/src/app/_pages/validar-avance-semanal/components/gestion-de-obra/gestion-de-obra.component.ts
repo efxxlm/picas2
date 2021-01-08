@@ -8,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class GestionDeObraComponent implements OnInit {
 
     @Input() seguimientoSemanal: any;
+    @Input() tipoObservaciones: any;
 
     constructor() { }
 
