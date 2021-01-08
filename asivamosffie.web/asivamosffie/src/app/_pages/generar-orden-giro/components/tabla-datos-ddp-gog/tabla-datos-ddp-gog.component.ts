@@ -12,21 +12,35 @@ export class TablaDatosDdpGogComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = ['componente', 'uso', 'valorUso', 'valorTotal'];
+  displayedColumns: string[] = ['uso', 'aportante', 'valorUso', 'saldoActualUso'];
   dataTable: any[] = [
     {
-      componente: "Obra", 
-      uso: [
-        { nombre: "Diseño" }, 
-        { nombre: "Diagnostico" }, 
-        { nombre: "Obra Principal" }
+      uso: "Diseño obra complementaria", 
+      aportante: [
+        { nombre: "Alcaldía de Susacón" }, 
+        { nombre: "Fundación Pies Descalzos" }
       ], 
       valorUso: [
-        { valor: "$ 8.000.000" }, 
-        { valor: "$ 12.000.000" }, 
-        { valor: "$ 60.000.000" }
-      ], valorTotal: '$80.000.000'
+        { valor: "$ 45.000.000" }, 
+        { valor: "$ 30.000.000" }
+      ], 
+      saldoActualUso: [
+        { valor: "$ 45.000.000" }, 
+        { valor: "$ 30.000.000" }
+      ], 
     },
+    {
+      uso: "Estudios y diseños",
+      aportante: [
+        { nombre: "Alcaldía de Susacón" }
+      ], 
+      valorUso: [
+        { valor: "$ 30.000.000" }
+      ], 
+      saldoActualUso: [
+        { valor: "$ 30.000.000" }
+      ], 
+    }
   ];
   constructor() { }
 

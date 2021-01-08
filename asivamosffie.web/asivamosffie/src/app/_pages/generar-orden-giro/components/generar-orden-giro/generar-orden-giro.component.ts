@@ -31,8 +31,8 @@ export class GenerarOrdenGiroComponent implements OnInit {
       numeroSolicitud: 'Sol Pago O 001',
       modalidadContrato: 'Tipo B',
       numeroContrato: 'N801801',
-      estadoGeneracion: 'Solicitud enviada a verificación',
-      estadoRegistro: 'Completo',
+      estadoGeneracion: 'Sin generación',
+      estadoRegistro: 'Incompleto',
       gestion: 1
     },
     {
