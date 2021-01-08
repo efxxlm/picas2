@@ -27,11 +27,9 @@ export class FormVerificarSeguimientoSemanalComponent implements OnInit {
             .subscribe(
                 seguimiento => {
                     this.seguimientoSemanal = seguimiento;
-                    console.log( this.seguimientoSemanal );
                     this.verificarAvanceSemanalSvc.tipoObservaciones()
                     .subscribe( response => {
                         this.tipoObservaciones = response;
-                        console.log( this.tipoObservaciones );
                         // Semaforo avance fisico
                         const avanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
                         if ( avanceFisico.registroCompletoObservacionApoyo === false ) {

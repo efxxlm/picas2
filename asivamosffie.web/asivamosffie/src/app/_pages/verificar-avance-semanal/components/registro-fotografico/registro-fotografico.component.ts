@@ -73,7 +73,6 @@ export class RegistroFotograficoComponent implements OnInit {
                                 }
                                 this.dataHistorial = response.filter( obs => obs.archivada === true );
                                 this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
-                                console.log( observacionApoyo[0] );
                                 this.seguimientoSemanalObservacionId = observacionApoyo[0].seguimientoSemanalObservacionId;
                                 this.formRegistroFotografico.get( 'tieneObservaciones' ).setValue( this.reporteFotografico.tieneObservacionApoyo );
                                 this.formRegistroFotografico.get( 'fechaCreacion' ).setValue( observacionApoyo[0].fechaCreacion );

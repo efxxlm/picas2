@@ -176,6 +176,7 @@ export class GestionAmbientalComponent implements OnInit {
                                     }
                                 }
                                 this.historialGestionAmbiental = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorialgestionAmbiental = new MatTableDataSource( this.historialGestionAmbiental );
                                 this.formGestionAmbientalObservacion.get( 'tieneObservaciones' ).setValue( this.gestionObraAmbiental.tieneObservacionApoyo );
                                 this.formGestionAmbientalObservacion.get( 'fechaCreacion' ).setValue( obsApoyoAmbiental[0].fechaCreacion );
                             }

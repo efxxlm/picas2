@@ -89,10 +89,12 @@ export class GestionSstComponent implements OnInit {
                 {
                     this.gestionObraSst =
                         this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+                        console.log( this.gestionObraSst );
                     if ( this.gestionObraSst.observacionApoyoId !== undefined ) {
-                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.gestionObraSst )
+                        this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.tipoObservacionSst )
                             .subscribe(
                                 response => {
+                                    console.log( response );
                                     const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                     if ( observacionApoyo[0].observacion !== undefined ) {
                                         if ( observacionApoyo[0].observacion.length > 0 ) {
@@ -140,7 +142,7 @@ export class GestionSstComponent implements OnInit {
 		const pSeguimientoSemanalObservacion = {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
-            tipoObservacionCodigo: this.gestionObraSst,
+            tipoObservacionCodigo: this.tipoObservacionSst,
             observacionPadreId: this.seguimientoSemanalGestionObraId,
             observacion: this.formGestionSst.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionSst.get( 'tieneObservaciones' ).value,

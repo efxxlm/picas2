@@ -1,4 +1,4 @@
-<section class="container" *ngIf="seguimientoSemanal !== undefined">
+<section class="container" *ngIf="seguimientoSemanal !== undefined && tipoObservaciones !== undefined">
     <div class="text-right">
         <a mat-button color="primary" class="btn-regresar" routerLink="/validarAvanceSemanal">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -55,7 +55,8 @@
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal"></app-verificar-avance-fisico>
+
+                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="tipoObservaciones.avanceFisico"></app-verificar-avance-fisico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -65,7 +66,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0"></app-avance-financiero>
+                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero"></app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -75,7 +76,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal"></app-gestion-de-obra>
+                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [tipoObservaciones]="tipoObservaciones"></app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">

@@ -1,6 +1,11 @@
+import { Router } from '@angular/router';
+import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-avance-financiero',
@@ -11,26 +16,23 @@ export class AvanceFinancieroComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() avanceFinancieroObs: string;
     seguimientoSemanalId: number;
     seguimientoSemanalAvanceFinancieroId: number;
     avanceFinanciero: any;
+    tablaHistorial = new MatTableDataSource();
+    observacionApoyo: any;
+    seguimientoSemanalObservacionId = 0;
     formAvanceFinanciero: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null ]
 	});
-	tablaHistorial = new MatTableDataSource();
 	displayedColumnsHistorial: string[]  = [
 		'fechaRevision',
 		'responsable',
 		'historial'
 	];
-	dataHistorial: any[] = [
-		{
-			fechaRevision: new Date(),
-			responsable: 'Apoyo a la supervisión',
-			historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-		}
-	];
+	dataHistorial: any[] = [];
 	editorStyle = {
 		height: '100px'
 	};
@@ -43,7 +45,13 @@ export class AvanceFinancieroComponent implements OnInit {
 		]
 	};
 
-    constructor( private fb: FormBuilder ) { }
+    constructor(
+        private fb: FormBuilder,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService,
+        private dialog: MatDialog,
+        private routes: Router )
+    { }
 
     ngOnInit(): void {
         if ( this.seguimientoSemanal !== undefined ) {
@@ -53,8 +61,29 @@ export class AvanceFinancieroComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
                 this.avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
+                //Get Observacion apoyo y supervisor
+                if ( this.avanceFinanciero.observacionApoyoId !== undefined || this.avanceFinanciero.observacionSupervisorId !== undefined ) {
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalAvanceFinancieroId, this.avanceFinancieroObs )
+                        .subscribe(
+                            response => {
+                                this.observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                if ( observacionSupervisor.length > 0 ) {
+                                    this.seguimientoSemanalObservacionId = observacionSupervisor[0].seguimientoSemanalObservacionId;
+                                    if ( observacionSupervisor[0].observacion !== undefined ) {
+                                        if ( observacionSupervisor[0].observacion.length > 0 ) {
+                                            this.formAvanceFinanciero.get( 'observaciones' ).setValue( observacionSupervisor[0].observacion );
+                                        }
+                                    }
+                                    this.formAvanceFinanciero.get( 'tieneObservaciones' ).setValue( this.avanceFinanciero.tieneObservacionSupervisor );
+                                    this.formAvanceFinanciero.get( 'fechaCreacion' ).setValue( observacionSupervisor[0].fechaCreacion );
+                                }
+                            }
+                        );
+                }
 			}
-			this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
         }
     }
 
@@ -72,8 +101,46 @@ export class AvanceFinancieroComponent implements OnInit {
         }
     }
 
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
 	guardar() {
-        console.log( this.formAvanceFinanciero.value );
+        if ( this.formAvanceFinanciero.get( 'tieneObservaciones' ).value === false && this.formAvanceFinanciero.get( 'observaciones' ).value !== null ) {
+            this.formAvanceFinanciero.get( 'observaciones' ).setValue( '' );
+        }
+		const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: this.avanceFinancieroObs,
+            observacionPadreId: this.seguimientoSemanalAvanceFinancieroId,
+            observacion: this.formAvanceFinanciero.get( 'observaciones' ).value,
+            tieneObservacion: this.formAvanceFinanciero.get( 'tieneObservaciones' ).value,
+            esSupervisor: true
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
