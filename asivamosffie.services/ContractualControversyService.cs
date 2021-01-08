@@ -1320,6 +1320,23 @@ namespace asivamosffie.services
             return true;
         }
 
+        private bool ValidarRegistroCompletoControversiaActuacionSeguimiento(ActuacionSeguimiento controversiaActuacion)
+        {
+            if ((controversiaActuacion.CantDiasVencimiento)==0
+             || (controversiaActuacion.EsResultadoDefinitivo==null)
+            || (controversiaActuacion.FechaActuacionAdelantada==null)
+                || (controversiaActuacion.FechaVencimiento == null)
+                || (controversiaActuacion.NumeroReclamacion == null)
+               || (controversiaActuacion.Observaciones == null)
+                || (controversiaActuacion.ProximaActuacion == null)
+                || (controversiaActuacion.RutaSoporte == null))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private bool ValidarRegistroCompletoControversiaContractual(ControversiaContractual controversiaContractual)
         {
             //RutaSoporte
@@ -1378,7 +1395,8 @@ namespace asivamosffie.services
 
                         actuacionSeguimiento.Observaciones = Helpers.Helpers.CleanStringInput(actuacionSeguimiento.Observaciones);
 
-                        //actuacionSeguimiento.Eliminado = false;
+                        actuacionSeguimiento.RegistroCompleto = ValidarRegistroCompletoControversiaActuacionSeguimiento(actuacionSeguimiento);
+                        actuacionSeguimiento.Eliminado = false;                        
                         _context.ActuacionSeguimiento.Add(actuacionSeguimiento);
                         await _context.SaveChangesAsync();
 
@@ -1395,28 +1413,7 @@ namespace asivamosffie.services
                         //contratoPoliza.UsuarioCreacion = "forozco"; //HttpContext.User.FindFirst("User").Value;
                         //contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
 
-                        //_context.Add(contratoPoliza);
-                        if (actuacionSeguimientoBD != null)
-                        {
-                            actuacionSeguimientoBD.EstadoReclamacionCodigo = actuacionSeguimiento.EstadoReclamacionCodigo;
-                            actuacionSeguimientoBD.SeguimientoCodigo = actuacionSeguimiento.SeguimientoCodigo;
-                            actuacionSeguimientoBD.ActuacionAdelantada = actuacionSeguimiento.ActuacionAdelantada;
-                            actuacionSeguimientoBD.ProximaActuacion = actuacionSeguimiento.ProximaActuacion;
-                            actuacionSeguimientoBD.Observaciones = actuacionSeguimiento.Observaciones;
-                            actuacionSeguimientoBD.EstadoDerivadaCodigo = actuacionSeguimiento.EstadoDerivadaCodigo;
-                            actuacionSeguimientoBD.RutaSoporte = actuacionSeguimiento.RutaSoporte;
-                            actuacionSeguimientoBD.FechaCreacion = DateTime.Now;
-                            actuacionSeguimientoBD.UsuarioCreacion = actuacionSeguimiento.UsuarioCreacion;
-                            actuacionSeguimientoBD.UsuarioModificacion = actuacionSeguimiento.UsuarioModificacion;
-
-                        }
-
-                        //actuacionSeguimiento.EsCompleto = ValidarRegistroCompletoactuacionSeguimiento(actuacionSeguimiento);
-
-                        //contratoPoliza.RegistroCompleo = ValidarRegistroCompletoContratoPoliza(contratoPoliza);
-                        //contratoPoliza.ObservacionesRevisionGeneral = ValidarRegistroCompleto(cofinanciacion);
-
-                        //LimpiarEntradasContratoPoliza(ref contratoPoliza);
+                        actuacionSeguimientoBD.RegistroCompleto = ValidarRegistroCompletoControversiaActuacionSeguimiento(actuacionSeguimientoBD);
                         actuacionSeguimientoBD.FechaModificacion = DateTime.Now;
                         //_context.ContratoPoliza.Add(contratoPoliza);
                         _context.ActuacionSeguimiento.Update(actuacionSeguimientoBD);

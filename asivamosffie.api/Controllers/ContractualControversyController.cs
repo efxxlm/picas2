@@ -101,6 +101,28 @@ namespace asivamosffie.api.Controllers
 
         
         [HttpPost]
+        [Route("CreateEditarActuacionReclamacion")]
+        public async Task<IActionResult> CreateEditarActuacionReclamacion(ActuacionSeguimiento actuacionSeguimiento)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (actuacionSeguimiento.ActuacionSeguimientoId == 0)
+                    actuacionSeguimiento.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    actuacionSeguimiento.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.CreateEditarActuacionSeguimiento(actuacionSeguimiento);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
+        [HttpPost]
         [Route("CreateEditarSeguimientoDerivado")]
         public async Task<IActionResult> CreateEditarSeguimientoDerivado(SeguimientoActuacionDerivada actuacionSeguimiento)
         {
@@ -165,6 +187,20 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         [Route("GetListGrillaActuacionSeguimientoByActuacionID")]
         public async Task<ActionResult<List<GrillaActuacionSeguimiento>>> GetListGrillaActuacionSeguimientoByActuacionID(int pControversiaActuacionId)
+        {
+            try
+            {
+                return await _contractualControversy.ListGrillaActuacionSeguimientoByActid(pControversiaActuacionId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListGrillaActuacionReclamacionByActuacionID")]
+        public async Task<ActionResult<List<GrillaActuacionSeguimiento>>> GetListGrillaActuacionReclamacionByActuacionID(int pControversiaActuacionId)
         {
             try
             {
