@@ -904,7 +904,7 @@ namespace asivamosffie.services
                         break;
 
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SEGURIDAD_Y_SALUD:
-                        CreateOrEditObservacionGestionCalidadEnsayoLaboratorioMuestras(pSeguimientoSemanalObservacion);
+                        CreateOrEditObservacionGestionSeguridadSalud(pSeguimientoSemanalObservacion);
                         break;
                             
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SOCIAL:
