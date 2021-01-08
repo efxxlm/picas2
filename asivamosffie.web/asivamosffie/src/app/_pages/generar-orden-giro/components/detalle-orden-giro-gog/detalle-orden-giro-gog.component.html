@@ -102,7 +102,21 @@
                             Tercero de giro
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    /*/*/*/*/*/*
+                    <!--&nbsp; significa espacios (dbenitez)-->
+                    <p class="info-sub-title textoGris" style="font-size: 14px;">
+                        <span><b>Nombre del contratista: Interventores S.A.</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Número de
+                                identificación: 900.879.765-2</b></span>
+                    </p>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content align="left">
+                            <p><strong>¿Cuál es el medio de pago para los giros del contrato?:</strong> Transferencia electrónica</p>
+                            <p><strong>Titular de la cuenta:</strong> Depósito de pinturas SAS</p>
+                            <p><strong>Número de identificación del titular:</strong> 950.789.897-2</p>
+                            <p><strong>Número de cuenta:</strong> 4563-9876-2453-3245</p>
+                            <p><strong>Banco:</strong> Bancolombia</p>
+                            <p><strong>Tipo de cuenta:</strong> Corriente</p>
+                        </mat-card-content>
+                    </mat-card>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
@@ -112,7 +126,133 @@
                     Detalle del giro
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            Hola, estoy haciendo maquetacion
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Porcentajes de participación
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-tabla-porcntj-partic-gog></app-tabla-porcntj-partic-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Información fuente de recursos
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-tabla-info-fuenterec-gog></app-tabla-info-fuenterec-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Estrategia de pagos
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content align="left">
+                            <p><strong>Estrategia de pagos:</strong> Entidad territorial - Tercero</p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Descuentos Dirección Técnica
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-detalle-desc-dir-tecnica-gog></app-detalle-desc-dir-tecnica-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Tercero de causación
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-detalle-tercero-causacion-gog></app-detalle-tercero-causacion-gog>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Origen
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content align="left">
+                            <mat-card-title class="header-card--text sub-text">
+                                Aportante 1
+                            </mat-card-title>
+                            <div class="mt-1em">
+                                <p><strong>Tipo de aportante: </strong>Entidad Territorial</p>
+                                <p><strong>Nombre del aportante: </strong>Alcaldía de Susacón</p>
+                                <p><strong>Fuente: </strong>Contingencias</p>
+                                <p><strong>Nombre de la Cuenta: </strong>Alcaldía de Susacón</p>
+                                <p><strong>Número de Cuenta: </strong>778969876543257</p>
+                                <p><strong>Banco: </strong>Davivienda</p>
+                                <p><strong>Tipo de Cuenta: </strong>Corriente</p>
+                                <p><strong>Código SIFI: </strong>357314</p>
+                            </div>
+                            <mat-card-title class="header-card--text sub-text">
+                                Aportante 2
+                            </mat-card-title>
+                            <div class="mt-1em">
+                                <p><strong>Tipo de aportante: </strong>Tercero</p>
+                                <p><strong>Nombre del aportante: </strong>Fundación Pies Descalzos</p>
+                                <p><strong>Fuente: </strong>Recursos propios</p>
+                                <p><strong>Nombre de la Cuenta: </strong>Fundación Pies Descalzos</p>
+                                <p><strong>Número de Cuenta: </strong>6758-9879-98760</p>
+                                <p><strong>Banco: </strong>Bancolombia</p>
+                                <p><strong>Tipo de Cuenta: </strong>Ahorros</p>
+                                <p><strong>Código SIFI: </strong>358765</p>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Observaciones
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-header class="header-card header-card--margin">
+                            <mat-card-title class="header-card--text textoGris">
+                                Observaciones a la orden de giro
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content align="left">
+                            <p><strong>25/10/2020</strong></p>
+                            <p>En la revisión deben tener en cuenta la fecha de actualización del RUT.</p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title ">
+                            Soporte de orden de giro
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-card class="shipping-card var-main-gris">
+                        <mat-card-content align="left">
+                            <p><strong>URL con soporte: </strong>https://drive.google.com/drive/registrodecontroversiacontractual/soportedeordendegiro</p>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-expansion-panel>
+            </mat-accordion>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-card class="shipping-card var-main-gris">
