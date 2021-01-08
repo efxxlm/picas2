@@ -41,6 +41,7 @@ namespace asivamosffie.services
                            r => r.SeguimientoSemanalId == pSeguimientoSemanalId
                            && r.ObservacionPadreId == pPadreId
                            && r.TipoObservacionCodigo == pTipoCodigo
+                           && !string.IsNullOrEmpty(r.Observacion)
                           )
                         .Select(r =>
                                 new {
