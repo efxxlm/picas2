@@ -319,7 +319,18 @@ export class CommonService {
   listaProximaActuacionRequerida(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=103`);
   }
-
+  listaEstadosAvanceReclamacion(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=127`);
+  }
+  listaEstadosControversiaNoTAI(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=128`);
+  }
+  listaRequiereSolicitudConcepto(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=129`);
+  }
+  listaEstadoAvanceMesaTrabajo(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=130`);
+  }
   listaEtapaJudicial() {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=124`);
   }
