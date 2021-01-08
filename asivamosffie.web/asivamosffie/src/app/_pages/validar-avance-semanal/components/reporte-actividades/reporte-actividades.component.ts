@@ -25,7 +25,7 @@ export class ReporteActividadesComponent implements OnInit {
     semaforoActividad = 'sin-diligenciar';
     semaforoActividadSiguiente = 'sin-diligenciar';
     tablaHistorial = new MatTableDataSource();
-    observacionApoyo: any;
+    observacionApoyo: any[] = [];
     formReporteActividades: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null ],
@@ -130,7 +130,7 @@ export class ReporteActividadesComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

@@ -7,7 +7,7 @@
 
     <div class="text-center">
         <h1 class="title-menu--h1">
-            Verificar avance semanal {{ seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
+            Validar avance semanal {{ seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
         </h1>
     </div>
 
@@ -96,7 +96,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal"></app-registro-fotografico>
+                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [tipoRegistroFotografico]="tipoObservaciones.registroFotografico"></app-registro-fotografico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -106,7 +106,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal"></app-comite-obra>
+                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [tipoComiteObra]="tipoObservaciones.comiteObra"></app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
     </div>

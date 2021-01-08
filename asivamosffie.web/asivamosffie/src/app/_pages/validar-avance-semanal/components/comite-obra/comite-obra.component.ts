@@ -1,6 +1,11 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
+import { VerificarAvanceSemanalService } from 'src/app/core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-comite-obra',
@@ -11,27 +16,25 @@ export class ComiteObraComponent implements OnInit {
 
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
+    @Input() tipoComiteObra: any;
     numeroComiteObra: string;
     seguimientoSemanalId: number;
     seguimientoSemanalRegistrarComiteObraId: number;
-	gestionComiteObra: any;
+    gestionComiteObra: any;
+    seguimientoSemanalObservacionId = 0;
+    observacionApoyo: any[] = [];
+    tablaHistorial = new MatTableDataSource();
     formComiteObra: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
-        observaciones: [ null ]
-	});
-	tablaHistorial = new MatTableDataSource();
+        observaciones: [ null ],
+        fechaCreacion: [ null ]
+    });
 	displayedColumnsHistorial: string[]  = [
 		'fechaRevision',
 		'responsable',
 		'historial'
 	];
-	dataHistorial: any[] = [
-		{
-			fechaRevision: new Date(),
-			responsable: 'Apoyo a la supervisión',
-			historial: '<p>Se recomienda que en cada actividad se especifique el responsable.</p>'
-		}
-	];
+	dataHistorial: any[] = [];
 	editorStyle = {
 		height: '100px'
 	};
@@ -44,7 +47,13 @@ export class ComiteObraComponent implements OnInit {
 		]
 	};
 
-    constructor( private fb: FormBuilder ) { }
+    constructor(
+        private fb: FormBuilder,
+        private dialog: MatDialog,
+        private routes: Router,
+        private registrarAvanceSemanalSvc: RegistrarAvanceSemanalService,
+        private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
+    { }
 
     ngOnInit(): void {
         if ( this.seguimientoSemanal !== undefined ) {
@@ -58,8 +67,28 @@ export class ComiteObraComponent implements OnInit {
             if ( this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra.length > 0 ) {
                 this.gestionComiteObra = this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra[0];
                 this.numeroComiteObra = this.gestionComiteObra.numeroComite;
-			}
-			this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                if ( this.gestionComiteObra.observacionApoyoId !== undefined || this.gestionComiteObra.observacionSupervisorId !== undefined ) {
+                    this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalRegistrarComiteObraId, this.tipoComiteObra )
+                        .subscribe(
+                            response => {
+                                this.observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
+                                const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
+                                this.dataHistorial = response.filter( obs => obs.archivada === true );
+                                this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
+                                if ( observacionSupervisor.length > 0 ) {
+                                    if ( observacionSupervisor[0].observacion !== undefined ) {
+                                        if ( observacionSupervisor[0].observacion.length > 0 ) {
+                                            this.formComiteObra.get( 'observaciones' ).setValue( observacionSupervisor[0].observacion );
+                                        }
+                                    }
+                                    this.seguimientoSemanalObservacionId = observacionSupervisor[0].seguimientoSemanalObservacionId;
+                                    this.formComiteObra.get( 'tieneObservaciones' ).setValue( this.gestionComiteObra.tieneObservacionSupervisor );
+                                    this.formComiteObra.get( 'fechaCreacion' ).setValue( observacionSupervisor[0].fechaCreacion );
+                                }
+                            }
+                        );
+                }
+            }
         }
 	}
 	
@@ -77,8 +106,46 @@ export class ComiteObraComponent implements OnInit {
         }
     }
 
-	guardar() {
-        console.log( this.formComiteObra.value );
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    guardar() {
+        if ( this.formComiteObra.get( 'tieneObservaciones' ).value === false && this.formComiteObra.get( 'observaciones' ).value !== null ) {
+            this.formComiteObra.get( 'observaciones' ).setValue( '' );
+        }
+		const pSeguimientoSemanalObservacion = {
+			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
+            seguimientoSemanalId: this.seguimientoSemanalId,
+            tipoObservacionCodigo: this.tipoComiteObra,
+            observacionPadreId: this.seguimientoSemanalRegistrarComiteObraId,
+            observacion: this.formComiteObra.get( 'observaciones' ).value,
+            tieneObservacion: this.formComiteObra.get( 'tieneObservaciones' ).value,
+            esSupervisor: true
+        }
+        console.log( pSeguimientoSemanalObservacion );
+        this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

@@ -22,6 +22,8 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
     @Input() tipoReporteActividad: any;
     reporteActividadId = 0;
     reporteActividadSiguienteId = 0;
+    tablaHistorial = new MatTableDataSource();
+    tablaHistorialSiguiente = new MatTableDataSource();
     formActividadesRealizadas: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null ],
@@ -32,8 +34,6 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
         observaciones: [ null ],
         fechaCreacion: [ null ]
     });
-    tablaHistorial = new MatTableDataSource();
-    tablaHistorialSiguiente = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
         'fechaRevision',
         'responsable',
@@ -72,7 +72,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                                 const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                 if ( observacionApoyo[0].observacion !== undefined ) {
                                     if ( observacionApoyo[0].observacion.length > 0 ) {
-                                        this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
+                                        this.formActividadesRealizadas.get( 'observaciones' ).setValue( observacionApoyo[0].observacion );
                                     }
                                 }
                                 this.dataHistorial = response.filter( obs => obs.archivada === true );
@@ -137,7 +137,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
             observacionPadreId: this.seguimientoSemanalReporteActividadId,
             observacion: this.formActividadesRealizadas.get( 'observaciones' ).value,
             tieneObservacion: this.formActividadesRealizadas.get( 'tieneObservaciones' ).value,
-            esSupervisor: false
+            esSupervisor: true
         }
         console.log( pSeguimientoSemanalObservacion );
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )
@@ -173,7 +173,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
             observacionPadreId: this.seguimientoSemanalReporteActividadId,
             observacion: this.formActividadesRealizadasSiguienteSemana.get( 'observaciones' ).value,
             tieneObservacion: this.formActividadesRealizadasSiguienteSemana.get( 'tieneObservaciones' ).value,
-            esSupervisor: false
+            esSupervisor: true
         }
         console.log( pSeguimientoSemanalObservacion );
         this.verificarAvanceSemanalSvc.seguimientoSemanalObservacion( pSeguimientoSemanalObservacion )

@@ -82,11 +82,11 @@ export class GestionAmbientalComponent implements OnInit {
     residuosPeligrososObsId = 0; // ID de la observacion a residuos peligrosos.
     manejoOtrosObsId = 0; // ID de la observacion al manejo de otros.
     // Observaciones apoyo a la gestion ambiental y actividades
-    obsApoyoAmbiental: any;
-    obsApoyoManejoMateriales: any;
-    obsApoyoResiduosConstruccion: any;
-    obsApoyoResiduosPeligrosos: any;
-    obsApoyoOtros: any;
+    obsApoyoAmbiental: any[] = [];
+    obsApoyoManejoMateriales: any[] = [];
+    obsApoyoResiduosConstruccion: any[] = [];
+    obsApoyoResiduosPeligrosos: any[] = [];
+    obsApoyoOtros: any[] = [];
     gestionAmbientalDetalle: any[] = [];
     tipoActividadesCodigo = {
         manejoMaterialInsumo: '1',
@@ -665,7 +665,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -700,7 +700,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -735,7 +735,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -770,7 +770,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -805,7 +805,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

@@ -23,7 +23,7 @@ export class GestionSstComponent implements OnInit {
     seguimientoSemanalObservacionId = 0;
     gestionObraSst: any;
     tablaHistorial = new MatTableDataSource();
-    observacionApoyo: any;
+    observacionApoyo: any[] = [];
     formGestionSst: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null ],
@@ -153,7 +153,7 @@ export class GestionSstComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

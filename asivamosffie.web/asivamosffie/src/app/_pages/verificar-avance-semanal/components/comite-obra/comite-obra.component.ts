@@ -22,12 +22,12 @@ export class ComiteObraComponent implements OnInit {
     seguimientoSemanalRegistrarComiteObraId: number;
     seguimientoSemanalObservacionId = 0;
     gestionComiteObra: any;
+    tablaHistorial = new MatTableDataSource();
     formComiteObra: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null ],
         fechaCreacion: [ null ]
     });
-    tablaHistorial = new MatTableDataSource();
     displayedColumnsHistorial: string[]  = [
         'fechaRevision',
         'responsable',
@@ -127,13 +127,18 @@ export class ComiteObraComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
-                                    ]
-                                )
-                    );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );
