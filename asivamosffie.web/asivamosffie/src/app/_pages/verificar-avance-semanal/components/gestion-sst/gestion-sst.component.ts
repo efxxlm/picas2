@@ -87,9 +87,8 @@ export class GestionSstComponent implements OnInit {
                 if (    this.seguimientoSemanal.seguimientoSemanalGestionObra.length > 0
                     && this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud.length > 0 )
                 {
-                    this.gestionObraSst =
-                        this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
-                        console.log( this.gestionObraSst );
+                    this.gestionObraSst = this.seguimientoSemanal.seguimientoSemanalGestionObra[0].seguimientoSemanalGestionObraSeguridadSalud[0];
+                    console.log( this.gestionObraSst );
                     if ( this.gestionObraSst.observacionApoyoId !== undefined ) {
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId, this.tipoObservacionSst )
                             .subscribe(
@@ -143,7 +142,7 @@ export class GestionSstComponent implements OnInit {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: this.tipoObservacionSst,
-            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            observacionPadreId: this.gestionObraSst.seguimientoSemanalGestionObraSeguridadSaludId,
             observacion: this.formGestionSst.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionSst.get( 'tieneObservaciones' ).value,
             esSupervisor: false
