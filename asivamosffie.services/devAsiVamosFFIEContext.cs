@@ -162,7 +162,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
         public virtual DbSet<VVerificarValidarSeguimientoSemanal> VVerificarValidarSeguimientoSemanal { get; set; }
-        public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }     
+        public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
