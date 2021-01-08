@@ -1,0 +1,55 @@
+.container-table {
+  @media only screen and (min-width: 48em) {
+      width: 46rem;
+  }
+
+  @media only screen and (min-width: 62em) {
+      width: 80rem;
+  }
+
+  @media only screen and (min-width: 75em) {
+      width: 80rem;
+  }
+}
+
+.margin-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.border {
+  border: solid 1px rgba(0,0,0,.54) !important;
+}
+
+.w-45 {
+  width: 45%;
+}
+
+.section-flex {
+  display: flex;
+  justify-content: center;
+}
+
+.mr-1em {
+  margin-right: 1em;
+}
+
+.margin-2em {
+  margin: 2em;
+}
+
+.margin-1em {
+  margin: 1em;
+};
+
+.color-primary {
+  color: (var(--mainColor));
+}
+
+.mt-2em {
+  margin-top: 2em;
+}
+
+.w-23 {
+  width: 23%;
+}
