@@ -2515,7 +2515,7 @@ namespace asivamosffie.services
                         EstadoActuacionReclamacionCodigo = (controversia.EstadoActuacionReclamacionCodigo!=null)? controversia.EstadoActuacionReclamacionCodigo :"",
                         EstadoActuacionReclamacion = EstadoActuacionReclamacionTmp,
 
-                        
+                        RegistroCompletoReclamacion = controversia.EsCompletoReclamacion==null?"Incompleto":(bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
                         ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
                         //ActuacionSeguimientoId =controversia.ActuacionSeguimientoId,
                         //ControversiaContractualId = controversia.ControversiaContractualId,
@@ -2550,7 +2550,7 @@ namespace asivamosffie.services
                         EstadoActuacion = e.ToString(),//controversia.EstadoAvanceTramiteCodigo
                         NumeroActuacion = "ERROR",
 
-                        RegistroCompletoActuacion = "ERROR",
+                        RegistroCompletoReclamacion = "ERROR",
 
                         ProximaActuacionCodigo = "ERROR",
                         ProximaActuacionNombre = "ERROR",
@@ -2939,7 +2939,7 @@ namespace asivamosffie.services
 
                         NumeroActuacionReclamacion = "REC " + controversia.ControversiaActuacionId.ToString("0000"),
 
-                        RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
+                        RegistroCompletoReclamacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
 
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
                         ProximaActuacionNombre = strProximaActuacionNombre,
@@ -2961,7 +2961,7 @@ namespace asivamosffie.services
                         EstadoActuacion = e.ToString(),//controversia.EstadoAvanceTramiteCodigo
                         NumeroActuacion = "ERROR",
 
-                        RegistroCompletoActuacion = "ERROR",
+                        RegistroCompletoReclamacion = "ERROR",
 
                         ProximaActuacionCodigo = "ERROR",
                         ProximaActuacionNombre = "ERROR",
@@ -2990,7 +2990,7 @@ namespace asivamosffie.services
                     controversiaActuacionActual.ResumenPropuestaFiduciaria = prmControversiaActuacion.ResumenPropuestaFiduciaria;
                     controversiaActuacionActual.RutaSoporte = prmControversiaActuacion.RutaSoporte;
                     controversiaActuacionActual.FechaModificacion = DateTime.Now;
-                    
+                    controversiaActuacionActual.EsCompletoReclamacion = !string.IsNullOrEmpty(prmControversiaActuacion.ResumenPropuestaFiduciaria) && !string.IsNullOrEmpty(prmControversiaActuacion.RutaSoporte);
                     _context.ControversiaActuacion.Update(controversiaActuacionActual);                    
                     _context.SaveChanges();
 
