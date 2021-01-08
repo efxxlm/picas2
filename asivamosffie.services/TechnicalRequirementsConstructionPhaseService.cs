@@ -1558,7 +1558,7 @@ namespace asivamosffie.services
             return esCompleto;
         }
 
-        private Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId)
+        public Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId)
         {
 
             Proyecto proyecto = new Proyecto();

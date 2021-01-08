@@ -15,11 +15,13 @@ namespace asivamosffie.services
     {
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
+        private readonly ITechnicalRequirementsConstructionPhaseService _technicalRequirementsConstructionPhaseService;
 
-        public DailyFollowUpService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public DailyFollowUpService(devAsiVamosFFIEContext context, ICommonService commonService, ITechnicalRequirementsConstructionPhaseService technicalRequirementsConstructionPhaseService)
         {
             _context = context;
             _commonService = commonService;
+            _technicalRequirementsConstructionPhaseService = technicalRequirementsConstructionPhaseService;
         }
 
         public async Task<List<VProyectosXcontrato>> gridRegisterDailyFollowUp()
@@ -630,18 +632,24 @@ namespace asivamosffie.services
         {
             List<string> listaFechas = new List<string>();
             List<DateTime> listaFechasTotal = new List<DateTime>();
-
+            
             ContratacionProyecto contratacion = await _context.ContratacionProyecto
                                                                 .Where(r => r.ContratacionProyectoId == pId)
                                                                 .Include(r => r.Proyecto)
+                                                                    .ThenInclude( r => r.ContratoConstruccion )
                                                                 .Include(r => r.Contratacion)
                                                                     .ThenInclude(r => r.Contrato)
                                                                 .Include(r => r.SeguimientoDiario)
                                                                 .FirstOrDefaultAsync();
 
-            DateTime fechaInicial = contratacion.Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.Value;
-            DateTime fechaFin = fechaInicial.AddMonths(contratacion.Proyecto.PlazoMesesObra.Value);
-            fechaFin = fechaFin.AddDays(contratacion.Proyecto.PlazoDiasObra.Value);
+            Proyecto proyectoTemp = _technicalRequirementsConstructionPhaseService.CalcularFechaInicioContrato(contratacion.Proyecto.ContratoConstruccion.FirstOrDefault().ProyectoId);
+
+            // DateTime fechaInicial = contratacion.Contratacion.Contrato.FirstOrDefault().FechaActaInicioFase2.Value;
+            // DateTime fechaFin = fechaInicial.AddMonths(contratacion.Proyecto.PlazoMesesObra.Value);
+            // fechaFin = fechaFin.AddDays(contratacion.Proyecto.PlazoDiasObra.Value);
+
+            DateTime fechaInicial = proyectoTemp.FechaInicioEtapaObra;
+            DateTime fechaFin = proyectoTemp.FechaFinEtapaObra;
 
             while (fechaFin >= fechaInicial)
             {
