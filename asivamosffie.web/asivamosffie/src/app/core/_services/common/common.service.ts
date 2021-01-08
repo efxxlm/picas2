@@ -317,6 +317,11 @@ export class CommonService {
 
     return vigencias;
   }
+
+  public getFileById(id: number) {   
+    const retorno = this.http.get(`${environment.apiUrl}/Document/DownloadFilesById?pArchivoCargueId=${id}`, { responseType: "blob" });
+    return retorno;
+  }
 }
 
 export interface Dominio{

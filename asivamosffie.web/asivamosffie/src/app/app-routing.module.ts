@@ -233,7 +233,13 @@ const routes: Routes = [
         path: 'validarAvanceSemanal',
         loadChildren: () => import( './_pages/validar-avance-semanal/validar-avance-semanal.module' )
           .then( module => module.ValidarAvanceSemanalModule )
-      }
+      },
+      {
+        path: 'requisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
+          .then( module => module.RequisitosTecnicosConstruccionModule )
+      }, 
+      
     ]
 
   },

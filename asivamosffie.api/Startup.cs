@@ -125,7 +125,8 @@ namespace asivamosffie.api
             services.AddTransient<IRegisterWeeklyProgressService, RegisterWeeklyProgressService>();
             services.AddTransient<IRegisterPersonalProgrammingService, RegisterPersonalProgrammingService>();
             services.AddTransient<IApprovePreConstructionPhase1Service, ApprovePreConstructionPhase1Service>();
-            services.AddTransient<IRegisterPreContructionPhase1Service, RegisterPreContructionPhase1Service>(); 
+            services.AddTransient<IRegisterPreContructionPhase1Service, RegisterPreContructionPhase1Service>();
+            services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<ICommonService, CommonService>();
             services.AddTransient<IUser, UserService>();
             services.AddTransient<IAutenticacionService, AutenticacionService>();
@@ -156,7 +157,13 @@ namespace asivamosffie.api
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
             services.AddTransient<IContractualControversy, ContractualControversyService>();
-
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
+            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
+            services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
+            services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
+            services.AddTransient<IActBeginService, ActBeginService>();
+            services.AddTransient<IResourceControlService, ResourceControlService>();
+            
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
