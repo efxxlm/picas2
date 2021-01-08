@@ -40,8 +40,7 @@ namespace asivamosffie.services
                     .Where(
                            r => r.SeguimientoSemanalId == pSeguimientoSemanalId
                            && r.ObservacionPadreId == pPadreId
-                           && r.TipoObservacionCodigo == pTipoCodigo
-                           && !string.IsNullOrEmpty(r.Observacion)
+                           && r.TipoObservacionCodigo == pTipoCodigo 
                           )
                         .Select(r =>
                                 new {
