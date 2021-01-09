@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,6 +17,7 @@ export class ReporteActividadesComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() tipoReporteActividad: any;
     @Input() seguimientoSemanal: any;
+    @Output() estadoSemaforo = new EventEmitter<number>();
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
     seguimientoSemanalObservacionId = 0;
@@ -65,6 +66,32 @@ export class ReporteActividadesComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ) {
                 this.reporteActividad = this.seguimientoSemanal.seguimientoSemanalReporteActividad[0];
+                let totalReportes = 0;
+                // Semaforo resumen general
+                if ( this.reporteActividad.registroCompletoObservacionSupervisorEstadoContrato === false ) {
+                    this.semaforoReporte = 'en-proceso';
+                }
+                if ( this.reporteActividad.registroCompletoObservacionSupervisorEstadoContrato === true ) {
+                    this.semaforoReporte = 'completo';
+                    totalReportes++;
+                }
+                // Semaforo actividad
+                if ( this.reporteActividad.registroCompletoObservacionSupervisorActividad === false ) {
+                    this.semaforoActividad = 'en-proceso';
+                }
+                if ( this.reporteActividad.registroCompletoObservacionSupervisorActividad === true ) {
+                    this.semaforoActividad = 'completo';
+                    totalReportes++;
+                }
+                // Semaforo actividad siguiente
+                if ( this.reporteActividad.registroCompletoObservacionSupervisorActividadSiguiente === false ) {
+                    this.semaforoActividadSiguiente = 'en-proceso';
+                }
+                if ( this.reporteActividad.registroCompletoObservacionSupervisorActividadSiguiente === true ) {
+                    this.semaforoActividadSiguiente = 'completo';
+                    totalReportes++;
+                }
+                this.estadoSemaforo.emit( totalReportes );
                 //Get Observacion apoyo y supervisor
                 if ( this.reporteActividad.observacionApoyoIdEstadoContrato !== undefined || this.reporteActividad.observacionSupervisorIdEstadoContrato !== undefined ) {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
