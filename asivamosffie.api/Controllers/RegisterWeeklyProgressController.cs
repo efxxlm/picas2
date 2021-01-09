@@ -128,8 +128,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
+         
         [HttpPost]
         [Route("CreateEditEnsayoLaboratorioMuestra")]
         public async Task<IActionResult> CreateEditEnsayoLaboratorioMuestra([FromBody] GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)
