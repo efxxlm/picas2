@@ -164,6 +164,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarValidarSeguimientoSemanal> VVerificarValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -866,6 +868,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.PorcentajeAvanceObra)
                     .HasMaxLength(500)
                     .IsUnicode(false);
+
+                entity.Property(e => e.RutaCargaActaTerminacionContrato).HasMaxLength(200);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -1579,9 +1583,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.ControversiaActuacion)
+                entity.HasOne(d => d.ControversiaContractual)
                     .WithMany(p => p.ControversiaActuacionMesa)
-                    .HasForeignKey(d => d.ControversiaActuacionId)
+                    .HasForeignKey(d => d.ControversiaContractualId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Controver__Contr__23DE44F1");
             });

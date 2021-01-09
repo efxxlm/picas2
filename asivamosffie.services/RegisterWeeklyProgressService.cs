@@ -23,12 +23,59 @@ namespace asivamosffie.services
     public class RegisterWeeklyProgressService : IRegisterWeeklyProgressService
     {
         private readonly ICommonService _commonService;
+        private readonly IDocumentService _documentService;
         private readonly devAsiVamosFFIEContext _context;
 
-        public RegisterWeeklyProgressService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public RegisterWeeklyProgressService(devAsiVamosFFIEContext context, ICommonService commonService, IDocumentService documentService)
         {
+            _documentService = documentService;
             _commonService = commonService;
             _context = context;
+        }
+
+        public async Task<Respuesta> UploadContractTerminationCertificate(ContratacionProyecto pContratacionProyecto, AppSettingsService appSettingsService)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cargar_Acta_Terminacion_Contrato, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ContratacionProyecto contratacionProyecto = _context.ContratacionProyecto.Find(pContratacionProyecto.ContratacionProyectoId);
+                contratacionProyecto.UsuarioModificacion = pContratacionProyecto.UsuarioCreacion;
+                contratacionProyecto.FechaModificacion = DateTime.Now; 
+                 
+                contratacionProyecto.RutaCargaActaTerminacionContrato = Path.Combine( appSettingsService.DirectoryBase,
+                                                                                      appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
+                                                                                      pContratacionProyecto.ContratacionProyectoId.ToString(),
+                                                                                      pContratacionProyecto.pFile.FileName );
+
+                await _documentService.SaveFileContratacion(pContratacionProyecto.pFile, Path.Combine( appSettingsService.DirectoryBase,
+                                                                                                       appSettingsService.DirectoryRutaCargaActaTerminacionContrato,
+                                                                                                       pContratacionProyecto.ContratacionProyectoId.ToString()), pContratacionProyecto.pFile.FileName);
+                 
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pContratacionProyecto.UsuarioCreacion, "CARGAR ACTA TERMINACION DEL CONTRATO")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstanMessagesRegisterWeeklyProgress.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.Error, idAccion, pContratacionProyecto.UsuarioCreacion, ex.InnerException.ToString())
+                };
+            }
+
+
         }
 
         #region Save Edit
@@ -102,7 +149,7 @@ namespace asivamosffie.services
                     IsException = false,
                     IsValidation = false,
                     Code = ConstanMessagesRegisterWeeklyProgress.OperacionExitosa,
-                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioMod, "EL ESTADO DEL SEGUIMIENTO SEMANAL CAMBIO A: " + strNombreSEstadoObraCodigo.ToUpper())
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Avance_Semanal, ConstanMessagesRegisterWeeklyProgress.OperacionExitosa, idAccion, pUsuarioMod, "EL ESTADO MUESTRAS DE LABORATORIO CAMBIO A: " + strNombreSEstadoObraCodigo.ToUpper())
                 };
             }
             catch (Exception ex)
@@ -1625,7 +1672,8 @@ namespace asivamosffie.services
                            && r.TipoObservacionCodigo == pTipoCodigo
                           )
                         .Select(r =>
-                                new {
+                                new
+                                {
                                     r.SeguimientoSemanalObservacionId,
                                     r.Observacion,
                                     r.EsSupervisor,

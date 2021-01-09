@@ -14,6 +14,7 @@ namespace asivamosffie.model.Models
         public string Sede { get; set; }
         public string FechaUltimoReporte { get; set; }
         public string EstadoObra { get; set; }
+        public int? CantidadSemanas { get; set; }
         public int? NumeroSemana { get; set; }
     }
 }

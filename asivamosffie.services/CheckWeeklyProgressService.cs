@@ -315,16 +315,50 @@ namespace asivamosffie.services
             {
                 foreach (var item in seguimientoSemanalGestionObraAmbiental)
                 {
-                    if (item.RegistroCompletoObservacionSupervisor != true)
-                        return false;
+                    if (item.ManejoMaterialesInsumoId == 0
+                     && item.ManejoResiduosConstruccionDemolicionId == 0
+                     && item.ManejoResiduosPeligrososEspecialesId == 0
+                     && item.ManejoOtroId == 0)
+                    {
+                        if (item.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                    }
+                    else
+                    {
+                        if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                        if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                        if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                        if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionSupervisor != true)
+                            return false;
+                    }
                 }
             }
             else
             {
                 foreach (var item in seguimientoSemanalGestionObraAmbiental)
                 {
-                    if (item.RegistroCompletoObservacionApoyo != true)
-                        return false;
+                    if (item.ManejoMaterialesInsumoId == 0
+                        && item.ManejoResiduosConstruccionDemolicionId == 0
+                        && item.ManejoResiduosPeligrososEspecialesId == 0
+                        && item.ManejoOtroId == 0)
+                    {
+                        if (item.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                    }
+                    else
+                    {
+                        if (item.ManejoMaterialesInsumoId > 0 && item.ManejoMaterialesInsumo.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                        if (item.ManejoResiduosConstruccionDemolicionId > 0 && item.ManejoResiduosConstruccionDemolicion.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                        if (item.ManejoResiduosPeligrososEspecialesId > 0 && item.ManejoResiduosPeligrososEspeciales.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                        if (item.ManejoOtroId > 0 && item.ManejoOtro.RegistroCompletoObservacionApoyo != true)
+                            return false;
+                    }
                 }
             }
             return true;
@@ -906,7 +940,7 @@ namespace asivamosffie.services
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SEGURIDAD_Y_SALUD:
                         CreateOrEditObservacionGestionSeguridadSalud(pSeguimientoSemanalObservacion);
                         break;
-                            
+
                     case ConstanCodigoTipoObservacionSeguimientoSemanal.GESTION_SOCIAL:
                         CreateOrEditObservacionGestionSocial(pSeguimientoSemanalObservacion);
                         break;
@@ -1055,7 +1089,7 @@ namespace asivamosffie.services
             {
                 SeguimientoSemanalRegistrarComiteObraOld.TieneObservacionApoyo = pSeguimientoSemanalObservacion.TieneObservacion;
                 SeguimientoSemanalRegistrarComiteObraOld.ObservacionApoyoId = pSeguimientoSemanalObservacion.SeguimientoSemanalObservacionId;
-                 SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
+                SeguimientoSemanalRegistrarComiteObraOld.RegistroCompletoObservacionApoyo = CompleteRecordObservation(pSeguimientoSemanalObservacion);
             }
         }
 
