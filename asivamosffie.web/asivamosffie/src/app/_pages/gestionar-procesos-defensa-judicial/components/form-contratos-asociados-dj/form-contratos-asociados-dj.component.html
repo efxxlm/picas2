@@ -37,7 +37,7 @@
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="contrato">
                                     </mat-form-field>
-                                    <button mat-button color="primary" class="busqueda--img">
+                                    <button mat-button type="button" color="primary" class="busqueda--img">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
@@ -46,7 +46,7 @@
                     </div>
                 </mat-card-content>
             </mat-card>
-            <div *ngIf="this.perfiles.value.contrato!=null">
+            <div *ngIf="dataSource[i]?.length>0">
                 <div style="margin-top: 1em;">
                     Seleccione la(s) Institución(es) Educativa(s), sede(s) asociada(s) al proceso
                 </div>

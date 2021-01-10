@@ -3,15 +3,10 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class ControversiaActuacionMesa
+    public partial class ControversiaActuacionMesaSeguimiento
     {
-        public ControversiaActuacionMesa()
-        {
-            ControversiaActuacionMesaSeguimiento = new HashSet<ControversiaActuacionMesaSeguimiento>();
-        }
-
+        public int ControversiaActuacionMesaSeguimientoId { get; set; }
         public int ControversiaActuacionMesaId { get; set; }
-        public int ControversiaContractualId { get; set; }
         public string EstadoAvanceMesaCodigo { get; set; }
         public DateTime? FechaActuacionAdelantada { get; set; }
         public string ActuacionAdelantada { get; set; }
@@ -27,8 +22,8 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string NumeroActuacionSeguimiento { get; set; }
 
-        public virtual ControversiaContractual ControversiaContractual { get; set; }
-        public virtual ICollection<ControversiaActuacionMesaSeguimiento> ControversiaActuacionMesaSeguimiento { get; set; }
+        public virtual ControversiaActuacionMesa ControversiaActuacionMesal { get; set; }
     }
 }

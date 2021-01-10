@@ -611,5 +611,78 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        /*4.2.1*/
+        [HttpPost]
+        [Route("CreateEditarActuacionMesa")]
+        public async Task<IActionResult> CreateEditarActuacionMesa(ControversiaActuacionMesaSeguimiento controversiaActuacionMesa)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (controversiaActuacionMesa.ControversiaActuacionMesaSeguimientoId == 0)
+                    controversiaActuacionMesa.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    controversiaActuacionMesa.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.CreateEditarActuacionMesa(controversiaActuacionMesa);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        /*4.2.1*/
+        [HttpGet]
+        [Route("GetActuacionesMesasByMesaId")]
+        public async Task<List<ControversiaActuacionMesaSeguimiento>> GetActuacionesMesasByMesaId(int pControversiaMesaID)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                return await _contractualControversy.GetActuacionesMesasByMesaId(pControversiaMesaID);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        /*4.2.1*/
+        [HttpPut]
+        [Route("SetStateActuacionMesa")]
+        public async Task<IActionResult> SetStateActuacionMesa([FromQuery] int pActuacionMesaId, string pNuevoCodigoEstadoAvance)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.SetStateActuacionMesa(pActuacionMesaId, pNuevoCodigoEstadoAvance, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        /*4.2.1*/
+        [HttpGet]
+        [Route("GetActuacionMesaByActuacionMesaId")]
+        public async Task<ControversiaActuacionMesaSeguimiento> GetActuacionMesaByActuacionMesaId(int pControversiaActuacionMesaID)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                return await _contractualControversy.GetActuacionMesaByActuacionMesaId(pControversiaActuacionMesaID);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -63,5 +63,9 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditarMesa(ControversiaActuacionMesa prmMesa);
         Task<List<ControversiaActuacionMesa>> GetMesasByControversiaActuacionId(int pControversiaActuacionId);
         Task<Respuesta> FinalizarMesa(int pControversiaActuacionId, string value);
+        Task<Respuesta> SetStateActuacionMesa(int pActuacionMesaId, string pNuevoCodigoEstadoAvance, string value);
+        Task<List<ControversiaActuacionMesaSeguimiento>> GetActuacionesMesasByMesaId(int pControversiaActuacionMesaID);
+        Task<Respuesta> CreateEditarActuacionMesa(ControversiaActuacionMesaSeguimiento controversiaActuacionMesa);
+        Task<ControversiaActuacionMesaSeguimiento> GetActuacionMesaByActuacionMesaId(int pControversiaActuacionMesaID);
     }
 }

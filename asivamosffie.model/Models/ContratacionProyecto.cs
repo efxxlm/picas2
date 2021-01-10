@@ -36,6 +36,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaAprobacionRequisitos { get; set; }
         public bool? RegistroCompleto { get; set; }
         public string EstadoObraCodigo { get; set; }
+        public string RutaCargaActaTerminacionContrato { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
