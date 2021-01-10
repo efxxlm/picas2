@@ -46,6 +46,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
   contratos=[];
   listProyectos: any[]=[];
   listProyectosSeleccion: any[]=[];
+  listContrattoscompletos=[];
 
   constructor ( private fb: FormBuilder, private defensaService:DefensaJudicialService,
     public dialog: MatDialog,    
@@ -73,18 +74,24 @@ export class FormContratosAsociadosDjComponent implements OnInit {
           console.log(this.perfiles.value.contrato);
         this.defensaService.GetListProyectsByContract(contrato[0].contratoId).subscribe(response=>{
           this.listProyectosSeleccion=response;
-          this.dataTable=response;      
+          this.dataTable=response;
+          let alguno=false;      
           this.dataTable.forEach(element2 => {
             if(element2.proyectoId==element.contratacionProyecto.proyectoId)
-            element2.checked=true;
+            {
+              element2.checked=true;
+              alguno=true;
+            }
           });
           this.dataSource[i] = new MatTableDataSource(this.dataTable);
           this.dataSource[i].paginator = this.paginator;
           this.dataSource[i].sort = this.sort;
+          this.listContrattoscompletos[i]=alguno;
           console.log(this.dataSource);
+          i++;
         });
         
-          i++;
+          
         });
       }  
     //});
@@ -170,6 +177,7 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       this.dataSource[i] = new MatTableDataSource(this.dataTable);
       this.dataSource[i].paginator = this.paginator;
       this.dataSource[i].sort = this.sort;
+      this.listContrattoscompletos[i]=false;
       console.log(this.dataSource);
     });
     

@@ -62,7 +62,27 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
     });
   }
 
+  openDialogSiNo(modalTitle: string, modalText: string,id) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText,siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        this.eliminarok(id); 
+      }           
+    });
+  }
   eliminar(id)
+  {
+   
+    this.openDialogSiNo("","“¿Está seguro de eliminar este registro?",id);
+   
+  }
+
+  eliminarok(id)
   {
     this.defensaServices.EliminarDefensaJudicial(id)
     .subscribe(respuesta => {

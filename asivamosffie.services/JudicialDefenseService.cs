@@ -436,6 +436,8 @@ namespace asivamosffie.services
 
                     string TipoIntervencionCodigoTmp = string.Empty;
                     string TipoIntervencionNombreTmp = string.Empty;
+
+                    defensaJudicial.DepartamentoID = defensaJudicial.LocalizacionIdMunicipio == null ? "" : _context.Localizacion.Where(z=>z.LocalizacionId==defensaJudicial.LocalizacionIdMunicipio.ToString()).FirstOrDefault().IdPadre;
                     foreach (var contr in defensaJudicial.DefensaJudicialContratacionProyecto)
                     {
                         var contratacionProyecto = _context.ContratacionProyecto.Where(x => x.ContratacionProyectoId == contr.ContratacionProyectoId).

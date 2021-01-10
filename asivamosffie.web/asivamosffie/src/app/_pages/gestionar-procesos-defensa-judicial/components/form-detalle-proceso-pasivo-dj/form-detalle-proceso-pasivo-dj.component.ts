@@ -59,11 +59,7 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
   }
 
   cargarRegistro() {
-    //this.ngOnInit().then(() => {
-      console.log("form");
-      console.log(this.defensaJudicial);
-      console.log(this.legitimacion);
-      console.log(this.tipoProceso);      
+     
       this.addressForm.get("tipoAccion").setValue(this.defensaJudicial.tipoAccionCodigo);
       this.addressForm.get("jurisdiccion").setValue(this.defensaJudicial.jurisdiccionCodigo);
       this.addressForm.get("pretensiones").setValue(this.defensaJudicial.pretensiones);
@@ -72,6 +68,16 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
       this.addressForm.get("fechaRadicado").setValue(this.defensaJudicial.fechaRadicadoFFIE);
       this.addressForm.get("numeroRadicado").setValue(this.defensaJudicial.numeroRadicadoFFIE);
       this.addressForm.get("canalIngreso").setValue(this.defensaJudicial.canalIngresoCodigo);
+      //let dep =this.departamentoArray.filter(x=>x.localizacionId==this.defensaJudicial.departamentoID)[0];
+      this.addressForm.get("departamentoInicio").setValue(this.defensaJudicial.departamentoID);
+      this.commonService.listaMunicipiosByIdDepartamento(this.defensaJudicial.departamentoID).subscribe(respuesta => {
+        this.municipioArray = respuesta;
+        //let mun =this.municipioArray.filter(x=>x.localizacionId==this.defensaJudicial.localizacionIdMunicipio)[0];
+        setTimeout(function(){ 
+          this.addressForm.get("municipioInicio").setValue(this.defensaJudicial.localizacionIdMunicipio);
+        }, 1000);
+        
+      });
   }
   
   ngOnInit(): void {
@@ -119,10 +125,13 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
     {
       dialogRef.afterClosed().subscribe(result => {
         console.log("cerre ventana, redirecciono?"+id);
-          if(id>0)
-          {
-            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-          }                  
+        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
+        {
+          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
+        }                  
+        else{
+          location.reload();
+        }                 
       });
     }
   }

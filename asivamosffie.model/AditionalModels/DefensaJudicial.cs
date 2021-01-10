@@ -25,6 +25,9 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string FechaCreacionFormat { get; set; }
-        
+
+        [NotMapped]
+        public string DepartamentoID { get; set; }
+
     }
 }

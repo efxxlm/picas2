@@ -198,10 +198,13 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-          if(id>0)
-          {
-            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-          }                  
+        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
+        {
+          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
+        }                  
+        else{
+          location.reload();
+        }                 
       });
     }
   }

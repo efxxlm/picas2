@@ -973,6 +973,14 @@ namespace asivamosffie.services
                     .Include( r => r.ControversiaContractual )
                     .OrderByDescending(r => r.ControversiaContractualId).ToList();
 
+                List<DefensaJudicial> ListDefensaJudicial = _context.DefensaJudicial
+                    .Where(r => !(bool)r.Eliminado
+                    && r.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite == true
+                    && r.EstadoProcesoCodigo == "2"
+                    //&& r.FechaCreacion < pFechaOrdenDelDia no estoy seguro de esto
+                    )                    
+                    .OrderByDescending(r => r.DefensaJudicialId).ToList();
+
                 //Quitar los que ya estan en sesionComiteSolicitud
 
                 List<int> LisIdContratacion = _context.SesionComiteSolicitud
@@ -1022,6 +1030,13 @@ namespace asivamosffie.services
                                                                 r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico
                                                                  )
                                                             .Select(r => r.SolicitudId).Distinct().ToList();
+                List<int> ListIdDefensaJudicial = _context.SesionComiteSolicitud
+                                                            .Where(r => r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Defensa_judicial &&
+                                                                r.Eliminado != true &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_fiduciario &&
+                                                                r.EstadoCodigo != ConstanCodigoEstadoSesionComiteSolicitud.Devuelta_por_comite_tecnico
+                                                                 )
+                                                            .Select(r => r.SolicitudId).Distinct().ToList();
 
                 //Se comentan ya que no esta listo el caso de uso
                 //List<SesionComiteSolicitud> ListSesionComiteSolicitudDefensaJudicial = _context.SesionComiteSolicitud.ToList();
@@ -1035,7 +1050,7 @@ namespace asivamosffie.services
                 ListActualizacionCronograma.RemoveAll(item => ListIdActualizacionCronograma.Contains(item.ProcesoSeleccionMonitoreoId));
                 ListControversiasContractuales.RemoveAll(item => ListIdControversiasContractuales.Contains(item.ControversiaContractualId));
                 ListControversiasActuaciones.RemoveAll(item => ListIdControversiasActuaciones.Contains(item.ControversiaActuacionId));
-
+                ListDefensaJudicial.RemoveAll(item => ListIdDefensaJudicial.Contains(item.DefensaJudicialId));
 
                 List<Dominio> ListTipoSolicitud = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud).ToList();
 
@@ -1108,6 +1123,18 @@ namespace asivamosffie.services
                         NumeroSolicitud = controversiaActuacion.ControversiaContractual.NumeroSolicitud,
                         TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales).FirstOrDefault().Nombre,
                         tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales
+                    });
+                };
+
+                foreach (var defensa in ListDefensaJudicial)
+                {
+                    ListValidacionSolicitudesContractualesGrilla.Add(new
+                    {
+                        Id = defensa.DefensaJudicialId,
+                        FechaSolicitud = Convert.ToDateTime(defensa.FechaCreacion.ToString("yyyy-MM-dd")),
+                        NumeroSolicitud = defensa.NumeroProceso,
+                        TipoSolicitud = ListTipoSolicitud.Where(r => r.Codigo == ConstanCodigoTipoSolicitud.Defensa_judicial).FirstOrDefault().Nombre,
+                        tipoSolicitudNumeroTabla = ConstanCodigoTipoSolicitud.Defensa_judicial
                     });
                 };
 

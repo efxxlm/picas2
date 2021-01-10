@@ -12,8 +12,8 @@
     <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroContratos' ).value !== null">
         <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let perfil of perfiles.controls; index as i">
             <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title sin-diligenciar">
-                    Contrato {{ i+1 }}
+                <mat-panel-title class="expansion-style--title "[ngClass]="{'sin-diligenciar': !listContrattoscompletos[i], 'completo': listContrattoscompletos[i]}">
+                    Contrato {{ i+1 }} 
                 </mat-panel-title>
             </mat-expansion-panel-header>
 
@@ -46,7 +46,7 @@
                     </div>
                 </mat-card-content>
             </mat-card>
-            <div *ngIf="dataSource[i]?.length>0">
+            <div *ngIf="myControl.controls[i].value">
                 <div style="margin-top: 1em;">
                     Seleccione la(s) Institución(es) Educativa(s), sede(s) asociada(s) al proceso
                 </div>

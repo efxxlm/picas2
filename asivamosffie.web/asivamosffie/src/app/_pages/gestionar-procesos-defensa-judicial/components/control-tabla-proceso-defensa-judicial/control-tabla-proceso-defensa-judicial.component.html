@@ -63,7 +63,7 @@
                     Cerrar proceso
                 </button>
                 <button mat-raised-button color="accent" class="btn-table"
-                    *ngIf="(element.estadoProcesoCodigo === '1' || element.estadoProcesoCodigo === '3'  || element.estadoProcesoCodigo === '6') && element.registroCompletoNombre=='Completo'"
+                    *ngIf="(element.vaAProcesoJudicial && element.estadoProcesoCodigo === '6') || (!element.vaAProcesoJudicial && (element.estadoProcesoCodigo === '1' || element.estadoProcesoCodigo === '3'  || element.estadoProcesoCodigo === '6')) && element.registroCompletoNombre=='Completo'"
                     (click)="this.actualizarProceso(element.defensaJudicialId)">
                     Actualizar proceso
                 </button>

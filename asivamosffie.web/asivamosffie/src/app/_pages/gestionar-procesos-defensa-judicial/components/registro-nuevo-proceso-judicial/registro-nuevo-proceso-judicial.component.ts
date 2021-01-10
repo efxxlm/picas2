@@ -55,7 +55,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
           this.contratos_class=this.estaIncompletocontratos(this.defensaJudicial);
           this.detalle_class=this.estaIncompletodetalle(this.defensaJudicial);
           this.convocados_class=this.estaIncompletoconvocados(this.defensaJudicial);
-          this.soporte_class=this.defensaJudicial.urlSoporteProceso?2:1;
+          this.soporte_class=this.defensaJudicial.urlSoporteProceso==null?0:2;
           this.ficha_class=this.estaIncompletoficha(this.defensaJudicial);
           setTimeout(() => { resolve(); },1000)
       });           
@@ -91,7 +91,13 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
         retorno= 2;
       }
       else{       
-      retorno=1;
+        if(defensaJudicial.demandadoConvocado.length==0)
+        {
+          retorno= 0;
+        }
+        else{
+          retorno= 1;
+        }
       }    
     return retorno;
   }
@@ -106,7 +112,19 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
         retorno= 2;
       }
       else{       
-      retorno=1;
+        if(defensaJudicial.localizacionIdMunicipio==null && 
+          defensaJudicial.tipoAccionCodigo==null &&
+          defensaJudicial.jurisdiccionCodigo==null &&
+          (defensaJudicial.pretensiones=="" || defensaJudicial.pretensiones==null) &&
+          defensaJudicial.cuantiaPerjuicios==null && defensaJudicial.esRequiereSupervisor==null)
+          {
+            retorno=0;
+          }
+          else
+          {
+            retorno=1;
+          }
+        
       }    
     return retorno;
   }
@@ -119,7 +137,13 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
         retorno= 2;
       }
       else{       
-      retorno=1;
+        if(pProceso.cantContratos==null && pProceso.defensaJudicialContratacionProyecto.length==0)
+        {
+          retorno= 0;
+        }
+        else{       
+        retorno=1;
+        }    
       }    
     return retorno;
   }

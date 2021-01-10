@@ -80,6 +80,7 @@ export class DefensaJudicialService {
 export interface DefensaJudicial{
   
   
+  
   defensaJudicialId?:number,
   legitimacionCodigo?:string,
   tipoProcesoCodigo?:string,
@@ -107,6 +108,7 @@ export interface DefensaJudicial{
   //not maped
   jurisdiccionCodigoNombre?:string,
   tipoAccionCodigoNombre?:string
+  departamentoID?: any;
 }
 
 export interface DefensaJudicialSeguimiento{
