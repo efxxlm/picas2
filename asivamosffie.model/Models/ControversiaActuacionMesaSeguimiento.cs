@@ -24,6 +24,6 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
         public string NumeroActuacionSeguimiento { get; set; }
 
-        public virtual ControversiaActuacionMesa ControversiaActuacionMesal { get; set; }
+        public virtual ControversiaActuacionMesa ControversiaActuacionMesa { get; set; }
     }
 }

@@ -40,11 +40,34 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
   @Input() tipoProceso:string;
   @Input() defensaJudicial:DefensaJudicial;
   cargarRegistro() {
-    //this.ngOnInit().then(() => {
-      console.log("form");
-      console.log(this.defensaJudicial);
-      console.log(this.legitimacion);
-      console.log(this.tipoProceso);      
+     
+
+/*      let defContraProyecto:DemandanteConvocante[]=[];
+    for(let perfil of this.perfiles.controls){
+      defContraProyecto.push({
+        nombre:perfil.get("nomConvocado").value,
+        tipoIdentificacionCodigo:perfil.get("tipoIdentificacion").value,
+        numeroIdentificacion:perfil.get("numIdentificacion").value,
+        direccion:perfil.get("direccion").value,
+        email:perfil.get("correo").value,
+        esConvocante:false
+      });
+    };
+*/
+    this.addressForm.get("demandaContraFFIE").setValue(this.defensaJudicial.esDemandaFfie);
+    this.formContratista.get("numeroContratos").setValue(this.defensaJudicial.numeroDemandantes);
+    let i=0;
+    console.log(this.perfiles);
+    this.defensaJudicial.demandanteConvocante.forEach(element => {
+      this.perfiles.controls[i].get("nomConvocado").setValue(element.nombre);
+      this.perfiles.controls[i].get("tipoIdentificacion").setValue(element.tipoIdentificacionCodigo);
+      this.perfiles.controls[i].get("numIdentificacion").setValue(element.numeroIdentificacion);
+      this.perfiles.controls[i].get("direccion").setValue(element.direccion);
+      this.perfiles.controls[i].get("correo").setValue(element.email);
+      i++;
+    });
+    //defensaJudicial.eDemandaFFIE=this.addressForm.get("demandaContraFFIE").value;
+    //=;
   }
 
   ngOnInit(): void {
@@ -145,13 +168,13 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     {
       defensaJudicial={
         defensaJudicialId:this.defensaJudicial.defensaJudicialId,
-        //legitimacionCodigo:this.legitimacion,
         tipoProcesoCodigo:this.tipoProceso,
-        //cantContratos:this.formContratista.get( 'numeroContratos' ).value,
         esLegitimacionActiva:this.legitimacion,
-        esCompleto:false,      
       };
     }
+    defensaJudicial.esDemandaFfie=this.addressForm.get("demandaContraFFIE").value;
+    defensaJudicial.numeroDemandantes=this.formContratista.get("numeroContratos").value;
+
     defensaJudicial.demandanteConvocante=defContraProyecto;
     
       console.log(defensaJudicial);
@@ -171,10 +194,13 @@ export class FormDemandantesConvocantesDjComponent implements OnInit {
     if(redirect)
     {
       dialogRef.afterClosed().subscribe(result => {
-          if(id>0)
-          {
-            this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
-          }                  
+        if(id>0 && this.defensaJudicial.defensaJudicialId==0)
+        {
+          this.router.navigate(["/gestionarProcesoDefensaJudicial/registrarNuevoProcesoJudicial/"+id], {});
+        }                  
+        else{
+          location.reload();
+        }                   
       });
     }
   

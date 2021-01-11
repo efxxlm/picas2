@@ -78,7 +78,7 @@ export class ControlTablaProcesoDefensaJudicialComponent implements OnInit {
   eliminar(id)
   {
    
-    this.openDialogSiNo("","“¿Está seguro de eliminar este registro?",id);
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
    
   }
 

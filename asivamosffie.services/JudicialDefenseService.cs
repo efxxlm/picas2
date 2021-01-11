@@ -402,6 +402,7 @@ namespace asivamosffie.services
                     && r.DefensaJudicialId == pDefensaJudicialId).
                     Include(x=>x.DefensaJudicialContratacionProyecto).
                     Include(x=>x.DemandadoConvocado).
+                    Include(x=>x.DemandanteConvocante).
                     Include(x=>x.FichaEstudio).
                     
                     Distinct()

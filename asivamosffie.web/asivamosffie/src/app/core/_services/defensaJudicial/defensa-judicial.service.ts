@@ -79,8 +79,6 @@ export class DefensaJudicialService {
 
 export interface DefensaJudicial{
   
-  
-  
   defensaJudicialId?:number,
   legitimacionCodigo?:string,
   tipoProcesoCodigo?:string,
@@ -105,6 +103,8 @@ export interface DefensaJudicial{
   canalIngresoCodigo?: string;
   numeroRadicadoFFIE?: string;
   fechaRadicadoFFIE?: Date;
+  numeroDemandantes?: string;
+  esDemandaFfie?: any;
   //not maped
   jurisdiccionCodigoNombre?:string,
   tipoAccionCodigoNombre?:string

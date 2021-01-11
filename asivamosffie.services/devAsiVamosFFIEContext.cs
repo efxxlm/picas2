@@ -165,6 +165,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarValidarSeguimientoSemanal> VVerificarValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -1634,7 +1635,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.ControversiaActuacionMesal)
+                entity.HasOne(d => d.ControversiaActuacionMesa)
                     .WithMany(p => p.ControversiaActuacionMesaSeguimiento)
                     .HasForeignKey(d => d.ControversiaActuacionMesaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
