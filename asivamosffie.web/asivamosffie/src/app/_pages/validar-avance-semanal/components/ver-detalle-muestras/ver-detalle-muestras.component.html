@@ -1,4 +1,4 @@
-<section class="container" *ngIf="ensayoLaboratorio !== undefined">
+<section class="container mb-2em" *ngIf="ensayoLaboratorio !== undefined">
     <div class="text-right">
         <a (click)="getRutaAnterior()" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -17,26 +17,155 @@
         <p style="margin-left: 2em;">Tipo de ensayo: <b> {{ ensayoLaboratorio.tipoEnsayoCodigo }} </b></p>
     </div>
 
-    <div class="text-center mt-1em" *ngIf="ensayoLaboratorio.ensayoLaboratorioMuestra.length > 0">
-        <mat-accordion *ngFor="let muestra of ensayoLaboratorio.ensayoLaboratorioMuestra; index as i">
-            <mat-expansion-panel class="expansion-style">
+    <div class="text-center mt-1em" *ngIf="muestras.length > 0">
+        <mat-accordion *ngFor="let muestra of muestras.controls; index as i">
+            <mat-expansion-panel class="expansion-style" [formGroup]="muestra">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="muestra.get( 'semaforoMuestra' ).value">
                         Muestra {{ i + 1 }}
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <div class="mt-1em" align="left">
-                    <mat-card class="border">
-                        <mat-card-content class="mt-1em">
-                            <p><b>Fecha de entrega de resultados</b>: {{ muestra.fechaEntregaResultado | date: 'dd/MM/yyyy' }} </p>
-                            <p><b>Nombre de la muestra</b>: {{ muestra.nombreMuestra }} </p>
-                            <section>
-                                <p><b>Observaciones frente a los resultados:</b></p> <div [innerHTML]="muestra.observacion"></div>
-                            </section>
-                        </mat-card-content>
-                    </mat-card>
-                </div>
+                <form [formGroup]="muestra" novalidate>
+                    <div class="mt-1em" align="left">
+                        <mat-card class="border">
+                            <mat-card-content class="mt-1em">
+                                <p><b>Fecha de entrega de resultados</b>: {{ muestra.get( 'fechaEntregaResultado' ).value | date: 'dd/MM/yyyy' }} </p>
+                                <p><b>Nombre de la muestra</b>: {{ muestra.get( 'nombreMuestra' ).value }} </p>
+                                <section>
+                                    <p><b>Observaciones frente a los resultados:</b></p> <div [innerHTML]="muestra.get( 'observacion' ).value"></div>
+                                </section>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+
+                    <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                        <mat-card class="shipping-card var-main-gris" align="left" *ngIf="muestra.get( 'fechaCreacion' ).value !== null">
+                            <mat-card-header class="header-card">
+                              <mat-card-title class="header-card--text">
+                                Verificación del apoyo a la supervisión
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p style="margin-left: 2em;"><b> {{ muestra.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionApoyo' ).value === true"><b>¿Tiene observaciones a la muestra {{ i + 1 }}?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionApoyo' ).value === false"><b>¿Tiene observaciones a la muestra {{ i + 1 }}?</b>: No</p>
+                                <section [innerHTML]="muestra.get( 'observacionApoyo' ).value" style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionApoyo' ).value === true"></section>
+                            </mat-card-content>
+                        </mat-card>
+
+                        <mat-card class="shipping-card var-main-gris" align="left" *ngIf="muestra.get( 'fechaCreacionSupervisor' ).value !== null">
+                            <mat-card-header class="header-card">
+                              <mat-card-title class="header-card--text">
+                                Validación de la supervisión
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p style="margin-left: 2em;"><b> {{ muestra.get( 'fechaCreacionSupervisor' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionSupervisor' ).value === true"><b>¿Desde la supervisión tiene observaciones a la muestra {{ i + 1 }}?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionSupervisor' ).value === false"><b>¿Desde la supervisión tiene observaciones a la muestra {{ i + 1 }}?</b>: No</p>
+                                <section [innerHTML]="muestra.get( 'observacionSupervisor' ).value" style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionSupervisor' ).value === true"></section>
+                            </mat-card-content>
+                        </mat-card>
+                    </ng-container>
+                    <ng-template #noEsVerDetalle>
+                        <mat-card class="shipping-card var-main-gris" align="left" *ngIf="muestra.get( 'fechaCreacion' ).value !== null">
+                            <mat-card-header class="header-card">
+                              <mat-card-title class="header-card--text">
+                                Verificación del apoyo a la supervisión
+                              </mat-card-title>
+                            </mat-card-header>
+                            <mat-card-content>
+                                <p style="margin-left: 2em;"><b> {{ muestra.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionApoyo' ).value === true"><b>¿Tiene observaciones a la muestra {{ i + 1 }}?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionApoyo' ).value === false"><b>¿Tiene observaciones a la muestra {{ i + 1 }}?</b>: No</p>
+                                <section [innerHTML]="muestra.get( 'observacionApoyo' ).value" style="margin-left: 2em;" *ngIf="muestra.get( 'tieneObservacionApoyo' ).value === true"></section>
+                            </mat-card-content>
+                        </mat-card>
+
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-12">
+                                <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                    <div class="pr-1">
+                                        <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones a la muestra {{ i + 1 }}?</label>
+                                    </div>
+                                    <div>
+                                        <mat-radio-group class="radioInput" formControlName="tieneObservacionSupervisor">
+                                            <mat-radio-button [value]="true" [checked]="muestra.get( 'tieneObservacionSupervisor' ).value === true">Sí</mat-radio-button>
+                                            <mat-radio-button [value]="false" [checked]="muestra.get( 'tieneObservacionSupervisor' ).value === false">No</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <span class="required-form-group m-0">*</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="muestra.value.tieneObservacionSupervisor == true" align="left">
+                            <div class="text-area-quill"
+                            [class.color-secondaryColor]="muestra.get('observacionSupervisor').invalid && muestra.get('observacionSupervisor').touched || muestra.get('observacionSupervisor').invalid">
+                                <label  class="text-area-quill--label align-left-label"
+                                        [class.colorMainColor]="!(muestra.get('observacionSupervisor').invalid && muestra.get('observacionSupervisor').touched || muestra.get('observacionSupervisor').invalid)">
+                                        Observaciones a la muestra {{ i + 1 }}
+                                </label>
+                                <quill-editor   class="quill-editor-style ml-1em"
+                                                [styles]="editorStyle"
+                                                [modules]="config"
+                                                (onContentChanged)="maxLength($event, 1000)"
+                                                formControlName="observacionSupervisor"
+                                                #obsAvanceFinanciero
+                                                required>
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="muestra.get('observacionSupervisor').value !== null">
+                              {{1000 - textoLimpio( obsAvanceFinanciero.quillEditor, 1000 )}}
+                            </span>
+                            <span class="contador miles" *ngIf="muestra.get('observacionSupervisor').value === null">
+                              1000
+                            </span>
+                        </div>
+                        <div class="text-center mt-1em">
+                            <button mat-button
+                                    color="warn"
+                                    class="btn-guardar"
+                                    type="button"
+                                    (click)="guardar( muestra )"
+                                    [disabled]="muestra.get('tieneObservacionSupervisor').value === null">
+                                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                            </button>
+                        </div>
+
+                        <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="muestra.get( 'dataHistorial' ).value.length > 0">
+                            <table mat-table [dataSource]="getDataHistorial( muestra.get( 'dataHistorial' ).value )" matSort>
+                          
+                                <ng-container matColumnDef="fechaRevision">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                                  <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="responsable">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                                    <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                        <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                            <p>Supervisor</p>
+                                        </ng-container>
+                                        <ng-template #noEsSupervisor>
+                                            <p>Apoyo a la supervisión</p>
+                                        </ng-template> 
+                                    </td>
+                                </ng-container>
+                          
+                                <ng-container matColumnDef="historial">
+                                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                                  <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                      <section [innerHTML]="element.observacion"></section>
+                                  </td>
+                                </ng-container>
+                            
+                              <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                            </table>
+                        </section>
+                    </ng-template>
+                </form>
             </mat-expansion-panel>
         </mat-accordion>
     </div>
