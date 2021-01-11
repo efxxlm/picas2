@@ -800,13 +800,7 @@ namespace asivamosffie.services
             }
 
         }
-
-
-        public async Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
-        {
-            return _context.VVerificarValidarSeguimientoSemanal.ToList();
-        }
-
+          
         public async Task<dynamic> GetListReporteSemanal()
         {
             List<SeguimientoSemanal> ListseguimientoSemanal =
@@ -869,6 +863,12 @@ namespace asivamosffie.services
             }
             return ListBitaCora;
         }
+
+        public async Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
+        {
+            return await _context.VVerificarValidarSeguimientoSemanal.ToListAsync();
+        }
+
         #endregion
 
         #region Create update

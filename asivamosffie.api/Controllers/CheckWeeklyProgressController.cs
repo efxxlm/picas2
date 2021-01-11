@@ -53,8 +53,7 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-
-
+         
         [Route("GetSeguimientoSemanalBySeguimientoSemanalId")]
         [HttpGet]
         public async Task<ActionResult<SeguimientoSemanal>> GetSeguimientoSemanalBySeguimientoSemanalId([FromQuery] int pSeguimientoSemanalId)
