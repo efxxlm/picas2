@@ -48,6 +48,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ControlRecurso> ControlRecurso { get; set; }
         public virtual DbSet<ControversiaActuacion> ControversiaActuacion { get; set; }
         public virtual DbSet<ControversiaActuacionMesa> ControversiaActuacionMesa { get; set; }
+        public virtual DbSet<ControversiaActuacionMesaSeguimiento> ControversiaActuacionMesaSeguimiento { get; set; }
         public virtual DbSet<ControversiaContractual> ControversiaContractual { get; set; }
         public virtual DbSet<ControversiaMotivo> ControversiaMotivo { get; set; }
         public virtual DbSet<CronogramaSeguimiento> CronogramaSeguimiento { get; set; }
@@ -164,7 +165,14 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarValidarSeguimientoSemanal> VVerificarValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
-
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=asivamosffie.database.windows.net;Database=devAsiVamosFFIE;User ID=adminffie;Password=SaraLiam2020*;MultipleActiveResultSets=False;Connection Timeout=30;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -1588,6 +1596,58 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.ControversiaContractualId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Controver__Contr__23DE44F1");
+            });
+
+            modelBuilder.Entity<ControversiaActuacionMesaSeguimiento>(entity =>
+            {
+                entity.Property(e => e.ActuacionAdelantada)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.EstadoAvanceMesaCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaActuacionAdelantada).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaVencimiento).HasColumnType("datetime");
+
+                entity.Property(e => e.NumeroActuacionSeguimiento)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Observaciones)
+                    .HasMaxLength(2000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ProximaActuacionRequerida)
+                    .HasMaxLength(1000)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.RutaSoporte)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ControversiaActuacionMesa)
+                    .WithMany(p => p.ControversiaActuacionMesaSeguimiento)
+                    .HasForeignKey(d => d.ControversiaActuacionMesaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Controver__Contr__2F4FF79D");
             });
 
             modelBuilder.Entity<ControversiaContractual>(entity =>
