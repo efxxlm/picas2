@@ -10,8 +10,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="estadoAvanceTramite" required>
-                                    <mat-option *ngFor="let contr of estadoAvanceTramiteArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let estadoAvanceTramite of estadoAvanceTramiteArrayDom" [value]="estadoAvanceTramite">
+                                        {{ estadoAvanceTramite.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -50,8 +50,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="actuacionAdelantada" required>
-                                    <mat-option *ngFor="let contr of actuacionAdelantadaArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let actuacionAdelantada of actuacionAdelantadaArrayDom" [value]="actuacionAdelantada">
+                                        {{ actuacionAdelantada.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -69,9 +69,9 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="proximaActuacionRequerida" required>
-                                    <mat-option *ngFor="let contr of proximaActuacionRequeridaArray"
-                                        [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let proximaActuacionRequerida of proximaActuacionRequeridaArrayDom"
+                                        [value]="proximaActuacionRequerida">
+                                        {{ proximaActuacionRequerida.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.value.proximaActuacionRequerida==='1'">
+            <div class="row" *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.value.proximaActuacionRequerida==='1'">
+            <div class="row" *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">

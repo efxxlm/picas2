@@ -10,8 +10,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="estadoAvanceTramite" required>
-                                    <mat-option *ngFor="let contr of estadoAvanceTramiteArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let contr of estadoAvanceTramiteArray" [value]="contr">
+                                        {{ contr.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

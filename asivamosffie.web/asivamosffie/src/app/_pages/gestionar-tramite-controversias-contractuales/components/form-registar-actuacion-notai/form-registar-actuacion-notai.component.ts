@@ -32,9 +32,15 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
     requiereMesaDeTrabajo: [null, Validators.required],
     resultadoDefinitivoyCerrado:  [null, Validators.required]
   });
-  estadoAvanceTramiteArrayDom: Dominio[] = [];
-  proximaActuacionRequeridaArrayDom: Dominio[] = [];
-  actuacionAdelantadaArrayDom: Dominio[] = [];
+  estadoAvanceTramiteArrayDom = [
+
+  ];
+  proximaActuacionRequeridaArrayDom = [
+
+  ];
+  actuacionAdelantadaArrayDom= [
+
+  ];
 
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   editorStyle = {
@@ -53,7 +59,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService,private router: Router) { }
 
   ngOnInit(): void {
-    this.common.listaEstadosAvanceTramite().subscribe(rep => {
+    this.common.listaEstadosControversiaNoTAI().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
     });
     this.common.listaActuacionAdelantada().subscribe(rep1=>{
@@ -133,10 +139,6 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        //"FechaCreacion": "2020-3-3",
-        //"UsuarioCreacion": "US CRE w",
-       // "UsuarioModificacion": "US MODIF w",
-        //"EsCompleto": completo,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -165,10 +167,6 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "ResumenPropuestaFiduciaria": "ResumenPropuestaFiduciaria w",
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        //"FechaCreacion": "2020-3-3",
-        //"UsuarioCreacion": "US CRE w",
-        //"UsuarioModificacion": "US MODIF w",
-        //"EsCompleto": completo,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,

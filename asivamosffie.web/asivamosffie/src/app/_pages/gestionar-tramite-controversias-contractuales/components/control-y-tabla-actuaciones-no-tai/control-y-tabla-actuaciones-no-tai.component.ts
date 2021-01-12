@@ -41,7 +41,9 @@ export class ControlYTablaActuacionesNoTaiComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   enviarComiteTecnicoTramAct(id){
-
+    this.services.CambiarEstadoControversiaActuacion(id,"3").subscribe(response=>{
+      this.ngOnInit();
+    });
   }
   verDetalleEditarActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarActuacionNoTai',id]);

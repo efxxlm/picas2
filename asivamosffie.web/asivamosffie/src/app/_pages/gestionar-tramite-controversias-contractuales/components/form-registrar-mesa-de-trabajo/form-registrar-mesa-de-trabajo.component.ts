@@ -26,7 +26,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     urlSoporte: [null, Validators.required]
   });
   estadoAvanceTramiteArray = [
-    { name: 'Remisión de Comunicación de decisión por Alianza Fiduciaria a la Aseguradora', value: '1' },
+  
   ];
   actuacionAdelantadaArray = [
     { name: 'Otro', value: '1' },
@@ -56,6 +56,9 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
       this.addressForm.get('diasVencimientoTerminos').setValue('3');
       this.addressForm.get('resultadoDefinitivo').setValue(true);
     }
+    this.common.listaEstadoAvanceMesaTrabajo().subscribe(a=>{
+      this.estadoAvanceTramiteArray = a;
+    });
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -115,7 +118,14 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
         "rutaSoporte": this.addressForm.value.urlSoporte
       }
     }
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    this.services.CreateEditarMesa(mesaTrabajoArray).subscribe((data:any)=>{
+      if (data.isSuccessful==true){
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+      }
+      else{
+        this.openDialog('', data.message);
+      }
+    });
   }
 
 }

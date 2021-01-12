@@ -30,6 +30,9 @@ export class ContractualControversyService implements OnInit{
   GetMotivosSolicitudByControversiaId(id: any){
     return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetMotivosSolicitudByControversiaId?id=${id}`);
   }
+  CreateEditarActuacionReclamacion(actuacionSeguimiento: any){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarActuacionReclamacion`, actuacionSeguimiento);
+  }
   CreateEditarActuacionSeguimiento(actuacionSeguimiento: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarActuacionSeguimiento`, actuacionSeguimiento);
   }
@@ -46,6 +49,9 @@ export class ContractualControversyService implements OnInit{
   }
   GetListGrillaControversiaActuacion(Id:number){
     return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaControversiaActuacion?pControversiaContractualId=${Id}`);
+  }
+  GetListGrillaActuacionReclamacionByActuacionID(pControversiaActuacionId: number){
+    return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaActuacionReclamacionByActuacionID?pControversiaActuacionId=${pControversiaActuacionId}`);
   }
   GetListGrillaActuacionSeguimiento(pControversiaActuacionId: number){
     return this.http.get<any[]>(`${environment.apiUrl}/ContractualControversy/GetListGrillaActuacionSeguimiento?pControversiaActuacionId=${pControversiaActuacionId}`);
@@ -121,9 +127,34 @@ export interface GetListGrillaTipoSolicitudControversiaContractual{
 }
 
 export interface GetVistaContratoContratista{
-
+  fechaFinContrato: any;
+  fechaInicioContrato: any;
+  idContratista: number;
+  nombreContratista: any;
+  numeroContrato: any;
+  plazoFormat: any;
 }
 
 export interface EliminarControversiaContractual{
+
+}
+
+export interface EliminarControversiaActuacion{
+
+}
+
+export interface GetListGrillaControversiaActuacion{
+
+}
+
+export interface GetControversiaContractualById{
+  contratoId: number;
+}
+
+export interface GetControversiaActuacionById{
+
+}
+
+export interface GetListContratos{
 
 }

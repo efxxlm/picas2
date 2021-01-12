@@ -47,7 +47,7 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
   }
   finalizarMesaTrabajo(id){
     this.services.FinalizarMesa(id).subscribe((data:any)=>{
-
+      this.ngOnInit();
     });
   }
   verDetalleMesaTrabajo(id){
