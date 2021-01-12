@@ -1,0 +1,48 @@
+<div class="container text-center">
+  <div class="text-right">
+    <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Verificar solicitud de novedades
+  </h1>
+  <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+  <div class="text-info" *ngIf="verAyuda">
+    <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+      <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+    </button>
+    Bienvenida/o, aquí podrá realizar la verificación de las solicitudes de novedades aprobadas por el interventor de
+    los contratos de obra y podrá registrar las solicitudes de novedades para los contratos de interventoría que se
+    encuentran a su cargo, que están activos, que cuentan con póliza aprobada, registro presupuestal y que serán
+    ejecutados en el marco de la gestión del FFIE.
+  </div>
+
+  <div class="tabs--actions">
+    <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': obra === true}"
+    (click)="obra = true;
+            interventoria = false;">
+            Novedades de contratos de obra
+    </button>
+    <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': interventoria === true}"
+    (click)="interventoria = true;
+            obra = false;">
+            Novedades de contratos de interventoría
+    </button>
+  </div>
+
+  <div *ngIf="obra" class="animatedDown">
+    <!-- <app-tabla-novedad-contratos-obra></app-tabla-novedad-contratos-obra> -->
+  </div>
+  <div *ngIf="interventoria" class="animatedDown">
+    <div class="mt-2em mb-2em">
+      <a routerLink="registrarSolicitudInterventoria" mat-raised-button color="accent" class="line-25 px-2em">
+        Registrar solicitud de novedad
+      </a>
+    </div>
+    <!-- <app-tabla-solicitud-novedad-contractual></app-tabla-solicitud-novedad-contractual> -->
+  </div>
+
+
+</div>

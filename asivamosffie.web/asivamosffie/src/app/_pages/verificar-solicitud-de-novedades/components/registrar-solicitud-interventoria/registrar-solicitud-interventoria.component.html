@@ -1,0 +1,116 @@
+<section class="container">
+  <div class="container text-center">
+    <div class="text-right">
+      <a routerLink=".." mat-button color="primary" class="btn-regresar">
+        <img src="assets/img/icon/regresar.svg" alt="Regresar">
+      </a>
+    </div>
+    <h1 class="title-menu--h1">
+      Registrar solicitud de novedad contractual
+    </h1>
+  </div>
+
+  <div class="mt-3em row justify-content-center">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left" for="numeroContrato">Número de contrato:</label>
+        </div>
+        <div class="col d-flex">
+          <mat-form-field class="example-full-width">
+            <input #buscar type="text" aria-label="Number" matInput [formControl]="numeroContrato"
+              [matAutocomplete]="auto" required>
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+              <mat-option class="autocomplete" *ngFor="let option of filteredOptions | async" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <img src="assets/img/icon/lupa.svg" alt="Buscar" class="buscar" (click)="buscar.focus()">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center animatedDown" *ngIf="numeroContrato.value">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="pr-1">
+          <label class="label-left" for="novedadesolicitud">La novedad aplica a:</label>
+        </div>
+        <div class="col">
+          <mat-form-field class="select-width">
+            <mat-select required [formControl]="novedadAplicada">
+              <mat-option *ngFor="let novedad of novedadesArray" [value]="novedad.value">
+                {{ novedad.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="novedadAplicada.value">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="header-card--text">
+        Datos del contrato
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        <strong>
+          Nombre del contratista:
+        </strong>
+        Constructora Colpatria SAS
+      </p>
+      <p>
+        <strong>Tipo de identificación:</strong>
+        <span>
+          NIT
+        </span>
+      </p>
+      <p>
+        <strong>
+          Número de identificación
+        </strong>
+        900.879.989
+      </p>
+      <p>
+        <strong>Tipo de intervención:</strong>
+        <span >
+          Remodelación
+        </span>
+      </p>
+      <p>
+        <strong>Valor del contrato:</strong>
+        <span >
+          $ 130.000.000
+        </span>
+      </p>
+      <p>
+        <strong>Plazo:</strong>
+        <span >
+          24 meses / 25 días
+        </span>
+      </p>
+      <p>
+        <strong>Fecha de inicio de contrato:</strong>
+        <span >
+          25/06/2020
+        </span>
+      </p>
+      <p>
+        <strong>Fecha de finalización de contrato:</strong>
+        <span >
+          20/07/2022
+        </span>
+      </p>
+
+    </mat-card-content>
+  </mat-card>
+
+  <div class="animatedDown" *ngIf="novedadAplicada.value">
+    <app-expansion-panel-interventoria></app-expansion-panel-interventoria>
+  </div>
+
+</section>
