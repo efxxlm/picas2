@@ -59,7 +59,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
   constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService,private router: Router) { }
 
   ngOnInit(): void {
-    this.common.listaEstadosAvanceTramite().subscribe(rep => {
+    this.common.listaEstadosControversiaNoTAI().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
     });
     this.common.listaActuacionAdelantada().subscribe(rep1=>{

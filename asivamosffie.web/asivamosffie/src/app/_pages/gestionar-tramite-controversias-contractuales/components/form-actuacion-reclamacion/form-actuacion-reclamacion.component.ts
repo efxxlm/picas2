@@ -28,7 +28,6 @@ export class FormActuacionReclamacionComponent implements OnInit {
     urlSoporte: [null, Validators.required]
   });
   estadoAvanceTramiteArrayDom = [
-
   ];
   editorStyle = {
     height: '50px'
@@ -44,7 +43,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
   constructor(private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
-    this.common.listaEstadosAvanceTramite().subscribe(rep => {
+    this.common.listaEstadosAvanceReclamacion().subscribe(rep => {
       this.estadoAvanceTramiteArrayDom = rep;
     });
     if (this.isEditable == true) {
@@ -121,7 +120,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos
       }
     }
-    this.services.CreateEditarActuacionSeguimiento(actuacionTaiArray).subscribe((data: any) => {
+    this.services.CreateEditarActuacionReclamacion(actuacionTaiArray).subscribe((data: any) => {
       if (data.isSuccessful == true) {
         this.openDialog("", data.message);
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);

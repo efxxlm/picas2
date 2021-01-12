@@ -118,7 +118,14 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
         "rutaSoporte": this.addressForm.value.urlSoporte
       }
     }
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    this.services.CreateEditarMesa(mesaTrabajoArray).subscribe((data:any)=>{
+      if (data.isSuccessful==true){
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+      }
+      else{
+        this.openDialog('', data.message);
+      }
+    });
   }
 
 }
