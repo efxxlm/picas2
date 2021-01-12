@@ -66,6 +66,7 @@ export interface Contrato {
   contratoObservacion: any[];
   contratoPerfil: ContratoPerfil[];
   contratoPoliza: ContratoPoliza[];
+  fechaAprobacionRequisitosConstruccionInterventor?: string;
 }
 
 interface ContratoPoliza {
@@ -145,6 +146,9 @@ interface Contratacion {
 }
 
 export interface ContratacionProyecto2 {
+  
+  estadoSemaforo: string;
+  estadoSemaforoContratacion: string;
   contratacionProyectoId: number;
   contratacionId: number;
   proyectoId: number;
@@ -156,6 +160,7 @@ export interface ContratacionProyecto2 {
   proyecto: Proyecto2;
   contratacionProyectoAportante: any[];
   sesionSolicitudObservacionProyecto: any[];
+  fasePreConstruccionNotMapped?: any;
 }
 
 interface Proyecto2 {
@@ -191,6 +196,7 @@ interface Proyecto2 {
   proyectoAportante: any[];
   proyectoPredio: any[];
   proyectoRequisitoTecnico: any[];
+  semaforoGeneral?: string;//just for class colors
 }
 
 interface LocalizacionIdMunicipioNavigation {
@@ -265,3 +271,20 @@ interface Contratista {
   usuarioModificacion: string;
   contratacion: any[];
 }
+
+
+interface TipoObservacionConstruccion{
+  Diagnostico: string;
+  PlanesProgramas: string;
+  ManejoAnticipo: string;
+  ProgramacionObra: string;
+  FlujoInversion: string;
+}
+
+export const TiposObservacionConstruccion: TipoObservacionConstruccion = {
+  Diagnostico: '1',
+  PlanesProgramas: '2',
+  ManejoAnticipo: '3',
+  ProgramacionObra: '4',
+  FlujoInversion: '5',
+};
