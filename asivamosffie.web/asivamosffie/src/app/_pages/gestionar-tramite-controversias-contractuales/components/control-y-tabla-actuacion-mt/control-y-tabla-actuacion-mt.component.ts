@@ -28,7 +28,7 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
   constructor(private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.services.GetListGrillaControversiaActuacion(this.idMesaTrabajo).subscribe((data:any)=>{
+    this.services.GetActuacionesMesasByMesaId(this.idMesaTrabajo).subscribe((data:any)=>{
       this.dataTable = data;
       this.dataSource = new MatTableDataSource(this.dataTable);
       this.dataSource.paginator = this.paginator;
@@ -41,7 +41,11 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   finalizarMesaDeTrabajo(id){
-
+    this.services.SetStateActuacionMesa(id,'2').subscribe((resp:any)=>{
+      if(resp.isSuccessful==true){
+        this.ngOnInit();
+      }
+    });
   }
   verDetalleEditarMTActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajoAct',id]);
