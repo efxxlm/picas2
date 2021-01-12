@@ -1,0 +1,63 @@
+<div class="text-center">
+  <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  </button>
+
+  <h1 class="title-menu--h1">
+    Observaciones flujo de inversión de recursos
+  </h1>
+
+  <section class="flex-center mt-05em">
+    <span>
+      Fecha de validación:
+      <strong>
+        10/08/2020
+      </strong>
+    </span>
+    <span>
+      Estado de la validación:
+      <strong>
+        Enviada al interventor
+      </strong>
+    </span>
+  </section>
+</div>
+<div class="d-flex align-items-center mt-1em">
+  <div class="text-area-quill">
+    <label class="text-area-quill--label align-left-label">
+      Observaciones a la nueva programación de obra
+    </label>
+    <div>
+      10/08/2020
+      El archivo presenta un error, cargue de nuevo para validarlo
+    </div>
+  </div>
+</div>
+
+<div *ngIf="false" class="text-center mb-2em">
+  <div class="table-responsive">
+    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
+      <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Fecha de revisión
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Historial de observaciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let observacion of listaObservaciones">
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ observacion.fecha }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ observacion.historial }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
