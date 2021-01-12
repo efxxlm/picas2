@@ -18,6 +18,6 @@ namespace asivamosffie.model.Models
         public int? NumeroSemana { get; set; }
         public bool? VerReportarSeguimientoSemanal { get; set; }
         public bool? VerCargarActa { get; set; }
-        public bool? EnviarSupervisor { get; set; }
+        public bool? EnviarVerificacion { get; set; }
     }
 }
