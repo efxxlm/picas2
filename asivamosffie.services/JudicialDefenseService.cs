@@ -10,19 +10,26 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using asivamosffie.services.Helpers.Enumerator;
 using asivamosffie.services.Helpers.Constant;
+using asivamosffie.services.Helpers.Constants;
+using System.IO;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 
 namespace asivamosffie.services
 {
-    public class JudicialDefenseService /*: IGuaranteePolicyService*/
+    public class JudicialDefenseService : IJudicialDefense
     {
         private readonly ICommonService _commonService;
-        private readonly devAsiVamosFFIEContext _context;
+        private readonly devAsiVamosFFIEContext _context;     
+            
+            private readonly IConverter _converter;
 
-        public JudicialDefenseService(devAsiVamosFFIEContext context, ICommonService commonService)
+        public JudicialDefenseService(devAsiVamosFFIEContext context, ICommonService commonService, IConverter converter)
         {
 
             _commonService = commonService;
             _context = context;
+            _converter = converter;
             //_settings = settings;
         }
 
@@ -91,7 +98,7 @@ namespace asivamosffie.services
                     demandadoConvocadoBD.UsuarioModificacion = demandadoConvocado.UsuarioModificacion;
                     demandadoConvocadoBD.Email = demandadoConvocado.Email;
                     
-                    _context.DemandadoConvocado.Update(demandadoConvocado);
+                    _context.DemandadoConvocado.Update(demandadoConvocadoBD);
 
                 }
 
@@ -740,9 +747,9 @@ namespace asivamosffie.services
                     fichaEstudioBD.EsAprobadoAperturaProceso = fichaEstudio.EsAprobadoAperturaProceso;
                     fichaEstudioBD.EsPresentadoAnteComiteFfie = fichaEstudio.EsPresentadoAnteComiteFfie;
 
-                    fichaEstudio.EsCompleto = ValidarRegistroCompletoFichaEstudio(fichaEstudio);
+                    fichaEstudio.EsCompleto = ValidarRegistroCompletoFichaEstudio(fichaEstudioBD);
 
-                    _context.FichaEstudio.Update(fichaEstudio);
+                    _context.FichaEstudio.Update(fichaEstudioBD);
 
                 }
 
@@ -897,8 +904,10 @@ namespace asivamosffie.services
                                 Municipio = proyecto.LocalizacionIdMunicipioNavigation.Descripcion,
                                 //InstitucionEducativa = _context.InstitucionEducativaSede.Find(proyecto.InstitucionEducativaId).Nombre,
                                 //Sede = _context.InstitucionEducativaSede.Find(proyecto.SedeId).Nombre,
-                                InstitucionEducativa = proyecto.InstitucionEducativa.Nombre,
+                                InstitucionEducativa = proyecto.InstitucionEducativa.CodigoDane,
+                                CodigoDane = proyecto.InstitucionEducativa.Nombre,
                                 Sede = proyecto.Sede.Nombre,
+                                SedeCodigo = proyecto.Sede.CodigoDane,
                                 ProyectoId = proyecto.ProyectoId,
 
 
@@ -919,8 +928,16 @@ namespace asivamosffie.services
 
                                 //item.Contratacion= item.Contratacion.wh(r => r.ContratacionId == item.ContratacionId ).FirstOrDefault();
 
+                                Contratista contratista = null;
+
                                 if (item.Contratacion != null)
                                 {
+                                     contratista = _context.Contratista.Where(r=>r.ContratistaId== item.Contratacion.ContratistaId).FirstOrDefault();
+
+                                    if (contratista != null)
+                                        proyectoGrilla.NombreContratista = contratista.Nombre;
+                                    else
+                                        proyectoGrilla.NombreContratista = "";
 
                                     if (!string.IsNullOrEmpty(item.Contratacion.TipoSolicitudCodigo))
                                     {
@@ -941,7 +958,7 @@ namespace asivamosffie.services
                         {
                         }
                     }
-                }
+                };
 
             }
             catch (Exception ex)
@@ -957,6 +974,13 @@ namespace asivamosffie.services
 
             return ListProyectoGrilla.OrderByDescending(r => r.ProyectoId).ToList();
         }
+        public async Task<Respuesta> EliminarDefensaJudicial(int pDefensaJudicialId, string pUsuarioModifico)
+        {
+            Respuesta respuesta = new Respuesta();
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Defensa_Judicial, (int)EnumeratorTipoDominio.Acciones);
+            string strCrearEditar = string.Empty;
+            
+            DefensaJudicial defensaJudicial = null;
 
             try
             {

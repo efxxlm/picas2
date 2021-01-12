@@ -140,6 +140,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Causa_Baja_Disponibilidad_Equipo = 96,
         Causa_Baja_Disponibilidad_Productividad = 97,
         Estados_Seguimiento_Diario = 98,
+        
+        Estado_controversia= 89,
 
         Estados_actas_inicio_obra = 85,
 
@@ -153,14 +155,12 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_avance_reclamacion = 91,
         Estados_acta_Interventoria_319 = 107,
-        Estados_acta_Interventoria_319 = 107,
         Estado_Actuacion_Derivada_4_4_1 = 114,
 
         Estado_Actuacion_Derivada_r_4_4_1 = 125,
 
 
         //Estado_avance_reclamacion = 91,
-        Estado_avance_reclamacion = 108,
 
         Proxima_actuacion_requerida =103,
 

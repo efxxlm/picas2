@@ -42,6 +42,42 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        //[HttpGet]
+        //[Route("GetPlantillaActaInicio")]
+        //public async Task<FileResult> GetPlantillaActaInicio(int pContratoId)
+        //{
+        //    //return File(await _ActBegin.GetPlantillaActaInicio(pContratoId), "application/pdf");
+        //}
+
+        [HttpGet]
+        [Route("GetPlantillaControversiaContractual")]
+        public async Task<FileResult> GetPlantillaControversiaContractual(int pContratoId)
+        {
+            return File(await _contractualControversy.GetPlantillaControversiaContractual(pContratoId), "application/pdf");
+        }
+
+
+        [HttpPost]
+        [Route("CreateEditarControversiaMotivo")]
+        public async Task<IActionResult> CreateEditarControversiaMotivo(ControversiaMotivo controversiaMotivo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                if (controversiaMotivo.ControversiaMotivoId == 0)
+                    controversiaMotivo.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+                else
+                    controversiaMotivo.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
+                respuesta = await _contractualControversy.InsertEditControversiaMotivo(controversiaMotivo);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpPost]
         [Route("CreateEditarActuacionSeguimiento")]
         public async Task<IActionResult> CreateEditarActuacionSeguimiento(ActuacionSeguimiento actuacionSeguimiento)
@@ -123,7 +159,7 @@ namespace asivamosffie.api.Controllers
                     controversiaActuacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 else
                     controversiaActuacion.UsuarioModificacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _contractualControversy.CreateEditNuevaActualizacionTramite(controversiaActuacion);
+                respuesta = await _contractualControversy.CreateEditControversiaOtros(controversiaActuacion);
                 return Ok(respuesta);
             }
             catch (Exception ex)
@@ -178,11 +214,11 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetListGrillaTipoSolicitudControversiaContractual")]
-        public async Task<ActionResult<List<GrillaTipoSolicitudControversiaContractual>>> GetListGrillaTipoSolicitudControversiaContractual()
+        public async Task<ActionResult<List<GrillaTipoSolicitudControversiaContractual>>> GetListGrillaTipoSolicitudControversiaContractual(int pControversiaContractualId = 0)
         {
             try
             {
-                return await _contractualControversy.ListGrillaTipoSolicitudControversiaContractual();
+                return await _contractualControversy.ListGrillaTipoSolicitudControversiaContractual(pControversiaContractualId);
             }
             catch (Exception ex)
             {
@@ -193,11 +229,11 @@ namespace asivamosffie.api.Controllers
         [HttpGet]
         [Route("GetListGrillaControversiaActuacion")]
 
-        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaActuacion(int id = 0)
+        public async Task<ActionResult<List<GrillaControversiaActuacionEstado>>> GetListGrillaControversiaActuacion(int id = 0, int pControversiaContractualId= 0, bool esActuacionReclamacion = false)
         {
             try
             {
-                return await _contractualControversy.ListGrillaControversiaActuacion(id);
+                return await _contractualControversy.ListGrillaControversiaActuacion(id,pControversiaContractualId,  esActuacionReclamacion);
             }
             catch (Exception ex)
             {
@@ -384,6 +420,23 @@ namespace asivamosffie.api.Controllers
             try
             {
                 respuesta = await _contractualControversy.CambiarEstadoActuacionSeguimiento(pActuacionSeguimientoId, pEstadoReclamacionCodigo, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+                
+        [HttpPut]
+        [Route("CambiarEstadoControversiaActuacion2")]
+        public async Task<IActionResult> CambiarEstadoControversiaActuacion2( int pControversiaActuacionId, string pNuevoCodigoProximaActuacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.CambiarEstadoControversiaActuacion2(pControversiaActuacionId, pNuevoCodigoProximaActuacion, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)
