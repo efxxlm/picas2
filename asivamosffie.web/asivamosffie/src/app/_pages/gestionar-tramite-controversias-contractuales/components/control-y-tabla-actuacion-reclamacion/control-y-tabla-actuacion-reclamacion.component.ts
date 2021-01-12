@@ -41,7 +41,7 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   enviarComiteTecnicoTramAct(id){
-    this.services.CambiarEstadoActuacionSeguimiento(id,"2").subscribe((resp:any)=>{
+    this.services.CambiarEstadoControversiaActuacion(id,"2").subscribe((resp:any)=>{
       this.ngOnInit();
     });
   }
