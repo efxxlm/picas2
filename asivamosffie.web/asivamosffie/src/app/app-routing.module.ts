@@ -257,6 +257,11 @@ const routes: Routes = [
         path: 'gestionarTramiteNovedadesContractualesAprobadas',
         loadChildren: () => import('./_pages/gestionar-novedades-aprobadas/gestionar-novedades-aprobadas.module')
         .then(m => m.GestionarNovedadesAprobadasModule)
+      },
+      {
+        path: 'registratAjusteProgramacion',
+        loadChildren: () => import('./_pages/registrar-ajuste-programacion/registrar-ajuste-programacion.module')
+        .then(m => m.RegistrarAjusteProgramacionModule)
       }
     ]
 

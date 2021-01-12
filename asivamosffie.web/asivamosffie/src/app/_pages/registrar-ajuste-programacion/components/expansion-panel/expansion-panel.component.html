@@ -1,0 +1,35 @@
+<div class="text-center">
+  <p class="info-container">
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
+</div>
+<mat-accordion>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title" [ngClass]="{
+        'sin-diligenciar':true,
+        'en-proceso':false,
+        'completo':false,
+        'en-alerta':false
+      }">
+      Programación de obra
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-programacion-de-obra></app-programacion-de-obra>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title" [ngClass]="{
+        'sin-diligenciar':true,
+        'en-proceso':false,
+        'completo':false,
+        'en-alerta':false
+      }">
+      Flujo de inversión de recursos
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-flujo-intervencion-recursos></app-flujo-intervencion-recursos>
+  </mat-expansion-panel>
+</mat-accordion>
