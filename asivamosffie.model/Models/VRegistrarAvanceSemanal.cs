@@ -16,6 +16,7 @@ namespace asivamosffie.model.Models
         public string EstadoObra { get; set; }
         public int? CantidadSemanas { get; set; }
         public int? NumeroSemana { get; set; }
+        public bool? VerReportarSeguimientoSemanal { get; set; }
         public bool? VerCargarActa { get; set; }
     }
 }
