@@ -459,6 +459,7 @@ namespace asivamosffie.services.Helpers.Constant
 
         #region 
         public const string Error = "500";
+        public const string ErrorLLAVEMEN = "501";
         #endregion
     }
 
@@ -752,6 +753,7 @@ namespace asivamosffie.services.Helpers.Constant
         public const string OperacionExitosa = "200";
         public const string EliminacionCancelada = "202";
         public const string EliminacionExitosa = "201";
+        public const string EliminacionNoExitosa = "301";
 
         #endregion Mensajes Exitoso
 
@@ -817,6 +819,72 @@ namespace asivamosffie.services.Helpers.Constant
         public const string Error = "500"; 
         #endregion
     }
+
+    public class ConstantMessagesDerivativeAction
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+        public const string Error = "500";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        //public const string CamposIncompletos = "101";
+                
+        public const string RecursoNoEncontrado = "104";
+        public const string CorreoEnviado = "101";
+
+        public const string ErrorEnviarCorreo = "107";
+        public const string ErrorGuardarCambios = "109";
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+        public const string EliminacionExitosa = "201";
+
+        #endregion Mensajes Exitoso
+    }
+
+
+    //public class ConstantMessagesJudicialDefense
+    //{
+    //    #region Mensajes Error
+
+    //    public const string ErrorInterno = "501";
+
+    //    public const string Error = "500";
+
+    //    #endregion Mensajes Informativos
+
+    //    #region Mensajes Informativos                
+
+    //    public const string CreadoCorrrectamente = "103";
+    //    public const string RecursoNoEncontrado = "104";
+
+    //    public const string ErrorEnviarCorreo = "107";
+    //    public const string ErrorGuardarCambios = "109";
+
+    //    #endregion Mensajes Informativos
+
+    //    #region Mensajes Exitoso
+
+    //    public const string OperacionExitosa = "200";
+    //    public const string EliminacionExitosa = "201";
+
+    //    #endregion Mensajes Exitoso
+
+    //    #region Mensajes Redireccion
+
+    //    #endregion Mensajes Redireccion
+
+    //    #endregion
+
+    //}
 
     public class GeneralCodes
     {
@@ -906,4 +974,73 @@ namespace asivamosffie.services.Helpers.Constant
 
         #endregion
     }
+
+    public class ConstantMessagesCargarEnlaceMonitoreo
+    {
+
+        #region Mensajes Informativos
+               
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        
+        public const string OperacionExitosa = "200";        
+        
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+        #endregion Mensajes Redireccion
+
+        #region 
+        public const string Error = "500";
+        //public const string ErrorInterno = "501";
+                
+        #endregion
+    }
+
+    public class ConstantMessagesContractualNovelty
+    {
+        #region Mensajes Error
+
+
+        public const string ErrorInterno = "501";
+
+        public const string Error = "500";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Informativos
+
+
+        //public const string CamposIncompletos = "101";
+        public const string EditadoCorrrectamente = "102";
+        public const string CreadoCorrrectamente = "103";
+        public const string RecursoNoEncontrado = "104";
+        public const string CorreoEnviado = "101";
+
+        public const string ErrorEnviarCorreo = "107";
+        public const string ErrorGuardarCambios = "109";
+
+        #endregion Mensajes Informativos
+
+        #region Mensajes Exitoso
+
+        public const string OperacionExitosa = "200";
+        public const string EliminacionCancelada = "202";
+        public const string EliminacionExitosa = "201";
+
+        #endregion Mensajes Exitoso
+
+        #region Mensajes Redireccion
+
+
+
+        #endregion Mensajes Redireccion
+
+    }
 }
+#endregion

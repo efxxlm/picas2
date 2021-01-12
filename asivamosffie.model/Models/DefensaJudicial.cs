@@ -41,6 +41,8 @@ namespace asivamosffie.model.Models
         public bool? EsDemandaFfie { get; set; }
         public int? NumeroDemandantes { get; set; }
         public string UrlSoporteProceso { get; set; }
+        public int? NumeroDemandados { get; set; }
+        public bool? ExisteConocimiento { get; set; }
 
         public virtual ICollection<DefensaJudicialContratacionProyecto> DefensaJudicialContratacionProyecto { get; set; }
         public virtual ICollection<DefensaJudicialSeguimiento> DefensaJudicialSeguimiento { get; set; }

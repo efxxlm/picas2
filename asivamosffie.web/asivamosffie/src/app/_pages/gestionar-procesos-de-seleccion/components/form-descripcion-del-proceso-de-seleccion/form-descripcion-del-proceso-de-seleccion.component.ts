@@ -104,7 +104,7 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
+    
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
@@ -449,14 +449,23 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     console.log(limite[1]);
     let maximo=parseInt(limite[1])*parseInt(this.listaSalarioMinimo[0].descripcion);
     let minimo=parseInt(limite[0])*parseInt(this.listaSalarioMinimo[0].descripcion);
+    console.log("maximo "+maximo);
+    console.log("minimo "+minimo);
+    console.log(this.addressForm.controls.grupos.value);
     const listaGrupo = this.addressForm.get('grupos') as FormArray;
     if(caso==1)
     {
-      if(this.addressForm.controls.grupos.value[i].valor>maximo
+      //ahora debo tener en cuenta la sumatoria de los grupos
+      let valor=0;
+      
+      this.addressForm.controls.grupos.value.forEach(element => {
+        valor+=element.valor;
+      });
+      console.log(valor);
+      if(valor>maximo
         ||
-        this.addressForm.controls.grupos.value[i].valor<minimo)
+        valor<minimo)
       {        
-        
         console.log(listaGrupo.controls[i]);
         listaGrupo.controls[i].get("valor").setValue(0);
         this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
@@ -464,18 +473,29 @@ export class FormDescripcionDelProcesoDeSeleccionComponent implements OnInit {
     }
     else if(caso==2)
     {
-      if(this.addressForm.controls.grupos.value[i].valorMaximoCategoria>maximo
+      //ahora debo tener en cuenta la sumatoria de los grupos
+      let valor=0;
+      this.addressForm.controls.grupos.value.forEach(element => {
+        valor+=element.valorMaximoCategoria;
+      });
+      console.log(valor);
+      if(valor>maximo
         ||
-        this.addressForm.controls.grupos.value[i].valorMaximoCategoria<minimo)
+        valor<minimo)
       {
         listaGrupo.controls[i].get("valorMaximoCategoria").setValue(0);
         this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");
       }
     }
     else{
-      if(this.addressForm.controls.grupos.value[i].valorMinimoCategoria > maximo
+      let valor=0;
+      this.addressForm.controls.grupos.value.forEach(element => {
+        valor+=element.valorMaximoCategoria;
+      });
+      console.log(valor);
+      if(valor > maximo
         ||
-        this.addressForm.controls.grupos.value[i].valorMinimoCategoria < minimo)
+        valor < minimo)
       {
         listaGrupo.controls[i].get("valorMinimoCategoria").setValue(0);
         this.openDialog("","<b>El valor de salarios mínimos no corresponde con el tipo de proceso de selección. Verifique por favor.</b>");

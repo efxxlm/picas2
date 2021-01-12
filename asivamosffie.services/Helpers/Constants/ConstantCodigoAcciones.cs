@@ -214,5 +214,29 @@
         public const string Crear_Editar_Observacion_Perfil = "143";
         public const string Aprobar_Inicio_Construccion = "144";
 
+        public const string Cambiar_Estado_Verificacion_Construccion = "157";
+
+
+        //CU 4_4_1
+        public const string Crear_seguimiento_actuacion_derivada = "168";
+        public const string Cambiar_estado_actuacion_derivada = "169";
+        public const string Eliminar_Controversia_Actuacion_Derivada = "170";
+        public const string  Notificacion_Actuacion_Derivada= "171";     
+                      
+            
+        
+        public const string Crear_Editar_Defensa_Judicial = "156";
+        public const string Eliminar_Defensa_Judicial = "159";
+        public const string Enviar_Defensa_Judicial = "177";
+
+        //4.4.1 Registrar actuaciones de controversias contractuales
+        public const string  Crear_Editar_Novedad_Contractual= "163";
+        public const string  Notificación_Novedad_Contractual= "164";
+        public const string  Eliminar_Novedad_Contractual= "165";
+
+
+        //4.1.1
+        public const string Editar_crear_url = "178";
+        public const string Visita_url = "179";
     }
 }

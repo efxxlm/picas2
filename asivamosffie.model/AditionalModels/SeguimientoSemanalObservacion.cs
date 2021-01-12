@@ -10,5 +10,8 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public bool TieneObservacion { get; set; }
+
+        //[NotMapped]
+        //public string NumeroSolicitudFormat { get; set; }
     }
 }

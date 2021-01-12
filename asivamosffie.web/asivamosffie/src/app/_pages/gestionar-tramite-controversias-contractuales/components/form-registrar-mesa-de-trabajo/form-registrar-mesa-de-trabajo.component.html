@@ -56,11 +56,11 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)" formControlName="actuacionAdelantada">
+                                    required (onContentChanged)="maxLength($event, 500)" formControlName="actuacionAdelantada" #actuacionAdelantada>
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.actuacionAdelantada.value">
-                                {{500 - textoLimpio(addressForm.controls.actuacionAdelantada.value)}}
+                                {{500 - (textoLimpio(actuacionAdelantada.quillEditor,500))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.actuacionAdelantada.value">
                                 500
@@ -84,11 +84,11 @@
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
                                 <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)" formControlName="proximaActuacionRequerida">
+                                    required (onContentChanged)="maxLength($event, 500)" formControlName="proximaActuacionRequerida" #proximaActuacionRequerida>
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.proximaActuacionRequerida.value">
-                                {{500 - textoLimpio(addressForm.controls.proximaActuacionRequerida.value)}}
+                                {{500 - (textoLimpio(proximaActuacionRequerida.quillEditor,500))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.proximaActuacionRequerida.value">
                                 500
@@ -110,7 +110,7 @@
                                     formControlName="diasVencimientoTerminos" required>
                             </mat-form-field>
                             <span class="contador miles" *ngIf="addressForm.controls.diasVencimientoTerminos.value">
-                                {{7 - textoLimpio(addressForm.controls.diasVencimientoTerminos.value)}}
+                                {{7 - (addressForm.get('diasVencimientoTerminos').value?addressForm.get('diasVencimientoTerminos').value.toString().length:0)}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.diasVencimientoTerminos.value">
                                 7
@@ -145,6 +145,34 @@
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
+                            <label class="label-left" for="observaciones">Observaciones</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div>
+                        <div class="d-flex align-items-center">
+                            <div class="text-area-quill auxBox">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
+                                {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                            </span>
+                            <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
+                                1000
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="padding-left: 0;">
+                    <div class="row">
+                        <div class="pr-1">
                             <label class="label-left" for="resultadoDefinitivo">¿La mesa de trabajo tiene resultado definitivo y se considera cerrado el trámite?</label>
                         </div>
                         <div class="col">
@@ -152,7 +180,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
@@ -160,7 +188,7 @@
         </mat-card-content>
     </mat-card>
     <mat-card class="shipping-card">
-        <mat-card-header class="header-card">
+        <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">
                 Soporte de la actuación
             </mat-card-title>
@@ -177,7 +205,7 @@
                                 <input matInput #urlSoporte type="text" 
                                     formControlName="urlSoporte" required>
                             </mat-form-field>
-                            <div align="center">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite</div>
+                            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite</span>
                         </div>
                     </div>
                 </div>

@@ -13,7 +13,7 @@ import { ProjectService } from 'src/app/core/_services/project/project.service';
 export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
   numeroSolicitud: any;
   objeto: any;
-  observaciones: any;
+  observaciones: any[];
   aportantesList: any;
   tipoSolicitudColdigo: string;
   public listaProyectos;
@@ -45,6 +45,7 @@ export class DetalleDisponibilidadPresupuestalComponent implements OnInit {
       this.plazoDias = data0.plazoDias;
       this.plazoMeses = data0.plazoMeses;
       this.fechaComite =data0.contratacionId&&data0.fechaComiteTecnicoNotMapped!='0001-01-01T00:00:00'?data0.fechaComiteTecnicoNotMapped:"";
+      this.observaciones=data0.disponibilidadPresupuestalObservacion
       //this.fechaComite = data0.disponibilidadPresupuestalProyecto[0].proyecto['fechaComite'];
       data0.disponibilidadPresupuestalProyecto.forEach(element => {
         this.cargarServicio2(element.proyectoId);

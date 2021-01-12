@@ -32,6 +32,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         DRPNotificacion = 33,
         DDPCancelado = 34,
         DRPCancelado = 35,
+        AlertaParticipacionJuridica4_2_1=52,
         AprobarInicio316 = 36,
         AprobarPoliza4diasNoGestion = 37,
         EnviarSupervisor317 = 38, 
@@ -41,6 +42,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         ConActaSinDocumento319 = 43, 
         VerificacionRequisitosTecnicosConstruccionFase2=44,
         EnviarActaParaFirmar319 = 45,
+
+        AlertaJuridicaDerivadaCumplida4_4_1= 51	,
         EnviarActaCargada319 = 46,
         Notificarinterventor=48,
         ObservacionesActaInicioFase2=50,

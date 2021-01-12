@@ -154,13 +154,19 @@ namespace asivamosffie.services.Helpers
             {
                 return $"{"ACTCRONO"}{(number).ToString("D4")}";
             }
-
+            //DefensaJudicial
+            if (input == "DJ")
+            {
+                return $"{"DJ"}-{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
 
             //Invitacion Abierta SA
             else
             {
                 return $"{"SA"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
             }
+
+            
         }
 
         //TODO: Implementacion para cosultas complejas

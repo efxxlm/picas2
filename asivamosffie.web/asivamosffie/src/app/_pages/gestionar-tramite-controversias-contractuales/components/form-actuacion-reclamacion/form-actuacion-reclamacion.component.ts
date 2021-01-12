@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { CommonService, Dominio } from 'src/app/core/_services/common/common.service';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,7 +13,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormActuacionReclamacionComponent implements OnInit {
   @Input() isEditable;
- 
+  @Input() idReclamacionActuacion;
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
+  public reclamacionID = parseInt(localStorage.getItem("reclamacionID"));
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -22,15 +27,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     definitvoAseguradora: [null, Validators.required],
     urlSoporte: [null, Validators.required]
   });
-  estadoAvanceTramiteArray = [
-    { name: 'Aprobación de Comunicación de Inicio de TAI', value: '1' },
-  ];
-  actuacionAdelantadaArray = [
-    { name: 'Actuación 1', value: '1' },
-  ];
-  proximaActuacionRequeridaArray = [
-    { name: 'Otro', value: '1' },
-  ];
+  estadoAvanceTramiteArrayDom: Dominio[] = [];
   editorStyle = {
     height: '50px'
   };
@@ -42,16 +39,26 @@ export class FormActuacionReclamacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(private services: ContractualControversyService, private common: CommonService, private fb: FormBuilder, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit(): void {
-    if(this.isEditable==true){
-      this.addressForm.get('estadoAvanceTramite').setValue('1');
-      this.addressForm.get('fechaActuacionAdelantada').setValue('10/10/2020');
-      this.addressForm.get('actuacionAdelantada').setValue('Prueba');
-      this.addressForm.get('proximaActuacionRequerida').setValue('Cuando sea necesario');
-      this.addressForm.get('diasVencimientoTerminos').setValue('3');
-      this.addressForm.get('definitvoAseguradora').setValue(true);
+    this.common.listaEstadosAvanceTramite().subscribe(rep => {
+      this.estadoAvanceTramiteArrayDom = rep;
+    });
+    if (this.isEditable == true) {
+      this.services.GetActuacionSeguimientoById(this.idReclamacionActuacion).subscribe((data: any) => {
+        const avanceTramSelected = this.estadoAvanceTramiteArrayDom.find(t => t.codigo === data.estadoReclamacionCodigo);
+        console.log( this.estadoAvanceTramiteArrayDom.filter(t => t.codigo === data.estadoReclamacionCodigo));
+        this.addressForm.get('estadoAvanceTramite').setValue(avanceTramSelected);
+        this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacionAdelantada);
+        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada);
+        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacion);
+        this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento);
+        this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
+        this.addressForm.get('definitvoAseguradora').setValue(data.esResultadoDefinitivo);
+        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+      });
     }
   }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -61,14 +68,15 @@ export class FormActuacionReclamacionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
+    
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n-1, e.editor.getLength());
     }
   }
-
-  textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+  textoLimpio(texto,n) {
+    if (texto!=undefined) {
+      return texto.getLength() > n ? n : texto.getLength();
+    }
   }
 
   openDialog(modalTitle: string, modalText: string) {
@@ -79,7 +87,58 @@ export class FormActuacionReclamacionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
-    this.openDialog('', 'La información ha sido guardada exitosamente.');
+    let actuacionTaiArray;
+    if (this.isEditable == true) {
+      actuacionTaiArray = {
+        "ControversiaActuacionId": this.reclamacionID,
+        "SeguimientoCodigo": true,
+        "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
+        "ProximaActuacion": this.addressForm.value.proximaActuacionRequerida,
+        "Observaciones": this.addressForm.value.observaciones,
+        "EstadoDerivadaCodigo": "1",
+        "RutaSoporte": this.addressForm.value.urlSoporte,
+        "FechaCreacion": "2020-01-01",
+        "UsuarioCreacion": "us cre",
+        "UsuarioModificacion": "us modif",
+        "EsResultadoDefinitivo": this.addressForm.value.definitvoAseguradora,
+        "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
+        "Eliminado": false,
+        "FechaModificacion": "2020-01-01",
+        "FechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
+        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
+        "ActuacionSeguimientoId": this.idReclamacionActuacion
+      }
+    }
+    else {
+      actuacionTaiArray = {
+        "ControversiaActuacionId": this.reclamacionID,
+        "SeguimientoCodigo": true,
+        "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
+        "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
+        "ProximaActuacion": this.addressForm.value.proximaActuacionRequerida,
+        "Observaciones": this.addressForm.value.observaciones,
+        "EstadoDerivadaCodigo": "1",
+        "RutaSoporte": this.addressForm.value.urlSoporte,
+        "FechaCreacion": "2020-01-01",
+        "UsuarioCreacion": "us cre",
+        "UsuarioModificacion": "us modif",
+        "EsResultadoDefinitivo": this.addressForm.value.definitvoAseguradora,
+        "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
+        "Eliminado": false,
+        "FechaModificacion": "",
+        "FechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
+        "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos
+      }
+    }
+    this.services.CreateEditarActuacionSeguimiento(actuacionTaiArray).subscribe((data: any) => {
+      if (data.isSuccessful == true) {
+        this.openDialog("", data.message);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora']);
+      }
+      else {
+        this.openDialog("", data.message);
+      }
+    });
   }
 }

@@ -9,6 +9,7 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
   providedIn: 'root'
 })
 export class ContratosModificacionesContractualesService {
+  
 
   url: string = environment.apiUrl;
 
@@ -41,3 +42,4 @@ export class ContratosModificacionesContractualesService {
   };
 
 };
+

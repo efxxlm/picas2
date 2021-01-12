@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 
 @Component({
   selector: 'app-control-y-tabla-actuacion-reclamacion',
@@ -22,40 +23,30 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     'estadoActuacion',
     'gestion',
   ];
-  dataTable: any[] = [
-    {
-      fechaActualizacion: '20/08/2020',
-      actuacion: 'Actuación 1',
-      numeroActuacion: 'ACT_REC 0001',
-      estadoRegistro: '1',
-      estadoActuacion: '1',
-      id: 1
-    },
-    {
-      fechaActualizacion: '21/08/2020',
-      actuacion: 'Actuación 2',
-      numeroActuacion: 'ACT_REC 0002',
-      estadoRegistro: '2',
-      estadoActuacion: '2',
-      id: 2
-    }
-  ];  
-  constructor(private router: Router) { }
+  dataTable: any[] = [];  
+  public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
+  constructor(private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    this.services.GetListGrillaControversiaActuacion(this.reclamacionId).subscribe((data:any)=>{
+      this.dataTable = data;
+      this.dataSource = new MatTableDataSource(this.dataTable);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+    });
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   enviarComiteTecnicoTramAct(id){
-
+    this.services.CambiarEstadoActuacionSeguimiento(id,"2").subscribe((resp:any)=>{
+      this.ngOnInit();
+    });
   }
-  verDetalleEditarActuacion(id){
+  verDetalleEditarActuacion(id,actR){
+    localStorage.setItem('actuacionReclamacion',actR);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarActuacionReclamacion',id]);
   }
   eliminarActuacion(id){

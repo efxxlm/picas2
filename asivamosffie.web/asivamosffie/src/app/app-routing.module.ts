@@ -1,5 +1,5 @@
 import { GestionarAcuerdoCofinanciacionRoutingModule } from './_pages/gestionar-acuerdo-cofinanciacion/gestionar-acuerdo-cofinanciacion-routing.module';
-import { CambiarContrasenaModule } from './_pages/cambiar-contrasena/cambiar-contrasena.module';
+
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules, PreloadingStrategy } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -83,12 +83,6 @@ const routes: Routes = [
 
       },
       {
-        path: 'cargarMasivamente',
-        // tslint:disable-next-line: max-line-length
-        loadChildren: () => import('./_pages/cargar-masivamente-proyectos-viabilizados/cargar-masivamente-proyectos-viabilizados.module')
-          .then(m => m.CargarMasivamenteProyectosViabilizadosModule),
-      },
-      {
         path: 'gestionarFuentes',
         loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
         .then(m => m.GestionarFuentesDeFinanciacionModule)
@@ -98,6 +92,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/generar-registro-presupuestal/generar-registro-presupuestal.module')
         .then(m => m.GenerarRegistroPresupuestalModule),
 
+      },
+      {
+        path: 'generarActaInicioFaseIPreconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
+        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
       },
       {
         path: 'generarActaInicioFaseIPreconstruccion',
@@ -170,6 +169,11 @@ const routes: Routes = [
         .then(m => m.FasePreconstruccionModule)
       },
       {
+        path: 'generarDisponibilidadPresupuestal',
+        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
+        .then(m => m.GenerarDisponibilidadPresupuestalModule)
+      },
+      {
         path: 'verificarPreconstruccion',
         loadChildren: () => import('./_pages/verificar-preconstruccion/verificar-preconstruccion.module')
         .then(m => m.VerificarPreconstruccionModule)
@@ -180,18 +184,15 @@ const routes: Routes = [
         .then(m => m.AprobarPreconstruccionModule)
       },
       {
-        path: 'generarDisponibilidadPresupuestal',
-        loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
-        .then(m => m.GenerarDisponibilidadPresupuestalModule),
-
-      },
-      {
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
-          .then( module => module.CompromisosActasComiteModule ),
-
-
+          .then( module => module.CompromisosActasComiteModule )
       },
+	  {
+        path: 'generarActaInicioConstruccion',
+        loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
+        .then(m => m.GestionarActaInicioFdosConstrModule)
+    },
       {
         path: 'registroSeguimientoDiario',
         loadChildren: () => import('./_pages/registro-seguimiento-diario/registro-seguimiento-diario.module')
@@ -230,16 +231,46 @@ const routes: Routes = [
           .then( module => module.VerificarAvanceSemanalModule )
       },
       {
+        path: 'requisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
+          .then( module => module.RequisitosTecnicosConstruccionModule )
+      },      
+      {
         path: 'validarAvanceSemanal',
         loadChildren: () => import( './_pages/validar-avance-semanal/validar-avance-semanal.module' )
           .then( module => module.ValidarAvanceSemanalModule )
       },
       {
-        path: 'requisitosTecnicosConstruccion',
-        loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
-          .then( module => module.RequisitosTecnicosConstruccionModule )
-      }, 
-      
+        path: 'cargarEnlaceMonitoreoEnLinea',
+        loadChildren: () => import( './_pages/cargar-enlace-sistema-monitoreo-linea/cargar-enlace-sistema-monitoreo-linea.module' )
+          .then( module => module.CargarEnlaceSistemaMonitoreoLineaModule )
+      },      
+      {    
+        path: 'visualizarAvanceObraTiempoReal',
+        loadChildren: () => import( './_pages/visualizar-avance-obra-tiempo-real/visualizar-avance-obra-tiempo-real.module' )
+          .then( module => module.VisualizarAvanceObraTiempoRealModule )
+      },
+      {
+        path: 'registrarActuacionesControversiasContractuales',
+        loadChildren: () => import('./_pages/registrar-actuacion-controv-contrc/registrar-actuacion-controv-contrc.module')
+        .then(m => m.RegistrarActuacionControvContrcModule)
+      },
+      {
+        path: 'gestionarTramiteControversiasContractuales',
+        loadChildren: () => import( './_pages/gestionar-tramite-controversias-contractuales/gestionar-tramite-controversias-contractuales.module' )
+          .then( module => module.GestionarTramiteControversiasContractualesModule ),
+
+      },
+      {
+        path: 'programacionPersonalObra',
+        loadChildren: () => import( './_pages/programacion-personal-obra/programacion-personal-obra.module' )
+          .then( module => module.ProgramacionPersonalObraModule )
+      },
+      {
+        path: 'registrarAvanceSemanal',
+        loadChildren: () => import( './_pages/registrar-avance-semanal/registrar-avance-semanal.module' )
+          .then( module => module.RegistrarAvanceSemanalModule )
+      }
     ]
 
   },
