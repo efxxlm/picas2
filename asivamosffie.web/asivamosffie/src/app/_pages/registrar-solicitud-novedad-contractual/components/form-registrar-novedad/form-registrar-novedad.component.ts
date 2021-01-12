@@ -39,7 +39,7 @@ export class FormRegistrarNovedadComponent implements OnInit {
     ]
   });
 
-  instanciaSeguimientoTecnico = InstanciasSeguimientoTecnico;
+  instanciaSeguimientoTecnico = InstanciasSeguimientoTecnico; 
   tiposNovedadModificacionContractual=TiposNovedadModificacionContractual;
 
   get plazoSolicitadoField() {
