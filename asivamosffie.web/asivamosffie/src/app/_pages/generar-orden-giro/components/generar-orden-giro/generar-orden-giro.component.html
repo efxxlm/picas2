@@ -46,11 +46,15 @@
                 </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 20%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center"> 
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.generarOrden(element.gestion)"
                     *ngIf="element.estadoGeneracion=='Sin generación'">
                         Generar orden de giro
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" (click)="this.devolverSolicitud()"
+                    *ngIf="element.estadoGeneracion=='En proceso de generación'">
+                        Enviar para verificación orden de giro
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.devolverSolicitud()"
                     *ngIf="element.estadoGeneracion=='En proceso de generación'">

@@ -45,7 +45,7 @@
             <div formArrayName="descuentos" *ngIf="addressForm.get( 'numeroDescuentos' ).value !== null">
                 <div *ngFor="let descuento of descuentos.controls; index as i">
                     <mat-card-title class="header-card--text sub-text">
-                        Aportante {{i+1}}
+                        Descuento {{i+1}}
                     </mat-card-title>
                     <div [formGroup]="descuento">
                         <div class="row">
