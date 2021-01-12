@@ -1,3 +1,4 @@
+import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -17,6 +18,7 @@ export class DialogCargarActaComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
         @Inject(MAT_DIALOG_DATA) public data )
     {
         this.crearFormulario();
@@ -58,7 +60,14 @@ export class DialogCargarActaComponent implements OnInit {
         pFile = pFile.name.split('.');
         pFile = pFile[pFile.length - 1];
         if ( pFile === this.tipoArchivoPermitido ) {
-            console.log( 'falta servicio...' );
+            const pContratacionProyecto = new FormData();
+            pContratacionProyecto.append( 'pFile', inputNode.files[0] );
+            pContratacionProyecto.append( 'contratacionProyectoId', this.data.registro.contratacionProyectoId );
+            this.avanceSemanalSvc.uploadContractTerminationCertificate( pContratacionProyecto )
+                .subscribe(
+                    response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                );
         } else {
             this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .pdf</b>');
             return;

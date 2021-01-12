@@ -51,6 +51,7 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
             .subscribe(
                 listas => {
                     this.dataTable = listas;
+                    console.log( this.dataTable );
                     this.tablaRegistro = new MatTableDataSource( this.dataTable );
                     this.tablaRegistro.sort = this.sort;
                     this.tablaRegistro.paginator = this.paginator;
