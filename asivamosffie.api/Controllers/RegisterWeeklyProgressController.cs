@@ -33,7 +33,7 @@ namespace asivamosffie.api.Controllers
             AppSettingsService appSettingsService = new AppSettingsService
             {
                 DirectoryBase = appSettings.Value.DirectoryBase,
-                MailServer = appSettings.Value.DirectoryRutaCargaActaTerminacionContrato, 
+                DirectoryRutaCargaActaTerminacionContrato = appSettings.Value.DirectoryRutaCargaActaTerminacionContrato, 
             };
             return appSettingsService;
         }
