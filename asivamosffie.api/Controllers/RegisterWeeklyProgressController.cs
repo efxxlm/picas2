@@ -112,7 +112,7 @@ namespace asivamosffie.api.Controllers
       
         [HttpPost]
         [Route("UploadContractTerminationCertificate")]
-        public async Task<IActionResult> UploadContractTerminationCertificate([FromBody] ContratacionProyecto pContratacionProyecto)
+        public async Task<IActionResult> UploadContractTerminationCertificate([FromForm] ContratacionProyecto pContratacionProyecto)
         {
             Respuesta respuesta = new Respuesta();
             try
