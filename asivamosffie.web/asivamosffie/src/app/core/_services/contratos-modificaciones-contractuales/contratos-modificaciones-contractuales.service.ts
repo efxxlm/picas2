@@ -9,6 +9,7 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
   providedIn: 'root'
 })
 export class ContratosModificacionesContractualesService {
+  
 
   url: string = environment.apiUrl;
 
@@ -40,4 +41,24 @@ export class ContratosModificacionesContractualesService {
     return this.http.post<Respuesta>( `${ this.url }/RegisterContractsAndContractualModifications/RegistrarTramiteContrato?pEstadoCodigo=${ pEstadoCodigo }`, pContrato );
   };
 
-};
+
+  getContratosAutocomplete()
+  {
+    return this.http.get<Contrato[]>( `${ this.url }/ContractualModification/GetListContract` ); 
+  }
+
+  postRegistroNovedadContractual( pNContrato: FormData) {
+    return this.http.post<Respuesta>( `${ this.url }/ContractualModification/CreateEditarModification`, pNContrato );
+  }
+
+  
+  getListGrillaNovedadContractual()
+  {
+    return this.http.get( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
+  }
+
+  getProyectosContrato(ncontrato) {
+    return this.http.get<any[]>( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
+  }
+
+}

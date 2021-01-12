@@ -215,6 +215,14 @@ export class CommonService {
     return this.http.get<Dominio[]>( `${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=75` );
   }
 
+  listaInstanciasdeSeguimientoTecnico(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=76`);
+  }
+
+  listaTipoNovedadModificacionContractual(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=76`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];
@@ -361,4 +369,31 @@ export const TiposAportante: TipoAportante = {
   Tercero:["10"]
 }
 
+interface InstanciaSeguimientoTecnico{
+  ComitedeObra: string[];
+  ComitedeAsesores: string[];
+  NoAplica: string[];
+}
 
+export const InstanciasSeguimientoTecnico: InstanciaSeguimientoTecnico = {
+  ComitedeObra:   ["1"],
+  ComitedeAsesores:     ["2"],
+  NoAplica:["3"]
+}
+
+
+interface TipoNovedadModificacionContractual{
+  Suspension: string[];
+  ProrrogaSuspension: string[];
+  Adicion: string[];
+  Prorroga: string[];
+  ModificacionCondicionesContractuales: string[];
+}
+
+export const TiposNovedadModificacionContractual: TipoNovedadModificacionContractual = {
+  Suspension: ["1"],
+  ProrrogaSuspension:["2"],
+  Adicion: ["3"],
+  Prorroga: ["4"],
+  ModificacionCondicionesContractuales: ["5"]
+}

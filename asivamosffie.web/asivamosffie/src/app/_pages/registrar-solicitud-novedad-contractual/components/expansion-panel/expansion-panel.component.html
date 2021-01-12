@@ -1,0 +1,30 @@
+<div class="text-center">
+  <p class="info-container">
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
+</div>
+
+<mat-accordion>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title"
+        [ngClass]="{'sin-diligenciar':true,'en-proceso':false,'completo':false}">
+        Registrar novedad
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <app-form-registrar-novedad></app-form-registrar-novedad>
+
+  </mat-expansion-panel>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title "
+        [ngClass]="{'sin-diligenciar':true,'en-proceso':false,'completo':false, 'en-alerta':false}">
+        Soporte de la solicitud
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-form-soporte-solicitud></app-form-soporte-solicitud>
+  </mat-expansion-panel>
+</mat-accordion>

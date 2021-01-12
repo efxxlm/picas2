@@ -163,7 +163,8 @@ namespace asivamosffie.api
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IActBeginService, ActBeginService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
-            
+            services.AddTransient<IContractualModification, ContractualModificationService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

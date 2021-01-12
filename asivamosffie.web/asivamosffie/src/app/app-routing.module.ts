@@ -92,6 +92,7 @@ const routes: Routes = [
         path: 'gestionarFuentes',
         loadChildren: () => import('./_pages/gestionar-fuentes-de-financiacion/gestionar-fuentes-de-financiacion.module')
         .then(m => m.GestionarFuentesDeFinanciacionModule)
+
       },
       {
         path: 'generarRegistroPresupuestal',
@@ -180,6 +181,11 @@ const routes: Routes = [
         .then(m => m.AprobarPreconstruccionModule)
       },
       {
+        path: 'generarActaInicioFaseIPreconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
+        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
+      },
+      {
         path: 'generarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
         .then(m => m.GenerarDisponibilidadPresupuestalModule),
@@ -189,8 +195,6 @@ const routes: Routes = [
         path: 'compromisosActasComite',
         loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
           .then( module => module.CompromisosActasComiteModule ),
-
-
       },
       {
         path: 'registroSeguimientoDiario',
@@ -213,6 +217,17 @@ const routes: Routes = [
         loadChildren: () => import( './_pages/gestionar-tramite-controversias-contractuales/gestionar-tramite-controversias-contractuales.module' )
           .then( module => module.GestionarTramiteControversiasContractualesModule ),
 
+      },
+      {
+        path: 'registrarSolicitudNovedadContractual',
+        loadChildren: () => import('./_pages/registrar-solicitud-novedad-contractual/registrar-solicitud-novedad-contractual.module')
+        .then(m => m.RegistrarSolicitudNovedadContractualModule),
+      },
+	    {
+
+        path: 'generarActaInicioConstruccion',
+        loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
+        .then(m => m.GestionarActaInicioFdosConstrModule)
       },
       {
         path: 'programacionPersonalObra',

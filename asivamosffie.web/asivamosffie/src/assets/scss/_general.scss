@@ -111,6 +111,14 @@ strong {
 }
 
 .mt-05em {
+  margin-top: 0.5em !important;
+}
+
+.mb-05em {
+  margin-bottom: .5em !important;
+}
+
+.mt-05em {
   margin-top: .5em !important;
 }
 
@@ -139,6 +147,10 @@ strong {
   margin-right: 1em;
 }
 
+.ml-05 {
+  margin-left: 0.5em !important;
+}
+
 .pl-0 {
   padding-left: 0 !important;
 }
@@ -158,6 +170,10 @@ strong {
 
 .pt-1 {
   padding-top: 0.5em;
+}
+
+.pt-3em {
+  padding-top: 3em;
 }
 
 .pr-3em {
@@ -254,7 +270,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .d-block {
-  display: block;
+  display: block !important;
 }
 
 .font-weight-bold {

@@ -49,6 +49,37 @@ td.mat-footer-cell {
   border-bottom-color: $mainColor;
 }
 
+.table-gris {
+  th.mat-header-cell {
+    background-color: $fontColor;
+  }
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type,
+  td.mat-footer-cell:first-of-type {
+    border-left: solid 1px $fontColor;
+  }
+
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type,
+  td.mat-footer-cell:last-of-type {
+    border-right: solid 1px $fontColor;
+  }
+
+  .mat-cell,
+  .mat-footer-cell {
+    color: $fontColor;
+  }
+
+  mat-row,
+  mat-header-row,
+  mat-footer-row,
+  th.mat-header-cell,
+  td.mat-cell,
+  td.mat-footer-cell {
+    border-bottom-color: $fontColor;
+  }
+}
+
 table {
   width: 100%;
 }
@@ -164,6 +195,14 @@ div.mat-paginator {
   width: 100%;
   min-width: 9em;
 
+  @media only screen and (max-width: 48em) {
+    display: inherit;
+
+    &::after {
+      right: 0.4em;
+    }
+  }
+
   &.btn-table--sm {
     width: 7em;
     min-width: 7em;
@@ -249,5 +288,5 @@ div.mat-paginator {
 
 .table-responsive {
   overflow: auto;
-  padding: .5em 0;
+  padding: 0.5em 0;
 }
