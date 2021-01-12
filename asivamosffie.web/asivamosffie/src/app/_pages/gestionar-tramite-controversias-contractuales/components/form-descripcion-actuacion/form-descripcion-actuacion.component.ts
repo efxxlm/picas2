@@ -30,9 +30,15 @@ export class FormDescripcionActuacionComponent implements OnInit {
     observaciones: [null, Validators.required],
     urlSoporte: [null, Validators.required]
   });
-  estadoAvanceTramiteArrayDom: Dominio[] = [];
-  proximaActuacionRequeridaArrayDom: Dominio[] = [];
-  actuacionAdelantadaArrayDom: Dominio[] = [];
+  estadoAvanceTramiteArrayDom= [
+
+  ];
+  proximaActuacionRequeridaArrayDom  = [
+
+  ];
+  actuacionAdelantadaArrayDom = [
+
+  ];
 
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   editorStyle = {
@@ -119,13 +125,8 @@ export class FormDescripcionActuacionComponent implements OnInit {
         "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
         "ProximaActuacionOtro": this.addressForm.value.cualOtro,
         "Observaciones": this.addressForm.value.observaciones,
-        //"ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        //"FechaCreacion": "2020-3-3",
-        //"UsuarioCreacion": "US CRE w",
-        //"UsuarioModificacion": "US MODIF w",
-        //"EsCompleto": true,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -139,7 +140,6 @@ export class FormDescripcionActuacionComponent implements OnInit {
         "EsRequiereComiteReclamacion": "",
         "EsprocesoResultadoDefinitivo": "",
         "EsRequiereMesaTrabajo": "",
-        //"Eliminado": false,
         "ControversiaActuacionId": parseInt(this.idActuacionFromEdit)
       }
     }
@@ -151,13 +151,8 @@ export class FormDescripcionActuacionComponent implements OnInit {
         "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
         "ProximaActuacionOtro": this.addressForm.value.cualOtro,
         "Observaciones": this.addressForm.value.observaciones,
-        //"ResumenPropuestaFiduciaria": "ResumenPropuestaFiduciaria w",
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
-        //"FechaCreacion": "2020-3-3",
-        //"UsuarioCreacion": "US CRE w",
-        //"UsuarioModificacion": "US MODIF w",
-        //"EsCompleto": true,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "FechaActuacion":this.addressForm.value.fechaActuacionAdelantada,
@@ -171,7 +166,6 @@ export class FormDescripcionActuacionComponent implements OnInit {
         "EsRequiereComiteReclamacion": "",
         "EsprocesoResultadoDefinitivo": "",
         "EsRequiereMesaTrabajo": "",
-        //"Eliminado": false
       }
     }
     this.services.CreateEditControversiaOtros(actuacionTaiArray).subscribe((data: any) => {

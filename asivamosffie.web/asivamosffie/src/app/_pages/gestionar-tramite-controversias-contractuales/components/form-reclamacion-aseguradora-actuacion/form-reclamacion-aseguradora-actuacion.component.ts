@@ -73,7 +73,6 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         "controversiaActuacionId":this.controversiaAct,
         "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
         "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
-        "esprocesoResultadoDefinitivo":true,
         "rutaSoporte":this.addressForm.value.urlSoporte,
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
@@ -85,7 +84,6 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       arrayReclam = { 
         "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
         "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
-        "esprocesoResultadoDefinitivo":true,
         "rutaSoporte":this.addressForm.value.urlSoporte,
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{

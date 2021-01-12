@@ -28,11 +28,15 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     motivosRechazo: ['', Validators.required],
     requeridoComite: [null, Validators.required],
     fechaRadicadoSAC: ['', Validators.required],
-    numeroRadicadoSAC: [0, Validators.required],
+    numeroRadicadoSAC: ['', Validators.required],
     resumenJustificacionSolicitud: ['', Validators.required]
   });
-  tipoControversiaArrayDom: Dominio[] = [];
-  motivosSolicitudArray: Dominio[] = [];
+  tipoControversiaArrayDom = [
+
+  ];
+  motivosSolicitudArray = [
+
+  ];
   editorStyle = {
     height: '50px'
   };

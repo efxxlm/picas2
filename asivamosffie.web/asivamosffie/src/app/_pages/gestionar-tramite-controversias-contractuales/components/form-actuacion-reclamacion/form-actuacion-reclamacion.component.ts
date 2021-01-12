@@ -27,7 +27,9 @@ export class FormActuacionReclamacionComponent implements OnInit {
     definitvoAseguradora: [null, Validators.required],
     urlSoporte: [null, Validators.required]
   });
-  estadoAvanceTramiteArrayDom: Dominio[] = [];
+  estadoAvanceTramiteArrayDom = [
+
+  ];
   editorStyle = {
     height: '50px'
   };
@@ -96,15 +98,9 @@ export class FormActuacionReclamacionComponent implements OnInit {
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
         "ProximaActuacion": this.addressForm.value.proximaActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
-        "EstadoDerivadaCodigo": "1",
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "FechaCreacion": "2020-01-01",
-        "UsuarioCreacion": "us cre",
-        "UsuarioModificacion": "us modif",
         "EsResultadoDefinitivo": this.addressForm.value.definitvoAseguradora,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
-        "Eliminado": false,
-        "FechaModificacion": "2020-01-01",
         "FechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos,
         "ActuacionSeguimientoId": this.idReclamacionActuacion
@@ -118,15 +114,9 @@ export class FormActuacionReclamacionComponent implements OnInit {
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
         "ProximaActuacion": this.addressForm.value.proximaActuacionRequerida,
         "Observaciones": this.addressForm.value.observaciones,
-        "EstadoDerivadaCodigo": "1",
         "RutaSoporte": this.addressForm.value.urlSoporte,
-        "FechaCreacion": "2020-01-01",
-        "UsuarioCreacion": "us cre",
-        "UsuarioModificacion": "us modif",
         "EsResultadoDefinitivo": this.addressForm.value.definitvoAseguradora,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,
-        "Eliminado": false,
-        "FechaModificacion": "",
         "FechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "FechaVencimiento": this.addressForm.value.fechaVencimientoTerminos
       }
