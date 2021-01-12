@@ -76,6 +76,7 @@ export class FormConvocadosPasivaDjComponent implements OnInit {
                 nomConvocado: [ null ],
                 tipoIdentificacion: [ null ],
                 numIdentificacion: [ null ],
+                conocimientoParteAutoridad: [ null ],
                 despacho: [ null ],
                 departamento: [ null ],
                 municipio: [ null ],

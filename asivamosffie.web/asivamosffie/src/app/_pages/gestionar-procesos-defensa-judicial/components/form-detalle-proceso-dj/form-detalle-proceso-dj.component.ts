@@ -20,7 +20,7 @@ export class FormDetalleProcesoDjComponent implements OnInit {
     tipoAccion: [null, Validators.required],
     jurisdiccion: [null, Validators.required],
     pretensiones: [null, Validators.required],
-    cuantiaPerjuicios: [null, Validators.required],
+    cuantiaPerjuicios: [null],
     requeridoParticipacionSupervisor: [null, Validators.required]
   });
   departamentoArray = [

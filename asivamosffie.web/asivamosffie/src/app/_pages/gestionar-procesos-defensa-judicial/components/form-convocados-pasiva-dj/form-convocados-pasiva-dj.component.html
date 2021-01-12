@@ -73,6 +73,24 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="pr-1">
+                                    <label class="label-left" for="conocimientoParteAutoridad">¿Existe conocimiento del
+                                        proceso por parte de la autoridad o un despacho de conocimiento?</label>
+                                </div>
+                                <div>
+                                    <mat-radio-group class="radioInput" formControlName="conocimientoParteAutoridad"
+                                        required>
+                                        <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                        <mat-radio-button [value]="false">No</mat-radio-button>
+                                    </mat-radio-group>
+                                    <span class="required-form-group" style="margin-left: 1px;">*</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
@@ -97,8 +115,10 @@
                                 </div>
                                 <div class="col">
                                     <mat-form-field class="select-width">
-                                        <mat-select formControlName="departamento" class="capitalize" (selectionChange)="changeDepartamento(i)" required>
-                                            <mat-option class="capitalize" *ngFor="let contr of departamentoArray" [value]="contr.localizacionId">
+                                        <mat-select formControlName="departamento" class="capitalize"
+                                            (selectionChange)="changeDepartamento(i)" required>
+                                            <mat-option class="capitalize" *ngFor="let contr of departamentoArray"
+                                                [value]="contr.localizacionId">
                                                 {{ contr.descripcion }}
                                             </mat-option>
                                         </mat-select>
@@ -116,7 +136,8 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="municipio" required>
-                                            <mat-option class="capitalize"  *ngFor="let contr of municipioArray" [value]="contr.localizacionId">
+                                            <mat-option class="capitalize" *ngFor="let contr of municipioArray"
+                                                [value]="contr.localizacionId">
                                                 {{ contr.descripcion }}
                                             </mat-option>
                                         </mat-select>
@@ -168,7 +189,8 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="pr-1">
-                                    <label class="label-left" for="accionAEvitar">Medio de Control/Acción a evitar</label>
+                                    <label class="label-left" for="accionAEvitar">Medio de Control/Acción a
+                                        evitar</label>
                                 </div>
                             </div>
                         </div>

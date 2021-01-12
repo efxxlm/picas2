@@ -113,7 +113,7 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
-                                <input matInput #cuantiaPerjuicios currencyMask maxlength="20" required
+                                <input matInput #cuantiaPerjuicios currencyMask maxlength="20"
                                     formControlName="cuantiaPerjuicios" (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
@@ -150,7 +150,7 @@
                         <div class="col d-flex align-items-center">
                             <mat-form-field class="example-full-width">
                                 <input matInput formControlName="fechaRadicado" [matDatepicker]="pickerFecha" readonly
-                                    (click)="pickerFecha.open()" required placeholder="DD/MM/AAAA">
+                                    (click)="pickerFecha.open()" placeholder="DD/MM/AAAA">
                                 <mat-datepicker #pickerFecha></mat-datepicker>
                             </mat-form-field>
                             <button mat-button color="primary" type="button" (click)="pickerFecha.open()"
@@ -170,7 +170,7 @@
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
                                 <input matInput #numeroRadicado type="text" maxlength="20"
-                                    formControlName="numeroRadicado" required>
+                                    formControlName="numeroRadicado">
                             </mat-form-field>
                             <span class="contador">{{20 - numeroRadicado.value.length}}</span>
                         </div>

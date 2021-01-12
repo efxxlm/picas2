@@ -113,7 +113,7 @@
                         </div>
                         <div class="col d-flex">
                             <mat-form-field class="full-width">
-                                <input matInput #cuantiaPerjuicios currencyMask maxlength="20" required
+                                <input matInput #cuantiaPerjuicios currencyMask maxlength="20"
                                     formControlName="cuantiaPerjuicios" (keypress)="validateNumberKeypress($event)"
                                     onKeyPress="if(this.value.length>=this.maxLength) return false;"
                                     [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">

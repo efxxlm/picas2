@@ -217,7 +217,24 @@ export class FormContratosAsociadosDjComponent implements OnInit {
       numeroContratos: `${ this.perfiles.length }`
     });
   };
-
+  number(e: { keyCode: any; }) {
+    const tecla = e.keyCode;
+    if (tecla === 8 ) { return true; } // Tecla de retroceso (para poder borrar)
+    if (tecla === 48) { return true; } // 0
+    if (tecla === 49) { return true; } // 1
+    if (tecla === 50) { return true; } // 2
+    if (tecla === 51) { return true; } // 3
+    if (tecla === 52) { return true; } // 4
+    if (tecla === 53) { return true; } // 5
+    if (tecla === 54) { return true; } // 6
+    if (tecla === 55) { return true; } // 7
+    if (tecla === 56) { return true; } // 8
+    if (tecla === 57) { return true; } // 9
+    const patron = /1/; // ver nota
+    const te = String.fromCharCode(tecla);
+    return patron.test(te);
+  }
+  
   agregarNumeroRadicado () {
     this.numeroRadicado.push( this.fb.control( '' ) )
   }

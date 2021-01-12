@@ -3,7 +3,8 @@
         <label class="mr-label" class="label-left"><b>Número de contratos vinculados al proceso</b></label>
         <div class="col d-flex">
             <mat-form-field class="w-70">
-                <input matInput type="text" maxlength="2" formControlName="numeroContratos" required>
+                <input matInput (keypress)="number($event)" onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                type="number" maxlength="2" formControlName="numeroContratos" required>
             </mat-form-field>
             <span class="contador">{{2 - formContratista.get( 'numeroContratos' ).value.toString().length}}</span>
         </div>

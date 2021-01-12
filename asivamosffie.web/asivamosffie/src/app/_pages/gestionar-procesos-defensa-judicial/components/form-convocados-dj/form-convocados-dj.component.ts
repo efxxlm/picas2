@@ -106,7 +106,11 @@ export class FormConvocadosDjComponent implements OnInit {
       e.editor.deleteText(n, e.editor.getLength());
     };
   };
-
+  validateNumberKeypress(event: KeyboardEvent) {
+    const alphanumeric = /[0-9]/;
+    const inputChar = String.fromCharCode(event.charCode);
+    return alphanumeric.test(inputChar) ? true : false;
+  }
   crearFormulario () {
     this.formContratista = this.fb.group({
       numeroContratos: [ '' ],

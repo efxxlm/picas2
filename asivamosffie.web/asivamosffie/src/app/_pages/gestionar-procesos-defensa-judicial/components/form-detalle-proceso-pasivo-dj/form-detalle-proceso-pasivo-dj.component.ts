@@ -20,10 +20,10 @@ export class FormDetalleProcesoPasivoDjComponent implements OnInit {
     tipoAccion: [null, Validators.required],
     jurisdiccion: [null, Validators.required],
     pretensiones: [null, Validators.required],
-    cuantiaPerjuicios: [null, Validators.required],
+    cuantiaPerjuicios: [null],
     requeridoParticipacionSupervisor: [null, Validators.required],
-    fechaRadicado: [null, Validators.required],
-    numeroRadicado: [null, Validators.required],
+    fechaRadicado: [null],
+    numeroRadicado: [null],
     canalIngreso: [null, Validators.required]
   });
   departamentoArray = [
