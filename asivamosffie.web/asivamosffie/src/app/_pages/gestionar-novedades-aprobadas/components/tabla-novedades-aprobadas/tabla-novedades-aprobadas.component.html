@@ -1,0 +1,96 @@
+<div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)">
+  </mat-form-field>
+  <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+    <img src="assets/img/icon/lupa.svg" alt="Buscar">
+  </button>
+</div>
+
+<div class="table-responsive">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- fechaValidacionNovedad Column -->
+    <ng-container matColumnDef="fechaValidacionNovedad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Fecha de solicitud de la novedad
+      </th>
+      <td mat-cell *matCellDef="let element"><b>{{element.fechaValidacionNovedad}}</b></td>
+    </ng-container>
+
+    <!-- numeroSolicitud Column -->
+    <ng-container matColumnDef="numeroSolicitud">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Número de solicitud
+      </th>
+      <td mat-cell *matCellDef="let element">{{element.numeroSolicitud}}</td>
+    </ng-container>
+
+    <!-- numeroContrato Column -->
+    <ng-container matColumnDef="numeroContrato">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Número de contrato
+      </th>
+      <td mat-cell *matCellDef="let element">{{element.numeroContrato}}</td>
+    </ng-container>
+
+    <!-- tipoNovedad Column -->
+    <ng-container matColumnDef="tipoNovedad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Tipo de novedad
+      </th>
+      <td mat-cell *matCellDef="let element">{{element.tipoNovedad}}</td>
+    </ng-container>
+
+    <!-- estadoNovedad Column -->
+    <ng-container matColumnDef="estadoNovedad">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Estado de la novedad
+      </th>
+      <td mat-cell *matCellDef="let element">{{element.estadoNovedad}}</td>
+    </ng-container>
+
+    <!-- estadoRegistro Column -->
+    <ng-container matColumnDef="estadoRegistro">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Estado del registro
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <span class="info-text d-block m-0" [class.sin-diligenciar]="element.estadoRegistro === 'Incompleto'"
+          [class.completo]="element.estadoRegistro === 'Completo'"></span>
+        {{element.estadoRegistro}}
+      </td>
+    </ng-container>
+
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
+      <td mat-cell *matCellDef="let element">
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+          [routerLink]="[ 'registrarRevisionJuridica', element.id ]">
+          Registrar revisión jurídica
+        </a>
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
+          Enviar a comité técnico
+        </button>
+        <a mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button"
+        [routerLink]="[ 'verDetalle', element.id ]">
+        Ver detalle
+      </a>
+      <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
+        Devolver solicitud
+      </button>
+      <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
+        Cancelar novedad
+      </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+<mat-paginator #paginator [length]="dataSource?.data.length" [pageIndex]="0" [pageSize]="5"
+  [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>

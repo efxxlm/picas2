@@ -1,0 +1,191 @@
+<mat-card class="shipping-card var-main-gris mb-4em">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text">
+      Datos del contrato
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong>
+        Nombre del contratista:
+      </strong>
+      Constructora Colpatria SAS
+    </p>
+    <p>
+      <strong>
+        Tipo de identificación:
+      </strong>
+      NIT
+    </p>
+    <p>
+      <strong>
+        Número de identificación:
+      </strong>
+      900.879.989
+    </p>
+    <p>
+      <strong>
+        Tipo de intervención:
+      </strong>
+      Remodelación
+    </p>
+    <p>
+      <strong>
+        Valor del contrato:
+      </strong>
+      $ 420.000.000
+    </p>
+    <p>
+      <strong>
+        Plazo:
+      </strong>
+      36 meses / 25 días
+    </p>
+    <p>
+      <strong>
+        Fecha de inicio de contrato:
+      </strong>
+      10/02/2020
+    </p>
+    <p>
+      <strong>
+        Fecha de finalización de contrato:
+      </strong>
+      05/04/2023
+    </p>
+
+    <h2 class="card-subTitle">Proyecto asociado</h2>
+    <div class="table-responsive mb-2em px-table">
+      <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 table-gris">
+        <thead>
+          <tr class="mat-header-row cdk-header-row ng-star-inserted">
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              Llave MEN
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              Departamento
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              Municipio
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              Institucion Educativa
+            </th>
+            <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+              Sede
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let observacion of listaObservaciones">
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ observacion.llaveMEN }}
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ observacion.departamento }}
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ observacion.municipio }}
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ observacion.institucionEducativa }}
+            </td>
+            <td class="mat-cell cdk-cell ng-star-inserted">
+              {{ observacion.sede }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="shipping-card var-main-gris">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text">
+      Registro de novedad
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      <strong>
+        Fecha de solicitud de la novedad:
+      </strong>
+      17/10/2020
+    </p>
+    <p>
+      <strong>
+        Instancia donde se presentó la solicitud:
+      </strong>
+      No aplica
+    </p>
+    <p>
+      <strong>
+        Tipo de Novedad:
+      </strong>
+      Reinicio
+    </p>
+    <p>
+      <strong>
+        Resumen de la justificación de la novedad:
+      </strong>
+      <span class="d-block">
+        El predio se está utilizando como albergue dado el desastre natural presentado en el municipio.
+      </span>
+    </p>
+    <p>
+      <strong>
+        Motivos de la novedad:
+      </strong>
+      Desastres naturales
+    </p>
+
+    <mat-card-title class="header-card--text">
+      Plazo solicitado
+    </mat-card-title>
+    <p>
+      <strong>
+        Fecha de inicio del reinicio:
+      </strong>
+      01/12/2020
+    </p>
+    <p>
+      <strong>
+        Fecha final del reinicio:
+      </strong>
+      03/02/2020
+    </p>
+    <p>
+      <strong>
+        Plazo adicional solicitado:
+      </strong>
+      4 meses / 10 días
+    </p>
+    <p>
+      <strong>
+        ¿Cuenta con la documentación soporte suficiente?:
+      </strong>
+      Si
+    </p>
+    <p>
+      <strong>
+        Concepto técnico:
+      </strong>
+      <span class="d-block">
+        Se evalúa la documentación y se evidencia que se requiere generar la novedad contractual por la calamidad presentada.
+      </span>
+    </p>
+    <p>
+      <strong>
+        Fecha concepto técnico:
+      </strong>
+      20/10/2020
+    </p>
+    <p>
+      <strong>
+        Número de radicado en FFIE de solicitud:
+      </strong>
+      NR-N56789-006
+    </p>
+  </mat-card-content>
+</mat-card>
