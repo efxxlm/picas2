@@ -24,7 +24,7 @@ export class FormValidarSeguimientoSemanalComponent implements OnInit {
         private activatedRoute: ActivatedRoute )
     {
         this.avanceSemanalSvc
-        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0, 1224 )
+        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( this.activatedRoute.snapshot.params.id, 0 )
             .subscribe(
               seguimiento => {
                   this.seguimientoSemanal = seguimiento;
