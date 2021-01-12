@@ -1627,19 +1627,7 @@ namespace asivamosffie.services
             
         }
 
-        private Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId)
-        {
-
-            Proyecto proyecto = new Proyecto();
-
-            // obtengo la informacion del proyecto
-            ContratoConstruccion contratoConstruccion = _context.ContratoConstruccion
-                                                                        .Find(pContratoConstruccionId);
-
-            return CalcularFechasContrato( contratoConstruccion.ProyectoId );
-
-            
-        }
+        
 
         #endregion private
 
