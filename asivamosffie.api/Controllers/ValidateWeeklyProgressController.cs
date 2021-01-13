@@ -34,5 +34,24 @@ namespace asivamosffie.api.Controllers
         {
             return await _ValidateWeeklyProgressService.GetListReporteSemanalView(strListCodEstadoSeguimientoSemanal);
         }
+ 
+
+
+        [HttpPost]
+        [Route("ReturnSeguimientoSemanal")]
+        public async Task<IActionResult> ReturnSeguimientoSemanal([FromQuery]int pSeguimientoSemanalId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            { 
+                respuesta = await _ValidateWeeklyProgressService.ReturnSeguimientoSemanal(pSeguimientoSemanalId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            { 
+                return BadRequest(respuesta);
+            }
+        }
+
     }
 }

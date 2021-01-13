@@ -562,7 +562,7 @@ namespace asivamosffie.services
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
 
-                if (pEstadoMod == ConstanCodigoEstadoReporteSemanal.Enviado_a_verificacion)
+                if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Verificacion)
                 {
                     seguimientoSemanalMod.RegistroCompleto = true;
                 }
@@ -605,7 +605,7 @@ namespace asivamosffie.services
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
 
-                if (pEstadoMod == ConstanCodigoEstadoReporteSemanal.Enviado_a_verificacion)
+                if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Verificacion)
                 {
                     seguimientoSemanalMod.RegistroCompleto = true;
                 }
