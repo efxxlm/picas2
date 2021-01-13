@@ -317,7 +317,12 @@ const routes: Routes = [
         path: 'registrarAvanceSemanal',
         loadChildren: () => import( './_pages/registrar-avance-semanal/registrar-avance-semanal.module' )
           .then( module => module.RegistrarAvanceSemanalModule )
-      }
+      },
+      {
+        path: 'registrarValidarRequisitosPago',
+        loadChildren: () => import('./_pages/registrar-validar-requisitos-pago/registrar-validar-requisitos-pago.module')
+        .then(m => m.RegistrarValidarRequisitosPagoModule)
+      },
     ]
 
   },

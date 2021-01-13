@@ -1,0 +1,51 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<div style="padding: 30px 20px; text-align: center;">
+    <h1 class="title-menu--h1 centerTrick">
+        Observaciones item 2
+    </h1>
+    <p class="info-sub-title">
+        <span>Número de solicitud: <b>SolPagoO0001</b></span>
+        <span>Número de contrato: <b>N801801</b></span>
+    </p>
+    <p>
+        Factura (Prefactura si tiene facturación electrónica) por costo variable del Contrato de Interventoría, cuyo
+        deudor es el
+        Patrimonio Autónomo del Fondo de Infraestructura Educativa FFIE, NIT 830.053.812-2. Indicar el lugar en el que
+        se presta el
+        servicio. Para la instrucción de pago se sugiere la siguiente nota: “Favor realizar transferencia electrónica
+        (consignación) a la cuenta
+        (mencionar el tipo: ahorro o corriente) No. XXXXX en el (nombre de banco), a nombre de (XXXXXXXXX) con NIT
+        (XXXXXXXX).
+    </p>
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-12" style="padding-left: 0;">
+                <div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-area-quill" style="text-align: left; margin-top: 1em; max-width: calc(100% - 2.3em); margin-left: -2em;">
+                            <label for="observaciones" class="text-area-quill--label size-label colorMainColor">
+                                Observaciones
+                            </label>
+                            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones>
+                            </quill-editor>
+                        </div>
+                        <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
+                            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                        </span>
+                        <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
+                            1000
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="addressForm.invalid">
+                Realizar observación
+            </button>
+        </div>
+    </form>
+</div>
