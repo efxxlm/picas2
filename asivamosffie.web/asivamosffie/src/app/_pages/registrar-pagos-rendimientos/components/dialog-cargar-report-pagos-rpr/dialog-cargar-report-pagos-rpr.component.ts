@@ -52,6 +52,7 @@ export class DialogCargarReportPagosRprComponent implements OnInit {
     pFile = pFile.name.split('.');
     pFile = pFile[pFile.length - 1];
     if (pFile === 'xlsx') {
+      /*
       this.openDialogNoConfirmar(
         'Validación de registro',
         ` <br>Número de registros en el archivo: <b>5</b><br>
@@ -61,7 +62,7 @@ export class DialogCargarReportPagosRprComponent implements OnInit {
         inválidos. Ajuste el archivo y cargue de nuevo</b>
         `
       );
-      /*
+      */
       this.openDialogConfirmar(
         'Validación de registro',
         ` <br>Número de registros en el archivo: <b>5</b><br>
@@ -69,7 +70,7 @@ export class DialogCargarReportPagosRprComponent implements OnInit {
         Número de registros inválidos: <b>0</b><br><br>
         <b>¿Desea realizar el cargue de los reportes de pagos?</b>
         `
-      );*/
+      );
     } else {
       this.openDialog('', '<b>El tipo de archivo que esta intentando cargar no es permitido en la plataforma.<br>El tipo de documento soportado es .xlsx</b>');
       return;

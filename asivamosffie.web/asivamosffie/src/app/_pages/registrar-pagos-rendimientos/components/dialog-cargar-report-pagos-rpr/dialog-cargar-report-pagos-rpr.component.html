@@ -8,19 +8,19 @@
     <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
         <div class="text-center">
             <div class="mtop">
-                <div class="input-file">
+                <div class="input-file" style="margin-top: 3em;">
                     <span class="input-file--text">{{archivo}}</span>
                     <button mat-raised-button color="primary" type="button" (click)="fileInput.click()"
                         class="input-file--btn">Explorar</button>
                     <input required hidden (change)="fileName( $event )" #fileInput type="file" id="file"
                         formControlName="documentoFile">
                 </div>
-                <p>
-                    Explore en su computador o dispositivo y seleccione el documento que desea cargar los formatos
-                    permitidos
-                    son: xlsx
-                </p>
-                <button mat-raised-button color="accent" [disabled]="!addressForm.valid" type="submit">{{boton}}</button>
+                <div class="textoGris">
+                    Explore en su computador o dispositivo y seleccione el documento que desea cargar <b>el formato permitido es: xlsx</b>
+                </div>
+                <div style="margin-top: 1.5em;"> 
+                    <button mat-raised-button color="accent" [disabled]="!addressForm.valid" type="submit">{{boton}}</button>
+                </div>
             </div>
         </div>
     </form>

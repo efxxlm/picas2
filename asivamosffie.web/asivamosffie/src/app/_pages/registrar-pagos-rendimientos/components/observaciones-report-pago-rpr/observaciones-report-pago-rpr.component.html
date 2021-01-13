@@ -19,15 +19,15 @@
                                 Observaciones
                             </label>
                             <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
+                                (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones"
                                 #observaciones>
                             </quill-editor>
                         </div>
                         <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                            {{3000 - (textoLimpio(observaciones.quillEditor,3000))}}
                         </span>
                         <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
-                            1000
+                            3000
                         </span>
                     </div>
                 </div>
