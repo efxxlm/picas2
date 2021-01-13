@@ -16,9 +16,6 @@ export class ConsideracionesEspecialesComponent implements OnInit {
     reasignacion: ['', Validators.required],
     descripcion: [ null ]
   });
-  editorStyle = {
-    height: '45px'
-  };
   config = {
     toolbar: [
       ['bold', 'italic', 'underline'],
