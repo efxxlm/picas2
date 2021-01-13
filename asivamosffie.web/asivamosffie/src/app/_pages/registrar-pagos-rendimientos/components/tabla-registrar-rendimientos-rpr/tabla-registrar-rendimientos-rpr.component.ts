@@ -28,10 +28,10 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
     {
       fechaCargue: '10/08/2020',
       numTotalRegistros: 5,
-      numRegistrosValidos: 3,
-      numRegistrosInvalidos: 2,
+      numRegistrosValidos: 5,
+      numRegistrosInvalidos: 0,
       registrosInconsistentes: '---',
-      estadoCargue: 'Fallido',
+      estadoCargue: 'Valido',
       gestion: 1
     },
     {
