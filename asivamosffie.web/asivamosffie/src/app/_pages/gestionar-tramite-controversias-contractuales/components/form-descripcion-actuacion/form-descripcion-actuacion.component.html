@@ -98,7 +98,7 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtro.value">
-                                {{500 - (textoLimpio(cualOtro.quillEditor,500))}}
+                                {{500 - (textoLimpio(cualOtro.quillEditor))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.cualOtro.value">
                                 500
@@ -245,7 +245,7 @@
                         (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" style="padding: 1.5em 0em 1.2em;"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                    {{1000 - (textoLimpio(observaciones.quillEditor))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000

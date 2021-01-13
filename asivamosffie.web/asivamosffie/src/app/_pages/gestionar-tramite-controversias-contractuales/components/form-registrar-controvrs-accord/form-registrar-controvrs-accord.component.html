@@ -153,7 +153,7 @@
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.conclusionComitePretecnico.value">
-                                {{1000 - (textoLimpio(conclusionComitePretecnico.quillEditor,1000))}}
+                                {{1000 - (textoLimpio(conclusionComitePretecnico.quillEditor))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.conclusionComitePretecnico.value">
                                 1000
@@ -186,7 +186,7 @@
                             </div>
                             <span class="contador miles"
                                 *ngIf="addressForm.controls.resumenJustificacionSolicitud.value">
-                                {{1000 - (textoLimpio(resumenJustificacionSolicitud.quillEditor,1000))}}
+                                {{1000 - (textoLimpio(resumenJustificacionSolicitud.quillEditor))}}
                             </span>
                             <span class="contador miles"
                                 *ngIf="!addressForm.controls.resumenJustificacionSolicitud.value">
@@ -235,7 +235,7 @@
                             </div>
                             <span class="contador miles"
                                 *ngIf="addressForm.controls.motivosRechazo.value">
-                                {{1000 - (textoLimpio(motivosRechazo.quillEditor,1000))}}
+                                {{1000 - (textoLimpio(motivosRechazo.quillEditor))}}
                             </span>
                             <span class="contador miles"
                                 *ngIf="!addressForm.controls.motivosRechazo.value">

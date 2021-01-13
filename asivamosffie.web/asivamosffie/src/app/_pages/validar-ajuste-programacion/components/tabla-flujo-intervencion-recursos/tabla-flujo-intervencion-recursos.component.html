@@ -1,0 +1,71 @@
+<div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)">
+  </mat-form-field>
+  <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+    <img src="assets/img/icon/lupa.svg" alt="Buscar">
+  </button>
+</div>
+
+<div class="table-responsive">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <!-- fechaRevision Column -->
+    <ng-container matColumnDef="fechaRevision">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+				Fecha de solicitud de la novedad
+			</th>
+      <td mat-cell *matCellDef="let element"><b>{{element.fechaRevision}}</b></td>
+    </ng-container>
+
+    <!-- numeroSolicitud Column -->
+    <ng-container matColumnDef="numeroSolicitud">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Número de solicitud
+      </th>
+      <td mat-cell *matCellDef="let element">{{element.numeroSolicitud}}</td>
+    </ng-container>
+
+    <!-- fechaValidacion Column -->
+    <ng-container matColumnDef="fechaValidacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Tipo de novedad
+      </th>
+      <td mat-cell *matCellDef="let element">{{element.fechaValidacion}}</td>
+    </ng-container>
+
+    <!-- estadoValidacion Column -->
+    <ng-container matColumnDef="estadoValidacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        Estado del registro
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{element.estadoValidacion}}
+      </td>
+    </ng-container>
+
+    <!-- Id Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gestión</th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table" type="button">
+          Ver detalle
+        </button>
+        <button mat-button color="warn" mat-raised-button color="accent" class="btn-table info-button"
+            [class.sin-diligenciar]="element.estadoRegistro === 'Sin diligenciar'"
+            [class.en-proceso]="element.estadoRegistro === 'En proceso'"
+            [class.completo]="element.estadoRegistro === 'Completo'" type="button"
+            (click)="openObservaciones(element.id)">
+            Observaciones
+          </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
+<mat-paginator #paginator [length]="dataSource?.data.length" [pageIndex]="0" [pageSize]="5"
+  [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>

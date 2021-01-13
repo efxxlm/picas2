@@ -1,0 +1,24 @@
+<div class="container text-center">
+  <div class="text-right">
+    <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Registrar ajuste a la programación
+  </h1>
+  <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+  <div class="text-info" *ngIf="verAyuda">
+    <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+      <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+    </button>
+    Bienvenida/o, aquí podrá realizar el registro del ajuste a la programación de obra y del flujo de inversión de
+    recursos para los contratos que están a su cargo, que tienen modificación contractual que afectan el plazo y/o el
+    valor inicial, que cuentan con las pólizas aprobadas y que están siendo ejecutados en el marco de la gestión del
+    FFIE.
+  </div>
+
+  <app-tabla-ajuste-programacion></app-tabla-ajuste-programacion>
+
+</div>

@@ -1,0 +1,23 @@
+<div class="container text-center">
+  <div class="text-right">
+    <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar">
+    </a>
+  </div>
+  <h1 class="title-menu--h1">
+    Gestionar trámite de novedades contractuales aprobadas
+  </h1>
+  <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+  <div class="text-info" *ngIf="verAyuda">
+    <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+      <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+    </button>
+    Bienvenida/o, aquí podrá gestionar el trámite de las solicitudes de novedades contractuales aprobadas por el
+    supervisor de los contratos de obra y/o interventoría y que se encuentran a su cargo, que están activos y que son
+    ejecutados en el marco de la gestión del FFIE.
+  </div>
+
+  <app-tabla-novedades-aprobadas></app-tabla-novedades-aprobadas>
+
+</div>

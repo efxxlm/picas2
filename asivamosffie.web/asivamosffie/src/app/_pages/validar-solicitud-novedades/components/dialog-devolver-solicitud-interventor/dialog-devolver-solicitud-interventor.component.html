@@ -1,0 +1,48 @@
+<section class="text-center">
+  <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="true">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+  </button>
+
+  <h1 class="title-menu--h1">
+    Devolver la solicitud
+  </h1>
+
+  <section class="flex-center mt-05em">
+    <span>
+      Numero de solicitud:
+      <strong>
+        NOV-002
+      </strong>
+    </span>
+    <span>
+      Tipo de novedad:
+      <strong>
+        Suspensión
+      </strong>
+    </span>
+  </section>
+
+  <form autocomplete="off" [formGroup]="formObservacion" (ngSubmit)="guardar()">
+
+    <div class="d-flex align-items-center mt-1em">
+      <div class="text-area-quill">
+        <quill-editor class="quill-editor-style" [modules]="config"
+          (onContentChanged)="maxLength($event, 1000)" formControlName="causaRechazo" required>
+        </quill-editor>
+      </div>
+      <span class="contador miles" *ngIf="formObservacion.get('causaRechazo').value !== null">
+        {{1000 - (textoLimpio(formObservacion.get('causaRechazo').value)>1000?1000:textoLimpio(formObservacion.get('causaRechazo').value))}}
+      </span>
+      <span class="contador miles" *ngIf="formObservacion.get('causaRechazo').value === null">
+        1000
+      </span>
+    </div>
+
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit"
+      [disabled]="formObservacion.get('causaRechazo').invalid && formObservacion.get('causaRechazo').touched">
+        <img src="assets/img/icon/guardar.svg">
+      </button>
+    </div>
+  </form>
+</section>

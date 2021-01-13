@@ -224,6 +224,20 @@ div.mat-select-arrow {
 
 .table-checkbox {
   padding: 0.5em;
+
+  &.radio {
+    .mat-checkbox-background, .mat-checkbox-frame{
+      border-radius: 50%;
+      border: var(--mainColor) 1.5px solid;
+    }
+    .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+      box-shadow: 0 0 0 1px #fff, 0 0 0 2px $mainColor
+    }
+
+    .mat-checkbox-checked .mat-checkbox-checkmark {
+      display: none;
+    }
+  }
 }
 
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,

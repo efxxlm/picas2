@@ -40,6 +40,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Gestionar_procesos_Defensa_Judicial = 52,
         Registrar_Avance_Semanal = 55,
         Verificar_Requisitos_Tecnicos_Construccion = 45,
+
+         Registrar_solicitud_novedad_contractual= 50,      
         Registrar_actuaciones_controversias_contractuales=57,
 
 

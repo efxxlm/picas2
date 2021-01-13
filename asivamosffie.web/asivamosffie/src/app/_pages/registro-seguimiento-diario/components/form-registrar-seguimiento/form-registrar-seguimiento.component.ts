@@ -57,7 +57,7 @@ export class FormRegistrarSeguimientoComponent implements OnInit {
 
   minDate: Date;
   editorStyle = {
-    height: '45px'
+    // height: '45px'
   };
   config = {
     toolbar: [

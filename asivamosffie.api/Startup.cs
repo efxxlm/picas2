@@ -166,6 +166,7 @@ namespace asivamosffie.api
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IActBeginService, ActBeginService>();
             services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<IContractualModification, ContractualModificationService>();
             services.AddTransient<IDerivativeActionService, DerivativeActionService>();
             services.AddTransient<IMonitoringURL, MonitoringURLService>();
             
