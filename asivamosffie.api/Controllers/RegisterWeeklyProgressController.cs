@@ -28,6 +28,16 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService
+            {
+                DirectoryBase = appSettings.Value.DirectoryBase,
+                DirectoryRutaCargaActaTerminacionContrato = appSettings.Value.DirectoryRutaCargaActaTerminacionContrato, 
+            };
+            return appSettingsService;
+        }
+         
         [Route("GetObservacionSeguimientoSemanal")]
         [HttpGet]
         public async Task<dynamic> GetObservacionBy([FromQuery] int pSeguimientoSemanalId, int pPadreId, string pTipoCodigo)
@@ -41,8 +51,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
-
+         
         [Route("GetEnsayoLaboratorioMuestras")]
         [HttpGet]
         public async Task<ActionResult<GestionObraCalidadEnsayoLaboratorio>> GetEnsayoLaboratorioMuestras([FromQuery] int pGestionObraCalidadEnsayoLaboratorioId)
@@ -100,7 +109,26 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-
+      
+        [HttpPost]
+        [Route("UploadContractTerminationCertificate")]
+        public async Task<IActionResult> UploadContractTerminationCertificate([FromForm] ContratacionProyecto pContratacionProyecto)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                AppSettingsService appSettingsService = ToAppSettingsService(_settings);
+                pContratacionProyecto.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _registerWeeklyProgressService.UploadContractTerminationCertificate(pContratacionProyecto, appSettingsService); 
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+         
         [HttpPost]
         [Route("CreateEditEnsayoLaboratorioMuestra")]
         public async Task<IActionResult> CreateEditEnsayoLaboratorioMuestra([FromBody] GestionObraCalidadEnsayoLaboratorio pGestionObraCalidadEnsayoLaboratorio)

@@ -82,11 +82,11 @@ export class GestionAmbientalComponent implements OnInit {
     residuosPeligrososObsId = 0; // ID de la observacion a residuos peligrosos.
     manejoOtrosObsId = 0; // ID de la observacion al manejo de otros.
     // Observaciones apoyo a la gestion ambiental y actividades
-    obsApoyoAmbiental: any;
-    obsApoyoManejoMateriales: any;
-    obsApoyoResiduosConstruccion: any;
-    obsApoyoResiduosPeligrosos: any;
-    obsApoyoOtros: any;
+    obsApoyoAmbiental: any[] = [];
+    obsApoyoManejoMateriales: any[] = [];
+    obsApoyoResiduosConstruccion: any[] = [];
+    obsApoyoResiduosPeligrosos: any[] = [];
+    obsApoyoOtros: any[] = [];
     gestionAmbientalDetalle: any[] = [];
     tipoActividadesCodigo = {
         manejoMaterialInsumo: '1',
@@ -390,11 +390,11 @@ export class GestionAmbientalComponent implements OnInit {
                         );
                         const manejoMaterial = this.gestionObraAmbiental.manejoMaterialesInsumo;
 
-                        if ( manejoMaterial !== undefined && manejoMaterial.registroCompleto === false ) {
+                        if ( manejoMaterial !== undefined && manejoMaterial.registroCompletoObservacionSupervisor === false ) {
                             estadoSemaforoMaterial = 'en-proceso';
                         }
 
-                        if ( manejoMaterial !== undefined && manejoMaterial.registroCompleto === true ) {
+                        if ( manejoMaterial !== undefined && manejoMaterial.registroCompletoObservacionSupervisor === true ) {
                             estadoSemaforoMaterial = 'completo';
                         }
                         this.actividades.push(
@@ -443,11 +443,11 @@ export class GestionAmbientalComponent implements OnInit {
                         );
                         const residuosConstruccion = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion;
 
-                        if ( residuosConstruccion !== undefined && residuosConstruccion.registroCompleto === false ) {
+                        if ( residuosConstruccion !== undefined && residuosConstruccion.registroCompletoObservacionSupervisor === false ) {
                             estadoSemaforoConstruccion = 'en-proceso';
                         }
 
-                        if ( residuosConstruccion !== undefined && residuosConstruccion.registroCompleto === true ) {
+                        if ( residuosConstruccion !== undefined && residuosConstruccion.registroCompletoObservacionSupervisor === true ) {
                             estadoSemaforoConstruccion = 'completo';
                         }
                         this.actividades.push(
@@ -497,11 +497,11 @@ export class GestionAmbientalComponent implements OnInit {
 
                         const residuosEspeciales = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales;
 
-                        if ( residuosEspeciales !== undefined && residuosEspeciales.registroCompleto === false ) {
+                        if ( residuosEspeciales !== undefined && residuosEspeciales.registroCompletoObservacionSupervisor === false ) {
                             estadoSemaforoEspeciales = 'en-proceso';
                         }
 
-                        if ( residuosEspeciales !== undefined && residuosEspeciales.registroCompleto === true ) {
+                        if ( residuosEspeciales !== undefined && residuosEspeciales.registroCompletoObservacionSupervisor === true ) {
                             estadoSemaforoEspeciales = 'completo';
                         }
                         this.actividades.push(
@@ -551,11 +551,11 @@ export class GestionAmbientalComponent implements OnInit {
 
                         const manejoOtros = this.gestionObraAmbiental.manejoOtro;
 
-                        if ( manejoOtros !== undefined && manejoOtros.registroCompleto === false ) {
+                        if ( manejoOtros !== undefined && manejoOtros.registroCompletoObservacionSupervisor === false ) {
                             estadoSemaforoOtra = 'en-proceso';
                         }
 
-                        if ( manejoOtros !== undefined && manejoOtros.registroCompleto === true ) {
+                        if ( manejoOtros !== undefined && manejoOtros.registroCompletoObservacionSupervisor === true ) {
                             estadoSemaforoOtra = 'completo';
                         }
                         this.actividades.push(
@@ -665,7 +665,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -700,7 +700,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -735,7 +735,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -770,7 +770,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -805,7 +805,7 @@ export class GestionAmbientalComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

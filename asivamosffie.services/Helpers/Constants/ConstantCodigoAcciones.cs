@@ -238,5 +238,7 @@
         //4.1.1
         public const string Editar_crear_url = "178";
         public const string Visita_url = "179";
+        public const string Cargar_Acta_Terminacion_Contrato = "180";
+        	
     }
 }   

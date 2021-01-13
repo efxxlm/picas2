@@ -21,7 +21,7 @@ export class AvanceFinancieroComponent implements OnInit {
     seguimientoSemanalAvanceFinancieroId: number;
     avanceFinanciero: any;
     tablaHistorial = new MatTableDataSource();
-    observacionApoyo: any;
+    observacionApoyo: any[] = [];
     seguimientoSemanalObservacionId = 0;
     formAvanceFinanciero: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
@@ -126,7 +126,7 @@ export class AvanceFinancieroComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

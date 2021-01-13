@@ -23,7 +23,7 @@ export class FormVerificarSeguimientoSemanalComponent implements OnInit {
         private activatedRoute: ActivatedRoute,
         private verificarAvanceSemanalSvc: VerificarAvanceSemanalService )
     {
-        this.avanceSemanalSvc.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0, 1224 )
+        this.avanceSemanalSvc.getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( activatedRoute.snapshot.params.id, 0 )
             .subscribe(
                 seguimiento => {
                     this.seguimientoSemanal = seguimiento;

@@ -29,7 +29,7 @@ export class AlertasRelevantesComponent implements OnInit {
     seguimientoSemanalGestionObraAlertaId = 0;
     seguimientoSemanalObservacionId = 0;
     gestionAlertas: any;
-    observacionApoyo: any;
+    observacionApoyo: any[] = [];
     displayedColumnsHistorial: string[]  = [
         'fechaRevision',
         'responsable',
@@ -132,7 +132,7 @@ export class AlertasRelevantesComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(

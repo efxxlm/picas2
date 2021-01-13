@@ -5,13 +5,14 @@ namespace asivamosffie.model.Models
 {
     public partial class ControversiaActuacionMesa
     {
-        public int ControversiaActuacionMesaId { get; set; }
-        public int ControversiaActuacionId { get; set; }
-        public int ControversiaContractualId {get; set;}
         public ControversiaActuacionMesa()
         {
             ControversiaActuacionMesaSeguimiento = new HashSet<ControversiaActuacionMesaSeguimiento>();
         }
+
+        public int ControversiaActuacionMesaId { get; set; }
+        public int ControversiaActuacionId { get; set; }
+        public int ControversiaContractualId {get; set;}
 
         public string EstadoAvanceMesaCodigo { get; set; }
         public DateTime? FechaActuacionAdelantada { get; set; }

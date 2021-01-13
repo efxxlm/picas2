@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -15,6 +15,7 @@ export class TablaConsultarBitacoraComponent implements OnInit {
 
     tablaConsultarEditarBitacora = new MatTableDataSource();
     @Input() consultarBitacora: any;
+    @Output() seRealizoPeticion = new EventEmitter<boolean>();
     @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
     @ViewChild( MatSort, { static: true } ) sort: MatSort;
     estadoAvanceSemanal: any;
@@ -29,21 +30,6 @@ export class TablaConsultarBitacoraComponent implements OnInit {
         'estadoMuestras',
         'gestion'
     ];
-    dataTable: any[] = [
-        {
-            numeroSemana: 1,
-            ultimaSemana: 10,
-            fechaInicio: new Date(),
-            fechaFin: new Date(),
-            estadoObra: 'Con ejecución normal',
-            programacionAcumulada: '2',
-            avanceFisico: '2',
-            estadoRegistro: false,
-            estadoReporteSemanal: 'Enviado a supervisor',
-            estadoMuestrasReporteSemanal: '--',
-            seguimientoSemanalId: 1224,
-        }
-    ];
 
     constructor(
         private routes: Router,
@@ -51,10 +37,16 @@ export class TablaConsultarBitacoraComponent implements OnInit {
     { }
 
     ngOnInit(): void {
-        this.tablaConsultarEditarBitacora = new MatTableDataSource( this.dataTable );
-        this.tablaConsultarEditarBitacora.sort = this.sort;
-        this.tablaConsultarEditarBitacora.paginator = this.paginator;
-        this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        this.getBitacora();
+    }
+
+    getBitacora() {
+        if ( this.consultarBitacora !== undefined ) {
+            this.tablaConsultarEditarBitacora = new MatTableDataSource( this.consultarBitacora );
+            this.tablaConsultarEditarBitacora.sort = this.sort;
+            this.tablaConsultarEditarBitacora.paginator = this.paginator;
+            this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
+        }
     }
 
     applyFilter( event: Event ) {

@@ -42,7 +42,7 @@ export class GestionCalidadComponent implements OnInit {
     seguimientoSemanalObservacionId = 0;
     gestionObraCalidad: any;
     tipoEnsayos: any[] = [];
-    observacionApoyo: any;
+    observacionApoyo: any[] = [];
     editorStyle = {
         height: '100px'
     };
@@ -218,7 +218,7 @@ export class GestionCalidadComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
@@ -253,7 +253,7 @@ export class GestionCalidadComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'False' )
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
                         .subscribe(
                             () => {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
