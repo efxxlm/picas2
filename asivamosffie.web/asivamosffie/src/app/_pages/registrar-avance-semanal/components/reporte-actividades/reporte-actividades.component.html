@@ -28,10 +28,10 @@
 
                         </mat-card-content>
                     </mat-card>
-                    <span class="contador miles" *ngIf="formResumenGeneral.value.observaciones !== null">
+                    <span class="contador miles" *ngIf="formResumenGeneral.value.resumenEstadoContrato !== null">
                         {{2000 - textoLimpio( obsResumenGeneral.quillEditor, 2000 )}}
                     </span>
-                    <span class="contador miles" *ngIf="formResumenGeneral.value.observaciones === null">
+                    <span class="contador miles" *ngIf="formResumenGeneral.value.resumenEstadoContrato === null">
                         2000
                     </span>
                 </div>
@@ -40,7 +40,7 @@
                             color="warn"
                             class="btn-guardar"
                             type="submit"
-                            [disabled]="formResumenGeneral.get( 'resumenEstadoContrato' ).dirty === false">
+                            [disabled]="formResumenGeneral.get( 'resumenEstadoContrato' ).dirty === false || seRealizaGuardado === true">
                             <img  src="assets/img/icon/guardar.svg">
                     </button>
                 </div>

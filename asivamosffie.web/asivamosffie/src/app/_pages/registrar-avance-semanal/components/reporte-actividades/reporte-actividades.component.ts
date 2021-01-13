@@ -1,6 +1,6 @@
 import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
@@ -15,6 +15,7 @@ export class ReporteActividadesComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Output() estadoSemaforoReporte = new EventEmitter();
+    seRealizaGuardado = false;
     formResumenGeneral: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
@@ -27,10 +28,10 @@ export class ReporteActividadesComponent implements OnInit {
     };
     config = {
         toolbar: [
-          ['bold', 'italic', 'underline'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          [{ indent: '-1' }, { indent: '+1' }],
-          [{ align: [] }],
+            ['bold', 'italic', 'underline'],
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            [{ indent: '-1' }, { indent: '+1' }],
+            [{ align: [] }],
         ]
     };
 
@@ -146,6 +147,8 @@ export class ReporteActividadesComponent implements OnInit {
     }
 
     guardar( reporte?: any ) {
+        this.seRealizaGuardado = true;
+        console.log( 'test btn' );
         const pSeguimientoSemanal = this.seguimientoSemanal;
         const seguimientoSemanalReporteActividad: any = [
             {

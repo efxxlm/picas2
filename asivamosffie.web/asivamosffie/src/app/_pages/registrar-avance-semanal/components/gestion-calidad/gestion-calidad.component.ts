@@ -21,6 +21,7 @@ export class GestionCalidadComponent implements OnInit {
     seguimientoSemanalGestionObraId: number;
     SeguimientoSemanalGestionObraCalidadId = 0;
     gestionObraCalidad: any;
+    maxDate: Date;
     booleanosEnsayosLaboratorio: any[] = [
         { value: true, viewValue: 'Si' },
         { value: false, viewValue: 'No' }
@@ -53,6 +54,7 @@ export class GestionCalidadComponent implements OnInit {
             .subscribe( tipo => this.tipoEnsayos = tipo );
         this.crearFormulario();
         this.getCantidadEnsayos();
+        this.maxDate = new Date();
     }
 
     ngOnInit(): void {
@@ -319,6 +321,15 @@ export class GestionCalidadComponent implements OnInit {
                     }
                 }
             );
+    }
+
+    valuePendingSemaforo( value: boolean ) {
+        if ( value === undefined ) {
+            return 'sin-diligenciar';
+        }
+        if ( value === false ) {
+            return 'en-proceso';
+        }
     }
 
     convertToNumber( cantidadEnsayos: string ) {

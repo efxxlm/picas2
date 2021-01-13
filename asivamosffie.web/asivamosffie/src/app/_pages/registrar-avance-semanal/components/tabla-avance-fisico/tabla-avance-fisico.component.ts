@@ -191,7 +191,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
             this.tablaAvanceFisico.data[0][ 'avancePorCapitulo' ].filter( value => {
                 if ( flujoInversion.programacion.programacionId === value.programacionId ) {
                     console.log( );
-                    if (  value.avanceFisicoCapitulo.length === 0 ) {
+                    if (  value.avanceFisicoCapitulo === null ) {
                         flujoInversion.programacion.avanceFisicoCapitulo = null;
                     } else {
                         flujoInversion.programacion.avanceFisicoCapitulo = Number( value.avanceFisicoCapitulo );
