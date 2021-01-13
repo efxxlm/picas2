@@ -328,6 +328,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/aprobar-solicitudes-pago/aprobar-solicitudes-pago.module')
         .then(m => m.AprobarSolicitudesPagoModule)
       },
+      {
+        path: 'autorizarSolicitudDePago',
+        loadChildren: () => import('./_pages/autorizar-solicitud-pago/autorizar-solicitud-pago.module')
+        .then(m => m.AutorizarSolicitudPagoModule)
+      },
     ]
 
   },

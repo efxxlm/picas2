@@ -1,0 +1,45 @@
+<mat-card class="shipping-card var-main-gris">
+    <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text textoGris">
+            Datos
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="text-align: left;">
+        <h2 class="card-subTitle">Descripción de la factura</h2>
+        <p><strong>Número de factura:</strong> FAC00456</p>
+        <p><strong>Fecha de factura:</strong> 05/10/2020</p>
+        <p><strong>Valor facturado:</strong> $15.000.000</p>
+    </mat-card-content>
+</mat-card>
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <div class="row mtop justCenter">
+        <div class="col-md-7">
+            <label class="label-left">¿Desde la coordinación tiene observaciones a los datos de la factura?</label>
+        </div>
+        <div class="col-md-2">
+            <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                formControlName="tieneObservaciones">
+                <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+            </mat-radio-group>
+            <span class="required-form-group" style="margin-left: 1px;">*</span>
+        </div>
+    </div>
+    <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+        <div class="text-area-quill izqTitle">
+            <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a los datos de la factura</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+        </div>
+        <span class="contador" *ngIf="addressForm.get('observaciones').value">
+            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+        </span>
+        <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
+            1000
+        </span>
+    </div>
+    <button mat-button color="warn" class="btn-guardar mt1"
+        type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+</form>
