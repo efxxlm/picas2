@@ -38,6 +38,24 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
   actuacionDerivadaID: any;
   controversia: any;
   actuacion: any;
+  seRealizoPeticion=false;
+
+  ngOnDestroy(): void {
+    if (this.addressForm.dirty === true  && this.seRealizoPeticion === false ) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmit();          
+        }           
+      });
+    }
+}
+
   constructor(private fb: FormBuilder,private router: Router, private conServices:ContractualControversyService,
     public dialog: MatDialog,
     public commonServices: CommonService,
@@ -102,9 +120,10 @@ export class RegistrarAvanceActuaDerivadasComponent implements OnInit {
       descripciondeActuacionAdelantada :this.addressForm.get("proximaActuacionRequerida").value,
       rutaSoporte :this.addressForm.get("urlSoporte").value,
       estadoActuacionDerivadaCodigo :this.addressForm.get("estadoActuacionDerivada").value,
-      observaciones :this.addressForm.get("observaciones").value,}
+      observaciones :this.addressForm.get("observaciones").value,}      
     this.conServices.CreateEditarSeguimientoDerivado(obj).subscribe(
       response=>{
+        this.seRealizoPeticion=true;
         this.openDialog( '', `<b>${ response.message }</b>`,true);   
       }
     );

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild,OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -29,12 +29,14 @@ export class ActualizarTramiteRaccComponent implements OnInit {
   ]
   actuacionid: any;
   actuacion: any;
+  noGuardado: boolean=true;
   constructor(private router: Router, private conServices:ContractualControversyService,
     public dialog: MatDialog,
     public commonServices: CommonService,
     private activatedRoute: ActivatedRoute,)
      { }
 
+    
   ngOnInit(): void {
     this.activatedRoute.params.subscribe( param => {
       this.actuacionid = param['id'];
@@ -69,10 +71,27 @@ export class ActualizarTramiteRaccComponent implements OnInit {
       });
 
   }
+
   eliminarActuacionDerivada(id){
+    this.openDialogSiNo("","<b>¿Esta seguro de eliminar este registro?</b>",id);
+  }
+  openDialogSiNo(modalTitle: string, modalText: string , id:any) {
+    let dialogRef =this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton:true }
+    });   
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if(result === true)
+      {
+        this.eliminarActuacionDerivadaSi(id)
+      }           
+    });
+  }
+  eliminarActuacionDerivadaSi(id){
     this.conServices.EliminarActuacionDerivada(id).subscribe(
       response=>{
-        this.openDialog("",response.message,true);
+        this.openDialog("","<b>La información se ha eliminado correctamente</b>",true);
       });
   }
   verDetalleActuacionDerivada(id){
