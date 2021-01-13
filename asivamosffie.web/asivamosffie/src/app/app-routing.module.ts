@@ -338,6 +338,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/verificar-financ-solicitud-pago/verificar-financ-solicitud-pago.module')
         .then(m => m.VerificarFinancSolicitudPagoModule)
       },
+      {
+        path: 'validarFinancieramenteSolicitudDePago',
+        loadChildren: () => import('./_pages/validar-financ-solicitud-pago/validar-financ-solicitud-pago.module')
+        .then(m => m.ValidarFinancSolicitudPagoModule)
+      },
     ]
 
   },
