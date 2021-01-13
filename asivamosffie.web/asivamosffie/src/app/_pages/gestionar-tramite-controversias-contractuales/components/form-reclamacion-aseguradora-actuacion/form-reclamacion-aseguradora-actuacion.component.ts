@@ -91,6 +91,11 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         "rutaSoporte":this.addressForm.value.urlSoporte,
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
+        if(this.addressForm.value.resumenReclamacionFiduciaria!=null && this.addressForm.value.requereReclamacionComiteTecnico!=null && this.addressForm.value.urlSoporte!=null){
+          this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,'3').subscribe((data:any)=>{
+          
+          });
+        }
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       });
@@ -102,6 +107,11 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         "rutaSoporte":this.addressForm.value.urlSoporte,
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
+        if(this.addressForm.value.resumenReclamacionFiduciaria!=null && this.addressForm.value.requereReclamacionComiteTecnico!=null && this.addressForm.value.urlSoporte!=null){
+          this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,'3').subscribe((data:any)=>{
+          
+          });
+        }
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       });
