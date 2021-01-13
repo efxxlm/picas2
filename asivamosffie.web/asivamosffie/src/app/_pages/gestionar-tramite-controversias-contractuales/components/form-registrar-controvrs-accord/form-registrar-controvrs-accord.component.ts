@@ -139,6 +139,7 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
 
   loadSemaforos() {
     this.estadoSemaforo.emit('sin-diligenciar');
+    alert(this.addressForm.value.tipoControversia.codigo);
     switch (this.addressForm.value.tipoControversia.codigo) {
       case '1':
         if (this.addressForm.value.tipoControversia.codigo == '1' && this.addressForm.value.fechaSolicitud != null && this.addressForm.value.motivosSolicitud != null

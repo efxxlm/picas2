@@ -20,6 +20,7 @@ import { VerDetalleeditarActuacionMtComponent } from './components/ver-detalleed
 import { VerDetalleeditarActuacionNotaiComponent } from './components/ver-detalleeditar-actuacion-notai/ver-detalleeditar-actuacion-notai.component';
 import { VerDetalleeditarActuacionReclmComponent } from './components/ver-detalleeditar-actuacion-reclm/ver-detalleeditar-actuacion-reclm.component';
 import { VerDetalleeditarMesaDeTrabajoComponent } from './components/ver-detalleeditar-mesa-de-trabajo/ver-detalleeditar-mesa-de-trabajo.component';
+import { VerDetalleeditarReclamacionComponent } from './components/ver-detalleeditar-reclamacion/ver-detalleeditar-reclamacion.component';
 import { VerdetalleReclamacionActuacionCcComponent } from './components/verdetalle-reclamacion-actuacion-cc/verdetalle-reclamacion-actuacion-cc.component';
 import { VerdetalleReclamacionAsegCcComponent } from './components/verdetalle-reclamacion-aseg-cc/verdetalle-reclamacion-aseg-cc.component';
 import { VerdetalleTramiteCcComponent } from './components/verdetalle-tramite-cc/verdetalle-tramite-cc.component';
@@ -61,6 +62,10 @@ const routes: Routes = [
   {
     path: 'registrarReclamacionAseguradora/:id',
     component: RegistarReclamacionAseguradoraCcComponent
+  },
+  {
+    path: 'verDetalleEditarReclamacionAseguradora/:id',
+    component: VerDetalleeditarReclamacionComponent
   },
   {
     path: 'verDetalleReclamacionAseguradora/:id',

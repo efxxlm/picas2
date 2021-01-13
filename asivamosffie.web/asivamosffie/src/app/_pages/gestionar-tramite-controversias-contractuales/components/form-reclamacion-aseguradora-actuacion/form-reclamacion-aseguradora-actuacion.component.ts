@@ -33,7 +33,6 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   constructor(private router: Router, private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
-      this.addressForm.get('requiereReclamacionAseguradora').setValue(true);
       this.addressForm.get('resumenReclamacionFiduciaria').setValue('prueba');
       this.addressForm.get('requereReclamacionComiteTecnico').setValue(true);
       this.addressForm.get('definitivoyCerrado').setValue(true);

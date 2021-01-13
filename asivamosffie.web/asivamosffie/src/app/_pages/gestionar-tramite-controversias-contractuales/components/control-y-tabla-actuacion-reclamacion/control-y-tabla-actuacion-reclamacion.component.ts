@@ -24,7 +24,8 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     'gestion',
   ];
   dataTable: any[] = [];  
-  public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
+  //public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
+  public reclamacionId = parseInt(localStorage.getItem("controversiaID"));
   constructor(private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
