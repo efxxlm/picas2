@@ -343,6 +343,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/validar-financ-solicitud-pago/validar-financ-solicitud-pago.module')
         .then(m => m.ValidarFinancSolicitudPagoModule)
       },
+      {
+        path: 'generarOrdenDeGiro',
+        loadChildren: () => import('./_pages/generar-orden-giro/generar-orden-giro.module')
+        .then(m => m.GenerarOrdenGiroModule)
+      },
     ]
 
   },

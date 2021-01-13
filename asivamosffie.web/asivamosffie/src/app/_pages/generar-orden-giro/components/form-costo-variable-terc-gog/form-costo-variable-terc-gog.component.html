@@ -1,0 +1,107 @@
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+                Demolición
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <p><strong>Valor facturado por concepto: </strong>$ 8.000.000</p>
+            <mat-card-title class="header-card--text sub-text">
+                Aportante
+            </mat-card-title>
+            <p><strong>Tipo de aportante: </strong>Entidad territorial</p>
+            <p><strong>Nombre del aportante: </strong>Alcaldía de Susacón</p>
+            <p><strong>Fuente de recursos: </strong>Contingencias</p>
+            <p><strong>Valor facturado por el concepto para el aportante después del descuento: </strong>$ 7.970.000</p>
+            <h2 class="card-subTitle">Descuentos Dirección financiera</h2>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="aplicarDescuentos">¿Se requieren aplicar descuentos sobre el
+                                concepto de pago?</label>
+                        </div>
+                        <div class="col">
+                            <mat-radio-group class="radioInput" formControlName="aplicarDescuentos" required>
+                                <mat-radio-button [value]="true">Sí</mat-radio-button>
+                                <mat-radio-button [value]="false">No</mat-radio-button>
+                            </mat-radio-group>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex mt-1em" *ngIf="addressForm.get('aplicarDescuentos').value==true">
+                <label class="mr-label" class="label-left"><b>¿Cuántos descuentos se aplican sobre el concepto de
+                        pago?</b></label>
+                <div class="col d-flex">
+                    <mat-form-field class="w-25">
+                        <input matInput type="text" maxlength="2" formControlName="numeroDescuentos" required>
+                    </mat-form-field>
+                    <span class="contador">{{2 - addressForm.get( 'numeroDescuentos' ).value.length}}</span>
+                </div>
+            </div>
+            <div formArrayName="descuentos" *ngIf="addressForm.get( 'numeroDescuentos' ).value !== null">
+                <div *ngFor="let descuento of descuentos.controls; index as i">
+                    <mat-card-title class="header-card--text sub-text">
+                        Descuento {{i+1}}
+                    </mat-card-title>
+                    <div [formGroup]="descuento">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="pr-1">
+                                        <label class="label-left" for="tipoDescuento">Tipo de descuento</label>
+                                    </div>
+                                    <div class="col">
+                                        <mat-form-field class="select-width w-75">
+                                            <mat-select formControlName="tipoDescuento" required>
+                                                <mat-option *ngFor="let contr of tipoDescuentoArray" [value]="contr.value">
+                                                    {{ contr.name }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="pr-1">
+                                        <label class="label-left" for="valorDescuento">
+                                            Valor del descuento
+                                        </label>
+                                    </div>
+                                    <div class="col d-flex">
+                                        <mat-form-field class="full-width w-75">
+                                            <input matInput #valorDescuento currencyMask maxlength="20" required
+                                                formControlName="valorDescuento" (keypress)="validateNumberKeypress($event)"
+                                                onKeyPress="if(this.value.length>=this.maxLength) return false;"
+                                                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center' }">
+                                        </mat-form-field>
+                                        <span class="contador" [matTooltipPosition]="'above'"
+                                            matTooltip="Valor en ($) Pesos colombianos" matTooltipClass="info-tooltip">{{20 -
+                                            valorDescuento.value.length}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right" *ngIf="descuentos.controls.length > 1">
+                            <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarDescuento( i )">
+                              <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                              Eliminar descuento
+                            </button>
+                          </div>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <div class="text-center mb-2em">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+            <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+    </div>
+</form>

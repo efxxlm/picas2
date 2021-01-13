@@ -1,0 +1,94 @@
+<div style="margin-top: 1em;">
+    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+        A continuación encontrará los tipos de pago asociados a la factura para que usted determine la distribución de los descuentos
+        identificados por la Dirección Técnica.
+    </div>
+</div>
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="tipoDescuento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de descuento </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoDescuento }} </td>
+        </ng-container>
+        <ng-container matColumnDef="valorDescuento">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor del descuento </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.valorDescuento }} </td>
+        </ng-container>
+        <ng-container matColumnDef="valorTotalDescuentos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor total de descuentos </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.valorTotalDescuentos }} </td>
+        </ng-container>
+        <ng-container matColumnDef="valorNetoGiro">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor neto de giro </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.valorNetoGiro }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+</div>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion-black">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Costo variable
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    4 x mil
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>Nombre del concepto: </strong>Demolición </p>
+                <mat-card-title class="header-card--text sub-text">
+                    Aportante 1
+                </mat-card-title>
+                <div class="mt-1em">
+                    <p><strong>Tipo de aportante: </strong>Entidad Territorial</p>
+                    <p><strong>Nombre del aportante: </strong>Alcaldía de Susacón</p>
+                    <p><strong>Fuente de recursos: </strong>Contingencias</p>
+                    <p><strong>Valor del descuento: </strong>$ 15.000</p>
+                </div>
+                <mat-card-title class="header-card--text sub-text">
+                    Aportante 2
+                </mat-card-title>
+                <div class="mt-1em">
+                    <p><strong>Tipo de aportante: </strong>Tercero</p>
+                    <p><strong>Nombre del aportante: </strong>Fundación Pies Descalzos</p>
+                    <p><strong>Fuente de recursos: </strong>Recursos propios</p>
+                    <p><strong>Valor del descuento: </strong>$ 15.000</p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-expansion-panel> 
+</mat-accordion>
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion-black">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title">
+                Tipo de pago 3
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-card class="shipping-card var-main-gris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    4 x mil
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left">
+                <p><strong>Nombre del concepto: </strong>Cimentación </p>
+                <mat-card-title class="header-card--text sub-text">
+                    Aportante 1
+                </mat-card-title>
+                <div class="mt-1em">
+                    <p><strong>Tipo de aportante: </strong>Entidad Territorial</p>
+                    <p><strong>Nombre del aportante: </strong>Alcaldía de Susacón</p>
+                    <p><strong>Fuente de recursos: </strong>Contingencias</p>
+                    <p><strong>Valor del descuento: </strong>$ 30.000</p>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </mat-expansion-panel>
+</mat-accordion>

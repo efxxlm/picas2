@@ -1,0 +1,38 @@
+<div class="table-responsive text-center">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+        <ng-container matColumnDef="drp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
+            <td mat-cell *matCellDef="let element"> <b>{{element.drp}}</b></td>
+        </ng-container>
+
+        <ng-container matColumnDef="numeroDRP">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.numeroDRP}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nombreAportante">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre del aportante </th>
+            <td mat-cell *matCellDef="let element" style="padding: 0 0em !important;">
+                <div class="supportElement" *ngFor="let el of element.nombreAportante ; let i = index">
+                        {{el.nombre }}
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="porcParticipacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre del aportante </th>
+            <td mat-cell *matCellDef="let element" style="padding: 0 0em !important;">
+                <div class="supportElement" *ngFor="let el of element.porcParticipacion ; let i = index">
+                        {{el.numero }}
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
+

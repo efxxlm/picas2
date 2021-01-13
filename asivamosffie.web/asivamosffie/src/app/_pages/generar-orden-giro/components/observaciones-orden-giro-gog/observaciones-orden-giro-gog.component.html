@@ -1,0 +1,19 @@
+<form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+    <div class="d-flex align-items-center mtop">
+        <div class="text-area-quill izqTitle">
+            <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a la orden de giro</label>
+            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required 
+                (onContentChanged)="maxLength($event, 3000)" formControlName="observaciones" #observaciones></quill-editor>
+        </div>
+        <span class="contador miles" *ngIf="addressForm.get('observaciones').value">
+            {{3000 - (textoLimpio(observaciones.quillEditor,3000))}}
+        </span>
+        <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+            3000
+        </span>
+    </div>
+    <button mat-button color="warn" class="btn-guardar"
+        type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+</form>
