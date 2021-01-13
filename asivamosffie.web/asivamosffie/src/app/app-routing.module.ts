@@ -348,6 +348,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/generar-orden-giro/generar-orden-giro.module')
         .then(m => m.GenerarOrdenGiroModule)
       },
+      {
+        path: 'gestionarProcesoDefensaJudicial',
+        loadChildren: () => import('./_pages/gestionar-procesos-defensa-judicial/gestionar-procesos-defensa-judicial.module')
+        .then(m => m.GestionarProcesosDefensaJudicialModule)
+      },
     ]
 
   },
