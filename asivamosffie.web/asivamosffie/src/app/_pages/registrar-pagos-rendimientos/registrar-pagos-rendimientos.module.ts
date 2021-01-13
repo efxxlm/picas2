@@ -6,9 +6,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { QuillModule } from 'ngx-quill';
 import { MaterialModule } from 'src/app/material/material.module';
+import { TablaRegistrarPagosRprComponent } from './components/tabla-registrar-pagos-rpr/tabla-registrar-pagos-rpr.component';
+import { TablaRegistrarRendimientosRprComponent } from './components/tabla-registrar-rendimientos-rpr/tabla-registrar-rendimientos-rpr.component';
+import { DialogCargarReportPagosRprComponent } from './components/dialog-cargar-report-pagos-rpr/dialog-cargar-report-pagos-rpr.component';
+import { DialogCargarReportRendRprComponent } from './components/dialog-cargar-report-rend-rpr/dialog-cargar-report-rend-rpr.component';
 
 @NgModule({
-  declarations: [RegistrarPagosRendimientosComponent],
+  declarations: [RegistrarPagosRendimientosComponent, TablaRegistrarPagosRprComponent, TablaRegistrarRendimientosRprComponent, DialogCargarReportPagosRprComponent, DialogCargarReportRendRprComponent],
   imports: [
     RegistrarPagosRendimientosRoutingModule,
     CommonModule,

@@ -217,6 +217,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
         .then(m => m.FasePreconstruccionModule)
       },
+      {
+        path: 'registrarPagosRendimientos',
+        loadChildren: () => import('./_pages/registrar-pagos-rendimientos/registrar-pagos-rendimientos.module')
+        .then(m => m.RegistrarPagosRendimientosModule)
+      },
     ]
 
   },

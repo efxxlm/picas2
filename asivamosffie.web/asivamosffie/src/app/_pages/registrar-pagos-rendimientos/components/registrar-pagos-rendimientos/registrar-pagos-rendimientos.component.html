@@ -1,1 +1,34 @@
-<p>registrar-pagos-rendimientos works!</p>
+<section class="container">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Registrar pagos y rendimientos
+        </h1>
+        <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+        <div class="text-info" *ngIf="verAyuda">
+            <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+                <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+            </button>
+            Bienvenido/a, aquí podrá realizar el registro de los pagos por orden de giro y el registro de los rendimientos que han sido generados a los
+            aportantes y fuentes de financiación disponibles y activas para la ejecución de proyectos de infraestructura del FFIE.
+        </div>
+    </div>
+    <div class="tabs--actions">
+        <button mat-raised-button color="accent" class="tabs--btn" [ngClass]="{'active': registrarPagos === true}"
+            (click)="registrarPagos = true; registrarRendimientos = false;">
+            Registrar pagos
+        </button>
+        <button mat-raised-button color="accent" class="tabs--btn"
+            [ngClass]="{'active': registrarRendimientos === true}"
+            (click)="registrarRendimientos = true; registrarPagos = false;">
+            Registrar rendimientos
+        </button>
+    </div>
+    <app-tabla-registrar-pagos-rpr *ngIf="registrarPagos"></app-tabla-registrar-pagos-rpr>
+    <app-tabla-registrar-rendimientos-rpr *ngIf="registrarRendimientos"></app-tabla-registrar-rendimientos-rpr>
+</section>
