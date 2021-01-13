@@ -332,6 +332,11 @@ const routes: Routes = [
         path: 'autorizarSolicitudDePago',
         loadChildren: () => import('./_pages/autorizar-solicitud-pago/autorizar-solicitud-pago.module')
         .then(m => m.AutorizarSolicitudPagoModule)
+      },      
+      {
+        path: 'verificarFinancieramenteSolicitudDePago',
+        loadChildren: () => import('./_pages/verificar-financ-solicitud-pago/verificar-financ-solicitud-pago.module')
+        .then(m => m.VerificarFinancSolicitudPagoModule)
       },
     ]
 
