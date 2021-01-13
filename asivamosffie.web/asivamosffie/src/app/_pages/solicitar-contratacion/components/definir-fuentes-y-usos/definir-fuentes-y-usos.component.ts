@@ -249,6 +249,7 @@ export class DefinirFuentesYUsosComponent implements OnInit, OnDestroy {
     //let listaUsos =this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value.map((x) => x);
     let listaUsos: any[] = [];
 
+    if ( this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value )
     this.componentes(posicionAportante).controls[posicionComponente].get('listaUsos').value.forEach(u => {
         listaUsos.push(u)
     });
