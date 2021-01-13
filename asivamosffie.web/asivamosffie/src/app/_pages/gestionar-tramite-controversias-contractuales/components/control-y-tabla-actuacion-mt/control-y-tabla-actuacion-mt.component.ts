@@ -24,7 +24,8 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
     'gestion',
   ];
   dataTable: any[] = [];  
-  public idMesaTrabajo = parseInt(localStorage.getItem("idMesaTrabajo"));
+  //public idMesaTrabajo = parseInt(localStorage.getItem("idMesaTrabajo"));
+  public idMesaTrabajo = parseInt(localStorage.getItem("controversiaID"));
   constructor(private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
