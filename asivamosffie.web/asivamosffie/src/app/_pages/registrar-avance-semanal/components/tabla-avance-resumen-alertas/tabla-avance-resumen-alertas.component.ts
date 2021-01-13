@@ -27,23 +27,35 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
     constructor( private dialog: MatDialog ) { }
 
     ngOnInit(): void {
-        if ( this.seguimientoDiario !== undefined && this.seguimientoDiario.length > 0 ) {
+        if ( this.seguimientoDiario !== undefined ) {
             const dataSeguimientoDiario = [];
             const seguimientoDiario = [];
             let sumaTotal = 0;
-            for ( const seguimiento of this.seguimientoDiario ) {
-                if (    seguimiento.cantidadPersonalProgramado !== undefined
-                        && seguimiento.cantidadPersonalTrabajando !== undefined
-                        && seguimiento.numeroHorasRetrasoPersonal !== undefined )
-                {
-                    seguimientoDiario.push( seguimiento );
-                    sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
+            if ( this.seguimientoDiario.length > 0 ) {
+                for ( const seguimiento of this.seguimientoDiario ) {
+                    if (    seguimiento.cantidadPersonalProgramado !== undefined
+                            && seguimiento.cantidadPersonalTrabajando !== undefined
+                            && seguimiento.numeroHorasRetrasoPersonal !== undefined )
+                    {
+                        seguimientoDiario.push( seguimiento );
+                        sumaTotal += seguimiento.numeroHorasRetrasoPersonal;
+                    }
                 }
+            } else {
+                seguimientoDiario.push(
+                    {
+                        fechaSeguimiento: null,
+                        cantidadPersonalProgramado: '---',
+                        cantidadPersonalTrabajando: '---',
+                        numeroHorasRetrasoPersonal: '---',
+                        seguimientoDiarioObservaciones: ''
+                    }
+                );
             }
 
             dataSeguimientoDiario.push(
                 {
-                    totalHorasRetraso: sumaTotal,
+                    totalHorasRetraso: sumaTotal === 0 ? '---' : sumaTotal,
                     resumenAlertas: seguimientoDiario
                 }
             );

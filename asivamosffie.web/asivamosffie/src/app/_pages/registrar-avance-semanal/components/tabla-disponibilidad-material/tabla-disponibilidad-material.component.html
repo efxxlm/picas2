@@ -1,4 +1,4 @@
-<table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2" *ngIf="seguimientoDiario !== undefined && dataSeguimientoDiario.length > 0">
+<table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2 mt-1em" *ngIf="seguimientoDiario !== undefined && dataSeguimientoDiario.length > 0">
     <thead>
         <tr class="mat-header-row cdk-header-row ng-star-inserted">
             <th class="mat-header-cell cdk-header-cell ng-star-inserted" rowspan="2">
@@ -33,7 +33,7 @@
       <tr>
         <td class="mat-cell cdk-cell ng-star-inserted" style="padding: 0em !important;">
             <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let resumen of dataSeguimientoDiario[0].resumenAlertas">
-                {{ resumen.fechaSeguimiento | date: 'dd/MM/yyyy' }}
+                {{ resumen.fechaSeguimiento !== null ? ( resumen.fechaSeguimiento | date: 'dd/MM/yyyy' ) : '---' }}
             </div>
         </td>
         <td class="mat-cell cdk-cell ng-star-inserted" style="padding: 0em !important;">

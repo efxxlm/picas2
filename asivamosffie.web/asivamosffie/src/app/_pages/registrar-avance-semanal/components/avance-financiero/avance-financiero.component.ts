@@ -49,11 +49,8 @@ export class AvanceFinancieroComponent implements OnInit {
             this.seguimientoSemanalAvanceFinancieroId =  this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ?
             this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0].seguimientoSemanalAvanceFinancieroId : 0;
 
-            console.log( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length );
-
             if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
                 this.avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
-                console.log( this.avanceFinanciero );
                 this.formAvanceFinanciero.setValue(
                     {
                         requiereObservacion:    this.avanceFinanciero.requiereObservacion !== undefined ?

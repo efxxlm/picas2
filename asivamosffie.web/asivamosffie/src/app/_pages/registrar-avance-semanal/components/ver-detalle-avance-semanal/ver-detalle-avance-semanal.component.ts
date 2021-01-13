@@ -38,6 +38,7 @@ export class VerDetalleAvanceSemanalComponent implements OnInit {
     valuePendingSemaforo( value: string, tipoSemaforo: string ) {
         if ( tipoSemaforo === 'gestionObra' ) {
           this.semaforoGestionObra = value;
+          
         }
     }
 

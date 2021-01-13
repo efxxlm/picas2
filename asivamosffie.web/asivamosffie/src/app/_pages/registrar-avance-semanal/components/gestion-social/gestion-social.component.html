@@ -54,12 +54,11 @@
                                     <label class="label-left">Total de empleos generados</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <section style="width: 100%;">
+                                    <section style="width: 90%;">
                                         <mat-form-field>
-                                            <input matInput type="text" maxlength="3" formControlName="cantidadTotalEmpleos" readonly required>
+                                            <input matInput type="text" formControlName="cantidadTotalEmpleos" readonly>
                                         </mat-form-field>
                                     </section>
-                                    <span class="contador">{{3 - formGestionSocial.get( 'cantidadTotalEmpleos' ).value.length}}</span>
                                 </div>
                             </div>
                         </div>

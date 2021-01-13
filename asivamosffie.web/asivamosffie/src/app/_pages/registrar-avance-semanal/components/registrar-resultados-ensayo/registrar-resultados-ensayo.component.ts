@@ -15,6 +15,7 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
 
     formMuestra: FormGroup;
     ensayoLaboratorio: any;
+    maxDate: Date;
     editorStyle = {
         height: '45px'
     };
@@ -40,6 +41,7 @@ export class RegistrarResultadosEnsayoComponent implements OnInit {
     {
         this.crearFormulario();
         this.getEnsayoLaboratorio();
+        this.maxDate = new Date();
     }
 
     ngOnInit(): void {

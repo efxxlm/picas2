@@ -28,6 +28,7 @@ export class ConsultarEditarBitacoraComponent implements OnInit {
     this.avanceSemanalSvc.getListSeguimientoSemanalByContratacionProyectoId( this.activatedRoute.snapshot.params.id )
       .subscribe( bitacora => {
         this.consultarBitacora = bitacora;
+        console.log( this.consultarBitacora );
         this.ultimaBitacora = this.consultarBitacora[ this.consultarBitacora.length - 1 ];
       } );
   }

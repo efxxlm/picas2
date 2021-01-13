@@ -56,13 +56,14 @@
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte !== 'Sin registro'"
                 [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
                 Registrar seguimiento semanal
         </button>
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
-                *ngIf="element.numeroSemana !== primeraSemana"
+                *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === true"
                 [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
                 Consultar/Editar bitacora
         </button>
@@ -70,37 +71,30 @@
                 color="accent" 
                 class="btn-table"
                 (click)="enviarVerificacion( element.contratacionProyectoId )"
-                *ngIf="element.enviarSupervisor === true">
-                Enviar a verificación
+                *ngIf="element.enviarVerificacion === true">
+                {{ element.numeroSemana !== element.cantidadSemanas && element.actaCargada === false ? 'Enviar a verificación' : 'Enviar para registrar informe final' }}
         </button>
         <button mat-raised-button
                 color="accent" 
                 class="btn-table"
+                *ngIf="element.verCargarActa === true"
                 (click)="openDialogCargarActa( element )">
                 Cargar acta de terminación de contrato
         </button>
-        <!--
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
+                class="btn-table"
+                *ngIf="element.verReportarSeguimientoSemanal === true && element.fechaUltimoReporte === 'Sin registro'"
+                [routerLink]="[ 'registroSeguimientoSemanal', element.contratacionProyectoId ]">
                 Ver detalle/Editar
         </button>
         <button mat-raised-button
                 color="accent" 
-                class="btn-table">
+                class="btn-table"
+                *ngIf="element.numeroSemana !== primeraSemana && element.verEditarBitacora === false"
+                [routerLink]="[ 'consultarEditarBitacora', element.contratacionProyectoId ]">
                 Consultar bitácora
         </button>
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table">
-                Enviar para registrar informe final
-        </button>
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table">
-                Eliminar
-        </button>
-        -->
 
       </td>
     </ng-container>

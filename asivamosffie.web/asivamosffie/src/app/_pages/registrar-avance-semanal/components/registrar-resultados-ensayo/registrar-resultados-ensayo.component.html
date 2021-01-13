@@ -50,6 +50,8 @@
                                                             [matDatepicker]="pickerfechaMuestra"
                                                             formControlName="fechaEntregaResultado"
                                                             placeholder="DD/MM/AAAA"
+                                                            [min]="ensayoLaboratorio.fechaTomaMuestras"
+                                                            [max]="maxDate"
                                                             (click)="pickerfechaMuestra.open()"
                                                             readonly required>
                                                     <mat-datepicker #pickerfechaMuestra></mat-datepicker>
@@ -111,18 +113,18 @@
                                     </div>
                                 </mat-card-content>
                             </mat-card>
-                        </div>    
+                        </div>
+                        <div class="text-center" style="margin-bottom: 2em;">
+                            <button mat-button
+                                    color="warn"
+                                    class="btn-guardar"
+                                    type="submit"
+                                    [disabled]="formMuestra.dirty === false">
+                                    <img  src="assets/img/icon/guardar.svg">
+                            </button>
+                        </div>
                 </mat-expansion-panel>
             </mat-accordion>
-            <div class="text-center" style="margin-bottom: 2em;">
-                <button mat-button
-                        color="warn"
-                        class="btn-guardar"
-                        type="submit"
-                        [disabled]="formMuestra.dirty === false">
-                        <img  src="assets/img/icon/guardar.svg">
-                </button>
-            </div>
         </div>
     </form>
 </section>

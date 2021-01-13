@@ -115,6 +115,8 @@
                                                         [matDatepicker]="pickerfechaToma"
                                                         formControlName="fechaTomaMuestras"
                                                         placeholder="DD/MM/AAAA"
+                                                        [min]="seguimientoSemanal.fechaInicio"
+                                                        [max]="seguimientoSemanal.fechaFin"
                                                         (click)="pickerfechaToma.open()"
                                                         readonly required>
                                                 <mat-datepicker #pickerfechaToma></mat-datepicker>
@@ -132,7 +134,7 @@
                                       </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" *ngIf="ensayo.get( 'fechaTomaMuestras' ).value !== null">
                                     <div class="col-md-12">
                                       <div class="row">
                                         <div class="pr-1">
@@ -144,6 +146,8 @@
                                                         [matDatepicker]="pickerProyectadaEntrega"
                                                         formControlName="fechaEntregaResultados"
                                                         placeholder="DD/MM/AAAA"
+                                                        [min]="ensayo.get( 'fechaTomaMuestras' ).value"
+                                                        [max]="maxDate"
                                                         (click)="pickerProyectadaEntrega.open()"
                                                         readonly required>
                                                 <mat-datepicker #pickerProyectadaEntrega></mat-datepicker>
@@ -283,7 +287,7 @@
   <mat-accordion *ngIf="gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0">
     <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let ensayo of gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio; index as i">
         <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
+            <mat-panel-title class="expansion-style--title" [ngClass]="valuePendingSemaforo( ensayo.registroCompletoMuestras )">
               Ensayo de laboratorio {{ i + 1 }}
             </mat-panel-title>
         </mat-expansion-panel-header>
