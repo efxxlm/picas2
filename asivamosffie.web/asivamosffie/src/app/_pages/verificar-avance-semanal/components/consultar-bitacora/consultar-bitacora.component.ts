@@ -1,3 +1,5 @@
+import { ActivatedRoute } from '@angular/router';
+import { RegistrarAvanceSemanalService } from './../../../../core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConsultarBitacoraComponent implements OnInit {
 
-  constructor() { }
+    consultarBitacora: any;
+    ultimaBitacora: any;
 
-  ngOnInit(): void {
-  }
+    constructor(
+        private avanceSemanalSvc: RegistrarAvanceSemanalService,
+        private activatedRoute: ActivatedRoute )
+    {
+        this.getBitacora();
+    }
+
+    ngOnInit(): void {
+    }
+
+    getBitacora() {
+        this.consultarBitacora = undefined;
+        this.ultimaBitacora = undefined;
+        this.avanceSemanalSvc.getListSeguimientoSemanalByContratacionProyectoId( this.activatedRoute.snapshot.params.id )
+          .subscribe( bitacora => {
+            this.consultarBitacora = bitacora;
+            console.log( this.consultarBitacora );
+            this.ultimaBitacora = this.consultarBitacora[ this.consultarBitacora.length - 1 ];
+          } );
+    }
+    
+    valuePendingBitacora( value: boolean ) {
+        if ( value === true ) {
+          this.getBitacora();
+        }
+    }
 
 }

@@ -1,5 +1,5 @@
 import { VerificarAvanceSemanalService } from './../../../../core/_services/verificarAvanceSemanal/verificar-avance-semanal.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RegistrarAvanceSemanalService } from 'src/app/core/_services/registrarAvanceSemanal/registrar-avance-semanal.service';
 
@@ -13,6 +13,10 @@ export class FormValidarSeguimientoSemanalComponent implements OnInit {
     seguimientoSemanal: any;
     tipoObservaciones: any;
     semaforoAvanceFisico = 'sin-diligenciar';
+    semaforoGestionObra = 'sin-diligenciar';
+    semaforoReporteActividad = 'sin-diligenciar';
+    semaforoRegistroFotografico = 'sin-diligenciar';
+    semaforoComiteObra = 'sin-diligenciar';
 
     constructor(
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
@@ -20,7 +24,7 @@ export class FormValidarSeguimientoSemanalComponent implements OnInit {
         private activatedRoute: ActivatedRoute )
     {
         this.avanceSemanalSvc
-        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0, 1224 )
+        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( this.activatedRoute.snapshot.params.id, 0 )
             .subscribe(
               seguimiento => {
                   this.seguimientoSemanal = seguimiento;
@@ -30,29 +34,29 @@ export class FormValidarSeguimientoSemanalComponent implements OnInit {
                       this.tipoObservaciones = response;
                       console.log( this.tipoObservaciones );
                       // Semaforo avance fisico
-                      // const avanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
-                      // if ( avanceFisico.registroCompletoObservacionApoyo === false ) {
-                      //     this.semaforoAvanceFisico = 'en-proceso';
-                      // } 
-                      // if ( avanceFisico.registroCompletoObservacionApoyo === true ) {
-                      //     this.semaforoAvanceFisico = 'completo';
-                      // }
+                      const avanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
+                      if ( avanceFisico.registroCompletoObservacionSupervisor === false ) {
+                          this.semaforoAvanceFisico = 'en-proceso';
+                      } 
+                      if ( avanceFisico.registroCompletoObservacionSupervisor === true ) {
+                          this.semaforoAvanceFisico = 'completo';
+                      }
                       // Semaforo registro fotografico
-                      // const registroFotografico = this.seguimientoSemanal.seguimientoSemanalRegistroFotografico[0];
-                      // if ( registroFotografico.registroCompletoObservacionApoyo === false ) {
-                      //     this.semaforoRegistroFotografico = 'en-proceso';
-                      // } 
-                      // if ( registroFotografico.registroCompletoObservacionApoyo === true ) {
-                      //     this.semaforoRegistroFotografico = 'completo';
-                      // }
+                      const registroFotografico = this.seguimientoSemanal.seguimientoSemanalRegistroFotografico[0];
+                      if ( registroFotografico.registroCompletoObservacionSupervisor === false ) {
+                          this.semaforoRegistroFotografico = 'en-proceso';
+                      } 
+                      if ( registroFotografico.registroCompletoObservacionSupervisor === true ) {
+                          this.semaforoRegistroFotografico = 'completo';
+                      }
                       // Semaforo comite de obra
-                      // const comiteObra = this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra[0];
-                      // if ( comiteObra.registroCompletoObservacionApoyo === false ) {
-                      //     this.semaforoComiteObra = 'en-proceso';
-                      // } 
-                      // if ( comiteObra.registroCompletoObservacionApoyo === true ) {
-                      //     this.semaforoComiteObra = 'completo';
-                      // }
+                      const comiteObra = this.seguimientoSemanal.seguimientoSemanalRegistrarComiteObra[0];
+                      if ( comiteObra.registroCompletoObservacionSupervisor === false ) {
+                          this.semaforoComiteObra = 'en-proceso';
+                      } 
+                      if ( comiteObra.registroCompletoObservacionSupervisor === true ) {
+                          this.semaforoComiteObra = 'completo';
+                      }
                   } );
               }
             );
@@ -67,10 +71,10 @@ export class FormValidarSeguimientoSemanalComponent implements OnInit {
           if ( this.seguimientoSemanal !== undefined ) {
             if ( this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero.length > 0 ) {
               const avanceFinanciero = this.seguimientoSemanal.seguimientoSemanalAvanceFinanciero[0];
-              if ( avanceFinanciero.requiereObservacion !== undefined && avanceFinanciero.registroCompleto === false ) {
+              if ( avanceFinanciero.registroCompletoObservacionSupervisor === false ) {
                 semaforoFinanciero = 'en-proceso';
               }
-              if ( avanceFinanciero.registroCompleto === true ) {
+              if ( avanceFinanciero.registroCompletoObservacionSupervisor === true ) {
                 semaforoFinanciero = 'completo';
               }
             }
@@ -78,6 +82,25 @@ export class FormValidarSeguimientoSemanalComponent implements OnInit {
           return semaforoFinanciero;
         } else {
           return 'en-alerta';
+        }
+    }
+
+    valuePendingSemaforo( tipoAcordeon: string, totalGestion: number, totalAcordeon: number ) {
+        if ( tipoAcordeon === 'gestionObra' ) {
+            if ( totalGestion > 0 && ( totalGestion < totalAcordeon ) ) {
+                this.semaforoGestionObra = 'en-proceso';
+            }
+            if ( totalGestion > 0 && ( totalGestion === totalAcordeon ) ) {
+                this.semaforoGestionObra = 'completo';
+            }
+        }
+        if ( tipoAcordeon === 'reporteActividad' ) {
+            if ( totalGestion > 0 && ( totalGestion < totalAcordeon ) ) {
+                this.semaforoReporteActividad = 'en-proceso';
+            }
+            if ( totalGestion > 0 && ( totalGestion === totalAcordeon ) ) {
+                this.semaforoReporteActividad = 'completo';
+            }
         }
     }
 

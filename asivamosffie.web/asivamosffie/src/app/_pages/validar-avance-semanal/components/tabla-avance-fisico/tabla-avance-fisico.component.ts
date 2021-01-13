@@ -26,7 +26,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
     seguimientoSemanalAvanceFisicoId: number;
     seguimientoSemanalObservacionId = 0;
     seguimientoSemanalAvanceFisico: any;
-    observacionApoyo: any;
+    observacionApoyo: any[] = [];
     formAvanceFisico: FormGroup = this.fb.group({
         tieneObservaciones: [ null, Validators.required ],
         observaciones: [ null ],
@@ -261,13 +261,18 @@ export class TablaAvanceFisicoComponent implements OnInit {
             .subscribe(
                 response => {
                     this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () =>   this.routes.navigate(
-                                    [
-                                        '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
-                                    ]
-                                )
-                    );
+                    this.verificarAvanceSemanalSvc.getValidarRegistroCompletoObservaciones( this.seguimientoSemanalId, 'True' )
+                        .subscribe(
+                            () => {
+                                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                                    () =>   this.routes.navigate(
+                                                [
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
+                                                ]
+                                            )
+                                );
+                            }
+                        );
                 },
                 err => this.openDialog( '', `<b>${ err.message }</b>` )
             );

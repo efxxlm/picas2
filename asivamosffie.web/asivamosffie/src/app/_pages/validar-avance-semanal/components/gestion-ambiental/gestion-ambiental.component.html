@@ -12,7 +12,7 @@
 
     <ng-container *ngIf="gestionObraAmbiental.seEjecutoGestionAmbiental === false || cantidadActividades === 0; else elseTemplate">
         <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-            <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoAmbiental !== undefined">
+            <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoAmbiental.length > 0">
                 <mat-card-header class="header-card">
                       <mat-card-title class="header-card--text">
                             Verificación del apoyo a la supervisión
@@ -41,7 +41,7 @@
             </mat-card>
         </ng-container>
         <ng-template #noEsVerDetalle>
-            <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoAmbiental !== undefined">
+            <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoAmbiental.length > 0">
                 <mat-card-header class="header-card">
                       <mat-card-title class="header-card--text">
                             Verificación del apoyo a la supervisión
@@ -193,7 +193,7 @@
                                 && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
                                 && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoMaterialInsumo">
                     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoManejoMateriales !== undefined">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoManejoMateriales.length > 0">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                         Verificación del apoyo a la supervisión
@@ -222,7 +222,7 @@
                         </mat-card>
                       </ng-container>
                       <ng-template #noEsVerDetalle>
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoManejoMateriales !== undefined">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoManejoMateriales.length > 0">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                         Verificación del apoyo a la supervisión
@@ -325,7 +325,7 @@
                                 && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
                                 && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosConstruccion">
                     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoResiduosConstruccion !== undefined">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoResiduosConstruccion.length > 0">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                         Verificación del apoyo a la supervisión
@@ -354,7 +354,7 @@
                         </mat-card>
                       </ng-container>
                       <ng-template #noEsVerDetalle>
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoResiduosConstruccion !== undefined">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoResiduosConstruccion.length > 0">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                         Verificación del apoyo a la supervisión
@@ -458,7 +458,7 @@
                                 && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
                                 && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.manejoResiduosPeligrosos">
                     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoResiduosPeligrosos !== undefined">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoResiduosPeligrosos.length > 0">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                         Verificación del apoyo a la supervisión
@@ -487,7 +487,7 @@
                         </mat-card>
                       </ng-container>
                       <ng-template #noEsVerDetalle>
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoResiduosPeligrosos !== undefined">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoResiduosPeligrosos.length > 0">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                         Verificación del apoyo a la supervisión
@@ -590,7 +590,7 @@
                                 && formGestionAmbiental.get( 'seEjecutoGestionAmbiental' ).value === true
                                 && actividad.get( 'tipoActividad' ).value.codigo === tipoActividadesCodigo.otra">
                     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoOtros !== undefined">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoOtros.length > 0">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                         Verificación del apoyo a la supervisión
@@ -619,7 +619,7 @@
                         </mat-card>
                       </ng-container>
                       <ng-template #noEsVerDetalle>
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoOtros !== undefined">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="obsApoyoOtros.length > 0">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                         Verificación del apoyo a la supervisión

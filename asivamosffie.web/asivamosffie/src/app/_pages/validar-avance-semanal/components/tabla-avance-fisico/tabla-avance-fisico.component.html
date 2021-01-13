@@ -73,7 +73,7 @@
 </section>
 <section *ngIf="seguimientoSemanalAvanceFisico !== undefined">
     <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
-        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="observacionApoyo !== undefined">
+        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="observacionApoyo.length > 0">
             <mat-card-header class="header-card">
                   <mat-card-title class="header-card--text">
                         Verificación del apoyo a la supervisión
@@ -102,7 +102,7 @@
         </mat-card>
     </ng-container>
     <ng-template #noEsVerDetalle>
-        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="observacionApoyo !== undefined">
+        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="observacionApoyo.length > 0">
             <mat-card-header class="header-card">
                   <mat-card-title class="header-card--text">
                         Verificación del apoyo a la supervisión

@@ -10,6 +10,7 @@ export class VerificarAvanceFisicoComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Input() avanceFisicoObs: string;
+    @Input() estadoSemaforo: string;
     semaforoAvanceFisico = 'sin-diligenciar';
 
     constructor() { }

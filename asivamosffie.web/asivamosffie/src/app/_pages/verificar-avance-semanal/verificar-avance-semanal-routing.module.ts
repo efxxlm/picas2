@@ -1,10 +1,10 @@
 import { VerDetalleAvanceSemanalComponent } from './components/ver-detalle-avance-semanal/ver-detalle-avance-semanal.component';
-import { VerDetalleMuestrasComponent } from './../registrar-avance-semanal/components/ver-detalle-muestras/ver-detalle-muestras.component';
 import { ConsultarBitacoraComponent } from './components/consultar-bitacora/consultar-bitacora.component';
 import { FormVerificarSeguimientoSemanalComponent } from './components/form-verificar-seguimiento-semanal/form-verificar-seguimiento-semanal.component';
 import { VerificarAvanceSemanalComponent } from './components/verificar-avance-semanal/verificar-avance-semanal.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { VerDetalleMuestrasComponent } from './components/ver-detalle-muestras/ver-detalle-muestras.component';
 
 const routes: Routes = [
   {
