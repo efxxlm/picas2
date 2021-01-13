@@ -1,0 +1,42 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<div style="padding: 30px 5px; text-align: center;">
+    <h1 class="title-menu--h1 centerTrick">
+        Observaciones reporte de pago
+    </h1>
+    <div class="mt-1em">
+        10/08/2020&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="info-text info-text__table sin-diligenciar"></span>Fallido
+    </div>
+    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+        <div class="row">
+            <div class="col-md-12" style="padding-left: 0;">
+                <div>
+                    <div class="d-flex align-items-center">
+                        <div class="text-area-quill"
+                            style="text-align: left; margin-top: 1em; max-width: calc(100% - 2.3em); margin-left: -2em;">
+                            <label for="observaciones" class="text-area-quill--label size-label colorMainColor">
+                                Observaciones
+                            </label>
+                            <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"
+                                #observaciones>
+                            </quill-editor>
+                        </div>
+                        <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
+                            {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                        </span>
+                        <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
+                            1000
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center" style="margin-top: 15px;">
+            <button mat-raised-button color="accent" class="btn-dialog" type="submit" [disabled]="addressForm.invalid">
+                Realizar observación
+            </button>
+        </div>
+    </form>
+</div>

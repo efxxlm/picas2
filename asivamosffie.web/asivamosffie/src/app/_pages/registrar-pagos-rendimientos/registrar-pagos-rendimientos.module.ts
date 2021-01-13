@@ -10,9 +10,11 @@ import { TablaRegistrarPagosRprComponent } from './components/tabla-registrar-pa
 import { TablaRegistrarRendimientosRprComponent } from './components/tabla-registrar-rendimientos-rpr/tabla-registrar-rendimientos-rpr.component';
 import { DialogCargarReportPagosRprComponent } from './components/dialog-cargar-report-pagos-rpr/dialog-cargar-report-pagos-rpr.component';
 import { DialogCargarReportRendRprComponent } from './components/dialog-cargar-report-rend-rpr/dialog-cargar-report-rend-rpr.component';
+import { ObservacionesReportPagoRprComponent } from './components/observaciones-report-pago-rpr/observaciones-report-pago-rpr.component';
+import { ObservacionesReportRendRprComponent } from './components/observaciones-report-rend-rpr/observaciones-report-rend-rpr.component';
 
 @NgModule({
-  declarations: [RegistrarPagosRendimientosComponent, TablaRegistrarPagosRprComponent, TablaRegistrarRendimientosRprComponent, DialogCargarReportPagosRprComponent, DialogCargarReportRendRprComponent],
+  declarations: [RegistrarPagosRendimientosComponent, TablaRegistrarPagosRprComponent, TablaRegistrarRendimientosRprComponent, DialogCargarReportPagosRprComponent, DialogCargarReportRendRprComponent, ObservacionesReportPagoRprComponent, ObservacionesReportRendRprComponent],
   imports: [
     RegistrarPagosRendimientosRoutingModule,
     CommonModule,

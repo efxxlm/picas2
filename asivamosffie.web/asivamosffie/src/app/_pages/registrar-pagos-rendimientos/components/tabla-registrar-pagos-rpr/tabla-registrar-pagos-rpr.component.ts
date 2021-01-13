@@ -4,6 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogCargarReportPagosRprComponent } from '../dialog-cargar-report-pagos-rpr/dialog-cargar-report-pagos-rpr.component';
+import { ObservacionesReportPagoRprComponent } from '../observaciones-report-pago-rpr/observaciones-report-pago-rpr.component';
 
 @Component({
   selector: 'app-tabla-registrar-pagos-rpr',
@@ -71,5 +72,11 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
     dialogConfig.height = 'auto';
     dialogConfig.width = '865px';
     const dialogRef = this.dialog.open(DialogCargarReportPagosRprComponent, dialogConfig);
+  }
+  abrirObservaciones(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '865px';
+    const dialogRef = this.dialog.open(ObservacionesReportPagoRprComponent, dialogConfig);
   }
 }

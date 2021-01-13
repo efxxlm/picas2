@@ -37,7 +37,8 @@
                 <button mat-raised-button color="accent" class="btn-table">
                     Ver detalle
                 </button>
-                <button mat-raised-button color="accent" class="btn-table"  [class.sin-diligenciar]="element.estadoCargue=='Fallido'">
+                <button mat-raised-button color="accent" class="btn-table"  [class.sin-diligenciar]="element.estadoCargue=='Fallido'"
+                *ngIf="element.numRegistrosInvalidos>0" (click)="this.abrirObservaciones()">
                     Observaciones
                 </button>
             </td>
