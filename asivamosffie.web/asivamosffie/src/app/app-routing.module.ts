@@ -323,6 +323,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/registrar-validar-requisitos-pago/registrar-validar-requisitos-pago.module')
         .then(m => m.RegistrarValidarRequisitosPagoModule)
       },
+      {
+        path: 'aprobarSolicitudesPago',
+        loadChildren: () => import('./_pages/aprobar-solicitudes-pago/aprobar-solicitudes-pago.module')
+        .then(m => m.AprobarSolicitudesPagoModule)
+      },
     ]
 
   },
