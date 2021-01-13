@@ -432,19 +432,20 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
-            List<SeguimientoSemanal> ListseguimientoSemanal =
-                await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Proyecto)
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Contratacion)
-                       .ThenInclude(r => r.Contrato)
-                .Include(r => r.SeguimientoSemanalAvanceFisico)
-
-                .ToListAsync();
+            List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
+                                                                    .Include(r => r.ContratacionProyecto)
+                                                                       .ThenInclude(r => r.Proyecto)
+                                                                    .Include(r => r.ContratacionProyecto)
+                                                                       .ThenInclude(r => r.Contratacion)
+                                                                           .ThenInclude(r => r.Contrato)
+                                                                    .Include(r => r.SeguimientoSemanalAvanceFisico)
+                                                                    .Include(r => r.SeguimientoSemanalGestionObra)
+                                                                       .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                                                           .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                                                               .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+                                                                    .ToListAsync();
 
             List<dynamic> ListBitaCora = new List<dynamic>();
-
             List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
             List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
 
@@ -474,7 +475,7 @@ namespace asivamosffie.services
                 {
                     UltimoReporte = item.FechaModificacion,
                     item.SeguimientoSemanalId,
-                    RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                    RegistroCompletoMuestras = item.RegistroCompletoMuestras,
                     item.NumeroSemana,
                     UltimaSemana,
                     item.FechaInicio,
@@ -488,6 +489,14 @@ namespace asivamosffie.services
                     EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
                     EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
 
+                    RegistroCompletoMuestrasVerificar = item.SeguimientoSemanalGestionObra?
+                    .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
+                    .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
+                    .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo,
+                    RegistroCompletoMuestrasValidar = item.SeguimientoSemanalGestionObra?
+                    .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
+                    .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
+                    .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo
                 });
             }
             return ListBitaCora;
