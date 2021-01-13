@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Validators, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { CommonService } from 'src/app/core/_services/common/common.service';
@@ -7,11 +7,12 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-form-registrar-mesa-de-trabajo',
-  templateUrl: './form-registrar-mesa-de-trabajo.component.html',
-  styleUrls: ['./form-registrar-mesa-de-trabajo.component.scss']
+  selector: 'app-form-registrar-mesa-de-trabajo-act',
+  templateUrl: './form-registrar-mesa-de-trabajo-act.component.html',
+  styleUrls: ['./form-registrar-mesa-de-trabajo-act.component.scss']
 })
-export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
+export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
+
   @Input() isEditable;
 
   addressForm = this.fb.group({
@@ -49,6 +50,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isEditable == true) {
+      //this.services.GetActuacionMesaByActuacionMesaId()
       this.addressForm.get('estadoAvanceTramite').setValue('1');
       this.addressForm.get('fechaActuacionAdelantada').setValue('10/10/2020');
       this.addressForm.get('actuacionAdelantada').setValue('Pruebas');
@@ -118,7 +120,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
         "rutaSoporte": this.addressForm.value.urlSoporte
       }
     }
-    this.services.CreateEditarMesa(mesaTrabajoArray).subscribe((data:any)=>{
+    this.services.CreateEditarActuacionMesa(mesaTrabajoArray).subscribe((data:any)=>{
       if (data.isSuccessful==true){
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo']);

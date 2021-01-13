@@ -51,9 +51,9 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetPlantillaControversiaContractual")]
-        public async Task<FileResult> GetPlantillaControversiaContractual(int pContratoId)
+        public async Task<FileResult> GetPlantillaControversiaContractual(int pControversiaContractualID)
         {
-            return File(await _contractualControversy.GetPlantillaControversiaContractual(pContratoId), "application/pdf");
+            return File(await _contractualControversy.GetPlantillaControversiaContractual(pControversiaContractualID), "application/pdf");
         }
 
 

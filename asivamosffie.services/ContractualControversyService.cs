@@ -321,9 +321,9 @@ namespace asivamosffie.services
         //    return await _context.Contrato.Where(r=>r.Eliminado==false).ToList<Contrato>();
         //}
 
-        public async Task<byte[]> GetPlantillaControversiaContractual(int pContratoId)
+        public async Task<byte[]> GetPlantillaControversiaContractual(int pControversiaContractualID)
         {
-            if (pContratoId == 0)
+            if (pControversiaContractualID == 0)
             {
                 return Array.Empty<byte>();
             }
@@ -353,21 +353,7 @@ namespace asivamosffie.services
             //}
 
             pTipoContrato = ConstanCodigoTipoContratacion.Obra;
-
-
-            //if (actaInicio == null)
-            if (pContratoId == 0)
-            {
-                return Array.Empty<byte>();
-            }
-
-            Contrato contrato = null;
-            contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
-
-            Contratacion contratacion = null;
-            if (contrato != null)
-                contratacion = _context.Contratacion.Where(r => r.ContratacionId == contrato.ContratacionId).FirstOrDefault();
-
+                      
             Plantilla plantilla = null;
         
 
@@ -379,30 +365,27 @@ namespace asivamosffie.services
             //Plantilla plantilla = new Plantilla();
             //plantilla.Contenido = "";
             if (plantilla != null)
-                plantilla.Contenido = await ReemplazarDatosPlantillaControversiaContractual(plantilla.Contenido, pContratoId, "cdaza");
+                plantilla.Contenido = await ReemplazarDatosPlantillaControversiaContractual(plantilla.Contenido, pControversiaContractualID, "cdaza");
             return ConvertirPDF(plantilla);
         }
 
-        private async Task<string> ReemplazarDatosPlantillaControversiaContractual(string strContenido, int pContratoId, string usuario)
+        private async Task<string> ReemplazarDatosPlantillaControversiaContractual(string strContenido, int pControversiaContractualID, string usuario)
         {
             string str = "";
             string valor = "";
 
 
-            Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
+            //Contrato contrato = _context.Contrato.Where(r => r.ContratoId == pContratoId).FirstOrDefault();
             ControversiaContractual controversiaContractual = null;
 
             ControversiaMotivo controversiaMotivo = null;
             ControversiaActuacion controversiaActuacion = null;
 
             ActuacionSeguimiento actuacionSeguimiento = null;
-            if (contrato != null)
-            {
-                controversiaContractual = _context.ControversiaContractual
-                   .Where(r => r.ContratoId == contrato.ContratoId).FirstOrDefault();
+            controversiaContractual = _context.ControversiaContractual
+                   .Where(r => r.ControversiaContractualId == pControversiaContractualID).Include(x=>x.Contrato).FirstOrDefault();
 
-            }
-
+            Contrato contrato = controversiaContractual.Contrato;
             NovedadContractual novedadContractual = null;   //sin rel?????
             //novedadContractual = new NovedadContractual();   //sin rel?????
 

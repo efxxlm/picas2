@@ -48,7 +48,12 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
   verDetalleEditarTramiteButton(id) {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarControversia', id]);
   }
@@ -58,7 +63,10 @@ export class ControlYTablaCcGeneralComponent implements OnInit {
   }
   deleteControversiaConfirmed(id){
     this.services.EliminarControversiaContractual(id).subscribe((dataEliminado: any) => {
-      if (dataEliminado.isSuccessful == true) {
+      if (dataEliminado.code == "301") {
+        this.openDialog('', dataEliminado.message);
+      }
+      else{
         this.ngOnInit();
       }
     });
