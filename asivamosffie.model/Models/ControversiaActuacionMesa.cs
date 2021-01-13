@@ -7,6 +7,12 @@ namespace asivamosffie.model.Models
     {
         public int ControversiaActuacionMesaId { get; set; }
         public int ControversiaActuacionId { get; set; }
+        public int ControversiaContractualId {get; set;}
+        public ControversiaActuacionMesa()
+        {
+            ControversiaActuacionMesaSeguimiento = new HashSet<ControversiaActuacionMesaSeguimiento>();
+        }
+
         public string EstadoAvanceMesaCodigo { get; set; }
         public DateTime? FechaActuacionAdelantada { get; set; }
         public string ActuacionAdelantada { get; set; }
@@ -24,5 +30,7 @@ namespace asivamosffie.model.Models
         public string UsuarioModificacion { get; set; }
 
         public virtual ControversiaActuacion ControversiaActuacion { get; set; }
+        public virtual ControversiaContractual ControversiaContractual { get; set; }
+        public virtual ICollection<ControversiaActuacionMesaSeguimiento> ControversiaActuacionMesaSeguimiento { get; set; }
     }
 }

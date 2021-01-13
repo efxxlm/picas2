@@ -535,6 +535,7 @@ namespace asivamosffie.services
             {
                 DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
                                                 .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
+                                                .Include(r=>r.DisponibilidadPresupuestalObservacion)
                                                 .Include(r => r.DisponibilidadPresupuestalProyecto)
                                                    .ThenInclude(r => r.Proyecto)
                                                    .ThenInclude(r => r.LocalizacionIdMunicipioNavigation)

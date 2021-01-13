@@ -42,6 +42,11 @@ namespace asivamosffie.services.Helpers.Enumerator
         Verificar_Requisitos_Tecnicos_Construccion = 45,
 
          Registrar_solicitud_novedad_contractual= 50,      
+        Registrar_actuaciones_controversias_contractuales=57,
+
+
+        Cargar_enlace_monitoreo=43,
+
 
     }
 

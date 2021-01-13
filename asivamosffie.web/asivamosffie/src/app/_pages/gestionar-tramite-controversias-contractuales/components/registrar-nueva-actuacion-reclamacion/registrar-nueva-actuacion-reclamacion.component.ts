@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./registrar-nueva-actuacion-reclamacion.component.scss']
 })
 export class RegistrarNuevaActuacionReclamacionComponent implements OnInit {
-
+  public numReclamacion = localStorage.getItem("codReclamacion");
   constructor() { }
 
   ngOnInit(): void {

@@ -167,9 +167,10 @@
         public const string Crear_Editar_Actuacion_Seguimiento = "148";
 
         public const string Cambiar_estado_Controversia_Actuacion = "136";
-        public const string Cambiar_estado_Controversia_Contractual = "137";
-        public const string Notificacion_Controversia_Contractual = "140";
-        public const string Cambiar_estado_Actuacion_Seguimiento = "150";
+        public const string  Cambiar_estado_Controversia_Contractual = "137";
+        public const string  Notificacion_Controversia_Contractual= "140";
+        public const string  Cambiar_estado_Actuacion_Seguimiento= "150";
+        public const string  Crear_Editar_Controversia_Motivo= "153";        	
 
         //4.2.2 Gestionar procesos de Defensa Judicial
         public const string Crear_Editar_Ficha_Estudio = "145";
@@ -221,5 +222,21 @@
         public const string Notificación_Novedad_Contractual = "164";
         public const string Eliminar_Novedad_Contractual = "165";
 
+
+        //CU 4_4_1
+        public const string Crear_seguimiento_actuacion_derivada = "168";
+        public const string Cambiar_estado_actuacion_derivada = "169";
+        public const string Eliminar_Controversia_Actuacion_Derivada = "170";
+        public const string  Notificacion_Actuacion_Derivada= "171";     
+                      
+            
+        
+        public const string Crear_Editar_Defensa_Judicial = "156";
+        public const string Eliminar_Defensa_Judicial = "159";
+        public const string Enviar_Defensa_Judicial = "177";
+
+        //4.1.1
+        public const string Editar_crear_url = "178";
+        public const string Visita_url = "179";
     }
 }   

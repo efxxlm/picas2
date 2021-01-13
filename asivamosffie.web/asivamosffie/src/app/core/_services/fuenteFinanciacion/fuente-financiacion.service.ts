@@ -11,8 +11,6 @@ import { mergeMap, tap, toArray } from 'rxjs/operators';
 })
 export class FuenteFinanciacionService {
   
-  
-
   constructor( private http:HttpClient
 
   ) { }
@@ -89,6 +87,10 @@ export class FuenteFinanciacionService {
   DeleteResourceFundingBySourceFunding(id:number)
   {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ResourceControl/DeleteResourceFundingBySourceFunding?id=${id}`,null);
+  }
+
+  eliminarCuentaBancaria(cuentaBancariaId: any) {
+    return this.http.delete(`${environment.apiUrl}/SourceFunding/EliminarCuentaBancaria?id=${cuentaBancariaId}`);
   }
 
 }

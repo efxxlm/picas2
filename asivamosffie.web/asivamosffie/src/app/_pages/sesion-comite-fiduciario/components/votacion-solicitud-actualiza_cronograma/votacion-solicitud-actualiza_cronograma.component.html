@@ -15,7 +15,7 @@
 
 <mat-dialog-content>
   <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-    <div>
+    <div class="table-responsive">
       <table class="mat-table cdk-table mat-sort mat-table-style">
         <thead>
           <tr class="mat-header-row cdk-header-row ng-star-inserted">
@@ -65,7 +65,7 @@
             {{ proyecto.value.llaveMen }} - {{ proyecto.value.nombreInstitucion }} - {{ proyecto.value.nombreSede }}
           </mat-panel-title>
         </mat-expansion-panel-header>
-        <div>
+        <div class="table-responsive">
           <table class="mat-table cdk-table mat-sort mat-table-style">
             <thead>
               <tr class="mat-header-row cdk-header-row ng-star-inserted">

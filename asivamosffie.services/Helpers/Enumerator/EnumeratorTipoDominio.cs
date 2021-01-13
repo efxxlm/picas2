@@ -140,6 +140,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Causa_Baja_Disponibilidad_Equipo = 96,
         Causa_Baja_Disponibilidad_Productividad = 97,
         Estados_Seguimiento_Diario = 98,
+        
+        Estado_controversia= 89,
 
         Estados_actas_inicio_obra = 85,
 
@@ -153,6 +155,20 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Estado_avance_reclamacion = 91,
         Estados_acta_Interventoria_319 = 107,
+        Estado_Actuacion_Derivada_4_4_1 = 114,
+
+        Estado_Actuacion_Derivada_r_4_4_1 = 125,
+
+
+        //Estado_avance_reclamacion = 91,
+
+        Proxima_actuacion_requerida =103,
+
+        Procesos_judiciales=105,
+
+        Tipo_accion_judicial = 106,
+        Estados_Actuacion=110,
+        Estados_Actuacion_Derivada = 114,
 
         Tipo_Actividad = 109,
 
@@ -162,5 +178,10 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_Observacion_Seguimiento_Semanal = 123,
         
+        Jurisdiccion =116,
+        Actuaciones_Recomendadas=119,
+        Estados_Defensa_Judicial=120,
+
+        Estados_Reclamacion = 120,
     }
 }

@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,7 +12,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   @Input() isEditable;
-
+  @Input() controversiaAct;
+  public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   addressForm = this.fb.group({
     resumenReclamacionFiduciaria: [null, Validators.required],
     requereReclamacionComiteTecnico: [null, Validators.required],
@@ -27,7 +30,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(private router: Router, private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
       this.addressForm.get('requiereReclamacionAseguradora').setValue(true);
@@ -43,6 +46,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   }
 
   maxLength(e: any, n: number) {
+    
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n, e.editor.getLength());
     }
@@ -62,7 +66,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   private contarSaltosDeLinea(cadena: string, subcadena: string) {
     let contadorConcurrencias = 0;
     let posicion = 0;
-    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) { 
       ++contadorConcurrencias;
       posicion += subcadena.length;
     }
@@ -78,7 +82,30 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
 
   onSubmit() {
     console.log(this.addressForm.value);
-    this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-  }
+    let arrayReclam;
 
+    if(this.isEditable==true){
+      arrayReclam = { 
+        "controversiaActuacionId":this.controversiaAct,
+        "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
+        "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
+        "rutaSoporte":this.addressForm.value.urlSoporte,
+        };
+      this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+      });
+    }
+    else{
+      arrayReclam = { 
+        "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
+        "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
+        "rutaSoporte":this.addressForm.value.urlSoporte,
+        };
+      this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
+        this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
+      });
+    }
+  }
 }

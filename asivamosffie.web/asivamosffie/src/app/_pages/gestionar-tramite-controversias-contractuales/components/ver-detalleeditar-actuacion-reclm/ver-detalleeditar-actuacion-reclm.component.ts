@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-ver-detalleeditar-actuacion-reclm',
@@ -6,10 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ver-detalleeditar-actuacion-reclm.component.scss']
 })
 export class VerDetalleeditarActuacionReclmComponent implements OnInit {
-
-  constructor() { }
+  
+  idControversia: any;
+  idReclamacionActuacion:any;
+  public codRecalamacion = localStorage.getItem('codReclamacion');
+  public codReclamacionActuacion = localStorage.getItem('actuacionReclamacion');
+  constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe(param => {
+      this.idReclamacionActuacion = param.id;
+    });
   }
 
 }

@@ -21,5 +21,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoAvalar { get; set; }
         public bool? TieneObservacionApoyo { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
+        public int? VerAvanceApoyo { get; set; }
+        public int? VerAvanceSupervisor { get; set; }
     }
 }

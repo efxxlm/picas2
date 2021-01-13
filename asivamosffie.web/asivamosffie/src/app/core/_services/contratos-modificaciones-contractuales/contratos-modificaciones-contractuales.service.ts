@@ -61,4 +61,5 @@ export class ContratosModificacionesContractualesService {
     return this.http.get<any[]>( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
   }
 
-}
+};
+

@@ -118,7 +118,7 @@ namespace asivamosffie.services
                             IsValidation = false,
                             Code = ConstantMessagesContractualNovelty.OperacionExitosa,
                             Message =
-                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_solicitud_novedad_contractual,
+                            await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_actuaciones_controversias_contractuales,
                             ConstantMessagesContractualNovelty.OperacionExitosa,
                             //contratoPoliza
                             idAccionCrearEditarNovedadContractual
