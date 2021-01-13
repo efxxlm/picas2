@@ -264,12 +264,6 @@ export class FormRegistrarControvrsAccordComponent implements OnInit {
     return contadorConcurrencias;
   }
 
-  textoLimpio(texto, n) {
-    if (texto != undefined) {
-      return texto.getLength() > n ? n : texto.getLength();
-    }
-  }
-
   openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
