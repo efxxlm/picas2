@@ -176,90 +176,97 @@ namespace asivamosffie.services
                 .ToListAsync();
 
             List<DisponibilidadPresupuestalGrilla> ListDisponibilidadPresupuestalGrilla = new List<DisponibilidadPresupuestalGrilla>();
-
-            foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
+            try
             {
-                string strEstadoRegistro = "";
-                string strTipoSolicitud = "";
-                if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.EstadoSolicitudCodigo))
+                foreach (var DisponibilidadPresupuestal in ListDisponibilidadPresupuestal)
                 {
-                    strEstadoRegistro = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal);
-                }
-
-                if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.TipoSolicitudCodigo))
-                {
-                    strTipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal);
-                }
-
-                DateTime? fechaContrato = null;
-                string numeroContrato = "";
-                if (DisponibilidadPresupuestal.ContratacionId != null)
-                {
-                    var contrato = _context.Contrato.Find(DisponibilidadPresupuestal.ContratacionId);
-                    fechaContrato = contrato != null ? contrato.FechaFirmaContrato : null;
-                    numeroContrato = DisponibilidadPresupuestal.NumeroContrato == null ?
-                        contrato != null ? contrato.NumeroContrato : ""
-                        : DisponibilidadPresupuestal.NumeroContrato;
-                }
-                else
-                {
-                    numeroContrato = DisponibilidadPresupuestal.NumeroContrato != null ?
-                         DisponibilidadPresupuestal.NumeroContrato : "";
-                }
-                bool blnEstado = false;
-
-                //si es administrativo, esta completo, si es tradicional, se verifica contra fuentes gestionadas
-                //2020-11-08 ahora los administrativos y especiales tambien estionan fuentes
-                if(DisponibilidadPresupuestal.TipoSolicitudCodigo== ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
-                {
-                    List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => x.DisponibilidadPresupuestalProyectoId).ToList();
-                    if (_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
+                    string strEstadoRegistro = "";
+                    string strTipoSolicitud = "";
+                    if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.EstadoSolicitudCodigo))
                     {
-                        blnEstado = true;
+                        strEstadoRegistro = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.EstadoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Solicitud_Presupuestal);
                     }
-                }
-                else if(DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
-                {
-                    
-                    if (_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId ==DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
-                    {
-                        blnEstado = true;
-                    }
-                }
-                else
-                {
-                    
-                    List<int> proyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x=>(int)x.ProyectoId).ToList();
-                    List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
-                    var aportantes = _context.ProyectoAportante.Where(x => proyectosId.Contains( x.ProyectoId)).ToList();
-                    //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
-                    if (_context.GestionFuenteFinanciacion.Where(x=> x.DisponibilidadPresupuestalProyectoId!=null && ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId)).Count()
-                        == aportantes.Count())
-                    {
-                        blnEstado = true;
-                    }
-                }
-                var contratacion = _context.Contratacion.Where(x=>x.ContratacionId==DisponibilidadPresupuestal.ContratacionId);
-                DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
-                {
 
-                    FechaSolicitud = DisponibilidadPresupuestal.FechaSolicitud.ToString("dd/MM/yyyy"),
-                    EstadoRegistro = blnEstado,
-                    TipoSolicitud = strTipoSolicitud,
-                    TipoSolicitudEspecial= DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
-                    //si no viene el campo puede ser contratación
-                    DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
-                    "Contratación",
-                    DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
-                    NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
-                    NumeroDDP = DisponibilidadPresupuestal.NumeroDdp,
-                    FechaFirmaContrato = fechaContrato == null ? "" : Convert.ToDateTime(fechaContrato).ToString("dd/MM/yyyy"),
-                    NumeroContrato = numeroContrato,
-                    Contratacion = contratacion
+                    if (!string.IsNullOrEmpty(DisponibilidadPresupuestal.TipoSolicitudCodigo))
+                    {
+                        strTipoSolicitud = await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Tipo_Disponibilidad_Presupuestal);
+                    }
 
-                };
-                ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
+                    DateTime? fechaContrato = null;
+                    string numeroContrato = "";
+                    if (DisponibilidadPresupuestal.ContratacionId != null)
+                    {
+                        var contrato = _context.Contrato.Find(DisponibilidadPresupuestal.ContratacionId);
+                        fechaContrato = contrato != null ? contrato.FechaFirmaContrato : null;
+                        numeroContrato = DisponibilidadPresupuestal.NumeroContrato == null ?
+                            contrato != null ? contrato.NumeroContrato : ""
+                            : DisponibilidadPresupuestal.NumeroContrato;
+                    }
+                    else
+                    {
+                        numeroContrato = DisponibilidadPresupuestal.NumeroContrato != null ?
+                             DisponibilidadPresupuestal.NumeroContrato : "";
+                    }
+                    bool blnEstado = false;
+
+                    //si es administrativo, esta completo, si es tradicional, se verifica contra fuentes gestionadas
+                    //2020-11-08 ahora los administrativos y especiales tambien estionan fuentes
+                    if (DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo)
+                    {
+                        List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => x.DisponibilidadPresupuestalProyectoId).ToList();
+                        if (_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
+                        {
+                            blnEstado = true;
+                        }
+                    }
+                    else if (DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Especial)
+                    {
+
+                        if (_context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalId == DisponibilidadPresupuestal.DisponibilidadPresupuestalId).Count() > 0)
+                        {
+                            blnEstado = true;
+                        }
+                    }
+                    else
+                    {
+
+                        List<int> proyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Where(x=>x.ProyectoId>0).Select(x => (int)x.ProyectoId).ToList();
+                        List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
+                        var aportantes = _context.ProyectoAportante.Where(x => proyectosId.Contains(x.ProyectoId)).ToList();
+                        //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
+                        if (_context.GestionFuenteFinanciacion.Where(x => x.DisponibilidadPresupuestalProyectoId != null && ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId)).Count()
+                            == aportantes.Count())
+                        {
+                            blnEstado = true;
+                        }
+                    }
+                    var contratacion = _context.Contratacion.Where(x => x.ContratacionId == DisponibilidadPresupuestal.ContratacionId);
+                    DisponibilidadPresupuestalGrilla disponibilidadPresupuestalGrilla = new DisponibilidadPresupuestalGrilla
+                    {
+
+                        FechaSolicitud = DisponibilidadPresupuestal.FechaSolicitud.ToString("dd/MM/yyyy"),
+                        EstadoRegistro = blnEstado,
+                        TipoSolicitud = strTipoSolicitud,
+                        TipoSolicitudEspecial = DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo != null ? await _commonService.GetNombreDominioByCodigoAndTipoDominio(DisponibilidadPresupuestal.TipoSolicitudEspecialCodigo, (int)EnumeratorTipoDominio.Tipo_DDP_Espacial) :
+                        //si no viene el campo puede ser contratación
+                        DisponibilidadPresupuestal.TipoSolicitudCodigo == ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Administrativo ? "Proyecto administrativo" :
+                        "Contratación",
+                        DisponibilidadPresupuestalId = DisponibilidadPresupuestal.DisponibilidadPresupuestalId,
+                        NumeroSolicitud = DisponibilidadPresupuestal.NumeroSolicitud,
+                        NumeroDDP = DisponibilidadPresupuestal.NumeroDdp,
+                        FechaFirmaContrato = fechaContrato == null ? "" : Convert.ToDateTime(fechaContrato).ToString("dd/MM/yyyy"),
+                        NumeroContrato = numeroContrato,
+                        Contratacion = contratacion
+
+                    };
+                    ListDisponibilidadPresupuestalGrilla.Add(disponibilidadPresupuestalGrilla);
+                }
             }
+            catch(Exception e)
+            {
+
+            }
+            
             return ListDisponibilidadPresupuestalGrilla.OrderByDescending(r => r.DisponibilidadPresupuestalId).ToList();
 
         }
