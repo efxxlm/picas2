@@ -576,7 +576,7 @@ namespace asivamosffie.services
 
             try
             {
-                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && r.RegistroCompleto == false).FirstOrDefault();
+                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Find(pContratacionProyectoId);
 
                 seguimientoSemanalMod.EstadoSeguimientoSemanalCodigo = pEstadoMod;
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;

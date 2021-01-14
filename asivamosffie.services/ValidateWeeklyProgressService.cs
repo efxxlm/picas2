@@ -34,7 +34,7 @@ namespace asivamosffie.services
 
         public async Task<List<VValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
         {
-            return await _context.VValidarSeguimientoSemanal.Where(r => r.EstadoSeguimientoSemanalCodigo == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Validacion).ToListAsync();
+            return await _context.VValidarSeguimientoSemanal.ToListAsync();
         }
          
         public async Task<Respuesta> ReturnSeguimientoSemanal(int pSeguimientoSemanalId, string pUsuarioMod)
