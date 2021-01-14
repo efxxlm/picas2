@@ -537,7 +537,6 @@ namespace asivamosffie.services
 
         }
 
-
         public async Task<Respuesta> InsertContratoPoliza(ContratoPoliza contratoPoliza, AppSettingsService appSettingsService)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Contrato_Poliza, (int)EnumeratorTipoDominio.Acciones);
@@ -565,7 +564,7 @@ namespace asivamosffie.services
                         IsException = false,
                         IsValidation = true,
                         Code = ConstantMessagesContratoPoliza.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.Error, idAccion, contratoPoliza.UsuarioCreacion, "ERROR PETICIÓN SERVICIO")
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.GestionarGarantias, ConstantMessagesContratoPoliza.ErrorDuplicarPoliza, idAccion, contratoPoliza.UsuarioCreacion, "ERROR PETICIÓN SERVICIO")
                     };
                 }
 
@@ -578,8 +577,7 @@ namespace asivamosffie.services
                 if (contrato != null)
                     if (contrato.EstaDevuelto != null)
                         ContratoEsDevuelto = Convert.ToBoolean(contrato.EstaDevuelto);
-
-
+                 
                 contratoPoliza.RegistroCompleto = ValidarRegistroCompletoContratoPoliza(contratoPoliza, ContratoEsDevuelto);
 
                 LimpiarEntradasContratoPoliza(ref contratoPoliza);
@@ -622,7 +620,7 @@ namespace asivamosffie.services
                 objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
 
                 List<VistaContratoGarantiaPoliza> ListVista = new List<VistaContratoGarantiaPoliza>();
-                ListVista = await ListVistaContratoGarantiaPoliza();
+                ListVista = await ListVistaContratoGarantiaPoliza(contratoPoliza.ContratacionId);
 
                 NotificacionMensajeGestionPoliza msjNotificacion = new NotificacionMensajeGestionPoliza();
                 getDataNotifMsjAseguradora(ref msjNotificacion, contratoPoliza, ref fechaFirmaContrato, ref objVistaContratoGarantiaPoliza, ListVista);
@@ -685,7 +683,6 @@ namespace asivamosffie.services
             }
 
         }
-
 
         public async Task<Respuesta> CambiarEstadoPolizaByContratoId(int pContratoId, string pCodigoNuevoEstadoPoliza, string pUsuarioModifica)
         {
@@ -760,8 +757,7 @@ namespace asivamosffie.services
 
             try
             {
-                ContratoPoliza contratoPoliza = _context.ContratoPoliza.Find(pContratoPolizaId);
-
+                ContratoPoliza contratoPoliza = _context.ContratoPoliza.Find(pContratoPolizaId); 
                 //SesionComiteSolicitud sesionComiteSolicitudOld = _context.SesionComiteSolicitud.Find(/*pSesionComiteSolicitud*/);
                 contratoPoliza.UsuarioModificacion = pUsuarioModifica;
                 contratoPoliza.FechaModificacion = DateTime.Now;
@@ -804,7 +800,7 @@ namespace asivamosffie.services
                 int idAccionEditarContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
                 VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
                 List<VistaContratoGarantiaPoliza> ListVista = new List<VistaContratoGarantiaPoliza>();
-                ListVista = await ListVistaContratoGarantiaPoliza();
+                ListVista = await ListVistaContratoGarantiaPoliza(0);
 
                 NotificacionMensajeGestionPoliza msjNotificacion;
                 msjNotificacion = new NotificacionMensajeGestionPoliza();
@@ -926,7 +922,7 @@ namespace asivamosffie.services
                             objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
 
                             List<VistaContratoGarantiaPoliza> ListVista = new List<VistaContratoGarantiaPoliza>();
-                            ListVista = await ListVistaContratoGarantiaPoliza();
+                            ListVista = await ListVistaContratoGarantiaPoliza(0);
 
                             //int pIdTemplate = (int)enumeratorTemplate.MsjSupervisorJuridicaGestionPoliza;
                             int pIdTemplate = (int)enumeratorTemplate.MsjFiduciariaJuridicaGestionPoliza;
@@ -1094,7 +1090,7 @@ namespace asivamosffie.services
                                 objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
 
                                 List<VistaContratoGarantiaPoliza> ListVista = new List<VistaContratoGarantiaPoliza>();
-                                ListVista = await ListVistaContratoGarantiaPoliza();
+                                ListVista = await ListVistaContratoGarantiaPoliza(0);
 
                                 //int pIdTemplate = (int)enumeratorTemplate.MsjSupervisorJuridicaGestionPoliza;
                                 int pIdTemplate = (int)enumeratorTemplate.MsjFiduciariaJuridicaGestionPoliza;
@@ -1442,7 +1438,7 @@ namespace asivamosffie.services
             int idAccionEditarContratoPoliza = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantMessagesContratoPoliza.EditarContratoPolizaCorrrectamente, (int)EnumeratorTipoDominio.Acciones);
 
             try
-            {  
+            {
                 VistaContratoGarantiaPoliza objVistaContratoGarantiaPoliza;
                 objVistaContratoGarantiaPoliza = new VistaContratoGarantiaPoliza();
 
@@ -1525,12 +1521,12 @@ namespace asivamosffie.services
                         blEnvioCorreo = false;
                 }
 
-                if (blEnvioCorreo) 
+                if (blEnvioCorreo)
                     return new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.CorreoEnviado };
 
                 else
                     return new Respuesta() { IsSuccessful = blEnvioCorreo, IsValidation = blEnvioCorreo, Code = ConstantMessagesContratoPoliza.ErrorEnviarCorreo };
-                 
+
             }
             catch (Exception ex)
             {
@@ -1822,21 +1818,11 @@ namespace asivamosffie.services
 
         }
 
-        public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId = 0)
+        public async Task<List<VistaContratoGarantiaPoliza>> ListVistaContratoGarantiaPoliza(int pContratoId)
         {
             List<VistaContratoGarantiaPoliza> ListContratoGrilla = new List<VistaContratoGarantiaPoliza>();
-            //Fecha de firma del contrato ??? FechaFirmaContrato , [Contrato] -(dd / mm / aaaa)
-
-            //Tipo de solicitud ??? ContratoPoliza - TipoSolicitudCodigo          
 
             List<Contrato> ListContratos = new List<Contrato>();
-            //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).Include(r => r.NumeroContrato).Include(r => r.Estado).Distinct().ToListAsync();
-
-            //return await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.TipoAportanteId == pTipoAportanteID).Include(r => r.Cofinanciacion).ToListAsync();
-
-            //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado).Include(r => r.FechaFirmaContrato).ToListAsync();
-
-            //item.CofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => !(bool)r.Eliminado && r.CofinanciacionId == item.CofinanciacionId).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
 
             if (pContratoId == 0)
             {
@@ -1846,20 +1832,8 @@ namespace asivamosffie.services
             }
             else
             {
-                ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado == false && r.ContratoId == pContratoId).Distinct()
-          .ToListAsync();
-
+                ListContratos = await _context.Contrato.Where(r => (bool)r.Eliminado == false && r.ContratoId == pContratoId).Distinct().ToListAsync();
             }
-
-
-            //ListContratos = await _context.Contrato.Where(r => !(bool)r.Estado)               
-
-            // .Select( new
-            //  {
-            //      FechaFirmaContrato =r.FechaFirmaContrato.ToString()
-            //  })
-            // .ToListAsync();
-
             foreach (var contrato in ListContratos)
             {
                 try
