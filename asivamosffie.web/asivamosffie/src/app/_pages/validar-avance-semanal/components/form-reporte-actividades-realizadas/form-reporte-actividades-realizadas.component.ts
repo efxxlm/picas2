@@ -159,7 +159,7 @@ export class FormReporteActividadesRealizadasComponent implements OnInit {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                                     () =>   this.routes.navigate(
                                                 [
-                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.seguimientoSemanalI
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.seguimientoSemanalId
                                                 ]
                                             )
                                 );

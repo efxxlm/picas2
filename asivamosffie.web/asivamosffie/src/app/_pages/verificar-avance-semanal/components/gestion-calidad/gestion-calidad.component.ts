@@ -195,7 +195,7 @@ export class GestionCalidadComponent implements OnInit {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: this.tipoObservacionCalidad.gestionCalidadCodigo,
-            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            observacionPadreId: this.seguimientoSemanalGestionObraCalidadId,
             observacion: this.formGestionCalidad.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionCalidad.get( 'tieneObservaciones' ).value,
             esSupervisor: false

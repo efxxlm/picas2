@@ -64,21 +64,21 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.numeroSemana !== primeraSemana"
+                        *ngIf="element.numeroSemana !== primeraSemana || element.estadoSeguimientoSemanalCodigo !== estadoAvanceSemanal.enviadoPorVerificacion.codigo"
                         [routerLink]="[ 'consultarBitacora', element.contratacionProyectoId ]">
                         Consultar bitacora
                 </button>
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.registroCompletoAvalar === true && element.tieneObservacionSupervisor === true"
+                        *ngIf="element.registroCompletoAvalar === true && element.tieneObservacionSupervisor === true && element.estadoSeguimientoSemanalCodigo === estadoAvanceSemanal.enviadoPorVerificacion.codigo"
                         (click)="enviarInterventor( element.seguimientoSemanalId )">
                         Enviar al interventor
                 </button>
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        *ngIf="element.registroCompletoAvalar === true && element.tieneObservacionSupervisor === false"
+                        *ngIf="element.registroCompletoAvalar === true && element.tieneObservacionSupervisor === false && element.estadoSeguimientoSemanalCodigo === estadoAvanceSemanal.enviadoPorVerificacion.codigo"
                         (click)="enviarVerificacion( element.seguimientoSemanalId )">
                         Aprobar avance
                 </button>

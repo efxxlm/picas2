@@ -194,7 +194,7 @@ export class GestionAmbientalComponent implements OnInit {
                         );
                 }
                 // ID manejo de materiales e insumos
-                if ( this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId !== undefined || this.gestionObraAmbiental.manejoMaterialesInsumo.observacionSupervisorId !== undefined ) {
+                if ( this.gestionObraAmbiental.manejoMaterialesInsumo !== undefined && ( this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId !== undefined || this.gestionObraAmbiental.manejoMaterialesInsumo.observacionSupervisorId !== undefined ) ) {
                     if ( this.gestionObraAmbiental.manejoMaterialesInsumo.observacionSupervisorId !== undefined ) {
                         this.manejoMaterialInsumoObsId = this.gestionObraAmbiental.manejoMaterialesInsumo.observacionSupervisorId;
                     }
@@ -219,7 +219,7 @@ export class GestionAmbientalComponent implements OnInit {
                         );
                 }
                 // ID residuos de construccion
-                if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId !== undefined || this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionSupervisorId !== undefined ) {
+                if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion !== undefined && ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId !== undefined || this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionSupervisorId !== undefined ) ) {
                     if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionSupervisorId !== undefined ) {
                         this.residuosConstruccionObsId = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionSupervisorId;
                     }
@@ -244,7 +244,7 @@ export class GestionAmbientalComponent implements OnInit {
                         );
                 }
                 // ID residuos peligrosos
-                if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId !== undefined || this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionSupervisorId !== undefined ) {
+                if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales !== undefined && ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId !== undefined || this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionSupervisorId !== undefined ) ) {
                     if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionSupervisorId !== undefined ) {
                         this.residuosPeligrososObsId = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionSupervisorId;
                     }
@@ -269,7 +269,7 @@ export class GestionAmbientalComponent implements OnInit {
                         )
                 }
                 // ID manejo de otros
-                if ( this.gestionObraAmbiental.manejoOtro.observacionApoyoId !== undefined || this.gestionObraAmbiental.manejoOtro.observacionSupervisorId !== undefined ) {
+                if ( this.gestionObraAmbiental.manejoOtro !== undefined && ( this.gestionObraAmbiental.manejoOtro.observacionApoyoId !== undefined || this.gestionObraAmbiental.manejoOtro.observacionSupervisorId !== undefined ) ) {
                     if ( this.gestionObraAmbiental.manejoOtro.observacionSupervisorId !== undefined ) {
                         this.manejoOtrosObsId = this.gestionObraAmbiental.manejoOtro.observacionSupervisorId;
                     }

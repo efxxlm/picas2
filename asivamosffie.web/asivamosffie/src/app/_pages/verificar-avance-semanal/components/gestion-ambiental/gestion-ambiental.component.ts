@@ -183,7 +183,7 @@ export class GestionAmbientalComponent implements OnInit {
                         );
                 }
                 // ID manejo de materiales e insumos
-                if ( this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId !== undefined ) {
+                if ( this.gestionObraAmbiental.manejoMaterialesInsumo !== undefined && this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId !== undefined ) {
                     this.manejoMaterialInsumoObsId = this.gestionObraAmbiental.manejoMaterialesInsumo.observacionApoyoId;
                     // GET observacion manejo de materiales e insumos
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoMaterialInsumoId, this.tipoObservacionAmbiental.manejoMateriales )
@@ -203,7 +203,7 @@ export class GestionAmbientalComponent implements OnInit {
                         );
                 }
                 // ID residuos de construccion
-                if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId !== undefined ) {
+                if ( this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion !== undefined && this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId !== undefined ) {
                     this.residuosConstruccionObsId = this.gestionObraAmbiental.manejoResiduosConstruccionDemolicion.observacionApoyoId;
                     // GET observacion residuos de construccion
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosConstruccionId, this.tipoObservacionAmbiental.residuosConstruccion )
@@ -223,7 +223,7 @@ export class GestionAmbientalComponent implements OnInit {
                         );
                 }
                 // ID residuos peligrosos
-                if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId !== undefined ) {
+                if ( this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales !== undefined && this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId !== undefined ) {
                     this.residuosPeligrososObsId = this.gestionObraAmbiental.manejoResiduosPeligrososEspeciales.observacionApoyoId;
                     // GET observacion residuos peligrosos
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.residuosPeligrososId, this.tipoObservacionAmbiental.residuosPeligrosos )
@@ -243,7 +243,7 @@ export class GestionAmbientalComponent implements OnInit {
                         )
                 }
                 // ID manejo de otros
-                if ( this.gestionObraAmbiental.manejoOtro.observacionApoyoId !== undefined ) {
+                if ( this.gestionObraAmbiental.manejoOtro !== undefined && this.gestionObraAmbiental.manejoOtro.observacionApoyoId !== undefined ) {
                     this.manejoOtrosObsId = this.gestionObraAmbiental.manejoOtro.observacionApoyoId;
                     // GET observacion manejo de otros
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.manejoOtrosId, this.tipoObservacionAmbiental.manejoOtra )
