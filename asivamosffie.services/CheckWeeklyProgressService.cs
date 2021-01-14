@@ -38,7 +38,7 @@ namespace asivamosffie.services
         public async Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor)
         {
             try
-            {
+            { 
                 SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
                 _context.SeguimientoSemanal.Attach(seguimientoSemanal);
                 if (esSupervisor)
