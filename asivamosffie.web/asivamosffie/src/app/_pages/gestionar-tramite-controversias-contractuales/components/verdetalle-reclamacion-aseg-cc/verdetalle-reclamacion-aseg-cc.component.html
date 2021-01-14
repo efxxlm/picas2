@@ -5,10 +5,10 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle reclamación REC 0001
+        Ver detalle reclamación {{this.reclamacionCod}}
     </h1>
     <p class="info-sub-title">
-        <span>Actuación: <b>Actuación 1</b> Número de actuación: <b>ACT controversia 0001</b></span>
+        <span>Actuación: <b>{{this.actuacion}}</b> Número de actuación: <b>{{this.numActuacion}}</b></span>
     </p>
     <mat-card class="shipping-card mainGris">
         <mat-card-header class="header-card header-card--margin">
@@ -18,8 +18,8 @@
         </mat-card-header>
         <mat-card-content style="text-align: left;">
             <p><strong>Resumen de la propuesta de reclamación ante la fiduciaria:</strong></p>
-            <p>Se le solicita a la fiduciaria responder por el trabajo acordado hasta el día de hoy, ya que existe un retraso de 30 días, deben solucionar</p>
-            <p><strong>¿Se requiere presentar la propuesta de reclamación a comité técnico?:</strong> Sí</p>
+            <div [innerHtml]="this.resumen"></div> 
+            <p><strong>¿Se requiere presentar la propuesta de reclamación a comité técnico?:</strong> {{this.requiereReclamacionComite}}</p>
         </mat-card-content>
     </mat-card>
     <mat-card class="shipping-card mainGris">
@@ -29,7 +29,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content style="text-align: left;">
-            <p><strong>URL con soporte:</strong> https://drive.google.com/drive/registrodecontroversiacontractual/registronuevaactualizaciondelareclamacion</p>
+            <p><strong>URL con soporte:</strong> {{this.soporteReclamacion}}</p>
         </mat-card-content>
     </mat-card>
 </div>

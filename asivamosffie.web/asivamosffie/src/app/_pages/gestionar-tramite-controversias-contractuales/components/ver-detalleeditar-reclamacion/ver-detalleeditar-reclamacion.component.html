@@ -5,10 +5,12 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle/Editar reclamación 898989898
+        Ver detalle/Editar reclamación {{this.numReclamacion}}
     </h1>
     <p class="info-sub-title">
-        <span>Actuación: <b>Actuación 1</b> Número de actuación: <b>ACT controversia 0001</b></span>
+        <span>Actuación: <b>{{this.actuacion}}</b> Número de actuación: <b>{{this.numActuacion}}</b></span>
     </p>
-    <app-form-reclamacion-aseguradora-actuacion [controversiaAct]=this.idControversia [isEditable]="true"></app-form-reclamacion-aseguradora-actuacion>
+    <app-form-reclamacion-aseguradora-actuacion [controversiaAct]=this.idControversia [isEditable]="true" 
+    (numReclamacion)="this.numReclamacion=$event" (actuacion)="this.actuacion=$event"
+    (numActuacion)="this.numActuacion=$event"></app-form-reclamacion-aseguradora-actuacion>
 </div>

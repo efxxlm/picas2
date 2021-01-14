@@ -8,7 +8,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class VerDetalleeditarReclamacionComponent implements OnInit {
   idControversia: any;
-
+  numReclamacion: any;
+  actuacion: any;
+  numActuacion: any;
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {

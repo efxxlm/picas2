@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -13,6 +13,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   @Input() isEditable;
   @Input() controversiaAct;
+  @Output() numReclamacion = new EventEmitter<string>();
+  @Output() actuacion = new EventEmitter<string>();
+  @Output() numActuacion = new EventEmitter<string>();
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   addressForm = this.fb.group({
     resumenReclamacionFiduciaria: [null, Validators.required],
@@ -33,9 +36,14 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   constructor(private router: Router, private services: ContractualControversyService, private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
-      this.addressForm.get('resumenReclamacionFiduciaria').setValue('prueba');
-      this.addressForm.get('requereReclamacionComiteTecnico').setValue(true);
-      this.addressForm.get('urlSoporte').setValue(true);
+      this.services.GetControversiaActuacionById(this.controversiaAct).subscribe((a:any)=>{
+        this.addressForm.get('resumenReclamacionFiduciaria').setValue(a.resumenPropuestaFiduciaria);
+        this.addressForm.get('requereReclamacionComiteTecnico').setValue(true);
+        this.addressForm.get('urlSoporte').setValue(a.rutaSoporte);
+        this.numReclamacion.emit('sin-diligenciar');
+        this.actuacion.emit('sin-diligenciar');
+        this.numActuacion.emit(a.numeroActuacionFormat);
+      });
     }
   }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -66,7 +74,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   onSubmit() {
     console.log(this.addressForm.value);
     let arrayReclam;
-
+    let codeState;
     if(this.isEditable==true){
       arrayReclam = { 
         "controversiaActuacionId":this.controversiaAct,
@@ -77,10 +85,14 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
         if(this.addressForm.value.resumenReclamacionFiduciaria!=null && this.addressForm.value.requereReclamacionComiteTecnico!=null && this.addressForm.value.urlSoporte!=null){
-          this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,'3').subscribe((data:any)=>{
-          
-          });
+          codeState = '3';
         }
+        else{
+          codeState = '2';
+        }
+        this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,codeState).subscribe((data:any)=>{
+          
+        });
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       });
@@ -94,10 +106,13 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
         if(this.addressForm.value.resumenReclamacionFiduciaria!=null && this.addressForm.value.requereReclamacionComiteTecnico!=null && this.addressForm.value.urlSoporte!=null){
-          this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,'3').subscribe((data:any)=>{
-          
-          });
+          codeState = '3';
         }
+        else{
+          codeState = '2';
+        }
+        this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,codeState).subscribe((data:any)=>{
+        });
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       });

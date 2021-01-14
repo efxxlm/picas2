@@ -33,13 +33,13 @@
             <ng-container matColumnDef="estadoReclamacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la reclamación </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                    <div *ngIf="element.estadoActuacionCodigo=='1'">Sin registro</div>
-                    <div *ngIf="element.estadoActuacionCodigo=='2'">En proceso de registro</div>
-                    <div *ngIf="element.estadoActuacionCodigo=='3'">En proceso de registro</div>
-                    <div *ngIf="element.estadoActuacionCodigo=='4'">Enviado a comité técnico</div>
-                    <div *ngIf="element.estadoActuacionCodigo=='5'">Devuelta por comité técnico</div>
-                    <div *ngIf="element.estadoActuacionCodigo=='6'">Devuelta por comité técnico</div>
-                    <div *ngIf="element.estadoActuacionCodigo=='7'">Aprobada por comité técnico</div>
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='1'">Sin registro</div>
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='2'">En proceso de registro</div>
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='3'">En proceso de registro</div>
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='4'">Enviado a comité técnico</div>
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='5'">Devuelta por comité técnico</div>
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='6'">Devuelta por comité técnico</div>
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='7'">Aprobada por comité técnico</div>
                 </td>
             </ng-container>
 
@@ -47,27 +47,27 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
                 <td mat-cell *matCellDef="let element">
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionCodigo=='7'"
+                        *ngIf="element.estadoActuacionReclamacionCodigo=='7'"
                         (click)="this.actualizarReclamacionAseguradora(element.actuacionId,element.numeroReclamacion)">
                         Actualizar reclamación ante la aseguradora
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionCodigo=='1'"
+                        *ngIf="element.estadoActuacionReclamacionCodigo=='1'"
                         (click)="this.registrarReclamacionAseguradora(element.actuacionId)">
                         Registrar reclamación ante la aseguradora
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionCodigo=='3' || element.estadoActuacionCodigo=='7'"
+                        *ngIf="element.estadoActuacionReclamacionCodigo=='3' || element.estadoActuacionReclamacionCodigo=='7'"
                         (click)="this.enviarReclamacionComiteTecnico(element.actuacionId)">
                         Enviar reclamación a comité técnico
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionCodigo=='2' || element.estadoActuacionCodigo=='3' || element.estadoActuacionCodigo=='5' || element.estadoActuacionCodigo=='6'"
+                        *ngIf="element.estadoActuacionReclamacionCodigo=='2' || element.estadoActuacionReclamacionCodigo=='3' || element.estadoActuacionReclamacionCodigo=='5' || element.estadoActuacionReclamacionCodigo=='6'"
                         (click)="this.verDetalleEditarReclamacion(element.actuacionId)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionCodigo=='7' || element.estadoActuacionCodigo=='5'"
+                        *ngIf="element.estadoActuacionReclamacionCodigo=='7' || element.estadoActuacionReclamacionCodigo=='4'"
                         (click)="this.verDetalleReclamacion(element.actuacionId)">
                         Ver detalle
                     </button>
