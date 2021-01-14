@@ -44,17 +44,18 @@ namespace asivamosffie.services
 
             try
             {
-                SeguimientoSemanal seguimientoSemanal = await _registerWeeklyProgressService.GetLastSeguimientoSemanalByContratacionProyectoIdOrSeguimientoSemanalId(0, pSeguimientoSemanalId);
+                SeguimientoSemanal seguimientoSemanal = _context.SeguimientoSemanal.Find(pSeguimientoSemanalId);
                 seguimientoSemanal.UsuarioModificacion = pUsuarioMod;
-                seguimientoSemanal.FechaEnvioSupervisor = null;
+                seguimientoSemanal.FechaModificacion = DateTime.Now;
+            
+                seguimientoSemanal.FechaEnvioSupervisor = null; 
                 seguimientoSemanal.RegistroCompleto = false;
-                seguimientoSemanal.RegistroCompletoMuestras = false;
                 seguimientoSemanal.RegistroCompletoVerificar = false;
                 seguimientoSemanal.RegistroCompletoAvalar = false;
                 seguimientoSemanal.EstadoSeguimientoSemanalCodigo = ConstanCodigoEstadoSeguimientoSemanal.Devuelto_Supervisor;
 
                 List<SeguimientoSemanalObservacion> ListSeguimientoSemanalObservacion = _context.SeguimientoSemanalObservacion.Where(r => r.SeguimientoSemanalId == pSeguimientoSemanalId).ToList();
-            
+
                 ListSeguimientoSemanalObservacion.ForEach(s =>
                 {
                     s.Archivada = true;
@@ -62,37 +63,6 @@ namespace asivamosffie.services
                     s.UsuarioModificacion = pUsuarioMod;
                 });
 
-                //seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompleto = false;
-                //seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompletoObservacionApoyo = false;
-                //seguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().RegistroCompletoObservacionSupervisor = false;
-
-                //if (seguimientoSemanal.NumeroSemana % 5 == 0)
-                //{
-                //    seguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault().RegistroCompleto = false;
-                //    seguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault().RegistroCompletoObservacionApoyo = false;
-                //    seguimientoSemanal.SeguimientoSemanalAvanceFinanciero.FirstOrDefault().RegistroCompletoObservacionSupervisor = false;
-                //} 
-                 
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompleto = false;
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompletoActividad = false;
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompletoActividadSiguiente = false;
-
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompletoObservacionApoyoEstadoContrato = false;
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompletoObservacionApoyoActividad = false;
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompletoObservacionApoyoActividadSiguiente = false;
-
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompletoObservacionSupervisorEstadoContrato = false;
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompletoObservacionSupervisorActividad = false;
-                //seguimientoSemanal.SeguimientoSemanalReporteActividad.FirstOrDefault().RegistroCompletoObservacionSupervisorActividadSiguiente = false;
-
-                //seguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault().RegistroCompleto = false;
-                //seguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault().RegistroCompletoObservacionApoyo = false;
-                //seguimientoSemanal.SeguimientoSemanalRegistroFotografico.FirstOrDefault().RegistroCompletoObservacionSupervisor = false;
-
-                //seguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault().RegistroCompleto = false;
-                //seguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault().RegistroCompletoObservacionApoyo = false;
-                //seguimientoSemanal.SeguimientoSemanalRegistrarComiteObra.FirstOrDefault().RegistroCompletoObservacionSupervisor = false;
-                 
                 _context.SaveChanges();
                 return new Respuesta
                 {

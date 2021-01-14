@@ -137,6 +137,14 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
                                 .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
                                     .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+                     
+                      // Gestion Obra Calidad + Observaciones
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                        .ThenInclude(r => r.ObservacionSupervisor)
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                        .ThenInclude(r => r.ObservacionApoyo)
 
                          //   Gestion Obra Calidad
                          .Include(r => r.SeguimientoSemanalGestionObra)
@@ -299,6 +307,14 @@ namespace asivamosffie.services
                          .Include(r => r.SeguimientoSemanalGestionObra)
                             .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
                                 .ThenInclude(r => r.SeguridadSaludCausaAccidente)
+
+                      // Gestion Obra Calidad + Observaciones
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                        .ThenInclude(r => r.ObservacionSupervisor)
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                        .ThenInclude(r => r.ObservacionApoyo)
 
                         //Gestion Obra Social
                         .Include(r => r.SeguimientoSemanalGestionObra)
@@ -964,7 +980,9 @@ namespace asivamosffie.services
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
             ///Validar Estado De obra 
             //Actualizar estado obra
-            List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + pSeguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
+            List<Programacion> ListProgramacion = _context.Programacion
+                .FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + pSeguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'")
+                .ToList();
 
             decimal? ProgramacionAcumuladaObra = ListProgramacion.Sum(r => r.ProgramacionCapitulo);
             decimal? ProgramacionEjecutadaObra = ListProgramacion.Sum(r => r.AvanceFisicoCapitulo);
@@ -1018,8 +1036,8 @@ namespace asivamosffie.services
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().FechaCreacion = DateTime.Now;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().Eliminado = false;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = contratacionProyectoValidarEstadoObra.EstadoObraCodigo;
-                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
 
+                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
             }
             else
             {
@@ -1033,7 +1051,6 @@ namespace asivamosffie.services
                 seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
                 seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
             }
-
         }
 
         private void SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero pSeguimientoSemanalAvanceFinanciero, string pUsuarioCreacion)
