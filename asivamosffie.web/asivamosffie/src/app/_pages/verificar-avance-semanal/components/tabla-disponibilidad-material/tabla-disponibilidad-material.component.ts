@@ -26,18 +26,31 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
     constructor( private dialog: MatDialog ) { }
 
     ngOnInit(): void {
-        if ( this.seguimientoDiario !== undefined && this.seguimientoDiario.length > 0 ) {
+        if ( this.seguimientoDiario !== undefined ) {
             const seguimientoDiario = [];
             let sumaTotal = 0;
-            for ( const seguimiento of this.seguimientoDiario ) {
-                let totalhorasRetraso = 0;
-                totalhorasRetraso += seguimiento.numeroHorasRetrasoMaterial !== undefined ? seguimiento.numeroHorasRetrasoMaterial : 0;
-                totalhorasRetraso += seguimiento.numeroHorasRetrasoEquipo !== undefined ? seguimiento.numeroHorasRetrasoEquipo : 0;
-                totalhorasRetraso +=    seguimiento.numeroHorasRetrasoProductividad !== undefined ?
-                                        seguimiento.numeroHorasRetrasoProductividad : 0;
-                seguimiento.totalHorasRetraso = totalhorasRetraso === 0 ? '---' : totalhorasRetraso;
-                sumaTotal += totalhorasRetraso;
-                seguimientoDiario.push( seguimiento );
+            if ( this.seguimientoDiario.length > 0 ) {
+                for ( const seguimiento of this.seguimientoDiario ) {
+                    let totalhorasRetraso = 0;
+                    totalhorasRetraso += seguimiento.numeroHorasRetrasoMaterial !== undefined ? seguimiento.numeroHorasRetrasoMaterial : 0;
+                    totalhorasRetraso += seguimiento.numeroHorasRetrasoEquipo !== undefined ? seguimiento.numeroHorasRetrasoEquipo : 0;
+                    totalhorasRetraso +=    seguimiento.numeroHorasRetrasoProductividad !== undefined ?
+                                            seguimiento.numeroHorasRetrasoProductividad : 0;
+                    seguimiento.totalHorasRetraso = totalhorasRetraso === 0 ? '---' : totalhorasRetraso;
+                    sumaTotal += totalhorasRetraso;
+                    seguimientoDiario.push( seguimiento );
+                }
+            } else {
+                seguimientoDiario.push(
+                    {
+                        fechaSeguimiento: null,
+                        causaIndisponibilidadMaterialCodigo: '---',
+                        causaIndisponibilidadEquipoCodigo: '---',
+                        causaIndisponibilidadProductividadCodigo: '---',
+                        totalHorasRetraso: '---',
+                        seguimientoDiarioObservaciones: ''
+                    }
+                );
             }
 
             this.dataSeguimientoDiario.push(
