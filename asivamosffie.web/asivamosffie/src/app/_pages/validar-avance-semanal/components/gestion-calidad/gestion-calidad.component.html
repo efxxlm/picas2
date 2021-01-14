@@ -69,7 +69,7 @@
                                     <mat-radio-button [value]="false" [checked]="formGestionCalidad.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
                                 </mat-radio-group>
                             </div>
-                            <span class="required-form-group m-0">*</span>
+                            <span class="required-form-group m-0 margin-required">*</span>
                         </div>
                     </div>
                 </div>
@@ -188,17 +188,17 @@
                                 </mat-card-content>
                             </mat-card>
 
-                            <mat-card class="shipping-card var-main-gris mt-1em" align="left">
+                            <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="ensayo.get( 'fechaCreacion' ).value !== null">
                                 <mat-card-header class="header-card">
                                       <mat-card-title class="header-card--text">
                                         Validación de la supervisión
                                       </mat-card-title>
                                 </mat-card-header>
                                 <mat-card-content>
-                                    <p style="margin-left: 2em;"><b>12/07/2020</b></p>
-                                    <p style="margin-left: 2em;"><b>¿Desde la supervisión tiene observaciones al ensayo de laboratorio {{ i + 1 }}?</b>: Si</p>
-                                    <p style="margin-left: 2em;"><b>¿Desde la supervisión tiene observaciones al ensayo de laboratorio {{ i + 1 }}?</b>: No</p>
-                                    <section [innerHTML]="'<p>test</p>'" style="margin-left: 2em;"></section>
+                                    <p style="margin-left: 2em;"><b> {{ ensayo.get( 'fechaCreacion' ).value }} </b></p>
+                                    <p style="margin-left: 2em;" *ngIf="ensayo.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones al ensayo de laboratorio {{ i + 1 }}?</b>: Si</p>
+                                    <p style="margin-left: 2em;" *ngIf="ensayo.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones al ensayo de laboratorio {{ i + 1 }}?</b>: No</p>
+                                    <section [innerHTML]="ensayo.get('observacionEnsayo').value" style="margin-left: 2em;" *ngIf="ensayo.get( 'tieneObservaciones' ).value === true"></section>
                                 </mat-card-content>
                             </mat-card>
                         </ng-container>
@@ -217,7 +217,7 @@
                                 </mat-card-content>
                             </mat-card>
 
-                            <div class="row justify-content-center align-items-center">
+                            <div class="row justify-content-center align-items-center" *ngIf="ensayo.get( 'registroCompletoMuestras' ).value === true">
                                 <div class="col-md-12">
                                     <div class="row justify-content-center align-items-center" style="width: 100%;">
                                         <div class="pr-1">
@@ -229,11 +229,11 @@
                                                 <mat-radio-button [value]="false" [checked]="ensayo.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
                                             </mat-radio-group>
                                         </div>
-                                        <span class="required-form-group m-0">*</span>
+                                        <span class="required-form-group m-0 margin-required">*</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="ensayo.value.tieneObservaciones == true" align="left">
+                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="ensayo.value.tieneObservaciones == true && ensayo.get( 'registroCompletoMuestras' ).value === true" align="left">
                                 <div class="text-area-quill"
                                 [class.color-secondaryColor]="ensayo.get('observacionEnsayo').invalid && ensayo.get('observacionEnsayo').touched || ensayo.get('observacionEnsayo').invalid">
                                     <label  class="text-area-quill--label align-left-label"
@@ -256,7 +256,7 @@
                                   1000
                                 </span>
                             </div>
-                            <div class="text-center mt-1em">
+                            <div class="text-center mt-1em" *ngIf="ensayo.get( 'registroCompletoMuestras' ).value === true">
                                 <button mat-button
                                         color="warn"
                                         class="btn-guardar"

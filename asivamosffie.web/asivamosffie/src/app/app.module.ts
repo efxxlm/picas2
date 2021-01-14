@@ -5,6 +5,7 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // others
+import { NgxSpinnerModule } from "ngx-spinner";
 import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core/core.module';
@@ -27,7 +28,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { DomSafePipe } from './_pipes/dom-safe.pipe';
 import { AuthGuard } from './_guards/auth.guard';
 import { CanDeactivateGuard } from './_guards/can-deactivate.guard';
-//import { LoaderInterceptor } from './_helpers/loader.interceptor';
+import { LoaderInterceptor } from './_helpers/loader.interceptor';
 
 export const customCurrencyMaskConfig = {
   align: 'right',
@@ -57,6 +58,7 @@ export const customCurrencyMaskConfig = {
     HttpClientModule,
     SharedModule,
     CoreModule,
+    NgxSpinnerModule,
     BrowserAnimationsModule,
     MatTableModule,
     FormsModule,
@@ -64,7 +66,7 @@ export const customCurrencyMaskConfig = {
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorInterceptor, multi: true },
-    /*{ provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }, no alcance a implementarlo, att juan*/
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true }, //no alcance a implementarlo, att juan
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     //{ provide: LOCALE_ID, useValue: "es-ES" },
     DatePipe,

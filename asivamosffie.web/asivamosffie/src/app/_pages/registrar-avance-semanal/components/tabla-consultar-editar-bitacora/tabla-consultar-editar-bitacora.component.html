@@ -61,7 +61,7 @@
                     color="accent" 
                     class="btn-table"
                     (click)="getVerDetalleAvance( element.seguimientoSemanalId )">
-                    Ver detalle
+                    {{ element.registroCompletoMuestras === true ? 'Ver detalle' : 'Ver detalle/Editar' }}
             </button>
             <button mat-raised-button
                     color="accent" 
@@ -69,12 +69,6 @@
                     (click)="enviarMuestrasVerificacion( element.seguimientoSemanalId )"
                     *ngIf="element.registroCompletoMuestra === true">
                     Enviar muestras a verificación
-            </button>
-            <button mat-raised-button
-                    color="accent" 
-                    class="btn-table"
-                    (click)="getVerDetalleAvance( element.seguimientoSemanalId )">
-                    Ver detalle/Editar
             </button>
           </td>
         </ng-container>

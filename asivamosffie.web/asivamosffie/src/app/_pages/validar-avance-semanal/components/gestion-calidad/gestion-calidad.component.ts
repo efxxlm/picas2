@@ -92,7 +92,6 @@ export class GestionCalidadComponent implements OnInit {
                                 response => {
                                     this.observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                     const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                    console.log( this.observacionApoyo, observacionSupervisor );
                                     this.dataHistorial = response.filter( obs => obs.archivada === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     if ( observacionSupervisor.length > 0 ) {
@@ -112,52 +111,60 @@ export class GestionCalidadComponent implements OnInit {
                 // GET ensayos de laboratorio
                 if ( this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio.length > 0 ) {
                     for ( const ensayo of this.gestionObraCalidad.gestionObraCalidadEnsayoLaboratorio ) {
+                        const observacionApoyo = ensayo.observacionApoyo;
+                        const observacionSupervisor = ensayo.observacionSupervisor;
+                        let historial = [];
+                        let estadoSemaforo = 'sin-diligenciar';
+                        let observacion: string;
+                        let fechaCreacion: Date;
+                        if ( observacionSupervisor !== undefined ) {
+                            fechaCreacion = observacionSupervisor.fechaCreacion;
+                            if ( observacionSupervisor.observacion !== undefined ) {
+                                if ( observacionSupervisor.observacion.length > 0 ) {
+                                    observacion = observacionSupervisor.observacion;
+                                }
+                            }
+                        }
+                        if ( this.esVerDetalle === false ) {
+                            if ( ensayo.registroCompletoObservacionSupervisor === false ) {
+                                estadoSemaforo = 'en-proceso';
+                            }
+                            if ( ensayo.registroCompletoObservacionSupervisor === true ) {
+                                estadoSemaforo = 'completo';
+                            }
+                        }
+                        if ( this.esVerDetalle === true ) {
+                            estadoSemaforo = '';
+                        }
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
                             .subscribe(
                                 response => {
-                                    const observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
-                                    const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                    let observacion: string;
-                                    let fechaCreacion: Date;
-                                    if ( observacionSupervisor.length > 0 ) {
-                                        fechaCreacion = observacionSupervisor[0].fechaCreacion;
-                                        if ( observacionSupervisor[0].observacion !== undefined ) {
-                                            if ( observacionSupervisor[0].observacion.length > 0 ) {
-                                                observacion = observacionSupervisor[0].observacion;
-                                            }
-                                        }
-                                    }
-                                    const historial = response.filter( obs => obs.archivada === true );
-                                    let estadoSemaforo = 'sin-diligenciar';
-                                    if ( ensayo.registroCompletoObservacionSupervisor === false ) {
-                                        estadoSemaforo = 'en-proceso';
-                                    }
-                                    if ( ensayo.registroCompletoObservacionSupervisor === true ) {
-                                        estadoSemaforo = 'completo';
-                                    }
-                                    this.ensayos.push( this.fb.group(
-                                        {
-                                            estadoSemaforo,
-                                            tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo,
-                                            numeroMuestras: ensayo.numeroMuestras,
-                                            fechaTomaMuestras: ensayo.fechaTomaMuestras,
-                                            fechaEntregaResultados: ensayo.fechaEntregaResultados,
-                                            realizoControlMedicion: ensayo.realizoControlMedicion,
-                                            observacion: ensayo.observacion,
-                                            urlSoporteGestion: ensayo.urlSoporteGestion,
-                                            registroCompletoMuestras: ensayo.registroCompletoMuestras,
-                                            observacionApoyo: observacionApoyo.length > 0 ? observacionApoyo[0] : null,
-                                            gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
-                                            tieneObservaciones: [ ensayo.tieneObservacionSupervisor !== undefined ? ensayo.tieneObservacionSupervisor : null, Validators.required ],
-                                            tieneObservacionApoyo: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
-                                            observacionEnsayo: observacion !== undefined ? observacion : null,
-                                            fechaCreacion: fechaCreacion !== undefined ? fechaCreacion : null,
-                                            seguimientoSemanalObservacionId: ensayo.observacionSupervisorId !== undefined ? ensayo.observacionSupervisorId : 0,
-                                            historial: [ historial ]
-                                        }
-                                    ) );
+                                    historial = response.filter( obs => obs.archivada === true );
                                 }
                             );
+                            setTimeout(() => {
+                                this.ensayos.push( this.fb.group(
+                                    {
+                                        estadoSemaforo,
+                                        tipoEnsayoCodigo: ensayo.tipoEnsayoCodigo,
+                                        numeroMuestras: ensayo.numeroMuestras,
+                                        fechaTomaMuestras: ensayo.fechaTomaMuestras,
+                                        fechaEntregaResultados: ensayo.fechaEntregaResultados,
+                                        realizoControlMedicion: ensayo.realizoControlMedicion,
+                                        observacion: ensayo.observacion,
+                                        urlSoporteGestion: ensayo.urlSoporteGestion,
+                                        registroCompletoMuestras: ensayo.registroCompletoMuestras,
+                                        observacionApoyo: observacionApoyo !== undefined ? observacionApoyo : null,
+                                        gestionObraCalidadEnsayoLaboratorioId: ensayo.gestionObraCalidadEnsayoLaboratorioId,
+                                        tieneObservaciones: [ ensayo.tieneObservacionSupervisor !== undefined ? ensayo.tieneObservacionSupervisor : null, Validators.required ],
+                                        tieneObservacionApoyo: [ ensayo.tieneObservacionApoyo !== undefined ? ensayo.tieneObservacionApoyo : null, Validators.required ],
+                                        observacionEnsayo: observacion !== undefined ? observacion : null,
+                                        fechaCreacion: fechaCreacion !== undefined ? fechaCreacion : null,
+                                        seguimientoSemanalObservacionId: ensayo.observacionSupervisorId !== undefined ? ensayo.observacionSupervisorId : 0,
+                                        historial: [ historial ]
+                                    }
+                                ) );
+                            }, 500);
                     }
                 }
             }
@@ -208,7 +215,7 @@ export class GestionCalidadComponent implements OnInit {
 			seguimientoSemanalObservacionId: this.seguimientoSemanalObservacionId,
             seguimientoSemanalId: this.seguimientoSemanalId,
             tipoObservacionCodigo: this.tipoObservacionCalidad.gestionCalidadCodigo,
-            observacionPadreId: this.seguimientoSemanalGestionObraId,
+            observacionPadreId: this.seguimientoSemanalGestionObraCalidadId,
             observacion: this.formGestionCalidad.get( 'observaciones' ).value,
             tieneObservacion: this.formGestionCalidad.get( 'tieneObservaciones' ).value,
             esSupervisor: true
@@ -224,7 +231,7 @@ export class GestionCalidadComponent implements OnInit {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                                     () =>   this.routes.navigate(
                                                 [
-                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanalId
                                                 ]
                                             )
                                 );
@@ -259,7 +266,7 @@ export class GestionCalidadComponent implements OnInit {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                                     () =>   this.routes.navigate(
                                                 [
-                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanalId
                                                 ]
                                             )
                                 );

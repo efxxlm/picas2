@@ -7,8 +7,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.model.APIModels;
-
+using asivamosffie.model.APIModels; 
 using System.IO;
 using Z.EntityFramework.Plus;
 using DinkToPdf;
@@ -137,6 +136,16 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
                                 .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
                                     .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+
+                      // Gestion Obra Calidad + Observaciones
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionSupervisor)
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionApoyo)
 
                          //   Gestion Obra Calidad
                          .Include(r => r.SeguimientoSemanalGestionObra)
@@ -300,6 +309,16 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
                                 .ThenInclude(r => r.SeguridadSaludCausaAccidente)
 
+                      // Gestion Obra Calidad + Observaciones 
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionSupervisor)
+                      .Include(r => r.SeguimientoSemanalGestionObra)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionApoyo)
+
                         //Gestion Obra Social
                         .Include(r => r.SeguimientoSemanalGestionObra)
                            .ThenInclude(r => r.SeguimientoSemanalGestionObraSocial)
@@ -432,19 +451,20 @@ namespace asivamosffie.services
 
         public async Task<List<dynamic>> GetListSeguimientoSemanalByContratacionProyectoId(int pContratacionProyectoId)
         {
-            List<SeguimientoSemanal> ListseguimientoSemanal =
-                await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Proyecto)
-                .Include(r => r.ContratacionProyecto)
-                   .ThenInclude(r => r.Contratacion)
-                       .ThenInclude(r => r.Contrato)
-                .Include(r => r.SeguimientoSemanalAvanceFisico)
-
-                .ToListAsync();
+            List<SeguimientoSemanal> ListseguimientoSemanal = await _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId)
+                                                                    .Include(r => r.ContratacionProyecto)
+                                                                       .ThenInclude(r => r.Proyecto)
+                                                                    .Include(r => r.ContratacionProyecto)
+                                                                       .ThenInclude(r => r.Contratacion)
+                                                                           .ThenInclude(r => r.Contrato)
+                                                                    .Include(r => r.SeguimientoSemanalAvanceFisico)
+                                                                    .Include(r => r.SeguimientoSemanalGestionObra)
+                                                                       .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                                                                           .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                                                               .ThenInclude(r => r.EnsayoLaboratorioMuestra)
+                                                                    .ToListAsync();
 
             List<dynamic> ListBitaCora = new List<dynamic>();
-
             List<Dominio> ListEstadoObra = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Obra_Avance_Semanal).ToList();
             List<Dominio> ListEstadoSeguimientoSemanal = _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Estado_Reporte_Semanal_Y_Muestras).ToList();
 
@@ -474,7 +494,7 @@ namespace asivamosffie.services
                 {
                     UltimoReporte = item.FechaModificacion,
                     item.SeguimientoSemanalId,
-                    RegistroCompletoMuestras = item.RegistroCompletoMuestras.HasValue ? item.RegistroCompletoMuestras : false,
+                    RegistroCompletoMuestras = item.RegistroCompletoMuestras,
                     item.NumeroSemana,
                     UltimaSemana,
                     item.FechaInicio,
@@ -488,6 +508,14 @@ namespace asivamosffie.services
                     EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
                     EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
 
+                    RegistroCompletoMuestrasVerificar = item.SeguimientoSemanalGestionObra?
+                    .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
+                    .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
+                    .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo,
+                    RegistroCompletoMuestrasValidar = item.SeguimientoSemanalGestionObra?
+                    .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
+                    .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
+                    .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo
                 });
             }
             return ListBitaCora;
@@ -547,13 +575,13 @@ namespace asivamosffie.services
 
             try
             {
-                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Where(r => r.ContratacionProyectoId == pContratacionProyectoId && r.RegistroCompleto == false).FirstOrDefault();
+                SeguimientoSemanal seguimientoSemanalMod = _context.SeguimientoSemanal.Find(pContratacionProyectoId);
 
                 seguimientoSemanalMod.EstadoSeguimientoSemanalCodigo = pEstadoMod;
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
 
-                if (pEstadoMod == ConstanCodigoEstadoReporteSemanal.Enviado_a_verificacion)
+                if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Verificacion)
                 {
                     seguimientoSemanalMod.RegistroCompleto = true;
                 }
@@ -596,7 +624,7 @@ namespace asivamosffie.services
                 seguimientoSemanalMod.UsuarioModificacion = pUsuarioMod;
                 seguimientoSemanalMod.FechaModificacion = DateTime.Now;
 
-                if (pEstadoMod == ConstanCodigoEstadoReporteSemanal.Enviado_a_verificacion)
+                if (pEstadoMod == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Verificacion)
                 {
                     seguimientoSemanalMod.RegistroCompleto = true;
                 }
@@ -955,7 +983,9 @@ namespace asivamosffie.services
             //EstadosDisponibilidad codigo =  7 6 cuando esta estos estados de obra desabilitar 
             ///Validar Estado De obra 
             //Actualizar estado obra
-            List<Programacion> ListProgramacion = _context.Programacion.FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + pSeguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'").ToList();
+            List<Programacion> ListProgramacion = _context.Programacion
+                .FromSqlRaw("SELECT DISTINCT p.* FROM dbo.Programacion AS p INNER JOIN dbo.FlujoInversion AS f ON p.ProgramacionId = f.ProgramacionId INNER JOIN dbo.SeguimientoSemanal AS s ON f.SeguimientoSemanalId = s.SeguimientoSemanalId WHERE s.ContratacionProyectoId = " + pSeguimientoSemanal.ContratacionProyectoId + " AND p.TipoActividadCodigo = 'C'")
+                .ToList();
 
             decimal? ProgramacionAcumuladaObra = ListProgramacion.Sum(r => r.ProgramacionCapitulo);
             decimal? ProgramacionEjecutadaObra = ListProgramacion.Sum(r => r.AvanceFisicoCapitulo);
@@ -1009,8 +1039,8 @@ namespace asivamosffie.services
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().FechaCreacion = DateTime.Now;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().Eliminado = false;
                 pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().EstadoObraCodigo = contratacionProyectoValidarEstadoObra.EstadoObraCodigo;
-                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
 
+                _context.SeguimientoSemanalAvanceFisico.Add(pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault());
             }
             else
             {
@@ -1024,7 +1054,6 @@ namespace asivamosffie.services
                 seguimientoSemanalAvanceFisicoOld.ProgramacionSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().ProgramacionSemanal;
                 seguimientoSemanalAvanceFisicoOld.AvanceFisicoSemanal = pSeguimientoSemanal.SeguimientoSemanalAvanceFisico.FirstOrDefault().AvanceFisicoSemanal;
             }
-
         }
 
         private void SaveUpdateAvanceFinanciero(SeguimientoSemanalAvanceFinanciero pSeguimientoSemanalAvanceFinanciero, string pUsuarioCreacion)
@@ -2119,6 +2148,16 @@ namespace asivamosffie.services
 
         #endregion
 
-        #endregion 
+        #endregion
+         
+        #region Notificaciones Alertas 
+
+
+        public void SendSeguimientoSemanalApoyoSupervision()
+        {
+             
+        }
+
+        #endregion
     }
 }
