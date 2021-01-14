@@ -142,6 +142,7 @@ namespace asivamosffie.services
                 var dis= await _context.DisponibilidadPresupuestal.Where(d => d.DisponibilidadPresupuestalId == id)
                                     .Include(r => r.DisponibilidadPresupuestalProyecto)  
                                     .Include(x => x.DisponibilidadPresupuestalObservacion)
+                                    .Include(x=>x.Contratacion)
                                     .FirstOrDefaultAsync();
                 DateTime fechaComitetecnico = DateTime.Now;
                 string numerocomietetecnico = "";
@@ -169,7 +170,8 @@ namespace asivamosffie.services
         {
 
             List<DisponibilidadPresupuestal> ListDisponibilidadPresupuestal = 
-                await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado && r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud))
+                await _context.DisponibilidadPresupuestal.Where(r => !(bool)r.Eliminado &&
+                r.EstadoSolicitudCodigo.Equals(pCodigoEstadoSolicitud))
                 .Include(x=>x.DisponibilidadPresupuestalProyecto)
                 .ToListAsync();
 
@@ -226,8 +228,13 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x=>x.DisponibilidadPresupuestalProyectoId).ToList();
-                    if(_context.GestionFuenteFinanciacion.Where(x=> x.DisponibilidadPresupuestalProyectoId!=null && ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId)).Count()>0)
+                    
+                    List<int> proyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x=>(int)x.ProyectoId).ToList();
+                    List<int> ddpproyectosId = DisponibilidadPresupuestal.DisponibilidadPresupuestalProyecto.Select(x => (int)x.DisponibilidadPresupuestalProyectoId).ToList();
+                    var aportantes = _context.ProyectoAportante.Where(x => proyectosId.Contains( x.ProyectoId)).ToList();
+                    //var fuentes = _context.FuenteFinanciacion.Where(x => aportantes.Contains(x.AportanteId)).Count();
+                    if (_context.GestionFuenteFinanciacion.Where(x=> x.DisponibilidadPresupuestalProyectoId!=null && ddpproyectosId.Contains((int)x.DisponibilidadPresupuestalProyectoId)).Count()
+                        == aportantes.Count())
                     {
                         blnEstado = true;
                     }
