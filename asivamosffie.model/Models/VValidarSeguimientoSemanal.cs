@@ -22,5 +22,6 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacionAvalar { get; set; }
         public bool? RegistroCompletoAvalar { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
+        public int? VerAvanceSupervisor { get; set; }
     }
 }
