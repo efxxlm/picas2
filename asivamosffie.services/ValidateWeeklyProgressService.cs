@@ -36,8 +36,7 @@ namespace asivamosffie.services
         {
             return await _context.VVerificarValidarSeguimientoSemanal.Where(r => r.EstadoSeguimientoSemanalCodigo == ConstanCodigoEstadoSeguimientoSemanal.Enviado_Validacion).ToListAsync();
         }
-
-
+         
         public async Task<Respuesta> ReturnSeguimientoSemanal(int pSeguimientoSemanalId, string pUsuarioMod)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cargar_Acta_Terminacion_Contrato, (int)EnumeratorTipoDominio.Acciones);
