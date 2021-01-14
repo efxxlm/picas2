@@ -2,7 +2,7 @@
 {
     public class ConstantCodigoAcciones
     {
-public const string Inicio_de_sesion = "1";
+        public const string Inicio_de_sesion = "1";
         public const string Cambio_de_contrasena = "2";
         public const string Solicitud_de_contrasena = "3";
         public const string CrearActualizarCofinanciacion = "4";
@@ -104,14 +104,14 @@ public const string Inicio_de_sesion = "1";
 
         //Acta inicio contrato Fase 2     
         public const string Editar_Plazo_Ejecucion_Fase_2 = "108";
-        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";        
+        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";
         public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
         public const string Notificación_Acta_Inicio_Fase_II = "111";
         public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
         public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
         public const string Crear_Editar_Contrato_Observacion = "122";
 
-        
+
 
         public const string Crear_Cronograma_monitoreo = "114";
 
@@ -149,21 +149,21 @@ public const string Inicio_de_sesion = "1";
 
         public const string Cambiar_Estado_Programacion_Especial = "139";
         public const string Crear_Editar_Controversia_Contractual = "128";
-       	public const string Crear_Editar_Controversia_Actuacion= "129";
-        public const string Eliminar_Controversia_Contractual= "130";
-        public const string Eliminar_Controversia_Actuacion= "131";
-        public const string Crear_Editar_Actuacion_Seguimiento = "148";        
+        public const string Crear_Editar_Controversia_Actuacion = "129";
+        public const string Eliminar_Controversia_Contractual = "130";
+        public const string Eliminar_Controversia_Actuacion = "131";
+        public const string Crear_Editar_Actuacion_Seguimiento = "148";
 
         public const string Cambiar_estado_Controversia_Actuacion = "136";
-        public const string  Cambiar_estado_Controversia_Contractual = "137";
-        public const string  Notificacion_Controversia_Contractual= "140";
+        public const string Cambiar_estado_Controversia_Contractual = "137";
+        public const string Notificacion_Controversia_Contractual = "140";
 
         //4.2.2 Gestionar procesos de Defensa Judicial
         public const string Crear_Edit_Contrato_Observacion = "141";
-        public const string  Crear_Editar_Ficha_Estudio= "145";
-        public const string  Crear_Editar_Demandado_Convocado= "146";
-        public const string  Cambiar_Estado_Proceso= "147";
-         
+        public const string Crear_Editar_Ficha_Estudio = "145";
+        public const string Crear_Editar_Demandado_Convocado = "146";
+        public const string Cambiar_Estado_Proceso = "147";
+
         public const string Crear_Editar_Contrato_Construccion = "101";
         public const string Crear_Editar_Construccion_Perfil = "102";
         public const string Eliminar_Construccion_Perfil = "104";
@@ -181,13 +181,13 @@ public const string Inicio_de_sesion = "1";
         public const string Crear_Editar_Observacion_Construccion_ProgramacionObra = "119";
         public const string Crear_Editar_Observacion_Construccion_FlujoInversion = "120";
         public const string Enviar_Al_Supervisor = "123";
-        public const string Cambiar_Estado_Contrato_Construccion ="142";
+        public const string Cambiar_Estado_Contrato_Construccion = "142";
         public const string Crear_Editar_Observacion_Perfil = "143";
         public const string Aprobar_Inicio_Construccion = "144";
 
         public const string Cambiar_Estado_Verificacion_Construccion = "157";
 
-        
+        public const string Enviar_Correo_Crear_Contrato_Poliza = "182";
 
     }
 }
