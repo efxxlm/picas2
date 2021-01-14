@@ -30,7 +30,7 @@ namespace asivamosffie.api.Controllers
   
         [Route("GetListReporteSemanalView")]
         [HttpGet]
-        public async Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView([FromQuery] List<string> strListCodEstadoSeguimientoSemanal)
+        public async Task<List<VValidarSeguimientoSemanal>> GetListReporteSemanalView([FromQuery] List<string> strListCodEstadoSeguimientoSemanal)
         {
             return await _ValidateWeeklyProgressService.GetListReporteSemanalView(strListCodEstadoSeguimientoSemanal);
         }

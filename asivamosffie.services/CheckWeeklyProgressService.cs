@@ -260,11 +260,11 @@ namespace asivamosffie.services
                         if (item3.TieneObservacionSupervisor != true)
                             return false;
 
-                        foreach (var item in item3.EnsayoLaboratorioMuestra)
-                        {
-                            if (item.TieneObservacionSupervisor != true)
-                                return false;
-                        }
+                        //foreach (var item in item3.EnsayoLaboratorioMuestra)
+                        //{
+                        //    if (item.TieneObservacionSupervisor != true)
+                        //        return false;
+                        //}
                     }
                 }
             }
@@ -277,11 +277,11 @@ namespace asivamosffie.services
                         if (item3.TieneObservacionApoyo != true)
                             return false;
 
-                        foreach (var item in item3.EnsayoLaboratorioMuestra)
-                        {
-                            if (item.TieneObservacionApoyo != true)
-                                return false;
-                        }
+                        //foreach (var item in item3.EnsayoLaboratorioMuestra)
+                        //{
+                        //    if (item.TieneObservacionApoyo != true)
+                        //        return false;
+                        //}
                     }
                 }
             }
@@ -864,9 +864,9 @@ namespace asivamosffie.services
             return ListBitaCora;
         }
 
-        public async Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
+        public async Task<List<VVerificarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal)
         {
-            return await _context.VVerificarValidarSeguimientoSemanal.ToListAsync();
+            return await _context.VVerificarSeguimientoSemanal.ToListAsync();
         }
 
         #endregion

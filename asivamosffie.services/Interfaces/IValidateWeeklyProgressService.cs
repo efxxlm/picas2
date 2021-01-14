@@ -9,7 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IValidateWeeklyProgressService
     { 
-        Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal);
+        Task<List<VValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal);
 
         Task<Respuesta> ReturnSeguimientoSemanal(int pSeguimientoSemanalId, string pUsuarioMod);
     }
