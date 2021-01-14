@@ -884,7 +884,7 @@ namespace asivamosffie.services
                         seguimientoSemanal.TieneObservacionSupervisor = true;
                     else
                         seguimientoSemanal.TieneObservacionApoyo = true;
-                 
+
                 UpdateObservation(pSeguimientoSemanalObservacion);
 
                 switch (pSeguimientoSemanalObservacion.TipoObservacionCodigo)
@@ -1428,10 +1428,10 @@ namespace asivamosffie.services
         }
 
         private bool CompleteRecordObservation(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
-        {
+        {   
             if (pSeguimientoSemanalObservacion.TieneObservacion == false)
                 return true;
-            if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(pSeguimientoSemanalObservacion.Observacion))
+            if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(Helpers.Helpers.HtmlConvertirTextoPlano(Helpers.Helpers.HtmlConvertirTextoPlano(pSeguimientoSemanalObservacion.Observacion))))
                 return true;
 
             return false;
