@@ -149,7 +149,7 @@ namespace asivamosffie.services
                         bool allDigits = contratacion.Contratista.TipoIdentificacionCodigo.All(char.IsDigit);
                         if (allDigits)
                         {
-                            contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
+                            contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Codigo;
                         }
                     }
                 }
