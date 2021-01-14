@@ -12,6 +12,7 @@ namespace asivamosffie.model.Models
         public string TipoIntervencion { get; set; }
         public string InstitucionEducativa { get; set; }
         public string Sede { get; set; }
+        public int? SeguimientoSemanalId { get; set; }
         public bool? ActaCargada { get; set; }
         public bool? VerEditarBitacora { get; set; }
         public string FechaUltimoReporte { get; set; }
