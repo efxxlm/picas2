@@ -35,7 +35,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
     if(this.isEditable==true){
       this.addressForm.get('resumenReclamacionFiduciaria').setValue('prueba');
       this.addressForm.get('requereReclamacionComiteTecnico').setValue(true);
-      this.addressForm.get('definitivoyCerrado').setValue(true);
+      this.addressForm.get('urlSoporte').setValue(true);
     }
   }
   validateNumberKeypress(event: KeyboardEvent) {
@@ -70,6 +70,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
     if(this.isEditable==true){
       arrayReclam = { 
         "controversiaActuacionId":this.controversiaAct,
+        "controversiaContractualId":this.controversiaID,
         "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
         "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
         "rutaSoporte":this.addressForm.value.urlSoporte,
@@ -86,6 +87,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
     }
     else{
       arrayReclam = { 
+        "controversiaContractualId":this.controversiaID,
         "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
         "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
         "rutaSoporte":this.addressForm.value.urlSoporte,
