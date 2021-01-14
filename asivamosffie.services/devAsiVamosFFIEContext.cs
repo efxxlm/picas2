@@ -162,7 +162,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VRequisitosTecnicosConstruccionAprobar> VRequisitosTecnicosConstruccionAprobar { get; set; }
         public virtual DbSet<VRequisitosTecnicosInicioConstruccion> VRequisitosTecnicosInicioConstruccion { get; set; }
         public virtual DbSet<VRequisitosTecnicosPreconstruccion> VRequisitosTecnicosPreconstruccion { get; set; }
-        public virtual DbSet<VVerificarValidarSeguimientoSemanal> VVerificarValidarSeguimientoSemanal { get; set; }
+        public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
+        public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
@@ -4096,6 +4097,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
+
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -5784,6 +5789,10 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaUltimoReporte)
                     .HasMaxLength(30)
                     .IsUnicode(false);
@@ -6015,18 +6024,17 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<VVerificarValidarSeguimientoSemanal>(entity =>
+            modelBuilder.Entity<VValidarSeguimientoSemanal>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToView("V_VerificarValidarSeguimientoSemanal");
+                entity.ToView("V_ValidarSeguimientoSemanal");
 
                 entity.Property(e => e.EstadoMuestras)
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EstadoObra)
-                    .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -6038,10 +6046,11 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaReporte).HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
-                    .IsRequired()
                     .HasMaxLength(300)
                     .IsUnicode(false);
 
@@ -6055,7 +6064,54 @@ namespace asivamosffie.model.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.Sede)
-                    .IsRequired()
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoIntervencion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<VVerificarSeguimientoSemanal>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("V_VerificarSeguimientoSemanal");
+
+                entity.Property(e => e.EstadoMuestras)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoObra)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoSeguimientoSemanal)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.EstadoSeguimientoSemanalCodigo)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaReporte).HasColumnType("datetime");
+
+                entity.Property(e => e.InstitucionEducativa)
+                    .HasMaxLength(300)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LlaveMen)
+                    .HasColumnName("LlaveMEN")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroContrato)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Sede)
                     .HasMaxLength(300)
                     .IsUnicode(false);
 

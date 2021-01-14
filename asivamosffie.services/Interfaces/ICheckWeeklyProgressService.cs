@@ -11,7 +11,7 @@ namespace asivamosffie.services.Interfaces
     {
         Task<bool> GetValidarRegistroCompletoObservaciones(int pSeguimientoSemanalId, bool esSupervisor);
 
-        Task<List<VVerificarValidarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal);
+        Task<List<VVerificarSeguimientoSemanal>> GetListReporteSemanalView(List<string> strListCodEstadoSeguimientoSemanal);
 
         Task<dynamic> GetListReporteSemanal();
 

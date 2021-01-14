@@ -42,5 +42,13 @@ export class VerDetalleAvanceSemanalComponent implements OnInit {
         }
     }
 
+    valuePending( value: number ) {
+        if ( value % 5 === 0 ) {
+            return '';
+        } else {
+            return 'en-alerta';
+        }
+    }
+
 
 }

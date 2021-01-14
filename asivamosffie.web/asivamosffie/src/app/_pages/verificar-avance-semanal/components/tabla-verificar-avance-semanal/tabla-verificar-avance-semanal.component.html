@@ -52,51 +52,30 @@
     </ng-container>
   
     <ng-container matColumnDef="gestion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
-      <td mat-cell *matCellDef="let element">
-  
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table"
-                [routerLink]="[ 'verificarSeguimientoSemanal', element.contratacionProyectoId ]">
-                Verificar avance
-        </button>
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table"
-                [routerLink]="[ 'consultarBitacora', element.contratacionProyectoId ]">
-                Consultar bitacora
-        </button>
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table"
-                [routerLink]="[ 'verificarSeguimientoSemanal', element.contratacionProyectoId ]">
-                Ver detalle/Editar
-        </button>
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table">
-                Enviar al supervisor
-        </button>
-        <!--
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table">
-                Enviar para registrar informe final
-        </button>
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table">
-                Cargar acta de terminación de contrato
-        </button>
-        <button mat-raised-button
-                color="accent" 
-                class="btn-table">
-                Eliminar
-        </button>
-        -->
-
-      </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-raised-button
+                    color="accent" 
+                    class="btn-table"
+                    *ngIf="element.verAvanceApoyo !== undefined"
+                    [routerLink]="[ 'verificarSeguimientoSemanal', element.seguimientoSemanalId ]">
+                    {{ element.fechaModificacionVerificar === undefined ? 'Verificar avance' : 'Ver detalle/Editar' }}
+            </button>
+            <button mat-raised-button
+                    color="accent" 
+                    class="btn-table"
+                    *ngIf="element.numeroSemana !== primeraSemana"
+                    [routerLink]="[ 'consultarBitacora', element.contratacionProyectoId ]">
+                    Consultar bitacora
+            </button>
+            <button mat-raised-button
+                    color="accent" 
+                    class="btn-table"
+                    *ngIf="element.registroCompletoVerificar === true"
+                    (click)="enviarVerificacion( element.seguimientoSemanalId )">
+                    Enviar al supervisor
+            </button>
+        </td>
     </ng-container>
   
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -24,7 +24,7 @@ export class FormValidarSeguimientoSemanalComponent implements OnInit {
         private activatedRoute: ActivatedRoute )
     {
         this.avanceSemanalSvc
-        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( this.activatedRoute.snapshot.params.id, 0 )
+        .getLastSeguimientoSemanalContratacionProyectoIdOrSeguimientoSemanalId( 0, this.activatedRoute.snapshot.params.id )
             .subscribe(
               seguimiento => {
                   this.seguimientoSemanal = seguimiento;
@@ -32,7 +32,6 @@ export class FormValidarSeguimientoSemanalComponent implements OnInit {
                   this.verificarAvanceSemanalSvc.tipoObservaciones()
                   .subscribe( response => {
                       this.tipoObservaciones = response;
-                      console.log( this.tipoObservaciones );
                       // Semaforo avance fisico
                       const avanceFisico = this.seguimientoSemanal.seguimientoSemanalAvanceFisico[0];
                       if ( avanceFisico.registroCompletoObservacionSupervisor === false ) {

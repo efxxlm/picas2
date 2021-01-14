@@ -38,6 +38,8 @@ namespace asivamosffie.model.Models
         public bool? TieneObservacionSupervisor { get; set; }
         public bool? RegistroCompletoAvalar { get; set; }
         public string EstadoMuestrasCodigo { get; set; }
+        public DateTime? FechaModificacionVerificar { get; set; }
+        public DateTime? FechaModificacionAvalar { get; set; }
 
         public virtual ContratacionProyecto ContratacionProyecto { get; set; }
         public virtual ICollection<FlujoInversion> FlujoInversion { get; set; }

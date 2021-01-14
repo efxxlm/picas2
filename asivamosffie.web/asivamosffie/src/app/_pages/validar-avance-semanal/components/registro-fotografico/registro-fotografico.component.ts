@@ -132,7 +132,7 @@ export class RegistroFotograficoComponent implements OnInit {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                                     () =>   this.routes.navigate(
                                                 [
-                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanalId
                                                 ]
                                             )
                                 );

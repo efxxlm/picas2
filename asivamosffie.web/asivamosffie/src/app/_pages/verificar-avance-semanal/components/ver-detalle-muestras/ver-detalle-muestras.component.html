@@ -30,10 +30,10 @@
                     <div class="mt-1em" align="left">
                         <mat-card class="border">
                             <mat-card-content class="mt-1em">
-                                <p><b>Fecha de entrega de resultados</b>: {{ muestra.get( 'fechaEntregaResultado' ).value | date: 'dd/MM/yyyy' }} </p>
-                                <p><b>Nombre de la muestra</b>: {{ muestra.get( 'nombreMuestra' ).value }} </p>
+                                <p><b>Fecha de entrega de resultados</b>: <i>{{ muestra.get( 'fechaEntregaResultado' ).value | date: 'dd/MM/yyyy' }}</i> </p>
+                                <p><b>Nombre de la muestra</b>: <i>{{ muestra.get( 'nombreMuestra' ).value }}</i> </p>
                                 <section>
-                                    <p><b>Observaciones frente a los resultados:</b></p> <div [innerHTML]="muestra.get( 'observacion' ).value"></div>
+                                    <p><b>Observaciones frente a los resultados:</b></p> <i><div [innerHTML]="muestra.get( 'observacion' ).value"></div></i>
                                 </section>
                             </mat-card-content>
                         </mat-card>
@@ -67,7 +67,7 @@
                                             <mat-radio-button [value]="false" [checked]="muestra.get( 'tieneObservacionApoyo' ).value === false">No</mat-radio-button>
                                         </mat-radio-group>
                                     </div>
-                                    <span class="required-form-group m-0">*</span>
+                                    <span class="required-form-group m-0 margin-required">*</span>
                                 </div>
                             </div>
                         </div>

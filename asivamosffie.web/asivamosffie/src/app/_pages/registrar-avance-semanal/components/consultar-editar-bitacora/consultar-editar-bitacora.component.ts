@@ -26,11 +26,11 @@ export class ConsultarEditarBitacoraComponent implements OnInit {
     this.consultarBitacora = undefined;
     this.ultimaBitacora = undefined;
     this.avanceSemanalSvc.getListSeguimientoSemanalByContratacionProyectoId( this.activatedRoute.snapshot.params.id )
-      .subscribe( bitacora => {
-        this.consultarBitacora = bitacora;
-        console.log( this.consultarBitacora );
-        this.ultimaBitacora = this.consultarBitacora[ this.consultarBitacora.length - 1 ];
-      } );
+        .subscribe( bitacora => {
+            this.consultarBitacora = bitacora;
+            console.log( this.consultarBitacora );
+            this.ultimaBitacora = this.consultarBitacora[ this.consultarBitacora.length - 1 ];
+        } );
   }
 
   valuePendingBitacora( value: boolean ) {

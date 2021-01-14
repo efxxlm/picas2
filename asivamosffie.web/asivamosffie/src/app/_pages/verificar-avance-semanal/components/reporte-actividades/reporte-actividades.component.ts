@@ -66,32 +66,39 @@ export class ReporteActividadesComponent implements OnInit {
             if ( this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ) {
                 this.reporteActividad = this.seguimientoSemanal.seguimientoSemanalReporteActividad[0];
                 if ( this.reporteActividad !== undefined ) {
-                    let totalReportes = 0;
-                    // Semaforo resumen general
-                    if ( this.reporteActividad.registroCompletoObservacionApoyoEstadoContrato === false ) {
-                        this.semaforoReporte = 'en-proceso';
+                    if ( this.esVerDetalle === false ) {
+                        let totalReportes = 0;
+                        // Semaforo resumen general
+                        if ( this.reporteActividad.registroCompletoObservacionApoyoEstadoContrato === false ) {
+                            this.semaforoReporte = 'en-proceso';
+                        }
+                        if ( this.reporteActividad.registroCompletoObservacionApoyoEstadoContrato === true ) {
+                            this.semaforoReporte = 'completo';
+                            totalReportes++;
+                        }
+                        // Semaforo actividad
+                        if ( this.reporteActividad.registroCompletoObservacionApoyoActividad === false ) {
+                            this.semaforoActividad = 'en-proceso';
+                        }
+                        if ( this.reporteActividad.registroCompletoObservacionApoyoActividad === true ) {
+                            this.semaforoActividad = 'completo';
+                            totalReportes++;
+                        }
+                        // Semaforo actividad siguiente
+                        if ( this.reporteActividad.registroCompletoObservacionApoyoActividadSiguiente === false ) {
+                            this.semaforoActividadSiguiente = 'en-proceso';
+                        }
+                        if ( this.reporteActividad.registroCompletoObservacionApoyoActividadSiguiente === true ) {
+                            this.semaforoActividadSiguiente = 'completo';
+                            totalReportes++;
+                        }
+                        this.estadoSemaforo.emit( totalReportes );
                     }
-                    if ( this.reporteActividad.registroCompletoObservacionApoyoEstadoContrato === true ) {
-                        this.semaforoReporte = 'completo';
-                        totalReportes++;
+                    if ( this.esVerDetalle === true ) {
+                        this.semaforoReporte = '';
+                        this.semaforoActividad = '';
+                        this.semaforoActividadSiguiente = '';
                     }
-                    // Semaforo actividad
-                    if ( this.reporteActividad.registroCompletoObservacionApoyoActividad === false ) {
-                        this.semaforoActividad = 'en-proceso';
-                    }
-                    if ( this.reporteActividad.registroCompletoObservacionApoyoActividad === true ) {
-                        this.semaforoActividad = 'completo';
-                        totalReportes++;
-                    }
-                    // Semaforo actividad siguiente
-                    if ( this.reporteActividad.registroCompletoObservacionApoyoActividadSiguiente === false ) {
-                        this.semaforoActividadSiguiente = 'en-proceso';
-                    }
-                    if ( this.reporteActividad.registroCompletoObservacionApoyoActividadSiguiente === true ) {
-                        this.semaforoActividadSiguiente = 'completo';
-                        totalReportes++;
-                    }
-                    this.estadoSemaforo.emit( totalReportes );
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
                         .subscribe(
                             response => {
@@ -160,7 +167,7 @@ export class ReporteActividadesComponent implements OnInit {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                                     () =>   this.routes.navigate(
                                                 [
-                                                    '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanal.contratacionProyectoId
+                                                    '/verificarAvanceSemanal/verificarSeguimientoSemanal', this.seguimientoSemanalId
                                                 ]
                                             )
                                 );

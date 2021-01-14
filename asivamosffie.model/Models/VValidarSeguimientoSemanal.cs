@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class VVerificarValidarSeguimientoSemanal
+    public partial class VValidarSeguimientoSemanal
     {
         public int ContratacionProyectoId { get; set; }
         public int SeguimientoSemanalId { get; set; }
@@ -18,12 +18,10 @@ namespace asivamosffie.model.Models
         public string EstadoSeguimientoSemanalCodigo { get; set; }
         public string EstadoMuestras { get; set; }
         public int? CantidadSemanas { get; set; }
-        public int? NumeroSemana { get; set; }
-        public bool? RegistroCompletoVerificar { get; set; }
+        public int NumeroSemana { get; set; }
+        public DateTime? FechaModificacionAvalar { get; set; }
         public bool? RegistroCompletoAvalar { get; set; }
-        public bool? TieneObservacionApoyo { get; set; }
         public bool? TieneObservacionSupervisor { get; set; }
-        public int? VerAvanceApoyo { get; set; }
         public int? VerAvanceSupervisor { get; set; }
     }
 }

@@ -97,7 +97,7 @@
                 <p style="margin-left: 2em;"><b> {{ formAvanceFisico.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
                 <p style="margin-left: 2em;" *ngIf="formAvanceFisico.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones al avance físico?</b>: Si</p>
                 <p style="margin-left: 2em;" *ngIf="formAvanceFisico.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones al avance físico?</b>: No</p>
-                <section [innerHTML]="formAvanceFisico.get( 'observacion' ).value" style="margin-left: 2em;" *ngIf="formAvanceFisico.get( 'tieneObservaciones' ).value === true"></section>
+                <section [innerHTML]="formAvanceFisico.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formAvanceFisico.get( 'tieneObservaciones' ).value === true"></section>
             </mat-card-content>
         </mat-card>
     </ng-container>
@@ -129,7 +129,7 @@
                                 <mat-radio-button [value]="false" [checked]="formAvanceFisico.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
                             </mat-radio-group>
                         </div>
-                        <span class="required-form-group m-0">*</span>
+                        <span class="required-form-group m-0 margin-required">*</span>
                     </div>
                 </div>
             </div>

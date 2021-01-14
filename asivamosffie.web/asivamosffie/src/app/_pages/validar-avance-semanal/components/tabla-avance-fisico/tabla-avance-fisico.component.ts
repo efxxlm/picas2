@@ -267,7 +267,7 @@ export class TablaAvanceFisicoComponent implements OnInit {
                                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
                                     () =>   this.routes.navigate(
                                                 [
-                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoDiario.contratacionProyectoId
+                                                    '/validarAvanceSemanal/validarSeguimientoSemanal', this.seguimientoSemanalId
                                                 ]
                                             )
                                 );

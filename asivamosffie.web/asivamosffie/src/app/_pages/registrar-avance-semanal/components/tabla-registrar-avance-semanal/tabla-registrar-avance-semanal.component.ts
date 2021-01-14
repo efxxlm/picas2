@@ -38,7 +38,6 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
         this.avanceSemanalSvc.estadosAvanceSemanal()
             .subscribe( estados => {
                 this.estadoAvanceSemanal = estados;
-                console.log( this.estadoAvanceSemanal );
             } );
         this.getDataTable();
     }
@@ -50,8 +49,8 @@ export class TablaRegistrarAvanceSemanalComponent implements OnInit {
         this.avanceSemanalSvc.getVRegistrarAvanceSemanal()
             .subscribe(
                 listas => {
+                    console.log( listas );
                     this.dataTable = listas;
-                    console.log( this.dataTable );
                     this.tablaRegistro = new MatTableDataSource( this.dataTable );
                     this.tablaRegistro.sort = this.sort;
                     this.tablaRegistro.paginator = this.paginator;

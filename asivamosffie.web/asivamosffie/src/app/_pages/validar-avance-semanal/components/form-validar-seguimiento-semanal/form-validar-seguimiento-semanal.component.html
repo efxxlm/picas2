@@ -13,11 +13,11 @@
 
     <div class="d-flex justify-content-center colorMainColor mt-1em">
         <p>Número de contrato de obra: <b> {{ seguimientoSemanal.contratacionProyecto.contratacion.contrato[0].numeroContrato }} </b> </p>
-        <p style="margin-left: 2em;">Fecha del reporte: <b>Por integrar</b> </p>
+        <p style="margin-left: 2em;">Fecha del reporte: <b>{{ seguimientoSemanal.fechaModificacion | date: 'dd/MM/yyyy' }}</b> </p>
         <p style="margin-left: 2em;">Semana número: <b> {{ seguimientoSemanal.numeroSemana }} </b> </p>
     </div>
 
-    <div align="left">
+    <div class="mt-2em" align="left">
         <mat-card class="border">
             <mat-card-content class="mt-1em">
                 <p><b>Tipo de intervención</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.tipoIntervencionString }} </p>
