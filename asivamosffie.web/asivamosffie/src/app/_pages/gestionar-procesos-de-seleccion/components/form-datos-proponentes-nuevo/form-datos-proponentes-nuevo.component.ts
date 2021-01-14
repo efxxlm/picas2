@@ -309,7 +309,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
           this.unionTemporalForm.get("cuantasEntidades").setValue(this.entidades.length);
         }
         else{
-          this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
+          this.openDialog("","<b>Debe eliminar uno de los registros diligenciedos para disminuir el total de los registros requeridos.</b>");
           this.unionTemporalForm.get("cuantasEntidades").setValue(this.entidades.length);
         }
         
@@ -348,7 +348,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   onSubmitPersonaNatural() {
     if(this.personaNaturalForm.invalid)
     {
-     this.openDialog("","Por favor diligencia completamente el formulario");
+     this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
      return false; 
     }
 
@@ -381,7 +381,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
     if(this.personaJuridicaIndividualForm.invalid)
     {
-     this.openDialog("","Por favor diligencia completamente el formulario");
+     this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
      return false; 
     }
     if(!this.noTanNuevo)
@@ -430,7 +430,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
     if(this.unionTemporalForm.invalid)
     {
-     this.openDialog("","Por favor diligencia completamente el formulario");
+     this.openDialog("","<b>Por favor diligencie completamente el formulario</b>");
      return false; 
     }
     let porcentaje: number = 0;
