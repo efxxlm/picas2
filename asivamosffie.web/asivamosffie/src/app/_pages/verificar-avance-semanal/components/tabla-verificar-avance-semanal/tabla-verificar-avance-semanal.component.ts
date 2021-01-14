@@ -36,9 +36,9 @@ export class TablaVerificarAvanceSemanalComponent implements OnInit {
         private avanceSemanalSvc: RegistrarAvanceSemanalService,
         private dialog: MatDialog ) {
         this.avanceSemanalSvc.estadosAvanceSemanal()
-        .subscribe( estados => {
-            this.estadoAvanceSemanal = estados;
-        } );
+            .subscribe( estados => {
+                this.estadoAvanceSemanal = estados;
+            } );
     }
 
     ngOnInit(): void {
@@ -49,6 +49,7 @@ export class TablaVerificarAvanceSemanalComponent implements OnInit {
         this.verificarAvanceSemanalSvc.getListReporteSemanalView()
             .subscribe(
                 response => {
+                    console.log( response );
                     this.tablaRegistro = new MatTableDataSource( response );
                     this.tablaRegistro.sort = this.sort;
                     this.tablaRegistro.paginator = this.paginator;

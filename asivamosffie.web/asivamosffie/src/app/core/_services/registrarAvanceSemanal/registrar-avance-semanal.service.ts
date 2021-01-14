@@ -93,6 +93,12 @@ export class RegistrarAvanceSemanalService {
                                     codigo: estado.codigo
                                 };
                             }
+                            if ( estado.codigo === '4' ) {
+                                estadoAvanceSemanal.devueltoPorSupervisor = {
+                                    nombre: estado.nombre,
+                                    codigo: estado.codigo
+                                };
+                            }
                         }
                         return estadoAvanceSemanal;
                     }

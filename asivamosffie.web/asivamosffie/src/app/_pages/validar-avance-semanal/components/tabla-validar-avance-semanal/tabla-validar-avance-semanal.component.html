@@ -48,7 +48,7 @@
 
         <ng-container matColumnDef="estadoValidacion">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la validación </th>
-            <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoValidacion }} </td>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoSeguimientoSemanal }} </td>
         </ng-container>
   
         <ng-container matColumnDef="gestion">
@@ -57,25 +57,30 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
+                        *ngIf="element.verAvanceSupervisor !== undefined || element.estadoSeguimientoSemanalCodigo === estadoAvanceSemanal.enviadoPorVerificacion.codigo"
                         [routerLink]="[ 'validarSeguimientoSemanal', element.seguimientoSemanalId ]">
-                        Validar avance
+                        {{ element.fechaModificacionAvalar === undefined ? 'Validar avance' : 'Ver detalle/Editar' }}
                 </button>
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
+                        *ngIf="element.numeroSemana !== primeraSemana"
                         [routerLink]="[ 'consultarBitacora', element.contratacionProyectoId ]">
                         Consultar bitacora
                 </button>
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        [routerLink]="[ 'validarSeguimientoSemanal', element.seguimientoSemanalId ]">
-                        Ver detalle/Editar
+                        *ngIf="element.registroCompletoAvalar === true && element.tieneObservacionSupervisor === true"
+                        (click)="enviarInterventor( element.seguimientoSemanalId )">
+                        Enviar al interventor
                 </button>
                 <button mat-raised-button
                         color="accent" 
-                        class="btn-table">
-                        Enviar al interventor
+                        class="btn-table"
+                        *ngIf="element.registroCompletoAvalar === true && element.tieneObservacionSupervisor === false"
+                        (click)="enviarVerificacion( element.seguimientoSemanalId )">
+                        Aprobar avance
                 </button>
             </td>
         </ng-container>
