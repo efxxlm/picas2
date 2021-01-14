@@ -166,6 +166,8 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -6045,6 +6047,8 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
+                entity.Property(e => e.FechaModificacionAvalar).HasColumnType("datetime");
+
                 entity.Property(e => e.FechaReporte).HasColumnType("datetime");
 
                 entity.Property(e => e.InstitucionEducativa)
@@ -6090,6 +6094,8 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.EstadoSeguimientoSemanalCodigo)
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.FechaModificacionVerificar).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaReporte).HasColumnType("datetime");
 

@@ -17,6 +17,7 @@ namespace asivamosffie.model.Models
         public string EstadoSeguimientoSemanal { get; set; }
         public string EstadoSeguimientoSemanalCodigo { get; set; }
         public string EstadoMuestras { get; set; }
+        public DateTime? FechaModificacionVerificar { get; set; }
         public int? CantidadSemanas { get; set; }
         public int? NumeroSemana { get; set; }
         public bool? RegistroCompletoVerificar { get; set; }
