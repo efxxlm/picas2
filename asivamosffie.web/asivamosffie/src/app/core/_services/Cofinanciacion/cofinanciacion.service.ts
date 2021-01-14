@@ -39,6 +39,14 @@ export class CofinanciacionService {
     return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarCofinanciacionAportanteByCofinanciacionAportanteId?pCofinancicacionId=${idCof}`,null);
   }
 
+  eliminarVigencia(vigenciaAporteId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarVigenciaAportanteId?pVigenciaAportanteId=${vigenciaAporteId}`,null);
+  }
+
+  eliminarDocumento(DocumentoAporteId: any) {
+    return this.http.post<Respuesta>(`${environment.apiUrl}/Cofinancing/EliminarDocumentoAportanteId?pDocumentID=${DocumentoAporteId}`,null);
+  }
+
   listaAcuerdosCofinanciacion(){ 
     return this.http.get<Cofinanciacion[]>(`${environment.apiUrl}/Cofinancing/GetListCofinancing`);
   }

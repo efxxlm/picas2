@@ -558,5 +558,99 @@ namespace asivamosffie.services
                              };
             }
         }
+
+        public async Task<Respuesta> EliminarVigenciaAportanteId(int pCofinancicacionId, string pUsuarioModifico)
+        {            
+            int IdAccionEliminarCofinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                //valido que no tenga ninguna relación para poder eliminarlo
+                VigenciaAporte cofinanciacion = _context.VigenciaAporte.Find(pCofinancicacionId);
+                /*var aportantes = _context.CofinanciacionAportante.Where(x => x.CofinanciacionId == pCofinancicacionId && x.FuenteFinanciacion.Count() > 0).ToList();
+
+                if (aportantes.Count() > 0)
+                {
+                    //tiene relaciones entonces no lo puedo eliminar
+                    return
+                  new Respuesta
+                  {
+                      IsSuccessful = true,
+                      IsException = false,
+                      IsValidation = false,
+                      Code = ConstantMessagesCofinanciacion.EliminacionCancelada,
+                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.EliminacionCancelada, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                  };
+                }
+                */
+
+                cofinanciacion.Eliminado = true;
+                cofinanciacion.UsuarioModificacion = pUsuarioModifico.ToUpper();
+                cofinanciacion.FechaModificacion = DateTime.Now;
+                //Si falla descomentar el de abajo
+                // _context.Update(cofinanciacion);
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesCofinanciacion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.EliminacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                             new Respuesta
+                             {
+                                 IsSuccessful = true,
+                                 IsException = false,
+                                 IsValidation = false,
+                                 Code = ConstantMessagesProyecto.Error,
+                                 Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.Error, IdAccionEliminarCofinanciacion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                             };
+            }
+        }
+
+        public async Task<Respuesta> EliminarDocumentoAportanteId(int pDocumentID, string pUsuarioModifico)
+        {
+            int IdAccionEliminarCofinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Cofinanciacion, (int)EnumeratorTipoDominio.Acciones);
+            try
+            {
+                //valido que no tenga ninguna relación para poder eliminarlo
+                CofinanciacionDocumento cofinanciacion = _context.CofinanciacionDocumento.Find(pDocumentID);                
+
+                cofinanciacion.Eliminado = true;
+                cofinanciacion.UsuarioModificacion = pUsuarioModifico.ToUpper();
+                cofinanciacion.FechaModificacion = DateTime.Now;
+                //Si falla descomentar el de abajo
+                // _context.Update(cofinanciacion);
+                _context.SaveChanges();
+
+                return
+                new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesCofinanciacion.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesCofinanciacion.EliminacionExitosa, IdAccionEliminarCofinanciacion, pUsuarioModifico, "COFINANCIACIÓN ELIMINADA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = true,
+                        IsException = false,
+                        IsValidation = false,
+                        Code = ConstantMessagesProyecto.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Cofinanciacion, ConstantMessagesProyecto.Error, IdAccionEliminarCofinanciacion, pUsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                    };
+            }
+        }
     }
 }
