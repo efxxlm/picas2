@@ -92,7 +92,6 @@ export class GestionCalidadComponent implements OnInit {
                                 response => {
                                     this.observacionApoyo = response.filter( obs => obs.archivada === false && obs.esSupervisor === false );
                                     const observacionSupervisor = response.filter( obs => obs.archivada === false && obs.esSupervisor === true );
-                                    console.log( this.observacionApoyo, observacionSupervisor );
                                     this.dataHistorial = response.filter( obs => obs.archivada === true );
                                     this.tablaHistorial = new MatTableDataSource( this.dataHistorial );
                                     if ( observacionSupervisor.length > 0 ) {
@@ -126,11 +125,16 @@ export class GestionCalidadComponent implements OnInit {
                                 }
                             }
                         }
-                        if ( ensayo.registroCompletoObservacionSupervisor === false ) {
-                            estadoSemaforo = 'en-proceso';
+                        if ( this.esVerDetalle === false ) {
+                            if ( ensayo.registroCompletoObservacionSupervisor === false ) {
+                                estadoSemaforo = 'en-proceso';
+                            }
+                            if ( ensayo.registroCompletoObservacionSupervisor === true ) {
+                                estadoSemaforo = 'completo';
+                            }
                         }
-                        if ( ensayo.registroCompletoObservacionSupervisor === true ) {
-                            estadoSemaforo = 'completo';
+                        if ( this.esVerDetalle === true ) {
+                            estadoSemaforo = '';
                         }
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
                             .subscribe(

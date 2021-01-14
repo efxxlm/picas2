@@ -1,4 +1,4 @@
-<section class="container" *ngIf="seguimientoSemanal !== undefined">
+<section class="container" *ngIf="seguimientoSemanal !== undefined && tipoObservaciones !== undefined">
     <div class="text-right">
         <a mat-button color="primary" class="btn-regresar" (click)="getRutaAnterior()">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -17,7 +17,7 @@
         <p style="margin-left: 2em;">Semana número: <b> {{ seguimientoSemanal.numeroSemana }} </b> </p>
     </div>
 
-    <div align="left">
+    <div class="mt-2em" align="left">
         <mat-card class="border">
             <mat-card-content class="mt-1em">
                 <p><b>Tipo de intervención</b>: {{ seguimientoSemanal.contratacionProyecto.proyecto.tipoIntervencionString }} </p>
@@ -55,7 +55,7 @@
                         Avance físico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-verificar-avance-fisico>
+                <app-verificar-avance-fisico [seguimientoSemanal]="seguimientoSemanal" [avanceFisicoObs]="tipoObservaciones.avanceFisico" [esVerDetalle]="true"></app-verificar-avance-fisico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
@@ -65,47 +65,47 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [esVerDetalle]="true"></app-avance-financiero>
+                <app-avance-financiero [seguimientoSemanal]="seguimientoSemanal" *ngIf="seguimientoSemanal.numeroSemana % 5 === 0" [avanceFinancieroObs]="tipoObservaciones.avanceFinanciero" [esVerDetalle]="true"></app-avance-financiero>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title">
                         Gestión de la obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal"></app-gestion-de-obra>
+                <app-gestion-de-obra [seguimientoSemanal]="seguimientoSemanal" [tipoObservaciones]="tipoObservaciones" [esVerDetalle]="true"></app-gestion-de-obra>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title">
                         Reporte de actividades
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-reporte-actividades>
+                <app-reporte-actividades [seguimientoSemanal]="seguimientoSemanal" [tipoReporteActividad]="tipoObservaciones.reporteActividades" [esVerDetalle]="true"></app-reporte-actividades>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title">
                         Registro fotográfico
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-registro-fotografico>
+                <app-registro-fotografico [seguimientoSemanal]="seguimientoSemanal" [tipoRegistroFotografico]="tipoObservaciones.registroFotografico" [esVerDetalle]="true"></app-registro-fotografico>
             </mat-expansion-panel>
 
             <mat-expansion-panel class="expansion-style">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title completo">
+                    <mat-panel-title class="expansion-style--title">
                         Comité de obra
                     </mat-panel-title>
                 </mat-expansion-panel-header>
 
-                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="true"></app-comite-obra>
+                <app-comite-obra [seguimientoSemanal]="seguimientoSemanal" [tipoComiteObra]="tipoObservaciones.comiteObra" [esVerDetalle]="true"></app-comite-obra>
             </mat-expansion-panel>
         </mat-accordion>
     </div>

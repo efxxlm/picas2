@@ -20,7 +20,14 @@ export class GestionDeObraComponent implements OnInit {
     constructor() { }
 
     ngOnInit(): void {
-      if ( this.seguimientoSemanal !== undefined ) {
+      if ( this.seguimientoSemanal !== undefined && this.esVerDetalle === true ) {
+        this.semaforoGestionAmbiental = '';
+        this.semaforoGestionCalidad = '';
+        this.semaforoGestionSst = '';
+        this.semaforoGestionSocial = '';
+        this.semaforoAlertasRelevantes = '';
+      }
+      if ( this.seguimientoSemanal !== undefined && this.esVerDetalle === false ) {
             //variable gestiones completadas
             let totalGestion = 0;
             // Semaforo gestion ambiental

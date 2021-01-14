@@ -207,17 +207,17 @@
                             </mat-card-content>
                         </mat-card>
                         
-                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="formGestionAmbientalObservacion.get( 'fechaCreacion' ).value !== null">
+                        <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="formMaterialObservacion.get( 'fechaCreacion' ).value !== null">
                             <mat-card-header class="header-card">
                                   <mat-card-title class="header-card--text">
                                     Validación de la supervisión
                                   </mat-card-title>
                             </mat-card-header>
                             <mat-card-content>
-                                <p style="margin-left: 2em;"><b> {{ formGestionAmbientalObservacion.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
-                                <p style="margin-left: 2em;" *ngIf="formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones al manejo de materiales e insumos?</b>: Si</p>
-                                <p style="margin-left: 2em;" *ngIf="formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones al manejo de materiales e insumos?</b>: No</p>
-                                <section [innerHTML]="formGestionAmbientalObservacion.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formGestionAmbientalObservacion.get( 'tieneObservaciones' ).value === true"></section>
+                                <p style="margin-left: 2em;"><b> {{ formMaterialObservacion.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                                <p style="margin-left: 2em;" *ngIf="formMaterialObservacion.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones al manejo de materiales e insumos?</b>: Si</p>
+                                <p style="margin-left: 2em;" *ngIf="formMaterialObservacion.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones al manejo de materiales e insumos?</b>: No</p>
+                                <section [innerHTML]="formMaterialObservacion.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formMaterialObservacion.get( 'tieneObservaciones' ).value === true"></section>
                             </mat-card-content>
                         </mat-card>
                       </ng-container>

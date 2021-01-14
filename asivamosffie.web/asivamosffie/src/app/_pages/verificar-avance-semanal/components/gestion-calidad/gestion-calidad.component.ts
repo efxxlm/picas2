@@ -112,11 +112,16 @@ export class GestionCalidadComponent implements OnInit {
                         const observacionApoyo = ensayo.observacionApoyo;
                         let historial = [];
                         let estadoSemaforo = 'sin-diligenciar';
-                        if ( ensayo.registroCompletoObservacionApoyo === false ) {
-                            estadoSemaforo = 'en-proceso';
+                        if ( this.esVerDetalle === false ) {
+                            if ( ensayo.registroCompletoObservacionApoyo === false ) {
+                                estadoSemaforo = 'en-proceso';
+                            }
+                            if ( ensayo.registroCompletoObservacionApoyo === true ) {
+                                estadoSemaforo = 'completo';
+                            }
                         }
-                        if ( ensayo.registroCompletoObservacionApoyo === true ) {
-                            estadoSemaforo = 'completo';
+                        if ( this.esVerDetalle === true ) {
+                            estadoSemaforo = '';
                         }
                         this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, ensayo.gestionObraCalidadEnsayoLaboratorioId, this.tipoObservacionCalidad.ensayosLaboratorio )
                             .subscribe(

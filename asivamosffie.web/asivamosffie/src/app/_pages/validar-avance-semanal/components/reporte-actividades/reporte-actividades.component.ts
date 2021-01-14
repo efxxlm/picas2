@@ -66,32 +66,39 @@ export class ReporteActividadesComponent implements OnInit {
 
             if ( this.seguimientoSemanal.seguimientoSemanalReporteActividad.length > 0 ) {
                 this.reporteActividad = this.seguimientoSemanal.seguimientoSemanalReporteActividad[0];
-                let totalReportes = 0;
-                // Semaforo resumen general
-                if ( this.reporteActividad.registroCompletoObservacionSupervisorEstadoContrato === false ) {
-                    this.semaforoReporte = 'en-proceso';
+                if ( this.esVerDetalle === false ) {
+                    let totalReportes = 0;
+                    // Semaforo resumen general
+                    if ( this.reporteActividad.registroCompletoObservacionSupervisorEstadoContrato === false ) {
+                        this.semaforoReporte = 'en-proceso';
+                    }
+                    if ( this.reporteActividad.registroCompletoObservacionSupervisorEstadoContrato === true ) {
+                        this.semaforoReporte = 'completo';
+                        totalReportes++;
+                    }
+                    // Semaforo actividad
+                    if ( this.reporteActividad.registroCompletoObservacionSupervisorActividad === false ) {
+                        this.semaforoActividad = 'en-proceso';
+                    }
+                    if ( this.reporteActividad.registroCompletoObservacionSupervisorActividad === true ) {
+                        this.semaforoActividad = 'completo';
+                        totalReportes++;
+                    }
+                    // Semaforo actividad siguiente
+                    if ( this.reporteActividad.registroCompletoObservacionSupervisorActividadSiguiente === false ) {
+                        this.semaforoActividadSiguiente = 'en-proceso';
+                    }
+                    if ( this.reporteActividad.registroCompletoObservacionSupervisorActividadSiguiente === true ) {
+                        this.semaforoActividadSiguiente = 'completo';
+                        totalReportes++;
+                    }
+                    this.estadoSemaforo.emit( totalReportes );
                 }
-                if ( this.reporteActividad.registroCompletoObservacionSupervisorEstadoContrato === true ) {
-                    this.semaforoReporte = 'completo';
-                    totalReportes++;
+                if ( this.esVerDetalle === true ) {
+                    this.semaforoReporte = '';
+                    this.semaforoActividad = '';
+                    this.semaforoActividadSiguiente = '';
                 }
-                // Semaforo actividad
-                if ( this.reporteActividad.registroCompletoObservacionSupervisorActividad === false ) {
-                    this.semaforoActividad = 'en-proceso';
-                }
-                if ( this.reporteActividad.registroCompletoObservacionSupervisorActividad === true ) {
-                    this.semaforoActividad = 'completo';
-                    totalReportes++;
-                }
-                // Semaforo actividad siguiente
-                if ( this.reporteActividad.registroCompletoObservacionSupervisorActividadSiguiente === false ) {
-                    this.semaforoActividadSiguiente = 'en-proceso';
-                }
-                if ( this.reporteActividad.registroCompletoObservacionSupervisorActividadSiguiente === true ) {
-                    this.semaforoActividadSiguiente = 'completo';
-                    totalReportes++;
-                }
-                this.estadoSemaforo.emit( totalReportes );
                 //Get Observacion apoyo y supervisor
                 if ( this.reporteActividad.observacionApoyoIdEstadoContrato !== undefined || this.reporteActividad.observacionSupervisorIdEstadoContrato !== undefined ) {
                     this.registrarAvanceSemanalSvc.getObservacionSeguimientoSemanal( this.seguimientoSemanalId, this.seguimientoSemanalReporteActividadId, this.tipoReporteActividad.actividadEstadoObra )
