@@ -1715,7 +1715,7 @@ namespace asivamosffie.services
                                     CofinanciacionAportanteId = ppapor.AportanteId,
                                     Nombre = getNombreAportante(ppapor.Aportante),
                                     TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(ppapor.Aportante.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
-                                    ValorAportanteAlProyecto = ppapor.ValorTotalAportante,
+                                    ValorAportanteAlProyecto = valorproyecto,
                                     FuentesFinanciacion = fuentes,
                                     ValorGestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && fuentes.Select(x=>x.FuenteFinanciacionID).Contains(x.FuenteFinanciacionId)).Sum(x => x.ValorSolicitado)
                             });
