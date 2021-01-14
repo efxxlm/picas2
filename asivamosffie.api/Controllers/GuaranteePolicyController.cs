@@ -113,8 +113,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
-
+               AppSettingsService _appSettingsService; 
                 _appSettingsService = toAppSettingsService(_settings);
                 contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _guaranteePolicy.InsertContratoPoliza(contratoPoliza, _appSettingsService);

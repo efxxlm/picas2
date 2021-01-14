@@ -101,6 +101,17 @@
         public const string Votacion_Solicitud_Participante = "80";
         public const string Registrar_Tramite_Contrato = "78";
 
+        //Acta inicio contrato Fase 2     
+        public const string Editar_Plazo_Ejecucion_Fase_2 = "108";
+        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";
+        public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
+        public const string Notificación_Acta_Inicio_Fase_II = "111";
+        public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
+        public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
+        public const string Crear_Editar_Contrato_Observacion = "122";
+
+
+
         public const string Crear_Cronograma_monitoreo = "114";
 
         public const string Eliminar_Compromisos_Solicitud = "125";
@@ -146,14 +157,7 @@
 
         public const string Eliminar_Numero_Radicado = "99";
 
-        public const string Crear_Observacion_Contrato_Perfil = "100";
-        public const string Editar_Plazo_Ejecucion_Fase_2 = "108";
-        public const string Editar_Cargar_Acta_Suscrita_Contrato_Fase_2 = "109";        
-        public const string Editar_Tiene_Observaciones_Acta_Inicio_Fase2 = "110";
-        public const string Notificación_Acta_Inicio_Fase_II = "111";
-        public const string Cambiar_Estado_Acta_Inicio_Fase_2 = "121";
-        public const string Cambiar_Estado_Verificacion_Acta_Inicio_Fase_2 = "124";
-        public const string Crear_Editar_Contrato_Observacion = "122";
+        public const string Crear_Observacion_Contrato_Perfil = "100"; 
 
         public const string Cambiar_Estado_Verificacion_Contrato = "103";
 
@@ -172,7 +176,9 @@
         public const string  Cambiar_estado_Actuacion_Seguimiento= "150";
         public const string  Crear_Editar_Controversia_Motivo= "153";        	
 
-        //4.2.2 Gestionar procesos de Defensa Judicial
+        //4.2.2 Gestionar procesos de Defensa Judicial  
+
+        //4.2.2 Gestionar procesos de Defensa Judicial 
         public const string Crear_Editar_Ficha_Estudio = "145";
         public const string Crear_Editar_Demandado_Convocado = "146";
         public const string Cambiar_Estado_Proceso = "147";
@@ -211,7 +217,7 @@
         public const string Crear_Editar_Observacion_Construccion_ProgramacionObra = "119";
         public const string Crear_Editar_Observacion_Construccion_FlujoInversion = "120";
         public const string Enviar_Al_Supervisor = "123";
-        public const string Cambiar_Estado_Contrato_Construccion ="142";
+        public const string Cambiar_Estado_Contrato_Construccion = "142";
         public const string Crear_Editar_Observacion_Perfil = "143";
         public const string Aprobar_Inicio_Construccion = "144";
 
@@ -221,6 +227,7 @@
         public const string Crear_Editar_Novedad_Contractual = "163";
         public const string Notificación_Novedad_Contractual = "164";
         public const string Eliminar_Novedad_Contractual = "165";
+        public const string Enviar_Correo_Crear_Contrato_Poliza = "182";
 
 
         //CU 4_4_1

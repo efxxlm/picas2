@@ -695,6 +695,7 @@ namespace asivamosffie.services.Helpers.Constant
         #region 
         public const string Error = "500";
         public const string ErrorInterno = "501";
+        public const string ErrorDuplicarPoliza = "502";
         public const string ErrorEnviarCorreo = "107";
         public const string CorreoNoExiste = "106";
         #endregion
