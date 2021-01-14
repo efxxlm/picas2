@@ -15,7 +15,6 @@ export class ReporteActividadesComponent implements OnInit {
     @Input() esVerDetalle = false;
     @Input() seguimientoSemanal: any;
     @Output() estadoSemaforoReporte = new EventEmitter();
-    seRealizaGuardado = false;
     formResumenGeneral: FormGroup;
     seguimientoSemanalId: number;
     seguimientoSemanalReporteActividadId: number;
@@ -147,8 +146,6 @@ export class ReporteActividadesComponent implements OnInit {
     }
 
     guardar( reporte?: any ) {
-        this.seRealizaGuardado = true;
-        console.log( 'test btn' );
         const pSeguimientoSemanal = this.seguimientoSemanal;
         const seguimientoSemanalReporteActividad: any = [
             {
