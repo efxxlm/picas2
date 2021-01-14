@@ -346,6 +346,13 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
   }
 
   onSubmitPersonaNatural() {
+    if(this.personaNaturalForm.invalid)
+    {
+     this.openDialog("","Por favor diligencia completamente el formulario");
+     return false; 
+    }
+
+
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -372,6 +379,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
   onSubmitPersonaJuridicaIndividual() {
 
+    if(this.personaJuridicaIndividualForm.invalid)
+    {
+     this.openDialog("","Por favor diligencia completamente el formulario");
+     return false; 
+    }
     if(!this.noTanNuevo)
     {
       this.procesoSeleccion.procesoSeleccionProponente = [];
@@ -416,6 +428,11 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
 
   onSubmitUnionTemporal() {
 
+    if(this.unionTemporalForm.invalid)
+    {
+     this.openDialog("","Por favor diligencia completamente el formulario");
+     return false; 
+    }
     let porcentaje: number = 0;
 
     if(!this.noTanNuevo)
