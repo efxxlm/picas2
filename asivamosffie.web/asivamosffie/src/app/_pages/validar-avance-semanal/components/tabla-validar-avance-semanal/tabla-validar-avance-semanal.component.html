@@ -57,7 +57,7 @@
                 <button mat-raised-button
                         color="accent" 
                         class="btn-table"
-                        [routerLink]="[ 'validarSeguimientoSemanal', element.contratacionProyectoId ]">
+                        [routerLink]="[ 'validarSeguimientoSemanal', element.seguimientoSemanalId ]">
                         Validar avance
                 </button>
                 <button mat-raised-button
@@ -68,7 +68,8 @@
                 </button>
                 <button mat-raised-button
                         color="accent" 
-                        class="btn-table">
+                        class="btn-table"
+                        [routerLink]="[ 'validarSeguimientoSemanal', element.seguimientoSemanalId ]">
                         Ver detalle/Editar
                 </button>
                 <button mat-raised-button

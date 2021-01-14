@@ -55,7 +55,7 @@ export class TablaDisponibilidadMaterialComponent implements OnInit {
 
             this.dataSeguimientoDiario.push(
                 {
-                    totalHorasRetraso: sumaTotal,
+                    totalHorasRetraso: sumaTotal === 0 ? '---' : sumaTotal,
                     resumenAlertas: seguimientoDiario
                 }
             );

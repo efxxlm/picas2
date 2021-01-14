@@ -161,7 +161,7 @@
                             </mat-card>
                         </ng-container>
                         <ng-template #noEsVerDetalle>
-                            <div class="row justify-content-center align-items-center">
+                            <div class="row justify-content-center align-items-center" *ngIf="ensayo.get( 'registroCompletoMuestras' ).value === true">
                                 <div class="col-md-12">
                                     <div class="row justify-content-center align-items-center" style="width: 100%;">
                                         <div class="pr-1">
@@ -177,7 +177,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="ensayo.value.tieneObservaciones == true" align="left">
+                            <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="ensayo.value.tieneObservaciones == true && ensayo.get( 'registroCompletoMuestras' ).value === true" align="left">
                                 <div class="text-area-quill"
                                 [class.color-secondaryColor]="ensayo.get('observacionEnsayo').invalid && ensayo.get('observacionEnsayo').touched || ensayo.get('observacionEnsayo').invalid">
                                     <label  class="text-area-quill--label align-left-label"
@@ -200,7 +200,7 @@
                                   1000
                                 </span>
                             </div>
-                            <div class="text-center mt-1em">
+                            <div class="text-center mt-1em" *ngIf="ensayo.get( 'registroCompletoMuestras' ).value === true">
                                 <button mat-button
                                         color="warn"
                                         class="btn-guardar"

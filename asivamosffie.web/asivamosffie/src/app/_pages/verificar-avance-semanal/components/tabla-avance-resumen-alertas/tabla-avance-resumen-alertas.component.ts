@@ -55,7 +55,7 @@ export class TablaAvanceResumenAlertasComponent implements OnInit {
 
             dataSeguimientoDiario.push(
                 {
-                    totalHorasRetraso: sumaTotal,
+                    totalHorasRetraso: sumaTotal === 0 ? '---' : sumaTotal,
                     resumenAlertas: seguimientoDiario
                 }
             );
