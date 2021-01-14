@@ -68,7 +68,8 @@
                                 </p>
                                 <p>
                                     <b>Valor del aportante:</b>
-                                    {{ aportante.valorTotalAportante | currency }}
+                                    <span *ngIf="opcionContratarCodigo=='Interventoria'">{{ aportante.valorInterventoria | currency }}</span>
+                                    <span *ngIf="opcionContratarCodigo!='Interventoria'">{{ aportante.valorObra | currency }}</span>
     
                                 </p>
                             </div>
