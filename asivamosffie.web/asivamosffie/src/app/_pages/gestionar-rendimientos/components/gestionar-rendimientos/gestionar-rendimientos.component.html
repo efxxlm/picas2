@@ -18,5 +18,53 @@
             fuentes de financiación disponibles y activas para la ejecución de proyectos de infraestructura del FFIE.
         </div>
     </div>
-    
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="fechaCargue">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Fecha de cargue </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaCargue }}</b> </td>
+            </ng-container>
+            <ng-container matColumnDef="numTotalRegistros">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 12%;"> Número total de registros </th>
+                <td mat-cell *matCellDef="let element" align="center"> <em>{{ element.numTotalRegistros }}</em> </td>
+            </ng-container>
+            <ng-container matColumnDef="registrosConsistentes">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 13%;"> Registros consistentes </th>
+                <td mat-cell *matCellDef="let element" align="center"> <em>{{ element.registrosConsistentes }}</em> </td>
+            </ng-container>
+            <ng-container matColumnDef="registrosInconsistentes">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 14%;"> Registros inconsistentes
+                </th>
+                <td mat-cell *matCellDef="let element" align="center"> <em>{{ element.registrosInconsistentes }}</em> </td>
+            </ng-container>
+            <ng-container matColumnDef="gestion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10%;"> Gestión </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <!--
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes==''&&element.registrosInconsistentes==''">
+                        Tramitar rendimientos
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes=='0'||element.registrosInconsistentes=='0'">
+                        Enviar para aprobación
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosInconsistentes!='0'&&element.registrosInconsistentes!=''">
+                        Enviar para aprobación */*/*/*
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes!=''||element.registrosInconsistentes!=''">
+                        Descargar resultado
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosConsistentes!='0' && element.registrosConsistentes!=''">
+                        Ver registros consistentes
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.registrosInconsistente!='0' && element.registrosInconsistente!=''">
+                        Ver registros inconsistentes
+                    </button>
+                    -->
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
 </section>
