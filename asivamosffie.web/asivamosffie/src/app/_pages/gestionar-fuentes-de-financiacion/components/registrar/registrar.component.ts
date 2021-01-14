@@ -46,6 +46,8 @@ export class RegistrarComponent implements OnInit {
   solonombres: any[]=[];
   edicion: boolean;
   fuentesDeRecursosListaArr: any[]=[];
+  listaBase: CofinanciacionDocumento[];
+  documentoFFIEID=0;
 
   constructor(private fb: FormBuilder,
               private commonService: CommonService,
@@ -177,6 +179,7 @@ export class RegistrarComponent implements OnInit {
           this.listaDocumentos.forEach(element => {
             this.valorTotal+=element.valorDocumento;
           });
+          this.documentoFFIEID=ff.cofinanciacionDocumentoId;
           this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
         }
         const grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
@@ -480,7 +483,7 @@ export class RegistrarComponent implements OnInit {
   changeNombreAportanteFFIE()
   {
     if (this.addressForm.get('nombreAportanteFFIE').value) {
-
+      this.tipoDocumentoap=[];
       this.idAportante = 
         this.addressForm.get('nombreAportanteFFIE').value.cofinanciacionAportanteId;
 
@@ -491,6 +494,7 @@ export class RegistrarComponent implements OnInit {
             //this.addressForm.get('numerodocumento').setValue(listDoc[0].numeroActa);
             //this.addressForm.get('documentoApropiacion').setValue(listDoc[0].tipoDocumento.nombre);
             this.listaDocumentosApropiacion=listDoc;
+            this.listaBase=this.listaDocumentosApropiacion;
             listDoc.forEach(element => {
               let m = this.tipoDocumentoap.some(function(item) {
                 return item.dominioId === element.tipoDocumentoId
@@ -728,8 +732,11 @@ export class RegistrarComponent implements OnInit {
   filterDocumento(variable)
   {
     console.log(variable);
-    this.listaDocumentosApropiacion=this.listaDocumentosApropiacion.filter(x=>x.tipoDocumentoId==variable);
+    
+    this.listaDocumentosApropiacion=this.listaBase.filter(x=>x.tipoDocumentoId==variable);
     this.listaDocumentos=this.listaDocumentosApropiacion;
+    console.log(this.listaDocumentos);
+    this.documentoFFIEID=this.listaDocumentos[0].cofinanciacionDocumentoId;
     this.listaDocumentos.forEach(element => {
       this.valorTotal+=element.valorDocumento;  
     });
@@ -766,7 +773,7 @@ export class RegistrarComponent implements OnInit {
           cantVigencias: controlFR.get('cuantasVigencias').value,
           cuentaBancaria: [],
           vigenciaAporte: [],
-          cofinanciacionDocumentoId:this.addressForm.get('numerodocumento').value==null?0:this.addressForm.get('numerodocumento').value.cofinanciacionDocumentoId,
+          cofinanciacionDocumentoId:this.documentoFFIEID,
           aportante:{
             cofinanciacionAportanteId:this.idAportante,
             cuentaConRp:this.addressForm.get('tieneRP').value=="1"?true:false,
