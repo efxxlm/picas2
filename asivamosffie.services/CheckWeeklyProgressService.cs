@@ -880,10 +880,25 @@ namespace asivamosffie.services
             try
             {
                 if (pSeguimientoSemanalObservacion.TieneObservacion)
+                {
                     if (pSeguimientoSemanalObservacion.EsSupervisor)
+                    {
                         seguimientoSemanal.TieneObservacionSupervisor = true;
+                        seguimientoSemanal.FechaModificacionAvalar = DateTime.Now;
+                    }
                     else
+                    {
                         seguimientoSemanal.TieneObservacionApoyo = true;
+                        seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;
+                    }
+                }
+                else
+                {
+                    if (pSeguimientoSemanalObservacion.EsSupervisor) 
+                        seguimientoSemanal.FechaModificacionAvalar = DateTime.Now; 
+                    else 
+                        seguimientoSemanal.FechaModificacionVerificar = DateTime.Now;  
+                }
 
                 UpdateObservation(pSeguimientoSemanalObservacion);
 
@@ -1428,7 +1443,7 @@ namespace asivamosffie.services
         }
 
         private bool CompleteRecordObservation(SeguimientoSemanalObservacion pSeguimientoSemanalObservacion)
-        {   
+        {
             if (pSeguimientoSemanalObservacion.TieneObservacion == false)
                 return true;
             if (pSeguimientoSemanalObservacion.TieneObservacion == true && !string.IsNullOrEmpty(Helpers.Helpers.HtmlConvertirTextoPlano(Helpers.Helpers.HtmlConvertirTextoPlano(pSeguimientoSemanalObservacion.Observacion))))
@@ -1464,7 +1479,7 @@ namespace asivamosffie.services
         {
             throw new NotImplementedException();
         }
-         
+
         #endregion
     }
 }

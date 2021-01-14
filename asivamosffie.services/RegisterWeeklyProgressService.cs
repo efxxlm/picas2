@@ -2149,6 +2149,17 @@ namespace asivamosffie.services
 
         #endregion
 
-        #endregion 
+        #endregion
+
+
+        #region Notificaciones Alertas 
+
+
+        public void SendSeguimientoSemanalApoyoSupervision()
+        {
+             
+        }
+
+        #endregion
     }
 }

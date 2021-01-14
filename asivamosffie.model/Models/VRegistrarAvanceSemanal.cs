@@ -21,5 +21,7 @@ namespace asivamosffie.model.Models
         public bool? VerReportarSeguimientoSemanal { get; set; }
         public bool? VerCargarActa { get; set; }
         public bool? EnviarVerificacion { get; set; }
+        public DateTime? FechaModificacionAvalar { get; set; }
+        public DateTime? FechaModificacionVerificar { get; set; }
     }
 }
