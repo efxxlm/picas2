@@ -20,5 +20,8 @@ namespace asivamosffie.model.Models
         public string TipoControversia { get; set; }
         [NotMapped]
         public string EstadoActuacionReclamacionString { get; set; }
+
+        [NotMapped]
+        public List<string> ObservacionesComites { get; set; }
     }
 }

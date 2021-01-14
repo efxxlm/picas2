@@ -428,7 +428,24 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-                
+
+        [HttpPut]
+        [Route("CambiarEstadoActuacionReclamacion")]
+        public async Task<IActionResult> CambiarEstadoActuacionReclamacion(int pActuacionId, string pEstadoReclamacionCodigo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.CambiarEstadoActuacionReclamacion(pActuacionId, pEstadoReclamacionCodigo, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
         [HttpPut]
         [Route("CambiarEstadoControversiaActuacion2")]
         public async Task<IActionResult> CambiarEstadoControversiaActuacion2( int pControversiaActuacionId, string pNuevoCodigoProximaActuacion)

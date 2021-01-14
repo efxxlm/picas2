@@ -278,7 +278,11 @@ namespace asivamosffie.services
             {
                 var estadostring = await _commonService.GetDominioByNombreDominioAndTipoDominio(cont.EstadoActuacionDerivadaCodigo, (int)EnumeratorTipoDominio.Estado_Actuacion_Derivada_r_4_4_1);
                 cont.EstadoActuacionString = estadostring == null ? "" : estadostring.Nombre;
+                
             }
+
+            controversiaActuacion.ObservacionesComites = _context.SesionComiteSolicitud.Where(x => x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Actuaciones_Controversias_Contractuales &&
+                  !(bool)x.Eliminado && x.SolicitudId == controversiaActuacion.ControversiaActuacionId).Select(y => y.Observaciones).ToList();
             return controversiaActuacion;
         }
 
@@ -1076,12 +1080,12 @@ namespace asivamosffie.services
 
             try
             {
-                ActuacionSeguimiento actuacionSeguimientoOld;
+                ControversiaActuacion actuacionSeguimientoOld;
 
-                actuacionSeguimientoOld = _context.ActuacionSeguimiento.Find(pActuacionSeguimientoId);
+                actuacionSeguimientoOld = _context.ControversiaActuacion.Find(pActuacionSeguimientoId);
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
-                actuacionSeguimientoOld.EstadoReclamacionCodigo = pEstadoReclamacionCodigo;
+                actuacionSeguimientoOld.EstadoActuacionReclamacionCodigo = pEstadoReclamacionCodigo;
 
                 _context.SaveChanges();
 
@@ -1109,7 +1113,7 @@ namespace asivamosffie.services
         }
 
         //seguimiento = reclamacion
-        public async Task<Respuesta> CambiarEstadoActuacionReclamacion(int pActuacionSeguimientoId, string pEstadoActuacionCodigo, string pUsuarioModifica)
+        public async Task<Respuesta> CambiarEstadoActuacionReclamacion(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
 
@@ -1120,7 +1124,7 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld = _context.ActuacionSeguimiento.Find(pActuacionSeguimientoId);
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
-                //actuacionSeguimientoOld.EstadoReclamacionCodigo = pEstadoReclamacionCodigo;
+                actuacionSeguimientoOld.EstadoReclamacionCodigo = pEstadoReclamacionCodigo;
 
                 _context.SaveChanges();
 
