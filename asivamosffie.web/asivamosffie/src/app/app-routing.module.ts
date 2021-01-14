@@ -222,6 +222,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/registrar-pagos-rendimientos/registrar-pagos-rendimientos.module')
         .then(m => m.RegistrarPagosRendimientosModule)
       },
+      {
+        path: 'gestionarRendimientos',
+        loadChildren: () => import('./_pages/gestionar-rendimientos/gestionar-rendimientos.module')
+        .then(m => m.GestionarRendimientosModule)
+      },
     ]
 
   },
