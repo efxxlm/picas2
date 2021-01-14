@@ -207,6 +207,30 @@ export class CommonService {
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=61`);
   }
 
+  listaEstadosPoliza(){
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=51`)
+      .pipe(
+        map( estados => {
+          const estadoPoliza: any = {};
+          for ( const estado of estados ) {
+            if ( estado.codigo === '1' ) {
+              estadoPoliza.sinRadicacion = estado.codigo
+            }
+            if ( estado.codigo === '2' ) {
+              estadoPoliza.enRevision = estado.codigo
+            }
+            if ( estado.codigo === '3' ) {
+              estadoPoliza.polizaDevuelta = estado.codigo
+            }
+            if ( estado.codigo === '4' ) {
+              estadoPoliza.conAprobacion = estado.codigo
+            }
+          }
+          return estadoPoliza;
+        } )
+      );
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

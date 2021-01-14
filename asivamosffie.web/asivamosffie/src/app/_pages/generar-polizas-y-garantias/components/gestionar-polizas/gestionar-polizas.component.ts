@@ -46,12 +46,9 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     responsableAprob: ['', Validators.required],
     observacionesGenerales: ['']
   });
-
   polizasYSegurosArray: Dominio[] = [];
-  estadoArray = [
-    { name: 'Devuelta', value: '1' },
-    { name: 'Aprobada', value: '2' }
-  ];
+  estadoArray: any[];
+  estadosPoliza: any;
   aprobadosArray = [
     { name: 'Andres Montealegre', value: '1' },
     { name: 'David Benitez', value: '2' }
@@ -100,6 +97,19 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     private contratacion: ProjectContractingService
   ) {
     this.minDate = new Date();
+    this.common.listaEstadosPoliza()
+      .subscribe(
+        estadosPoliza => {
+          this.estadosPoliza = estadosPoliza;
+        }
+      );
+    this.common.listaEstadoRevision()
+      .subscribe(
+        estadoRevision => {
+          console.log( estadoRevision );
+          this.estadoArray = estadoRevision;
+        }
+      );
   }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
@@ -274,7 +284,11 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     else {
       completo = false;
     }
-    let estadopolizacodigo=this.addressForm.value.estadoRevision.value=='1'?'3':'2';
+    /*
+      estadoPolizaCodigo: '3' => Envia el contrato al 3er acordeon principal "Con póliza observada y devuelta"
+      estadoPolizaCodigo: '2' => Envia el contrato al 2er acordeon principal "En revisión de pólizas"
+      Cuando el estado de revision es = devuelta( "1" ) redirige el contrato al 3er acordeon principal "Con póliza observada y devuelta" 
+    */
     const contratoArray = {
       'contratoId': this.idContrato,
       'TipoSolicitudCodigo': "",
@@ -286,7 +300,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
       'Observaciones': "",
       'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion': nombreAprobado,
-      'EstadoPolizaCodigo': estadopolizacodigo,
+      'EstadoPolizaCodigo': this.addressForm.value.estadoRevision.value !== null ? ( this.addressForm.value.estadoRevision.value.codigo === this.estadosPoliza.sinRadicacion ? this.estadosPoliza.polizaDevuelta : this.estadosPoliza.enRevision) : this.estadosPoliza.enRevision,
       'UsuarioCreacion': "",
       'UsuarioModificacion': "",
       'FechaExpedicion': this.addressForm.value.fecha,
