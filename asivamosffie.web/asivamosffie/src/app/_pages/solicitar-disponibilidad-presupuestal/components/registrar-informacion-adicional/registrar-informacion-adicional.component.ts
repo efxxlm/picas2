@@ -37,6 +37,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  observaciones: any[];
 
   constructor(
     private fb: FormBuilder,
@@ -71,7 +72,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
-
+        this.observaciones=response.disponibilidadPresupuestalObservacion;
         this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
         .subscribe(
           contratacion => {

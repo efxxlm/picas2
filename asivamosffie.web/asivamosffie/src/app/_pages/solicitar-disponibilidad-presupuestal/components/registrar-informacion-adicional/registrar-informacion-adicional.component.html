@@ -133,6 +133,16 @@
                 1000
             </span>
         </div>
+
+        <div class="d-flex align-items-center" style="margin: auto;width: 85%;" *ngIf="observaciones.length>0">
+            <div class="text-area-quill quill-sin-borde">
+                <label for="objeto" class="text-area-quill--label title-objeto">Observaciones</label>
+                <div  *ngFor="let ob of observaciones">
+                    <div [innerHtml]="ob.observacion"></div>
+                </div>
+                
+            </div>
+        </div>
         <div class="text-center mb-2em">
             <button mat-button color="warn" class="btn-guardar" type="submit">
                 <img src="assets/img/icon/guardar.svg" alt="Guardar">
