@@ -9,6 +9,8 @@ import { MatTableDataSource } from '@angular/material/table';
 export class TablaDetalleFuentesUsoComponent implements OnInit {
 
   @Input() contratacionProyecto: any;
+  @Input() contratacionProyectoAportanteId: any;
+  
   dataSource = new MatTableDataSource();
   dataTable: any[] = [];
   displayedColumns: string[] = [     
@@ -23,7 +25,8 @@ export class TablaDetalleFuentesUsoComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       if ( this.contratacionProyecto.dataAportantes.length > 0 ) {
-        this.dataTable = this.contratacionProyecto.dataAportantes;
+        console.log( this.contratacionProyectoAportanteId, this.contratacionProyecto.dataAportantes )
+        this.dataTable = this.contratacionProyecto.dataAportantes.filter( da => da.contratacionProyectoAportanteId === this.contratacionProyectoAportanteId );
         this.dataSource = new MatTableDataSource ( this.dataTable );
       }
     }, 1000);

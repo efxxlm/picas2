@@ -107,7 +107,15 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   }
 
   buscar(){
-    this.contratista.idContratista = 0;
+
+    if ( this.unionTemporal.value !== true && this.unionTemporal.value !== false ){
+      this.openDialog( '', '<b>No se encontraron registros asociados al criterio de búsqueda seleccionado.</b>' );
+      return false;
+    }
+
+    if (this.contratista)
+      this.contratista.idContratista = 0;
+    
     if (this.contratacion[ 'contratista' ] !== undefined)
       this.contratacion[ 'contratista' ].numeroIdentificacion = '';
 
@@ -129,7 +137,8 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   changeUnionTemporal(){
     this.nombreContratista.setValue('');
     this.numeroDocumento.setValue('');
-    this.contratista.idContratista = 0;
+    if (this.contratista)
+      this.contratista.idContratista = 0;
     if (this.contratacion[ 'contratista' ] !== undefined)
       this.contratacion[ 'contratista' ].numeroIdentificacion = '';
     this.dataSource = new MatTableDataSource(null);

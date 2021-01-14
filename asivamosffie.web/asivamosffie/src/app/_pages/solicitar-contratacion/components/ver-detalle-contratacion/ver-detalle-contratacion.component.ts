@@ -87,7 +87,7 @@ export class VerDetalleContratacionComponent implements OnInit {
       this.usosSelect = resp[2];
 
       for ( let cont of contratacionProyecto ) {
-
+        console.log(cont);
         for ( let componente of cont.componenteAportante ) {
 
           let componenteSeleccionado = this.componentesSelect.filter( value => value.codigo === componente.tipoComponenteCodigo );
@@ -100,7 +100,9 @@ export class VerDetalleContratacionComponent implements OnInit {
               componente: componenteSeleccionado[0].nombre,
               fase: faseSeleccionado[0].nombre,
               tipoUso: [], 
-              valorUso: []
+              valorUso: [],
+              contratacionProyectoAportanteId: cont.contratacionProyectoAportanteId,
+              
             }
             apor.tipoUso.push( usoSeleccionado[0].nombre );
             apor.valorUso.push( uso.valorUso  );
