@@ -137,14 +137,16 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
                                 .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
                                     .ThenInclude(r => r.EnsayoLaboratorioMuestra)
-                     
+
                       // Gestion Obra Calidad + Observaciones
                       .Include(r => r.SeguimientoSemanalGestionObra)
-                                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                        .ThenInclude(r => r.ObservacionSupervisor)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionSupervisor)
                       .Include(r => r.SeguimientoSemanalGestionObra)
-                                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                        .ThenInclude(r => r.ObservacionApoyo)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionApoyo)
 
                          //   Gestion Obra Calidad
                          .Include(r => r.SeguimientoSemanalGestionObra)
@@ -308,13 +310,15 @@ namespace asivamosffie.services
                             .ThenInclude(r => r.SeguimientoSemanalGestionObraSeguridadSalud)
                                 .ThenInclude(r => r.SeguridadSaludCausaAccidente)
 
-                      // Gestion Obra Calidad + Observaciones
+                      // Gestion Obra Calidad + Observaciones 
                       .Include(r => r.SeguimientoSemanalGestionObra)
-                                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                        .ThenInclude(r => r.ObservacionSupervisor)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionSupervisor)
                       .Include(r => r.SeguimientoSemanalGestionObra)
-                                    .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
-                                        .ThenInclude(r => r.ObservacionApoyo)
+                         .ThenInclude(r => r.SeguimientoSemanalGestionObraCalidad)
+                             .ThenInclude(r => r.GestionObraCalidadEnsayoLaboratorio)
+                                 .ThenInclude(r => r.ObservacionApoyo)
 
                         //Gestion Obra Social
                         .Include(r => r.SeguimientoSemanalGestionObra)
