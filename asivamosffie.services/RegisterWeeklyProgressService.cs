@@ -7,8 +7,7 @@ using asivamosffie.services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using asivamosffie.services.Helpers.Constant;
 using asivamosffie.services.Helpers.Enumerator;
-using asivamosffie.model.APIModels;
-
+using asivamosffie.model.APIModels; 
 using System.IO;
 using Z.EntityFramework.Plus;
 using DinkToPdf;
@@ -490,6 +489,32 @@ namespace asivamosffie.services
 
                 if (!string.IsNullOrEmpty(item.EstadoMuestrasCodigo))
                     strCodigoEstadoMuestas = ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoMuestrasCodigo).FirstOrDefault().Nombre;
+                else
+                    strCodigoEstadoMuestas = "Sin Registro";
+                bool? RegistroCompletoMuestrasVerificar;
+                try
+                {
+                    RegistroCompletoMuestrasVerificar = item.SeguimientoSemanalGestionObra?
+                   .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
+                   .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
+                   .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo;
+                }
+                catch (Exception)
+                {
+                    RegistroCompletoMuestrasVerificar = false;
+                }
+                bool? RegistroCompletoMuestrasValidar;
+                try
+                {
+                    RegistroCompletoMuestrasValidar = item.SeguimientoSemanalGestionObra?
+                         .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
+                         .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
+                         .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionSupervisor;
+                }
+                catch (Exception)
+                {
+                    RegistroCompletoMuestrasValidar = false;
+                }
 
                 ListBitaCora.Add(new
                 {
@@ -508,15 +533,9 @@ namespace asivamosffie.services
                     item.ContratacionProyecto?.Contratacion?.Contrato?.FirstOrDefault().NumeroContrato,
                     EstadoReporteSemanal = !string.IsNullOrEmpty(item.EstadoSeguimientoSemanalCodigo) ? ListEstadoSeguimientoSemanal.Where(r => r.Codigo == item.EstadoSeguimientoSemanalCodigo).FirstOrDefault().Nombre : "---",
                     EstadoMuestrasReporteSemanal = strCodigoEstadoMuestas,
+                    RegistroCompletoMuestrasVerificar,
+                    RegistroCompletoMuestrasValidar
 
-                    RegistroCompletoMuestrasVerificar = item.SeguimientoSemanalGestionObra?
-                    .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
-                    .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
-                    .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo,
-                    RegistroCompletoMuestrasValidar = item.SeguimientoSemanalGestionObra?
-                    .FirstOrDefault().SeguimientoSemanalGestionObraCalidad?
-                    .FirstOrDefault().GestionObraCalidadEnsayoLaboratorio?
-                    .FirstOrDefault().EnsayoLaboratorioMuestra?.FirstOrDefault().RegistroCompletoObservacionApoyo
                 });
             }
             return ListBitaCora;
@@ -2150,14 +2169,13 @@ namespace asivamosffie.services
         #endregion
 
         #endregion
-
-
+         
         #region Notificaciones Alertas 
 
 
         public void SendSeguimientoSemanalApoyoSupervision()
         {
-             
+
         }
 
         #endregion
