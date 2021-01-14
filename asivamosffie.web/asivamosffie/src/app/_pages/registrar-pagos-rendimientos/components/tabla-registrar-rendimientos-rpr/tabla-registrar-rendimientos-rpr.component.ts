@@ -33,7 +33,7 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
       registrosInconsistentes: '---',
       estadoCargue: 'Valido',
       gestion: 1
-    },
+    }, 
     {
       fechaCargue: '15/08/2020',
       numTotalRegistros: 5,

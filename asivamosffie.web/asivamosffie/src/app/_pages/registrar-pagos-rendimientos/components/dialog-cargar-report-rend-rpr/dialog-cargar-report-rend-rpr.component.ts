@@ -57,7 +57,7 @@ export class DialogCargarReportRendRprComponent implements OnInit {
         ` <br>Número de registros en el archivo: <b>5</b><br>
         Número de registros válidos: <b>5</b><br>
         Número de registros inválidos: <b>0</b><br><br>
-        <b>¿Desea realizar el cargue de los reportes de rendimiento?</b>
+        <b>¿Desea realizar el cargue de los reportes de rendimientos?</b>
         `
       );  
     } else {
