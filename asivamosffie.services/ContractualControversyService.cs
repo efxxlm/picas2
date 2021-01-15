@@ -1333,7 +1333,7 @@ namespace asivamosffie.services
             || string.IsNullOrEmpty(controversiaActuacion.CantDiasVencimiento.ToString())
                 || (controversiaActuacion.EsRequiereContratista == null)
                 || (controversiaActuacion.EsRequiereInterventor == null)
-               || (controversiaActuacion.EsRequiereJuridico == null)
+              // || (controversiaActuacion.EsRequiereJuridico == null)
                 || (controversiaActuacion.EsRequiereSupervisor == null))
             {
                 return false;
