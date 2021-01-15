@@ -92,6 +92,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     if (this.isEditable == true) {
       actuacionTaiArray = {
         "ControversiaActuacionId": this.reclamacionID,
+        "EstadoDerivadaCodigo":'1',
         "SeguimientoCodigo": true,
         "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,
@@ -108,6 +109,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
     else {
       actuacionTaiArray = {
         "ControversiaActuacionId": this.reclamacionID,
+        "EstadoDerivadaCodigo":'1',
         "SeguimientoCodigo": true,
         "EstadoReclamacionCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "ActuacionAdelantada": this.addressForm.value.actuacionAdelantada,

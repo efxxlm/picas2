@@ -55,7 +55,7 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarReclamacionAseguradora',id]);
   }
   enviarReclamacionComiteTecnico(id){
-    this.services.CambiarEstadoControversiaActuacion(id,'3').subscribe((data:any)=>{
+    this.services.CambiarEstadoActuacionReclamacion(id,'3').subscribe((data:any)=>{
       this.ngOnInit();
     });
   }

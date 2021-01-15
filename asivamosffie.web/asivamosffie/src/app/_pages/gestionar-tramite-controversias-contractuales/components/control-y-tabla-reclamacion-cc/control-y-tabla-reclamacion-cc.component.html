@@ -46,7 +46,7 @@
                 <td mat-cell *matCellDef="let element">
                     <!---->
                     <button mat-raised-button color="accent" class="btn-table"
-                        
+                    *ngIf="element.estadoActuacionReclamacionCodigo=='5'"
                         (click)="this.actualizarReclamacionAseguradora(element.actuacionId,element.numeroReclamacion)">
                         Actualizar reclamación ante la aseguradora
                     </button>
