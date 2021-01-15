@@ -262,11 +262,13 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     console.log(this.addressForm.value);
     let polizasList;
     if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
-      polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
-      for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
-        const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
+      if ( this.addressForm.value.polizasYSeguros.length > 0 ) {
+        polizasList = [this.addressForm.value.polizasYSeguros[0].codigo];
+        for (let i = 1; i < this.addressForm.value.polizasYSeguros.length; i++) {
+          const membAux = polizasList.push(this.addressForm.value.polizasYSeguros[i].codigo);
+        }
+        console.log(polizasList);
       }
-      console.log(polizasList);
     }
     let nombreAprobado;
     if (this.addressForm.value.responsableAprob != undefined || this.addressForm.value.responsableAprob != null) {
@@ -300,7 +302,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
       'Observaciones': "",
       'ObservacionesRevisionGeneral': this.addressForm.value.observacionesGenerales,
       'ResponsableAprobacion': nombreAprobado,
-      'EstadoPolizaCodigo': this.addressForm.value.estadoRevision.value !== null ? ( this.addressForm.value.estadoRevision.value.codigo === this.estadosPoliza.sinRadicacion ? this.estadosPoliza.polizaDevuelta : this.estadosPoliza.enRevision) : this.estadosPoliza.enRevision,
+      'EstadoPolizaCodigo': this.addressForm.value.estadoRevision !== null ? ( this.addressForm.value.estadoRevision.value.codigo === this.estadosPoliza.sinRadicacion ? this.estadosPoliza.polizaDevuelta : this.estadosPoliza.enRevision) : this.estadosPoliza.enRevision,
       'UsuarioCreacion': "",
       'UsuarioModificacion': "",
       'FechaExpedicion': this.addressForm.value.fecha,
@@ -322,11 +324,7 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     let garantiaArray;
     this.polizaService.CreateContratoPoliza(contratoArray).subscribe(data => {
       if (data.isSuccessful == true) {
-        /*
-        this.polizaService.CambiarEstadoPolizaByContratoId("2", this.idContrato).subscribe(resp0 => {
-
-        });
-        */
+        //this.polizaService.CambiarEstadoPolizaByContratoId("2", this.idContrato).subscribe(resp0 => {});
         this.polizaService.GetContratoPolizaByIdContratoId(this.idContrato).subscribe(rep1 => {
           if (this.addressForm.value.polizasYSeguros != undefined || this.addressForm.value.polizasYSeguros != null) {
             for (let i = 0; i < polizasList.length; i++) {
