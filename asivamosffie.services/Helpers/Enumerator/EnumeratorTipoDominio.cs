@@ -163,6 +163,6 @@ namespace asivamosffie.services.Helpers.Enumerator
         Actuaciones_Recomendadas=119,
         Estados_Defensa_Judicial=120,
 
-        Estados_Reclamacion = 120,
+        Estados_Reclamacion = 126,
     }
 }
