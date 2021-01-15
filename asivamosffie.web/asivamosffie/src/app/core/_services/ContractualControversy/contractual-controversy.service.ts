@@ -98,6 +98,15 @@ export class ContractualControversyService implements OnInit{
   CreateEditarReclamacion(prmReclamacion: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarReclamacion`, prmReclamacion);
   }
+  CambiarEstadoActuacionSeguimientoActuacion(pActuacionSeguimientoId: number, pEstadoReclamacionCodigo: string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoActuacionSeguimientoActuacion?pActuacionSeguimientoId=${pActuacionSeguimientoId}&pEstadoReclamacionCodigo=${pEstadoReclamacionCodigo}`, null);
+  }
+  EliminarActuacionSeguimientoActuacion(pActuacionSeguimientoId:number){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/EliminarActuacionSeguimientoActuacion?pActuacionSeguimientoId=${pActuacionSeguimientoId}`, null);
+  }
+  GetListGrillMesasByControversiaId(id:number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetListGrillMesasByControversiaId?id=${id}`);
+  }
   CreateEditarMesa(prmMesa: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarMesa`, prmMesa);
   }

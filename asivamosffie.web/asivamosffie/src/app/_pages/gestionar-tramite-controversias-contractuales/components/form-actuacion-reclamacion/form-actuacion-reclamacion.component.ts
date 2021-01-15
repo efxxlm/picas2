@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormActuacionReclamacionComponent implements OnInit {
   @Input() isEditable;
   @Input() idReclamacionActuacion;
+  @Output() codRecalamacion = new EventEmitter<string>();
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   public reclamacionID = parseInt(localStorage.getItem("reclamacionID"));
   addressForm = this.fb.group({
@@ -59,6 +60,7 @@ export class FormActuacionReclamacionComponent implements OnInit {
         this.addressForm.get('definitvoAseguradora').setValue(data.esResultadoDefinitivo);
         this.addressForm.get('observaciones').setValue(data.observaciones);
         this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+        this.codRecalamacion.emit(data.numeroReclamacion);
       });
     }
   }
