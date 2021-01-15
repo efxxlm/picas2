@@ -40,8 +40,8 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         this.addressForm.get('resumenReclamacionFiduciaria').setValue(a.resumenPropuestaFiduciaria);
         this.addressForm.get('requereReclamacionComiteTecnico').setValue(true);
         this.addressForm.get('urlSoporte').setValue(a.rutaSoporte);
-        this.numReclamacion.emit('sin-diligenciar');
-        this.actuacion.emit('sin-diligenciar');
+        this.numReclamacion.emit(localStorage.getItem("numReclamacion"));
+        this.actuacion.emit(localStorage.getItem("actuacion"));
         this.numActuacion.emit(a.numeroActuacionFormat);
       });
     }

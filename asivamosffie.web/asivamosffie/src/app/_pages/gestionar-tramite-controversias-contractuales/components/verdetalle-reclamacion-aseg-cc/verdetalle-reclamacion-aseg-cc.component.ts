@@ -25,8 +25,8 @@ export class VerdetalleReclamacionAsegCcComponent implements OnInit {
   }
   loadData(id){
     this.services.GetControversiaActuacionById(id).subscribe((a:any)=>{
-      this.reclamacionCod = "Por definir"; //quemado
-      this.actuacion = "Por definir"; //quemado
+      this.reclamacionCod = localStorage.getItem("numReclamacion");
+      this.actuacion = localStorage.getItem("actuacion");
       this.numActuacion = a.numeroActuacionFormat;
       this.resumen = a.resumenPropuestaFiduciaria;
       this.requiereReclamacionComite = 'Sí'; //quemado

@@ -33,7 +33,7 @@
             <ng-container matColumnDef="estadoReclamacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la reclamación </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='1'">Sin registro</div>
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='1' && !element.numeroActuacionReclamacion">Sin registro</div>
                     <div *ngIf="element.estadoActuacionReclamacionCodigo=='2'">En proceso de registro</div>
                     <div *ngIf="element.estadoActuacionReclamacionCodigo=='3'">En proceso de registro</div>
                     <div *ngIf="element.estadoActuacionReclamacionCodigo=='4'">Enviado a comité técnico</div>
@@ -57,18 +57,18 @@
                         Registrar reclamación ante la aseguradora
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
-                        *ngIf="element.estadoActuacionReclamacionCodigo=='3' || element.estadoActuacionReclamacionCodigo=='7'"
+                        *ngIf="element.estadoActuacionReclamacionCodigo=='3' || element.estadoActuacionReclamacionCodigo=='6'"
                         (click)="this.enviarReclamacionComiteTecnico(element.actuacionId)">
                         Enviar reclamación a comité técnico
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActuacionReclamacionCodigo=='2' || element.estadoActuacionReclamacionCodigo=='3' || element.estadoActuacionReclamacionCodigo=='5' || element.estadoActuacionReclamacionCodigo=='6'"
-                        (click)="this.verDetalleEditarReclamacion(element.actuacionId)">
+                        (click)="this.verDetalleEditarReclamacion(element.actuacionId,element.descripcionActuacion,element.numeroActuacionReclamacion)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table"
                         *ngIf="element.estadoActuacionReclamacionCodigo=='7' || element.estadoActuacionReclamacionCodigo=='4'"
-                        (click)="this.verDetalleReclamacion(element.actuacionId)">
+                        (click)="this.verDetalleReclamacion(element.actuacionId,element.descripcionActuacion,element.numeroActuacionReclamacion)">
                         Ver detalle
                     </button>
                 </td>

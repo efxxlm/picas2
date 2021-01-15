@@ -47,7 +47,9 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
   registrarReclamacionAseguradora(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/registrarReclamacionAseguradora',id]);
   }
-  verDetalleEditarReclamacion(id){
+  verDetalleEditarReclamacion(id,actuacion,numReclamacion){
+    localStorage.setItem("actuacion",actuacion);
+    localStorage.setItem("numReclamacion",numReclamacion);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarReclamacionAseguradora',id]);
   }
   enviarReclamacionComiteTecnico(id){
@@ -55,7 +57,9 @@ export class ControlYTablaReclamacionCcComponent implements OnInit {
       this.ngOnInit();
     });
   }
-  verDetalleReclamacion(id){
+  verDetalleReclamacion(id,actuacion,numReclamacion){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleReclamacionAseguradora',id]);
+    localStorage.setItem("actuacion",actuacion);
+    localStorage.setItem("numReclamacion",numReclamacion);
   }
 }
