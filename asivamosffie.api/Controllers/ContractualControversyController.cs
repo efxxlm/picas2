@@ -445,14 +445,14 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
-        [HttpPut]
+        [HttpPost]
         [Route("EliminarActuacionSeguimientoActuacion")]
-        public async Task<IActionResult> EliminarActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo)
+        public async Task<IActionResult> EliminarActuacionSeguimientoActuacion(int pActuacionSeguimientoId)
         {
             Respuesta respuesta = new Respuesta();
             try
             {
-                respuesta = await _contractualControversy.EliminarActuacionSeguimientoActuacion(pActuacionSeguimientoId, pEstadoReclamacionCodigo, HttpContext.User.FindFirst("User").Value);
+                respuesta = await _contractualControversy.EliminarActuacionSeguimientoActuacion(pActuacionSeguimientoId, HttpContext.User.FindFirst("User").Value);
                 return Ok(respuesta);
             }
             catch (Exception ex)

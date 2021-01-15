@@ -3404,7 +3404,7 @@ namespace asivamosffie.services
             }
         }
 
-        public async Task<Respuesta> EliminarActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string pUsuarioModifica)
+        public async Task<Respuesta> EliminarActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string pUsuarioModifica)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
 
