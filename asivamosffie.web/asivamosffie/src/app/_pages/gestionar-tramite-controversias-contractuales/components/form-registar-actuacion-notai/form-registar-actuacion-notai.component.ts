@@ -164,7 +164,7 @@ export class FormRegistarActuacionNotaiComponent implements OnInit {
         "ProximaActuacionCodigo": this.addressForm.value.proximaActuacionRequerida.codigo,
         "ProximaActuacionOtro": this.addressForm.value.cualOtro,
         "Observaciones": this.addressForm.value.observaciones,
-        "ResumenPropuestaFiduciaria": "ResumenPropuestaFiduciaria w",
+        "ResumenPropuestaFiduciaria": "",
         "RutaSoporte": this.addressForm.value.urlSoporte,
         "EstadoAvanceTramiteCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "CantDiasVencimiento": this.addressForm.value.diasVencimientoTerminos,

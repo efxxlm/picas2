@@ -37,22 +37,22 @@
             <ng-container matColumnDef="estadoActuacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la actuación </th>
                 <td mat-cell *matCellDef="let element" align="center">
-                   <div *ngIf="element.estadoActuacionCodigo=='1'">En proceso de registro</div>
+                   <div *ngIf="element.estadoActuacionCodigo=='1' || element.estadoActuacionCodigo=='sin definir'">En proceso de registro</div>
                    <div *ngIf="element.estadoActuacionCodigo=='2'">Finalizada</div>
                     </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1' || element.estadoActuacionCodigo=='sin definir'"
                     (click)="this.enviarComiteTecnicoTramAct(element.actuacionId)">
                         Finalizar actuación
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1' || element.estadoActuacionCodigo=='sin definir'"
                     (click)="this.verDetalleEditarActuacion(element.actuacionId)">
                         Ver detalle/Editar
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1' || element.estadoActuacionCodigo=='sin definir'"
                     (click)="this.eliminarActuacion(element.actuacionId)">
                         Eliminar
                     </button>

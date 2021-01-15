@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-control-y-tabla-actua-tramite-cc',
@@ -24,7 +26,7 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
     'gestion',
   ];
   dataTable: any[] = [];  
-  constructor( private services: ContractualControversyService, private router: Router) {
+  constructor(public dialog: MatDialog, private services: ContractualControversyService, private router: Router) {
    }
 
   ngOnInit(): void {
@@ -41,14 +43,24 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   enviarComiteTecnicoTramAct(id){
+    this.services.CambiarEstadoActuacionSeguimiento(id,'2').subscribe((data:any)=>{
+      if(data.isSuccessful==true){
+        this.ngOnInit();
+      }
+    });
+    /*
     this.services.CambiarEstadoControversiaActuacion(id,"2").subscribe((data:any)=>{
       if(data.isSuccessful==true){
         this.ngOnInit();
       }
     });
+    */
   }
   verDetalleEditarActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarTramite',id]);
+  }
+  deleteActuacion(id) {
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
   }
   eliminarActuacion(id){
     this.services.EliminarControversiaActuacion(id).subscribe((data:any)=>{
@@ -57,5 +69,17 @@ export class ControlYTablaActuaTramiteCcComponent implements OnInit {
   }
   verDetalleActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionTramite',id]);
+  }
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        this.eliminarActuacion(e);
+      }
+    });
   }
 }

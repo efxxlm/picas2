@@ -84,13 +84,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
         "rutaSoporte":this.addressForm.value.urlSoporte,
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
-        if(this.addressForm.value.resumenReclamacionFiduciaria!=null && this.addressForm.value.requereReclamacionComiteTecnico!=null && this.addressForm.value.urlSoporte!=null){
-          codeState = '3';
-        }
-        else{
-          codeState = '2';
-        }
-        this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,codeState).subscribe((data:any)=>{
+        this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,'2').subscribe((data:any)=>{
           
         });
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
@@ -99,19 +93,15 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
     }
     else{
       arrayReclam = { 
+        "controversiaActuacionId":this.controversiaAct,
         "controversiaContractualId":this.controversiaID,
         "resumenPropuestaFiduciaria":this.addressForm.value.resumenReclamacionFiduciaria,
         "esRequiereComiteReclamacion":this.addressForm.value.requereReclamacionComiteTecnico,
         "rutaSoporte":this.addressForm.value.urlSoporte,
         };
       this.services.CreateEditarReclamacion(arrayReclam).subscribe((data:any)=>{
-        if(this.addressForm.value.resumenReclamacionFiduciaria!=null && this.addressForm.value.requereReclamacionComiteTecnico!=null && this.addressForm.value.urlSoporte!=null){
-          codeState = '3';
-        }
-        else{
-          codeState = '2';
-        }
-        this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,codeState).subscribe((data:any)=>{
+        this.services.CambiarEstadoActuacionSeguimiento(this.controversiaAct,'2').subscribe((data:any)=>{
+          
         });
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
