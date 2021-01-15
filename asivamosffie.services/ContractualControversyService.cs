@@ -3504,7 +3504,13 @@ namespace asivamosffie.services
 
                     int ActuacionSeguimientoIdTmp = 0;
                     ControversiaActuacionMesa controversiamesa = _context.ControversiaActuacionMesa.Where(x=>!(bool)x.Eliminado && x.ControversiaActuacionlId==controversia.ControversiaActuacionId).FirstOrDefault();
-                    var EstadoActuacionMesa = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiamesa.EstadoAvanceMesaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
+                    string stadomesa = "";
+                    if(controversiamesa!=null)
+                    {
+                        var EstadoActuacionMesa = await _commonService.GetDominioByNombreDominioAndTipoDominio(controversiamesa.EstadoAvanceMesaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
+                        stadomesa = EstadoActuacionMesa == null ? "" : EstadoActuacionMesa.Nombre;
+                    }
+                        
                     
                     GrillaControversiaActuacionEstado RegistroControversiaContractual = new GrillaControversiaActuacionEstado
                     {
@@ -3530,7 +3536,7 @@ namespace asivamosffie.services
                         ActuacionSeguimientoId = ActuacionSeguimientoIdTmp,
                         NumeroMesa = controversiamesa==null?"":"MT " + controversiamesa.ControversiaActuacionMesaId.ToString("0000"),
                         EstadoMesa = controversiamesa == null ? "" : controversiamesa.EstadoAvanceMesaCodigo,
-                        EstadoCodigoMesa = EstadoActuacionMesa == null ? "" : EstadoActuacionMesa.Nombre,
+                        EstadoCodigoMesa = stadomesa,
                         MesaId= controversiamesa == null ? "" : controversiamesa.ControversiaActuacionMesaId.ToString(),
                     };
                     ListControversiaContractualGrilla.Add(RegistroControversiaContractual);

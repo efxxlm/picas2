@@ -680,7 +680,7 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetListGrillMesasByControversiaActuacionId")]
+        [Route("GetListGrillMesasByControversiaId")]
 
         public async Task<List<GrillaControversiaActuacionEstado>> GetListGrillMesasByControversiaActuacionId(int id)
         {
