@@ -2369,7 +2369,7 @@ namespace asivamosffie.services
         public async Task<List<GrillaActuacionSeguimiento>> ListGrillaActuacionSeguimientoByActid(int pControversiaActId)
         {
             List<GrillaActuacionSeguimiento> LstActuacionSeguimientoGrilla = new List<GrillaActuacionSeguimiento>();
-            List<ActuacionSeguimiento> lstActuacionSeguimiento = await _context.ActuacionSeguimiento.Where(x => x.ActuacionSeguimientoId == pControversiaActId).ToListAsync();
+            List<ActuacionSeguimiento> lstActuacionSeguimiento = await _context.ActuacionSeguimiento.Where(x => x.ControversiaActuacionId == pControversiaActId).ToListAsync();
 
 
             foreach (var actuacionSeguimiento in lstActuacionSeguimiento)
