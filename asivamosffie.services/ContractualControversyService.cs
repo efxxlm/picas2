@@ -1348,7 +1348,7 @@ namespace asivamosffie.services
              || (controversiaActuacion.EsResultadoDefinitivo==null)
             || (controversiaActuacion.FechaActuacionAdelantada==null)
                 || (controversiaActuacion.FechaVencimiento == null)
-                || (controversiaActuacion.NumeroReclamacion == null)
+               // || (controversiaActuacion.NumeroReclamacion == null)
                || (controversiaActuacion.Observaciones == null)
                 || (controversiaActuacion.ProximaActuacion == null)
                 || (controversiaActuacion.RutaSoporte == null))
@@ -2407,7 +2407,7 @@ namespace asivamosffie.services
                                 EstadoActuacionCodigo= actuacionSeguimiento.EstadoDerivadaCodigo,
                                 EstadoReclamacionCodigo = actuacionSeguimiento.EstadoReclamacionCodigo,
                                 FechaActualizacion = actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
-                                NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
+                                NumeroReclamacion = "ACT_REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
                                 Actuacion = "Actuación " + actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
                                 ControversiaActuacionId = actuacionSeguimiento.ControversiaActuacionId,
                                 //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",                        
