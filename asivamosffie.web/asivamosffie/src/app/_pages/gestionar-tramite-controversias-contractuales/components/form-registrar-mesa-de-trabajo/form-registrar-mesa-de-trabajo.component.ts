@@ -90,9 +90,9 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     if (this.isEditable == true) {
       mesaTrabajoArray =
       {
-        "controversiaActuacionMesaId": 1,
-        "controversiaActuacionId": 1,
-        "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite,
+        "controversiaActuacionMesaId": 2,
+        "controversiaActuacionId": 24,
+        "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
         "proximaActuacionRequerida": this.addressForm.value.proximaActuacionRequerida,
@@ -106,8 +106,9 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     else {
       mesaTrabajoArray =
       {
-        "controversiaActuacionId": 1,
-        "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite,
+        "controversiaActuacionMesaId": 2,
+        "controversiaActuacionId": 24,
+        "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
         "proximaActuacionRequerida": this.addressForm.value.proximaActuacionRequerida,
@@ -121,7 +122,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     this.services.CreateEditarMesa(mesaTrabajoArray).subscribe((data:any)=>{
       if (data.isSuccessful==true){
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
-        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo']);
+        this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       }
       else{
         this.openDialog('', data.message);

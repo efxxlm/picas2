@@ -53,7 +53,7 @@
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='1' || element.estadoActuacionCodigo=='sin definir'"
-                    (click)="this.eliminarActuacion(element.actuacionId)">
+                    (click)="this.deleteActuacion(element.actuacionId)">
                         Eliminar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionCodigo=='2'"
