@@ -430,6 +430,39 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPut]
+        [Route("CambiarEstadoActuacionSeguimientoActuacion")]
+        public async Task<IActionResult> CambiarEstadoActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.CambiarEstadoActuacionSeguimientoActuacion(pActuacionSeguimientoId, pEstadoReclamacionCodigo, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+        [HttpPut]
+        [Route("EliminarActuacionSeguimientoActuacion")]
+        public async Task<IActionResult> EliminarActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.EliminarActuacionSeguimientoActuacion(pActuacionSeguimientoId, pEstadoReclamacionCodigo, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPut]
         [Route("CambiarEstadoActuacionReclamacion")]
         public async Task<IActionResult> CambiarEstadoActuacionReclamacion(int pActuacionId, string pEstadoReclamacionCodigo)
         {
