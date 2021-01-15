@@ -3013,7 +3013,7 @@ namespace asivamosffie.services
 
                         NumeroActuacionReclamacion = "REC " + controversia.ControversiaActuacionId.ToString("0000"),
 
-                        RegistroCompletoReclamacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",
+                        RegistroCompletoReclamacion = (bool)controversia.EsCompletoReclamacion ? "Completo" : "Incompleto",
 
                         ProximaActuacionCodigo = strProximaActuacionCodigo,
                         ProximaActuacionNombre = strProximaActuacionNombre,
@@ -3063,6 +3063,7 @@ namespace asivamosffie.services
 
                     controversiaActuacionActual.ResumenPropuestaFiduciaria = prmControversiaActuacion.ResumenPropuestaFiduciaria;
                     controversiaActuacionActual.RutaSoporte = prmControversiaActuacion.RutaSoporte;
+                    controversiaActuacionActual.EsRequiereComiteReclamacion = prmControversiaActuacion.EsRequiereComiteReclamacion;
                     controversiaActuacionActual.FechaModificacion = DateTime.Now;
                     controversiaActuacionActual.EsCompletoReclamacion = !string.IsNullOrEmpty(prmControversiaActuacion.ResumenPropuestaFiduciaria) && !string.IsNullOrEmpty(prmControversiaActuacion.RutaSoporte);
                     _context.ControversiaActuacion.Update(controversiaActuacionActual);                    
