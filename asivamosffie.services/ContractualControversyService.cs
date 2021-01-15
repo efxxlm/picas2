@@ -1085,7 +1085,7 @@ namespace asivamosffie.services
                 actuacionSeguimientoOld = _context.ControversiaActuacion.Find(pActuacionSeguimientoId);
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
-                actuacionSeguimientoOld.EstadoActuacionReclamacionCodigo = pEstadoReclamacionCodigo;
+                actuacionSeguimientoOld.EstadoAvanceTramiteCodigo = pEstadoReclamacionCodigo;
 
                 _context.SaveChanges();
 
