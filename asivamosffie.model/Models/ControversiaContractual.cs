@@ -8,7 +8,6 @@ namespace asivamosffie.model.Models
         public ControversiaContractual()
         {
             ControversiaActuacion = new HashSet<ControversiaActuacion>();
-            ControversiaActuacionMesa = new HashSet<ControversiaActuacionMesa>();
             ControversiaMotivo = new HashSet<ControversiaMotivo>();
         }
 
@@ -35,7 +34,6 @@ namespace asivamosffie.model.Models
 
         public virtual Contrato Contrato { get; set; }
         public virtual ICollection<ControversiaActuacion> ControversiaActuacion { get; set; }
-        public virtual ICollection<ControversiaActuacionMesa> ControversiaActuacionMesa { get; set; }
         public virtual ICollection<ControversiaMotivo> ControversiaMotivo { get; set; }
     }
 }

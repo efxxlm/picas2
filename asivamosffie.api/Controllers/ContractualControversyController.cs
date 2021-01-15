@@ -679,6 +679,21 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetListGrillMesasByControversiaActuacionId")]
+
+        public async Task<List<GrillaControversiaActuacionEstado>> GetListGrillMesasByControversiaActuacionId(int id)
+        {
+            try
+            {
+                return await _contractualControversy.GetListGrillMesasByControversiaActuacionId(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /*4.2.1*/
         [HttpPost]
         [Route("CreateEditarActuacionMesa")]

@@ -19,7 +19,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> InsertEditControversiaMotivo(ControversiaMotivo controversiaMotivo);
 
-        Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual(int pControversiaContractualId = 0);
+        Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual(int pControversiaContractualId = 0);        
 
         Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId);
 
@@ -71,5 +71,6 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CambiarEstadoActuacionReclamacionSeguimiento(int pActuacionId, string pEstadoReclamacionCodigo, string value);
         Task<Respuesta> EliminarActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string value);
         Task<Respuesta> CambiarEstadoActuacionSeguimiento(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string value);
+        Task<List<GrillaControversiaActuacionEstado>> GetListGrillMesasByControversiaActuacionId(int id);
     }
 }
