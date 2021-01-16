@@ -8,8 +8,8 @@
         Ver detalle/Editar mesa de trabajo MT_001
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>CO00002</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación anticipada por imposibilidad de ejecución (TAIE)</b></span>
+        <span>Solicitud: <b>{{this.solictud}}</b> Número del contrato: <b>{{this.numContrato}}</b> Tipo de controversia: <b>{{this.tipoControversia}}</b></span>
     </p>
-    <app-form-registrar-mesa-de-trabajo-act [isEditable]="true"></app-form-registrar-mesa-de-trabajo-act>
+    <app-form-registrar-mesa-de-trabajo [isEditable]="true" ></app-form-registrar-mesa-de-trabajo>
 </div>
 
