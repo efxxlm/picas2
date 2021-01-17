@@ -1584,9 +1584,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.ControversiaContractual)
+                entity.HasOne(d => d.ControversiaActuacionl)
                     .WithMany(p => p.ControversiaActuacionMesa)
-                    .HasForeignKey(d => d.ControversiaContractualId)
+                    .HasForeignKey(d => d.ControversiaActuacionlId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Controver__Contr__23DE44F1");
             });
@@ -2685,10 +2685,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion).HasMaxLength(500);
-
-                entity.Property(e => e.Url).HasMaxLength(255);
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -2773,8 +2769,6 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.Observacion).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
