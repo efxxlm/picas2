@@ -58,7 +58,7 @@ namespace asivamosffie.services
 
                 CantidadSemanas = CantidadDias / 7;
 
-                if (CantidadDias % 7 == 1)
+                if (CantidadDias % 7 != 0)
                     CantidadSemanas = (CantidadDias / 7) + 1;
             }
             else
@@ -70,7 +70,7 @@ namespace asivamosffie.services
 
                 CantidadSemanas = CantidadDias / 7;
 
-                if (CantidadDias % 7 == 1)
+                if (CantidadDias % 7 != 0)
                     CantidadSemanas = (CantidadDias / 7) + 1;
             }
 
@@ -235,5 +235,9 @@ namespace asivamosffie.services
                     };
             }
         }
+  
+
+        ///ALERTAS AUTOMATICAS
+        ///
     }
 }

@@ -26,8 +26,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         RegistrosTablaAprobacionParticipanteActa = 28,
       	NotificarFiduciaria322 = 29,
         DDPDevolucion=30,
-        DDPRechazado=31,
-
+        DDPRechazado=31, 
         NotificacionContratacion341 = 32,
         DRPNotificacion = 33,
         DDPCancelado = 34,
@@ -48,5 +47,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Notificarinterventor=48,
         ObservacionesActaInicioFase2=50,
         NotificacionCompromisos=53,
+        msjAprobacion4_1_10 = 54,
+        Alerta5Dias4_1_10 = 55
     }
 }
