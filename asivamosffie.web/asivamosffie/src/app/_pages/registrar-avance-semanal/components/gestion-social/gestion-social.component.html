@@ -94,7 +94,7 @@
                             <div class="col-md-12">
                               <div>
                                 <div class="pr-1">
-                                  <label class="label-left">Tema</label>
+                                  <label class="label-left">Tema tratado con la comunidad</label>
                                 </div>
                                 <div class="col d-flex" style="width: 100%;">
                                     <quill-editor   class="quill-editor-style card-80em position-relative"
@@ -124,17 +124,17 @@
                                 <div class="col d-flex">
                                     <quill-editor   class="quill-editor-style card-80em position-relative"
                                                     [styles]="editorStyle"
-                                                    [modules]="config"
-                                                    (onContentChanged)="maxLength($event, 2000)"
+                                                    [modules]="configTema"
+                                                    (onContentChanged)="maxLength($event, 200)"
                                                     formControlName="conclusion"
                                                     #obsConclusiones
                                                     required>
                                     </quill-editor>
                                     <span class="contador miles" *ngIf="formGestionSocial.get('conclusion').value !== null" style="margin-top: 3.5em;">
-                                        {{2000 - textoLimpio( obsConclusiones.quillEditor, 2000 )}}
+                                        {{200 - textoLimpio( obsConclusiones.quillEditor, 200 )}}
                                     </span>
                                     <span class="contador miles" *ngIf="formGestionSocial.get('conclusion').value === null" style="margin-top: 3.5em;">
-                                        2000
+                                        200
                                     </span>
                                 </div>
                               </div>
@@ -150,6 +150,7 @@
                                     <mat-form-field style="width: 97.8%;">
                                         <input  matInput
                                                 type="text"
+                                                maxlength="400"
                                                 formControlName="urlSoporteGestion">
                                     </mat-form-field>
                                 </div>

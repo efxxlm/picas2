@@ -19,12 +19,7 @@ export class ManejoMaterialInsumoComponent implements OnInit {
         height: '45px'
     };
     config = {
-        toolbar: [
-          ['bold', 'italic', 'underline'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          [{ indent: '-1' }, { indent: '+1' }],
-          [{ align: [] }],
-        ]
+        toolbar: []
     };
     booleanosActividadRelacionada: any[] = [
         { value: true, viewValue: 'Si' },
