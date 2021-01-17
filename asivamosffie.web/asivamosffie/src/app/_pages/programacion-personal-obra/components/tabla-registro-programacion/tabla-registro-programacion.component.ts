@@ -77,7 +77,7 @@ export class TablaRegistroProgramacionComponent implements OnInit {
       .subscribe( value => {
         if ( value === true ) {
           this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-            () => this.routes.navigate( [ '/registrarProgramacionPersonalObra' ] )
+            () => this.routes.navigate( [ '/programacionPersonalObra' ] )
           );
         }
       } );
@@ -90,7 +90,7 @@ export class TablaRegistroProgramacionComponent implements OnInit {
         response => {
           this.openDialog( '', response.message );
           this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-            () => this.routes.navigate( [ '/registrarProgramacionPersonalObra' ] )
+            () => this.routes.navigate( [ '/programacionPersonalObra' ] )
           );
         },
         err => this.openDialog( '', err.message )
