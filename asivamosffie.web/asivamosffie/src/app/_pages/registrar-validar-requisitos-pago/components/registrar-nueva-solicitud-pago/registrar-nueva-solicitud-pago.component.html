@@ -1,14 +1,15 @@
-<section class="container text-center">
-    <div class="text-right">
-        <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
-            <img src="assets/img/icon/regresar.svg" alt="Regresar">
-        </a>
-    </div>
-    <h1 class="title-menu--h1">
-        Registrar nueva solicitud de pago
-    </h1>
-</section>
-<section class="container text-center">
+<section class="container text-center" *ngIf="tiposSolicitudArray.length > 0">
+    <section class="container text-center">
+        <div class="text-right">
+            <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
+                <img src="assets/img/icon/regresar.svg" alt="Regresar">
+            </a>
+        </div>
+        <h1 class="title-menu--h1">
+            Registrar nueva solicitud de pago
+        </h1>
+    </section>
+
     <form [formGroup]="addressForm" novalidate>
         <div class="row" style="margin-top: 2em; justify-content: center;">
             <div class="col-md-7">
@@ -19,8 +20,8 @@
                     <div class="col">
                         <mat-form-field class="select-width">
                             <mat-select formControlName="tipoSolicitud" required style="top: 20px;">
-                                <mat-option *ngFor="let contr of tiposSolicitudArray" [value]="contr.value">
-                                    {{ contr.name }}
+                                <mat-option *ngFor="let solicitud of tiposSolicitudArray" [value]="solicitud">
+                                    {{ solicitud.nombre }}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -28,7 +29,8 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="this.addressForm.value.tipoSolicitud=='1'">
+
+        <div *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null && addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoObra">
             <mat-card class="shipping-card ">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">
@@ -83,7 +85,7 @@
                 </mat-card-content>
             </mat-card>
         </div>
-        <div *ngIf="this.addressForm.value.tipoSolicitud=='2'">
+        <div *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null && addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoInterventoria">
             <mat-card class="shipping-card">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text">
@@ -196,7 +198,9 @@
                     <span class="info-text completo">Completo</span>
                 </p>
             </div>
-            <div *ngIf="this.addressForm.value.tipoSolicitud=='1'||this.addressForm.value.tipoSolicitud=='2'">
+            <div *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null
+                        && (    addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoObra
+                                || addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoInterventoria )">
                 <mat-accordion>
                     <mat-expansion-panel class="expansion-style">
                         <mat-expansion-panel-header class="expansion-style--header">
@@ -229,9 +233,11 @@
                 </mat-accordion>
             </div>  
         </div>
-        <div *ngIf="this.addressForm.value.tipoSolicitud=='3'||this.addressForm.value.tipoSolicitud=='4'">
-            <app-form-solicitud-expensas *ngIf="this.addressForm.value.tipoSolicitud=='3'"></app-form-solicitud-expensas>
-            <app-form-solicitud-otros-costosservicios *ngIf="this.addressForm.value.tipoSolicitud=='4'"></app-form-solicitud-otros-costosservicios>
+        <div *ngIf="addressForm.get( 'tipoSolicitud' ).value !== null
+                    && (    addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.expensas
+                            || addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.otrosCostos )">
+            <app-form-solicitud-expensas *ngIf="addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.expensas"></app-form-solicitud-expensas>
+            <app-form-solicitud-otros-costosservicios *ngIf="addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.otrosCostos"></app-form-solicitud-otros-costosservicios>
             <div class="text-center">
                 <p class="info-container">
                     <span class="info-text sin-diligenciar">Sin diligenciar</span>

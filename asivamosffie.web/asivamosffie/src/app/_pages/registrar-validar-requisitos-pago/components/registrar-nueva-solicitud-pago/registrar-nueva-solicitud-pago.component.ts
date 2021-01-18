@@ -1,3 +1,5 @@
+import { Dominio } from 'src/app/core/_services/common/common.service';
+import { CommonService } from './../../../../core/_services/common/common.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -41,12 +43,8 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
     modalidadContrato: [null, Validators.required],
     numeroContrato: [null, Validators.required],
   });
-  tiposSolicitudArray = [
-    { name: 'Contratos de obra', value: '1' },
-    { name: 'Contratos de interventoria', value: '2' },
-    { name: 'Expensas', value: '3' },
-    { name: 'Otros costos/servicios', value: '4' }
-  ];
+  tiposSolicitudArray: Dominio[] = [];
+  tipoSolicitudCodigo: any = {};
   modalidadContratoArray = [
     { name: 'Tipo A', value: '1' },
     { name: 'Tipo B', value: '2' },
@@ -56,7 +54,33 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
     { name: 'N801801', value: '1' }
   ];
   contratoId: any;
-  constructor(private fb: FormBuilder, public dialog: MatDialog) { }
+  constructor(
+    private fb: FormBuilder,
+    public dialog: MatDialog,
+     private commonSvc: CommonService )
+  {
+    this.commonSvc.tiposDeSolicitudes()
+      .subscribe(
+        solicitudes => {
+          for ( const solicitud of solicitudes ) {
+            if ( solicitud.codigo === '1' ) {
+              this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
+            }
+            if ( solicitud.codigo === '2' ) {
+              this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
+            }
+            if ( solicitud.codigo === '3' ) {
+              this.tipoSolicitudCodigo.expensas = solicitud.codigo;
+            }
+            if ( solicitud.codigo === '4' ) {
+              this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
+            }
+          }
+          this.tiposSolicitudArray = solicitudes;
+          console.log( this.tiposSolicitudArray, this.tipoSolicitudCodigo );
+        }
+      );
+  }
 
 
   ngOnInit(): void {

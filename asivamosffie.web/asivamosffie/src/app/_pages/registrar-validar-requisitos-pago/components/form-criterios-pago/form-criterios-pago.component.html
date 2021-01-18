@@ -21,11 +21,12 @@
       </div>
     </div>
   </div>
-  <div style="margin-top: 3em;">
-    <mat-card class="shipping-card">
+
+  <div style="margin-top: 3em;" *ngFor="let criterio of criterios.controls; index as i">
+    <mat-card class="shipping-card" [formGroup]="criterio">
       <mat-card-header class="header-card header-card--margin">
         <mat-card-title class="header-card--text">
-          Estudios y diseños interventoria hasta 90%
+          {{ criterio.get( 'nombreCriterio' ).value }}
         </mat-card-title>
       </mat-card-header>
       <mat-card-content style="text-align: left;">
@@ -89,14 +90,14 @@
       </mat-card-content>
     </mat-card>
     <div class="text-right">
-      <button mat-button color="warn" type="button" class="btn-eliminar">
-        <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteCriterio( i, criterio.get( 'estadoCodigo' ).value )">
+        <img src="assets/img/icon/menos.svg">
         Eliminar criterio
       </button>
     </div>
     <div class="text-center mb-2em">
       <button mat-button color="warn" class="btn-guardar" type="submit">
-        <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        <img src="assets/img/icon/guardar.svg">
       </button>
     </div>
   </div>
