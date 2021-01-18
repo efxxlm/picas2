@@ -14,6 +14,7 @@ namespace asivamosffie.model.Models
             InfraestructuraIntervenirProyecto = new HashSet<InfraestructuraIntervenirProyecto>();
             ProgramacionPersonalContrato = new HashSet<ProgramacionPersonalContrato>();
             ProyectoAportante = new HashSet<ProyectoAportante>();
+            ProyectoFuentes = new HashSet<ProyectoFuentes>();
             ProyectoMonitoreoWeb = new HashSet<ProyectoMonitoreoWeb>();
             ProyectoPredio = new HashSet<ProyectoPredio>();
             ProyectoRequisitoTecnico = new HashSet<ProyectoRequisitoTecnico>();
@@ -64,6 +65,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<InfraestructuraIntervenirProyecto> InfraestructuraIntervenirProyecto { get; set; }
         public virtual ICollection<ProgramacionPersonalContrato> ProgramacionPersonalContrato { get; set; }
         public virtual ICollection<ProyectoAportante> ProyectoAportante { get; set; }
+        public virtual ICollection<ProyectoFuentes> ProyectoFuentes { get; set; }
         public virtual ICollection<ProyectoMonitoreoWeb> ProyectoMonitoreoWeb { get; set; }
         public virtual ICollection<ProyectoPredio> ProyectoPredio { get; set; }
         public virtual ICollection<ProyectoRequisitoTecnico> ProyectoRequisitoTecnico { get; set; }
