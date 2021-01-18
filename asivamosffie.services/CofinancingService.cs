@@ -150,7 +150,7 @@ namespace asivamosffie.services
 
             if (cofinanciacion != null)
             {
-                List<CofinanciacionAportante> cofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => r.CofinanciacionId == idCofinanciacion && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).ToListAsync();
+                List<CofinanciacionAportante> cofinanciacionAportante = await _context.CofinanciacionAportante.Where(r => r.CofinanciacionId == idCofinanciacion && !(bool)r.Eliminado).IncludeFilter(r => r.CofinanciacionDocumento.Where(r => !(bool)r.Eliminado)).OrderBy(x=>x.CofinanciacionAportanteId).ToListAsync();
 
                 cofinanciacion.CofinanciacionAportante = cofinanciacionAportante;
             }

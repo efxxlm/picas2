@@ -56,12 +56,11 @@
             </mat-expansion-panel-header>
             <button style="display: none;" type="button" (click)="proponenteCerrada.cargarRegistro()"
                 id="botonProponente"></button>
-            <app-form-datos-proponentes-seleccionados-invitacion-cerrada
+            <app-form-datos-proponentes-seleccionados-invitacion-cerrada>
                 #proponenteCerrada
                 [procesoSeleccion]="procesoSeleccion"
                 [editar]="bitPuedoEditar"
-                (guardar)="onSubmit()"
-                [style.pointer-events]="getStyleProponentesCreado()">
+                (guardar)="onSubmit()"                
             </app-form-datos-proponentes-seleccionados-invitacion-cerrada>
         </mat-expansion-panel>
 
