@@ -1,1 +1,32 @@
-<p>dialog-cargar-acta-firmada-air works!</p>
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<div style="padding: 30px 0px;">
+    <h1 class="title-menu--h1 centerTrick">
+        Cargar acta firmada
+    </h1>
+    <div class="centerTrick" style="margin-top: 10px;">
+        <p><b>10/08/2020</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Número de registros incorporados: <b>5</b>
+        </p>
+    </div>
+    <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+        <div class="text-center">
+            <div class="mtop">
+                <div class="input-file" style="margin-top: 0.5em;">
+                    <span class="input-file--text">{{archivo}}</span>
+                    <button mat-raised-button color="primary" type="button" (click)="fileInput.click()"
+                        class="input-file--btn">Explorar</button>
+                    <input required hidden (change)="fileName( $event )" #fileInput type="file" id="file"
+                        formControlName="documentoFile">
+                </div>
+                <div class="textoGris">
+                    Explore en su computador o dispositivo y seleccione el documento que desea cargar <b>el formato permitido es: pdf</b>
+                </div>
+                <div style="margin-top: 1.5em;"> 
+                    <button mat-raised-button color="accent" [disabled]="!addressForm.valid" type="submit">{{boton}}</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

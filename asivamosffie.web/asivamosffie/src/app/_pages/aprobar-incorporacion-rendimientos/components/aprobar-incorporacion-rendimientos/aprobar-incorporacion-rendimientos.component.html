@@ -20,4 +20,34 @@
             infraestructura del FFIE.
         </div>
     </div>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="fechaCargue">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de cargue </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.fechaCargue }}</b> </td>
+            </ng-container>
+            <ng-container matColumnDef="numTotalRegistrosIncorporados">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número total de registros incorporados</th>
+                <td mat-cell *matCellDef="let element" align="center"> <em>{{ element.numTotalRegistrosIncorporados }}</em> </td>
+            </ng-container>
+            <ng-container matColumnDef="gestion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados==''">
+                        Incorporar rendimientos
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados==''">
+                        Ver registros consistentes
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados==''"
+                    (click)="this.cargarActaFirmada();">
+                        Cargar acta firmada
+                    </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
 </section>

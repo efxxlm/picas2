@@ -1,7 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DialogCargarActaFirmadaAirComponent } from '../dialog-cargar-acta-firmada-air/dialog-cargar-acta-firmada-air.component';
+
 
 @Component({
   selector: 'app-aprobar-incorporacion-rendimientos',
@@ -25,7 +28,7 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
       gestion: 1
     }
   ]
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTable);
@@ -50,5 +53,10 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }; 
-
+  cargarActaFirmada(){
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.height = 'auto';
+    dialogConfig.width = '865px';
+    const dialogRef = this.dialog.open(DialogCargarActaFirmadaAirComponent, dialogConfig);
+  }
 }
