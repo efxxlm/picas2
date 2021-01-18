@@ -1,0 +1,23 @@
+<section class="container">
+    <div class="text-right">
+        <a routerLink="/home" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <div class="text-center">
+        <h1 class="title-menu--h1">
+            Aprobar incorporación de rendimientos
+        </h1>
+        <button mat-mini-fab color="primary" class="btn-info" (click)="verAyuda = !verAyuda">?</button>
+
+        <div class="text-info" *ngIf="verAyuda">
+            <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+                <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda">
+            </button>
+            Bienvenido/a, aquí podrá realizar la aprobación para la incorporación de los rendimientos de recursos que
+            han sido remitidos por la Fiduciaria frente
+            a los aportantes y fuentes de financiación disponibles y activas para la ejecución de proyectos de
+            infraestructura del FFIE.
+        </div>
+    </div>
+</section>

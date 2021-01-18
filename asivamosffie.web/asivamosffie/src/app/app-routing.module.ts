@@ -227,6 +227,11 @@ const routes: Routes = [
         loadChildren: () => import('./_pages/gestionar-rendimientos/gestionar-rendimientos.module')
         .then(m => m.GestionarRendimientosModule)
       },
+      {
+        path: 'aprobarIncorporacionRendimientos',
+        loadChildren: () => import('./_pages/aprobar-incorporacion-rendimientos/aprobar-incorporacion-rendimientos.module')
+        .then(m => m.AprobarIncorporacionRendimientosModule)
+      },
     ]
 
   },

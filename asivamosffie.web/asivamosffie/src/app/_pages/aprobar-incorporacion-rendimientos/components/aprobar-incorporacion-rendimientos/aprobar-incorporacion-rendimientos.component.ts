@@ -1,50 +1,31 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-gestionar-rendimientos',
-  templateUrl: './gestionar-rendimientos.component.html',
-  styleUrls: ['./gestionar-rendimientos.component.scss']
+  selector: 'app-aprobar-incorporacion-rendimientos',
+  templateUrl: './aprobar-incorporacion-rendimientos.component.html',
+  styleUrls: ['./aprobar-incorporacion-rendimientos.component.scss']
 })
-export class GestionarRendimientosComponent implements OnInit {
+export class AprobarIncorporacionRendimientosComponent implements OnInit {
   verAyuda = false;
   dataSource = new MatTableDataSource();
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   displayedColumns: string[] = [
     'fechaCargue',
-    'numTotalRegistros',
-    'registrosConsistentes',
-    'registrosInconsistentes',
+    'numTotalRegistrosIncorporados',
     'gestion'
   ];
   dataTable: any[] = [
     {
       fechaCargue: '10/08/2020',
-      numTotalRegistros: 300,
-      registrosConsistentes: '',
-      registrosInconsistentes: '',
+      numTotalRegistrosIncorporados: '',
       gestion: 1
-    },
-    {
-      fechaCargue: '10/08/2020',
-      numTotalRegistros: 23,
-      registrosConsistentes: '0',
-      registrosInconsistentes: '23',
-      gestion: 2
-    },
-    {
-      fechaCargue: '10/08/2020',
-      numTotalRegistros: 326,
-      registrosConsistentes: '300',
-      registrosInconsistentes: '26',
-      gestion: 2
     }
-  ];
-  constructor(public dialog: MatDialog) { }
+  ]
+  constructor() { }
 
   ngOnInit(): void {
     this.dataSource = new MatTableDataSource(this.dataTable);
