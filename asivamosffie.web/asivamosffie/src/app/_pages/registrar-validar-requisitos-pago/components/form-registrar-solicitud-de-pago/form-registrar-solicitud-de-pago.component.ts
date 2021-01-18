@@ -48,6 +48,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     { name: 'Fase 1 - Preconstrucción', value: '1' },
     { name: 'Fase 2 - Construcción', value: '2' }
   ];
+  obj1: boolean;
+  obj2: boolean;
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -60,6 +62,14 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
+  getvalues(values: any[]) {
+    console.log(values);
+    const fase1Preconstruccion = values.find(value => value.value == "1");
+    const fase2Construccion = values.find(value => value.value == "2");
+    fase1Preconstruccion ? this.obj1 = true : this.obj1 = false;
+    fase2Construccion ? this.obj2 = true : this.obj2 = false;
+
+  }
   onSubmit() {
 
   }

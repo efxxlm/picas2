@@ -81,8 +81,8 @@
                         </div>
                         <div class="col">
                             <mat-form-field class="select-width">
-                                <mat-select formControlName="faseContrato" multiple required>
-                                    <mat-option *ngFor="let faseContrato of fasesArray" [value]="faseContrato.value">
+                                <mat-select formControlName="faseContrato" multiple required (selectionChange)="getvalues($event.value)">
+                                    <mat-option *ngFor="let faseContrato of fasesArray" [value]="faseContrato">
                                         {{ faseContrato.name }}
                                     </mat-option>
                                 </mat-select>
@@ -99,55 +99,100 @@
         </button>
     </div>
 </form>
-<mat-accordion>
-    <mat-expansion-panel class="expansion-style sub-expansion">
-        <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title sin-diligenciar">
-                Fase 1 - Preconstrucción
-            </mat-panel-title>
-        </mat-expansion-panel-header>
-        <mat-accordion>
-            <mat-expansion-panel class="expansion-style sub-expansion-black">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        Criterios de pago incluidos en la factura
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <app-form-criterios-pago></app-form-criterios-pago>
-            </mat-expansion-panel>
-            <mat-expansion-panel class="expansion-style sub-expansion-black">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        Amortización del anticipo
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <app-form-amortizacion-anticipo></app-form-amortizacion-anticipo>
-            </mat-expansion-panel>
-            <mat-expansion-panel class="expansion-style sub-expansion-black">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        Detalle factura para proyectos asociados
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <app-detalle-factura-proyectos-asociados></app-detalle-factura-proyectos-asociados>
-            </mat-expansion-panel>
-            <mat-expansion-panel class="expansion-style sub-expansion-black">
-                <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title sin-diligenciar">
-                        Datos de la factura
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <app-form-datos-factura></app-form-datos-factura>
-            </mat-expansion-panel>
-            <div style="margin-top: 1em;">
-                <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
-                    Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
-                    sección anterior
+<div *ngIf="this.obj1==true">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Fase 1 - Preconstrucción
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Criterios de pago incluidos en la factura
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-criterios-pago></app-form-criterios-pago>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Amortización del anticipo
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-amortizacion-anticipo></app-form-amortizacion-anticipo>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Detalle factura para proyectos asociados
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-detalle-factura-proyectos-asociados></app-detalle-factura-proyectos-asociados>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Datos de la factura
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-datos-factura></app-form-datos-factura>
+                </mat-expansion-panel>
+                <div style="margin-top: 1em;">
+                    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+                        Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
+                        sección anterior
+                    </div>
                 </div>
-            </div>
-        </mat-accordion>
-    </mat-expansion-panel>
-</mat-accordion>
+            </mat-accordion>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<div *ngIf="this.obj2==true">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title sin-diligenciar">
+                    Fase 2 - Construcción
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Criterios de pago incluidos en la factura
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-criterios-pago></app-form-criterios-pago>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Detalle factura para proyectos asociados
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-detalle-factura-proyectos-asociados></app-detalle-factura-proyectos-asociados>
+                </mat-expansion-panel>
+                <mat-expansion-panel class="expansion-style sub-expansion-black">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            Datos de la factura
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-datos-factura-construccion-rvrp></app-datos-factura-construccion-rvrp>
+                </mat-expansion-panel>
+                <div style="margin-top: 1em;">
+                    <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+                        Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
+                        sección anterior
+                    </div>
+                </div>
+            </mat-accordion>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
 <mat-accordion>
     <mat-expansion-panel class="expansion-style sub-expansion">
         <mat-expansion-panel-header class="expansion-style--header">

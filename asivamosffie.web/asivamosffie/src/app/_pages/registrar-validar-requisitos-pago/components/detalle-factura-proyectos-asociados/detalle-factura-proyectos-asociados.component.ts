@@ -19,7 +19,8 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     'departamento',
     'municipio',
     'institucionEducativa',
-    'sede'
+    'sede',
+    'validar'
   ];
   dataTable: any[] = [
     {
@@ -47,5 +48,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
-
+  addProject(elemento: any) {
+    console.log(elemento);
+  }
 }
