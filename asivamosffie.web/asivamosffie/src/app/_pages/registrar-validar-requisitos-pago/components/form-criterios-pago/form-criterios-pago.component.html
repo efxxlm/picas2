@@ -90,7 +90,7 @@
       </mat-card-content>
     </mat-card>
     <div class="text-right">
-      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteCriterio( i, criterio.get( 'estadoCodigo' ).value )">
+      <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteCriterio( i, criterio.get( 'estadoCodigo' ).value, criterio.get( 'codigo' ).value )">
         <img src="assets/img/icon/menos.svg">
         Eliminar criterio
       </button>

@@ -199,18 +199,36 @@ export class FormCriteriosPagoComponent implements OnInit {
         return dialogRef.afterClosed();
     }
 
-    deleteCriterio( index: number, estadoCodigo: number ) {
+    deleteCriterio( index: number, estadoCodigo: number, codigo: string ) {
         this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
             .subscribe(
                 value => {
                     if ( value === true ) {
                         if ( estadoCodigo === 0 ) {
                             this.criterios.removeAt( index );
+                            const criteriosSeleccionados = this.addressForm.get( 'criterioPago' ).value;
+                            if ( criteriosSeleccionados !== null && criteriosSeleccionados.length > 0 ) {
+                                criteriosSeleccionados.forEach( ( value, index ) => {
+                                    if ( value === codigo ) {
+                                        criteriosSeleccionados.splice( index, 1 );
+                                    }
+                                } );
+                            }
+                            this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
                             this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                         } else {
                             this.criterios.removeAt( index );
+                            const criteriosSeleccionados = this.addressForm.get( 'criterioPago' ).value;
+                            if ( criteriosSeleccionados !== null && criteriosSeleccionados.length > 0 ) {
+                                criteriosSeleccionados.forEach( ( value, index ) => {
+                                    if ( value === codigo ) {
+                                        criteriosSeleccionados.splice( index, 1 );
+                                    }
+                                } );
+                            }
+                            this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
                             this.openDialog( '', '<b>Falta el servicio.</b>' );
-                            this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                            // this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
                         }
                     }
                 }
