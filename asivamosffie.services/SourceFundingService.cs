@@ -242,6 +242,22 @@ namespace asivamosffie.services
 
             try
             {
+                //verifico que no tenga relación con proyectos
+                var proyectoFuentes = _context.ProyectoFuentes.Where(x => x.FuenteId==id && !(bool)x.Eliminado).Count();
+                if(proyectoFuentes>0)
+                {
+                    return
+                      new Respuesta
+                      {
+                          IsSuccessful = true,
+                          IsException = false,
+                          IsValidation = false,
+                          Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
+                      };
+                }
+
+
                 var entity = await _context.FuenteFinanciacion.FindAsync(id);
                 entity.FechaModificacion = DateTime.Now;
                 entity.UsuarioModificacion = UsuarioModifico;
