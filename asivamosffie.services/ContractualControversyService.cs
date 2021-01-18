@@ -3170,7 +3170,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    prmMesa.FechaCreacion = DateTime.Now;
+                    prmMesa.FechaCreacion = DateTime.Now;                    
                     _context.ControversiaActuacionMesa.Add(prmMesa);
                 }
                 //al papa le cambio el estado
@@ -3205,7 +3205,7 @@ namespace asivamosffie.services
 
         public async Task<List<ControversiaActuacionMesa>> GetMesasByControversiaActuacionId(int pControversiaId)
         {
-            var mesas = _context.ControversiaActuacionMesa.Where(x=>x.ControversiaActuacionl.ControversiaContractualId== pControversiaId).ToList();
+            var mesas = _context.ControversiaActuacionMesa.Where(x=>x.ControversiaActuacion.ControversiaContractualId== pControversiaId).ToList();
             foreach(var mesa in mesas)
             {
                var  EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(mesa.EstadoAvanceMesaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
@@ -3223,10 +3223,10 @@ namespace asivamosffie.services
             {
                 ControversiaActuacionMesa actuacionSeguimientoOld;
 
-                actuacionSeguimientoOld = _context.ControversiaActuacionMesa.Find(pControversiaActuacionId);
+                actuacionSeguimientoOld = _context.ControversiaActuacionMesa.Where(x=>x.ControversiaActuacionId==pControversiaActuacionId).FirstOrDefault();
                 actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
                 actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
-                actuacionSeguimientoOld.EstadoAvanceMesaCodigo = "3";//cambiar
+                actuacionSeguimientoOld.EstadoAvanceMesaCodigo = "2";//cambiar
                 _context.ControversiaActuacionMesa.Update(actuacionSeguimientoOld);
                 _context.SaveChanges();
 
@@ -3503,7 +3503,7 @@ namespace asivamosffie.services
                     }
 
                     int ActuacionSeguimientoIdTmp = 0;
-                    ControversiaActuacionMesa controversiamesa = _context.ControversiaActuacionMesa.Where(x=>!(bool)x.Eliminado && x.ControversiaActuacionlId==controversia.ControversiaActuacionId).FirstOrDefault();
+                    ControversiaActuacionMesa controversiamesa = _context.ControversiaActuacionMesa.Where(x=>!(bool)x.Eliminado && x.ControversiaActuacionId==controversia.ControversiaActuacionId).FirstOrDefault();
                     string stadomesa = "";
                     if(controversiamesa!=null)
                     {
@@ -3563,6 +3563,92 @@ namespace asivamosffie.services
                 }
             }
             return ListControversiaContractualGrilla.OrderByDescending(r => r.ActuacionId).ToList();
+        }
+
+        public async Task<List<ControversiaActuacionMesaSeguimiento>> GetActuacionesMesasByActuacionId(int pActuacionId)
+        {
+            var mesas = _context.ControversiaActuacionMesaSeguimiento.Where(x => x.ControversiaActuacionMesa.ControversiaActuacionId == pActuacionId).ToList();
+            foreach (var mesa in mesas)
+            {
+                var EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(mesa.EstadoAvanceMesaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
+                mesa.EstadoRegistroString = mesa.EsCompleto ? "Completo" : "Incompleto";
+                mesa.EstadoAvanceMesaString = EstadoActuacionReclamacion == null ? "" : EstadoActuacionReclamacion.Nombre;
+            }
+            return mesas;
+        }
+
+        public async Task<Respuesta> EliminacionActuacionMesa(int pControversiaActuacionMesaId, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ControversiaActuacionMesaSeguimiento actuacionSeguimientoOld;
+
+                actuacionSeguimientoOld = _context.ControversiaActuacionMesaSeguimiento.Find(pControversiaActuacionMesaId);
+                actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
+                actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
+                actuacionSeguimientoOld.Eliminado = true;
+                _context.ControversiaActuacionMesaSeguimiento.Update(actuacionSeguimientoOld);
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, pUsuarioModifica, "ELIMINAR ACTUACION MESA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
+        }
+
+        public async Task<Respuesta> EliminacionMesa(int pControversiaMesaId, string pUsuarioModifica)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Cambiar_estado_Actuacion_Seguimiento, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                ControversiaActuacionMesa actuacionSeguimientoOld;
+
+                actuacionSeguimientoOld = _context.ControversiaActuacionMesa.Find(pControversiaMesaId);
+                actuacionSeguimientoOld.UsuarioModificacion = pUsuarioModifica;
+                actuacionSeguimientoOld.FechaModificacion = DateTime.Now;
+                actuacionSeguimientoOld.Eliminado = true;
+                _context.ControversiaActuacionMesa.Update(actuacionSeguimientoOld);
+                _context.SaveChanges();
+
+                return new Respuesta
+                {
+                    IsSuccessful = true,
+                    IsException = false,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.OperacionExitosa,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.OperacionExitosa, idAccion, pUsuarioModifica, "ELIMINAR MESA")
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Respuesta
+                {
+                    IsSuccessful = false,
+                    IsException = true,
+                    IsValidation = false,
+                    Code = ConstantMessagesContractualControversy.Error,
+                    Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Gestionar_controversias_contractuales, ConstantMessagesContractualControversy.Error, idAccion, pUsuarioModifica, ex.InnerException.ToString())
+                };
+            }
         }
     }
 }

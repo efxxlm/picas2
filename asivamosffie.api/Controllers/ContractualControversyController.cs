@@ -732,6 +732,24 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
+
+        /*4.2.1*/
+        [HttpGet]
+        [Route("GetActuacionesMesasByActuacionId")]
+        public async Task<List<ControversiaActuacionMesaSeguimiento>> GetActuacionesMesasByActuacionId(int pActuacionId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                return await _contractualControversy.GetActuacionesMesasByActuacionId(pActuacionId);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /*4.2.1*/
         [HttpPut]
         [Route("SetStateActuacionMesa")]
@@ -764,6 +782,40 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        [HttpPost]
+        [Route("EliminacionActuacionMesa")]
+        public async Task<IActionResult> EliminacionActuacionMesa([FromQuery] int pControversiaActuacionMesaId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.EliminacionActuacionMesa(pControversiaActuacionMesaId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+        [HttpPost]
+        [Route("EliminacionMesa")]
+        public async Task<IActionResult> EliminacionMesa([FromQuery] int pMesaId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _contractualControversy.EliminacionMesa(pMesaId, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
             }
         }
     }
