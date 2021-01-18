@@ -63,7 +63,6 @@ export class TablaProcesosComponent implements OnInit {
         
         if(proceso.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
         {
-          console.log(proceso.numeroProceso);
           
           //valido si esta incompleto si no tiene datos de evaluacion y proponentes seleccionados
           if(proceso.evaluacionDescripcion!="" 
@@ -71,7 +70,6 @@ export class TablaProcesosComponent implements OnInit {
         
         )
           {
-            console.log("estan vacios");
             //si cerrada debe tener contratista
             if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Cerrada)
             {

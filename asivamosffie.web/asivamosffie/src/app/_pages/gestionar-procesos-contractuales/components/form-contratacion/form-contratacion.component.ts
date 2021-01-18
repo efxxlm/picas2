@@ -6,6 +6,7 @@ import { DataSolicitud } from '../../../../_interfaces/procesosContractuales.int
 import { CommonService } from '../../../../core/_services/common/common.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { DisponibilidadPresupuestalService } from 'src/app/core/_services/disponibilidadPresupuestal/disponibilidad-presupuestal.service';
 
 @Component({
   selector: 'app-form-contratacion',
@@ -58,7 +59,8 @@ export class FormContratacionComponent implements OnInit {
                 private routes: Router,
                 private commonSvc: CommonService,
                 private dialog: MatDialog,
-                private procesosContractualesSvc: ProcesosContractualesService ) {
+                private procesosContractualesSvc: ProcesosContractualesService,
+                private disponibilidadServices:DisponibilidadPresupuestalService ) {
     this.getContratacion( this.activatedRoute.snapshot.params.id );
     this.crearFormulario();
     if ( this.routes.getCurrentNavigation().extras.replaceUrl || undefined ) {
@@ -117,7 +119,7 @@ export class FormContratacionComponent implements OnInit {
       } );
 
   };
-
+/*
   getDdp ( sesionComiteSolicitudId: number, numeroDdp: string ) {
     this.procesosContractualesSvc.getDdp( sesionComiteSolicitudId )
       .subscribe( resp => {
@@ -136,6 +138,27 @@ export class FormContratacionComponent implements OnInit {
         anchor.click();
       } );
   };
+*/
+  getDdp(sesionComiteSolicitudId: number, numeroDdp: string )
+  {
+    
+    this.disponibilidadServices.GenerateDDP(sesionComiteSolicitudId).subscribe((listas:any) => {
+      console.log(listas);
+      let documento = '';
+        if ( numeroDdp !== undefined ) {
+          documento = `${ numeroDdp }.pdf`;
+        } else {
+          documento = `DDP.pdf`;
+        };
+        const text = documento,
+          blob = new Blob([listas], { type: 'application/pdf' }),
+          anchor = document.createElement('a');
+        anchor.download = documento;
+        anchor.href = window.URL.createObjectURL(blob);
+        anchor.dataset.downloadurl = ['application/pdf', anchor.download, anchor.href].join(':');
+        anchor.click();
+    });
+  }
 
   openDialog(modalTitle: string, modalText: string) {
     const dialogRef = this.dialog.open(ModalDialogComponent, {
