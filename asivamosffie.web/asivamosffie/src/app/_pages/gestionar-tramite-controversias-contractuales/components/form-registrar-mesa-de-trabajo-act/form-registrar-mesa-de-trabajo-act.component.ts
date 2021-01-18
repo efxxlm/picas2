@@ -14,7 +14,8 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
 
   @Input() isEditable;
-
+  
+  public actuacionID = parseInt(localStorage.getItem("idMesaTrabajo"));
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -92,9 +93,9 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
     if (this.isEditable == true) {
       mesaTrabajoArray =
       {
-        "controversiaActuacionMesaId": 1,
-        "controversiaActuacionId": 1,
-        "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite,
+        "ControversiaActuacionMesaSeguimientoId": 1,
+        "ControversiaActuacionMesaId": this.actuacionID,
+        "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
         "proximaActuacionRequerida": this.addressForm.value.proximaActuacionRequerida,
@@ -108,8 +109,8 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
     else {
       mesaTrabajoArray =
       {
-        "controversiaActuacionId": 1,
-        "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite,
+        "ControversiaActuacionMesaId": this.actuacionID,
+        "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
         "proximaActuacionRequerida": this.addressForm.value.proximaActuacionRequerida,

@@ -24,8 +24,7 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     'gestion',
   ];
   dataTable: any[] = [];  
-  //public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
-  public reclamacionId = parseInt(localStorage.getItem("controversiaID"));
+  public reclamacionId = parseInt(localStorage.getItem("reclamacionID"));
   constructor(private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
@@ -42,7 +41,7 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   enviarComiteTecnicoTramAct(id){
-    this.services.CambiarEstadoControversiaActuacion(id,"2").subscribe((resp:any)=>{
+    this.services.CambiarEstadoActuacionSeguimientoActuacion(id,"2").subscribe((resp:any)=>{
       this.ngOnInit();
     });
   }
@@ -51,7 +50,9 @@ export class ControlYTablaActuacionReclamacionComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarActuacionReclamacion',id]);
   }
   eliminarActuacion(id){
-
+    this.services.EliminarActuacionSeguimientoActuacion(id).subscribe((a:any)=>{
+      this.ngOnInit();
+    });
   }
   verDetalleActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleActuacionReclamacion',id]);

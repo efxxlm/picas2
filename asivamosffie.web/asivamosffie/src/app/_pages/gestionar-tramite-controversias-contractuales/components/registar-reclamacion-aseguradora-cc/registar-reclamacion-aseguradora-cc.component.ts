@@ -8,7 +8,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RegistarReclamacionAseguradoraCcComponent implements OnInit {
   idControversia: any;
-
+  actuacion = localStorage.getItem("actuacion");
+  numActuacion = localStorage.getItem("numeroActuacion"); 
   constructor(private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {

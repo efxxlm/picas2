@@ -10,7 +10,7 @@ export class VerDetalleeditarActuacionReclmComponent implements OnInit {
   
   idControversia: any;
   idReclamacionActuacion:any;
-  public codRecalamacion = localStorage.getItem('codReclamacion');
+  public codRecalamacion;
   public codReclamacionActuacion = localStorage.getItem('actuacionReclamacion');
   constructor(private activatedRoute: ActivatedRoute) { }
 

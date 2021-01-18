@@ -19,7 +19,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> InsertEditControversiaMotivo(ControversiaMotivo controversiaMotivo);
 
-        Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual(int pControversiaContractualId = 0);
+        Task<List<GrillaTipoSolicitudControversiaContractual>> ListGrillaTipoSolicitudControversiaContractual(int pControversiaContractualId = 0);        
 
         Task<VistaContratoContratista> GetVistaContratoContratista(int pContratoId);
 
@@ -48,7 +48,7 @@ namespace asivamosffie.services.Interfaces
 
         Task<Respuesta> CambiarEstadoControversiaContractual(int pControversiaContractualId, string pNuevoCodigoEstado, string pUsuarioModifica);
 
-        Task<Respuesta> CambiarEstadoActuacionSeguimiento(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string pUsuarioModifica);
+        Task<Respuesta> CambiarEstadoActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string pUsuarioModifica);
         Task<Respuesta> ActualizarRutaSoporteControversiaContractual(int pControversiaContractualId, string pRutaSoporte, string pUsuarioModifica);
         Task<Respuesta> ActualizarRutaSoporteControversiaActuacion(int pControversiaActuacionId, string pRutaSoporte, string pUsuarioModifica);
         Task<Respuesta> EliminarControversiaActuacion(int pControversiaActuacionId, string pUsuario);
@@ -67,5 +67,10 @@ namespace asivamosffie.services.Interfaces
         Task<List<ControversiaActuacionMesaSeguimiento>> GetActuacionesMesasByMesaId(int pControversiaActuacionMesaID);
         Task<Respuesta> CreateEditarActuacionMesa(ControversiaActuacionMesaSeguimiento controversiaActuacionMesa);
         Task<ControversiaActuacionMesaSeguimiento> GetActuacionMesaByActuacionMesaId(int pControversiaActuacionMesaID);
+        Task<Respuesta> CambiarEstadoActuacionReclamacion(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string value);
+        Task<Respuesta> CambiarEstadoActuacionReclamacionSeguimiento(int pActuacionId, string pEstadoReclamacionCodigo, string value);
+        Task<Respuesta> EliminarActuacionSeguimientoActuacion(int pActuacionSeguimientoId, string value);
+        Task<Respuesta> CambiarEstadoActuacionSeguimiento(int pActuacionSeguimientoId, string pEstadoReclamacionCodigo, string value);
+        Task<List<GrillaControversiaActuacionEstado>> GetListGrillMesasByControversiaActuacionId(int id);
     }
 }

@@ -68,6 +68,9 @@ export class ContractualControversyService implements OnInit{
   CambiarEstadoControversiaContractual(pControversiaContractualId:number, pNuevoCodigoEstado:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoControversiaContractual?pControversiaContractualId=${pControversiaContractualId}&pNuevoCodigoEstado=${pNuevoCodigoEstado}`, null);  
   }
+  CambiarEstadoActuacionReclamacion(pActuacionId:number, pEstadoReclamacionCodigo:string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoActuacionReclamacion?pActuacionId=${pActuacionId}&pEstadoReclamacionCodigo=${pEstadoReclamacionCodigo}`, null);
+  }
   EliminarControversiaContractual(pControversiaContractualId:number){
     return this.http.post<EliminarControversiaContractual>(`${environment.apiUrl}/ContractualControversy/EliminarControversiaContractual?pControversiaContractualId=${pControversiaContractualId}`,null);
   }
@@ -100,6 +103,15 @@ export class ContractualControversyService implements OnInit{
   }
   CreateEditarReclamacion(prmReclamacion: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarReclamacion`, prmReclamacion);
+  }
+  CambiarEstadoActuacionSeguimientoActuacion(pActuacionSeguimientoId: number, pEstadoReclamacionCodigo: string){
+    return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/CambiarEstadoActuacionSeguimientoActuacion?pActuacionSeguimientoId=${pActuacionSeguimientoId}&pEstadoReclamacionCodigo=${pEstadoReclamacionCodigo}`, null);
+  }
+  EliminarActuacionSeguimientoActuacion(pActuacionSeguimientoId:number){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/EliminarActuacionSeguimientoActuacion?pActuacionSeguimientoId=${pActuacionSeguimientoId}`, null);
+  }
+  GetListGrillMesasByControversiaId(id:number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetListGrillMesasByControversiaId?id=${id}`);
   }
   CreateEditarMesa(prmMesa: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarMesa`, prmMesa);
