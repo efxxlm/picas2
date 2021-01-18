@@ -2437,22 +2437,6 @@ namespace asivamosffie.services
                     }
 
                     GrillaActuacionSeguimiento RegistroActuacionSeguimiento = null;
-                    
-                            //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
-                            RegistroActuacionSeguimiento = new GrillaActuacionSeguimiento
-                            {
-                                ActuacionSeguimientoId = actuacionSeguimiento.ActuacionSeguimientoId,
-                                NumeroActuacion = actuacionSeguimiento.ActuacionAdelantada,
-                                NumeroActuacionFormat = "ACT controversia " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
-                                EstadoActuacion = EstadoActuacion==null?"": EstadoActuacion.Nombre,
-                                EstadoRegistro = actuacionSeguimiento.RegistroCompleto?"Completo":"Incompleto",
-                                EstadoActuacionCodigo= actuacionSeguimiento.EstadoDerivadaCodigo,
-                                EstadoReclamacionCodigo = actuacionSeguimiento.EstadoReclamacionCodigo,
-                                FechaActualizacion = actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
-                                NumeroReclamacion = "ACT_REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
-                                Actuacion = "Actuación " + actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
-                                ControversiaActuacionId = actuacionSeguimiento.ControversiaActuacionId,
-                                //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",                        
 
                     //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     RegistroActuacionSeguimiento = new GrillaActuacionSeguimiento
@@ -2465,11 +2449,12 @@ namespace asivamosffie.services
                         EstadoActuacionCodigo = actuacionSeguimiento.EstadoDerivadaCodigo,
                         EstadoReclamacionCodigo = actuacionSeguimiento.EstadoReclamacionCodigo,
                         FechaActualizacion = actuacionSeguimiento.FechaActuacionAdelantada != null ? Convert.ToDateTime(actuacionSeguimiento.FechaModificacion).ToString("dd/MM/yyyy") : actuacionSeguimiento.FechaModificacion.ToString(),
-                        NumeroReclamacion = "REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
+                        NumeroReclamacion = "ACT_REC " + actuacionSeguimiento.ActuacionSeguimientoId.ToString("0000"),
                         Actuacion = "Actuación " + actuacionSeguimiento.ActuacionSeguimientoId.ToString(),
                         ControversiaActuacionId = actuacionSeguimiento.ControversiaActuacionId,
                         //RegistroCompletoActuacion = (bool)controversia.EsCompleto ? "Completo" : "Incompleto",                        
 
+                        //Dominio EstadoSolicitudCodigoContratoPoliza = await _commonService.GetDominioByNombreDominioAndTipoDominio(contratoPoliza.TipoSolicitudCodigo, (int)EnumeratorTipoDominio.Estado_Contrato_Poliza);
                     };
 
                     if (RegistroActuacionSeguimiento != null)
