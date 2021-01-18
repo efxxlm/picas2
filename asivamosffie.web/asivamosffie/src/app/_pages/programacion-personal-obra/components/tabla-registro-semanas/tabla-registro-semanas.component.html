@@ -13,12 +13,14 @@
                         <mat-form-field style="width: 2.5em;" *ngIf="semana[0] !== undefined && semana[0].seguimientoSemanalPersonalObra.length > 0">
                             <input  matInput
                                     type="number"
-                                    max="100"
+                                    max="999"
                                     min="0"
+                                    maxlength="3"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
                                     [(ngModel)]="semana[0].seguimientoSemanalPersonalObra[0].cantidadPersonal"
+                                    name="cantPersonal"
                                     required
-                                    style="width: 2em;"
-                                    #cantPersonal>
+                                    style="width: 2em;">
                         </mat-form-field>
                     </div>
                 </section>

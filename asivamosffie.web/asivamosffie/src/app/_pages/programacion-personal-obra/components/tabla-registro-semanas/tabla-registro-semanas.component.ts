@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
@@ -16,15 +17,13 @@ export class TablaRegistroSemanasComponent implements OnInit {
   @Input() registroSemanas: DetalleProgramacionPersonal[];
   @Input() contratoConstruccionId: number;
   @Output() seRealizoPeticion = new EventEmitter<boolean>();
-  @ViewChild( 'cantPersonal', { static: true } ) cantidadPersonal: ElementRef;
   registroSemanasTabla: any[] = [];
 
   constructor(
     private dialog: MatDialog,
     private programacionPersonalSvc: ProgramacionPersonalObraService,
     private routes: Router )
-  {
-  }
+  {}
 
   ngOnInit(): void {
     if ( this.registroSemanas !== undefined ) {
