@@ -27,38 +27,41 @@
 
             <ng-container matColumnDef="numReclamacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de mesa de trabajo </th>
-                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroMesa }} </td>
+                <td mat-cell *matCellDef="let element" align="center"> 
+                <div *ngIf="element.numeroMesa!=''">{{ element.numeroMesa }}</div>    
+                <div *ngIf="element.numeroMesa==''">----</div>  
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="estadoReclamacion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la mesa de trabajo </th>
                 <td mat-cell *matCellDef="let element" align="center"> 
-                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='1'"> Sin registro </div> 
-                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='2'"> En proceso de registro </div> 
-                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='3'"> Finalizada </div> 
+                    <div *ngIf="element.estadoMesa==''"> Sin registro </div> 
+                    <div *ngIf="element.estadoMesa=='1'"> En proceso de registro </div> 
+                    <div *ngIf="element.estadoMesa=='2'"> Finalizada </div> 
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="gestion">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>
                 <td mat-cell *matCellDef="let element">
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='1'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa==''"
                         (click)="this.registrarNuevaMesa(element.actuacionId)">
                         Registrar nueva mesa de trabajo
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='2'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='1'"
                         (click)="this.finalizarMesaTrabajo(element.actuacionId)">
                         Finalizar mesa de trabajo
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='2'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='1'"
                         (click)="this.verDetalleEditar(element.actuacionId)">
                         Ver detalle/Editar
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='3'"
-                        (click)="this.actualizarMesaTrabajo(element.actuacionId)">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='2'"
+                        (click)="this.actualizarMesaTrabajo(element.actuacionId,element.numeroMesa,element.mesaId)">
                         Actualizar mesa de trabajo
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='3'"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='2'"
                         (click)="this.verDetalleMesaTrabajo(element.actuacionId)">
                         Ver detalle
                     </button>

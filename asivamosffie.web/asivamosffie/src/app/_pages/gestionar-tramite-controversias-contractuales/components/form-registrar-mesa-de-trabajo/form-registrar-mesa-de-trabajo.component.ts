@@ -13,7 +13,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
   @Input() isEditable;
-
+  @Input() idActuacion;
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -91,7 +91,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
       mesaTrabajoArray =
       {
         "controversiaActuacionMesaId": 2,
-        "controversiaActuacionId": 24,
+        "controversiaActuacionId": parseInt(this.idActuacion),
         "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
@@ -106,8 +106,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     else {
       mesaTrabajoArray =
       {
-        "controversiaActuacionMesaId": 2,
-        "controversiaActuacionId": 24,
+        "controversiaActuacionId": parseInt(this.idActuacion),
         "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,

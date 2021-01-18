@@ -14,8 +14,9 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
 
   @Input() isEditable;
-  
+  @Input() idSeguimientoMesa;
   public actuacionID = parseInt(localStorage.getItem("idMesaTrabajo"));
+  public mesaID = parseInt(localStorage.getItem("idMesa"));
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -28,7 +29,7 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
     urlSoporte: [null, Validators.required]
   });
   estadoAvanceTramiteArray = [
-  
+
   ];
   actuacionAdelantadaArray = [
     { name: 'Otro', value: '1' },
@@ -47,7 +48,7 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(private fb: FormBuilder, public dialog: MatDialog,private services: ContractualControversyService, private common: CommonService,private router: Router) { }
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
 
   ngOnInit(): void {
     if (this.isEditable == true) {
@@ -59,7 +60,7 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
       this.addressForm.get('diasVencimientoTerminos').setValue('3');
       this.addressForm.get('resultadoDefinitivo').setValue(true);
     }
-    this.common.listaEstadoAvanceMesaTrabajo().subscribe(a=>{
+    this.common.listaEstadoAvanceMesaTrabajo().subscribe(a => {
       this.estadoAvanceTramiteArray = a;
     });
   }
@@ -93,8 +94,8 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
     if (this.isEditable == true) {
       mesaTrabajoArray =
       {
-        "ControversiaActuacionMesaSeguimientoId": 1,
-        "ControversiaActuacionMesaId": this.actuacionID,
+        "ControversiaActuacionMesaSeguimientoId": this.idSeguimientoMesa,
+        "ControversiaActuacionMesaId": this.mesaID,
         "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
@@ -109,7 +110,7 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
     else {
       mesaTrabajoArray =
       {
-        "ControversiaActuacionMesaId": this.actuacionID,
+        "ControversiaActuacionMesaId": this.mesaID,
         "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
         "actuacionAdelantada": this.addressForm.value.actuacionAdelantada,
@@ -121,12 +122,12 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
         "rutaSoporte": this.addressForm.value.urlSoporte
       }
     }
-    this.services.CreateEditarActuacionMesa(mesaTrabajoArray).subscribe((data:any)=>{
-      if (data.isSuccessful==true){
+    this.services.CreateEditarActuacionMesa(mesaTrabajoArray).subscribe((data: any) => {
+      if (data.isSuccessful == true) {
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo']);
       }
-      else{
+      else {
         this.openDialog('', data.message);
       }
     });

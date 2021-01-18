@@ -53,8 +53,10 @@ export class ControlYTablaMesasTrabajoCcComponent implements OnInit {
   verDetalleMesaTrabajo(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajo',id]);
   }
-  actualizarMesaTrabajo(id){
+  actualizarMesaTrabajo(id,codeMT,idMesa){
     localStorage.setItem("idMesaTrabajo",id);
+    localStorage.setItem("nomMesaTrabajo",codeMT);
+    localStorage.setItem("idMesa",idMesa);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarMesaTrabajo']);
   } 
 }
