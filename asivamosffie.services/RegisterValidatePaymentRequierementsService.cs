@@ -44,7 +44,7 @@ namespace asivamosffie.services
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
             return await _context.Contrato
-                 .Where(c => c.ContratacionId == pContratoId)
+                 .Where(c => c.ContratoId == pContratoId)
                  .Include(c => c.Contratacion)
                     .ThenInclude(c => c.Contratista)
                  .Include(c => c.Contratacion)
