@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 namespace asivamosffie.model.Models
 {
-    public partial class SolicitudPagoSoporteSolicitud
+    public partial class SolicitudPagoAmortizacion
     {
-        public int SolicitudPagoSoporteSolicitudId { get; set; }
-        public int? SolicitudPagoId { get; set; }
-        public string UrlSoporte { get; set; }
+        public int SolicitudPagoFaseAmortizacionAnticipoId { get; set; }
+        public int? SolicitudPagoFaseId { get; set; }
+        public int? PorcentajeAmortizacion { get; set; }
+        public decimal? ValorAmortizacion { get; set; }
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaCreacion { get; set; }
         public string UsuarioModificacion { get; set; }
@@ -15,6 +16,6 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
         public bool? RegistroCompleto { get; set; }
 
-        public virtual SolicitudPago SolicitudPago { get; set; }
+        public virtual SolicitudPagoFase SolicitudPagoFase { get; set; }
     }
 }

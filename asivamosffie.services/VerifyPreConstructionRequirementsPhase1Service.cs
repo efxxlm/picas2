@@ -382,8 +382,7 @@ namespace asivamosffie.services
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRequeridas.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvRecibidas.ToString())
                  || string.IsNullOrEmpty(contratoPerfilOld.CantidadHvAprobadas.ToString())
-                 || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString())
-
+                 || string.IsNullOrEmpty(contratoPerfilOld.FechaAprobacion.ToString()) 
                  || string.IsNullOrEmpty(contratoPerfilOld.RutaSoporte)
 
                 //|| string.IsNullOrEmpty(contratoPerfilOld.ConObervacionesSupervision.ToString() 

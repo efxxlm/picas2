@@ -701,8 +701,7 @@ namespace asivamosffie.services.Helpers.Constant
     }
 
     public class RegisterPreContructionPhase1
-    {
-
+    { 
         #region Mensajes Informativos
 
 
@@ -797,8 +796,7 @@ namespace asivamosffie.services.Helpers.Constant
         #endregion Mensajes Redireccion
 
     }
-
-
+     
     public class ConstanMessagesRegisterWeeklyProgress {
         #region Mensajes Informativos
 

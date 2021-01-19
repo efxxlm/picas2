@@ -10,8 +10,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Proyecto = 10,
         Fuentes = 14,
         Aportantes = 15,
-        Contratacion_Proyecto = 17, 
-        Procesos_Seleccion = 18, 
+        Contratacion_Proyecto = 17,
+        Procesos_Seleccion = 18,
         Procesos_Seleccion_Cronograma = 20,
         Procesos_Seleccion_Grupo = 21,
         CargueMasivoOrdenes = 22,
@@ -23,30 +23,30 @@ namespace asivamosffie.services.Helpers.Enumerator
         DisponibilidadPresupuestal = 30,
         Gestionar_Procesos_Contractuales = 31,
 
-        
-       GestionarGarantias= 35,
- 
-        Generar_Registro_Presupuestal=36,
+
+        GestionarGarantias = 35,
+
+        Generar_Registro_Presupuestal = 36,
         Gestionar_acta_inicio_fase_2 = 42,
         Registrar_contratos_modificaciones_contractuales = 46,
 
         Registrar_seguimiento_diario = 53,
         Verificar_seguimiento_diario = 54,
 
-        Preconstruccion_Fase_1 = 37,   
+        Preconstruccion_Fase_1 = 37,
         Registrar_Requisitos_Tecnicos_Construccion = 41,
-     	Registrar_Programacion_Personal_Obra = 48,
-        Gestionar_controversias_contractuales=47, 
+        Registrar_Programacion_Personal_Obra = 48,
+        Gestionar_controversias_contractuales = 47,
         Gestionar_procesos_Defensa_Judicial = 52,
         Registrar_Avance_Semanal = 55,
         Verificar_Requisitos_Tecnicos_Construccion = 45,
 
-         Registrar_solicitud_novedad_contractual= 50,      
-        Registrar_actuaciones_controversias_contractuales=57,
+        Registrar_solicitud_novedad_contractual = 50,
+        Registrar_actuaciones_controversias_contractuales = 57,
+         
+        Cargar_enlace_monitoreo = 43,
 
-
-        Cargar_enlace_monitoreo=43,
-
+        Registrar_validar_requisitos_de_pago = 63
 
     }
 
@@ -57,13 +57,13 @@ namespace asivamosffie.services.Helpers.Enumerator
         SolicitarContraseña = 53,
         CrearActualizarCofinanciacion = 55,
         Error = 56,
-        ValidarExcel = 63, 
+        ValidarExcel = 63,
         CargueProyectosMasivos = 69,
         DescargarExcelProyectos = 75,
         CargueOrdenesMasivos = 76,
         DescargarExcelOrdenes = 77,
-        Notificacion_Gestion_Poliza = 90, 
-        Crear_Editar_ProcesoSeleccion_Grupo= 29
+        Notificacion_Gestion_Poliza = 90,
+        Crear_Editar_ProcesoSeleccion_Grupo = 29
 
     }
 

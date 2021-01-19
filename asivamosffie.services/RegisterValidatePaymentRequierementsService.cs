@@ -17,6 +17,7 @@ namespace asivamosffie.services
 {
     public class RegisterValidatePaymentRequierementsService : IRegisterValidatePaymentRequierementsService
     {
+
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
@@ -87,5 +88,75 @@ namespace asivamosffie.services
         }
 
         #endregion
+
+        #region Create Edit 
+
+        public async Task<Respuesta> CreateEditNewPaymentWayToPay(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId > 0)
+                {
+                    SolicitudPagoCargarFormaPago solicitudPagoCargarFormaPagoOld = _context.SolicitudPagoCargarFormaPago.Find(pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId);
+                    solicitudPagoCargarFormaPagoOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoCargarFormaPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
+                    solicitudPagoCargarFormaPagoOld.FaseConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo;
+                    solicitudPagoCargarFormaPagoOld.FasePreConstruccionFormaPagoCodigo = pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo;
+
+                }
+                else
+                {
+                    pSolicitudPagoCargarFormaPago.FechaCreacion = DateTime.Now;
+                    pSolicitudPagoCargarFormaPago.Eliminado = false;
+                    pSolicitudPagoCargarFormaPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoCargarFormaPago(pSolicitudPagoCargarFormaPago);
+
+                    _context.SolicitudPagoCargarFormaPago.Add(pSolicitudPagoCargarFormaPago);
+                }
+
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPagoCargarFormaPago.UsuarioCreacion, pSolicitudPagoCargarFormaPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoCargarFormaPago.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            } 
+        }
+
+
+        #endregion
+
+        #region Validate Complete Form
+        private bool ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
+        {
+            if (pSolicitudPagoCargarFormaPago.TieneFase1)
+                if (string.IsNullOrEmpty(pSolicitudPagoCargarFormaPago.FasePreConstruccionFormaPagoCodigo))
+                    return false;
+
+            if (string.IsNullOrEmpty(pSolicitudPagoCargarFormaPago.FaseConstruccionFormaPagoCodigo))
+                return false;
+
+            return true;
+        }
+
+
+        #endregion
+
     }
 }
