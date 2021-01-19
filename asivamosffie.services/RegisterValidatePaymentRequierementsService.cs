@@ -36,8 +36,7 @@ namespace asivamosffie.services
         {
             return await _context.Contrato
                                           .Include(c => c.Contratacion)
-                                          .Where(c => c.Contratacion.TipoContratacionCodigo == pTipoSolicitud
-                                                   && c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower()))
+                                          .Where( c=> c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower()))
                                                       .Select(r => new
                                                       {
                                                           r.ContratoId,
@@ -57,18 +56,20 @@ namespace asivamosffie.services
                     .FirstOrDefaultAsync();
         }
 
-        public async Task<dynamic> GetProyectos(int pContratoId)
+        public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
         {
-            return await _context.Contrato
-                 .Where(c => c.ContratacionId == pContratoId)
-                 .Include(c => c.Contratacion)
-                    .ThenInclude(c => c.Contratista)
-                 .Include(c => c.Contratacion)
-                    .ThenInclude(cp => cp.DisponibilidadPresupuestal)
-                    .FirstOrDefaultAsync();
+            return await _context.VProyectosXcontrato
+                                                    .Where(p => p.ContratoId == pContratoId)
+                                                                                            .Select(p =>new { 
+                                                                                                    p.LlaveMen,
+                                                                                                    p.TipoIntervencion,
+                                                                                                    p.Departamento,
+                                                                                                    p.Municipio,
+                                                                                                    p.InstitucionEducativa,
+                                                                                                    p.Sede 
+                                                                                            }).ToListAsync();
         }
-
-
+         
         #endregion
     }
 }
