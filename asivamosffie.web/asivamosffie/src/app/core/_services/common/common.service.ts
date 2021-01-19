@@ -265,6 +265,10 @@ listaEstadoRevision(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=131`);
   }
 
+  modalidadesContrato() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=132`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

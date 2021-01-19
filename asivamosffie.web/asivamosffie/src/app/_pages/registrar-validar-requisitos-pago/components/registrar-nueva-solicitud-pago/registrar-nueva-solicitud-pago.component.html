@@ -47,9 +47,8 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="modalidadContrato" required>
-                                            <mat-option *ngFor="let contr of modalidadContratoArray"
-                                                [value]="contr.value">
-                                                {{ contr.name }}
+                                            <mat-option *ngFor="let modalidad of modalidadContratoArray" [value]="modalidad">
+                                                {{ modalidad.nombre }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -57,25 +56,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="this.addressForm.value.modalidadContrato!=null">
+                    <div class="row" *ngIf="addressForm.get( 'modalidadContrato' ).value !== null">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="numeroContrato">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <mat-form-field class="full-width">
+                                    <mat-form-field class="full-width" #desplegable>
                                         <input matInput #numeroContrato type="text" maxlength="100" required
-                                            [matAutocomplete]="auto">
+                                            [matAutocomplete]="auto" formControlName="searchContrato">
                                         <mat-autocomplete #auto="matAutocomplete">
-                                            <mat-option (click)="seleccionAutocomplete(contr.value)"
-                                                *ngFor="let contr of contratosArray" [value]="contr.name">
-                                                {{contr.name}}
+                                            <mat-option *ngFor="let contrato of contratosArray" (click)="seleccionAutocomplete( contrato )" [value]="contrato.numeroContrato">
+                                                {{contrato.numeroContrato}}
                                             </mat-option>
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="numeroContrato">
                                     </mat-form-field>
-                                    <button mat-button color="primary" class="busqueda--img">
+                                    <button mat-button color="primary" class="busqueda--img" (click)="getContratos()">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
@@ -102,9 +100,8 @@
                                 <div class="col">
                                     <mat-form-field class="select-width">
                                         <mat-select formControlName="modalidadContrato" required>
-                                            <mat-option *ngFor="let contr of modalidadContratoArray"
-                                                [value]="contr.value">
-                                                {{ contr.name }}
+                                            <mat-option *ngFor="let modalidad of modalidadContratoArray" [value]="modalidad">
+                                                {{ modalidad.nombre }}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -112,25 +109,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" *ngIf="this.addressForm.value.modalidadContrato!=null">
+                    <div class="row" *ngIf="addressForm.get( 'modalidadContrato' ).value !== null">
                         <div class="col-md-8">
                             <div class="row">
                                 <div class="pr-1">
                                     <label class="label-left" for="numeroContrato">Número de contrato</label>
                                 </div>
                                 <div class="col d-flex">
-                                    <mat-form-field class="full-width">
+                                    <mat-form-field class="full-width" #desplegable>
                                         <input matInput #numeroContrato type="text" maxlength="100" required
-                                            [matAutocomplete]="auto">
+                                            [matAutocomplete]="auto" formControlName="searchContrato">
                                         <mat-autocomplete #auto="matAutocomplete">
-                                            <mat-option (click)="seleccionAutocomplete(contr.value)"
-                                                *ngFor="let contr of contratosArray" [value]="contr.name">
-                                                {{contr.name}}
+                                            <mat-option *ngFor="let contrato of contratosArray" (click)="seleccionAutocomplete( contrato )" [value]="contrato.numeroContrato">
+                                                {{contrato.numeroContrato}}
                                             </mat-option>
                                         </mat-autocomplete>
                                         <input type="hidden" formControlName="numeroContrato">
                                     </mat-form-field>
-                                    <button mat-button color="primary" class="busqueda--img">
+                                    <button mat-button color="primary" class="busqueda--img" (click)="getContratos()">
                                         <img src="assets/img/icon/lupa.svg" alt="Buscar">
                                     </button>
                                 </div>
@@ -140,11 +136,11 @@
                 </mat-card-content>
             </mat-card>
         </div>
-        <div *ngIf="this.addressForm.value.numeroContrato!=null">
+        <div *ngIf="contrato !== undefined">
             <mat-card class="shipping-card var-main-gris">
                 <mat-card-header class="header-card header-card--margin">
                     <mat-card-title class="header-card--text textoGris">
-                        N801801
+                        {{ contrato.numeroContrato }}
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content style="text-align: left;">
@@ -185,7 +181,7 @@
                         <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
                     </div>
                     <div class="tabs--actions" style="margin-top: 1em;">
-                        <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="this.openProyectosAsociados()">
+                        <button mat-raised-button color="accent" class="tabs--btn auxBtn" (click)="openProyectosAsociados()">
                             Ver proyectos asociados
                         </button>
                     </div>
