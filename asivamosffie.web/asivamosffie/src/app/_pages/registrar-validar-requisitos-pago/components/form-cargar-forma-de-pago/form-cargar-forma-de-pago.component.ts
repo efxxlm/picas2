@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
@@ -7,20 +7,28 @@ import { FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./form-cargar-forma-de-pago.component.scss']
 })
 export class FormCargarFormaDePagoComponent implements OnInit {
-  addressForm = this.fb.group({
-    formaPagoPreconstruccion: [null, Validators.required],
-    formaPagoConstruccion: [null, Validators.required]
-  });
-  formaPagoArray = [
-    { name: 'Forma 1 (50/50)', value: '1' },
-    { name: 'Forma 2 (60/40)', value: '2' },
-    { name: 'Forma 3 (90/10)', value: '3' }
-  ];
-  constructor(private fb: FormBuilder) { }
 
-  ngOnInit(): void {
-  }
-  onSubmit() {
+    @Input() contrato: any;
+    addressForm = this.fb.group({
+      formaPagoPreconstruccion: [null, Validators.required],
+      formaPagoConstruccion: [null, Validators.required]
+    });
+    formaPagoArray = [
+      { name: 'Forma 1 (50/50)', value: '1' },
+      { name: 'Forma 2 (60/40)', value: '2' },
+      { name: 'Forma 3 (90/10)', value: '3' }
+    ];
+    tieneFase1 = false;
 
-  }
+    constructor( private fb: FormBuilder ) { }
+
+    ngOnInit(): void {
+        if ( this.contrato.plazoFase1PreDias !== undefined ) {
+            this.tieneFase1 = true;
+        }
+    }
+
+    onSubmit() {
+    }
+
 }

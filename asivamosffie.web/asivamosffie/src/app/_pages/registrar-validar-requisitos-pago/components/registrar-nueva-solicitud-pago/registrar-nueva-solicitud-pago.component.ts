@@ -83,9 +83,6 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.dataSource = new MatTableDataSource(this.dataTable);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
     };
 
     applyFilter(event: Event) {
@@ -97,10 +94,7 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
         if ( this.addressForm.get( 'searchContrato' ).value.length > 0 ) {
             this.contratosArray = [];
             this.registrarPagosSvc.getContratos( this.addressForm.get( 'tipoSolicitud' ).value.codigo, this.addressForm.get( 'modalidadContrato' ).value.codigo, this.addressForm.get( 'searchContrato' ).value )
-                .subscribe(
-                    response => {
-                        this.contratosArray = response;
-                    } );
+                .subscribe( response => this.contratosArray = response );
         }
     }
 
@@ -111,6 +105,9 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
             contrato => {
                 this.contrato = contrato;
                 console.log( this.contrato );
+                this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
             }
         );
     }
