@@ -183,5 +183,9 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estados_Defensa_Judicial=120,
 
         Estados_Reclamacion = 120,
+
+        Tipo_Solicitud_Contrato_Requisitos_Pago  = 131,
+
+        Modalidad_Contrato = 132,
     }
 }
