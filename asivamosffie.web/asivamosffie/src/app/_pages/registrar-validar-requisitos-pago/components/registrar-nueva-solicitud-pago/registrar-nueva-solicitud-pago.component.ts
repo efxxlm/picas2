@@ -91,10 +91,12 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
     };
 
     getContratos() {
-        if ( this.addressForm.get( 'searchContrato' ).value.length > 0 ) {
-            this.contratosArray = [];
-            this.registrarPagosSvc.getContratos( this.addressForm.get( 'tipoSolicitud' ).value.codigo, this.addressForm.get( 'modalidadContrato' ).value.codigo, this.addressForm.get( 'searchContrato' ).value )
-                .subscribe( response => this.contratosArray = response );
+        if ( this.addressForm.get( 'searchContrato' ).value !== null ) {
+            if ( this.addressForm.get( 'searchContrato' ).value.length > 0 ) {
+                this.contratosArray = [];
+                this.registrarPagosSvc.getContratos( this.addressForm.get( 'tipoSolicitud' ).value.codigo, this.addressForm.get( 'modalidadContrato' ).value.codigo, this.addressForm.get( 'searchContrato' ).value )
+                    .subscribe( response => this.contratosArray = response );
+            }
         }
     }
 

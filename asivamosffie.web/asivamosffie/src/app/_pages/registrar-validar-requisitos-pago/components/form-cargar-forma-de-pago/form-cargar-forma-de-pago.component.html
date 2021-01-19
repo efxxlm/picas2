@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="contrato !== undefined">
+<form [formGroup]="addressForm" novalidate (ngSubmit)="guardar()" *ngIf="contrato !== undefined">
     <mat-card class="shipping-card">
         <mat-card-header class="header-card header-card--margin">
             <mat-card-title class="header-card--text">

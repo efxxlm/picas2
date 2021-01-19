@@ -269,6 +269,14 @@ listaEstadoRevision(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=132`);
   }
 
+  formasDePago() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=134`);
+  }
+
+  criteriosDePago() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=135`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

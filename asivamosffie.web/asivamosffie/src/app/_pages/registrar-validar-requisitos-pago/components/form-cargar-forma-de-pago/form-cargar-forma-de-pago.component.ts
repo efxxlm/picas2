@@ -1,3 +1,4 @@
+import { CommonService } from './../../../../core/_services/common/common.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -20,7 +21,15 @@ export class FormCargarFormaDePagoComponent implements OnInit {
     ];
     tieneFase1 = false;
 
-    constructor( private fb: FormBuilder ) { }
+    constructor(
+        private fb: FormBuilder,
+        private commonSvc: CommonService )
+    {
+        this.commonSvc.formasDePago()
+            .subscribe(
+                response => console.log( response )
+            );
+    }
 
     ngOnInit(): void {
         if ( this.contrato.plazoFase1PreDias !== undefined ) {
@@ -28,7 +37,8 @@ export class FormCargarFormaDePagoComponent implements OnInit {
         }
     }
 
-    onSubmit() {
+    guardar() {
+
     }
 
 }
