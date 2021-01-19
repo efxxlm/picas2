@@ -28,20 +28,47 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        #region Get
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(
             string pTipoSolicitud,
-            string pModalidadContrato, 
-            int pNumeroContrato)
+            string pModalidadContrato,
+            string pNumeroContrato)
         {
             return await _context.Contrato
                                           .Include(c => c.Contratacion)
                                           .Where(c => c.Contratacion.TipoContratacionCodigo == pTipoSolicitud
-                                                   && c.NumeroContrato.Trim().Contains(pNumeroContrato.ToString()))
+                                                   && c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower()))
                                                       .Select(r => new
                                                       {
                                                           r.ContratoId,
                                                           r.NumeroContrato
                                                       }).ToListAsync();
         }
+
+
+        public async Task<Contrato> GetContratoByContratoId(int pContratoId)
+        {
+            return await _context.Contrato
+                 .Where(c => c.ContratacionId == pContratoId)
+                 .Include(c => c.Contratacion)
+                    .ThenInclude(c => c.Contratista)
+                 .Include(c => c.Contratacion)
+                    .ThenInclude(cp => cp.DisponibilidadPresupuestal)
+                    .FirstOrDefaultAsync();
+        }
+
+        public async Task<dynamic> GetProyectos(int pContratoId)
+        {
+            return await _context.Contrato
+                 .Where(c => c.ContratacionId == pContratoId)
+                 .Include(c => c.Contratacion)
+                    .ThenInclude(c => c.Contratista)
+                 .Include(c => c.Contratacion)
+                    .ThenInclude(cp => cp.DisponibilidadPresupuestal)
+                    .FirstOrDefaultAsync();
+        }
+
+
+        #endregion
     }
 }

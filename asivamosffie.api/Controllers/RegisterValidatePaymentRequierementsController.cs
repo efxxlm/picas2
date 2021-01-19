@@ -29,10 +29,15 @@ namespace asivamosffie.api.Controllers
 
         [HttpGet]
         [Route("GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato")]
-        public async Task<IActionResult> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato([FromQuery] string pTipoSolicitud, string pModalidadContrato, int pNumeroContrato)
+        public async Task<IActionResult> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato([FromQuery] string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
         {
             return await _registerValidatePaymentRequierementsService.GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(pTipoSolicitud, pModalidadContrato, pNumeroContrato);
-        }
-
+        } 
+        [HttpGet]
+        [Route("GetContratoByContratoId")]
+        public async Task<IActionResult> GetContratoByContratoId([FromQuery] int pContratoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId));
+        } 
     }
 }
