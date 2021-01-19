@@ -28,8 +28,7 @@ namespace asivamosffie.services.Helpers
         {
             _context = context;
         }
-
-
+         
         public static string HtmlConvertirTextoPlano(string origen)
         {
             DocumentoHtml documento = new DocumentoHtml();
