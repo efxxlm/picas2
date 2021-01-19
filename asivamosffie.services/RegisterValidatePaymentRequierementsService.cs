@@ -31,10 +31,13 @@ namespace asivamosffie.services
 
         #region Get
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
-        {
+        { 
             return await _context.Contrato
                                           .Include(c => c.Contratacion)
-                                          .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower()) && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud)
+                                          .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                                   && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                   && string.IsNullOrEmpty(c.RutaActaFase2) 
+                                                   )
                                                       .Select(r => new
                                                       {
                                                           r.ContratoId,
