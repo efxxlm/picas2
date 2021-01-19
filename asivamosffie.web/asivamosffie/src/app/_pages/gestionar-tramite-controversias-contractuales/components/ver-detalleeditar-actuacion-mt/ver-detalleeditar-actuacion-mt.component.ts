@@ -10,7 +10,7 @@ import { ContractualControversyService } from 'src/app/core/_services/Contractua
 export class VerDetalleeditarActuacionMtComponent implements OnInit {
 
   idSeguimientoMesa: any;
-  public nomMesaTrabajo = localStorage.getItem("nomMesaTrabajo");
+  public nomMesaTrabajo = localStorage.getItem("numActuacionMT");
   public controversiaID = parseInt(localStorage.getItem("controversiaID"));
   solicitud: any;
   numContrato: any;

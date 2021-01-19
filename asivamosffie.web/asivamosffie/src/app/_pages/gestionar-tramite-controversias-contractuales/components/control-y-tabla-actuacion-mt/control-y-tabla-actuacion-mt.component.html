@@ -48,7 +48,7 @@
                         Finalizar actuación
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoAvanceMesaString=='En proceso de registro'"
-                    (click)="this.verDetalleEditarMTActuacion(element.controversiaActuacionMesaSeguimientoId)">
+                    (click)="this.verDetalleEditarMTActuacion(element.controversiaActuacionMesaSeguimientoId,element.numeroActuacionSeguimiento)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoAvanceMesaString=='En proceso de registro'"
@@ -56,7 +56,7 @@
                         Eliminar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoAvanceMesaString=='Finalizada'"
-                    (click)="this.verDetalleMTActuacion(element.controversiaActuacionMesaSeguimientoId)">
+                    (click)="this.verDetalleMTActuacion(element.controversiaActuacionMesaSeguimientoId,element.numeroActuacionSeguimiento)">
                         Ver detalle
                     </button>
                 </td>

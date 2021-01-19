@@ -55,13 +55,15 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
       }
     });
   }
-  verDetalleEditarMTActuacion(id){
+  verDetalleEditarMTActuacion(id,numActuacionMT){
+    localStorage.setItem("numActuacionMT",numActuacionMT);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajoAct',id]);
   }
   eliminarMTActuacion(id){
     this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
   }
-  verDetalleMTActuacion(id){
+  verDetalleMTActuacion(id,numActuacionMT){
+    localStorage.setItem("numActuacionMT",numActuacionMT);
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajoAct',id]);
   }
   deleteControversia(id) {
