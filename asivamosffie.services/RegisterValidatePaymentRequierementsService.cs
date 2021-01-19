@@ -36,7 +36,7 @@ namespace asivamosffie.services
                                           .Include(c => c.Contratacion)
                                           .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
                                                    && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                   && string.IsNullOrEmpty(c.RutaActaFase2) 
+                                                   && !string.IsNullOrEmpty(c.RutaActaFase2) 
                                                    )
                                                       .Select(r => new
                                                       {
@@ -146,6 +146,21 @@ namespace asivamosffie.services
         #endregion
 
         #region Validate Complete Form
+
+        //private bool ValidateCompleteRecordSolicitudPago(int SoliditudPagoId)
+        //{
+        //    try
+        //    {
+        //        solicitud
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return false;
+        //    } 
+        //}
+
+
         private bool ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
         {
             if (pSolicitudPagoCargarFormaPago.TieneFase1)
@@ -157,6 +172,9 @@ namespace asivamosffie.services
 
             return true;
         }
+
+
+
 
 
         #endregion
