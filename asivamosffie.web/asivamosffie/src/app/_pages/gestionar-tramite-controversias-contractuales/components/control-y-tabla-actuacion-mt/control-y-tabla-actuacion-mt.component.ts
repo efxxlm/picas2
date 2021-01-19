@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ContractualControversyService } from 'src/app/core/_services/ContractualControversy/contractual-controversy.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-control-y-tabla-actuacion-mt',
@@ -25,7 +27,7 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
   ];
   dataTable: any[] = [];  
   public idMesaTrabajo = parseInt(localStorage.getItem("idMesaTrabajo"));
-  constructor(private router: Router,private services: ContractualControversyService) { }
+  constructor(public dialog: MatDialog, private router: Router,private services: ContractualControversyService) { }
 
   ngOnInit(): void {
     this.services.GetActuacionesMesasByActuacionId(this.idMesaTrabajo).subscribe((data:any)=>{
@@ -40,6 +42,12 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
+  openDialog(modalTitle: string, modalText: string) {
+    this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText }
+    });
+  }
   finalizarMesaDeTrabajo(id){
     this.services.SetStateActuacionMesa(id,'2').subscribe((resp:any)=>{
       if(resp.isSuccessful==true){
@@ -51,9 +59,31 @@ export class ControlYTablaActuacionMtComponent implements OnInit {
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleEditarMesaTrabajoAct',id]);
   }
   eliminarMTActuacion(id){
-
+    this.openDialogSiNo("","¿Está seguro de eliminar este registro?",id);
   }
   verDetalleMTActuacion(id){
     this.router.navigate(['/gestionarTramiteControversiasContractuales/verDetalleMesaTrabajoAct',id]);
+  }
+  deleteControversia(id) {
+    this.services.EliminacionActuacionMesa(id).subscribe((resp:any)=>{
+      if (resp.code == "301") {
+        this.openDialog('', resp.message);
+      }
+      else{
+        this.ngOnInit();
+      }
+    });
+  }
+  openDialogSiNo(modalTitle: string, modalText: string, e: number) {
+    let dialogRef = this.dialog.open(ModalDialogComponent, {
+      width: '28em',
+      data: { modalTitle, modalText, siNoBoton: true }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+      if (result === true) {
+        this.deleteControversia(e);
+      }
+    });
   }
 }
