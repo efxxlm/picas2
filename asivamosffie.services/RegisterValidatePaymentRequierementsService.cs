@@ -29,21 +29,17 @@ namespace asivamosffie.services
         }
 
         #region Get
-        public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(
-            string pTipoSolicitud,
-            string pModalidadContrato,
-            string pNumeroContrato)
+        public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
         {
             return await _context.Contrato
                                           .Include(c => c.Contratacion)
-                                          .Where( c=> c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())  && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud)
+                                          .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower()) && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud)
                                                       .Select(r => new
                                                       {
                                                           r.ContratoId,
                                                           r.NumeroContrato
                                                       }).ToListAsync();
         }
-
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
@@ -58,18 +54,37 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
         {
-            return await _context.VProyectosXcontrato
-                                                    .Where(p => p.ContratoId == pContratoId)
-                                                                                            .Select(p =>new { 
-                                                                                                    p.LlaveMen,
-                                                                                                    p.TipoIntervencion,
-                                                                                                    p.Departamento,
-                                                                                                    p.Municipio,
-                                                                                                    p.InstitucionEducativa,
-                                                                                                    p.Sede 
-                                                                                            }).ToListAsync();
+            List<dynamic> dynamics = new List<dynamic>();
+
+            var resultContrato = _context.Contrato
+                .Where(r => r.ContratoId == pContratoId)
+                .Include(cp => cp.ContratoPoliza)
+                            .Select(c => new
+                            {
+                                c.NumeroContrato,
+                                c.ContratoPoliza.FirstOrDefault().FechaAprobacion,
+                                PlazoDias = c.PlazoFase1PreDias + c.PlazoFase2ConstruccionDias,
+                                PlazoMeses = c.PlazoFase1PreMeses + c.PlazoFase2ConstruccionMeses
+                            }).FirstOrDefault();
+
+            var resultProyectos = await _context.VProyectosXcontrato
+                        .Where(p => p.ContratoId == pContratoId)
+                                                                .Select(p => new
+                                                                {
+                                                                    p.LlaveMen,
+                                                                    p.TipoIntervencion,
+                                                                    p.Departamento,
+                                                                    p.Municipio,
+                                                                    p.InstitucionEducativa,
+                                                                    p.Sede
+                                                                }).ToListAsync();
+            dynamics.Add(resultContrato);
+            dynamics.Add(resultProyectos);
+
+            return dynamics;
+
         }
-         
-        #endregion
-    }
+
+    #endregion
+}
 }
