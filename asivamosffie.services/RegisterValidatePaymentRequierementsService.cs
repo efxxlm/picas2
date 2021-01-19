@@ -31,18 +31,17 @@ namespace asivamosffie.services
 
         #region Get
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
-        { 
+        {
             return await _context.Contrato
                                           .Include(c => c.Contratacion)
                                           .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
                                                    && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                   && !string.IsNullOrEmpty(c.RutaActaFase2) 
-                                                   )
-                                                      .Select(r => new
-                                                      {
-                                                          r.ContratoId,
-                                                          r.NumeroContrato
-                                                      }).ToListAsync();
+                                                   && !string.IsNullOrEmpty(c.RutaActaFase2))
+                                                                                            .Select(r => new
+                                                                                            {
+                                                                                                r.ContratoId,
+                                                                                                r.NumeroContrato
+                                                                                            }).ToListAsync();
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
@@ -94,6 +93,44 @@ namespace asivamosffie.services
 
         #region Create Edit 
 
+        public async Task<Respuesta> CreateEditNewPayment(SolicitudPago pSolicitudPago)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() > 0)
+                {
+                    pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault().UsuarioCreacion = pSolicitudPago.UsuarioCreacion;
+                    await CreateEditNewPaymentWayToPay(pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault());
+                }
+                     
+
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, pSolicitudPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+
         public async Task<Respuesta> CreateEditNewPaymentWayToPay(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
@@ -139,7 +176,7 @@ namespace asivamosffie.services
                         Code = GeneralCodes.Error,
                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoCargarFormaPago.UsuarioCreacion, ex.InnerException.ToString())
                     };
-            } 
+            }
         }
 
 

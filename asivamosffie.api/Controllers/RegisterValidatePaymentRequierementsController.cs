@@ -28,15 +28,13 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPost]
-        [Route("CreateEditNewPaymentWayToPay")]
-        public async Task<IActionResult> CreateEditNewPaymentWayToPay([FromBody] SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
+        [Route("CreateEditNewPayment")]
+        public async Task<IActionResult> CreateEditNewPayment([FromBody]SolicitudPago  pSolicitudPago)
         {
-            pSolicitudPagoCargarFormaPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-            return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPaymentWayToPay(pSolicitudPagoCargarFormaPago));
+            pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+            return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPayment(pSolicitudPago));
         }
-
-
-
+         
         [HttpGet]
         [Route("GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato")]
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato([FromQuery] string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
