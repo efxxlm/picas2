@@ -105,6 +105,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<ProyectoAdministrativo> ProyectoAdministrativo { get; set; }
         public virtual DbSet<ProyectoAdministrativoAportante> ProyectoAdministrativoAportante { get; set; }
         public virtual DbSet<ProyectoAportante> ProyectoAportante { get; set; }
+        public virtual DbSet<ProyectoFuentes> ProyectoFuentes { get; set; }
         public virtual DbSet<ProyectoMonitoreoWeb> ProyectoMonitoreoWeb { get; set; }
         public virtual DbSet<ProyectoPredio> ProyectoPredio { get; set; }
         public virtual DbSet<ProyectoRequisitoTecnico> ProyectoRequisitoTecnico { get; set; }
@@ -141,6 +142,18 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SesionSolicitudVoto> SesionSolicitudVoto { get; set; }
         public virtual DbSet<SesionTemaVoto> SesionTemaVoto { get; set; }
         public virtual DbSet<Solicitud> Solicitud { get; set; }
+        public virtual DbSet<SolicitudAmortizacion> SolicitudAmortizacion { get; set; }
+        public virtual DbSet<SolicitudPago> SolicitudPago { get; set; }
+        public virtual DbSet<SolicitudPagoCargarFormaPago> SolicitudPagoCargarFormaPago { get; set; }
+        public virtual DbSet<SolicitudPagoExpensas> SolicitudPagoExpensas { get; set; }
+        public virtual DbSet<SolicitudPagoFase> SolicitudPagoFase { get; set; }
+        public virtual DbSet<SolicitudPagoFaseCriterio> SolicitudPagoFaseCriterio { get; set; }
+        public virtual DbSet<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
+        public virtual DbSet<SolicitudPagoFaseDescuento> SolicitudPagoFaseDescuento { get; set; }
+        public virtual DbSet<SolicitudPagoFaseFactura> SolicitudPagoFaseFactura { get; set; }
+        public virtual DbSet<SolicitudPagoOtrosCostosServicios> SolicitudPagoOtrosCostosServicios { get; set; }
+        public virtual DbSet<SolicitudPagoRegistrarSolicitudPago> SolicitudPagoRegistrarSolicitudPago { get; set; }
+        public virtual DbSet<SolicitudPagoSoporteSolicitud> SolicitudPagoSoporteSolicitud { get; set; }
         public virtual DbSet<TemaCompromiso> TemaCompromiso { get; set; }
         public virtual DbSet<TemaCompromisoSeguimiento> TemaCompromisoSeguimiento { get; set; }
         public virtual DbSet<Temp> Temp { get; set; }
@@ -1584,9 +1597,9 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.ControversiaContractual)
+                entity.HasOne(d => d.ControversiaActuacion)
                     .WithMany(p => p.ControversiaActuacionMesa)
-                    .HasForeignKey(d => d.ControversiaContractualId)
+                    .HasForeignKey(d => d.ControversiaActuacionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Controver__Contr__23DE44F1");
             });
@@ -2542,13 +2555,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaTomaMuestras).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion).HasMaxLength(500);
-
                 entity.Property(e => e.TipoEnsayoCodigo)
                     .HasMaxLength(10)
                     .IsUnicode(false);
-
-                entity.Property(e => e.UrlSoporteGestion).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
@@ -2685,10 +2694,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion).HasMaxLength(500);
-
-                entity.Property(e => e.Url).HasMaxLength(255);
-
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -2717,7 +2722,9 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.Proveedor).HasMaxLength(100);
 
-                entity.Property(e => e.UrlRegistroFotografico).HasMaxLength(255);
+                entity.Property(e => e.UrlRegistroFotografico)
+                    .HasMaxLength(500)
+                    .IsFixedLength();
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -2736,15 +2743,11 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<ManejoOtro>(entity =>
             {
-                entity.Property(e => e.Actividad).HasMaxLength(600);
-
                 entity.Property(e => e.FechaActividad).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.UrlSoporteGestion).HasMaxLength(255);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -2774,8 +2777,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion).HasMaxLength(500);
-
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -2803,8 +2804,6 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NombreGestorResiduos).HasMaxLength(255);
 
-                entity.Property(e => e.Url).HasMaxLength(255);
-
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -2825,9 +2824,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.Observacion).HasMaxLength(500);
-
-                entity.Property(e => e.UrlRegistroFotografico).HasMaxLength(255);
+                entity.Property(e => e.UrlRegistroFotografico).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .IsRequired()
@@ -3816,6 +3813,38 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_ProyectoAportante_Proyecto");
             });
 
+            modelBuilder.Entity<ProyectoFuentes>(entity =>
+            {
+                entity.HasKey(e => e.ProyectoFuenteId)
+                    .HasName("PK_ProyectoAportante_copy1");
+
+                entity.Property(e => e.Eliminado).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Fuente)
+                    .WithMany(p => p.ProyectoFuentes)
+                    .HasForeignKey(d => d.FuenteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ProyectoA__Aport__3BB5CE82");
+
+                entity.HasOne(d => d.Proyecto)
+                    .WithMany(p => p.ProyectoFuentes)
+                    .HasForeignKey(d => d.ProyectoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__ProyectoA__Proye__3D9E16F4");
+            });
+
             modelBuilder.Entity<ProyectoMonitoreoWeb>(entity =>
             {
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
@@ -4360,15 +4389,11 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SeguimientoSemanalGestionObraSocial>(entity =>
             {
-                entity.Property(e => e.Conclusion).HasMaxLength(300);
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.TemaComunidad).HasMaxLength(300);
-
-                entity.Property(e => e.UrlSoporteGestion).HasMaxLength(255);
+                entity.Property(e => e.UrlSoporteGestion).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion).HasMaxLength(50);
 
@@ -4450,7 +4475,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.NumeroComite).HasMaxLength(255);
 
-                entity.Property(e => e.UrlSoporteComite).HasMaxLength(255);
+                entity.Property(e => e.UrlSoporteComite).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
@@ -4483,7 +4508,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
-                entity.Property(e => e.UrlSoporteFotografico).HasMaxLength(255);
+                entity.Property(e => e.UrlSoporteFotografico).HasMaxLength(500);
 
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(255)
@@ -5085,6 +5110,181 @@ namespace asivamosffie.model.Models
                 entity.Property(e => e.UsuarioModificacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<SolicitudAmortizacion>(entity =>
+            {
+                entity.HasKey(e => e.SolicitudPagoFaseAmortizacionAnticipoId)
+                    .HasName("PK__Registra__A833D9FF66862EE2");
+
+                entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(25, 1)");
+
+                entity.HasOne(d => d.SolicitudPagoFase)
+                    .WithMany(p => p.SolicitudAmortizacion)
+                    .HasForeignKey(d => d.SolicitudPagoFaseId)
+                    .HasConstraintName("FK_SolicitudPagoFaseAmortizacionAnticipo_SolicitudPagoFase");
+            });
+
+            modelBuilder.Entity<SolicitudPago>(entity =>
+            {
+                entity.Property(e => e.TipoSolicitud)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.ContratacionProyecto)
+                    .WithMany(p => p.SolicitudPago)
+                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .HasConstraintName("FK_SolicitudPago_ContratacionProyecto");
+            });
+
+            modelBuilder.Entity<SolicitudPagoCargarFormaPago>(entity =>
+            {
+                entity.Property(e => e.FaseConstruccionFormaPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FasePreConstruccionFormaPagoCodigo).HasMaxLength(2);
+
+                entity.HasOne(d => d.SolicitudPago)
+                    .WithMany(p => p.SolicitudPagoCargarFormaPago)
+                    .HasForeignKey(d => d.SolicitudPagoId)
+                    .HasConstraintName("FK_SolicitudPagoCargarFormaPago_SolicitudPago");
+            });
+
+            modelBuilder.Entity<SolicitudPagoExpensas>(entity =>
+            {
+                entity.Property(e => e.ConceptoPagoCriterioCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroRadicadoSac).HasColumnName("NumeroRadicadoSAC");
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
+
+                entity.Property(e => e.ValorFacturadoConcepto)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SolicitudPago)
+                    .WithMany(p => p.SolicitudPagoExpensas)
+                    .HasForeignKey(d => d.SolicitudPagoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoExpensas_SolicitudPago");
+            });
+
+            modelBuilder.Entity<SolicitudPagoFaseCriterio>(entity =>
+            {
+                entity.Property(e => e.ConceptoPagoCriterio)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
+
+                entity.HasOne(d => d.SolicitudPagoFase)
+                    .WithMany(p => p.SolicitudPagoFaseCriterio)
+                    .HasForeignKey(d => d.SolicitudPagoFaseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoFase_SolicitudPagoFaseId");
+            });
+
+            modelBuilder.Entity<SolicitudPagoFaseCriterioProyecto>(entity =>
+            {
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
+
+                entity.HasOne(d => d.ContratacionProyecto)
+                    .WithMany(p => p.SolicitudPagoFaseCriterioProyecto)
+                    .HasForeignKey(d => d.ContratacionProyectoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RegistrarSolicitudPagoFaseCriterioProyecto_ContratacionProyecto");
+
+                entity.HasOne(d => d.SolicitudPagoFaseCriterio)
+                    .WithMany(p => p.SolicitudPagoFaseCriterioProyecto)
+                    .HasForeignKey(d => d.SolicitudPagoFaseCriterioId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_SolicitudPagoFaseCriterioId_SolicitudPagoFaseCriterioProyecto");
+            });
+
+            modelBuilder.Entity<SolicitudPagoFaseDescuento>(entity =>
+            {
+                entity.Property(e => e.SolicitudPagoFaseDescuentoId).ValueGeneratedNever();
+
+                entity.Property(e => e.TipoDescuentoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(25, 3)");
+            });
+
+            modelBuilder.Entity<SolicitudPagoFaseFactura>(entity =>
+            {
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
+
+                entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
+
+                entity.HasOne(d => d.SolicitudPagoFase)
+                    .WithMany(p => p.SolicitudPagoFaseFactura)
+                    .HasForeignKey(d => d.SolicitudPagoFaseId)
+                    .HasConstraintName("FK_SolicitudPagoFaseFactura_SolicitudPagoFase");
+            });
+
+            modelBuilder.Entity<SolicitudPagoOtrosCostosServicios>(entity =>
+            {
+                entity.Property(e => e.NumeroFactura)
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NumeroRadicadoSac).HasColumnName("NumeroRadicadoSAC");
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorFacturado)
+                    .HasMaxLength(25)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SolicitudPago)
+                    .WithMany(p => p.SolicitudPagoOtrosCostosServicios)
+                    .HasForeignKey(d => d.SolicitudPagoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoOtrosCostosServicios_SolicitudPago");
+            });
+
+            modelBuilder.Entity<SolicitudPagoRegistrarSolicitudPago>(entity =>
+            {
+                entity.Property(e => e.FechaSolicitud).HasColumnType("date");
+
+                entity.Property(e => e.NumeroRadicadoSac)
+                    .HasColumnName("NumeroRadicadoSAC")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SolicitudPago)
+                    .WithMany(p => p.SolicitudPagoRegistrarSolicitudPago)
+                    .HasForeignKey(d => d.SolicitudPagoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoContratoFormaPago_SolicitudPago");
+            });
+
+            modelBuilder.Entity<SolicitudPagoSoporteSolicitud>(entity =>
+            {
+                entity.Property(e => e.UrlSoporte)
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SolicitudPago)
+                    .WithMany(p => p.SolicitudPagoSoporteSolicitud)
+                    .HasForeignKey(d => d.SolicitudPagoId)
+                    .HasConstraintName("FK_SolicitudPagoSoporteSolicitud_SolicitudPago");
             });
 
             modelBuilder.Entity<TemaCompromiso>(entity =>

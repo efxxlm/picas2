@@ -1249,7 +1249,8 @@ namespace asivamosffie.services
             {
                 controversiaContractual = _context.ControversiaContractual.
                     Where(d => d.ControversiaContractualId == pControversiaContractualId)
-                    .Include(c=>c.ControversiaActuacion).Include(x=>x.ControversiaActuacionMesa).FirstOrDefault();
+       
+                    .Include(c=>c.ControversiaActuacion).FirstOrDefault();
 
                 //confirmo que no tenga actuaciones
 
@@ -1266,7 +1267,8 @@ namespace asivamosffie.services
 
                     };
                 }
-                if (controversiaContractual.ControversiaActuacionMesa.Count() > 0)
+                //No tomar esta version JMC 
+                if (controversiaContractual.ControversiaContractualId > 0)
                 {
                     return respuesta = new Respuesta
                     {
@@ -3160,8 +3162,8 @@ namespace asivamosffie.services
         }
 
         public async Task<List<ControversiaActuacionMesa>> GetMesasByControversiaActuacionId(int pControversiaId)
-        {
-            var mesas = _context.ControversiaActuacionMesa.Where(x=>x.ControversiaContractualId== pControversiaId).ToList();
+        {    //No tomar esta version JMC 
+            var mesas = _context.ControversiaActuacionMesa.Where(x=>x.ControversiaActuacionMesaId== pControversiaId).ToList();
             foreach(var mesa in mesas)
             {
                var  EstadoActuacionReclamacion = await _commonService.GetDominioByNombreDominioAndTipoDominio(mesa.EstadoAvanceMesaCodigo, (int)EnumeratorTipoDominio.Estados_Actuacion);
