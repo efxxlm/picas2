@@ -36,7 +36,7 @@ namespace asivamosffie.services
         {
             return await _context.Contrato
                                           .Include(c => c.Contratacion)
-                                          .Where( c=> c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower()))
+                                          .Where( c=> c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())  && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud)
                                                       .Select(r => new
                                                       {
                                                           r.ContratoId,
