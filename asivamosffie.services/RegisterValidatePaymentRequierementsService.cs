@@ -159,12 +159,11 @@ namespace asivamosffie.services
                 if (pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() > 0)
                 {
                     pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().UsuarioCreacion = pSolicitudPago.UsuarioCreacion;
-                   
+
                     CreateEditRegistrarSolicitudPago(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault());
-                     
+
                     CreateEditFaseCriterio(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().SolicitudPagoFase, pSolicitudPago.UsuarioCreacion);
-           
-                
+
                 }
 
                 return
@@ -206,15 +205,12 @@ namespace asivamosffie.services
             {
                 solicitudPagoRegistrarSolicitudPago.FechaCreacion = DateTime.Now;
                 solicitudPagoRegistrarSolicitudPago.Eliminado = false;
-                solicitudPagoRegistrarSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago); 
+                solicitudPagoRegistrarSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago);
+               
+                _context.SolicitudPagoRegistrarSolicitudPago.Add(solicitudPagoRegistrarSolicitudPago);
             }
         }
-
-        private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
-        {
-            return false;
-        }
-
+         
         private void CreateEditFaseCriterio(ICollection<SolicitudPagoFase> solicitudPagoFaseList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoFase in solicitudPagoFaseList)
@@ -237,7 +233,7 @@ namespace asivamosffie.services
                 }
             }
         }
-         
+
         private void CreateEditNewPaymentNew(SolicitudPago pSolicitudPago)
         {
             if (pSolicitudPago.SolicitudPagoId > 0)
@@ -288,6 +284,11 @@ namespace asivamosffie.services
 
 
         #region Validate Complete Form
+        private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
+        {
+            return false;
+        }
+
         private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
         {
             return false;
