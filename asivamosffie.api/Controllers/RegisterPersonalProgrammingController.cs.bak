@@ -34,31 +34,6 @@ namespace asivamosffie.api.Controllers
 
         }
 
-        [Route("GetProgramacionPersonalByContratoConstruccionId")]
-        [HttpGet]
-        public async Task<List<ProgramacionPersonalContratoConstruccion>> GetProgramacionPersonalByContratoConstruccionId([FromQuery] int pContratoConstruccionId)
-        {
-            var result = await _IRegisterPersonalProgrammingService.GetProgramacionPersonalByContratoConstruccionId(pContratoConstruccionId, HttpContext.User.FindFirst("User").Value.ToUpper());
-            return result;
-        }
-         
-        [Route("UpdateProgramacionContratoPersonal")]
-        [HttpPost]
-        public async Task<IActionResult> UpdateProgramacionContratoPersonal([FromBody] ContratoConstruccion pContratoConstruccion)
-        {
-            try
-            {
-                pContratoConstruccion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value.ToUpper();
-                Task<Respuesta> result = _IRegisterPersonalProgrammingService.UpdateProgramacionContratoPersonal(pContratoConstruccion);
-                object respuesta = await result;
-                return Ok(respuesta);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.ToString());
-            }
-        }
-        
         [Route("GetProgramacionPersonalByContratoId")]
         [HttpGet]
         public async Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId([FromQuery] int pContratacionProyectoId)
