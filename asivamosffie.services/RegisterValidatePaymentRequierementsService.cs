@@ -110,10 +110,12 @@ namespace asivamosffie.services
                     .ThenInclude(c => c.Contratista)
                  .Include(c => c.Contratacion)
                     .ThenInclude(cp => cp.DisponibilidadPresupuestal)
-                 .Include(r => r.SolicitudPago).FirstOrDefaultAsync();
-
+                 .Include(r => r.SolicitudPago)
+                    .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
+                 .FirstOrDefaultAsync();
+             
             if (contrato.SolicitudPago.Count() > 0)
-                contrato.SolicitudPagoOnly = GetSolicitudPago(contrato.SolicitudPago.FirstOrDefault());
+                contrato.SolicitudPagoOnly = GetSolicitudPago(contrato.SolicitudPago.LastOrDefault());
 
             return contrato;
         }
