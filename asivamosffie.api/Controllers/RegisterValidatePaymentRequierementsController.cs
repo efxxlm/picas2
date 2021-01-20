@@ -36,12 +36,12 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("CreateEditNewPayment")]
-        public async Task<IActionResult> CreateEditNewPayment([FromBody]SolicitudPago  pSolicitudPago)
+        public async Task<IActionResult> CreateEditNewPayment([FromBody] SolicitudPago pSolicitudPago)
         {
             pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
             return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPayment(pSolicitudPago));
         }
-         
+
         [HttpGet]
         [Route("GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato")]
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato([FromQuery] string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)

@@ -46,14 +46,52 @@ namespace asivamosffie.services
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
-            return await _context.Contrato
+            Contrato contrato = await _context.Contrato
                  .Where(c => c.ContratoId == pContratoId)
                  .Include(c => c.ContratoPoliza)
                  .Include(c => c.Contratacion)
                     .ThenInclude(c => c.Contratista)
                  .Include(c => c.Contratacion)
                     .ThenInclude(cp => cp.DisponibilidadPresupuestal)
-                    .FirstOrDefaultAsync();
+                 .Include(r => r.SolicitudPago).FirstOrDefaultAsync();
+
+            if (contrato.SolicitudPago.Count() > 0)
+                contrato.SolicitudPagoOnly = GetSolicitudPago(contrato.SolicitudPago.FirstOrDefault());
+
+            return contrato;
+        }
+
+        private SolicitudPago GetSolicitudPago(SolicitudPago solicitudPago)
+        {
+            switch (solicitudPago.TipoSolicitudCodigo)
+            {
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Interventoria:
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
+
+                    solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
+                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                          .ThenInclude(r => r.SolicitudPagoFase)
+                              .ThenInclude(r => r.SolicitudPagoFaseCriterio)
+                                  .ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
+                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                          .ThenInclude(r => r.SolicitudPagoFase)
+                              .ThenInclude(r => r.SolicitudPagoAmortizacion)
+                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                          .ThenInclude(r => r.SolicitudPagoFase)
+                              .ThenInclude(r => r.SolicitudPagoFaseFactura)
+                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                          .ThenInclude(r => r.SolicitudPagoFaseDescuento)
+                       .Include(r => r.SolicitudPagoSoporteSolicitud).FirstOrDefault();
+
+                    break;
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Expensas:
+
+                    break;
+                case ConstanCodigoTipoSolicitudContratoSolicitudPago.Otros_Costos_Servicios:
+
+                    break;
+            }
+            return solicitudPago;
         }
 
         public async Task<dynamic> GetProyectosByIdContrato(int pContratoId)
@@ -90,8 +128,8 @@ namespace asivamosffie.services
         }
 
         public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
-        { 
-            return  pFormaPagoCodigo  switch
+        {
+            return pFormaPagoCodigo switch
             {
                 ConstanCodigoFormaPagoCodigo.Forma_1_50_50 => await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && (r.Codigo == ConstanCodigoCriterioPago.Criterio_1 || r.Codigo == ConstanCodigoCriterioPago.Criterio_2)).Select(r => new { r.DominioId, r.Nombre }).ToListAsync(),
                 ConstanCodigoFormaPagoCodigo.Forma_2_50_40_10 => await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && (r.Codigo == ConstanCodigoCriterioPago.Criterio_1 || r.Codigo == ConstanCodigoCriterioPago.Criterio_2)).Select(r => new { r.DominioId, r.Nombre }).ToListAsync(),
@@ -111,10 +149,14 @@ namespace asivamosffie.services
             {
                 if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() > 0)
                 {
-                    pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault().UsuarioCreacion = pSolicitudPago.UsuarioCreacion;
-                    await CreateEditNewPaymentWayToPay(pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault());
-                }
+                    pSolicitudPago.FechaCreacion = DateTime.Now;
+                    pSolicitudPago.Eliminado = false;
 
+                    _context.SolicitudPago.Add(pSolicitudPago);
+                     
+                    pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault().UsuarioCreacion = pSolicitudPago.UsuarioCreacion;
+                    CreateEditNewPaymentWayToPay(pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault());
+                }
 
                 return
                      new Respuesta
@@ -141,9 +183,8 @@ namespace asivamosffie.services
         }
 
 
-        public async Task<Respuesta> CreateEditNewPaymentWayToPay(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
+        private bool CreateEditNewPaymentWayToPay(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
         {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
 
             try
             {
@@ -164,29 +205,13 @@ namespace asivamosffie.services
 
                     _context.SolicitudPagoCargarFormaPago.Add(pSolicitudPagoCargarFormaPago);
                 }
-
-                return
-                     new Respuesta
-                     {
-                         IsSuccessful = true,
-                         IsException = false,
-                         IsValidation = false,
-                         Code = GeneralCodes.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPagoCargarFormaPago.UsuarioCreacion, pSolicitudPagoCargarFormaPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
-                     };
+                return true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPagoCargarFormaPago.UsuarioCreacion, ex.InnerException.ToString())
-                    };
+                return false;
             }
+
         }
 
 
