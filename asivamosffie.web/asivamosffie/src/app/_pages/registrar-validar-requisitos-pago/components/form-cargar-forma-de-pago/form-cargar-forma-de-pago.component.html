@@ -6,7 +6,7 @@
             </mat-card-title>
         </mat-card-header>
         <mat-card-content style="text-align: left;">
-            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;margin-top: 0.5em;">
+            <mat-card-title class="header-card--text alineacion-titulos2 mt-1em" style="padding-left: 0px;margin-top: 0.5em;" *ngIf="tieneFase1 === true">
                 Fase 1 - Preconstrucción
             </mat-card-title>
             <div class="row" style="margin-left:-0.5em;" *ngIf="tieneFase1 === true">

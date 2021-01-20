@@ -1,4 +1,4 @@
-<section class="container text-center">
+<section class="container text-center" *ngIf="contrato !== undefined">
     <div class="text-right">
         <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -88,7 +88,8 @@
                             Cargar forma de pago
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-cargar-forma-de-pago></app-form-cargar-forma-de-pago>
+
+                    <app-form-cargar-forma-de-pago [contrato]="contrato" [tipoSolicitud]="contrato.solicitudPago[0].tipoSolicitudCodigo"></app-form-cargar-forma-de-pago>
                 </mat-expansion-panel>
             </mat-accordion>
             <mat-accordion>
@@ -98,7 +99,7 @@
                             Registrar solicitud de pago
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-registrar-solicitud-de-pago></app-form-registrar-solicitud-de-pago>
+                    <app-form-registrar-solicitud-de-pago [contrato]="contrato"></app-form-registrar-solicitud-de-pago>
                 </mat-expansion-panel>
             </mat-accordion>
             <mat-accordion>
