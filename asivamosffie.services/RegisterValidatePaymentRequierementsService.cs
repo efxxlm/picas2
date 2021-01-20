@@ -162,7 +162,7 @@ namespace asivamosffie.services
 
                     CreateEditRegistrarSolicitudPago(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault());
 
-                    CreateEditFaseCriterio(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().SolicitudPagoFase, pSolicitudPago.UsuarioCreacion);
+                    CreateEditSolicitudPagoFase(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().SolicitudPagoFase, pSolicitudPago.UsuarioCreacion);
 
                 }
 
@@ -211,7 +211,7 @@ namespace asivamosffie.services
             }
         }
          
-        private void CreateEditFaseCriterio(ICollection<SolicitudPagoFase> solicitudPagoFaseList, string pUsuarioCreacion)
+        private void CreateEditSolicitudPagoFase(ICollection<SolicitudPagoFase> solicitudPagoFaseList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoFase in solicitudPagoFaseList)
             {
