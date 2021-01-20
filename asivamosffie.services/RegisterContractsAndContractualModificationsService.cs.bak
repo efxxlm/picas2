@@ -164,15 +164,6 @@ namespace asivamosffie.services
                 }
 
                 _context.SaveChanges();
-
-
-                if (contratacion.Contratista != null)
-                {
-                    if (!string.IsNullOrEmpty(contratacion.Contratista.TipoIdentificacionCodigo))
-                    {
-                        contratacion.Contratista.TipoIdentificacionCodigo = LisParametricas.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_Documento && r.Codigo == contratacion.Contratista.TipoIdentificacionCodigo).FirstOrDefault().Nombre;
-                    }
-                }
                 return contratacion;
             }
             catch (Exception ex)
@@ -203,7 +194,7 @@ namespace asivamosffie.services
                 //Contrato  
                 //if (!string.IsNullOrEmpty(pContrato.RutaDocumento))
                 //    contratoOld.RutaDocumento = pContrato.RutaDocumento;
-
+                 
                 contratacionOld.FechaTramite = DateTime.Now;
 
 

@@ -219,7 +219,7 @@ namespace asivamosffie.services
                                     contratoPerfilObservacionOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                                     contratoPerfilObservacionOld.FechaModificacion = DateTime.Now;
                                     contratoPerfilObservacionOld.Eliminado = false;
-                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion == null ? null : ContratoPerfilObservacion.Observacion.ToUpper();
+                                    contratoPerfilObservacionOld.Observacion = ContratoPerfilObservacion.Observacion==null? null:ContratoPerfilObservacion.Observacion.ToUpper();
                                 }
                                 else
                                 {
@@ -493,21 +493,17 @@ namespace asivamosffie.services
                     foreach (var ContratoPerfil in contratoMod.ContratoPerfil)
                     {
                         ContratoPerfil contratoPerfilOld = _context.ContratoPerfil.Find(ContratoPerfil.ContratoPerfilId);
-
-                        if (contratoPerfilOld.TieneObservacionSupervisor == true)
-                        {
-                            contratoPerfilOld.FechaModificacion = DateTime.Now;
-                            contratoPerfilOld.RegistroCompleto = false;
-                            contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
-                        }
+                        contratoPerfilOld.FechaModificacion = DateTime.Now;
+                        contratoPerfilOld.RegistroCompleto = false;
+                        contratoPerfilOld.UsuarioModificacion = UsuarioModificacion;
 
                         _context.Update(contratoPerfilOld);
                     }
-                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender);
+                    await EnviarCorreoSupervisor(ConstanCodigoTipoContratacionSTRING.Obra, contratoMod, pDominioFront, pMailServer, pMailPort, pEnableSSL, pPassword, pSender); 
                 }
 
 
-                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo)
+                if (pEstadoVerificacionContratoCodigo == ConstanCodigoEstadoContrato.Enviado_al_apoyo) 
                 {
                     //se reinicia los contadores 
                     contratoMod.RegistroCompleto = false;
