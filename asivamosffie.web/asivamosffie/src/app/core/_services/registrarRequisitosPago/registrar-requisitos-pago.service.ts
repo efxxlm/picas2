@@ -1,3 +1,4 @@
+import { Respuesta } from './../common/common.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from './../../../../environments/environment';
 import { Injectable } from '@angular/core';
@@ -21,6 +22,14 @@ export class RegistrarRequisitosPagoService {
 
   getProyectosByIdContrato( pContratoId: number ) {
     return this.http.get( `${ this.apiUrl }/GetProyectosByIdContrato?pContratoId=${ pContratoId }` );
+  }
+
+  getCriterioByFormaPagoCodigo( pFormaPagoCodigo: string ) {
+    return this.http.get( `${ this.apiUrl }/GetCriterioByFormaPagoCodigo?pFormaPagoCodigo=${ pFormaPagoCodigo }` );
+  }
+
+  createEditNewPayment( pSolicitudPago: any ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditNewPayment`, pSolicitudPago );
   }
 
 }

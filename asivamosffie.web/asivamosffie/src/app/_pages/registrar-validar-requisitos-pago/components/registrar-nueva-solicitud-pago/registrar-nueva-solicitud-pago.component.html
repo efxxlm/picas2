@@ -206,7 +206,7 @@
                                 Cargar forma de pago
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-cargar-forma-de-pago [contrato]="contrato"></app-form-cargar-forma-de-pago>
+                        <app-form-cargar-forma-de-pago [contrato]="contrato" [tipoSolicitud]="addressForm.get( 'tipoSolicitud' ).value.codigo"></app-form-cargar-forma-de-pago>
                     </mat-expansion-panel>
                 </mat-accordion>
                 <mat-accordion>

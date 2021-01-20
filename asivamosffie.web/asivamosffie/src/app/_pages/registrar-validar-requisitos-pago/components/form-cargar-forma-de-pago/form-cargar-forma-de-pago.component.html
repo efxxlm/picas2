@@ -18,8 +18,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="formaPagoPreconstruccion" required>
-                                    <mat-option *ngFor="let contr of formaPagoArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let forma of formaPagoArray" [value]="forma">
+                                        {{ forma.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -40,8 +40,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="formaPagoConstruccion" required>
-                                    <mat-option *ngFor="let contr of formaPagoArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let forma of formaPagoArray" [value]="forma">
+                                        {{ forma.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

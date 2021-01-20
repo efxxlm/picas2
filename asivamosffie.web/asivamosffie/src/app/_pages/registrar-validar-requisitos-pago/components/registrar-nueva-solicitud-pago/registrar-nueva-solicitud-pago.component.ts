@@ -100,7 +100,7 @@ export class RegistrarNuevaSolicitudPagoComponent implements OnInit {
         }
     }
 
-    seleccionAutocomplete( contrato: any ){
+    seleccionAutocomplete( contrato: any ) {
       this.addressForm.get( 'contratoSeleccionado' ).setValue( contrato );
       this.registrarPagosSvc.getContratoByContratoId( contrato.contratoId )
         .subscribe(

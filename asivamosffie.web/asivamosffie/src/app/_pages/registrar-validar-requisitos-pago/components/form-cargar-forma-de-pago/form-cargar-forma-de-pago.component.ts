@@ -1,6 +1,10 @@
-import { CommonService } from './../../../../core/_services/common/common.service';
+import { Router } from '@angular/router';
+import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { CommonService, Dominio } from './../../../../core/_services/common/common.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-form-cargar-forma-de-pago',
@@ -10,35 +14,79 @@ import { FormBuilder, Validators } from '@angular/forms';
 export class FormCargarFormaDePagoComponent implements OnInit {
 
     @Input() contrato: any;
+    @Input() tipoSolicitud: string;
     addressForm = this.fb.group({
       formaPagoPreconstruccion: [null, Validators.required],
       formaPagoConstruccion: [null, Validators.required]
     });
-    formaPagoArray = [
-      { name: 'Forma 1 (50/50)', value: '1' },
-      { name: 'Forma 2 (60/40)', value: '2' },
-      { name: 'Forma 3 (90/10)', value: '3' }
-    ];
+    formaPagoArray: Dominio[] = [];
+    solicitudPagoId = 0;
+    solicitudPagoCargarFormaPago: any;
+    solicitudPagoCargarFormaPagoId = 0;
     tieneFase1 = false;
 
     constructor(
         private fb: FormBuilder,
-        private commonSvc: CommonService )
+        private commonSvc: CommonService,
+        private dialog: MatDialog,
+        private routes: Router,
+        private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
         this.commonSvc.formasDePago()
-            .subscribe(
-                response => console.log( response )
-            );
+            .subscribe( response => {
+              console.log( response );
+              this.formaPagoArray = response;
+            } );
     }
 
     ngOnInit(): void {
         if ( this.contrato.plazoFase1PreDias !== undefined ) {
             this.tieneFase1 = true;
         }
+        if ( this.contrato.solicitudPago.length > 0 ) {
+            this.solicitudPagoId = this.contrato.solicitudPago[0].solicitudPagoId;
+            this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago;
+            console.log( this.solicitudPagoCargarFormaPago );
+        }
+    }
+
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
     }
 
     guardar() {
-
+      const pSolicitudPago = {
+        solicitudPagoId: this.solicitudPagoId,
+        tipoSolicitudCodigo: this.tipoSolicitud,
+        contratoId: this.contrato.contratoId,
+        solicitudPagoCargarFormaPago: [
+            {
+                solicitudPagoId: this.solicitudPagoId,
+                solicitudPagoCargarFormaPagoId: this.solicitudPagoCargarFormaPagoId,
+                fasePreConstruccionFormaPagoCodigo: this.addressForm.get( 'formaPagoPreconstruccion' ).value !== null ?  this.addressForm.get( 'formaPagoPreconstruccion' ).value.codigo : '',
+                faseConstruccionFormaPagoCodigo: this.addressForm.get( 'formaPagoConstruccion' ).value !== null ?  this.addressForm.get( 'formaPagoConstruccion' ).value.codigo : '',
+                tieneFase1: this.tieneFase1
+            }
+        ]
+      }
+      console.log( pSolicitudPago );
+      this.registrarPagosSvc.createEditNewPayment( pSolicitudPago )
+        .subscribe(
+            response => {
+                this.openDialog( '', `<b>${ response.message }</b>` );
+                this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                    () =>   this.routes.navigate(
+                                [
+                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId
+                                ]
+                            )
+                );
+            },
+            err => this.openDialog( '', `<b>${ err.message }</b>` )
+        );
     }
 
 }
