@@ -20,6 +20,7 @@ export class FormularioProyectosComponent implements OnInit {
   proyectoAdmin: ProyectoAdministrativo;
   listadoAportantes: Dominio[];
   listadoFuentes: Dominio[];
+  estaEditando = false;
 
   addFont(index: number) {
     this.proyectoAdmin.proyectoAdministrativoAportante[index].aportanteFuenteFinanciacion.push({ valorFuente: null, fuenteRecursosCodigo: null,fuenteFinanciacionId:null,proyectoAdministrativoAportanteId:null });
@@ -206,6 +207,7 @@ export class FormularioProyectosComponent implements OnInit {
               private router: Router) { }
 
   onSubmit() {
+    this.estaEditando = true;
     this.projectServices.CreateOrUpdateAdministrativeProyect(this.proyectoAdmin).subscribe(respuesta => {
       this.noGuardado=false;
       this.openDialog('', `<b>${respuesta.message}</b>`,true);

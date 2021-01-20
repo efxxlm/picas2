@@ -17,6 +17,7 @@ export class VotacionSolicitudComponent implements OnInit{
   miembros: any[] =  ['Juan Lizcano Garcia', 'Fernando José Aldemar Rojas', 'Gonzalo Díaz Mesa'];
 
   addressForm = this.fb.array([]);
+  estaEditando = false;
 
   get listaVotacion() {
     return this.addressForm as FormArray;
@@ -115,7 +116,7 @@ export class VotacionSolicitudComponent implements OnInit{
       this.listaVotacion.push( grupoVotacion )
     })
 
-    console.log( this.addressForm.value, this.data.sesionComiteSolicitud )
+    // console.log( this.addressForm.value, this.data.sesionComiteSolicitud )
 
   }
 
@@ -131,7 +132,7 @@ export class VotacionSolicitudComponent implements OnInit{
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     let sesionComiteSolicitud: SesionComiteSolicitud = {
       sesionComiteSolicitudId: this.data.sesionComiteSolicitud.sesionComiteSolicitudId,
       comiteTecnicoId: this.data.sesionComiteSolicitud.comiteTecnicoId,
@@ -157,7 +158,7 @@ export class VotacionSolicitudComponent implements OnInit{
       sesionComiteSolicitud.estadoCodigo = EstadosSolicitud.RechazadaPorComiteTecnico;
     })
 
-    console.log( sesionComiteSolicitud );
+    // console.log( sesionComiteSolicitud );
 
     this.technicalCommitteSessionService.createEditSesionSolicitudVoto( sesionComiteSolicitud )
     .subscribe( respuesta => {

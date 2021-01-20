@@ -1,147 +1,257 @@
 <div class="container">
-    <div class="text-right">
-      <a routerLink="/gestionarFuentes" mat-button color="primary" class="btn-regresar">
-        <img src="assets/img/icon/regresar.svg" alt="Regresar">
-      </a>
-    </div>
-    <div class="text-center">
-      <h1 class="title-menu--h1">
-        Control de recursos
-      </h1>
-    </div>
-    <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
-      <mat-card class="shipping-card var-main-gris">
-        <mat-card-header class="header-card header-card--margin">
-          <mat-card-title class="header-card--text">
-            Aportante
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <input type="hidden" formControlName="controlRecursoId">
-          <p><strong>Nombre del aportante:</strong>
-            {{ fuente?fuente.aportante.nombreAportanteString:"" }}</p>
-            <div *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
-              <p ><strong>Departamento:</strong>
-                {{ departamento }}</p>
-              <p><strong>Municipio:</strong>
-                {{ municipio }}</p>
-          </div>
-          <p><strong>Vigencia del acuerdo de cofinanciación:</strong>
-            {{ vigencia }}</p>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="shipping-card var-main-gris">
-        <mat-card-header class="header-card header-card--margin">
-          <mat-card-title class="header-card--text">
-            Datos de la fuente
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <p><strong>Fuente de recursos:</strong>
-            {{ nombreFuente }}</p>
-          <p><strong>Valor aporte fuente de recursos:</strong>
-            {{ valorFuente | currency }}</p>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="shipping-card">
-        <mat-card-content>
-          <div class="row" >
-            <div class="pr-1">
-              <label class="label-left" for="nombreCuenta">Nombre de la cuenta</label>
-            </div>
-            <div class="col">
-              <mat-form-field class="select-width">
-                <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()" required>
-                  <mat-option *ngFor="let Nombre of NombresDeLaCuenta" [value]="Nombre">
-                    {{ Nombre.nombreCuentaBanco }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="pr-1">
-              <label class="label-left" for="numeroCuenta">Número de cuenta</label>
-            </div>
-            <div class="col d-flex">
-              <mat-form-field class="full-width">
-                <input matInput type="text" class="maincolor" formControlName="numeroCuenta" readonly >
-              </mat-form-field>
-              <!-- <span class="contador">{{10 - numDocumento.value.length}}</span> -->
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
-      <mat-card class="shipping-card" *ngIf="addressForm.get('nombreCuenta').value!=null">
-        <mat-card-content>
-          <div class="row"  *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
-            <div class="pr-1">
-              <label class="label-left" for="rp">RP</label>
-            </div>
-            <div class="col">
-              <mat-form-field class="select-width">
-                <mat-select formControlName="rp" required>
-                  <mat-option *ngFor="let rp of rpArray" [value]="rp">
-                    {{ rp.numeroRp }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">            
-              <div class="pr-1">
-                <label class="label-left" for="vigencia">Vigencia</label>
-              </div>
-              <div class="col">
-                <mat-form-field class="select-width">
-                  <mat-select formControlName="vigencia" required>
-                    <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
-                      {{ vigencia.tipoVigenciaCodigo }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-          </div>
-          <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="fechaConsignacion">Fecha de consignación</label>
-                </div>
-                <div class="col d-flex">
-                  <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" class="maincolor"  required placeholder="DD/MM/AAAA" formControlName="fechaConsignacion" readonly (click)="picker.open()">
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                  <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
-                    <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                  </button>
-                </div>
-          </div>
-          <div class="row">
-                <div class="pr-1">
-                  <label class="label-left" for="numeroCuenta">Valor de consignación</label>
-                </div>
-                <div class="col d-flex">
-                  <mat-form-field class="full-width">
-                    <input matInput #valorConsignacion currencyMask maxlength="50" required class="maincolor"
-                    formControlName="valorConsignacion" keypress="if(this.value.length >= this.maxlength) return false"
-                    [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }">
-                  </mat-form-field>
-                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Valor en ($) Pesos colombianos"
-                  matTooltipClass="info-tooltip">{{50 - valorConsignacion.value.length}}</span>
-                </div>
-          </div>
-  
-        </mat-card-content>
-      </mat-card>
-      <div class="text-center">
-        <button mat-button color="warn" class="btn-guardar" type="submit">
-          <img src="assets/img/icon/guardar.svg" alt="Guardar">
-        </button>
-      </div>
-    </form>
+  <div class="text-right">
+    <a routerLink="/gestionarFuentes" mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
   </div>
+  <div class="text-center">
+    <h1 class="title-menu--h1">Control de recursos</h1>
+  </div>
+  <form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <mat-card class="shipping-card var-main-gris">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Aportante </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <input type="hidden" formControlName="controlRecursoId" />
+        <p><strong>Nombre del aportante:</strong> {{ fuente ? fuente.aportante.nombreAportanteString : '' }}</p>
+        <div *ngIf="tipoAportante.ET.includes(tipoAportanteId.toString())">
+          <p><strong>Departamento:</strong> {{ departamento }}</p>
+          <p><strong>Municipio:</strong> {{ municipio }}</p>
+        </div>
+        <p><strong>Vigencia del acuerdo de cofinanciación:</strong> {{ vigencia }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card var-main-gris">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text"> Datos de la fuente </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p><strong>Fuente de recursos:</strong> {{ nombreFuente }}</p>
+        <p><strong>Valor aporte fuente de recursos:</strong> {{ valorFuente | currency }}</p>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card">
+      <mat-card-content>
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              for="nombreCuenta"
+              [class.color-secondaryColor]="
+                (addressForm.get('nombreCuenta').invalid && addressForm.get('nombreCuenta').touched) ||
+                (addressForm.get('nombreCuenta').invalid && estaEditando)
+              "
+            >
+              Nombre de la cuenta
+            </label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="nombreCuenta" (selectionChange)="changeNombreCuenta()" required>
+                <mat-option *ngFor="let Nombre of NombresDeLaCuenta" [value]="Nombre">
+                  {{ Nombre.nombreCuentaBanco }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.get('nombreCuenta').invalid && addressForm.get('nombreCuenta').touched) ||
+                (addressForm.get('nombreCuenta').invalid && estaEditando)
+              "
+            />
+          </span>
+        </div>
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              for="numeroCuenta"
+              [class.color-secondaryColor]="
+                (addressForm.get('numeroCuenta').invalid && addressForm.get('numeroCuenta').touched) ||
+                (addressForm.get('numeroCuenta').invalid && estaEditando)
+              "
+            >
+              Número de cuenta
+            </label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input matInput type="text" class="maincolor" formControlName="numeroCuenta" readonly />
+            </mat-form-field>
+            <!-- <span class="contador">{{10 - numDocumento.value.length}}</span> -->
+          </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.get('numeroCuenta').invalid && addressForm.get('numeroCuenta').touched) ||
+                (addressForm.get('numeroCuenta').invalid && estaEditando)
+              "
+            />
+          </span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card" *ngIf="addressForm.get('nombreCuenta').value != null">
+      <mat-card-content>
+        <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              for="rp"
+              [class.color-secondaryColor]="
+                (addressForm.get('rp').invalid && addressForm.get('rp').touched) ||
+                (addressForm.get('rp').invalid && estaEditando)
+              "
+            >
+              RP
+            </label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="rp" required>
+                <mat-option *ngFor="let rp of rpArray" [value]="rp">
+                  {{ rp.numeroRp }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.get('rp').invalid && addressForm.get('rp').touched) ||
+                (addressForm.get('rp').invalid && estaEditando)
+              "
+            />
+          </span>
+        </div>
+        <div class="row" *ngIf="!tipoAportante.FFIE.includes(tipoAportanteId.toString())">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              for="vigencia"
+              [class.color-secondaryColor]="
+                (addressForm.get('vigencia').invalid && addressForm.get('vigencia').touched) ||
+                (addressForm.get('vigencia').invalid && estaEditando)
+              "
+            >
+              Vigencia
+            </label>
+          </div>
+          <div class="col">
+            <mat-form-field class="select-width">
+              <mat-select formControlName="vigencia" required>
+                <mat-option *ngFor="let vigencia of listaVigencias" [value]="vigencia">
+                  {{ vigencia.tipoVigenciaCodigo }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (addressForm.get('vigencia').invalid && addressForm.get('vigencia').touched) ||
+                (addressForm.get('vigencia').invalid && estaEditando)
+              "
+            />
+          </span>
+        </div>
+        <div class="row">
+          <div class="pr-1">
+            <label class="label-left" for="fechaConsignacion"> Fecha de consignación </label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="example-full-width">
+              <input
+                matInput
+                [matDatepicker]="picker"
+                class="maincolor"
+                required
+                placeholder="DD/MM/AAAA"
+                formControlName="fechaConsignacion"
+                readonly
+                (click)="picker.open()"
+              />
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">
+              <img src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario" />
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="pr-1">
+            <label
+              class="label-left"
+              for="valorConsignacion"
+              [class.color-secondaryColor]="
+                (addressForm.get('valorConsignacion').invalid && addressForm.get('valorConsignacion').touched) ||
+                (addressForm.get('valorConsignacion').invalid && estaEditando)
+              "
+            >
+              Valor de consignación
+            </label>
+          </div>
+          <div class="col d-flex">
+            <mat-form-field class="full-width">
+              <input
+                matInput
+                #valorConsignacion
+                currencyMask
+                maxlength="50"
+                required
+                class="maincolor"
+                formControlName="valorConsignacion"
+                keypress="if(this.value.length >= this.maxlength) return false"
+                [options]="{ prefix: '$ ', thousands: '.', precision: '0', align: 'center', allowNegative: false }"
+              />
+            </mat-form-field>
+            <span
+              class="contador"
+              [matTooltipPosition]="'above'"
+              matTooltip="Valor en ($) Pesos colombianos"
+              matTooltipClass="info-tooltip"
+            >
+              {{ 50 - valorConsignacion.value.length }}
+            </span>
+            <span class="icon-incompleto">
+              <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                  (addressForm.get('valorConsignacion').invalid && addressForm.get('valorConsignacion').touched) ||
+                  (addressForm.get('valorConsignacion').invalid && estaEditando)
+                "
+              />
+            </span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div class="text-center">
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+      </button>
+    </div>
+  </form>
+</div>
 
-  <pre>
+<pre>
     <!-- {{addressForm.value | json}}  -->
   </pre>
 

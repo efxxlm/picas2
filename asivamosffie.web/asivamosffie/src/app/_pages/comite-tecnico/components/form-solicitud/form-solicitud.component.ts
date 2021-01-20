@@ -25,7 +25,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   @Output() validar: EventEmitter<boolean> = new EventEmitter();
 
   minDate: Date;
-
+  estaEditando = false;
   tiposSolicitud = TiposSolicitud;
 
   fechaSolicitud: Date;
@@ -153,7 +153,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       data: { modalTitle, modalText, siNoBoton: true }
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
       if (result === true) {
         this.eliminarCompromisos(e);
       }
@@ -230,7 +230,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   changeCompromisos(requiereCompromisos) {
 
     if (requiereCompromisos.value === false) {
-      console.log(requiereCompromisos.value);
+      // console.log(requiereCompromisos.value);
       this.technicalCommitteSessionService.eliminarCompromisosSolicitud(this.sesionComiteSolicitud.sesionComiteSolicitudId)
         .subscribe(respuesta => {
           if (respuesta.code == "200") {
@@ -256,7 +256,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-
+    this.estaEditando = true;
     if (this.proyectos)
       this.proyectos.forEach(p => {
         let proyecto = p.proyecto
@@ -299,12 +299,12 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
       Solicitud.sesionSolicitudCompromiso.push(sesionSolicitudCompromiso);
     })
 
-    console.log(Solicitud)
+    // console.log(Solicitud)
 
     this.technicalCommitteSessionService.createEditActasSesionSolicitudCompromiso(Solicitud)
       .subscribe(respuesta => {
         this.openDialog('', `<b>${respuesta.message}</b>`)
-        console.log(respuesta.data)
+        // console.log(respuesta.data)
         this.validar.emit(respuesta.data);
         if (respuesta.code == "200" && !respuesta.data)
           this.router.navigate(['/comiteTecnico/crearActa', this.sesionComiteSolicitud.comiteTecnicoId])
@@ -314,7 +314,7 @@ export class FormSolicitudComponent implements OnInit, OnChanges {
 
   cargarRegistro() {
 
-    console.log(this.sesionComiteSolicitud)
+    // console.log(this.sesionComiteSolicitud)
 
     let estados: string[] = ['1', '3', '5']
 

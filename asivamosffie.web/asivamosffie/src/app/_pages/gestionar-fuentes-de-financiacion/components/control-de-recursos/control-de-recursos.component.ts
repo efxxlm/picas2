@@ -37,6 +37,7 @@ export class ControlDeRecursosComponent implements OnInit {
   NombresDeLaCuenta: CuentaBancaria[] = [] ;
 
   rpArray: RegistroPresupuestal[] = [];
+  estaEditando = false;
 
   constructor(
               private fb: FormBuilder,
@@ -155,11 +156,12 @@ export class ControlDeRecursosComponent implements OnInit {
   }
 
   onSubmit(){
+    this.estaEditando = true;
     if (this.addressForm.valid){
 
       let rp = this.addressForm.get('rp').value;
-console.log(this.addressForm.get('vigencia').value);
-console.log(this.addressForm);
+      // console.log(this.addressForm.get('vigencia').value);
+      // console.log(this.addressForm);
       let control: ControlRecurso = {
         controlRecursoId: this.addressForm.get('controlRecursoId').value,
         cuentaBancariaId: this.addressForm.get('nombreCuenta').value.cuentaBancariaId,

@@ -28,6 +28,7 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
   ngOnInit(): void {
     if(this.isEditable==true){
@@ -78,7 +79,8 @@ export class FormReclamacionAseguradoraActuacionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    this.estaEditando = true;
+    // console.log(this.addressForm.value);
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 

@@ -58,6 +58,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   tipoCodigo: any;
   numIdentificacionRepLegalInterventoria: any;
   nomRepresentanteLegalContrInterventoria: any;
+  estaEditando = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
@@ -145,10 +146,10 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
   generarFechaRestante() {
     let newdate = new Date(this.addressForm.value.fechaActaInicioFUnoPreconstruccion);
     newdate.setDate(newdate.getDate() + (this.mesPlazoIni * 30.44));
-    console.log(newdate);
+    // console.log(newdate);
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.diasPlazoIni)
-    console.log(newDateFinal);
+    // console.log(newDateFinal);
     this.addressForm.get('fechaPrevistaTerminacion').setValue(newDateFinal);
 
   }
@@ -230,6 +231,7 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     return patron.test(te);
   }
   onSubmit() {
+    this.estaEditando = true;
     let mesPlazoFase2;
     let diasPlazoFase2;
     let esSupervisionBool;

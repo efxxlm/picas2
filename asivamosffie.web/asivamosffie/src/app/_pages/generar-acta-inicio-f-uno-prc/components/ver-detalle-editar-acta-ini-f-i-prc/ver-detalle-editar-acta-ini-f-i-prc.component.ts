@@ -80,6 +80,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   plazoDiasContrato = 0;
   plazoMesesFase1 = 0;
   plazoMesesFase2 = 0;
+  estaEditando = false;
 
   constructor(private router: Router, public dialog: MatDialog, private fb: FormBuilder, private activatedRoute: ActivatedRoute, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
@@ -162,7 +163,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
   loadData(id) {
     this.service.GetContratoByContratoId(id).subscribe((data: any) => {
       this.contrato = data;
-      console.log( this.contrato );
+      // console.log( this.contrato );
       this.cargarDataParaInsercion(data);
       this.verObservaciones(data.conObervacionesActa);
       //Datos correspondientes al formulario
@@ -290,7 +291,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     newdate.setDate(newdate.getDate() + (this.mesPlazoIni * 30.44));
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.diasPlazoIni)
-    console.log(newDateFinal);
+    // console.log(newDateFinal);
     this.addressForm.get('fechaPrevistaTerminacion').setValue(newDateFinal);
   }
   crearFormulario() {
@@ -353,6 +354,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
     return patron.test(te);
   }
   onSubmit() {
+    this.estaEditando = true;
     let esSupervisionBool;
     let fecha = Date.parse(this.addressForm.get('fechaActaInicioFUnoPreconstruccion').value);
     this.fechaSesion = new Date(fecha);
@@ -439,7 +441,7 @@ export class VerDetalleEditarActaIniFIPreconstruccioComponent implements OnInit,
       });
       this.realizoPeticion = true;
     }
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
   }
 
 }

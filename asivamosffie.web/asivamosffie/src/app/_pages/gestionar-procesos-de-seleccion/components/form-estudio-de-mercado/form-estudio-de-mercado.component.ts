@@ -18,6 +18,8 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
   addressForm: FormGroup = this.fb.group({});
 
+  estaEditando = false;
+
   get cotizaciones() {
     return this.addressForm.get('cotizaciones') as FormArray;
   }
@@ -43,7 +45,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSubmit();          
@@ -182,6 +184,7 @@ export class FormEstudioDeMercadoComponent implements OnInit {
 
   onSubmit() {
     //console.log(this.procesoSeleccion);return;
+    this.estaEditando = true;
     const listaCotizaciones = this.addressForm.get('cotizaciones') as FormArray;
 
     this.procesoSeleccion.procesoSeleccionCotizacion = [];

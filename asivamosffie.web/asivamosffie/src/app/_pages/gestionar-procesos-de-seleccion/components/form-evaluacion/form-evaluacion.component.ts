@@ -34,6 +34,7 @@ export class FormEvaluacionComponent {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor(private fb: FormBuilder,public dialog: MatDialog) {}
   noGuardado=true;
@@ -44,7 +45,7 @@ export class FormEvaluacionComponent {
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSubmit();          
@@ -81,7 +82,8 @@ export class FormEvaluacionComponent {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    this.estaEditando = true;
+    // console.log(this.addressForm.value);
 
     this.procesoSeleccion.procesoSeleccionId = this.addressForm.get('procesoSeleccionId').value,
     this.procesoSeleccion.evaluacionDescripcion = this.addressForm.get('descricion').value,

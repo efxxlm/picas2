@@ -106,7 +106,9 @@ button.btn-calendario {
     margin-left: .65em;
 
     img {
-        height: 2.2em;
+        height: 2em;
+        border: solid 1px $mainColor;
+        border-radius: 50%;
     }
 
     &:hover::before {

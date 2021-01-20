@@ -1,26 +1,66 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()" *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo==estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario">
+<form
+  [formGroup]="addressForm"
+  novalidate
+  (ngSubmit)="onSubmit()"
+  *ngIf="procesoSeleccion.estadoProcesoSeleccionCodigo == estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario"
+>
   <div class="d-flex align-items-center">
-    <div class="text-area-quill">
+    <div
+      class="text-area-quill"
+      [class.color-secondaryColor]="
+        (addressForm.get('descricion').invalid && addressForm.get('descricion').touched) ||
+        (addressForm.get('descricion').invalid && estaEditando)
+      "
+    >
       <label for="descricion" class="text-area-quill--label">Descripción</label>
-      <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-        (onContentChanged)="maxLength($event, 3000)" formControlName="descricion" required></quill-editor>
-        <input type="hidden" formControlName="procesoSeleccionId">
+      <quill-editor
+        class="quill-editor-style"
+        [styles]="editorStyle"
+        [modules]="config"
+        (onContentChanged)="maxLength($event, 3000)"
+        formControlName="descricion"
+        required
+      ></quill-editor>
+      <input type="hidden" formControlName="procesoSeleccionId" />
     </div>
     <span class="contador miles" *ngIf="addressForm.get('descricion').value">
-      {{3000 - (textoLimpio(addressForm.get('descricion').value)>3000?3000:textoLimpio(addressForm.get('descricion').value))}}
+      {{
+        3000 -
+          (textoLimpio(addressForm.get('descricion').value) > 3000
+            ? 3000
+            : textoLimpio(addressForm.get('descricion').value))
+      }}
     </span>
-    <span class="contador miles" *ngIf="!addressForm.get('descricion').value">
-      3000
+    <span class="contador miles" *ngIf="!addressForm.get('descricion').value"> 3000 </span>
+    <span class="icon-incompleto">
+      <img
+        class="icon-incompleto--img"
+        src="assets/img/icon/incompleto.svg"
+        alt="este campo es requerido"
+        *ngIf="
+          (addressForm.get('descricion').invalid && addressForm.get('descricion').touched) ||
+          (addressForm.get('descricion').invalid && estaEditando)
+        "
+      />
     </span>
   </div>
 
   <div class="row margin-url-input">
     <div class="pr-1">
-      <label for="url" class="label-left">URL con soporte</label>
+      <label
+        for="url"
+        class="label-left"
+        [class.color-secondaryColor]="
+          (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+          (addressForm.get('url').invalid && estaEditando)
+        "
+      >
+        URL con soporte
+      </label>
     </div>
     <div class="col d-flex">
       <mat-form-field class="full-width">
-        <input matInput type="url" formControlName="url">
+        <input matInput type="url" formControlName="url" />
       </mat-form-field>
     </div>
   </div>
@@ -29,10 +69,21 @@
       <span class="info-url">Indique la ruta del soporte de esta información</span>
     </div>
   </div>
+  <span class="icon-incompleto">
+    <img
+      class="icon-incompleto--img"
+      src="assets/img/icon/incompleto.svg"
+      alt="este campo es requerido"
+      *ngIf="
+        (addressForm.get('url').invalid && addressForm.get('url').touched) ||
+        (addressForm.get('url').invalid && estaEditando)
+      "
+    />
+  </span>
 
   <div class="text-center">
     <button *ngIf="editar" mat-button color="warn" class="btn-guardar" type="submit">
-      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
     </button>
   </div>
 </form>

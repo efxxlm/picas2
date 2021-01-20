@@ -28,6 +28,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
       Validators.required])
     ]
   });
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -55,7 +56,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   };
 
   ngOnInit() {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       resolve();
     });
   }
@@ -141,6 +142,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
 
   onSubmit() {
+    this.estaEditando = true;
     this.noGuardado=false;
   }
 

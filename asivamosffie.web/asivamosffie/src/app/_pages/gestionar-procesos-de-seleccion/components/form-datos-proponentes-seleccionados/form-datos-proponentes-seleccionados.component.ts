@@ -18,6 +18,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   @Input() editar:boolean;
   @Output() guardar: EventEmitter<any> = new EventEmitter();
 
+  estaEditando = false;
+
   listaDepartamentos: Localizacion[] = [];
   listaMunicipios: Localizacion[] = [];
   listaProponentes: Dominio[] = [];
@@ -144,7 +146,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSubmitPersonaNatural();          
@@ -158,7 +160,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSubmitPersonaJuridicaIndividual();          
@@ -172,7 +174,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
         data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
-        console.log(`Dialog result: ${result}`);
+        // console.log(`Dialog result: ${result}`);
         if(result === true)
         {
             this.onSubmitUnionTemporal();          
@@ -183,7 +185,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   ngOnInit() {
 
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       forkJoin([
 
         this.commonService.listaTipoProponente(),
@@ -425,13 +427,13 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
         }
       );
     }
-    console.log(borrarForm);
+    // console.log(borrarForm);
     /*borrarForm.removeAt(i);
     this.unionTemporalForm.get("cuantasEntidades").setValue(borrarForm.length);*/
   }
 
   onSubmitPersonaNatural() {
-
+    this.estaEditando = true;
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
       procesoSeleccionProponenteId: this.personaNaturalForm.get('procesoSeleccionProponenteId').value,
@@ -454,6 +456,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
 
   onSubmitPersonaJuridicaIndividual() {
 
+    this.estaEditando = true;
     this.procesoSeleccion.procesoSeleccionProponente = [];
     let proponente: ProcesoSeleccionProponente = {
 
@@ -494,9 +497,8 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   }
 
   onSubmitUnionTemporal() {
-
+    this.estaEditando = true;
     let porcentaje: number = 0;
-
     this.procesoSeleccion.procesoSeleccionProponente = [];
     this.procesoSeleccion.procesoSeleccionIntegrante = [];
 

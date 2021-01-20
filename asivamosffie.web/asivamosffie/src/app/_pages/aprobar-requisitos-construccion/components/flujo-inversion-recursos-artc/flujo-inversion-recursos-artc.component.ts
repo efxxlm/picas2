@@ -47,6 +47,7 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
   @Input() contratoConstruccionId: any;
   @Output() createEdit = new EventEmitter();
   totalGuardados = 0;
+  estaEditando = false;
 
   constructor(
     private dialog: MatDialog,
@@ -148,7 +149,7 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
   }
 
   guardarFlujo() {
-
+    this.estaEditando = true;
     const construccion = {
       contratoConstruccionId: this.contratoConstruccionId,
       tieneObservacionesFlujoInversionSupervisor: this.addressForm.value.tieneObservaciones,
@@ -166,7 +167,7 @@ export class FlujoInversionRecursosArtcComponent implements OnInit {
       ]
     };
 
-    console.log( construccion );
+    // console.log( construccion );
 
     if (  this.addressForm.value.tieneObservaciones === false
           && this.totalGuardados === 0

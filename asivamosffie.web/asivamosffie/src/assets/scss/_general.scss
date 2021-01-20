@@ -138,8 +138,17 @@ strong {
   margin-bottom: 1em;
 }
 
+.my-1em {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 .mr-0 {
   margin-right: 0 !important;
+}
+
+.mr-05em {
+  margin-right: 0.5em !important;
 }
 
 .ml-05 {
@@ -274,7 +283,7 @@ input[type="number"]::-webkit-outer-spin-button {
   background-color: $tertiaryColor;
   color: $tertiaryColorFont;
   border-radius: 50em;
-  padding: 0 1em;
+  padding: 0 1.2em;
   font-size: 1em !important;
   text-align: center;
 }

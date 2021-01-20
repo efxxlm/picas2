@@ -18,6 +18,7 @@ export class BtnRegistrarComponent implements OnInit {
   regitrarAporteForm = this.fb.group({
     tipoAportante: [null, Validators.required]
   });
+  estaEditando = false;
 
   constructor(
     private fb: FormBuilder,
@@ -32,6 +33,7 @@ export class BtnRegistrarComponent implements OnInit {
   }
 
   onSubmit() {
+    this.estaEditando = true;
     if (this.regitrarAporteForm.valid) {
       let idTipoAportante: number;
       idTipoAportante = this.regitrarAporteForm.get('tipoAportante').value.dominioId

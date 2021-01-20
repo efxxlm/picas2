@@ -46,6 +46,7 @@ export class FormDescripcionActuacionComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -100,7 +101,8 @@ export class FormDescripcionActuacionComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
+    this.estaEditando = true;
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 }

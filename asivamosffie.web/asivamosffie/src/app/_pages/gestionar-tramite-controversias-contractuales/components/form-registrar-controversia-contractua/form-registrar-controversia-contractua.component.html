@@ -12,21 +12,40 @@
             <div class="col-md-4">
                 <div class="row">
                     <div class="pr-1">
-                        <label class="label-left" for="contrato">Número de contrato</label>
+                        <label class="label-left" for="contrato"
+            [class.color-secondaryColor]="
+              (addressForm.get('contrato').invalid && addressForm.get('contrato').touched) ||
+              (addressForm.get('contrato').invalid && estaEditando)
+            ">
+                            Número de contrato
+
+                        </label>
                     </div>
                     <div class="col d-flex">
                         <mat-form-field class="full-width">
                           <input matInput #nombre type="text" maxlength="100" required
                             [matAutocomplete]="auto">
                           <mat-autocomplete #auto="matAutocomplete">
-                            <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of contratosArray  | async"
-                            [value]="contr.value">
+                            <!-- <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of contratosArray  | async" -- no existe esa funcion -->
+                            <mat-option *ngFor="let nombres of contratosArray  | async"
+                            [value]="nombres.value">
                               {{nombres}}
                             </mat-option>
                           </mat-autocomplete>
                           <input type="hidden" formControlName="contrato">
                         </mat-form-field>
                       </div>
+          <span class="icon-incompleto">
+            <img
+                class="icon-incompleto--img"
+                src="assets/img/icon/incompleto.svg"
+                alt="este campo es requerido"
+                *ngIf="
+                    (addressForm.get('contrato').invalid && addressForm.get('contrato').touched) ||
+                    (addressForm.get('contrato').invalid && estaEditando)
+                "
+            />
+        </span>
                     <!--
                     <div class="col">
                         <mat-form-field class="select-width">

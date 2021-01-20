@@ -36,6 +36,7 @@ export class FormPerfilComponent implements OnInit {
     ]
   };
   perfilesCv: Dominio[] = [];
+  estaEditando = false;
 
   get perfiles() {
     return this.formContratista.get( 'perfiles' ) as FormArray;
@@ -423,6 +424,7 @@ export class FormPerfilComponent implements OnInit {
   }
 
   guardar() {
+    this.estaEditando = true;
     const perfiles: ContratoPerfil[] = this.formContratista.get( 'perfiles' ).value;
 
     if ( this.perfilProyecto.length === 0 ) {

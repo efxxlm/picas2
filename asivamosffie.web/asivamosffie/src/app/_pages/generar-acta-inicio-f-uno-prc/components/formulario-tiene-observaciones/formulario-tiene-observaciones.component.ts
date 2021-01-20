@@ -20,6 +20,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
   observacionesUltimas: any;
   contratoObservacionId: any;
   realizoPeticion: boolean = false;
+  estaEditando = false;
   constructor(private router: Router,public dialog: MatDialog, private fb: FormBuilder, private service: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
@@ -70,7 +71,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
     })
   }
   maxLength(e: any, n: number) {
-    console.log(e.editor.getLength()+" "+n);
+    // console.log(e.editor.getLength()+" "+n);
     if (e.editor.getLength() > n) {
       e.editor.deleteText(n-1, e.editor.getLength());
     }
@@ -111,6 +112,7 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
     });
   }
   onSubmit() {
+    this.estaEditando = true;
     let dataObsrvacionWrite;
     if(this.addressForm.value.observaciones==null){
       dataObsrvacionWrite = "";
@@ -230,6 +232,6 @@ export class FormularioTieneObservacionesComponent implements OnInit, OnDestroy 
 
       })
     }
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
   }
 }

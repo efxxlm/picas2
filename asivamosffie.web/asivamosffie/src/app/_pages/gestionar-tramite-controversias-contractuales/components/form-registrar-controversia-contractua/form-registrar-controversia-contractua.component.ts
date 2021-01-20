@@ -16,6 +16,7 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
     { name: 'C223456789', value: '1' },
     { name: 'C223456999', value: '2' },
   ];
+  estaEditando = false;
   constructor(  private fb: FormBuilder, public dialog: MatDialog) { }
 
   ngOnInit(): void {
@@ -62,7 +63,8 @@ export class FormRegistrarControversiaContractuaComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.addressForm.value);
+    // console.log(this.addressForm.value);
+    this.estaEditando = true;
     this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
   }
 }

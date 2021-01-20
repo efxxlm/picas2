@@ -24,6 +24,7 @@ export class FormRegistroModificacionContractualComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  estaEditando = false;
 
   constructor ( private dialog: MatDialog,
                 private routes: Router ) { }
@@ -64,7 +65,8 @@ export class FormRegistroModificacionContractualComponent implements OnInit {
   };
 
   guardar () {
-    console.log( this.dataFormulario );
+    this.estaEditando = true;
+    // console.log( this.dataFormulario );
 
     if ( this.dataFormulario.invalid ) {
       this.openDialog( '', '<b>Falta registrar información</b>' );

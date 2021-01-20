@@ -62,6 +62,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
   objeto: any;
   valorProponente: any;
   numeroIdentificacionRepresentanteContratistaInterventoria: any;
+  estaEditando = false;
   constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, private services: ActBeginService) { }
   ngOnInit(): void {
     this.addressForm = this.crearFormulario();
@@ -228,6 +229,7 @@ export class FormValidarActaInicioConstruccionComponent implements OnInit, OnDes
     });
   }
   onSubmit() {
+    this.estaEditando = true;
     this.fechaSesion = new Date(this.fechaCreacion);
     this.fechaSesionString = `${this.fechaSesion.getFullYear()}-${this.fechaSesion.getMonth() + 1}-${this.fechaSesion.getDate()}`;
     

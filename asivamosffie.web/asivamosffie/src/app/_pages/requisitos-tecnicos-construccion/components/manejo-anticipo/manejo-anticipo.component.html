@@ -2,90 +2,186 @@
   <form autocomplete="off" [formGroup]="formAnticipo" (ngSubmit)="guardar()">
     <mat-card>
       <mat-card-content>
-
         <div class="row">
           <div class="pr-1">
-            <label class="label-left" for="tieneObservacion">
+            <label
+              class="label-left"
+              for="requiereAnticipo"
+              [class.color-secondaryColor]="
+                (formAnticipo.get('requiereAnticipo').invalid && formAnticipo.get('requiereAnticipo').touched) ||
+                (formAnticipo.get('requiereAnticipo').invalid && estaEditando)
+              "
+            >
               ¿El contrato requiere anticipo?
             </label>
           </div>
           <div>
             <mat-radio-group class="radioInput" formControlName="requiereAnticipo">
-              <mat-radio-button [value]="true" [checked]="formAnticipo.get( 'requiereAnticipo' ).value === true">Sí</mat-radio-button>
-              <mat-radio-button [value]="false" [checked]="formAnticipo.get( 'requiereAnticipo' ).value === false">No</mat-radio-button>
+              <mat-radio-button [value]="true" [checked]="formAnticipo.get('requiereAnticipo').value === true"
+                >Sí</mat-radio-button
+              >
+              <mat-radio-button [value]="false" [checked]="formAnticipo.get('requiereAnticipo').value === false"
+                >No</mat-radio-button
+              >
             </mat-radio-group>
             <span class="required-form-group m-0">*</span>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (formAnticipo.get('requiereAnticipo').invalid && formAnticipo.get('requiereAnticipo').touched) ||
+                (formAnticipo.get('requiereAnticipo').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
-      
-        <div class="row animatedDown" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+
+        <div class="row animatedDown" *ngIf="formAnticipo.get('requiereAnticipo').value">
           <div class="pr-1">
-            <label class="label-left" for="tieneObservacion">
+            <label
+              class="label-left"
+              for="planInversionAnticipo"
+              [class.color-secondaryColor]="
+                (formAnticipo.get('planInversionAnticipo').invalid &&
+                  formAnticipo.get('planInversionAnticipo').touched) ||
+                (formAnticipo.get('planInversionAnticipo').invalid && estaEditando)
+              "
+            >
               ¿Cuenta con plan de inversión aprobado para el anticipo?
             </label>
           </div>
           <div>
             <mat-radio-group class="radioInput" formControlName="planInversionAnticipo">
-              <mat-radio-button [value]="true" [checked]="formAnticipo.get( 'planInversionAnticipo' ).value === true">Sí</mat-radio-button>
-              <mat-radio-button [value]="false" [checked]="formAnticipo.get( 'planInversionAnticipo' ).value === false">No</mat-radio-button>
+              <mat-radio-button [value]="true" [checked]="formAnticipo.get('planInversionAnticipo').value === true"
+                >Sí</mat-radio-button
+              >
+              <mat-radio-button [value]="false" [checked]="formAnticipo.get('planInversionAnticipo').value === false"
+                >No</mat-radio-button
+              >
             </mat-radio-group>
             <span class="required-form-group m-0">*</span>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (formAnticipo.get('planInversionAnticipo').invalid &&
+                  formAnticipo.get('planInversionAnticipo').touched) ||
+                (formAnticipo.get('planInversionAnticipo').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
-      
-        <div class="row animatedDown" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+
+        <div class="row animatedDown" *ngIf="formAnticipo.get('requiereAnticipo').value">
           <div class="pr-1">
-            <label class="label-left" for="tieneObservacion">
+            <label
+              class="label-left"
+              for="cronogramaAmortizacionAprobado"
+              [class.color-secondaryColor]="
+                (formAnticipo.get('cronogramaAmortizacionAprobado').invalid &&
+                  formAnticipo.get('cronogramaAmortizacionAprobado').touched) ||
+                (formAnticipo.get('cronogramaAmortizacionAprobado').invalid && estaEditando)
+              "
+            >
               ¿Cuenta con cronograma de amortización aprobado?
             </label>
           </div>
           <div>
             <mat-radio-group class="radioInput" formControlName="cronogramaAmortizacionAprobado">
-              <mat-radio-button [value]="true" [checked]="formAnticipo.get( 'cronogramaAmortizacionAprobado' ).value === true">Sí</mat-radio-button>
-              <mat-radio-button [value]="false" [checked]="formAnticipo.get( 'cronogramaAmortizacionAprobado' ).value === false">No</mat-radio-button>
+              <mat-radio-button
+                [value]="true"
+                [checked]="formAnticipo.get('cronogramaAmortizacionAprobado').value === true"
+                >Sí</mat-radio-button
+              >
+              <mat-radio-button
+                [value]="false"
+                [checked]="formAnticipo.get('cronogramaAmortizacionAprobado').value === false"
+                >No</mat-radio-button
+              >
             </mat-radio-group>
             <span class="required-form-group m-0">*</span>
           </div>
+          <span class="icon-incompleto">
+            <img
+              class="icon-incompleto--img"
+              src="assets/img/icon/incompleto.svg"
+              alt="este campo es requerido"
+              *ngIf="
+                (formAnticipo.get('cronogramaAmortizacionAprobado').invalid &&
+                  formAnticipo.get('cronogramaAmortizacionAprobado').touched) ||
+                (formAnticipo.get('cronogramaAmortizacionAprobado').invalid && estaEditando)
+              "
+            />
+          </span>
         </div>
       </mat-card-content>
     </mat-card>
 
-    <section class="text-center container w-100 mt-2em" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value">
+    <section class="text-center container w-100 mt-2em" *ngIf="formAnticipo.get('requiereAnticipo').value">
       <div class="d-flex mt-1em">
-        <label class="ml-5em"><b>URL con soporte</b></label>
+        <label
+          class="ml-5em"
+          [class.color-secondaryColor]="
+            (formAnticipo.get('urlSoporte').invalid && formAnticipo.get('urlSoporte').touched) ||
+            (formAnticipo.get('urlSoporte').invalid && estaEditando)
+          "
+          ><b>URL con soporte</b></label
+        >
         <div class="w-80">
           <mat-form-field>
-            <input matInput type="text" formControlName="urlSoporte" required>
+            <input matInput type="text" formControlName="urlSoporte" required />
           </mat-form-field>
         </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (formAnticipo.get('urlSoporte').invalid && formAnticipo.get('urlSoporte').touched) ||
+              (formAnticipo.get('urlSoporte').invalid && estaEditando)
+            "
+          />
+        </span>
       </div>
-      
+
       <div class="text-center">
         <span class="info-url">Indique la ruta del soporte de esta información</span>
       </div>
     </section>
-    
-    <div class="text-center" *ngIf="formAnticipo.get( 'requiereAnticipo' ).value === true || formAnticipo.get( 'requiereAnticipo' ).value === false">
-      <button mat-button 
-              color="warn" 
-              class="btn-guardar" 
-              type="submit">
-              <img  src="assets/img/icon/guardar.svg">
+
+    <div
+      class="text-center"
+      *ngIf="
+        formAnticipo.get('requiereAnticipo').value === true || formAnticipo.get('requiereAnticipo').value === false
+      "
+    >
+      <button mat-button color="warn" class="btn-guardar" type="submit">
+        <img src="assets/img/icon/guardar.svg" />
       </button>
     </div>
   </form>
 </div>
 <div align="center" *ngIf="contratoConstruccion && contratoConstruccion.observacionDevolucionManejoAnticipo">
-  <mat-card class="border" style="margin-top: 20px;">
-      <mat-card-header class="header-card">
-          <mat-card-title class="header-card--text grayTitle">
-            Observaciones de la supervisión
-          </mat-card-title>
-      </mat-card-header>
-      <mat-card-content align="left" >
-          <p style="margin-left: 2em;"><b>{{ contratoConstruccion.observacionDevolucionManejoAnticipo.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-          <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-          <section [innerHTML]="contratoConstruccion.observacionDevolucionManejoAnticipo.observaciones" style="margin-left: 2em;"></section>
-      </mat-card-content>
+  <mat-card class="border" style="margin-top: 20px">
+    <mat-card-header class="header-card">
+      <mat-card-title class="header-card--text grayTitle"> Observaciones de la supervisión </mat-card-title>
+    </mat-card-header>
+    <mat-card-content align="left">
+      <p style="margin-left: 2em">
+        <b>{{ contratoConstruccion.observacionDevolucionManejoAnticipo.fechaCreacion | date: 'dd/MM/yyyy' }}</b>
+      </p>
+      <p style="margin-left: 2em"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+      <section
+        [innerHTML]="contratoConstruccion.observacionDevolucionManejoAnticipo.observaciones"
+        style="margin-left: 2em"
+      ></section>
+    </mat-card-content>
   </mat-card>
 </div>
