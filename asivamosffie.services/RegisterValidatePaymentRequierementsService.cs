@@ -156,6 +156,17 @@ namespace asivamosffie.services
                     CreateEditNewPaymentWayToPay(pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault());
                 }
 
+                if (pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.Count() > 0)
+                {
+                    pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().UsuarioCreacion = pSolicitudPago.UsuarioCreacion;
+                   
+                    CreateEditRegistrarSolicitudPago(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault());
+                     
+                    CreateEditFaseCriterio(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().SolicitudPagoFase, pSolicitudPago.UsuarioCreacion);
+           
+                
+                }
+
                 return
                      new Respuesta
                      {
@@ -180,6 +191,53 @@ namespace asivamosffie.services
             }
         }
 
+        private void CreateEditRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago solicitudPagoRegistrarSolicitudPago)
+        {
+            if (solicitudPagoRegistrarSolicitudPago.SolicitudPagoRegistrarSolicitudPagoId > 0)
+            {
+                SolicitudPagoRegistrarSolicitudPago solicitudPagoRegistrarSolicitudPagoOld = _context.SolicitudPagoRegistrarSolicitudPago.Find(solicitudPagoRegistrarSolicitudPago.SolicitudPagoRegistrarSolicitudPagoId);
+                solicitudPagoRegistrarSolicitudPagoOld.FechaModificacion = DateTime.Now;
+                solicitudPagoRegistrarSolicitudPagoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago);
+
+                solicitudPagoRegistrarSolicitudPagoOld.FechaSolicitud = solicitudPagoRegistrarSolicitudPago.FechaSolicitud;
+                solicitudPagoRegistrarSolicitudPagoOld.NumeroRadicadoSac = solicitudPagoRegistrarSolicitudPago.NumeroRadicadoSac;
+            }
+            else
+            {
+                solicitudPagoRegistrarSolicitudPago.FechaCreacion = DateTime.Now;
+                solicitudPagoRegistrarSolicitudPago.Eliminado = false;
+                solicitudPagoRegistrarSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago); 
+            }
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
+        {
+            return false;
+        }
+
+        private void CreateEditFaseCriterio(ICollection<SolicitudPagoFase> solicitudPagoFaseList, string pUsuarioCreacion)
+        {
+            foreach (var SolicitudPagoFase in solicitudPagoFaseList)
+            {
+                if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
+                {
+                    SolicitudPagoFase solicitudPagoFaseOld = _context.SolicitudPagoFase.Find(SolicitudPagoFase.SolicitudPagoFaseId);
+                    solicitudPagoFaseOld.UsuarioModificacion = pUsuarioCreacion;
+                    solicitudPagoFaseOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoFaseOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
+
+                }
+                else
+                {
+                    SolicitudPagoFase.FechaCreacion = DateTime.Now;
+                    SolicitudPagoFase.Eliminado = false;
+                    SolicitudPagoFase.UsuarioCreacion = pUsuarioCreacion;
+                    SolicitudPagoFase.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
+                    _context.SolicitudPagoFase.Add(SolicitudPagoFase);
+                }
+            }
+        }
+         
         private void CreateEditNewPaymentNew(SolicitudPago pSolicitudPago)
         {
             if (pSolicitudPago.SolicitudPagoId > 0)
@@ -227,8 +285,13 @@ namespace asivamosffie.services
         }
 
         #endregion
-        #region Validate Complete Form
 
+
+        #region Validate Complete Form
+        private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
+        {
+            return false;
+        }
         private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
         {
             return false;
