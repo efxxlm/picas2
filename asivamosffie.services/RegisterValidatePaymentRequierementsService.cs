@@ -70,26 +70,41 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
         {
-            List<int?> ListIdContratosConSolicitudPago = _context.SolicitudPago.Where(s => s.Eliminado != false && s.ContratoId != null).Select(r => r.ContratoId).ToList();
+            try
+            {
+                ///Siempre aparecera el contrato Reunion ivhon 20/01/201 - 5:16 
 
-            return  _context.Contrato
-                                              .Include(c => c.Contratacion)
-                                              .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower() )
-                                                       && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                       && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada)
-                                                                                                                                          .Select(r => new
-                                                                                                                                          {
-                                                                                                                                              r.ContratoId,
-                                                                                                                                              r.NumeroContrato
-                                                                                                                                          }).ToListAsync();
+                List<int?> ListContratosConSolicitudPago = _context.SolicitudPago
+                 .Include(c => c.Contrato)
+                 .Where(s => s.Eliminado == false && s.ContratoId != null)
+                         .Select(r => r.ContratoId).ToList();
 
+                List<Contrato> ListContratos = await _context.Contrato
+                                .Include(c => c.Contratacion)
+                                         .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                               && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                               && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
+                                               ).ToListAsync();
 
+                ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
+                return ListContratos
+                    .Select(r => new
+                    {
+                        r.ContratoId,
+                        r.NumeroContrato
+                    }).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
             Contrato contrato = await _context.Contrato
-                 .Where(c => c.ContratoId == pContratoId) 
+                 .Where(c => c.ContratoId == pContratoId)
                  .Include(c => c.ContratoPoliza)
                  .Include(c => c.Contratacion)
                     .ThenInclude(c => c.Contratista)
