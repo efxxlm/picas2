@@ -187,7 +187,7 @@ public const string Inicio_de_sesion = "1";
 
         public const string Cambiar_Estado_Verificacion_Construccion = "157";
 
-        
-
+        //4.4.3 registro de pagos
+        public const string Validar_Excel_Registro_Pagos = "158";
     }
 }

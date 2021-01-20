@@ -13,6 +13,8 @@ namespace asivamosffie.model.Models
             SeguimientoDiario = new HashSet<SeguimientoDiario>();
             SeguimientoSemanal = new HashSet<SeguimientoSemanal>();
             SesionSolicitudObservacionProyecto = new HashSet<SesionSolicitudObservacionProyecto>();
+            SolicitudPago = new HashSet<SolicitudPago>();
+            SolicitudPagoFaseCriterioProyecto = new HashSet<SolicitudPagoFaseCriterioProyecto>();
         }
 
         public int ContratacionProyectoId { get; set; }
@@ -36,6 +38,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaAprobacionRequisitos { get; set; }
         public bool? RegistroCompleto { get; set; }
         public string EstadoObraCodigo { get; set; }
+        public string RutaCargaActaTerminacionContrato { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual Proyecto Proyecto { get; set; }
@@ -45,5 +48,7 @@ namespace asivamosffie.model.Models
         public virtual ICollection<SeguimientoDiario> SeguimientoDiario { get; set; }
         public virtual ICollection<SeguimientoSemanal> SeguimientoSemanal { get; set; }
         public virtual ICollection<SesionSolicitudObservacionProyecto> SesionSolicitudObservacionProyecto { get; set; }
+        public virtual ICollection<SolicitudPago> SolicitudPago { get; set; }
+        public virtual ICollection<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
     }
 }

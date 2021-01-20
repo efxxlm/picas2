@@ -42,6 +42,7 @@ namespace asivamosffie.model.Models
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
         public string EstadoActuacionReclamacionCodigo { get; set; }
+        public bool? EsCompletoReclamacion { get; set; }
 
         public virtual ControversiaContractual ControversiaContractual { get; set; }
         public virtual ICollection<ActuacionSeguimiento> ActuacionSeguimiento { get; set; }
