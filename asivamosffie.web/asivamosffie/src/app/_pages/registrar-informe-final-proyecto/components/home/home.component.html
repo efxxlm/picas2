@@ -1,0 +1,29 @@
+<div class="container text-center">
+  <div class="text-right">
+    <a routerLink="/.." mat-button color="primary" class="btn-regresar">
+      <img src="assets/img/icon/regresar.svg" alt="Regresar" />
+    </a>
+  </div>
+  <h1 class="title-menu--h1">Registrar informe final del proyecto</h1>
+  <button
+    mat-mini-fab
+    color="primary"
+    class="btn-info"
+    (click)="verAyuda = !verAyuda"
+  >
+    ?
+  </button>
+
+  <div class="text-info" *ngIf="verAyuda">
+    <button mat-icon-button (click)="verAyuda = false" class="text-info--close">
+      <img src="assets/img/icon/cerrar-gris.svg" alt="cerrar ayuda" />
+    </button>
+    Bienvenida/o, aquí podrá realizar el registro del informe final de
+    interventoría para los proyectos de infraestructura que tienen un avance
+    ejecutado acumulado igual al 100% y tienen acta de terminación de contrato
+    de obra (si corresponde) y fueron ejecutados en el marco de la gestión del
+    FFIE.
+  </div>
+
+  <app-tabla-informe-final-proyecto></app-tabla-informe-final-proyecto>
+</div>

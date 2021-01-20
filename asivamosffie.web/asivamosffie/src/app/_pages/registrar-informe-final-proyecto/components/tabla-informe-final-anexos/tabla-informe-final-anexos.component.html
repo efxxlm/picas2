@@ -1,0 +1,146 @@
+<!-- <div class="busqueda">
+  <mat-form-field appearance="outline" class="busqueda--input">
+    <mat-label>Buscador / Filtro</mat-label>
+    <input matInput #filtro (keyup)="applyFilter($event)" />
+  </mat-form-field>
+  <button
+    mat-button
+    color="primary"
+    class="busqueda--img"
+    (click)="filtro.focus()"
+  >
+    <img src="assets/img/icon/lupa.svg" alt="Buscar" />
+  </button>
+</div> -->
+
+<div class="d-flex align-items-center info-text en-alertaLibre">
+  Seleccione si el item Cumple, No cumple o No aplica, tenga en cuenta que para continuar el proceso todos los items deben estar en estado de Cumple o No aplica.
+</div>
+
+<div *ngIf="false">
+  <div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- numero Column -->
+      <ng-container matColumnDef="numero">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            No.
+          </th>
+        <td mat-cell *matCellDef="let element">
+          <b>{{ element.numero }}</b>
+        </td>
+      </ng-container>
+  
+      <!-- item Column -->
+      <ng-container matColumnDef="item">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Ítem
+          </th>
+        <td mat-cell *matCellDef="let element">{{ element.item }}</td>
+      </ng-container>
+  
+      <!-- estadoRequisito Column -->
+      <ng-container matColumnDef="estadoRequisito">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Estado del requisito
+        </th>
+        <td mat-cell *matCellDef="let element">{{ element.estadoRequisito }}</td>
+      </ng-container>
+  
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            Gestión
+          </th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            mat-button
+            color="warn"
+            mat-raised-button
+            color="accent"
+            class="btn-table"
+            type="button"
+            
+          >
+            Tipo de documento
+          </button>
+        </td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+  <mat-paginator
+    #paginator
+    [length]="dataSource?.data.length"
+    [pageIndex]="0"
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+  ></mat-paginator>
+</div>
+
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <div class="table-responsive">
+    <table class="text-center mat-table cdk-table mat-sort mat-table-style table-form table-form--2 spacing-0">
+      <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            No.
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Ítem
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Estado del requisito
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Gestión
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr formArrayName="informe" *ngFor="let informe of informeField.controls; let i = index">
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ i + 1 }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            Acta de recibo a satisfacción de la fase 2 - Interventoría
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <mat-form-field class="select-width">
+              <mat-select
+                required
+                [formControlName]="i"
+              >
+                <mat-option
+                  *ngFor="let estado of estadoArray"
+                  [value]="estado.value"
+                >
+                  {{ estado.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <button
+              mat-button
+              color="warn"
+              mat-raised-button
+              color="accent"
+              class="btn-table"
+              type="button"
+              (click)="openDialogTipoDocumento()"
+            >
+            Tipo de documento
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>

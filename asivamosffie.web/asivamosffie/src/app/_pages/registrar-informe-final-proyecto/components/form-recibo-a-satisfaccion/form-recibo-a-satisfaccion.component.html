@@ -1,0 +1,118 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <mat-card class="shipping-card">
+    <mat-card-header class="header-card header-card--margin">
+      <mat-card-title class="mat-card-title header-card--text">
+        Recibo a satisfacción
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="pr-1">
+          <label
+            class="label-left"
+            for="URLActaRecibo"
+            [class.color-secondaryColor]="
+              (addressForm.get('URLActaRecibo').invalid && addressForm.get('URLActaRecibo').touched) ||
+              (addressForm.get('URLActaRecibo').invalid && estaEditando)
+            "
+          >
+            URL Acta de recibo a satisfaccion - Obra
+          </label>
+        </div>
+        <div class="col">
+          <mat-form-field class="full-width">
+            <input
+              matInput
+              #numeroRadicadoInput
+              type="url"
+              formControlName="URLActaRecibo"
+              maxlength="20"
+              required
+            />
+          </mat-form-field>
+          <span
+            class="info-url"
+            [matTooltipPosition]="'above'"
+            matTooltip="Campo alfanumérico"
+            matTooltipClass="info-tooltip"
+          >
+            Indique la ruta en la que se encuentra el Acta de recibo a
+            satisfacción - Obra
+          </span>
+        </div>
+        <span class="icon-incompleto">
+          <img
+            class="icon-incompleto--img"
+            src="assets/img/icon/incompleto.svg"
+            alt="este campo es requerido"
+            *ngIf="
+              (addressForm.get('URLActaRecibo').invalid && addressForm.get('URLActaRecibo').touched) ||
+              (addressForm.get('URLActaRecibo').invalid && estaEditando)
+            "
+          />
+        </span>
+      </div>
+      <div class="row">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="pr-1">
+              <label
+                class="label-left"
+                for="fechaSuscripcion"
+                [class.color-secondaryColor]="
+                  (addressForm.get('fechaSuscripcion').invalid && addressForm.get('fechaSuscripcion').touched) ||
+                  (addressForm.get('fechaSuscripcion').invalid && estaEditando)
+                "
+              >
+                Fecha
+              </label>
+            </div>
+            <div class="col d-flex">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="pickerSolicitudNovedad"
+                  formControlName="fechaSuscripcion"
+                  readonly
+                  (click)="pickerSolicitudNovedad.open()"
+                  placeholder="DD/MM/AAAA"
+                  required
+                />
+                <mat-datepicker #pickerSolicitudNovedad></mat-datepicker>
+              </mat-form-field>
+              <button
+                mat-button
+                color="primary"
+                type="button"
+                (click)="pickerSolicitudNovedad.open()"
+                class="btn-calendario"
+              >
+                <img
+                  src="assets/img/icon/calendarioCirculo.svg"
+                  alt="Abrir Calendario"
+                />
+              </button>
+              <span class="icon-incompleto">
+                <img
+                  class="icon-incompleto--img"
+                  src="assets/img/icon/incompleto.svg"
+                  alt="este campo es requerido"
+                  *ngIf="
+                    (addressForm.get('fechaSuscripcion').invalid && addressForm.get('fechaSuscripcion').touched) ||
+                    (addressForm.get('fechaSuscripcion').invalid && estaEditando)
+                  "
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="text-center mb-2em">
+    <button mat-button color="warn" class="btn-guardar" type="submit"
+    [disabled]="addressForm.invalid">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar" />
+    </button>
+  </div>
+</form>
