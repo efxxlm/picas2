@@ -31,17 +31,30 @@
                 <td mat-cell *matCellDef="let element" align="center"> <em>{{ element.numTotalRegistrosIncorporados }}</em> </td>
             </ng-container>
             <ng-container matColumnDef="gestion">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-25"> Gestión </th>
                 <td mat-cell *matCellDef="let element" align="center">
+                    <!--
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados==''">
                         Incorporar rendimientos
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados==''">
                         Ver registros consistentes
                     </button>
-                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados==''"
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados!=''">
+                        Generar Acta
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados!=''"
                     (click)="this.cargarActaFirmada();">
                         Cargar acta firmada
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados!=''">
+                        Ver registros incorporados
+                    </button>
+                    
+
+                    -->
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.numTotalRegistrosIncorporados!=''">
+                       Descargar Acta
                     </button>
                 </td>
             </ng-container>
