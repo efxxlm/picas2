@@ -27,6 +27,13 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
         }
 
+        [HttpGet]
+        [Route("GetCriterioByFormaPagoCodigo")]
+        public async Task<IActionResult> GetCriterioByFormaPagoCodigo([FromQuery] string pFormaPagoCodigo)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetCriterioByFormaPagoCodigo(pFormaPagoCodigo));
+        }
+
         [HttpPost]
         [Route("CreateEditNewPayment")]
         public async Task<IActionResult> CreateEditNewPayment([FromBody]SolicitudPago  pSolicitudPago)

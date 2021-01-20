@@ -129,7 +129,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Tipos_De_Ensayos_De_Laboratorio = 74,
 
         Causas_De_Accidentes_Laborales = 75,
-         
+
         Tiempo_Aprobar_Acta = 84,
 
         Disponibilidad_Material = 92,
@@ -140,8 +140,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         Causa_Baja_Disponibilidad_Equipo = 96,
         Causa_Baja_Disponibilidad_Productividad = 97,
         Estados_Seguimiento_Diario = 98,
-        
-        Estado_controversia= 89,
+
+        Estado_controversia = 89,
 
         Estados_actas_inicio_obra = 85,
 
@@ -162,12 +162,12 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         //Estado_avance_reclamacion = 91,
 
-        Proxima_actuacion_requerida =103,
+        Proxima_actuacion_requerida = 103,
 
-        Procesos_judiciales=105,
+        Procesos_judiciales = 105,
 
         Tipo_accion_judicial = 106,
-        Estados_Actuacion=110,
+        Estados_Actuacion = 110,
         Estados_Actuacion_Derivada = 114,
 
         Tipo_Actividad = 109,
@@ -177,15 +177,18 @@ namespace asivamosffie.services.Helpers.Enumerator
         Estado_Reporte_Semanal_Y_Muestras = 112,
 
         Tipo_Observacion_Seguimiento_Semanal = 123,
-        
-        Jurisdiccion =116,
-        Actuaciones_Recomendadas=119,
-        Estados_Defensa_Judicial=120,
+
+        Jurisdiccion = 116,
+        Actuaciones_Recomendadas = 119,
+        Estados_Defensa_Judicial = 120,
 
         Estados_Reclamacion = 120,
 
-        Tipo_Solicitud_Contrato_Requisitos_Pago  = 131,
+        Tipo_Solicitud_Contrato_Requisitos_Pago = 131,
 
         Modalidad_Contrato = 132,
+
+        Formas_Pago = 134,
+        Criterios_Pago = 135,
     }
 }
