@@ -24,7 +24,7 @@ export class AprobarIncorporacionRendimientosComponent implements OnInit {
   dataTable: any[] = [
     {
       fechaCargue: '10/08/2020',
-      numTotalRegistrosIncorporados: '',
+      numTotalRegistrosIncorporados: 5,
       gestion: 1
     }
   ]
