@@ -95,6 +95,36 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     }
 
     guardar() {
+        const pago = () => {
+            const pagosArray = [];
+            if ( this.obj1 === true ) {
+                pagosArray.push(
+                    {
+                        solicitudPagofaseId: 0,
+                        solicitudPagoRegistrarSolicitudPagoId: 0,
+                        esPreconstruccion: true
+                    }
+                );
+                pagosArray.push(
+                    {
+                        solicitudPagofaseId: 0,
+                        solicitudPagoRegistrarSolicitudPagoId: 0,
+                        esPreconstruccion: false
+                    }
+                );
+                return pagosArray;
+            }
+            if ( this.obj1 === false ) {
+                pagosArray.push(
+                    {
+                        solicitudPagofaseId: 0,
+                        solicitudPagoRegistrarSolicitudPagoId: 0,
+                        esPreconstruccion: false
+                    }
+                );
+                return pagosArray;
+            }
+        };
         const pSolicitudPago = {
             solicitudPagoId: this.solicitudPagoId,
             contratoId: this.contrato.contratoId,
@@ -105,7 +135,8 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                   tieneFasePreconstruccion: this.obj1,
                   tieneFaseConstruccion: this.obj2,
                   fechaSolicitud: new Date( this.addressForm.get( 'fechaSolicitud' ).value ).toISOString(),
-                  numeroRadicadoSAC: this.addressForm.get( 'numeroRadicado' ).value
+                  numeroRadicadoSAC: this.addressForm.get( 'numeroRadicado' ).value,
+                  solicitudPagofase: pago()
                 }
             ]
         }
