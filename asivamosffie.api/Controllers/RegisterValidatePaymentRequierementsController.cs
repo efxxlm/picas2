@@ -28,6 +28,13 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
+        [Route("GetListSolicitudPago")]
+        public async Task<IActionResult> GetListSolicitudPago()
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetListSolicitudPago());
+        }
+
+        [HttpGet]
         [Route("GetCriterioByFormaPagoCodigo")]
         public async Task<IActionResult> GetCriterioByFormaPagoCodigo([FromQuery] string pFormaPagoCodigo)
         {

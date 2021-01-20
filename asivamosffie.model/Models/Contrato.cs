@@ -62,6 +62,7 @@ namespace asivamosffie.model.Models
         public int ContratoId { get; set; }
         public string EstadoFase2 { get; set; }
         public string EstadoActaFase2 { get; set; }
+        public string Modalidad { get; set; }
         public DateTime? FechaAprobacionRequisitos { get; set; }
         public bool? TieneDiagnosticoFase1 { get; set; }
         public bool? EstadoFase1EyD { get; set; }

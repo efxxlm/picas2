@@ -17,7 +17,7 @@ namespace asivamosffie.services
 {
     public class RegisterValidatePaymentRequierementsService : IRegisterValidatePaymentRequierementsService
     {
-
+        #region constructor
         private readonly devAsiVamosFFIEContext _context;
         private readonly ICommonService _commonService;
         private readonly IDocumentService _documentService;
@@ -29,7 +29,45 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        #endregion
+
+
         #region Get
+        public async Task<dynamic> GetListSolicitudPago()
+        {
+            var result = await _context.SolicitudPago
+                .Include(r => r.Contrato)
+                             .Select(s => new
+                             {
+                                 s.FechaCreacion,
+                                 s.NumeroSolicitud,
+                                 s.Contrato.Modalidad,
+                                 s.Contrato.NumeroContrato,
+                                 s.EstadoCodigo,
+                                 s.ContratoId,
+                                 s.SolicitudPagoId
+                             }).ToListAsync();
+
+            List<dynamic> grind = new List<dynamic>(); 
+            List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).ToList();
+          
+            result.ForEach(r =>
+            {
+                grind.Add(new
+                {
+                    r.ContratoId,
+                    r.SolicitudPagoId,
+                    r.FechaCreacion,
+                    r.NumeroSolicitud,
+                    r.NumeroContrato,
+                    Estado = !string.IsNullOrEmpty(r.EstadoCodigo) ? ListParametricas.Where(l => l.Codigo == r.EstadoCodigo && l.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).FirstOrDefault().Nombre : " - ",
+                    Modalidad = !string.IsNullOrEmpty(r.Modalidad) ? ListParametricas.Where(l => l.Codigo == r.Modalidad && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : " - "
+                });
+            });
+
+            return grind;
+        }
+
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
         {
             return await _context.Contrato
@@ -206,11 +244,11 @@ namespace asivamosffie.services
                 solicitudPagoRegistrarSolicitudPago.FechaCreacion = DateTime.Now;
                 solicitudPagoRegistrarSolicitudPago.Eliminado = false;
                 solicitudPagoRegistrarSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(solicitudPagoRegistrarSolicitudPago);
-               
+
                 _context.SolicitudPagoRegistrarSolicitudPago.Add(solicitudPagoRegistrarSolicitudPago);
             }
         }
-         
+
         private void CreateEditSolicitudPagoFase(ICollection<SolicitudPagoFase> solicitudPagoFaseList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoFase in solicitudPagoFaseList)

@@ -189,6 +189,7 @@ namespace asivamosffie.services.Helpers.Enumerator
         Modalidad_Contrato = 132,
 
         Formas_Pago = 134,
-        Criterios_Pago = 135,
+        Criterios_Pago = 135, 
+        Estados_Registro_Pago =136
     }
 }
