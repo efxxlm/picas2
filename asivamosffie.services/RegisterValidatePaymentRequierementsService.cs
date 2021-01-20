@@ -48,9 +48,9 @@ namespace asivamosffie.services
                                  s.SolicitudPagoId
                              }).ToListAsync();
 
-            List<dynamic> grind = new List<dynamic>(); 
+            List<dynamic> grind = new List<dynamic>();
             List<Dominio> ListParametricas = _context.Dominio.Where(d => d.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato || d.TipoDominioId == (int)EnumeratorTipoDominio.Estados_Registro_Pago).ToList();
-          
+
             result.ForEach(r =>
             {
                 grind.Add(new
@@ -70,22 +70,26 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetContratoByTipoSolicitudCodigoModalidadContratoCodigoOrNumeroContrato(string pTipoSolicitud, string pModalidadContrato, string pNumeroContrato)
         {
-            return await _context.Contrato
-                                          .Include(c => c.Contratacion)
-                                          .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                                   && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                                   && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada)
-                                                                                            .Select(r => new
-                                                                                            {
-                                                                                                r.ContratoId,
-                                                                                                r.NumeroContrato
-                                                                                            }).ToListAsync();
+            List<int?> ListIdContratosConSolicitudPago = _context.SolicitudPago.Where(s => s.Eliminado != false && s.ContratoId != null).Select(r => r.ContratoId).ToList();
+
+            return  _context.Contrato
+                                              .Include(c => c.Contratacion)
+                                              .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower() )
+                                                       && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                       && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada)
+                                                                                                                                          .Select(r => new
+                                                                                                                                          {
+                                                                                                                                              r.ContratoId,
+                                                                                                                                              r.NumeroContrato
+                                                                                                                                          }).ToListAsync();
+
+
         }
 
         public async Task<Contrato> GetContratoByContratoId(int pContratoId)
         {
             Contrato contrato = await _context.Contrato
-                 .Where(c => c.ContratoId == pContratoId)
+                 .Where(c => c.ContratoId == pContratoId) 
                  .Include(c => c.ContratoPoliza)
                  .Include(c => c.Contratacion)
                     .ThenInclude(c => c.Contratista)
@@ -272,8 +276,15 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditNewPaymentNew(SolicitudPago pSolicitudPago)
+        private async void CreateEditNewPaymentNew(SolicitudPago pSolicitudPago)
         {
+            string strInterventoriaCodigo = _context.SolicitudPago
+                .Include(s => s.Contrato).ThenInclude(ctr => ctr.Contratacion)
+                .Where(s => s.ContratoId == pSolicitudPago.ContratoId)
+                         .Select(crt =>
+                                 crt.Contrato.Contratacion.TipoSolicitudCodigo
+                         ).FirstOrDefault();
+
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
                 pSolicitudPago.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
@@ -282,6 +293,8 @@ namespace asivamosffie.services
             }
             else
             {
+                pSolicitudPago.NumeroSolicitud = Int32.Parse(strInterventoriaCodigo) == ConstanCodigoTipoContratacion.Obra ? await _commonService.EnumeradorSolicitudPago(true) : await _commonService.EnumeradorSolicitudPago(false);
+                pSolicitudPago.EstadoCodigo = ConstanCodigoEstadoSolicitudPago.En_proceso_de_registro;
                 pSolicitudPago.Eliminado = false;
                 pSolicitudPago.FechaCreacion = DateTime.Now;
                 _context.SolicitudPago.Add(pSolicitudPago);
