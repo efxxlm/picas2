@@ -69,7 +69,8 @@ namespace asivamosffie.services
                 case ConstanCodigoTipoSolicitudContratoSolicitudPago.Contratos_Obra:
 
                     solicitudPago = _context.SolicitudPago.Where(r => r.SolicitudPagoId == solicitudPago.SolicitudPagoId)
-                       .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
+                        .Include(r => r.SolicitudPagoCargarFormaPago)
+                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                           .ThenInclude(r => r.SolicitudPagoFase)
                               .ThenInclude(r => r.SolicitudPagoFaseCriterio)
                                   .ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
@@ -147,13 +148,10 @@ namespace asivamosffie.services
 
             try
             {
+                CreateEditNewPaymentNew(pSolicitudPago);
+
                 if (pSolicitudPago.SolicitudPagoCargarFormaPago.Count() > 0)
                 {
-                    pSolicitudPago.FechaCreacion = DateTime.Now;
-                    pSolicitudPago.Eliminado = false;
-
-                    _context.SolicitudPago.Add(pSolicitudPago);
-                     
                     pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault().UsuarioCreacion = pSolicitudPago.UsuarioCreacion;
                     CreateEditNewPaymentWayToPay(pSolicitudPago.SolicitudPagoCargarFormaPago.FirstOrDefault());
                 }
@@ -182,10 +180,24 @@ namespace asivamosffie.services
             }
         }
 
+        private void CreateEditNewPaymentNew(SolicitudPago pSolicitudPago)
+        {
+            if (pSolicitudPago.SolicitudPagoId > 0)
+            {
+                pSolicitudPago.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
+                pSolicitudPago.FechaModificacion = DateTime.Now;
+                pSolicitudPago.RegistroCompleto = ValidateCompleteRecordSolicitudPago(pSolicitudPago);
+            }
+            else
+            {
+                pSolicitudPago.Eliminado = false;
+                pSolicitudPago.FechaCreacion = DateTime.Now;
+                _context.SolicitudPago.Add(pSolicitudPago);
+            }
+        }
 
         private bool CreateEditNewPaymentWayToPay(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
         {
-
             try
             {
                 if (pSolicitudPagoCargarFormaPago.SolicitudPagoCargarFormaPagoId > 0)
@@ -214,24 +226,13 @@ namespace asivamosffie.services
 
         }
 
-
         #endregion
-
         #region Validate Complete Form
 
-        //private bool ValidateCompleteRecordSolicitudPago(int SoliditudPagoId)
-        //{
-        //    try
-        //    {
-        //        solicitud
-
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return false;
-        //    } 
-        //}
-
+        private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
+        {
+            return false;
+        }
 
         private bool ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
         {
@@ -244,10 +245,6 @@ namespace asivamosffie.services
 
             return true;
         }
-
-
-
-
 
         #endregion
 
