@@ -73,7 +73,7 @@
           class="btn-table"
           [class.sin-diligenciar]="element.estadoCargue == 'Fallido'"
           *ngIf="element.registrosInvalidos > 0"
-          (click)="this.abrirObservaciones()"
+          (click)="this.abrirObservaciones(element.cargaPagosRendimientosId)"
         >
           Observaciones
         </button>

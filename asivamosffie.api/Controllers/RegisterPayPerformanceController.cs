@@ -35,7 +35,7 @@ namespace asivamosffie.api.Controllers
 
         [Route("uploadFileToValidate")]
         [HttpPost]
-        public async Task<IActionResult> uploadFileToValidate(IFormFile file, [FromQuery] string typeFile)
+        public async Task<IActionResult> uploadFileToValidate(IFormFile file, [FromQuery] string typeFile, bool saveSuccessProcess)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace asivamosffie.api.Controllers
                 if (file.Length > 0 && file.FileName.Contains(".xls"))
                 {
                     string strUsuario = HttpContext.User.FindFirst("User").Value;
-                    respuesta = await _registerPayPerformanceService.uploadFileToValidate(file, strUsuario, typeFile);
+                    respuesta = await _registerPayPerformanceService.uploadFileToValidate(file, strUsuario, typeFile, saveSuccessProcess);
                 }
                 return Ok(respuesta);
             }
@@ -65,6 +65,22 @@ namespace asivamosffie.api.Controllers
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        [Route("setObservationPaymentsPerformances")]
+        [HttpPost]
+        public async Task<IActionResult> setObservationPaymentsPerformances(CargueObservacionesPaymentPerformance data)
+        {
+            try
+            {
+                 _registerPayPerformanceService.setObservationPaymentsPerformances(data.typeFile,data.observaciones,data.cargaPagosRendimientosId);
+
+                return Ok("Se actualizo correctamente");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
             }
         }
     }

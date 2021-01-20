@@ -10,11 +10,15 @@ export class FaseDosPagosRendimientosService {
 
   constructor(private http: HttpClient) {}
 
-  uploadFileToValidate(documento: File, typeFile: string) {
+  uploadFileToValidate(
+    documento: File,
+    typeFile: string,
+    saveSuccessProcess: boolean
+  ) {
     const formData = new FormData()
     formData.append('file', documento, documento.name)
     return this.http.post(
-      `${this.urlApi}/uploadFileToValidate?typeFile=${typeFile}`,
+      `${this.urlApi}/uploadFileToValidate?typeFile=${typeFile}&saveSuccessProcess=${saveSuccessProcess}`,
       formData
     )
   }
@@ -22,6 +26,14 @@ export class FaseDosPagosRendimientosService {
   getPaymentsPerformances(typeFile: string) {
     return this.http.get<CarguePagosRendimientos[]>(
       `${this.urlApi}/getPaymentsPerformances?typeFile=${typeFile}`
+    )
+  }
+
+  setObservationPaymentsPerformances(data: any) {
+    console.log(data)
+    return this.http.post(
+      `${this.urlApi}/setObservationPaymentsPerformances`,
+      data
     )
   }
 }

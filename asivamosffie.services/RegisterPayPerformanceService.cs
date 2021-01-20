@@ -50,7 +50,7 @@ namespace asivamosffie.services
             _budgetAvailabilityService = budgetAvailabilityService;
         }
         #region loads
-        public async Task<Respuesta> uploadFileToValidate(IFormFile pFile,string pUsuarioCreo, string typeFile)
+        public async Task<Respuesta> uploadFileToValidate(IFormFile pFile,string pUsuarioCreo, string typeFile, bool saveSuccessProcess)
         {
             int CantidadRegistrosInvalidos = 0;
             
@@ -71,6 +71,7 @@ namespace asivamosffie.services
                     for (int i = 2; i <= worksheet.Dimension.Rows; i++)
                     {
                         Dictionary<string, string> carguePagosRendimiento = new Dictionary<string, string>();
+                        bool tieneError = false;
                         try
                         {
 
@@ -81,8 +82,7 @@ namespace asivamosffie.services
                                 carguePagosRendimiento.Add("Número de orden de giro", worksheet.Cells[i, 1].Text);
                                 if (string.IsNullOrEmpty(worksheet.Cells[i, 1].Text) || worksheet.Cells[i, 1].Text.Length > 50)
                                 {
-                                    CantidadRegistrosInvalidos++;
-                                    continue;
+                                    tieneError = true;
                                 }
 
                                 // #2
@@ -92,8 +92,7 @@ namespace asivamosffie.services
                                 decimal respValNumber;
                                 if (string.IsNullOrEmpty(worksheet.Cells[i, 2].Text) || !DateTime.TryParseExact(worksheet.Cells[i, 2].Text, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out fecha))
                                 {
-                                    CantidadRegistrosInvalidos++;
-                                    continue;
+                                    tieneError = true;
                                 }
 
                                 // #3
@@ -102,8 +101,7 @@ namespace asivamosffie.services
                                 string impuetoClean = worksheet.Cells[i, 3].Text.Replace(".", "").Replace("$", "");
                                 if (string.IsNullOrEmpty(worksheet.Cells[i, 3].Text) || impuetoClean.Length > 20 || !decimal.TryParse(impuetoClean, out respValNumber))
                                 {
-                                    CantidadRegistrosInvalidos++;
-                                    continue;
+                                    tieneError = true;
                                 }
 
                                 // #4
@@ -112,11 +110,20 @@ namespace asivamosffie.services
                                 string valorNetoClean = worksheet.Cells[i, 4].Text.Replace(".", "").Replace("$", "");
                                 if (string.IsNullOrEmpty(worksheet.Cells[i, 4].Text) || valorNetoClean.Length > 20 || !decimal.TryParse(valorNetoClean, out respValNumber))
                                 {
-                                    CantidadRegistrosInvalidos++;
-                                    continue;
+                                    tieneError = true;
                                 }
                             }
 
+                            if(tieneError)
+                            {
+                                CantidadRegistrosInvalidos++;
+                                carguePagosRendimiento.Add("Estado", "Fallido");
+                            }
+                            else
+                            {
+                                carguePagosRendimiento.Add("Estado", "Valido");
+                            }
+                            
                             listaCarguePagosRendimientos.Add(carguePagosRendimiento);
 
 
@@ -130,19 +137,23 @@ namespace asivamosffie.services
 
                     int cantidadRegistrosTotales = worksheet.Dimension.Rows - 1;
 
-                    CarguePagosRendimientos CarguePagosRendimientos = new CarguePagosRendimientos();
-                    CarguePagosRendimientos.EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido";
-                    CarguePagosRendimientos.NombreArchivo = pFile.FileName;
-                    CarguePagosRendimientos.RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos;
-                    CarguePagosRendimientos.RegistrosInvalidos = CantidadRegistrosInvalidos;
-                    CarguePagosRendimientos.TotalRegistros = cantidadRegistrosTotales;
-                    CarguePagosRendimientos.TipoCargue = typeFile;
-                    CarguePagosRendimientos.FechaCargue = DateTime.Now;
-                    CarguePagosRendimientos.Json = JsonConvert.SerializeObject(listaCarguePagosRendimientos);
+                    if(CantidadRegistrosInvalidos > 0 || saveSuccessProcess)
+                    {
+                        CarguePagosRendimientos CarguePagosRendimientos = new CarguePagosRendimientos();
+                        CarguePagosRendimientos.EstadoCargue = CantidadRegistrosInvalidos > 0 ? "Fallido" : "Valido";
+                        CarguePagosRendimientos.NombreArchivo = pFile.FileName;
+                        CarguePagosRendimientos.RegistrosValidos = cantidadRegistrosTotales - CantidadRegistrosInvalidos;
+                        CarguePagosRendimientos.RegistrosInvalidos = CantidadRegistrosInvalidos;
+                        CarguePagosRendimientos.TotalRegistros = cantidadRegistrosTotales;
+                        CarguePagosRendimientos.TipoCargue = typeFile;
+                        CarguePagosRendimientos.FechaCargue = DateTime.Now;
+                        CarguePagosRendimientos.Json = JsonConvert.SerializeObject(listaCarguePagosRendimientos);
 
-                    _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
-                    _context.SaveChanges();
+                        _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
+                        _context.SaveChanges();
 
+                        //processPaymentsPerformances(typeFile, listaCarguePagosRendimientos);
+                    }
                     
                     ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
                     {
@@ -174,9 +185,6 @@ namespace asivamosffie.services
                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_Requisitos_Tecnicos_Construccion, GeneralCodes.Error, idAccion, pUsuarioCreo, "VALIDAR EXCEL PROGRAMACION")
                 };
             }
-            
-
-            
         }
 
         public async Task<List<dynamic>> getPaymentsPerformances(string typeFile)
@@ -202,6 +210,26 @@ namespace asivamosffie.services
             });
 
             return listaContrats;
+        }
+
+        public void processPaymentsPerformances(string typeFile, List<Dictionary<string, string>> listaCarguePagosRendimientos)
+        {
+            foreach (var pagoRendimiento in listaCarguePagosRendimientos)
+            {
+                if (typeFile == "Pagos")
+                {
+                    // cruce de pagos
+                }
+            }
+        }
+
+        public void setObservationPaymentsPerformances(string typeFile, string observaciones, string cargaPagosRendimientosId)
+        {
+            CarguePagosRendimientos CarguePagosRendimientos = _context.CarguePagosRendimientos.Find(int.Parse(cargaPagosRendimientosId));
+            CarguePagosRendimientos.Observaciones = observaciones;
+            _context.Entry<CarguePagosRendimientos>(CarguePagosRendimientos).State = EntityState.Modified;
+
+            _context.SaveChanges();
         }
         #endregion
 

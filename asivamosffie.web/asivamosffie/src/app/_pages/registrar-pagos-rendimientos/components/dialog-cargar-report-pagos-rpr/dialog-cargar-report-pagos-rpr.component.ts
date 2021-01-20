@@ -49,6 +49,18 @@ export class DialogCargarReportPagosRprComponent implements OnInit {
       width: '40em',
       data: { modalTitle, modalText, siNoBoton: true }
     })
+
+    confirmarDialog.afterClosed().subscribe((response) => {
+      if (response === true) {
+        let pFile = this.addressForm.get('documentoFile').value
+
+        this.faseDosPagosRendimientosSvc
+          .uploadFileToValidate(pFile, this.typeFile, true)
+          .subscribe((response: any) => {
+            this.openDialog('', 'La información ha sido guardada exitosamente')
+          })
+      }
+    })
   }
   fileName(event: any) {
     if (event.target.files.length > 0) {
@@ -68,12 +80,12 @@ export class DialogCargarReportPagosRprComponent implements OnInit {
     extFile = extFile[extFile.length - 1]
     if (extFile === 'xlsx') {
       this.faseDosPagosRendimientosSvc
-        .uploadFileToValidate(pFile, this.typeFile)
+        .uploadFileToValidate(pFile, this.typeFile, false)
         .subscribe((response: any) => {
           if (response.data.cantidadDeRegistrosInvalidos > 0) {
             this.openDialog(
               'Validación de registro',
-              ` <br>Número de registros en el archivo: <b>${response.data.cantidadDeRegistros}</b><br>
+              ` <br>Número de registros en el archivo: <b>${response.data.cantidadDeRegistros}</b>
         Número de registros válidos: <b>${response.data.cantidadDeRegistrosValidos}</b><br>
         Número de registros inválidos: <b>${response.data.cantidadDeRegistrosInvalidos}</b><br><br>
         <b>No se permite el cargue, ya que el archivo tiene registros

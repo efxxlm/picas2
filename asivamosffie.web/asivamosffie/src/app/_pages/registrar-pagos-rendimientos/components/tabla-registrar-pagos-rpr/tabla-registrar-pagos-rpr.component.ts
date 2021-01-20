@@ -80,7 +80,7 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
       this.getData()
     })
   }
-  abrirObservaciones() {
+  abrirObservaciones(cargaPagosRendimientosId: number) {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.height = 'auto'
     dialogConfig.width = '865px'
@@ -88,5 +88,19 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
       ObservacionesReportPagoRprComponent,
       dialogConfig
     )
+
+    dialogRef.afterClosed().subscribe((result) => {
+      let data = {
+        observaciones: result.data,
+        typeFile: this.tipoCargue,
+        cargaPagosRendimientosId: cargaPagosRendimientosId
+      }
+
+      this.faseDosPagosRendimientosSvc
+        .setObservationPaymentsPerformances(data)
+        .subscribe((response: any[]) => {
+          this.getData()
+        })
+    })
   }
 }

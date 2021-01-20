@@ -10,8 +10,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterPayPerformanceService
     {
-        Task<Respuesta> uploadFileToValidate(IFormFile pFile, string pUsuarioCreo, string typeFile);
+        Task<Respuesta> uploadFileToValidate(IFormFile pFile, string pUsuarioCreo, string typeFile, bool saveSuccessProcess);
 
         Task<List<dynamic>> getPaymentsPerformances(string typeFile);
+
+        void setObservationPaymentsPerformances(string typeFile, string observaciones, string cargaPagosRendimientosId);
     }
 }
