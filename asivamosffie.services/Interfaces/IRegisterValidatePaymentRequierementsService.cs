@@ -9,8 +9,12 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidatePaymentRequierementsService
     {
+        Task<Respuesta> CreateEditOtrosCostosServicios(SolicitudPago pSolicitudPago);
+
+        Task<Respuesta> CreateEditExpensas(SolicitudPago pSolicitudPago);
+
         Task<dynamic> GetConceptoPagoCriterioCodigoByTipoPagoCodigo(string TipoPagoCodigo);
- 
+
         Task<dynamic> GetTipoPagoByCriterioCodigo(string pCriterioCodigo);
 
         Task<dynamic> GetListSolicitudPago();

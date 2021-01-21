@@ -243,7 +243,7 @@ namespace asivamosffie.services
 
         #region Create Edit 
 
-        #region Create Tipo Obra Interventoria
+        #region  Tipo Obra Interventoria
         private async void CreateEditNewPaymentNew(SolicitudPago pSolicitudPago)
         {
             //Valida si el contrato de la solicitud es interventoria o Obra
@@ -558,66 +558,7 @@ namespace asivamosffie.services
                 }
             }
         }
-
-        #endregion
-
-        #endregion
-
-        #region Create Expensas 
-
-        public async Task<Respuesta> CreateEditExpensas(SolicitudPago pSolicitudPago)
-        {
-            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
-
-            try
-            {
-                CreateEditNewExpensas(pSolicitudPago);
-
-                return
-                     new Respuesta
-                     {
-                         IsSuccessful = true,
-                         IsException = false,
-                         IsValidation = false,
-                         Code = GeneralCodes.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, pSolicitudPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
-                     };
-            }
-            catch (Exception ex)
-            {
-                return
-                    new Respuesta
-                    {
-                        IsSuccessful = false,
-                        IsException = true,
-                        IsValidation = false,
-                        Code = GeneralCodes.Error,
-                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
-                    };
-            }
-        }
-
-        private void CreateEditNewExpensas(SolicitudPago pSolicitudPago)
-        {
-            if (pSolicitudPago.SolicitudPagoId > 0)
-            {
-             
-
-            }
-            else
-            {
-
-
-
-            }
-        }
-
-        #endregion;
-
-        #region Validate Complete Form
-
-        #region Validate Tipo Obra Interventoria
-
+     
         private bool ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud solicitudPagoSoporteSolicitudOld)
         {
             return true;
@@ -675,6 +616,220 @@ namespace asivamosffie.services
             return true;
         }
         #endregion
+
+        #region Tipo Create Expensas 
+
+        public async Task<Respuesta> CreateEditExpensas(SolicitudPago pSolicitudPago)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                CreateEditNewExpensas(pSolicitudPago);
+
+                if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
+                    CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
+
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, pSolicitudPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        private void CreateEditNewExpensas(SolicitudPago pSolicitudPago)
+        {
+            if (pSolicitudPago.SolicitudPagoExpensas.Count() > 0)
+            {
+                CreateEditSolicitudPagoExpensas(pSolicitudPago.SolicitudPagoExpensas, pSolicitudPago.UsuarioCreacion);
+            }
+
+            if (pSolicitudPago.SolicitudPagoId > 0)
+            {
+                SolicitudPago solicitudPagoOld = _context.SolicitudPago.Find(pSolicitudPago.SolicitudPagoId);
+
+                solicitudPagoOld.FechaModificacion = DateTime.Now;
+                solicitudPagoOld.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
+                solicitudPagoOld.RegistroCompleto = ValidateCompleteRecordopSolicitudPagoExpensas(pSolicitudPago);
+            }
+            else
+            {
+                pSolicitudPago.FechaCreacion = DateTime.Now;
+                pSolicitudPago.Eliminado = false;
+                pSolicitudPago.RegistroCompleto = ValidateCompleteRecordopSolicitudPagoExpensas(pSolicitudPago);
+
+                _context.SolicitudPago.Add(pSolicitudPago);
+            }
+        }
+
+        private void CreateEditSolicitudPagoExpensas(ICollection<SolicitudPagoExpensas> solicitudPagoExpensas, string usuarioCreacion)
+        {
+            foreach (var SolicitudPagoExpensas in solicitudPagoExpensas)
+            {
+                if (SolicitudPagoExpensas.SolicitudPagoExpensasId > 0)
+                {
+                    SolicitudPagoExpensas solicitudPagoExpensasOld = _context.SolicitudPagoExpensas.Find(SolicitudPagoExpensas.SolicitudPagoExpensasId);
+
+                    solicitudPagoExpensasOld.NumeroRadicadoSac = SolicitudPagoExpensas.NumeroRadicadoSac;
+                    solicitudPagoExpensasOld.NumeroFactura = SolicitudPagoExpensas.NumeroFactura;
+                    solicitudPagoExpensasOld.ValorFacturado = SolicitudPagoExpensas.ValorFacturado;
+                    solicitudPagoExpensasOld.TipoPagoCodigo = SolicitudPagoExpensas.TipoPagoCodigo;
+                    solicitudPagoExpensasOld.ConceptoPagoCriterioCodigo = SolicitudPagoExpensas.ConceptoPagoCriterioCodigo;
+                    solicitudPagoExpensasOld.ValorFacturadoConcepto = SolicitudPagoExpensas.ValorFacturadoConcepto;
+
+                    solicitudPagoExpensasOld.UsuarioModificacion = usuarioCreacion;
+                    solicitudPagoExpensasOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoExpensasOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoExpensas(SolicitudPagoExpensas);
+
+                }
+                else
+                {
+                    SolicitudPagoExpensas.UsuarioCreacion = usuarioCreacion;
+                    SolicitudPagoExpensas.FechaCreacion = DateTime.Now;
+                    SolicitudPagoExpensas.Eliminado = false;
+                    SolicitudPagoExpensas.RegistroCompleto = ValidateCompleteRecordSolicitudPagoExpensas(SolicitudPagoExpensas);
+
+                    _context.SolicitudPagoExpensas.Add(SolicitudPagoExpensas);
+                }
+            }
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoExpensas(SolicitudPagoExpensas solicitudPagoExpensas)
+        {
+            return true;
+        }
+
+        private bool ValidateCompleteRecordopSolicitudPagoExpensas(SolicitudPago pSolicitudPago)
+        {
+            return true;
+        }
+
+        #endregion;
+
+        #region Tipo Otros Costos Servicios
+        public async Task<Respuesta> CreateEditOtrosCostosServicios(SolicitudPago pSolicitudPago)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+
+                if (pSolicitudPago.SolicitudPagoExpensas.Count() > 0)
+                {
+                    CreateEditNewOtrosCostosServicios(pSolicitudPago.SolicitudPagoOtrosCostosServicios, pSolicitudPago.UsuarioCreacion);
+                }
+                if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
+                    CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
+
+
+                if (pSolicitudPago.SolicitudPagoId > 0)
+                {
+                    SolicitudPago solicitudPagoOld = _context.SolicitudPago.Find(pSolicitudPago.SolicitudPagoId);
+
+                    solicitudPagoOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoOld.UsuarioModificacion = pSolicitudPago.UsuarioCreacion;
+                    solicitudPagoOld.RegistroCompleto = ValidateCompleteRecordoSolicitudPagoOtrosCostosServicios(pSolicitudPago);
+                }
+                else
+                {
+                    pSolicitudPago.FechaCreacion = DateTime.Now;
+                    pSolicitudPago.Eliminado = false;
+                    pSolicitudPago.RegistroCompleto = ValidateCompleteRecordoSolicitudPagoOtrosCostosServicios(pSolicitudPago);
+
+                    _context.SolicitudPago.Add(pSolicitudPago);
+                }
+                if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
+                    CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
+
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, pSolicitudPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+
+        private void CreateEditNewOtrosCostosServicios(ICollection<SolicitudPagoOtrosCostosServicios> pSolicitudPagoOtrosCostosServiciosList, string usuarioCreacion)
+        {
+            foreach (var SolicitudPagoOtrosCostosServicios in pSolicitudPagoOtrosCostosServiciosList)
+            {
+                if (SolicitudPagoOtrosCostosServicios.SolicitudPagoOtrosCostosServiciosId > 0)
+                {
+                    SolicitudPagoOtrosCostosServicios solicitudPagoOtrosCostosServiciosOld = _context.SolicitudPagoOtrosCostosServicios.Find(SolicitudPagoOtrosCostosServicios.SolicitudPagoOtrosCostosServiciosId);
+                    solicitudPagoOtrosCostosServiciosOld.RegistroCompleto = ValidateCompleteRecordoOtrosCostosServicios(SolicitudPagoOtrosCostosServicios);
+                    solicitudPagoOtrosCostosServiciosOld.UsuarioModificacion = usuarioCreacion;
+                    solicitudPagoOtrosCostosServiciosOld.FechaModificacion = DateTime.Now;
+
+                    solicitudPagoOtrosCostosServiciosOld.NumeroRadicadoSac = SolicitudPagoOtrosCostosServicios.NumeroRadicadoSac;
+                    solicitudPagoOtrosCostosServiciosOld.NumeroFactura = SolicitudPagoOtrosCostosServicios.NumeroFactura;
+                    solicitudPagoOtrosCostosServiciosOld.ValorFacturado = SolicitudPagoOtrosCostosServicios.ValorFacturado;
+                    solicitudPagoOtrosCostosServiciosOld.TipoPagoCodigo = SolicitudPagoOtrosCostosServicios.TipoPagoCodigo;
+                }
+                else
+                {
+                    SolicitudPagoOtrosCostosServicios.RegistroCompleto = ValidateCompleteRecordoOtrosCostosServicios(SolicitudPagoOtrosCostosServicios);
+                    SolicitudPagoOtrosCostosServicios.UsuarioModificacion = usuarioCreacion;
+                    SolicitudPagoOtrosCostosServicios.FechaModificacion = DateTime.Now;
+                    SolicitudPagoOtrosCostosServicios.Eliminado = false;
+
+                    _context.SolicitudPagoOtrosCostosServicios.Add(SolicitudPagoOtrosCostosServicios);
+                }
+            }
+        }
+
+        private bool? ValidateCompleteRecordoOtrosCostosServicios(SolicitudPagoOtrosCostosServicios solicitudPagoOtrosCostosServiciosOld)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool ValidateCompleteRecordoSolicitudPagoOtrosCostosServicios(SolicitudPago pSolicitudPago)
+        {
+            return true;
+        }
+
+
+
+        #endregion
+
+        #endregion
+
+        #region Validate 
+
+     
 
         #endregion
 

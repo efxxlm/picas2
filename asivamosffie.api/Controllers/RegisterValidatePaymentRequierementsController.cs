@@ -25,14 +25,38 @@ namespace asivamosffie.api.Controllers
         {
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
             _settings = settings;
-        } 
+        }
+        [HttpPost]
+        [Route("CreateEditExpensas")]
+        public async Task<IActionResult> CreateEditExpensas([FromBody] SolicitudPago pSolicitudPago)
+        {
+            pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+            return Ok(await _registerValidatePaymentRequierementsService.CreateEditExpensas(pSolicitudPago));
+        }
+ 
+        [HttpPost]
+        [Route("CreateEditOtrosCostosServicios")]
+        public async Task<IActionResult> CreateEditOtrosCostosServicios([FromBody] SolicitudPago pSolicitudPago)
+        {
+            pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+            return Ok(await _registerValidatePaymentRequierementsService.CreateEditOtrosCostosServicios(pSolicitudPago));
+        }
+
+        [HttpPost]
+        [Route("CreateEditNewPayment")]
+        public async Task<IActionResult> CreateEditNewPayment([FromBody] SolicitudPago pSolicitudPago)
+        {
+            pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
+            return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPayment(pSolicitudPago));
+        }
+
         [HttpGet]
         [Route("GetTipoPagoByCriterioCodigo")]
         public async Task<IActionResult> GetTipoPagoByCriterioCodigo([FromQuery] string pCriterioCodigo)
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetTipoPagoByCriterioCodigo(pCriterioCodigo));
         }
-         
+
         [HttpGet]
         [Route("GetConceptoPagoCriterioCodigoByTipoPagoCodigo")]
         public async Task<IActionResult> GetConceptoPagoCriterioCodigoByTipoPagoCodigo([FromQuery] string TipoPagoCodigo)
@@ -52,14 +76,6 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> GetCriterioByFormaPagoCodigo([FromQuery] string pFormaPagoCodigo)
         {
             return Ok(await _registerValidatePaymentRequierementsService.GetCriterioByFormaPagoCodigo(pFormaPagoCodigo));
-        }
-
-        [HttpPost]
-        [Route("CreateEditNewPayment")]
-        public async Task<IActionResult> CreateEditNewPayment([FromBody] SolicitudPago pSolicitudPago)
-        {
-            pSolicitudPago.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-            return Ok(await _registerValidatePaymentRequierementsService.CreateEditNewPayment(pSolicitudPago));
         }
 
         [HttpGet]
