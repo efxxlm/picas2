@@ -401,6 +401,8 @@ namespace asivamosffie.services
                     CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
                 if (SolicitudPagoFase.SolicitudPagoFaseFactura.Count() > 0)
                     CreateEditSolicitudPagoFaseFactura(SolicitudPagoFase.SolicitudPagoFaseFactura, pUsuarioCreacion);
+                if (SolicitudPagoFase.SolicitudPagoAmortizacion.Count() > 0)
+                    CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoAmortizacion, pUsuarioCreacion);
 
 
                 if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
@@ -421,6 +423,18 @@ namespace asivamosffie.services
             }
         }
 
+        private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoAmortizacion> pSolicitudPagoAmortizacionList, string pUsuarioCreacion)
+        {
+            foreach (var SolicitudPagoAmortizacion in pSolicitudPagoAmortizacionList)
+            {
+                if (SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId > 0)
+                {
+
+
+                }
+            }
+        }
+
         private void CreateEditSolicitudPagoFaseFactura(ICollection<SolicitudPagoFaseFactura> pSolicitudPagoFaseFacturaList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoFaseFactura in pSolicitudPagoFaseFacturaList)
@@ -431,18 +445,21 @@ namespace asivamosffie.services
                 if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaId > 0)
                 {
                     SolicitudPagoFaseFactura solicitudPagoFaseFacturaOld = _context.SolicitudPagoFaseFactura.Find(SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaId);
-                    solicitudPagoFaseFacturaOld.Fecha = SolicitudPagoFaseFactura.Fecha;
-                    solicitudPagoFaseFacturaOld.ValorFacturado = SolicitudPagoFaseFactura.ValorFacturado;
-                    solicitudPagoFaseFacturaOld.Numero = SolicitudPagoFaseFactura.Numero; 
                     solicitudPagoFaseFacturaOld.UsuarioModificacion = SolicitudPagoFaseFactura.UsuarioModificacion;
                     solicitudPagoFaseFacturaOld.FechaModificacion = SolicitudPagoFaseFactura.FechaModificacion;
-                    solicitudPagoFaseFacturaOld.Eliminado = SolicitudPagoFaseFactura.Eliminado;
-                    solicitudPagoFaseFacturaOld.RegistroCompleto = SolicitudPagoFaseFactura.RegistroCompleto;
+                    solicitudPagoFaseFacturaOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura);
 
+                    solicitudPagoFaseFacturaOld.Fecha = SolicitudPagoFaseFactura.Fecha;
+                    solicitudPagoFaseFacturaOld.ValorFacturado = SolicitudPagoFaseFactura.ValorFacturado;
+                    solicitudPagoFaseFacturaOld.Numero = SolicitudPagoFaseFactura.Numero;
                 }
                 else
                 {
-
+                    SolicitudPagoFaseFactura.Eliminado = false;
+                    SolicitudPagoFaseFactura.UsuarioCreacion = pUsuarioCreacion;
+                    SolicitudPagoFaseFactura.FechaCreacion = DateTime.Now;
+                    SolicitudPagoFaseFactura.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura);
+                    _context.SolicitudPagoFaseFactura.Add(SolicitudPagoFaseFactura);
                 }
             }
         }
@@ -505,6 +522,10 @@ namespace asivamosffie.services
         #endregion
 
         #region Validate Complete Form
+        private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura solicitudPagoFaseFactura)
+        {
+            return false;
+        }
 
         private bool ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseFacturaDescuento solicitudPagoFaseDescuento)
         {

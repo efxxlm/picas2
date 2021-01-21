@@ -184,7 +184,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -5217,7 +5216,7 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SolicitudPagoAmortizacion>(entity =>
             {
-                entity.HasKey(e => e.SolicitudPagoFaseAmortizacionAnticipoId)
+                entity.HasKey(e => e.SolicitudPagoFaseAmortizacionId)
                     .HasName("PK__Registra__A833D9FF66862EE2");
 
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
