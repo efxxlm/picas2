@@ -104,26 +104,26 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title en-alerta">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( this.solicitudPagoRegistrarSolicitudPago.registroCompleto, true )">
                         Fase 1 - Preconstrucción
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-accordion>
+                <mat-accordion *ngIf="this.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPagoRegistrarSolicitudPago.registroCompleto === true">
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( solicitudPagoFase, 'criterioDePago' )">
                                 Criterios de pago incluidos en la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-criterios-pago [contrato]="contrato"></app-form-criterios-pago>
+                        <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly"></app-form-criterios-pago>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title en-alerta">
+                            <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonSubFase( solicitudPagoFase, 'detalleFactura' )">
                                 Detalle factura para proyectos asociados
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-detalle-factura-proyectos-asociados></app-detalle-factura-proyectos-asociados>
+                        <app-detalle-factura-proyectos-asociados [solicitudPago]="contrato.solicitudPagoOnly"></app-detalle-factura-proyectos-asociados>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>
@@ -133,18 +133,18 @@
         <mat-accordion>
             <mat-expansion-panel class="expansion-style sub-expansion">
                 <mat-expansion-panel-header class="expansion-style--header">
-                    <mat-panel-title class="expansion-style--title en-alerta">
+                    <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeonFase( this.solicitudPagoRegistrarSolicitudPago.registroCompleto, false )">
                         Fase 2 - Construcción
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-accordion>
+                <mat-accordion *ngIf="this.solicitudPagoRegistrarSolicitudPago !== undefined && this.solicitudPagoRegistrarSolicitudPago.registroCompleto === true">
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
                             <mat-panel-title class="expansion-style--title sin-diligenciar">
                                 Criterios de pago incluidos en la factura
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-criterios-pago [contrato]="contrato" [esPreconstruccion]="false"></app-form-criterios-pago>
+                        <app-form-criterios-pago [solicitudPago]="contrato.solicitudPagoOnly" [esPreconstruccion]="false"></app-form-criterios-pago>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
@@ -166,16 +166,6 @@
             </mat-expansion-panel>
         </mat-accordion>
     </div>
-    <mat-accordion>
-        <mat-expansion-panel class="expansion-style sub-expansion">
-            <mat-expansion-panel-header class="expansion-style--header">
-                <mat-panel-title class="expansion-style--title en-alerta">
-                    Descuentos Dirección Técnica
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <app-form-descuentos-direccion-tecnica></app-form-descuentos-direccion-tecnica>
-        </mat-expansion-panel>
-    </mat-accordion>
     <mat-accordion>
         <mat-expansion-panel class="expansion-style sub-expansion">
             <mat-expansion-panel-header class="expansion-style--header">

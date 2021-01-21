@@ -1,5 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,45 +11,90 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./detalle-factura-proyectos-asociados.component.scss']
 })
 export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
-  dataSource = new MatTableDataSource();
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  displayedColumns: string[] = [
-    'llaveMen',
-    'tipoIntervencion',
-    'departamento',
-    'municipio',
-    'institucionEducativa',
-    'sede',
-    'validar'
-  ];
-  dataTable: any[] = [
-    {
-      llaveMen: 'LL457326',
-      tipoIntervencion: 'Remodelación',
-      departamento: 'Boyacá',
-      municipio: 'Susacón',
-      institucionEducativa: 'I.E Nuestra Señora Del Carmen',
-      sede: 'Única sede',
+
+    @Input() solicitudPago: any;
+    dataSource = new MatTableDataSource();
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    displayedColumnsMultiProyecto: string[] = [
+      'llaveMen',
+      'tipoIntervencion',
+      'departamento',
+      'municipio',
+      'institucionEducativa',
+      'sede',
+      'validar'
+    ];
+    displayedColumns: string[] = [
+        'llaveMen',
+        'tipoIntervencion',
+        'departamento',
+        'municipio',
+        'institucionEducativa',
+        'sede'
+    ];
+    formProject = this.fb.group(
+        {
+            projects: this.fb.array( [] )
+        }
+    );
+    esMultiProyecto = false;
+
+    //Get proyectos
+    get projects() {
+        return this.formProject.get( 'projects' ) as FormArray;
     }
-  ];
 
-  addressForm = this.fb.group({
-    numeroFactura: [null, Validators.required]
-  });
-  constructor(private fb: FormBuilder) { }
+    constructor(
+        private fb: FormBuilder,
+        private registrarPagoSvc: RegistrarRequisitosPagoService )
+    { }
 
-  ngOnInit(): void {
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  };
+    ngOnInit(): void {
+        this.registrarPagoSvc.getProyectosByIdContrato( this.solicitudPago.contratoId )
+        .subscribe(
+            response => {
+                if ( response[1].length > 1 ) {
+                    this.esMultiProyecto = true;
+                    for( const proyecto of response[1] ) {
+                        proyecto.check = null;
+                    }
+                }
+                this.dataSource = new MatTableDataSource( response[1] );
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            }
+        );
+    };
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
-  addProject(elemento: any) {
-    console.log(elemento);
-  }
+    applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    };
+
+    projectSelect() {
+        const projectsArray: any = this.dataSource.data;
+        this.projects.clear();
+        for ( const project of projectsArray ) {
+            console.log( project );
+            if ( project.check === true ) {
+                this.projects.push(
+                    this.fb.group(
+                        {
+                            contratacionProyectoId: 0,
+                            llaveMen: project.llaveMen,
+                            solicitudPagoFaseCriterioProyectoId: 0,
+                            solicitudPagoFaseCriterioId: 0,
+                            valorFacturado: 0
+                        }
+                    )
+                );
+            }
+        }
+    }
+
+    guardar() {
+        console.log( this.projects.value );
+    }
+
 }

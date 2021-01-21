@@ -101,6 +101,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                     faseSeleccionada = fase[0];
                                 }
                             }
+
                             this.addressForm.setValue(
                                 {
                                     fechaSolicitud: this.solicitudPagoRegistrarSolicitudPago.fechaSolicitud !== undefined ? new Date( this.solicitudPagoRegistrarSolicitudPago.fechaSolicitud ) : null,
@@ -108,6 +109,11 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                                     faseContrato: faseSeleccionada !== undefined ? faseSeleccionada : null
                                 }
                             );
+                            if ( this.solicitudPagoRegistrarSolicitudPago.registroCompleto === true ) {
+                                this.addressForm.get( 'fechaSolicitud' ).disable();
+                                this.addressForm.get( 'numeroRadicado' ).disable();
+                                this.addressForm.get( 'faseContrato' ).disable();
+                            }
                         }
                     }
                     // Tabla pendiente por integrar
@@ -122,6 +128,53 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         const filterValue = (event.target as HTMLInputElement).value;
         this.dataSource.filter = filterValue.trim().toLowerCase();
     };
+
+    enabledAcordeonFase( registroCompleto: boolean, esPreconstruccion: boolean ) {
+        // Acordeon fase preconstruccion
+        if ( registroCompleto === true && esPreconstruccion === true ) {
+            return 'sin-diligenciar';
+        }
+        if ( ( registroCompleto === false || registroCompleto === undefined ) && esPreconstruccion === true ) {
+            return 'en-alerta';
+        }
+        // Acordeon fase construccion
+        if ( registroCompleto === true && esPreconstruccion === false ) {
+            return 'sin-diligenciar';
+        }
+        if ( ( registroCompleto === false || registroCompleto === undefined ) && esPreconstruccion === false ) {
+            return 'en-alerta';
+        }
+    }
+
+    enabledAcordeonSubFase( solicitudPagoFase: any, tipoAcordeon: string ) {
+        if ( solicitudPagoFase !== undefined ) {
+            if ( tipoAcordeon === 'criterioDePago' ) {
+                if ( solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                    if ( solicitudPagoFase.solicitudPagoFaseCriterio[0].registroCompleto === false ) {
+                        return 'en-proceso';
+                    }
+                    if ( solicitudPagoFase.solicitudPagoFaseCriterio[0].registroCompleto === true ) {
+                        return 'completo';
+                    }
+                } else {
+                    return 'sin-diligenciar';
+                }
+            }
+            if ( tipoAcordeon === 'detalleFactura' ) {
+                if ( solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                    if ( solicitudPagoFase.solicitudPagoFaseCriterio[0].registroCompleto === true ) {
+                        if ( this.contrato.contratacion.contratacionProyecto.length > 1 ) {
+                            return 'sin-diligenciar';
+                        } else {
+                            return '';
+                        }
+                    }
+                } else {
+                    return 'en-alerta';
+                }
+            }
+        }
+    }
 
     openDialog(modalTitle: string, modalText: string) {
         const dialogRef = this.dialog.open(ModalDialogComponent, {
