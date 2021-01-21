@@ -5,6 +5,11 @@ namespace asivamosffie.model.Models
 {
     public partial class SolicitudPagoFaseFactura
     {
+        public SolicitudPagoFaseFactura()
+        {
+            SolicitudPagoFaseFacturaDescuento = new HashSet<SolicitudPagoFaseFacturaDescuento>();
+        }
+
         public int SolicitudPagoFaseFacturaId { get; set; }
         public int? SolicitudPagoFaseId { get; set; }
         public DateTime? Fecha { get; set; }
@@ -18,5 +23,6 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompleto { get; set; }
 
         public virtual SolicitudPagoFase SolicitudPagoFase { get; set; }
+        public virtual ICollection<SolicitudPagoFaseFacturaDescuento> SolicitudPagoFaseFacturaDescuento { get; set; }
     }
 }
