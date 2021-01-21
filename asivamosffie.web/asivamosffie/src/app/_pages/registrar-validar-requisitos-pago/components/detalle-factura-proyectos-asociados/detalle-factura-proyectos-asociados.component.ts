@@ -39,6 +39,10 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
         }
     );
     esMultiProyecto = false;
+    solicitudPagoFaseCriterio: any;
+    solicitudPagoFaseCriterioProyecto: any;
+    solicitudPagoCargarFormaPago: any;
+    solicitudPagoFase: any;
 
     //Get proyectos
     get projects() {
@@ -47,49 +51,118 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private registrarPagoSvc: RegistrarRequisitosPagoService )
+        private registrarPagosSvc: RegistrarRequisitosPagoService )
     { }
 
     ngOnInit(): void {
-        this.registrarPagoSvc.getProyectosByIdContrato( this.solicitudPago.contratoId )
-        .subscribe(
-            response => {
-                if ( response[1].length > 1 ) {
-                    this.esMultiProyecto = true;
-                    for( const proyecto of response[1] ) {
-                        proyecto.check = null;
-                    }
-                }
-                this.dataSource = new MatTableDataSource( response[1] );
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
+        if ( this.solicitudPago !== undefined ) {
+            this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
+            this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+            this.solicitudPagoFaseCriterio = this.solicitudPagoFase.solicitudPagoFaseCriterio;
+
+            if ( this.solicitudPagoFase.esPreconstruccion === true ) {
+                this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo )
+                    .subscribe(
+                        criterios => {
+                            this.registrarPagosSvc.getProyectosByIdContrato( this.solicitudPago.contratoId )
+                                .subscribe(
+                                    proyectos => {
+                                        const criteriosArray = [];
+                                        if ( proyectos[1].length > 1 ) {
+                                            this.esMultiProyecto = true;
+                                            for( const proyecto of proyectos[1] ) {
+                                                proyecto.check = false;
+                                            }
+                                            this.solicitudPagoFaseCriterio.forEach( criterioValue => {
+                                                const criterioSelect = criterios.filter( value => value.codigo === criterioValue.tipoCriterioCodigo );
+                                                if ( criterioSelect.length > 0 ) {
+                                                    criterioSelect[0][ 'solicitudPagoFaseCriterioId' ] = criterioValue.solicitudPagoFaseCriterioId;
+                                                    criteriosArray.push( criterioSelect[0] );
+                                                }
+                                            } );
+                                            for ( const proyecto of proyectos[1] ) {
+                                                this.projects.push(
+                                                    this.fb.group(
+                                                        {
+                                                            check: [ false ],
+                                                            listaCriterios: [ criteriosArray ],
+                                                            contratacionProyectoId: [ proyecto.contratacionProyectoId ],
+                                                            llaveMen: [ proyecto.llaveMen ],
+                                                            criterioPago: [ null ],
+                                                            solicitudPagoFaseCriterioProyectoId: [ 0 ],
+                                                            solicitudPagoFaseCriterioId: [ 0 ],
+                                                            valorFacturado: [ 0 ],
+                                                            criteriosProyecto: this.fb.array( [] )
+                                                        }
+                                                    )
+                                                );
+                                            }
+                                        }
+                                        this.dataSource = new MatTableDataSource( proyectos[1] );
+                                        this.dataSource.paginator = this.paginator;
+                                        this.dataSource.sort = this.sort;
+                                    }
+                                );
+                        }
+                    );
             }
-        );
+            if ( this.solicitudPagoFase.esPreconstruccion === false ) {
+                this.registrarPagosSvc.getCriterioByFormaPagoCodigo( this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo )
+                    .subscribe(
+                        criterio => {
+                            console.log( criterio );
+                        }
+                    );
+            }
+        }
     };
 
     applyFilter(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSource.filter = filterValue.trim().toLowerCase();
     };
 
-    projectSelect() {
-        const projectsArray: any = this.dataSource.data;
-        this.projects.clear();
-        for ( const project of projectsArray ) {
-            console.log( project );
-            if ( project.check === true ) {
-                this.projects.push(
+    validateNumberKeypress(event: KeyboardEvent) {
+        const alphanumeric = /[0-9]/;
+        const inputChar = String.fromCharCode(event.charCode);
+
+        return alphanumeric.test(inputChar) ? true : false;
+    }
+
+    criteriosProyecto( i: number ) {
+        return this.projects.controls[i].get( 'criteriosProyecto' ) as FormArray;
+    }
+
+    getvalues( criteriosDePago: any[], index: number ) {
+        if ( criteriosDePago.length > 0 ) {
+            criteriosDePago.forEach( criterioValue => {
+                this.criteriosProyecto( index ).push(
                     this.fb.group(
                         {
-                            contratacionProyectoId: 0,
-                            llaveMen: project.llaveMen,
-                            solicitudPagoFaseCriterioProyectoId: 0,
-                            solicitudPagoFaseCriterioId: 0,
-                            valorFacturado: 0
+                            nombre: [ criterioValue.nombre ],
+                            valorFacturado: [ '' ]
                         }
                     )
                 );
-            }
+            } );
+        }
+    }
+
+    projectSelect() {
+        const projectsArray: any = this.dataSource.data;
+        for ( const project of projectsArray ) {
+            this.projects.controls.forEach( projectValue => {
+                if ( projectValue.value.contratacionProyectoId === project.contratacionProyectoId ) {
+                    if ( project.check === true ) {
+                        console.log( 'condicion 1' );
+                        projectValue.get( 'check' ).setValue( true );
+                    }
+                    if ( project.check === false ) {
+                        console.log( 'condicion 2' )
+                        projectValue.get( 'check' ).setValue( false );
+                    }
+                }
+            } );
         }
     }
 

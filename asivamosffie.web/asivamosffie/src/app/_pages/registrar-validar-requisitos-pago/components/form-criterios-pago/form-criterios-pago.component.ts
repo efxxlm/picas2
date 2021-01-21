@@ -266,7 +266,6 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     deleteCriterio( index: number, solicitudPagoFaseCriterioId: number, tipoCriterioCodigo: string ) {
-        console.log( this.addressForm.get( 'criterioPago' ).value );
         this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
             .subscribe(
                 value => {
