@@ -178,7 +178,8 @@ namespace asivamosffie.services
                                                                     p.Departamento,
                                                                     p.Municipio,
                                                                     p.InstitucionEducativa,
-                                                                    p.Sede
+                                                                    p.Sede,
+                                                                    p.ContratacionProyectoId
                                                                 }).ToListAsync();
             dynamics.Add(resultContrato);
             dynamics.Add(resultProyectos);
