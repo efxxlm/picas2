@@ -31,7 +31,6 @@ namespace asivamosffie.services
 
         #endregion
 
-
         #region Get
         public async Task<dynamic> GetListSolicitudPago()
         {
@@ -243,14 +242,20 @@ namespace asivamosffie.services
         #endregion
 
         #region Create Edit 
+
+        #region Create Tipo Obra Interventoria
         private async void CreateEditNewPaymentNew(SolicitudPago pSolicitudPago)
         {
+            //Valida si el contrato de la solicitud es interventoria o Obra
             string strInterventoriaCodigo = _context.SolicitudPago
                 .Include(s => s.Contrato).ThenInclude(ctr => ctr.Contratacion)
                 .Where(s => s.ContratoId == pSolicitudPago.ContratoId)
                          .Select(crt =>
                                  crt.Contrato.Contratacion.TipoSolicitudCodigo
                          ).FirstOrDefault();
+
+            if (pSolicitudPago.SolicitudPagoSoporteSolicitud.Count() > 0)
+                CreateEditNewSolicitudPagoSoporteSolicitud(pSolicitudPago.SolicitudPagoSoporteSolicitud, pSolicitudPago.UsuarioCreacion);
 
             if (pSolicitudPago.SolicitudPagoId > 0)
             {
@@ -265,6 +270,29 @@ namespace asivamosffie.services
                 pSolicitudPago.Eliminado = false;
                 pSolicitudPago.FechaCreacion = DateTime.Now;
                 _context.SolicitudPago.Add(pSolicitudPago);
+            }
+        }
+
+        private void CreateEditNewSolicitudPagoSoporteSolicitud(ICollection<SolicitudPagoSoporteSolicitud> pSolicitudPagoSoporteSolicitudList, string pUsuarioCreacion)
+        {
+            foreach (var SolicitudPagoSoporteSolicitud in pSolicitudPagoSoporteSolicitudList)
+            {
+                if (SolicitudPagoSoporteSolicitud.SolicitudPagoSoporteSolicitudId > 0)
+                {
+                    SolicitudPagoSoporteSolicitud solicitudPagoSoporteSolicitudOld = _context.SolicitudPagoSoporteSolicitud.Find(SolicitudPagoSoporteSolicitud.SolicitudPagoSoporteSolicitudId);
+                    solicitudPagoSoporteSolicitudOld.UsuarioModificacion = pUsuarioCreacion;
+                    solicitudPagoSoporteSolicitudOld.FechaModificacion = DateTime.Now;
+                    solicitudPagoSoporteSolicitudOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud);
+
+                    solicitudPagoSoporteSolicitudOld.UrlSoporte = SolicitudPagoSoporteSolicitud.UrlSoporte;
+                }
+                else
+                {
+                    SolicitudPagoSoporteSolicitud.UsuarioCreacion = pUsuarioCreacion;
+                    SolicitudPagoSoporteSolicitud.FechaCreacion = DateTime.Now;
+                    SolicitudPagoSoporteSolicitud.Eliminado = false;
+                    SolicitudPagoSoporteSolicitud.RegistroCompleto = ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud);
+                }
             }
         }
 
@@ -289,9 +317,7 @@ namespace asivamosffie.services
                     CreateEditRegistrarSolicitudPago(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault());
 
                     CreateEditSolicitudPagoFase(pSolicitudPago.SolicitudPagoRegistrarSolicitudPago.FirstOrDefault().SolicitudPagoFase, pSolicitudPago.UsuarioCreacion);
-
                 }
-
                 return
                      new Respuesta
                      {
@@ -429,8 +455,22 @@ namespace asivamosffie.services
             {
                 if (SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId > 0)
                 {
+                    SolicitudPagoAmortizacion solicitudPagoAmortizacionOld = _context.SolicitudPagoAmortizacion.Find(SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId);
+                    solicitudPagoAmortizacionOld.UsuarioModificacion = pUsuarioCreacion;
+                    solicitudPagoAmortizacionOld.FechaModificacion = DateTime.Now;
 
+                    solicitudPagoAmortizacionOld.PorcentajeAmortizacion = SolicitudPagoAmortizacion.PorcentajeAmortizacion;
+                    solicitudPagoAmortizacionOld.ValorAmortizacion = SolicitudPagoAmortizacion.ValorAmortizacion;
+                    solicitudPagoAmortizacionOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion);
+                }
+                else
+                {
+                    SolicitudPagoAmortizacion.Eliminado = SolicitudPagoAmortizacion.Eliminado;
+                    SolicitudPagoAmortizacion.UsuarioCreacion = pUsuarioCreacion;
+                    SolicitudPagoAmortizacion.FechaCreacion = DateTime.Now;
+                    SolicitudPagoAmortizacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion);
 
+                    _context.SolicitudPagoAmortizacion.Add(SolicitudPagoAmortizacion);
                 }
             }
         }
@@ -521,39 +561,106 @@ namespace asivamosffie.services
 
         #endregion
 
+        #endregion
+
+        #region Create Expensas 
+
+        public async Task<Respuesta> CreateEditExpensas(SolicitudPago pSolicitudPago)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Crear_Editar_Solicitud_De_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                CreateEditNewExpensas(pSolicitudPago);
+
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pSolicitudPago.UsuarioCreacion, pSolicitudPago.FechaModificacion.HasValue ? "EDITAR SOLICITUD DE PAGO" : "CREAR SOLICITUD DE PAGO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pSolicitudPago.UsuarioCreacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
+        private void CreateEditNewExpensas(SolicitudPago pSolicitudPago)
+        {
+            if (pSolicitudPago.SolicitudPagoId > 0)
+            {
+             
+
+            }
+            else
+            {
+
+
+
+            }
+        }
+
+        #endregion;
+
         #region Validate Complete Form
+
+        #region Validate Tipo Obra Interventoria
+
+        private bool ValidateCompleteRecordSolicitudPagoSoporteSolicitud(SolicitudPagoSoporteSolicitud solicitudPagoSoporteSolicitudOld)
+        {
+            return true;
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion solicitudPagoAmortizacion)
+        {
+            return true;
+        }
+
         private bool ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura solicitudPagoFaseFactura)
         {
-            return false;
+            return true;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseFacturaDescuento solicitudPagoFaseDescuento)
         {
-            return false;
+            return true;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterioProyecto solicitudPagoFaseCriterioProyecto)
         {
-            return false;
+            return true;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio solicitudPagoFaseCriterio)
         {
-            return false;
+            return true;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)
         {
-            return false;
+            return true;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
         {
-            return false;
+            return true;
         }
+
         private bool ValidateCompleteRecordSolicitudPago(SolicitudPago pSolicitudPago)
         {
-            return false;
+            return true;
         }
 
         private bool ValidateCompleteRecordSolicitudPagoCargarFormaPago(SolicitudPagoCargarFormaPago pSolicitudPagoCargarFormaPago)
@@ -567,6 +674,7 @@ namespace asivamosffie.services
 
             return true;
         }
+        #endregion
 
         #endregion
 
