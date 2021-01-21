@@ -113,7 +113,7 @@ namespace asivamosffie.services
                  .Include(r => r.SolicitudPago)
                     .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
                  .FirstOrDefaultAsync();
-             
+
             if (contrato.SolicitudPago.Count() > 0)
                 contrato.SolicitudPagoOnly = GetSolicitudPago(contrato.SolicitudPago.LastOrDefault());
 
@@ -189,14 +189,39 @@ namespace asivamosffie.services
 
         public async Task<dynamic> GetCriterioByFormaPagoCodigo(string pFormaPagoCodigo)
         {
-            return pFormaPagoCodigo switch
+            List<dynamic> ListDynamics = new List<dynamic>();
+
+            List<string> strCriterios = _context.FormaPagoCodigoCriterioPagoCodigo.Where(r => r.FormaPagoCodigo == pFormaPagoCodigo).Select(r => r.CriterioPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Criterios_Pago);
+
+            strCriterios.ForEach(l =>
             {
-                ConstanCodigoFormaPagoCodigo.Forma_1_50_50 => await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && (r.Codigo == ConstanCodigoCriterioPago.Criterio_1 || r.Codigo == ConstanCodigoCriterioPago.Criterio_2)).Select(r => new { r.DominioId, r.Nombre }).ToListAsync(),
-                ConstanCodigoFormaPagoCodigo.Forma_2_50_40_10 => await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && (r.Codigo == ConstanCodigoCriterioPago.Criterio_1 || r.Codigo == ConstanCodigoCriterioPago.Criterio_2)).Select(r => new { r.DominioId, r.Nombre }).ToListAsync(),
-                ConstanCodigoFormaPagoCodigo.Forma_3_90_10 => await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && (r.Codigo == ConstanCodigoCriterioPago.Criterio_1 || r.Codigo == ConstanCodigoCriterioPago.Criterio_2)).Select(r => new { r.DominioId, r.Nombre }).ToListAsync(),
-                _ => await _context.Dominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Criterios_Pago && (r.Codigo == ConstanCodigoCriterioPago.Criterio_1 || r.Codigo == ConstanCodigoCriterioPago.Criterio_2)).Select(r => new { r.DominioId, r.Nombre }).ToListAsync(),
-            };
+                ListDynamics.Add(new
+                {
+                    codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            }); 
+            return ListDynamics;
         }
+        public async Task<dynamic> GetTipoPagoByCriterioCodigo(string pCriterioCodigo)
+        {
+            List<dynamic> ListDynamics = new List<dynamic>();
+            List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago);
+
+            strCriterios.ForEach(l =>
+            {
+                ListDynamics.Add(new
+                {
+                    codigo = l,
+                    Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
+                });
+            }); 
+            return ListDynamics;
+        }
+
+
         #endregion
 
         #region Create Edit 
@@ -349,7 +374,6 @@ namespace asivamosffie.services
         }
 
         #endregion
-
 
         #region Validate Complete Form
         private bool ValidateCompleteRecordSolicitudPagoRegistrarSolicitudPago(SolicitudPagoRegistrarSolicitudPago pSolicitudPagoRegistrarSolicitudPago)

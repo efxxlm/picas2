@@ -62,7 +62,6 @@ namespace asivamosffie.model.Models
         public int ContratoId { get; set; }
         public string EstadoFase2 { get; set; }
         public string EstadoActaFase2 { get; set; }
-        public string Modalidad { get; set; }
         public DateTime? FechaAprobacionRequisitos { get; set; }
         public bool? TieneDiagnosticoFase1 { get; set; }
         public bool? EstadoFase1EyD { get; set; }
@@ -79,6 +78,7 @@ namespace asivamosffie.model.Models
         public bool? RegistroCompletoConstruccion { get; set; }
         public bool? ConObervacionesActaFase2 { get; set; }
         public DateTime? FechaCambioEstadoFase2 { get; set; }
+        public string Modalidad { get; set; }
 
         public virtual Contratacion Contratacion { get; set; }
         public virtual ICollection<ContratoConstruccion> ContratoConstruccion { get; set; }

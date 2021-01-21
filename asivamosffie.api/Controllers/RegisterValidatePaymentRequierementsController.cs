@@ -25,6 +25,12 @@ namespace asivamosffie.api.Controllers
         {
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
             _settings = settings;
+        } 
+        [HttpGet]
+        [Route("GetTipoPagoByCriterioCodigo")]
+        public async Task<IActionResult> GetTipoPagoByCriterioCodigo([FromQuery] string pCriterioCodigo)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetTipoPagoByCriterioCodigo(pCriterioCodigo));
         }
 
         [HttpGet]
