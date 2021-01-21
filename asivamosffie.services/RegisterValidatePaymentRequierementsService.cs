@@ -109,6 +109,8 @@ namespace asivamosffie.services
                  .Include(c => c.Contratacion)
                     .ThenInclude(c => c.Contratista)
                  .Include(c => c.Contratacion)
+                    .ThenInclude(c => c.ContratacionProyecto)
+                 .Include(c => c.Contratacion) 
                     .ThenInclude(cp => cp.DisponibilidadPresupuestal)
                  .Include(r => r.SolicitudPago)
                     .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
@@ -201,9 +203,10 @@ namespace asivamosffie.services
                     codigo = l,
                     Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
                 });
-            }); 
+            });
             return ListDynamics;
         }
+
         public async Task<dynamic> GetTipoPagoByCriterioCodigo(string pCriterioCodigo)
         {
             List<dynamic> ListDynamics = new List<dynamic>();
@@ -217,10 +220,9 @@ namespace asivamosffie.services
                     codigo = l,
                     Nombre = ListCriterio.Where(lc => lc.Codigo == l).FirstOrDefault().Nombre
                 });
-            }); 
+            });
             return ListDynamics;
         }
-
 
         #endregion
 
