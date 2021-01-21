@@ -152,7 +152,12 @@ namespace asivamosffie.services
                         _context.CarguePagosRendimientos.Add(CarguePagosRendimientos);
                         _context.SaveChanges();
 
-                        //processPaymentsPerformances(typeFile, listaCarguePagosRendimientos);
+                        
+                    }
+
+                    if (CantidadRegistrosInvalidos == 0)
+                    {
+                        processPaymentsPerformances(typeFile, listaCarguePagosRendimientos);
                     }
                     
                     ArchivoCargueRespuesta archivoCargueRespuesta = new ArchivoCargueRespuesta
