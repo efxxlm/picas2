@@ -110,7 +110,7 @@ namespace asivamosffie.services
                     .ThenInclude(c => c.Contratista)
                  .Include(c => c.Contratacion)
                     .ThenInclude(c => c.ContratacionProyecto)
-                 .Include(c => c.Contratacion) 
+                 .Include(c => c.Contratacion)
                     .ThenInclude(cp => cp.DisponibilidadPresupuestal)
                  .Include(r => r.SolicitudPago)
                     .ThenInclude(r => r.SolicitudPagoCargarFormaPago)
@@ -301,13 +301,14 @@ namespace asivamosffie.services
         {
             foreach (var SolicitudPagoFase in solicitudPagoFaseList)
             {
+                CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
+
                 if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
                 {
                     SolicitudPagoFase solicitudPagoFaseOld = _context.SolicitudPagoFase.Find(SolicitudPagoFase.SolicitudPagoFaseId);
                     solicitudPagoFaseOld.UsuarioModificacion = pUsuarioCreacion;
                     solicitudPagoFaseOld.FechaModificacion = DateTime.Now;
                     solicitudPagoFaseOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase);
-
                 }
                 else
                 {
@@ -318,6 +319,40 @@ namespace asivamosffie.services
                     _context.SolicitudPagoFase.Add(SolicitudPagoFase);
                 }
             }
+        }
+
+        private void CreateEditSolicitudPagoFaseCriterio(ICollection<SolicitudPagoFaseCriterio> ListSolicitudPagoFaseCriterio, string strUsuarioCreacion)
+        {
+            foreach (var SolicitudPagoFaseCriterio in ListSolicitudPagoFaseCriterio)
+            {
+                if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId > 0)
+                {
+                    SolicitudPagoFaseCriterio SolicitudPagoFaseCriterioOld = _context.SolicitudPagoFaseCriterio.Find(SolicitudPagoFaseCriterio);
+
+                    SolicitudPagoFaseCriterioOld.FechaModificacion = DateTime.Now;
+                    SolicitudPagoFaseCriterioOld.UsuarioModificacion = strUsuarioCreacion;
+                    SolicitudPagoFaseCriterioOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio);
+                     
+                    SolicitudPagoFaseCriterioOld.ConceptoPagoCriterio = SolicitudPagoFaseCriterio.ConceptoPagoCriterio;
+                    SolicitudPagoFaseCriterioOld.ValorFacturado = SolicitudPagoFaseCriterio.ValorFacturado;
+                    SolicitudPagoFaseCriterioOld.SolicitudPagoFaseId = SolicitudPagoFaseCriterio.SolicitudPagoFaseId;
+                    SolicitudPagoFaseCriterioOld.TipoCriterioCodigo = SolicitudPagoFaseCriterio.TipoCriterioCodigo;
+                }
+                else
+                {
+                    SolicitudPagoFaseCriterio.UsuarioCreacion = strUsuarioCreacion;
+                    SolicitudPagoFaseCriterio.FechaCreacion = DateTime.Now;
+                    SolicitudPagoFaseCriterio.Eliminado = false;
+                    SolicitudPagoFaseCriterio.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio);
+
+                    _context.SolicitudPagoFaseCriterio.Add(SolicitudPagoFaseCriterio);  
+                }
+            }
+        }
+
+        private bool ValidateCompleteRecordSolicitudPagoFaseCriterio(SolicitudPagoFaseCriterio solicitudPagoFaseCriterio)
+        {
+            return false;
         }
 
         private async void CreateEditNewPaymentNew(SolicitudPago pSolicitudPago)
