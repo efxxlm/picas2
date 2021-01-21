@@ -9,6 +9,10 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidatePaymentRequierementsService
     {
+        Task<Respuesta> DeleteSolicitudPagoFaseCriterioProyecto(int SolicitudPagoFaseCriterioProyectoId, string pUsuarioModificacion);
+
+        Task<Respuesta> DeleteSolicitudPagoFaseCriterio(int pSolicitudPagoFaseCriterioId, string pUsuarioModificacion);
+
         Task<Respuesta> CreateEditOtrosCostosServicios(SolicitudPago pSolicitudPago);
 
         Task<Respuesta> CreateEditExpensas(SolicitudPago pSolicitudPago);

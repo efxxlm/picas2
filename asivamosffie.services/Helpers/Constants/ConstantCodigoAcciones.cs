@@ -239,6 +239,11 @@
         public const string Editar_crear_url = "178";
         public const string Visita_url = "179";
         public const string Cargar_Acta_Terminacion_Contrato = "180";
-        public const string Crear_Editar_Solicitud_De_Pago = "183";
+
+
+        //4.1.7 Registrar y validar requisitos de pago
+        public const string Crear_Editar_Solicitud_De_Pago = "184";   
+        public const string Eliminar_Criterio_Pago = "185";
+        public const string Eliminar_Criterio_Proyecto = "186";
     }
 }   
