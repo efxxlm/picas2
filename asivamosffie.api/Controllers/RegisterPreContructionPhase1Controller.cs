@@ -41,20 +41,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerPreContructionPhase1Service.GetListContratacion();
         }
-        
-        [HttpGet]
-        [Route("GetListContratacion2")]
-        public async Task<List<VRegistrarFase1>> GetListContratacion2()
-        {
-            return await _registerPreContructionPhase1Service.GetListContratacion2();
-        }
-
-        [HttpGet]
-        [Route("GetListContratacion")]
-        public async Task<List<dynamic>> GetListContratacion()
-        {
-            return await _registerPreContructionPhase1Service.GetListContratacion();
-        }
+                
 
         [HttpGet]
         [Route("GetContratoByContratoId")]

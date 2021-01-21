@@ -87,7 +87,7 @@ export class VerDetalleContratacionComponent implements OnInit {
       this.usosSelect = resp[2];
 
       for ( let cont of contratacionProyecto ) {
-        console.log(cont);
+
         for ( let componente of cont.componenteAportante ) {
 
           let componenteSeleccionado = this.componentesSelect.filter( value => value.codigo === componente.tipoComponenteCodigo );

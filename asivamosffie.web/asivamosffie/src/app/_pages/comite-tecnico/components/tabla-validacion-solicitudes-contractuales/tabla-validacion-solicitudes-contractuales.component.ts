@@ -30,7 +30,9 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
     private technicalCommitteSessionService: TechnicalCommitteSessionService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  initTable() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
@@ -68,6 +70,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
 
   cargarRegistro() {
     this.dataSource = new MatTableDataSource(this.ObjetoComiteTecnico.sesionComiteSolicitudComiteTecnico);
+    this.initTable();
   }
 
 }

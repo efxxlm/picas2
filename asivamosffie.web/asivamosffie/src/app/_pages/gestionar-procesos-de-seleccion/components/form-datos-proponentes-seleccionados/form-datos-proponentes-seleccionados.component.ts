@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators, FormControl, FormArray, FormGroup } from '@angular/forms';
 import { ProcesoSeleccion, ProcesoSeleccionProponente, ProcesoSeleccionIntegrante, ProcesoSeleccionService } from 'src/app/core/_services/procesoSeleccion/proceso-seleccion.service';
 import { Dominio, Localizacion, CommonService } from 'src/app/core/_services/common/common.service';
@@ -136,6 +136,51 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
   ) {
     this.declararSelect();
   }
+  noGuardado=true;
+  ngOnDestroy(): void {
+    if ( this.noGuardado===true && this.personaNaturalForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmitPersonaNatural();          
+        }           
+      });
+    }
+
+    if ( this.personaJuridicaIndividualForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmitPersonaJuridicaIndividual();          
+        }           
+      });
+    }
+
+    if ( this.unionTemporalForm.dirty) {
+      let dialogRef =this.dialog.open(ModalDialogComponent, {
+        width: '28em',
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
+      });   
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+        if(result === true)
+        {
+            this.onSubmitUnionTemporal();          
+        }           
+      });
+    }
+  };
+
   ngOnInit() {
 
     return new Promise(resolve => {
@@ -402,7 +447,7 @@ export class FormDatosProponentesSeleccionadosComponent implements OnInit {
     }
 
     this.procesoSeleccion.procesoSeleccionProponente.push(proponente);
-
+    this.noGuardado=false;
     this.guardar.emit(null);
     //console.log(this.personaNaturalForm.value);
   }

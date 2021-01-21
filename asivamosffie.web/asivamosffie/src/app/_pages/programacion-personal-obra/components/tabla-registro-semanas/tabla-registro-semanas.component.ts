@@ -29,7 +29,6 @@ export class TablaRegistroSemanasComponent implements OnInit {
     if ( this.registroSemanas !== undefined ) {
       let numeroregistros = 0;
       this.registroSemanasTabla.push( [] );
-      console.log( this.registroSemanas );
       this.registroSemanas.forEach( registro => {
         if ( this.registroSemanasTabla[ numeroregistros ].length < 20 ) {
           if ( registro.seguimientoSemanalPersonalObra.length === 0 ) {

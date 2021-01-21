@@ -50,7 +50,7 @@ export class ConsideracionesEspecialesComponent implements OnInit {
 
     this.guardar.emit(null);
     console.log( this.contratacion );
-    
+
   }
 
   cargarRegistros(){

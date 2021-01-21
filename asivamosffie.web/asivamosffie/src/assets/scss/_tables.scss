@@ -116,6 +116,10 @@ table {
 div.mat-paginator {
   &-page-size {
     order: 2;
+
+    @media only screen and (max-width: 48em) {
+      margin-right: 30px;
+    }
   }
 
   &-range-actions {
@@ -278,6 +282,10 @@ div.mat-paginator {
 
 .mat-paginator-container {
   width: 95% !important;
+
+  @media only screen and (max-width: 28em) {
+    margin-bottom: 1em;
+  }
 }
 
 .info-table--img {
@@ -289,4 +297,8 @@ div.mat-paginator {
 .table-responsive {
   overflow: auto;
   padding: 0.5em 0;
+}
+
+th .mat-sort-header-button {
+  line-height: 1.25;
 }

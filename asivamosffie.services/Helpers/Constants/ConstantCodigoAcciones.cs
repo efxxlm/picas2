@@ -143,8 +143,7 @@
 
         public const string Aprobar_Seguimiento_Diario = "172";
         public const string Devolver_Seguimiento_Diario = "173";
-        
-        public const string Crear_Editar_Contrato_Perfil = "82";
+                
 
         public const string Eliminar_Contrato_Perfil = "83";
 
@@ -177,8 +176,7 @@
         public const string  Cambiar_estado_Actuacion_Seguimiento= "150";
         public const string  Crear_Editar_Controversia_Motivo= "153";        	
 
-        //4.2.2 Gestionar procesos de Defensa Judicial
-        public const string Crear_Edit_Contrato_Observacion = "141";
+        //4.2.2 Gestionar procesos de Defensa Judicial        
         public const string Crear_Editar_Ficha_Estudio = "145";
         public const string Crear_Editar_Demandado_Convocado = "146";
         public const string Cambiar_Estado_Proceso = "147";

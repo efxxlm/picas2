@@ -309,7 +309,7 @@ export class FormDatosProponentesNuevoComponent implements OnInit {
           this.unionTemporalForm.get("cuantasEntidades").setValue(this.entidades.length);
         }
         else{
-          this.openDialog("","<b>Debe eliminar uno de los registros diligenciedos para disminuir el total de los registros requeridos.</b>");
+          this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
           this.unionTemporalForm.get("cuantasEntidades").setValue(this.entidades.length);
         }
         

@@ -1,11 +1,12 @@
 export interface GrillaFaseUnoPreconstruccion {
-  cantidadProyectosAsociados: number;
-  estadoVerificacionNombre: string;
-  fechaAprobacionPoliza: string;
-  idContrato: number;
+  fechaAprobacion: string;
   numeroContrato: string;
-  proyectosCompletos: number;
-  proyectosNoCompletos: number;
+  cantidadProyectosAsociados: number;
+  cantidadProyectosRequisitosAprobados: number;
+  cantidadProyectosRequisitosPendientes: number;
+  estadoCodigo: string;
+  estadoNombre: string;
+  contratoId: number;
   verBotonAprobarInicio: boolean;
 };
 
@@ -29,12 +30,13 @@ interface estadoCodigos {
 };
 
 export interface ContratoModificado {
-  contratacion: Contratacion,
-  fechaPoliza: string,
-  numeroContrato: string
-};
+  contratacion: Contratacion;
+  fechaPoliza: string;
+  numeroContrato: string;
+}
 
 export interface Contrato {
+  
   contratacionId: number;
   fechaTramite: string;
   tipoContratoCodigo: string;
@@ -164,6 +166,7 @@ export interface ContratacionProyecto2 {
 }
 
 interface Proyecto2 {
+  
   departamento: string;
   municipio: string;
   proyectoId: number;

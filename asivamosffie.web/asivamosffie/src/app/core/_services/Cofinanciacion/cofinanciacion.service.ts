@@ -10,7 +10,8 @@ import { RegistroPresupuestal } from '../fuenteFinanciacion/fuente-financiacion.
 @Injectable({
   providedIn: 'root'
 })
-export class CofinanciacionService {    
+export class CofinanciacionService {
+  
 
   constructor( private http: HttpClient ) {}
 

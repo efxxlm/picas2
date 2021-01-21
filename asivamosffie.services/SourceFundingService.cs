@@ -16,14 +16,12 @@ namespace asivamosffie.services
     public class SourceFundingService : ISourceFundingService
     {
         private readonly ICommonService _commonService;
-        private readonly ICofinancingContributorService _contributor;
         private readonly devAsiVamosFFIEContext _context;
 
-        public SourceFundingService(devAsiVamosFFIEContext context, ICommonService commonService, ICofinancingContributorService contributor)
+        public SourceFundingService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _context = context;
             _commonService = commonService;
-            _contributor = contributor;
         }
 
         public async Task<List<FuenteFinanciacion>> GetISourceFunding()

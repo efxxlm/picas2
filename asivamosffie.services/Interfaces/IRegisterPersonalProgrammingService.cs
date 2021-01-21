@@ -9,11 +9,7 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterPersonalProgrammingService
     {
-        Task<List<dynamic>> GetListProyectos();
-        
-        Task<List<ProgramacionPersonalContratoConstruccion>> GetProgramacionPersonalByContratoConstruccionId(int pContratoConstruccionId, string pUsuario);
-        
-        Task<Respuesta> UpdateProgramacionContratoPersonal(ContratoConstruccion pContratoConstruccion);
+        Task<List<VRegistrarPersonalObra>> GetListProyectos();
         
         Task<List<SeguimientoSemanal>> GetProgramacionPersonalByContratoId(int pContratacionProyectoId, string pUsuario);
         

@@ -24,7 +24,6 @@ namespace asivamosffie.api.Controllers
         public readonly IOptions<AppSettings> _settings;
         public readonly IManagePreContructionActPhase1Service _managePreContructionActPhase1Service;
         public readonly IActBeginService _actBeginService;
-        public readonly IGuaranteePolicyService _guaranteePolicy;
 
         public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy, IActBeginService actBeginService)
         {

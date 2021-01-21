@@ -33,8 +33,8 @@
                 {{detailavailabilityBudget?.plazo}}
             </p>
             <div>
-                <strong>Objeto:</strong>                                
-                <div [innerHtml]="detailavailabilityBudget?.objeto"></div> 
+                <strong>Objeto:</strong>
+                <div [innerHtml]="detailavailabilityBudget?.objeto"></div>
             </div>
             <p *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_tradicional">
                 <strong>Número comité técnico:</strong>
@@ -60,10 +60,10 @@
                 <strong>Detalle de la modificación:</strong>
                 Se realiza adición de recursos para contrataciones complementarias
             </p>
-            
+
             <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
             &&detailavailabilityBudget?.tipoSolicitudEspecial=='Expensas'">
-                <h2 class="card-subTitle">Expensas</h2>                
+                <h2 class="card-subTitle">Expensas</h2>
                 <p>
                     <strong>¿Cuenta con carta de autorización de la ET?:</strong>
                     {{detailavailabilityBudget.cuentaCarta?"Si":"No"}}
@@ -95,7 +95,7 @@
             </div>
             <div *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial
             &&detailavailabilityBudget?.tipoSolicitudEspecial!='Expensas'">
-                <h2 class="card-subTitle">Otros costos/Servicios</h2>                
+                <h2 class="card-subTitle">Otros costos/Servicios</h2>
                 <p>
                     <strong>Número de contrato:</strong>
                     {{detailavailabilityBudget.contratoNumero}}
@@ -106,15 +106,15 @@
                 </p>
                 <div>
                     <strong>Limitación especial:</strong>
-                    <div [innerHtml]="detailavailabilityBudget?.limitacion"></div> 
-                </div>                
+                    <div [innerHtml]="detailavailabilityBudget?.limitacion"></div>
+                </div>
             </div>
             <div  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo==pTipoDDP.DDP_especial && detailavailabilityBudget?.aportantes.length>0">
                 <h2 class="card-subTitle">Aportantes</h2>
                 <div *ngFor="let aportante of detailavailabilityBudget?.aportantes; index as i">
                     <mat-card-title class="header-card--text sub-text">
                         Aportante {{i+1}}
-                    </mat-card-title>    
+                    </mat-card-title>
                     <p>
                         <strong>Tipo de aportante:</strong>
                         {{aportante.tipoAportante}}
@@ -125,10 +125,10 @@
                     </p>
                     <p>
                         <strong>Valor del aportante al proyecto:</strong>
-                        $ {{aportante.valorAportanteAlProyecto}}
+                        $ {{aportante.valorAportanteAlProyecto }}
                     </p>
                     <p *ngIf="detailavailabilityBudget?.urlConSoporte">
-                        <strong>Url con soporte:</strong>
+                        <strong>URL con soporte:</strong>
                         {{detailavailabilityBudget?.urlConSoporte}}
                     </p>
                     <mat-card-title class="header-card--text sub-text"  *ngIf="detailavailabilityBudget?.tipoSolicitudCodigo!=pTipoDDP.DDP_especial">
@@ -157,7 +157,7 @@
                                 Completo
                             </p>
                         </div>
-                    </div>                                        
+                    </div>
                 </div>
             </div>
         </mat-card-content>
@@ -168,15 +168,15 @@
                     Observaciones
                 </mat-card-title>
         </mat-card-header>
-        <mat-card-content>            
+        <mat-card-content>
                 <div [innerHtml]="detailavailabilityBudget?.observaciones"></div>
         </mat-card-content>
     </mat-card>
 
     <div class="botones">
-        <button mat-raised-button color="accent" (click)="download()" *ngIf="detailavailabilityBudget?.numeroDDP">Descargar DDP</button>       
+        <button mat-raised-button color="accent" (click)="download()" *ngIf="detailavailabilityBudget?.numeroDDP">Descargar DDP</button>
     </div>
 
-    
+
 </section>
 

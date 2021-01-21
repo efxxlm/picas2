@@ -8,21 +8,15 @@
     <h1 class="title-menu--h1">
       Validar requisitos de inicio contrato {{ contrato.numeroContrato }} fase 1 - Preconstrucción
     </h1>
-    <p class="text-primary">
+    <p class="colorMainColor" style="margin-top: 1em;">
       <span class="mx-2em">
-        Fecha de aprobacion de póliza:
-        <b>
-          {{ fechaPoliza | date: 'dd/MM/yyyy' }}
-        </b>
+        <b> Fecha de aprobacion de póliza: </b> {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }}
       </span>
-      <span class="mx-2em">
-        Proyectos asociados:
-        <b>
-          {{ contrato.contratacion.contratacionProyecto.length }}
-        </b>
+      <span style="margin-left: 2em;">
+        <b> Proyectos asociados: </b> {{ contrato.contratacion.contratacionProyecto.length }}
       </span>
     </p>
-    <p class="info-container">
+    <p class="info-container" style="margin-top: 2em;">
       <span class="info-text sin-diligenciar">Sin diligenciar</span>
       <span class="info-text en-proceso">En proceso</span>
       <span class="info-text completo">Completo</span>
@@ -98,7 +92,7 @@
                 {{ perfil.fechaAprobacion | date: 'dd/MM/yyyy' }}
               </p>
               <section *ngFor="let obs of perfil.contratoPerfilObservacion">
-                <div *ngIf="obs.tipoObservacionCodigo === '2'">
+                <div *ngIf="obs.tipoObservacionCodigo === '1'">
                   <b style="margin-bottom: .5em;">Oservaciones:</b> <div [innerHTML]="innerObservacion( obs.observacion )"></div>
                 </div>
               </section>
@@ -113,20 +107,20 @@
             </mat-card-content>
           </mat-card>
 
-          <section *ngFor="let obs of perfil.contratoPerfilObservacion">
-            <mat-card class="shipping-card var-main-gris" *ngIf="obs.tipoObservacionCodigo === '2' && perfil['tieneObservacionApoyo'] === true">
+          <section *ngIf="perfil[ 'observacionApoyo' ] !== undefined && perfil['tieneObservacionApoyo'] === true">
+            <mat-card class="shipping-card var-main-gris">
               <mat-card-header class="header-card">
                 <mat-card-title class="header-card--text">
                   Verificación del apoyo a la supervisión
                 </mat-card-title>
               </mat-card-header>
               <mat-card-content>
-                <b>
-                  {{ obs.fechaCreacion | date: 'dd/MM/yyyy' }}
+                <b style="margin-left: 2em;">
+                  {{ perfil[ 'observacionApoyo' ].fechaCreacion | date: 'dd/MM/yyyy' }}
                 </b>
-                <p>
-                  {{ textoLimpioObservacion( obs.observacion ) }}
-                </p>
+                <p *ngIf="perfil[ 'tieneObservacionApoyo' ] === true" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> Si</p>
+                <p *ngIf="perfil[ 'tieneObservacionApoyo' ] === false" style="margin-left: 2em;"><b>¿Tiene observaciones a las hojas de vida de este perfil?:</b> No</p>
+                <div *ngIf="perfil[ 'tieneObservacionApoyo' ] === true" [innerHTML]="perfil[ 'observacionApoyo' ].observacion" style="margin-left: 2em;"></div>
               </mat-card-content>
             </mat-card>
           </section>
@@ -142,21 +136,22 @@
                 <mat-radio-button [value]="true" [checked]="perfil['tieneObservaciones'] === true">Sí</mat-radio-button>
                 <mat-radio-button [value]="false" [checked]="perfil['tieneObservaciones'] === false">No</mat-radio-button>
               </mat-radio-group>
+              <span class="required-form-group m-0">*</span>
             </div>
           </div>
           <div class="d-flex align-items-center" *ngIf="perfil['tieneObservaciones'] === true">
             <div class="text-area-quill">
-              <label for="alcanceParticular" class="text-area-quill--label">
+              <label class="text-area-quill--label size-label colorMainColor">
                 Observaciones a las hojas de vida del contratista de obra
               </label>
               <quill-editor class="quill-editor-style miles" [styles]="editorStyle" [modules]="config"
                 (onContentChanged)="maxLength($event, 1000)" [(ngModel)]="perfil['verificarObservacion']" required>
               </quill-editor>
             </div>
-            <span class="contador" *ngIf="perfil['verificarObservacion'] !== null && perfil['verificarObservacion'].length > 0">
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] !== null && perfil['verificarObservacion'].length > 0">
               {{1000 - textoLimpio( perfil['verificarObservacion'] )}}
             </span>
-            <span class="contador" *ngIf="perfil['verificarObservacion'] === null || perfil['verificarObservacion'].length === 0">
+            <span class="contador miles" *ngIf="perfil['verificarObservacion'] === null || perfil['verificarObservacion'].length === 0">
               1000
             </span>
           </div>

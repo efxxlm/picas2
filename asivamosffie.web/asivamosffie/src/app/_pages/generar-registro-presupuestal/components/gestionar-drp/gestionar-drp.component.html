@@ -11,7 +11,7 @@
         <span>Fecha de firma del contrato: <b>{{detailavailabilityBudget?.fechaContrato}}</b></span>
         <span><b>{{detailavailabilityBudget?.tipoSolicitudEspecial}}</b></span>
         <span>Estado: <b>{{detailavailabilityBudget?.estadoStr}}</b></span>
-    </p> 
+    </p>
 </section>
 <section class="container">
     <mat-card class="shipping-card mainGris">
@@ -30,13 +30,13 @@
             <p *ngIf="esModificacion"><strong>Plazo después de la modificación: </strong>20 meses / 5 días</p>
             <p *ngIf="esModificacion"><strong>Detalle de la modificación:</strong></p>
             <p *ngIf="esModificacion">Se realiza adición de recursos para obras complementarias</p>
-            
+
             <div  *ngIf="detailavailabilityBudget?.aportantes.length>0">
                 <h2 class="card-subTitle">Aportantes</h2>
                 <div *ngFor="let aportante of detailavailabilityBudget?.aportantes; index as i">
                     <mat-card-title class="header-card--text sub-text">
                         Aportante {{i+1}}
-                    </mat-card-title>    
+                    </mat-card-title>
                     <p>
                         <strong>Tipo de aportante:</strong>
                         {{aportante.tipoAportante}}
@@ -50,7 +50,7 @@
                         {{aportante.valorAportanteAlProyecto | currency:'':'symbol':'3.0'}}
                     </p>
                     <p *ngIf="detailavailabilityBudget?.urlConSoporte">
-                        <strong>Url con soporte:</strong>
+                        <strong>URL con soporte:</strong>
                         {{detailavailabilityBudget?.urlConSoporte}}
                     </p>
                     <mat-card-title class="header-card--text sub-text" >
@@ -79,15 +79,15 @@
                                 {{fuente.estado_de_las_fuentes}}
                             </p>-->
                         </div>
-                    </div>                                        
+                    </div>
                 </div>
-            </div>       
+            </div>
             <div  *ngIf="detailavailabilityBudget?.observacioensCancelacion.length>0">
                 <h2 class="card-subTitle">Observaciones</h2>
                 <div *ngFor="let aportante of detailavailabilityBudget?.observacioensCancelacion; index as i">
                     <div [innerHtml]="aportante.observacion"></div>
                 </div>
-            </div>                 
+            </div>
         </mat-card-content>
     </mat-card>
     <mat-accordion>
@@ -104,13 +104,13 @@
             </p>
             <div class="table-responsive text-center">
                 <table mat-table [dataSource]="dataSource[i]" matSort class="mat-elevation-z8">
-        
+
                     <ng-container matColumnDef="componente">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Componente </th>
                         <!-- Caso mapeado <td mat-cell *matCellDef="let element"> <b>{{element.fechaFirma | date:'dd/MM/yyyy'}}</b></td>-->
                         <td mat-cell *matCellDef="let element"> <b>{{element.componente}}</b></td>
                     </ng-container>
-        
+
                     <ng-container matColumnDef="uso">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Uso </th>
                         <td mat-cell *matCellDef="let element">
@@ -119,7 +119,7 @@
                             </div>
                         </td>
                     </ng-container>
-        
+
                     <ng-container matColumnDef="valorUso">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor de Uso </th>
                         <td mat-cell *matCellDef="let element">
@@ -128,13 +128,13 @@
                             </div>
                         </td>
                     </ng-container>
-        
+
                     <ng-container matColumnDef="valorTotal">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Total </th>
                         <td mat-cell *matCellDef="let element"> {{element.valorTotal| currency:'':'symbol':'3.0'}} </td>
                     </ng-container>
-        
-        
+
+
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
@@ -144,10 +144,10 @@
     <div class="botones">
         <button mat-raised-button color="accent" (click)="this.descargarDDPBoton()">Descargar DDP</button>
         <button mat-raised-button color="accent" (click)="this.generardrp()" *ngIf="!detailavailabilityBudget?.numeroDRP">Generar DRP</button>
-        <button mat-raised-button color="accent" (click)="this.generardrpPDF()" 
+        <button mat-raised-button color="accent" (click)="this.generardrpPDF()"
         *ngIf="detailavailabilityBudget?.numeroDRP && detailavailabilityBudget?.estadoStr!='Sin registro presupuestal'">Descargar DRP</button>
         <button mat-raised-button color="accent" (click)="this.cancelarDRPBoton()"
-        *ngIf="detailavailabilityBudget?.estadoStr!='Sin registro presupuestal' && 
+        *ngIf="detailavailabilityBudget?.estadoStr!='Sin registro presupuestal' &&
         detailavailabilityBudget?.estadoStr!='Con registro presupuestal'"
         >Cancelar DRP</button>
     </div>

@@ -11,14 +11,14 @@ export interface ListaProgramacionPersonal {
     plazoProyecto: number;
     sede: string;
     tipoIntervencion: string;
-}
+};
 
 export interface EstadosProgramacion {
     sinProgramacionPersonal: string;
     enRegistroProgramacion: string;
     sinAprobacionProgramacionPersonal: string;
     conAprobacionProgramacionPersonal: string;
-}
+};
 
 export interface DetalleProgramacionPersonal {
     seguimientoSemanalPersonalObra: any;
