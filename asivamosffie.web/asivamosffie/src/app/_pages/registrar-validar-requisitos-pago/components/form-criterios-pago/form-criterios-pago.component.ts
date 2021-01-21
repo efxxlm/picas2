@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { async } from '@angular/core/testing';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
@@ -11,29 +13,15 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormCriteriosPagoComponent implements OnInit {
 
-    @Input() contrato: any;
+    @Input() solicitudPago: any;
     @Input() esPreconstruccion = true;
+    solicitudPagoRegistrarSolicitudPago: any;
+    solicitudPagoFase: any;
     addressForm = this.fb.group({
         criterioPago: [null, Validators.required],
-        tipoPago: [null, Validators.required],
-        conceptoPago: [null, Validators.required],
-        valorFacturado: [null, Validators.required],
         criterios: this.fb.array( [] )
     });
-    criteriosArray = [
-        { name: 'Estudios y diseños interventoria hasta 90%', value: '1' },
-        { name: 'Criterio 2', value: '2' },
-        { name: 'Criterio 3', value: '3' },
-        { name: 'Criterio 4', value: '4' },
-        { name: 'Criterio 5', value: '5' },
-    ];
-    criteriosCodigo = {
-        estudio: '1',
-        criterio2: '2',
-        criterio3: '3',
-        criterio4: '4',
-        criterio5: '5'
-    }
+    criteriosArray: { codigo: string, nombre: string }[] = [];
     tipoPagoArray = [
         { name: 'Costo variable', value: '1' },
         { name: 'Tipo de pago 2', value: '2' },
@@ -53,18 +41,95 @@ export class FormCriteriosPagoComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
+        private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService, )
     { }
 
     ngOnInit(): void {
-        const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+        this.getCriterios();
+    }
+
+    getCriterios() {
+        const solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
         if ( this.esPreconstruccion === true ) {
             const fasePreConstruccionFormaPagoCodigo = solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo;
             this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
                 .subscribe(
                     response => {
-                        console.log( response );
-                        // tipoCriterioCodigo
+                        const criteriosArray = [];
+                        this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+                        this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
+                        if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                            this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( async criterio => {
+                                // GET Criterio seleccionado
+                                const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
+                                criteriosArray.push( criterioSeleccionado[0] );
+                                // GET tipos de pago
+                                const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( criterio.tipoCriterioCodigo );
+                                const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
+                                // GET conceptos de pago
+                                const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
+                                const conceptoDePago = conceptosDePago.filter( value => value.codigo === criterio.conceptoPagoCriterio );
+                                this.criterios.push(
+                                    this.fb.group(
+                                        {
+                                            solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
+                                            solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
+                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                            nombreCriterio: [ criterioSeleccionado[0].nombre ],
+                                            tiposDePago: [ tiposDePago ],
+                                            tipoPago: [ tipoDePago[0], Validators.required ],
+                                            conceptosDePago: [ conceptosDePago, Validators.required ],
+                                            conceptoPago: [ conceptoDePago[0], Validators.required ],
+                                            valorFacturado: [ criterio.valorFacturado, Validators.required ]
+                                        }
+                                    )
+                                );
+                            } );
+                        }
+                        this.criteriosArray = response;
+                        this.addressForm.get( 'criterioPago' ).setValue( criteriosArray );
+                    }
+                );
+        }
+        if ( this.esPreconstruccion === false ) {
+            const faseConstruccionFormaPagoCodigo = solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo;
+            this.registrarPagosSvc.getCriterioByFormaPagoCodigo( faseConstruccionFormaPagoCodigo )
+                .subscribe(
+                    response => {
+                        const criteriosArray = [];
+                        this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
+                        this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
+                        if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                            this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( async criterio => {
+                                // GET Criterio seleccionado
+                                const criterioSeleccionado = response.filter( value => value.codigo === criterio.tipoCriterioCodigo );
+                                criteriosArray.push( criterioSeleccionado[0] );
+                                // GET tipos de pago
+                                const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( criterio.tipoCriterioCodigo );
+                                const tipoDePago = tiposDePago.filter( value => value.codigo === criterio.tipoPagoCodigo );
+                                // GET conceptos de pago
+                                const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( criterio.tipoPagoCodigo );
+                                const conceptoDePago = conceptosDePago.filter( value => value.codigo === criterio.conceptoPagoCriterio );
+                                this.criterios.push(
+                                    this.fb.group(
+                                        {
+                                            solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
+                                            solicitudPagoFaseCriterioId: [ criterio.solicitudPagoFaseCriterioId ],
+                                            tipoCriterioCodigo: [ criterio.tipoCriterioCodigo ],
+                                            nombreCriterio: [ criterioSeleccionado[0].nombre ],
+                                            tiposDePago: [ tiposDePago ],
+                                            tipoPago: [ tipoDePago[0], Validators.required ],
+                                            conceptosDePago: [ conceptosDePago, Validators.required ],
+                                            conceptoPago: [ conceptoDePago[0], Validators.required ],
+                                            valorFacturado: [ criterio.valorFacturado, Validators.required ]
+                                        }
+                                    )
+                                );
+                            } );
+                        }
+                        this.criteriosArray = response;
+                        this.addressForm.get( 'criterioPago' ).setValue( criteriosArray );
                     }
                 );
         }
@@ -77,124 +142,110 @@ export class FormCriteriosPagoComponent implements OnInit {
         return alphanumeric.test(inputChar) ? true : false;
     }
 
-    getvalues(values: string[]) {
-        const tieneEstudios = values.includes( this.criteriosCodigo.estudio );
-        const tieneCriterio2 = values.includes( this.criteriosCodigo.criterio2 );
-        const tieneCriterio3 = values.includes( this.criteriosCodigo.criterio3 );
-        const tieneCriterio4 = values.includes( this.criteriosCodigo.criterio4 );
-        const tieneCriterio5 = values.includes( this.criteriosCodigo.criterio5 );
-        const criteriosArray: any[] = this.criterios.value;
+    getvalues( criteriovalues: { codigo: string, nombre: string }[] ) {
+        const values = [ ...criteriovalues ];
+        if ( values.length > 0 ) {
+            const criteriosSeleccionados = this.addressForm.get( 'criterioPago' ).value;
+            if ( this.addressForm.get( 'criterios' ).dirty === true ) {
+                this.criterios.controls.forEach( ( criterio, indexValue ) => {
+                    values.forEach( ( value, index ) => {
+                        if ( value.codigo === criterio.value.tipoCriterioCodigo ) {
+                            values.splice( index, 1 );
+                        }
+                    } );
+                    const test = criteriovalues.filter( value => value.codigo === criterio.value.tipoCriterioCodigo );
+                    if ( test.length === 0 ) {
+                        this.criterios.removeAt( indexValue );
+                    }
+                } );
+                values.forEach( async value => {
+                    if ( this.criterios.controls.filter( control => control.value.tipoCriterioCodigo === value.codigo ).length === 0 ) {
+                        const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( value.codigo );
+                        this.criterios.push(
+                            this.fb.group(
+                                {
+                                    solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
+                                    solicitudPagoFaseCriterioId: [ 0 ],
+                                    tipoCriterioCodigo: [ value.codigo ],
+                                    nombreCriterio: [ value.nombre ],
+                                    tiposDePago: [ tiposDePago ],
+                                    tipoPago: [ null, Validators.required ],
+                                    conceptosDePago: [ [], Validators.required ],
+                                    conceptoPago: [ null, Validators.required ],
+                                    valorFacturado: [ null, Validators.required ]
+                                }
+                            )
+                        );
+                    }
+                } );
+                this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
+            }
+            if ( this.addressForm.get( 'criterios' ).dirty === false ) {
 
-        // Criterio estudios
-        if ( tieneEstudios === true && criteriosArray.filter( criterio => criterio.codigo === this.criteriosCodigo.estudio ).length === 0 ) {
-            this.criterios.push(
-                this.fb.group(
-                    {
-                        codigo: [ '1' ],
-                        estadoCodigo: [ 0 ],
-                        nombreCriterio: [ 'Estudios y diseños interventoria hasta 90%' ],
-                        tipoPago: [ null, Validators.required ],
-                        conceptoPago: [ null, Validators.required ],
-                        valorFacturado: [ null, Validators.required ]
-                    }
-                )
-            );
-        }
-        if ( tieneEstudios === false ) {
-            this.criterios.controls.forEach( ( criterio, index ) => {
-                if ( criterio.value.codigo === this.criteriosCodigo.estudio ) {
-                    this.criterios.removeAt( index );
+                if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
+                    this.criterios.controls.forEach( ( criterio, indexValue ) => {
+                        values.forEach( ( value, index ) => {
+                            if ( value.codigo === criterio.value.tipoCriterioCodigo ) {
+                                values.splice( index, 1 );
+                            }
+                        } );
+                        const test = criteriovalues.filter( value => value.codigo === criterio.value.tipoCriterioCodigo );
+                        if ( test.length === 0 ) {
+                            this.criterios.removeAt( indexValue );
+                        }
+                    } );
+
+                    values.forEach( async value => {
+                        if ( this.criterios.controls.filter( control => control.value.tipoCriterioCodigo === value.codigo ).length === 0 ) {
+                            const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( value.codigo );
+                            this.criterios.push(
+                                this.fb.group(
+                                    {
+                                        solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
+                                        solicitudPagoFaseCriterioId: [ 0 ],
+                                        tipoCriterioCodigo: [ value.codigo ],
+                                        nombreCriterio: [ value.nombre ],
+                                        tiposDePago: [ tiposDePago ],
+                                        tipoPago: [ null, Validators.required ],
+                                        conceptosDePago: [ [], Validators.required ],
+                                        conceptoPago: [ null, Validators.required ],
+                                        valorFacturado: [ null, Validators.required ]
+                                    }
+                                )
+                            );
+                        }
+                    } );
+                } else {
+                    this.criterios.clear();
+                    values.forEach( async value => {
+                        const tiposDePago = await this.registrarPagosSvc.getTipoPagoByCriterioCodigo( value.codigo );
+                        this.criterios.push(
+                            this.fb.group(
+                                {
+                                    solicitudPagoFaseId: [ this.solicitudPagoFase.solicitudPagoFaseId ],
+                                    solicitudPagoFaseCriterioId: [ 0 ],
+                                    tipoCriterioCodigo: [ value.codigo ],
+                                    nombreCriterio: [ value.nombre ],
+                                    tiposDePago: [ tiposDePago ],
+                                    tipoPago: [ null, Validators.required ],
+                                    conceptosDePago: [ [], Validators.required ],
+                                    conceptoPago: [ null, Validators.required ],
+                                    valorFacturado: [ null, Validators.required ]
+                                }
+                            )
+                        );
+                    } );
                 }
-            } );
+            }
+        } else {
+            this.criterios.clear();
         }
-        // Criterio 2
-        if ( tieneCriterio2 === true && criteriosArray.filter( criterio => criterio.codigo === this.criteriosCodigo.criterio2 ).length === 0 ) {
-            this.criterios.push(
-                this.fb.group(
-                    {
-                        codigo: [ '2' ],
-                        estadoCodigo: [ 0 ],
-                        nombreCriterio: [ 'Criterio 2' ],
-                        tipoPago: [ null, Validators.required ],
-                        conceptoPago: [ null, Validators.required ],
-                        valorFacturado: [ null, Validators.required ]
-                    }
-                )
-            );
-        }
-        if ( tieneCriterio2 === false ) {
-            this.criterios.controls.forEach( ( criterio, index ) => {
-                if ( criterio.value.codigo === this.criteriosCodigo.criterio2 ) {
-                    this.criterios.removeAt( index );
-                }
-            } );
-        }
-        // Criterio 3
-        if ( tieneCriterio3 === true && criteriosArray.filter( criterio => criterio.codigo === this.criteriosCodigo.criterio3 ).length === 0 ) {
-            this.criterios.push(
-                this.fb.group(
-                    {
-                        codigo: [ '3' ],
-                        estadoCodigo: [ 0 ],
-                        nombreCriterio: [ 'Criterio 3' ],
-                        tipoPago: [ null, Validators.required ],
-                        conceptoPago: [ null, Validators.required ],
-                        valorFacturado: [ null, Validators.required ]
-                    }
-                )
-            );
-        }
-        if ( tieneCriterio3 === false ) {
-            this.criterios.controls.forEach( ( criterio, index ) => {
-                if ( criterio.value.codigo === this.criteriosCodigo.criterio3 ) {
-                    this.criterios.removeAt( index );
-                }
-            } );
-        }
-        // Criterio 4
-        if ( tieneCriterio4 === true && criteriosArray.filter( criterio => criterio.codigo === this.criteriosCodigo.criterio4 ).length === 0 ) {
-            this.criterios.push(
-                this.fb.group(
-                    {
-                        codigo: [ '4' ],
-                        estadoCodigo: [ 0 ],
-                        nombreCriterio: [ 'Criterio 4' ],
-                        tipoPago: [ null, Validators.required ],
-                        conceptoPago: [ null, Validators.required ],
-                        valorFacturado: [ null, Validators.required ]
-                    }
-                )
-            );
-        }
-        if ( tieneCriterio4 === false ) {
-            this.criterios.controls.forEach( ( criterio, index ) => {
-                if ( criterio.value.codigo === this.criteriosCodigo.criterio4 ) {
-                    this.criterios.removeAt( index );
-                }
-            } );
-        }
-        // Criterio 5
-        if ( tieneCriterio5 === true && criteriosArray.filter( criterio => criterio.codigo === this.criteriosCodigo.criterio5 ).length === 0 ) {
-            this.criterios.push(
-                this.fb.group(
-                    {
-                        codigo: [ '5' ],
-                        estadoCodigo: [ 0 ],
-                        nombreCriterio: [ 'Criterio 5' ],
-                        tipoPago: [ null, Validators.required ],
-                        conceptoPago: [ null, Validators.required ],
-                        valorFacturado: [ null, Validators.required ]
-                    }
-                )
-            );
-        }
-        if ( tieneCriterio5 === false ) {
-            this.criterios.controls.forEach( ( criterio, index ) => {
-                if ( criterio.value.codigo === this.criteriosCodigo.criterio5 ) {
-                    this.criterios.removeAt( index );
-                }
-            } );
-        }
+    }
+
+    async getConceptosDePago( index: number, tipoPago: any ) {
+        const conceptosDePago = await this.registrarPagosSvc.getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPago.codigo );
+        console.log( conceptosDePago );
+        this.criterios.controls[ index ].get( 'conceptosDePago' ).setValue( conceptosDePago );
     }
 
     openDialog(modalTitle: string, modalText: string) {
@@ -214,17 +265,18 @@ export class FormCriteriosPagoComponent implements OnInit {
         return dialogRef.afterClosed();
     }
 
-    deleteCriterio( index: number, estadoCodigo: number, codigo: string ) {
+    deleteCriterio( index: number, solicitudPagoFaseCriterioId: number, tipoCriterioCodigo: string ) {
+        console.log( this.addressForm.get( 'criterioPago' ).value );
         this.openDialogTrueFalse( '', '<b>¿Está seguro de eliminar esta información?</b>' )
             .subscribe(
                 value => {
                     if ( value === true ) {
-                        if ( estadoCodigo === 0 ) {
+                        if ( solicitudPagoFaseCriterioId === 0 ) {
                             this.criterios.removeAt( index );
                             const criteriosSeleccionados = this.addressForm.get( 'criterioPago' ).value;
                             if ( criteriosSeleccionados !== null && criteriosSeleccionados.length > 0 ) {
-                                criteriosSeleccionados.forEach( ( value, index ) => {
-                                    if ( value === codigo ) {
+                                criteriosSeleccionados.forEach( ( criterioValue, index ) => {
+                                    if ( criterioValue.codigo === tipoCriterioCodigo ) {
                                         criteriosSeleccionados.splice( index, 1 );
                                     }
                                 } );
@@ -235,8 +287,8 @@ export class FormCriteriosPagoComponent implements OnInit {
                             this.criterios.removeAt( index );
                             const criteriosSeleccionados = this.addressForm.get( 'criterioPago' ).value;
                             if ( criteriosSeleccionados !== null && criteriosSeleccionados.length > 0 ) {
-                                criteriosSeleccionados.forEach( ( value, index ) => {
-                                    if ( value === codigo ) {
+                                criteriosSeleccionados.forEach( ( criterioValue, index ) => {
+                                    if ( criterioValue.codigo === tipoCriterioCodigo ) {
                                         criteriosSeleccionados.splice( index, 1 );
                                     }
                                 } );
@@ -250,7 +302,35 @@ export class FormCriteriosPagoComponent implements OnInit {
             );
     }
 
-    onSubmit() {
+    guardar() {
+        this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
+        this.criterios.controls.forEach( control => {
+            const criterio = control.value;
+            this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
+                {
+                    tipoCriterioCodigo: criterio.tipoCriterioCodigo,
+                    solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
+                    tipoPagoCodigo: criterio.tipoPago.codigo,
+                    conceptoPagocriterio: criterio.conceptoPago.codigo,
+                    valorFacturado: criterio.valorFacturado,
+                    solicitudPagoFaseId: criterio.solicitudPagoFaseId
+                }
+            );
+        } );
+        this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

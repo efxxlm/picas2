@@ -25,7 +25,7 @@ export class RegistrarRequisitosPagoService {
   }
 
   getCriterioByFormaPagoCodigo( pFormaPagoCodigo: string ) {
-    return this.http.get( `${ this.apiUrl }/GetCriterioByFormaPagoCodigo?pFormaPagoCodigo=${ pFormaPagoCodigo }` );
+    return this.http.get<{ codigo: string, nombre: string }[]>( `${ this.apiUrl }/GetCriterioByFormaPagoCodigo?pFormaPagoCodigo=${ pFormaPagoCodigo }` );
   }
 
   createEditNewPayment( pSolicitudPago: any ) {
@@ -34,6 +34,28 @@ export class RegistrarRequisitosPagoService {
 
   getListSolicitudPago() {
     return this.http.get<any[]>( `${ this.apiUrl }/GetListSolicitudPago` );
+  }
+
+  getTipoPagoByCriterioCodigo( pCriterioCodigo: string ) {
+    return new Promise<any[]>( resolve => {
+      this.http.get<any[]>( `${ this.apiUrl }/GetTipoPagoByCriterioCodigo?pCriterioCodigo=${ pCriterioCodigo }` )
+        .subscribe(
+          response => {
+            resolve( response );
+          }
+        );
+    } );
+  }
+
+  getConceptoPagoCriterioCodigoByTipoPagoCodigo( tipoPagoCodigo: string ) {
+    return new Promise<any[]>( resolve => {
+      this.http.get<any[]>( `${ this.apiUrl }/GetConceptoPagoCriterioCodigoByTipoPagoCodigo?TipoPagoCodigo=${ tipoPagoCodigo }` )
+        .subscribe(
+          response => {
+            resolve( response );
+          }
+        );
+    } );
   }
 
 }
