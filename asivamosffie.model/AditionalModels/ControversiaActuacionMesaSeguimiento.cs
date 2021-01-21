@@ -12,5 +12,7 @@ namespace asivamosffie.model.Models
 
         [NotMapped]
         public string EstadoAvanceMesaString { get; set; }
+        [NotMapped]
+        public string Actuacion { get; set; }
     }
 }

@@ -818,5 +818,21 @@ namespace asivamosffie.api.Controllers
                 return BadRequest(respuesta);
             }
         }
+
+        [HttpGet]
+        [Route("GetMesaByMesaId")]
+        public async Task<ControversiaActuacionMesa> GetMesaByMesaId(int pControversiaMesaID)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                return await _contractualControversy.GetMesaByMesaId(pControversiaMesaID);
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
