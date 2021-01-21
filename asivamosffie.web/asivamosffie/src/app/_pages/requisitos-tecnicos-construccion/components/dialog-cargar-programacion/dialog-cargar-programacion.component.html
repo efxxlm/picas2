@@ -2,6 +2,11 @@
   <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
 </button>
 
+<div class="loading" *ngIf="loading">
+  <mat-spinner></mat-spinner>
+</div>
+
+
 <div class="text-center">
   <h1 class="title-menu--h1">
     {{ esFlujoInversion == true ? 'Cargar Flujo inversión' : 'Cargar programación' }}
@@ -26,10 +31,10 @@
                 type="file"
                 id="file"
                 formControlName="fileCargarProgramacion"
-                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                accept=".xlsx, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
       </div>
-      <p>
-        Explore en su computador o dispositivo y seleccione el documento que desea cargar los formatos permitidos son: xls
+      <p class="color-fontColor">
+        Explore en su computador o dispositivo y seleccione el documento que desea cargar <b>los formatos permitidos son: xlsx</b>
       </p>
       <button mat-raised-button
               color="accent"

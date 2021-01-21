@@ -8,7 +8,7 @@
             <img src="assets/img/icon/lupa.svg" alt="Buscar">
         </button>
     </div>
-    <div class="table-responsive">
+    <div class="w-100 table-responsive">
         <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
             <ng-container matColumnDef="fechaAprobacionRequisitos">
@@ -35,7 +35,8 @@
                      <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarRevisionAprobacionInt(element.contratoId)"
                         *ngIf="element.estadoActa=='Enviada por el supervisor' &&  element.tipoContratoNombre=='Interventoria'">Enviar para revisión y aprobación</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarParaRevision(element.contratoId)"
-                        *ngIf="element.estadoActa=='Con acta preliminar generada' && element.tipoContratoNombre=='Obra' && (element.estadoActaCodigo=='14' || element.estadoActaCodigo=='17')">Enviar para revisión y aprobación</button>
+                        *ngIf="element.estadoActa=='Con acta preliminar generada' && element.tipoContratoNombre=='Obra' && 
+                        (element.estadoActaCodigo=='14' || element.estadoActaCodigo=='17')">Enviar para revisión y aprobación</button>
                         <button mat-raised-button color="accent" class="btn-table" (click)="this.enviarRevisionAprobacionInt(element.contratoId)"
                         *ngIf="(element.estadoActa=='Con acta preliminar generada'&&  element.tipoContratoNombre=='Interventoria')&&(element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2')">Enviar para revisión y aprobación</button>
                     <button mat-raised-button color="accent" class="btn-table" (click)="this.cargarActaSuscrita(element.contratoId,element.tipoContratoNombre,element.numeroContratoObra)"
@@ -46,7 +47,9 @@
                     *ngIf="element.estadoActa=='Sin acta generada'">Generar acta</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleEditarActaFDos(element.contratoId,element.tipoContratoNombre)"
-                        *ngIf="(element.estadoActa=='Con acta preliminar generada'&& element.tipoContratoNombre=='Obra'  && (element.estadoActaCodigo=='14' || element.estadoActaCodigo=='17')) || element.estadoActa=='Enviada por el supervisor' || (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2') "> Ver detalle /
+                        *ngIf="(element.tipoContratoNombre=='Obra' 
+                         && (element.estadoActaCodigo=='14' || element.estadoActaCodigo=='17')) || element.estadoActa=='Enviada por el supervisor' || 
+                         (element.estadoActa=='Con acta preliminar generada' && element.estadoActaCodigo=='2') "> Ver detalle /
                         Editar</button>
                     <button mat-raised-button color="accent" class="btn-table"
                         (click)="this.verDetalleActaFDos(element.contratoId)"

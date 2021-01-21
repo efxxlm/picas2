@@ -37,6 +37,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
       [{ align: [] }],
     ]
   };
+  observaciones: any[];
 
   constructor(
     private fb: FormBuilder,
@@ -71,7 +72,7 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
         this.addressForm.get('objeto').setValue(this.objetoDisponibilidad.objeto);
         this.addressForm.get('plazoMeses').setValue(this.objetoDisponibilidad.plazoMeses);
         this.addressForm.get('plazoDias').setValue(this.objetoDisponibilidad.plazoDias);
-
+        this.observaciones=response.disponibilidadPresupuestalObservacion;
         this.projectContractingService.getContratacionByContratacionId( this.objetoDisponibilidad.contratacionId )
         .subscribe(
           contratacion => {
@@ -159,8 +160,24 @@ export class RegistrarInformacionAdicionalComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    const textolimpio = texto.replace(/<[^>]*>/g, '');
-    return textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   openDialog(modalTitle: string, modalText: string) {

@@ -7,18 +7,18 @@
             ¿Tiene observaciones al registro del seguimiento diario?
           </label>
         </div>
-        <span class="spanObservaciones">Sí</span>
+        <span class="spanObservaciones">{{ tieneObservaciones == true ? 'Si' : 'No' }}</span>
       </div>
     </div>
   </div>
 </div>
-<div class="d-flex align-items-center var-main-gris mt-2em animatedDown">
+<div class="d-flex align-items-center var-main-gris mt-2em animatedDown" *ngIf="tieneObservaciones === true">
   <div class="text-area-quill">
     <label for="observacion" class="text-area-quill--label header">
       Observaciones al seguimiento diario
     </label>
     <div class="divObservaciones">
-      <p>Es necesario revisar los motivos de incumplimiento por parte del proveedor en la entrega del material.</p>
+      <p>{{ observacionObjeto.observaciones }}</p>
     </div>
   </div>
 </div>

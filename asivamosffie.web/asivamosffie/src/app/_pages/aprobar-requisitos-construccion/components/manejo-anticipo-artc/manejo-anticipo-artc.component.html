@@ -70,12 +70,17 @@
                         [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid)">
                         Observaciones al manejo del anticipo
                 </label>
-                <quill-editor   class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+                <quill-editor   class="quill-editor-style ml-1em"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)"
+                                formControlName="observaciones"
+                                #obsManejoAnticipo
+                                required>
                 </quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{1000 - textoLimpio(addressForm.get('observaciones').value )}}
+              {{1000 - textoLimpio( obsManejoAnticipo.quillEditor, 1000 )}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
               1000
@@ -89,17 +94,17 @@
     </form>
 </div>
 <div style="margin-top: 3em;" align="center" *ngIf="this.observacionesCompleted==true">
-    <mat-card class="border" *ngIf="contratacion.tieneObservacionesManejoAnticipoSupervisor !== undefined && contratacion.tieneObservacionesManejoAnticipoSupervisor === true">
+    <mat-card class="border">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
                 Validación de la supervisión
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p style="margin-left: 2em;"><b> {{ contratacion.observacionManejoAnticipoSupervisor.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-            <p *ngIf="contratacion.tieneObservacionesManejoAnticipoSupervisor === true" style="margin-left: 2em;"><b>¿Tiene observaciones al manejo del anticipo?:</b> Sí</p>
-            <p *ngIf="contratacion.tieneObservacionesManejoAnticipoSupervisor === false" style="margin-left: 2em;"><b>¿Tiene observaciones al manejo del anticipo?:</b> No</p>
-            <section *ngIf="contratacion.observacionManejoAnticipoSupervisor.observaciones !== undefined" [innerHTML]="contratacion.observacionManejoAnticipoSupervisor.observaciones" style="margin-left: 2em;"></section>
+            <p *ngIf="contratacion.observacionDevolucionManejoAnticipo !== undefined" style="margin-left: 2em;"><b> {{ contratacion.observacionDevolucionManejoAnticipo.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p *ngIf="contratacion.observacionDevolucionManejoAnticipo !== undefined" style="margin-left: 2em;"><b>¿Tiene observaciones al manejo del anticipo?:</b> Sí</p>
+            <p *ngIf="contratacion.observacionDevolucionManejoAnticipo === undefined" style="margin-left: 2em;"><b>¿Tiene observaciones al manejo del anticipo?:</b> No</p>
+            <section *ngIf="contratacion.observacionDevolucionManejoAnticipo !== undefined" [innerHTML]="contratacion.observacionDevolucionManejoAnticipo.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
     <!--Tabla para historial de observaciones-->

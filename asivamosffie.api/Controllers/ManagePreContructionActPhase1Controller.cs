@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using asivamosffie.model.APIModels;
 using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -12,19 +13,43 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+ 
     public class ManagePreContructionActPhase1Controller : Controller
     {
         private readonly IManagePreContructionActPhase1Service _managePreContruction;
         private readonly IOptions<AppSettings> _settings;
-
-        public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings) {
+         
+        public ManagePreContructionActPhase1Controller(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IOptions<AppSettings> settings)
+        {
             _managePreContruction = managePreContructionActPhase1Service;
             _settings = settings;
         }
-         
+
+        public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
+        {
+            AppSettingsService appSettingsService = new AppSettingsService
+            {
+                MailPort = appSettings.Value.MailPort,
+                MailServer = appSettings.Value.MailServer,
+                Password = appSettings.Value.Password,
+                Sender = appSettings.Value.Sender
+            };
+            return appSettingsService;
+        }
+
+
+        [HttpGet]
+        [Route("GetActaByIdPerfil")]
+        public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pContratoId , bool pEsContruccion)
+        {
+            ///Temp
+            int pUserId = 38; // Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
+            return File(await _managePreContruction.GetActaByIdPerfil(pContratoId, pUserId, ToAppSettingsService(_settings), pEsContruccion), "application/pdf");
+        }
+
         [Route("GetListContrato")]
         [HttpGet]
-        public async Task <List<dynamic>> GetListContrato()
+        public async Task<List<dynamic>> GetListContrato()
         {
             return await _managePreContruction.GetListContrato();
         }
@@ -34,8 +59,8 @@ namespace asivamosffie.api.Controllers
         public async Task<Contrato> GetContratoByContratoId([FromQuery] int pContratoId)
         {
             int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-            return await _managePreContruction.GetContratoByContratoId(pContratoId , pUserId);
-        }
+            return await _managePreContruction.GetContratoByContratoId(pContratoId, pUserId);
+        } 
 
         [HttpGet]
         [Route("GetListGrillaActaInicio")]
@@ -60,7 +85,7 @@ namespace asivamosffie.api.Controllers
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _managePreContruction.EditContrato(pContrato);
-                return respuesta; 
+                return respuesta;
             }
             catch (Exception ex)
             {
@@ -68,7 +93,7 @@ namespace asivamosffie.api.Controllers
                 return respuesta;
             }
         }
-         
+
         [Route("LoadActa")]
         [HttpPost]
         public async Task<Respuesta> LoadActa([FromForm] Contrato pContrato)
@@ -77,7 +102,9 @@ namespace asivamosffie.api.Controllers
             try
             {
                 pContrato.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                respuesta = await _managePreContruction.LoadActa( pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato);
+                respuesta = await _managePreContruction.LoadActa(pContrato, pContrato.pFile, _settings.Value.DirectoryBase, _settings.Value.DirectoryActaSuscritaContrato,
+                    ToAppSettingsService(_settings)
+                    );
                 return respuesta;
 
             }
@@ -94,9 +121,9 @@ namespace asivamosffie.api.Controllers
         {
             Respuesta respuesta = new Respuesta();
             try
-            {  
+            {
                 respuesta = await _managePreContruction.CambiarEstadoActa(pContratoId, pEstadoContrato,
-               HttpContext.User.FindFirst("User").Value);
+               HttpContext.User.FindFirst("User").Value, ToAppSettingsService(_settings));
                 return respuesta;
 
             }
@@ -108,14 +135,6 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpGet]
-        [Route("GetActaByIdPerfil")]
-        public async Task<FileResult> GetActaByIdPerfil([FromQuery] int pPerfilId, int pContratoId)
-        {
-            int pUserId = Int32.Parse(HttpContext.User.FindFirst("UserId").Value);
-            return File(await _managePreContruction.GetActaByIdPerfil(pPerfilId, pContratoId , pUserId), "application/pdf");
-        }
-
-        [HttpGet]
         [Route("GetListContratoObservacionByContratoId")]
         public async Task<List<ContratoObservacion>> GetListContratoObservacionByContratoId([FromQuery] int pContratoId)
         {
@@ -123,13 +142,13 @@ namespace asivamosffie.api.Controllers
         }
 
         [HttpPut]
-        [Route("CreateEditObservacionesActa")] 
+        [Route("CreateEditObservacionesActa")]
         public async Task<Respuesta> CreateEditObservacionesActa([FromBody] ContratoObservacion pcontratoObservacion)
-        { 
+        {
             try
             {
                 pcontratoObservacion.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
-                return await _managePreContruction.CreateEditObservacionesActa(pcontratoObservacion); 
+                return await _managePreContruction.CreateEditObservacionesActa(pcontratoObservacion);
             }
             catch (Exception ex)
             {
@@ -139,7 +158,6 @@ namespace asivamosffie.api.Controllers
                 };
                 return respuesta;
             }
-        }
- 
+        } 
     }
 }

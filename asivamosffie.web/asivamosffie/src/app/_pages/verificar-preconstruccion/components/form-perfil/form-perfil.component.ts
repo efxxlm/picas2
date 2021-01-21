@@ -308,10 +308,24 @@ export class FormPerfilComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
-    if ( texto !== undefined || texto !== null ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length > 1000 ? 1000 : textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   textoLimpioMessage(texto: string) {

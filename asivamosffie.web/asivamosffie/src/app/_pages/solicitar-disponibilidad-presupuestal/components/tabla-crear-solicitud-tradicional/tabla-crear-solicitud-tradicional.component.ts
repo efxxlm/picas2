@@ -23,12 +23,12 @@ export class TablaCrearSolicitudTradicionalComponent implements OnInit {
   listaSolicitudes: GrillaDisponibilidadPresupuestal[] = [];
 
   displayedColumns: string[] = [
-    'fecha',
-    'tipo',
-    'numero',
-    'opcionPorContratar',
-    'valorSolicitado',
-    'estado',
+    'fechaSolicitud',
+    'tipoSolicitudText',
+    'numeroSolicitud',
+    'opcionContratar',
+    'valorSolicitud',
+    'estadoSolicitudText',
     'id'
   ];
   dataSource = new MatTableDataSource();

@@ -92,12 +92,17 @@
                         [class.colorMainColor]="!(addressForm.get('observaciones').invalid && addressForm.get('observaciones').touched || addressForm.get('observaciones').invalid)">
                         Observaciones al diagnóstico
                 </label>
-                <quill-editor   class="quill-editor-style ml-1em" [styles]="editorStyle" [modules]="config"
-                                (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+                <quill-editor   class="quill-editor-style ml-1em"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)"
+                                formControlName="observaciones"
+                                #obsDiagnostico
+                                required>
                 </quill-editor>
             </div>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
-              {{1000 - textoLimpio(addressForm.get('observaciones').value )}}
+              {{1000 - textoLimpio( obsDiagnostico.quillEditor, 1000 )}}
             </span>
             <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
               1000
@@ -111,17 +116,17 @@
     </form>
 </div>
 <div style="margin-top: 3em;" align="center" *ngIf="this.observacionesCompleted==true">
-    <mat-card class="border" *ngIf="construccion.tieneObservacionesDiagnosticoSupervisor === true">
+    <mat-card class="border">
         <mat-card-header class="header-card">
             <mat-card-title class="header-card--text grayTitle">
                 Validación de la supervisión
             </mat-card-title>
         </mat-card-header>
         <mat-card-content align="left">
-            <p style="margin-left: 2em;"><b> {{ construccion.observacionDiagnosticoSupervisor.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
-            <p *ngIf="construccion.tieneObservacionesDiagnosticoSupervisor === true" style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-            <p *ngIf="construccion.tieneObservacionesDiagnosticoSupervisor === false" style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> No</p>
-            <section *ngIf="construccion.observacionDiagnosticoSupervisor.observaciones !== undefined" [innerHTML]="construccion.observacionDiagnosticoSupervisor.observaciones" style="margin-left: 2em;"></section>
+            <p *ngIf="construccion.observacionDevolucionDiagnostico !== undefined" style="margin-left: 2em;"><b> {{ construccion.observacionDevolucionDiagnostico.fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p *ngIf="construccion.observacionDevolucionDiagnostico !== undefined" style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <p *ngIf="construccion.observacionDevolucionDiagnostico === undefined" style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> No</p>
+            <section *ngIf="construccion.observacionDevolucionDiagnostico !== undefined" [innerHTML]="construccion.observacionDevolucionDiagnostico.observaciones" style="margin-left: 2em;"></section>
         </mat-card-content>
     </mat-card>
     <!--Tabla para historial de observaciones-->

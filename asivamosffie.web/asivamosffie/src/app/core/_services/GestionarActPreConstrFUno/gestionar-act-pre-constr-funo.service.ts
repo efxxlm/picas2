@@ -48,14 +48,18 @@ export class GestionarActPreConstrFUnoService {
   CambiarEstadoActa(pContratoId:number,pEstadoContrato:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CambiarEstadoActa?pContratoId=${pContratoId}&pEstadoContrato=${pEstadoContrato}`,pContratoId);
   }
-  GetActaByIdPerfil(pPerfilId:number, pContratoId:number){
-    return this.http.get(`${environment.apiUrl}/ManagePreContructionActPhase1/GetActaByIdPerfil?pPerfilId=${pPerfilId}&pContratoId=${pContratoId}`, { responseType: "blob" } );
+  GetActaByIdPerfil(pContratoId:number, pEsContruccion: string){
+    return this.http.get(`${environment.apiUrl}/ManagePreContructionActPhase1/GetActaByIdPerfil?pContratoId=${pContratoId}&pEsContruccion=${ pEsContruccion }`, { responseType: "blob" } );
   }
   GetListContratoObservacionByContratoId(pContratoId:number){
     return this.http.get<ObservacionesContrato>(`${environment.apiUrl}/ManagePreContructionActPhase1/GetListContratoObservacionByContratoId?pContratoId=${pContratoId}`);
   }
   CreateEditObservacionesActa(pcontratoObservacion: any){
     return this.http.put<Respuesta>(`${environment.apiUrl}/ManagePreContructionActPhase1/CreateEditObservacionesActa`, pcontratoObservacion);
+  }
+
+  getFiferenciaMesesDias( pMesesContrato: number, pDiasContrato: number, pMesesFase1: number, pDiasFase1: number ) {
+    return this.http.get( `${ environment.apiUrl }/Common/GetFiferenciaMesesDias?pMesesContrato=${ pMesesContrato }&pDiasContrato=${ pDiasContrato }&pMesesFase1=${ pMesesFase1 }&pDiasFase1=${ pDiasFase1 }` )
   }
 }
 

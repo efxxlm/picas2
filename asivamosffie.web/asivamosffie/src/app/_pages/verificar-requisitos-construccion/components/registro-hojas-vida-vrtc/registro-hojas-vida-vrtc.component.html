@@ -1,153 +1,165 @@
 <form autocomplete="off" [formGroup]="formContratista" (ngSubmit)="guardar()">
-    <div class="d-flex mt-1em" style="justify-content: center;display: inline-flex;">
-      <label class="mr-label" class="label-left"><b>¿Cuántos perfiles diferentes se requieren para ejecutar el proyecto?</b></label>
-      <div class="col d-flex">
-        <mat-form-field class="w-38">          
-          <input matInput type="number" formControlName="numeroPerfiles" #cantidadPerfiles maxlength="3" min="1" max="999"
+  <div class="d-flex mt-1em inline-flex" style="justify-content: center;">
+    <label class="mr-label" class="label-left">
+      <b>
+        ¿Cuantos perfiles diferentes se requieren del interventor para ejecutar el proyecto?
+      </b>
+    </label>
+    <div class="col d-flex">
+      <mat-form-field class="w-38">
+        <input matInput type="number" formControlName="numeroPerfiles" #cantidadPerfiles maxlength="3" min="1" max="999"
           required (keypress)="validateNumberKeypress($event)"
           onKeyPress="if(this.value.length>=this.maxLength) return false;">
-        </mat-form-field>
-        <span class="contador">{{formContratista.get( 'numeroPerfiles' ).value? 3 - formContratista.get( 'numeroPerfiles' ).value.toString().length:3}}</span>
-      </div>
+      </mat-form-field>
+      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+        {{formContratista.get( 'numeroPerfiles' ).value? 3 - formContratista.get( 'numeroPerfiles' ).value.toString().length:3}}
+      </span>
     </div>
+  </div>
 
-    <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroPerfiles' ).value !== null">
-      <mat-expansion-panel class="expansion-style sub-expansion-black" *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
-        <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title" [ngClass]="perfil.get( 'estadoSemaforo' ).value">
-            Perfil {{ i+1 }}
-          </mat-panel-title>
-        </mat-expansion-panel-header>
+  <mat-accordion formArrayName="perfiles" *ngIf="formContratista.get( 'numeroPerfiles' ).value !== null">
+    <mat-expansion-panel class="expansion-style sub-expansion-black"
+      *ngFor="let perfil of perfiles.controls; index as i" [formGroup]="perfil">
+      <mat-expansion-panel-header class="expansion-style--header">
+        <mat-panel-title class="expansion-style--title" [ngClass]="perfil.get( 'estadoSemaforo' ).value">
+          Perfil {{ i+1 }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-        <mat-card>
-          <mat-card-content>
-            
-            <div class="row">
-              <div class="pr-1">
-                <label class="label-left" for="perfilCodigo"
+      <mat-card>
+        <mat-card-content>
+
+          <div class="row">
+            <div class="pr-1">
+              <label class="label-left" for="perfilCodigo"
                 [ngClass]="{'color-secondaryColor' : perfil.get('perfilCodigo').invalid && perfil.get('perfilCodigo').touched || perfil.get('perfilCodigo').invalid && estaEditando}">
-                  Perfil
-                </label>
-              </div>
-              <div class="col">
-                <mat-form-field class="select-width">
-                  <mat-select required formControlName="perfilCodigo">
-                    <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
-                      {{perfilCv.nombre}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
+                Perfil
+              </label>
             </div>
+            <div class="col">
+              <mat-form-field class="select-width">
+                <mat-select required formControlName="perfilCodigo">
+                  <mat-option *ngFor="let perfilCv of perfilesCv" [value]="perfilCv.codigo">
+                    {{perfilCv.nombre}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label class="label-left"
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left"
                     [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvRequeridas').invalid && perfil.get('cantidadHvRequeridas').touched || perfil.get('cantidadHvRequeridas').invalid && estaEditando}">
-                      Cantidad de hojas de vida requeridas para el perfil
-                    </label>
-                  </div>
-                  <div class="col d-flex">
-                    <mat-form-field class="full-width">
-                      <input matInput type="number" maxlength="3" formControlName="cantidadHvRequeridas" required
-                        #cantidadHvRequeridas (keypress)="validateNumberKeypress($event)"
-                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                    </mat-form-field>
-                    <span class="contador">{{3 - cantidadHvRequeridas.value.length}}</span>
-                  </div>
+                    Cantidad de hojas de vida requeridas para el perfil
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput type="number" maxlength="3" formControlName="cantidadHvRequeridas" required
+                      #cantidadHvRequeridas (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  </mat-form-field>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvRequeridas.value.length}}</span>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label class="label-left"
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left"
                     [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvRecibidas').invalid && perfil.get('cantidadHvRecibidas').touched || perfil.get('cantidadHvRecibidas').invalid && estaEditando}">
-                      Cantidad de hojas de vida recibidas para el perfil
-                    </label>
-                  </div>
-                  <div class="col d-flex">
-                    <mat-form-field class="full-width">
-                      <input matInput type="number" maxlength="3" formControlName="cantidadHvRecibidas" required
-                        #cantidadHvRecibidas (keypress)="validateNumberKeypress($event)"
-                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                    </mat-form-field>
-                    <span class="contador">{{3 - cantidadHvRecibidas.value.length}}</span>
-                  </div>
+                    Cantidad de hojas de vida recibidas para el perfil
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput type="number" maxlength="3" formControlName="cantidadHvRecibidas" required
+                      #cantidadHvRecibidas (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  </mat-form-field>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvRecibidas.value.length}}</span>
                 </div>
               </div>
             </div>
+          </div>
 
-              
 
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label class="label-left"
+
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left"
                     [ngClass]="{'color-secondaryColor' : perfil.get('cantidadHvAprobadas').invalid && perfil.get('cantidadHvAprobadas').touched || perfil.get('cantidadHvAprobadas').invalid && estaEditando}">
-                      Cantidad de hojas de vida aprobadas para el perfil
-                    </label>
-                  </div>
-                  <div class="col d-flex">
-                    <mat-form-field class="full-width">
-                      <input matInput type="number" maxlength="3" formControlName="cantidadHvAprobadas" required
-                        #cantidadHvAprobadas (keypress)="validateNumberKeypress($event)"
-                        onKeyPress="if(this.value.length>=this.maxLength) return false;">
-                    </mat-form-field>
-                    <span class="contador">{{3 - cantidadHvAprobadas.value.length}}</span>
-                  </div>
+                    Cantidad de hojas de vida aprobadas para el perfil
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="full-width">
+                    <input matInput type="number" maxlength="3" formControlName="cantidadHvAprobadas" required
+                      #cantidadHvAprobadas (keypress)="validateNumberKeypress($event)"
+                      onKeyPress="if(this.value.length>=this.maxLength) return false;">
+                  </mat-form-field>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">{{3 - cantidadHvAprobadas.value.length}}</span>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div class="row">
-              <div class="col-md-8">
-                <div class="row">
-                  <div class="pr-1">
-                    <label class="label-left"
+          <div class="row">
+            <div class="col-md-8">
+              <div class="row">
+                <div class="pr-1">
+                  <label class="label-left"
                     [ngClass]="{'color-secondaryColor' : perfil.get('fechaAprobacion').invalid && perfil.get('fechaAprobacion').touched || perfil.get('fechaAprobacion').invalid && estaEditando}">
-                      Fecha de aprobación de la totalidad de las hojas de vida
-                    </label>
-                  </div>
-                  <div class="col d-flex">
-                    <mat-form-field class="mt-min">
-                      <input matInput [matDatepicker]="fechaAprobacion" formControlName="fechaAprobacion" [min]="minDate"
-                        placeholder="DD/MM/AAAA" required
-                        [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
-                      <mat-datepicker #fechaAprobacion></mat-datepicker>
-                    </mat-form-field>
-                    <button mat-button color="primary" type="button" (click)="fechaAprobacion.open()"
-                      class="btn-calendario">
-                      <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
-                    </button>
-                  </div>
+                    Fecha de aprobación de la totalidad de las hojas de vida
+                  </label>
+                </div>
+                <div class="col d-flex">
+                  <mat-form-field class="mt-min">
+                    <input matInput [matDatepicker]="fechaAprobacion" formControlName="fechaAprobacion" [min]="minDate"
+                      placeholder="DD/MM/AAAA" required readonly (click)="fechaAprobacion.open()"
+                      [attr.disabled]="disabledDate( perfil.get( 'cantidadHvAprobadas' ).value, perfil.get( 'cantidadHvRequeridas' ).value, i )">
+                    <mat-datepicker #fechaAprobacion></mat-datepicker>
+                  </mat-form-field>
+                  <button mat-button color="primary" type="button" (click)="fechaAprobacion.open()"
+                    class="btn-calendario">
+                    <img class="mr-bottom-1" src="assets/img/icon/calendarioCirculo.svg" alt="Abrir Calendario">
+                  </button>
                 </div>
               </div>
             </div>
+          </div>
 
             <div class="row">
               <div class="col-md-12">
                 <div class="row">
                   <div class="pr-1">
-                    <label class="label-left"><b>Observaciones</b></label>
+                    <label class="label-left"
+                    [ngClass]="{'color-secondaryColor' : perfil.get('observaciones').invalid && perfil.get('observaciones').touched || perfil.get('observaciones').invalid && estaEditando}">
+                      Observaciones</label>
                   </div>
                   <div class="col d-flex">
                     <quill-editor class="quill-editor-style w-65 card position-relative"
+                                  [class.invalid]="
+                                  perfil.get('observaciones').invalid && perfil.get('observaciones').touched ||
+                                  perfil.get('observaciones').invalid && estaEditando"
                                   [styles]="editorStyle"
                                   [modules]="config"
                                   (onContentChanged)="maxLength($event, 1000)"
-                                  formControlName="observacion"
+                                  formControlName="observaciones"
                                   required></quill-editor>
                     <div class="d-flex" style="align-items: flex-end;margin-bottom: .6em;">
-                      <span class="contador miles" *ngIf="perfil.get('observacion').value !== null">
-                        {{1000 - textoLimpio(perfil.get('observacion').value)}}
+                      <span class="contador miles" *ngIf="perfil.get('observaciones').value !== null">
+                        {{1000 - textoLimpio(perfil.get('observaciones').value)}}
                       </span>
-                      <span class="contador miles" *ngIf="perfil.get('observacion').value === null">
+                      <span class="contador miles" *ngIf="perfil.get('observaciones').value === null">
                         1000
                       </span>
                     </div>
@@ -156,143 +168,126 @@
               </div>
             </div>
 
-            <section formArrayName="contratoPerfilNumeroRadicado">
-              <div class="d-flex mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
-                <label class="mr-label mr-min mt-1em"
-                [ngClass]="{'color-secondaryColor' : numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched || numero.get('numeroRadicado').invalid && estaEditando}">
-                  <b>Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }} </b>
-                </label>
-                <div class="col d-flex" style="width: 25%;" [formGroup]="numero">
-                  <mat-form-field class="w-38">
-                    <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
-                  </mat-form-field>
-                  <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
+          <section formArrayName="contratoPerfilNumeroRadicado">
+            <div class="mt-1em" *ngFor="let numero of numeroRadicado( i ).controls; index as j">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="pr-1">
+                      <label class="label-left" [ngClass]="{
+                          'color-secondaryColor' : numero.get('numeroRadicado').invalid && numero.get('numeroRadicado').touched
+                          || numero.get('numeroRadicado').invalid && estaEditando}">
+                        Número de radicado en FFIE de aprobación de hojas de vida {{ j+1 }}
+                      </label>
+                    </div>
+                    <div class="col d-flex" [formGroup]="numero">
+                      <mat-form-field class="full-width">
+                        <input matInput type="text" maxlength="20" formControlName="numeroRadicado" required>
+                      </mat-form-field>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="text-right" *ngIf="numeroRadicado( i ).length > 1">
-                  <button mat-button
-                          color="warn"
-                          type="button"
-                          class="btn-eliminar"
-                          (click)="eliminarNumeroRadicado( i, j )"
-                          *ngIf="perfilProyecto.length === 0">
-                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
-                    Eliminar número de radicado
-                  </button>
-                  <button mat-button
-                          color="warn"
-                          type="button"
-                          class="btn-eliminar"
-                          (click)="deleteRadicado( numero.get( 'construccionPerfilNumeroRadicadoId' ).value, i, j )"
-                          *ngIf="perfilProyecto.length > 0">
-                    <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
-                    Eliminar número de radicado
-                  </button>
-                </div>
-                <div class="text-right" *ngIf="numeroRadicado( i ).length === 1">
-                  <button mat-button
-                          color="warn"
-                          type="button"
-                          class="btn-eliminar"
-                          (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
-                    <img src="assets/img/icon/mas.svg">
-                    Agregar otro número de radicado
-                  </button>
+                <div class="col-md-4">
+                  <div class="text-right" *ngIf="numeroRadicado( i ).length > 1">
+                    <button mat-button color="warn" type="button" class="btn-eliminar"
+                      (click)="eliminarNumeroRadicado( i, j )" *ngIf="perfilProyecto.length === 0">
+                      <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                      Eliminar número de radicado
+                    </button>
+                    <button mat-button color="warn" type="button" class="btn-eliminar"
+                      (click)="deleteRadicado( numero.get( 'construccionPerfilNumeroRadicadoId' ).value, i, j )"
+                      *ngIf="perfilProyecto.length > 0">
+                      <img src="assets/img/icon/menos.svg" alt="Eliminar vigencia">
+                      Eliminar número de radicado
+                    </button>
+                  </div>
+                  <div class="text-right" *ngIf="numeroRadicado( i ).length === 1">
+                    <button mat-button color="warn" type="button" class="btn-eliminar"
+                      (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                      <img src="assets/img/icon/mas.svg">
+                      Agregar otro número de radicado
+                    </button>
+                  </div>
                 </div>
               </div>
-              <div class="text-right w-margin" *ngIf="numeroRadicado( i ).length > 1">
-                <button mat-button
-                        color="warn"
-                        type="button"
-                        class="btn-eliminar"
-                        (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
-                  <img src="assets/img/icon/mas.svg">
-                  Agregar otro número de radicado
-                </button>
-              </div>
-            </section>
-
-            <section class="d-flex mt-1em">
-              <label class="mr-label mr-min mt-1em"
-              [ngClass]="{'color-secondaryColor' : perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched || perfil.get('rutaSoporte').invalid && estaEditando}">
-                <b>URL con soporte</b>
-              </label>
-              <div class="col d-flex" style="width: 85%;">
-                <mat-form-field class="w-38">
-                  <input matInput type="text" formControlName="rutaSoporte" required>
-                </mat-form-field>
-              </div>
-            </section>
-            <div class="d-flex justify-content-center size-text-descriptivo">
-              <p class="color-text-descriptivo" style="margin-left: 8em;">
-                <i>
-                  Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal
-                </i>
-              </p>
             </div>
-          </mat-card-content>
-        </mat-card>
-        <div class="text-right" *ngIf="perfiles.controls.length > 1">
-          <button mat-button
-                  color="warn"
-                  type="button"
-                  class="btn-eliminar"
-                  (click)="eliminarPerfil( i )"
-                  *ngIf="perfilProyecto.length === 0">
-            <img src="assets/img/icon/menos.svg">
-            Eliminar perfil
-          </button>
-          <button mat-button
-                  color="warn"
-                  type="button"
-                  class="btn-eliminar"
-                  (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value, i )"
-                  *ngIf="perfilProyecto.length > 0">
-            <img src="assets/img/icon/menos.svg">
-            Eliminar perfil
-          </button>
-        </div>
+            <div class="text-right w-margin" *ngIf="numeroRadicado( i ).length > 1">
+              <button mat-button color="warn" type="button" class="btn-eliminar"
+                (click)="agregarNumeroRadicado( i, perfil.get( 'contratoPerfilId' ).value )">
+                <img src="assets/img/icon/mas.svg">
+                Agregar otro número de radicado
+              </button>
+            </div>
+          </section>
 
-        <div class="text-center">
-          <button mat-button
-                  color="warn"
-                  class="btn-guardar"
-                  type="button"
-                  (click)="guardar()"
-                  [disabled]="formContratista.dirty === false">
-                  <img  src="assets/img/icon/guardar.svg">
-          </button>
-        </div>
+          <section class="d-flex mt-1em">
+            <label class="mr-label mr-min mt-1em"
+              [ngClass]="{'color-secondaryColor' : perfil.get('rutaSoporte').invalid && perfil.get('rutaSoporte').touched || perfil.get('rutaSoporte').invalid && estaEditando}">
+              <b>URL con soporte</b>
+            </label>
+            <div class="col d-flex" style="width: 85%;">
+              <mat-form-field class="w-38">
+                <input matInput type="text" formControlName="rutaSoporte" required>
+              </mat-form-field>
+            </div>
+          </section>
+          <div class="d-flex justify-content-center size-text-descriptivo">
+            <span class="info-url margen-url">Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación de personal</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <div class="text-right" *ngIf="perfiles.controls.length > 1">
+        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="eliminarPerfil( i )"
+          *ngIf="perfilProyecto.length === 0">
+          <img src="assets/img/icon/menos.svg">
+          Eliminar perfil
+        </button>
+        <button mat-button color="warn" type="button" class="btn-eliminar"
+          (click)="deletePerfil( perfil.get( 'contratoPerfilId' ).value, i )" *ngIf="perfilProyecto.length > 0">
+          <img src="assets/img/icon/menos.svg">
+          Eliminar perfil
+        </button>
+      </div>
 
-        <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="perfil.get( 'observacionSupervisor' ).value !== null">
+      <div class="text-center">
+        <button mat-button color="warn" class="btn-guardar" type="button" (click)="guardar()"
+          [disabled]="formContratista.dirty === false">
+          <img src="assets/img/icon/guardar.svg">
+        </button>
+      </div>
+
+      <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;"
+        *ngIf="perfil.get( 'observacionSupervisor' ).value !== null">
+        <mat-card-header class="header-card">
+          <mat-card-title class="header-card--text">
+            Observaciones del supervisor
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <b style="margin-top: 0.8em;">
+            {{ perfil.get( 'fechaObservacion' ).value | date: 'dd/MM/yyyy' }}
+          </b>
+          <p>
+            {{ textoLimpioMessage( perfil.get( 'observacionSupervisor' ).value ) }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+      <div align="center" *ngIf="perfil.value.observacionDevolucion">
+        <mat-card class="border" style="margin-top: 20px;">
           <mat-card-header class="header-card">
-            <mat-card-title class="header-card--text">
-              Observaciones del supervisor
+            <mat-card-title class="header-card--text grayTitle">
+              Observaciones de la supervisión
             </mat-card-title>
           </mat-card-header>
-          <mat-card-content>
-            <b style="margin-top: 0.8em;">
-              {{ perfil.get( 'fechaObservacion' ).value | date: 'dd/MM/yyyy' }}
-            </b>
-            <p>
-              {{ textoLimpioMessage( perfil.get( 'observacionSupervisor' ).value ) }}
-            </p>
+          <mat-card-content align="left">
+            <p style="margin-left: 2em;"><b>{{ perfil.value.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+            <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+            <section [innerHTML]="perfil.value.observacionDevolucion.observacion" style="margin-left: 2em;"></section>
           </mat-card-content>
         </mat-card>
-        <div align="center" *ngIf="perfil.value.observacionDevolucion">
-          <mat-card class="border" style="margin-top: 20px;">
-              <mat-card-header class="header-card">
-                  <mat-card-title class="header-card--text grayTitle">
-                    Observaciones de la supervisión
-                  </mat-card-title>
-              </mat-card-header>
-              <mat-card-content align="left" >
-                  <p><b>{{ perfil.value.observacionDevolucion.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-                  <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-                  <p>{{ perfil.value.observacionDevolucion.observacion }}</p>
-              </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
 
-  </form>
+</form>

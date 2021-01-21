@@ -1,3 +1,4 @@
+import { GestionarActPreConstrFUnoService } from './../../../../core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -38,7 +39,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   dataTable: any[]= [];
   loadDataItems: Subscription;
   @Input () dataTableAux;
-  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
+  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService, private gestionarActa: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     this.dataTableAux = this.dataTable;
@@ -46,6 +47,7 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
   }
   cargarTablaDeDatos(){
     this.services.GetListGrillaActaInicio(2).subscribe((data:any)=>{
+      console.log( data );
       for (let actas of data){
         if(actas.tipoContrato == 'Obra'){
           this.dataTable.push(actas);
@@ -151,9 +153,9 @@ export class TablaGeneralActaFdosConstComponent implements OnInit {
       }
     });
   }
-  descargarActaDesdeTabla(id){
-    this.services.GetPlantillaActaInicio(id).subscribe(resp=>{
-      const documento = `Prueba.pdf`; // Valor de prueba
+  descargarActaDesdeTabla(id, numContrato?){
+    this.gestionarActa.GetActaByIdPerfil(id, 'True').subscribe(resp=>{
+      const documento = `${ numContrato }.pdf`; // Valor de prueba
       const text = documento,
       blob = new Blob([resp], { type: 'application/pdf' }),
       anchor = document.createElement('a');

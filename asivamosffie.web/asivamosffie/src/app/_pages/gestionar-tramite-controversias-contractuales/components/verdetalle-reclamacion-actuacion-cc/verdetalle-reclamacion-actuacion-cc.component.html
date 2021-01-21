@@ -1,0 +1,42 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarReclamoAseguradora" mat-button
+            color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Ver detalle reclamación {{this.codReclamacionActuacion}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Número de reclamación: <b>{{this.codRecalamacion}}</b></span>
+    </p>
+    <mat-card class="shipping-card mainGris">
+        <mat-card-content style="text-align: left;">
+            <p><strong>Estado de avance de la reclamación:</strong> {{this.estadoAvanceReclamacion}}</p>
+            <p><strong>Fecha de la actuación adelantada:</strong> {{this.fechaActuacionAdelantada}}</p>
+            <p><strong>Actuación adelantada:</strong></p>
+            <div [innerHtml]="this.actuacionAdelantada"></div> 
+            <p><strong>Próxima actuación requerida:</strong></p>
+            <div [innerHtml]="this.proximaActuacionRequerida"></div> 
+            <p><strong>Días de vencimiento de términos para la próxima actuación requerida:</strong> {{this.diasVencimientoTerminos}}</p>
+            <p><strong>Fecha de vencimiento de términos para la próxima actuación requerida:</strong> {{this.fechaVencimientoTerminos}}</p>
+            <p><strong>Observaciones:</strong></p>
+            <div [innerHtml]="this.observacionesAR"></div> 
+            <p><strong>¿La reclamación tiene resultado definitivo y se considera cerrado el trámite ante la
+                    aseguradora?:</strong> {{this.resultadoDefinitivo}}</p>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card mainGris">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text textoGris">
+                Soporte de la actuación
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <p><strong>URL con soporte:</strong>
+                {{this.urlSoporte}}
+            </p>
+        </mat-card-content>
+    </mat-card>
+</div>

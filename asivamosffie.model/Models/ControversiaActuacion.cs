@@ -8,6 +8,8 @@ namespace asivamosffie.model.Models
         public ControversiaActuacion()
         {
             ActuacionSeguimiento = new HashSet<ActuacionSeguimiento>();
+            ControversiaActuacionMesa = new HashSet<ControversiaActuacionMesa>();
+            SeguimientoActuacionDerivada = new HashSet<SeguimientoActuacionDerivada>();
         }
 
         public int ControversiaActuacionId { get; set; }
@@ -39,8 +41,12 @@ namespace asivamosffie.model.Models
         public string UsuarioCreacion { get; set; }
         public DateTime? FechaModificacion { get; set; }
         public string UsuarioModificacion { get; set; }
+        public string EstadoActuacionReclamacionCodigo { get; set; }
+        public bool? EsCompletoReclamacion { get; set; }
 
         public virtual ControversiaContractual ControversiaContractual { get; set; }
         public virtual ICollection<ActuacionSeguimiento> ActuacionSeguimiento { get; set; }
+        public virtual ICollection<ControversiaActuacionMesa> ControversiaActuacionMesa { get; set; }
+        public virtual ICollection<SeguimientoActuacionDerivada> SeguimientoActuacionDerivada { get; set; }
     }
 }

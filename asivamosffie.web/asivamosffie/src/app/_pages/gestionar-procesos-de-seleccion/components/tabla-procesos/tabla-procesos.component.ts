@@ -63,6 +63,7 @@ export class TablaProcesosComponent implements OnInit {
         
         if(proceso.estadoProcesoSeleccionCodigo==this.estadosProcesoSeleccion.AprobadaAperturaPorComiteFiduciario)
         {
+          
           //valido si esta incompleto si no tiene datos de evaluacion y proponentes seleccionados
           if(proceso.evaluacionDescripcion!="" 
           && proceso.urlSoporteEvaluacion!=""
@@ -83,7 +84,15 @@ export class TablaProcesosComponent implements OnInit {
             }
             else
             {
-              proceso.esCompleto=true;  
+              if( proceso.tipoProcesoCodigo==TiposProcesoSeleccion.Abierta)            
+              {
+                proceso.esCompleto=false;  
+              }
+              else
+              {
+                proceso.esCompleto=true;  
+              }
+              
             }            
           }
           else{

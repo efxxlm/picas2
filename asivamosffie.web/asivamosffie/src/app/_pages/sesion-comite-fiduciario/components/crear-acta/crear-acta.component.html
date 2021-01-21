@@ -65,6 +65,7 @@
                         [fechaMaxima]="objetoComiteTecnico.fechaOrdenDia"
                         (validar)="habilitar($event)"
                         [style.pointer-events]="getStyle()"
+                        [fechaComite]="objetoComiteTecnico.fechaOrdenDia"
                     >
 
                     </app-form-solicitud>
@@ -107,6 +108,7 @@
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante"
                         (validar)="habilitar($event)"
                         [style.pointer-events]="getStyle()"
+                        [fechaComite]="objetoComiteTecnico.fechaOrdenDia"
                     >
                 </app-form-otros-temas>
                 </mat-expansion-panel>
@@ -148,6 +150,7 @@
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante"
                         (validar)="habilitar($event)"
                         [style.pointer-events]="getStyle()"
+                        [fechaComite]="objetoComiteTecnico.fechaOrdenDia"
                     >
                      </app-form-otros-temas>
                 </mat-expansion-panel>

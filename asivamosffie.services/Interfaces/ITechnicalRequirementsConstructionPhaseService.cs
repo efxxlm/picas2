@@ -21,9 +21,9 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditConstruccionPerfil(ContratoConstruccion pConstruccion);
         Task<Respuesta> DeleteConstruccionPerfil(int pConstruccionPerfilId, string pUsuarioModificacion);
         Task<Respuesta> DeleteConstruccionPerfilNumeroRadicado(int pConstruccionPerfilNumeroRadicadoId, string pUsuarioModificacion);
-        Task<Respuesta> UploadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId);
+        Task<Respuesta> UploadFileToValidateProgramming(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId, int pContratoId, int pProyectoId);
         Task<Respuesta> TransferMassiveLoadProgramming(string pIdDocument, string pUsuarioModifico);
-        Task<Respuesta> UploadFileToValidateInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId);
+        Task<Respuesta> UploadFileToValidateInvestmentFlow(IFormFile pFile, string pFilePatch, string pUsuarioCreo, int pContratoConstruccionId, int pContratoId, int pProyectoId);
         Task<Respuesta> TransferMassiveLoadInvestmentFlow(string pIdDocument, string pUsuarioModifico);
         Task<List<ArchivoCargue>> GetLoadProgrammingGrid(int pContratoConstruccionId);
         Task<List<ArchivoCargue>> GetLoadInvestmentFlowGrid(int pContratoConstruccionId);
@@ -40,6 +40,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> EnviarAlSupervisor(int pContratoId, string pUsuarioCreacion, string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSender);
         Task<Respuesta> CreateEditObservacionPerfil(ConstruccionPerfil pPerfil, bool esSupervisor);
         Task<Respuesta> AprobarInicio(int pContratoId, string pUsuarioCreacion);
+        Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId);
 
     }
 }

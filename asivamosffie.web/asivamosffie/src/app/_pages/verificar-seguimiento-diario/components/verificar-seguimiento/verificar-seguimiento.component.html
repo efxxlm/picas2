@@ -5,36 +5,64 @@
     </a>
   </div>
   <h1 class="title-menu--h1">
-    Verificar seguimiento diario LY665533
+    Verificar seguimiento diario {{ proyecto.llaveMen }}
   </h1>
   <p class="colorMainColor mt-05em">
-    <span class="mx-1em">05/07/2020</span>
-    <span class="mx-1em">Remodelación</span>
-    <span class="mx-1em">Atlántico</span>
-    <span class="mx-1em">Malambo</span>
-    <span class="mx-1em">I.E. María Villa Campo</span>
-    <span class="mx-1em">Única sede</span>
+    <span class="mx-1em" *ngIf="seguimiento" >{{ seguimiento.fechaSeguimiento | date: 'dd/MM/yyyy' }}</span>
+    <span class="mx-1em">{{ proyecto.tipoIntervencion }}</span>
+    <span class="mx-1em">{{ proyecto.departamento }}</span>
+    <span class="mx-1em">{{ proyecto.municipio }}</span>
+    <span class="mx-1em">{{ proyecto.institucionEducativa }}</span>
+    <!-- <span class="mx-1em">Inmaculada</span> -->
+    <span class="mx-1em">{{ proyecto.sede }}</span>
   </p>
 
 </section>
-<section class="container">
+<section class="container" *ngIf="seguimiento">
   <mat-card class="shipping-card var-main-gris">
     <mat-card-content>
       <mat-card-title class="header-card--text sub-text mt-0">
+      
         Personal (obreros/técnicos)
       </mat-card-title>
       <p>
         <strong>
           Disponibilidad de personal:
         </strong>
-        Suficiente
+        {{ seguimiento.disponibilidadPersonal === true ? 'Si' : 'No' }}
       </p>
-      <p>
-        <strong>Observaciones:</strong>
-        <span class="d-block">
-          La cantidad de personal es suficiente para ejecutar esta fase del proyecto
-        </span>
+      <p *ngIf="seguimiento.disponibilidadPersonal === false">
+        <strong>
+          Cantidad de personal operativo programado:
+        </strong>
+        {{ seguimiento.cantidadPersonalProgramado  }}
       </p>
+      <p *ngIf="seguimiento.disponibilidadPersonal === false">
+        <strong>
+          Cantidad de personal operativo trabajando:
+        </strong>
+        {{ seguimiento.cantidadPersonalTrabajando  }}
+      </p>
+      <p *ngIf="seguimiento.disponibilidadPersonal == false">
+        <strong>
+          ¿Se generó retraso en la obra?
+        </strong>
+        {{ seguimiento.seGeneroRetrasoPersonal === true ? 'Si' : 'No' }}
+      </p>
+      <p *ngIf="seguimiento.seGeneroRetrasoPersonal === true">
+        <strong>
+          Número de horas de retraso generado:
+        </strong>
+        {{ seguimiento.numeroHorasRetrasoPersonal }}
+      </p>
+      <section>
+        <b>
+          Observaciones
+        </b>: 
+        <div class="text-color" [innerHTML]="innerObservacion( seguimiento.disponibilidadPersonalObservaciones )"></div>
+      </section>
+
+
 
       <mat-card-title class="header-card--text sub-text">
         Material
@@ -43,14 +71,34 @@
         <strong>
           Disponibilidad de material:
         </strong>
-        Óptimo
+        {{ seguimiento.disponibilidadMaterialNombre }}
       </p>
-      <p>
-        <strong>Observaciones:</strong>
-        <span class="d-block">
-          La cantidad y estado del material es óptimo.
-        </span>
+      <p *ngIf="seguimiento.disponibilidadMaterialCodigo != '1'">
+        <strong>
+          Causa de baja disponibilidad:
+        </strong>
+        {{ seguimiento.causaBajaDisponibilidadMaterialNombre }}
       </p>
+      <p *ngIf="seguimiento.disponibilidadMaterialCodigo != '1'">
+        <strong>
+          ¿Se generó retraso en la obra?:
+        </strong>
+        {{ seguimiento.seGeneroRetrasoMaterial === true ? 'Si' : 'No' }}
+      </p>
+      <p *ngIf="seguimiento.seGeneroRetrasoMaterial === true">
+        <strong>
+          Número de horas de retraso generado:
+        </strong>
+        {{ seguimiento.numeroHorasRetrasoMaterial }}
+      </p>
+      <section>
+        <b>
+          Observaciones
+        </b>: 
+        <div class="text-color" [innerHTML]="innerObservacion( seguimiento.disponibilidadMaterialObservaciones )"></div>
+      </section>
+
+
 
       <mat-card-title class="header-card--text sub-text">
         Equipo
@@ -59,14 +107,31 @@
         <strong>
           Disponibilidad de equipo:
         </strong>
-        Total
+        {{ seguimiento.disponibilidadEquipoNombre }}
       </p>
-      <p>
-        <strong>Observaciones:</strong>
-        <span class="d-block">
-          El equipo está completo.
-        </span>
+      <p *ngIf="seguimiento.disponibilidadEquipoCodigo != '1'">
+        <strong>
+          Causa de baja disponibilidad:
+        </strong>
+        {{ seguimiento.causaBajaDisponibilidadEquipoNombre }}
       </p>
+      <p *ngIf="seguimiento.disponibilidadEquipoCodigo != '1'">
+        <strong>¿Se generó retraso en la obra?</strong>
+          {{ seguimiento.seGeneroRetrasoEquipo === true ? 'Si' : 'No' }}
+      </p>
+      <p *ngIf="seguimiento.seGeneroRetrasoEquipo === true">
+        <strong>Número de horas de retraso generado:</strong>
+          {{ seguimiento.numeroHorasRetrasoEquipo }}
+      </p>
+      <section>
+        <b>
+          Observaciones
+        </b>: 
+        <div class="text-color" [innerHTML]="innerObservacion( seguimiento.disponibilidadEquipoObservaciones )"></div>
+      </section>
+      
+
+
 
       <mat-card-title class="header-card--text sub-text">
         Productividad
@@ -75,20 +140,67 @@
         <strong>
           Productividad:
         </strong>
-        Alta
+        {{ seguimiento.productividadNombre }}
       </p>
-      <p>
-        <strong>Observaciones:</strong>
-        <span class="d-block">
-          La productividad es alta.
-        </span>
+      <p *ngIf="seguimiento.productividadCodigo == '3'">
+        <strong>
+          Causa:
+        </strong>
+        {{ seguimiento.causaBajaDisponibilidadProductividadNombre }}
       </p>
+      <p *ngIf="seguimiento.productividadCodigo == '3'">
+        <strong>
+          ¿Se generó retraso en la obra?
+        </strong>
+        {{ seguimiento.seGeneroRetrasoProductividad === true ? 'Si' : 'No' }}
+      </p>
+      <p *ngIf="seguimiento.seGeneroRetrasoProductividad === true">
+        <strong>
+          Número de horas de retraso generado:
+        </strong>
+        {{ seguimiento.numeroHorasRetrasoProductividad}}
+      </p>
+      <section>
+        <b>
+          Observaciones
+        </b>: 
+        <div class="text-color" [innerHTML]="innerObservacion( seguimiento.productividadObservaciones )"></div>
+      </section>
 
     </mat-card-content>
   </mat-card>
 </section>
+<section class="container" *ngIf="seguimiento">
+  <app-form-observaciones 
+                          *ngIf="seguimiento.estadoCodigo === '2' || seguimiento.estadoCodigo === '3'"
+                          [observacionObjeto]="seguimiento.observacionApoyo"
+                          [tieneObservaciones]="seguimiento.tieneObservacionApoyo"
+                          >
+  </app-form-observaciones>
 
-<section class="container">
-  <!-- <app-form-observaciones></app-form-observaciones> -->
-  <app-ver-observaciones></app-ver-observaciones>
+  <app-ver-observaciones 
+                        *ngIf="seguimiento.estadoCodigo != '2' && seguimiento.estadoCodigo != '3'"
+                        [observacionObjeto]="seguimiento.observacionApoyo"
+                        [tieneObservaciones]="seguimiento.tieneObservacionApoyo">
+  </app-ver-observaciones>
+
+
+<mat-card class="shipping-card var-main-gris" *ngIf=" seguimiento !== undefined && seguimiento.observacionDevolucion !== undefined">
+  <mat-card-header class="header-card header-card--margin">
+    <mat-card-title class="header-card--text">
+      Observaciones de la supervisión
+    </mat-card-title>
+</mat-card-header>
+  <mat-card-content>
+
+    ¿Tiene observaciones al registro del seguimiento diario?: <span>{{ 'Si' }}</span>
+    <br>
+    <p>
+      {{ seguimiento.observacionDevolucion.observaciones }}
+    </p>
+
+  </mat-card-content>
+</mat-card>
+
 </section>
+

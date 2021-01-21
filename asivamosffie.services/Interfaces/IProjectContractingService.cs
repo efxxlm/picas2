@@ -10,6 +10,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IProjectContractingService
     {
+        Task<Respuesta> DeleteComponenteAportante(int pComponenteAportanteId, string pUsuarioMod);
+
         Task<Contratacion> GetAllContratacionByContratacionId(int pContratacionId);
 
         Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico,
@@ -40,5 +42,7 @@ namespace asivamosffie.services.Interfaces
         Task<Respuesta> CreateEditContratacionProyectoAportanteByContratacionproyecto(ContratacionProyecto pContratacionProyecto, bool esTransaccion);
 
         Task<Contratacion> GetContratacionByContratacionIdWithGrillaProyecto(int pContratacionId);
+
+        Task<List<FaseComponenteUso>> GetListFaseComponenteUso();
     }
 }

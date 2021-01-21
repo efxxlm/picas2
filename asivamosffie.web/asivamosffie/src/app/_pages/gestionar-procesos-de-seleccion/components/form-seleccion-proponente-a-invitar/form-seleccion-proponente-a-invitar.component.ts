@@ -42,7 +42,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     if (this.noGuardado===true &&  this.addressForm.dirty) {
       let dialogRef =this.dialog.open(ModalDialogComponent, {
         width: '28em',
-        data: { modalTitle:"", modalText:"Â¿Desea guardar la informaciÃ³n registrada?",siNoBoton:true }
+        data: { modalTitle:"", modalText:"¿Desea guardar la información registrada?",siNoBoton:true }
       });   
       dialogRef.afterClosed().subscribe(result => {
         console.log(`Dialog result: ${result}`);
@@ -62,10 +62,11 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
 
   cargarRegistro() {
     this.ngOnInit().then(() => {
-      console.log(this.procesoSeleccion.listaContratistas.length);
-      if(this.procesoSeleccion.listaContratistas.length>0)
+      console.log(this.procesoSeleccion.procesoSeleccionProponente.length);
+      this.addressForm.get('cuantosProponentes').setValue(1);
+      if(this.procesoSeleccion.procesoSeleccionProponente.length>0)
       {
-        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.listaContratistas.length);
+        this.addressForm.get('cuantosProponentes').setValue(this.procesoSeleccion.procesoSeleccionProponente.length);
       }      
       this.addressForm.get('url').setValue(this.procesoSeleccion.urlSoporteProponentesSeleccionados);
     });
@@ -81,8 +82,8 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
   validateSel(numeroid: string) {
     
     let retorno= this.valida(numeroid);
-    console.log("valido "+numeroid);
-    console.log(retorno);
+    //console.log("valido "+numeroid);
+    //console.log(retorno);
     return retorno;
     
   }
@@ -91,7 +92,7 @@ export class FormSeleccionProponenteAInvitarComponent implements OnInit {
     let ret=false;
     this.procesoSeleccion.listaContratistas.forEach(element => {
       if (element.nombre == numeroid) {
-        console.log("valido2 "+element.nombre);
+        //console.log("valido2 "+element.nombre);
         ret= true;
       }
     });

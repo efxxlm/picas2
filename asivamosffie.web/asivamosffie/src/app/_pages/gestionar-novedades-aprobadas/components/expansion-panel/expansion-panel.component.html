@@ -1,0 +1,80 @@
+<div class="text-center">
+  <p class="info-container">
+    <span class="info-text sin-diligenciar">Sin diligenciar</span>
+    <span class="info-text en-proceso">En proceso</span>
+    <span class="info-text completo">Completo</span>
+  </p>
+</div>
+<mat-accordion>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title">
+        Solicitud de novedad
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-solicitud-novedad></app-solicitud-novedad>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title">
+        Soporte de la solicitud
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <mat-card class="shipping-card var-main-gris">
+      <mat-card-header class="header-card header-card--margin">
+        <mat-card-title class="header-card--text">
+          Soporte del registro del proceso
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          <strong>
+            URL con soporte:
+          </strong>
+          https://drive.google.com/drive/registrodecontroversiacontractual/registrosolicituddenovedad
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+  </mat-expansion-panel>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title" [ngClass]="{
+          'sin-diligenciar':true,
+          'en-proceso':false,
+          'completo':false,
+          'en-alerta':false
+        }">
+        Registrar revisión jurídica de la novedad
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-registrar-revision-novedad></app-registrar-revision-novedad>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title" [ngClass]="{
+        'sin-diligenciar':true,
+        'en-proceso':false,
+        'completo':false,
+        'en-alerta':false
+      }">
+        Registrar firmas
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-registrar-firmas></app-registrar-firmas>
+  </mat-expansion-panel>
+  <mat-expansion-panel class="expansion-style">
+    <mat-expansion-panel-header class="expansion-style--header">
+      <mat-panel-title class="expansion-style--title" [ngClass]="{
+        'sin-diligenciar':true,
+        'en-proceso':false,
+        'completo':false,
+        'en-alerta':false
+      }">
+      Detallar solicitud
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <app-form-detallar-solicitud-novedad></app-form-detallar-solicitud-novedad>
+  </mat-expansion-panel>
+</mat-accordion>

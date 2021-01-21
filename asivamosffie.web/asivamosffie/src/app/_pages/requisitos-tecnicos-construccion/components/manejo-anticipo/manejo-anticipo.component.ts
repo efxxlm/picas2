@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-manejo-anticipo',
@@ -31,10 +31,10 @@ export class ManejoAnticipoComponent implements OnInit {
 
   crearFormulario () {
     this.formAnticipo = this.fb.group({
-      requiereAnticipo: [ null ],
-      planInversionAnticipo: [ null ],
-      cronogramaAmortizacionAprobado: [ null ],
-      urlSoporte: [ null ]
+      requiereAnticipo: [null, Validators.required],
+      planInversionAnticipo: [null, Validators.required],
+      cronogramaAmortizacionAprobado: [null, Validators.required],
+      urlSoporte: [null, Validators.required]
     });
   };
 

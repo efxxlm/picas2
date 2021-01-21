@@ -10,8 +10,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="estadoAvanceTramite" required>
-                                    <mat-option *ngFor="let contr of estadoAvanceTramiteArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let estadoAvanceTramite of estadoAvanceTramiteArrayDom" [value]="estadoAvanceTramite">
+                                        {{ estadoAvanceTramite.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -50,8 +50,8 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="actuacionAdelantada" required>
-                                    <mat-option *ngFor="let contr of actuacionAdelantadaArray" [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let actuacionAdelantada of actuacionAdelantadaArrayDom" [value]="actuacionAdelantada">
+                                        {{ actuacionAdelantada.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -69,9 +69,9 @@
                         <div class="col">
                             <mat-form-field class="select-width">
                                 <mat-select formControlName="proximaActuacionRequerida" required>
-                                    <mat-option *ngFor="let contr of proximaActuacionRequeridaArray"
-                                        [value]="contr.value">
-                                        {{ contr.name }}
+                                    <mat-option *ngFor="let proximaActuacionRequerida of proximaActuacionRequeridaArrayDom"
+                                        [value]="proximaActuacionRequerida">
+                                        {{ proximaActuacionRequerida.nombre }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -79,7 +79,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.value.proximaActuacionRequerida==='1'">
+            <div class="row" *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div class="row">
                         <div class="pr-1">
@@ -88,17 +88,17 @@
                     </div>
                 </div>
             </div>
-            <div class="row" *ngIf="addressForm.value.proximaActuacionRequerida==='1'">
+            <div class="row" *ngIf="addressForm.controls.proximaActuacionRequerida.value && addressForm.controls.proximaActuacionRequerida.value.codigo == '4'">
                 <div class="col-md-12" style="padding-left: 0;">
                     <div>
                         <div class="d-flex align-items-center">
                             <div class="text-area-quill auxBox">
-                                <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config"
-                                    required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtro">
+                                <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
+                                    required (onContentChanged)="maxLength($event, 500)" formControlName="cualOtro" #cualOtro>
                                 </quill-editor>
                             </div>
                             <span class="contador miles" *ngIf="addressForm.controls.cualOtro.value">
-                                {{500 - textoLimpio(addressForm.controls.cualOtro.value)}}
+                                {{500 - (textoLimpio(cualOtro.quillEditor))}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.cualOtro.value">
                                 500
@@ -120,7 +120,7 @@
                                     formControlName="diasVencimientoTerminos" required>
                             </mat-form-field>
                             <span class="contador miles" *ngIf="addressForm.controls.diasVencimientoTerminos.value">
-                                {{7 - textoLimpio(addressForm.controls.diasVencimientoTerminos.value)}}
+                                {{7 - (addressForm.get('diasVencimientoTerminos').value?addressForm.get('diasVencimientoTerminos').value.toString().length:0)}}
                             </span>
                             <span class="contador miles" *ngIf="!addressForm.controls.diasVencimientoTerminos.value">
                                 7
@@ -163,7 +163,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
@@ -181,7 +181,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
@@ -199,7 +199,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
@@ -216,7 +216,7 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
@@ -233,23 +233,48 @@
                                 <mat-radio-button [value]="true">Sí</mat-radio-button>
                                 <mat-radio-button [value]="false">No</mat-radio-button>
                             </mat-radio-group>
-                            <span class="required-form-group">*</span>
+                            <span class="required-form-group" style="margin-left: 1px;">*</span>
                         </div>
                     </div>
                 </div>
             </div>            
             <div class="d-flex align-items-center mtop">
                 <div class="text-area-quill izqTitle auxBox">
-                    <label for="observaciones" class="text-area-quill--label">Observaciones al acta de inicio</label>
-                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config"
-                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones"></quill-editor>
+                    <label for="observaciones" class="text-area-quill--label" style="padding: 0; margin-left: 0; margin-top: .5em;">Observaciones</label>
+                    <quill-editor class="quill-editor-style card" [styles]="editorStyle" [modules]="config" #observaciones
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" style="padding: 1.5em 0em 1.2em;"></quill-editor>
                 </div>
                 <span class="contador miles" *ngIf="addressForm.controls.observaciones.value">
-                    {{1000 - textoLimpio(addressForm.controls.observaciones.value)}}
+                    {{1000 - (textoLimpio(observaciones.quillEditor))}}
                 </span>
                 <span class="contador miles" *ngIf="!addressForm.controls.observaciones.value">
                     1000
                 </span>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="shipping-card">
+        <mat-card-header class="header-card header-card--margin">
+            <mat-card-title class="header-card--text">
+                Soporte de la actuación
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content style="text-align: left;">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="pr-1">
+                            <label class="label-left" for="urlSoporte">URL con soporte</label>
+                        </div>
+                        <div class="col">
+                            <mat-form-field class="full-width">
+                                <input matInput #urlSoporte type="text" 
+                                    formControlName="urlSoporte" required>
+                            </mat-form-field>
+                            <span class="info-url">Indique la ruta en la que se encuentran los documentos de soporte del registro de la actuación de trámite</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </mat-card-content>
     </mat-card>

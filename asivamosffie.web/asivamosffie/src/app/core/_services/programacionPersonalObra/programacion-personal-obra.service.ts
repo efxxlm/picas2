@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DetalleProgramacionPersonal, ListaProgramacionPersonal, pContratoConstruccion } from 'src/app/_interfaces/programacionPersonal.interface';
+import { DetalleProgramacionPersonal, ListaProgramacionPersonal, ContratoConstruccion } from 'src/app/_interfaces/programacionPersonal.interface';
 import { environment } from 'src/environments/environment';
 import { Respuesta } from '../autenticacion/autenticacion.service';
 
@@ -9,25 +9,25 @@ import { Respuesta } from '../autenticacion/autenticacion.service';
 })
 export class ProgramacionPersonalObraService {
 
-  private urlApi: string = `${ environment.apiUrl }/RegisterPersonalProgramming`;
+  private urlApi = `${ environment.apiUrl }/RegisterPersonalProgramming`;
 
-  constructor ( private http: HttpClient )
-  {};
+  constructor( private http: HttpClient )
+  {}
 
-  getListProyectos () {
+  getListProyectos() {
     return this.http.get<ListaProgramacionPersonal[]>( `${ this.urlApi }/GetListProyectos` );
-  };
+  }
 
-  getProgramacionPersonalByContratoConstruccionId ( pContratoConstruccionId: number ) {
-    return this.http.get<DetalleProgramacionPersonal[]>( `${ this.urlApi }/GetProgramacionPersonalByContratoConstruccionId?pContratoConstruccionId=${ pContratoConstruccionId }` );
-  };
+  getProgramacionPersonalByContratoConstruccionId( pContratoConstruccionId: number ) {
+    return this.http.get<DetalleProgramacionPersonal[]>( `${ this.urlApi }/GetProgramacionPersonalByContratoId?pContratacionProyectoId=${ pContratoConstruccionId }` );
+  }
 
-  updateProgramacionContratoPersonal ( pContratoConstruccion: pContratoConstruccion ) {
-    return this.http.post<Respuesta>( `${ this.urlApi }/UpdateProgramacionContratoPersonal`, pContratoConstruccion )
-  };
+  updateProgramacionContratoPersonal( contratoConstruccion: any[] ) {
+    return this.http.post<Respuesta>( `${ this.urlApi }/UpdateSeguimientoSemanalPersonalObra`, contratoConstruccion );
+  }
 
-  changeStatusProgramacionContratoPersonal ( pContratoConstruccionId: number, pEstadoProgramacionCodigo: string ) {
-    return this.http.post<Respuesta>( `${ this.urlApi}/ChangeStatusProgramacionContratoPersonal?pContratoConstruccionId=${ pContratoConstruccionId }&pEstadoProgramacionCodigo=${ pEstadoProgramacionCodigo }`, '' )
-  };
+  changeStatusProgramacionContratoPersonal( pContratoConstruccionId: number, pEstadoProgramacionCodigo: string ) {
+    return this.http.post<Respuesta>( `${ this.urlApi}/ChangeStatusProgramacionContratoPersonal?pContratoConstruccionId=${ pContratoConstruccionId }&pEstadoProgramacionCodigo=${ pEstadoProgramacionCodigo }`, '' );
+  }
 
-};
+}

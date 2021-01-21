@@ -19,6 +19,7 @@ using DinkToPdf.Contracts;
 using DinkToPdf;
 using System.IO;
 using asivamosffie.api.Helpers;
+using asivamosffie.api.Controllers;
 
 namespace asivamosffie.api
 {
@@ -121,6 +122,10 @@ namespace asivamosffie.api
               => options.UseSqlServer(Configuration.GetConnectionString("asivamosffieDatabase")));
 
             //Agregar Interfaces y clases
+            services.AddTransient<IValidateWeeklyProgressService, ValidateWeeklyProgressService>();
+            services.AddTransient<ICheckWeeklyProgressService, CheckWeeklyProgressService>();
+            services.AddTransient<IRegisterWeeklyProgressService, RegisterWeeklyProgressService>();
+            services.AddTransient<IRegisterPersonalProgrammingService, RegisterPersonalProgrammingService>();
             services.AddTransient<IApprovePreConstructionPhase1Service, ApprovePreConstructionPhase1Service>();
             services.AddTransient<IRegisterPreContructionPhase1Service, RegisterPreContructionPhase1Service>();
             services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
@@ -139,18 +144,31 @@ namespace asivamosffie.api
             services.AddTransient<ISelectionProcessService, SelectionProcessService>();
             services.AddTransient<ISelectionProcessScheduleService, SelectionProcessScheduleService>();
             services.AddTransient<IGuaranteePolicyService, GuaranteePolicyService>();
+            services.AddTransient<IResourceControlService, ResourceControlService>();
             services.AddTransient<IBudgetAvailabilityService, BudgetAvailabilityService>();
             services.AddTransient<IRequestBudgetAvailabilityService, RequestBudgetAvailabilityService>();
+            services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>();
-            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
+            services.AddTransient<IDocumentService, DocumentService>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IDailyFollowUpService, DailyFollowUpService>();
+            services.AddTransient<IManagementCommitteeReportService, ManagementCommitteeReportService>(); 
+            services.AddTransient<IContractualControversy, ContractualControversyService>();
+            services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>();
+            services.AddTransient<IRegisterContractsAndContractualModificationsService, RegisterContractsAndContractualModificationsService>();
             services.AddTransient<IManagePreContructionActPhase1Service, ManagePreContructionActPhase1Service>(); 
             services.AddTransient<IVerifyPreConstructionRequirementsPhase1Service, VerifyPreConstructionRequirementsPhase1Service>();
             services.AddTransient<IContractualControversy, ContractualControversyService>();
+            services.AddTransient<IJudicialDefense, JudicialDefenseService>();
             services.AddTransient<IRegisterSessionTechnicalCommitteeService, RegisterSessionTechnicalCommitteeService>(); 
             services.AddTransient<IManageContractualProcessesService, ManageContractualProcessesService>();
             services.AddTransient<ITechnicalRequirementsConstructionPhaseService, TechnicalRequirementsConstructionPhaseService>();
             services.AddTransient<ITechnicalCheckConstructionPhase2Service, TechnicalCheckConstructionPhase2Service>();
             services.AddTransient<IActBeginService, ActBeginService>();
+            services.AddTransient<IResourceControlService, ResourceControlService>();
+            services.AddTransient<IContractualModification, ContractualModificationService>();
+            services.AddTransient<IDerivativeActionService, DerivativeActionService>();
+            services.AddTransient<IMonitoringURL, MonitoringURLService>();
             
         }
 

@@ -11,6 +11,7 @@ import { FaseUnoConstruccionService } from '../../../../core/_services/faseUnoCo
 })
 export class DialogCargarProgramacionComponent implements OnInit {
 
+  loading = false;
   archivo: string;
   boton: string= 'Cargar';
   formCargarProgramacion: FormGroup;
@@ -48,7 +49,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
     let dialogRef =this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data: { modalTitle, modalText }
-    });   
+    });
   };
 
   openDialog (modalTitle: string, modalText: string) {
@@ -92,14 +93,16 @@ export class DialogCargarProgramacionComponent implements OnInit {
 
   guardar () {
     //console.log( this.formCargarProgramacion );
+    this.loading = true;
     const inputNode: any = document.getElementById('file');
     if ( inputNode.files[0] === undefined ) {
       return;
     };
     console.log( inputNode.files[0] );
     if ( this.esFlujoInversion ) {
-      this.faseUnoConstruccionSvc.uploadFileToValidateInvestmentFlow( this.contratoConstruccionId, inputNode.files[0] )
-      .subscribe( 
+
+      this.faseUnoConstruccionSvc.uploadFileToValidateInvestmentFlow( this.contratoConstruccionId, this.data.contratoId, this.data.proyectoId, inputNode.files[0] )
+      .subscribe(
         ( response: any ) => {
           console.log( response );
           if ( response.data.cantidadDeRegistros === response.data.cantidadDeRegistrosValidos ) {
@@ -107,7 +110,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
             this.openDialogConfirmar(
               'Validación de registro',
               ` <br>Número de registros en el archivo: <b>${ response.data.cantidadDeRegistros }</b><br>
-              Número de registros validos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
+              Número de registros válidos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
               Número de registros inválidos: <b>${ response.data.cantidadDeRegistrosInvalidos }</b><br><br>
               <b>¿Desea realizar el cargue de la programación de obra?</b>
               `
@@ -116,18 +119,19 @@ export class DialogCargarProgramacionComponent implements OnInit {
             this.openDialog(
               'Validación de registro',
               ` <br>Número de registros en el archivo: <b>${ response.data.cantidadDeRegistros }</b><br>
-                Número de registros validos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
+                Número de registros válidos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
                 Número de registros inválidos: <b>${ response.data.cantidadDeRegistrosInvalidos }</b><br><br>
                 <b>No se permite el cargue, ya que el archivo tiene registros inválidos. Ajuste el archivo y cargue de nuevo</b>
               `
             );
+            this.loading = false;
             this.dialogRef.close( { terminoCarga: true } );
           }
         }
       )
     } else {
-      this.faseUnoConstruccionSvc.uploadFileToValidateProgramming( this.contratoConstruccionId, inputNode.files[0] )
-      .subscribe( 
+      this.faseUnoConstruccionSvc.uploadFileToValidateProgramming( this.contratoConstruccionId, this.data.contratoId, this.data.proyectoId, inputNode.files[0] )
+      .subscribe(
         ( response: any ) => {
           console.log( response );
           if ( response.data.cantidadDeRegistros === response.data.cantidadDeRegistrosValidos ) {
@@ -135,7 +139,7 @@ export class DialogCargarProgramacionComponent implements OnInit {
             this.openDialogConfirmar(
               'Validación de registro',
               ` <br>Número de registros en el archivo: <b>${ response.data.cantidadDeRegistros }</b><br>
-              Número de registros validos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
+              Número de registros válidos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
               Número de registros inválidos: <b>${ response.data.cantidadDeRegistrosInvalidos }</b><br><br>
               <b>¿Desea realizar el cargue de la programación de obra?</b>
               `
@@ -144,11 +148,12 @@ export class DialogCargarProgramacionComponent implements OnInit {
             this.openDialog(
               'Validación de registro',
               ` <br>Número de registros en el archivo: <b>${ response.data.cantidadDeRegistros }</b><br>
-                Número de registros validos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
+                Número de registros válidos: <b>${ response.data.cantidadDeRegistrosValidos }</b><br>
                 Número de registros inválidos: <b>${ response.data.cantidadDeRegistrosInvalidos }</b><br><br>
                 <b>No se permite el cargue, ya que el archivo tiene registros inválidos. Ajuste el archivo y cargue de nuevo</b>
               `
             );
+            this.loading = false;
             this.dialogRef.close( { terminoCarga: true } );
           }
         }

@@ -50,6 +50,14 @@ namespace asivamosffie.services
             return string.Concat(Nomeclatura, consecutivo );
         }
 
+        public async Task<string> EnumeradorComiteObra()
+        {
+            int cantidadDeResgistros = _context.SeguimientoSemanalRegistrarComiteObra.Count();
+            string Nomeclatura = "CObra__";
+            string consecutivo = (cantidadDeResgistros + 1).ToString("000");
+            return string.Concat(Nomeclatura, consecutivo);
+        }
+
         public async Task<string> EnumeradorComiteFiduciario()
         {
             int cantidadDeResgistros = _context.ComiteTecnico.Where( ct => ct.EsComiteFiduciario == true ).Count();
@@ -247,7 +255,6 @@ namespace asivamosffie.services
         {
             return await _context.Contratista.Where(r => r.ContratistaId.Equals(pContratistaId)).FirstOrDefaultAsync();
         }
-
         public string GetNombreLocalizacionByLocalizacionId(string pLocalizacionId)
         {
             return _context.Localizacion.Where(r => r.LocalizacionId.Equals(pLocalizacionId)).Select(r => r.Descripcion).FirstOrDefault();
@@ -351,94 +358,16 @@ namespace asivamosffie.services
             return await _context.InstitucionEducativaSede.FindAsync(InstitucionEducativaById);
         }
 
-        public async Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular)
+        public static DateTime PrimerDiaMes(int anio, int mes, DayOfWeek dia, int diaBase)
         {
-            DateTime fechaInicial = pFechaCalcular;
-            DateTime fechadiasHabiles = pFechaCalcular;
-
-            for (int i = 0; i < pDias; i++)
+            DateTime fechaRetorno = new DateTime(anio, mes, diaBase);
+            while (fechaRetorno.DayOfWeek != dia)
             {
-                fechadiasHabiles = fechadiasHabiles.AddDays(-1);
-                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
-                }
-                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
-                }
+                fechaRetorno = fechaRetorno.AddDays(1);
             }
-            List<DateTime> festivos = new List<DateTime>();
-
-            festivos.AddRange(DiasFestivosAnioRetroceso(fechaInicial.Year));
-
-            festivos.AddRange(DiasFestivosAnioRetroceso(fechaInicial.Year + 1));
-
-            foreach (var festivo in festivos)
-            {
-                if (festivo <= fechaInicial && festivo >= fechadiasHabiles)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
-                }
-                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
-                }
-                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
-                }
-            }
-            return fechadiasHabiles;
+            return fechaRetorno;
         }
-
-        /// <summary>
-        /// Julian Martinez
-        /// </summary>
-        /// <param name="dias">Cuantos dias habiles se agregan</param>
-        /// <param name="pFechaCalcular">La fecha a calcular los dias habiles</param>
-        /// <returns></returns>
-        public async Task <DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular)
-        {
-            DateTime fechaInicial = pFechaCalcular;
-            DateTime fechadiasHabiles = pFechaCalcular;
-
-            for (int i = 0; i < pDias; i++)
-            {
-                fechadiasHabiles = fechadiasHabiles.AddDays(1);
-                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
-                }
-                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
-                }
-            }
-            List<DateTime> festivos = new List<DateTime>();
-
-            festivos.AddRange(DiasFestivosAnio(fechaInicial.Year));
-
-            festivos.AddRange(DiasFestivosAnio(fechaInicial.Year + 1));
-
-            foreach (var festivo in festivos)
-            {
-                if (festivo >= fechaInicial && festivo <= fechadiasHabiles)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
-                }
-                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
-                }
-                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
-                {
-                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
-                }
-            }
-            return fechadiasHabiles;
-        }
-
+        
         public static DateTime[] DiasFestivosAnio(int anio)
         {
             List<DateTime> fechas = new List<DateTime>
@@ -485,6 +414,107 @@ namespace asivamosffie.services
             //Sagrado Corazon de Jesus 11 despues del domingo de pascua
             fechas.Add(DiaMesCantidad(anio, domingopascua.Month, DayOfWeek.Monday, domingopascua.Day, 11));
             return fechas.ToArray();
+        }
+
+        public static DateTime DiaMesCantidad(int anio, int mes, DayOfWeek dia, int diaBase, int cantidadVeces, bool antes = false)
+        {
+            DateTime fechaRetorno = new DateTime(anio, mes, diaBase);
+            int cantidadActual = 0;
+            int suma = 1;
+            if (antes)
+            {
+                suma = -1;
+            }
+            while (fechaRetorno.DayOfWeek != dia || cantidadVeces != cantidadActual)
+            {
+                fechaRetorno = fechaRetorno.AddDays(suma);
+                if (fechaRetorno.DayOfWeek == dia)
+                {
+                    cantidadActual++;
+                }
+            }
+            return fechaRetorno;
+        }
+
+        public static DateTime DomingoPascua(int anyo)
+        {
+            int M = 25;
+            int N = 5;
+
+            if (anyo >= 1583 && anyo <= 1699) { M = 22; N = 2; }
+            else if (anyo >= 1700 && anyo <= 1799) { M = 23; N = 3; }
+            else if (anyo >= 1800 && anyo <= 1899) { M = 23; N = 4; }
+            else if (anyo >= 1900 && anyo <= 2099) { M = 24; N = 5; }
+            else if (anyo >= 2100 && anyo <= 2199) { M = 24; N = 6; }
+            else if (anyo >= 2200 && anyo <= 2299) { M = 25; N = 0; }
+
+            int a, b, c, d, e, dia, mes;
+
+            //Cálculo de residuos
+            a = anyo % 19;
+            b = anyo % 4;
+            c = anyo % 7;
+            d = (19 * a + M) % 30;
+            e = (2 * b + 4 * c + 6 * d + N) % 7;
+
+            // Decidir entre los 2 casos:
+            if (d + e < 10) { dia = d + e + 22; mes = 3; }
+            else { dia = d + e - 9; mes = 4; }
+
+            // Excepciones especiales
+            if (dia == 26 && mes == 4) dia = 19;
+            if (dia == 25 && mes == 4 && d == 28 && e == 6 && a > 10) dia = 18;
+
+            return new DateTime(anyo, mes, dia);
+        }
+        
+        
+
+        /// <summary>
+        /// Julian Martinez
+        /// </summary>
+        /// <param name="dias">Cuantos dias habiles se agregan</param>
+        /// <param name="pFechaCalcular">La fecha a calcular los dias habiles</param>
+        /// <returns></returns>
+        public async Task <DateTime> CalculardiasLaborales(int pDias, DateTime pFechaCalcular)
+        {
+            DateTime fechaInicial = pFechaCalcular;
+            DateTime fechadiasHabiles = pFechaCalcular;
+
+            for (int i = 0; i < pDias; i++)
+            {
+                fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+            }
+            List<DateTime> festivos = new List<DateTime>();
+
+            festivos.AddRange(DiasFestivosAnio(fechaInicial.Year));
+
+            festivos.AddRange(DiasFestivosAnio(fechaInicial.Year + 1));
+
+            foreach (var festivo in festivos)
+            {
+                if (festivo >= fechaInicial && festivo <= fechadiasHabiles)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(1);
+                }
+            }
+            return fechadiasHabiles;
         }
 
         public static DateTime[] DiasFestivosAnioRetroceso(int anio)
@@ -535,68 +565,47 @@ namespace asivamosffie.services
             return fechas.ToArray();
         }
 
-        public static DateTime PrimerDiaMes(int anio, int mes, DayOfWeek dia, int diaBase)
+        public async Task<DateTime> CalculardiasLaboralesTranscurridos(int pDias, DateTime pFechaCalcular)
         {
-            DateTime fechaRetorno = new DateTime(anio, mes, diaBase);
-            while (fechaRetorno.DayOfWeek != dia)
-            {
-                fechaRetorno = fechaRetorno.AddDays(1);
-            }
-            return fechaRetorno;
-        }
+            DateTime fechaInicial = pFechaCalcular;
+            DateTime fechadiasHabiles = pFechaCalcular;
 
-        public static DateTime DiaMesCantidad(int anio, int mes, DayOfWeek dia, int diaBase, int cantidadVeces, bool antes = false)
-        {
-            DateTime fechaRetorno = new DateTime(anio, mes, diaBase);
-            int cantidadActual = 0;
-            int suma = 1;
-            if (antes)
+            for (int i = 0; i < pDias; i++)
             {
-                suma = -1;
-            }
-            while (fechaRetorno.DayOfWeek != dia || cantidadVeces != cantidadActual)
-            {
-                fechaRetorno = fechaRetorno.AddDays(suma);
-                if (fechaRetorno.DayOfWeek == dia)
+                fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
                 {
-                    cantidadActual++;
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
                 }
             }
-            return fechaRetorno;
+            List<DateTime> festivos = new List<DateTime>();
+
+            festivos.AddRange(DiasFestivosAnioRetroceso(fechaInicial.Year));
+
+            festivos.AddRange(DiasFestivosAnioRetroceso(fechaInicial.Year + 1));
+
+            foreach (var festivo in festivos)
+            {
+                if (festivo <= fechaInicial && festivo >= fechadiasHabiles)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Saturday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+                if (fechadiasHabiles.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    fechadiasHabiles = fechadiasHabiles.AddDays(-1);
+                }
+            }
+            return fechadiasHabiles;
         }
-         
-        public static DateTime DomingoPascua(int anyo)
-        {
-            int M = 25;
-            int N = 5;
-
-            if (anyo >= 1583 && anyo <= 1699) { M = 22; N = 2; }
-            else if (anyo >= 1700 && anyo <= 1799) { M = 23; N = 3; }
-            else if (anyo >= 1800 && anyo <= 1899) { M = 23; N = 4; }
-            else if (anyo >= 1900 && anyo <= 2099) { M = 24; N = 5; }
-            else if (anyo >= 2100 && anyo <= 2199) { M = 24; N = 6; }
-            else if (anyo >= 2200 && anyo <= 2299) { M = 25; N = 0; }
-
-            int a, b, c, d, e, dia, mes;
-
-            //Cálculo de residuos
-            a = anyo % 19;
-            b = anyo % 4;
-            c = anyo % 7;
-            d = (19 * a + M) % 30;
-            e = (2 * b + 4 * c + 6 * d + N) % 7;
-
-            // Decidir entre los 2 casos:
-            if (d + e < 10) { dia = d + e + 22; mes = 3; }
-            else { dia = d + e - 9; mes = 4; }
-
-            // Excepciones especiales
-            if (dia == 26 && mes == 4) dia = 19;
-            if (dia == 25 && mes == 4 && d == 28 && e == 6 && a > 10) dia = 18;
-
-            return new DateTime(anyo, mes, dia);
-        }
-
+ 
     }
 
 }

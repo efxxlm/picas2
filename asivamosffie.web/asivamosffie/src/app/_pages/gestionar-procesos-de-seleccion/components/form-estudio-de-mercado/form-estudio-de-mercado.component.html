@@ -38,7 +38,7 @@
                     required>
                   <input type="hidden" formControlName="procesoSeleccionCotizacionId">
                 </mat-form-field>
-                <span class="contador">{{20 - nombreOrganizacion.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - nombreOrganizacion.value.length}}</span>
               </div>
             </div>
             <div class="row">
@@ -83,13 +83,13 @@
               </div>
               <div class="col d-flex pr-3em">
                 <mat-form-field class="full-width">
-                  <input matInput type="url" formControlName="url">
+                  <input matInput type="url" formControlName="url" required>
                 </mat-form-field>
               </div>
             </div>
             <div class="row">
               <div class="pr-1 mcenter">
-                <span class="size1">Indique la ruta del soporte de esta información</span>
+                <span class="info-url">Indique la ruta del soporte de esta información</span>
               </div>
             </div>
             <div class="text-right" *ngIf="addressForm.value.cotizaciones.length > 1">

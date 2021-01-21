@@ -1,0 +1,39 @@
+<section class="text-center">
+    <button mat-button mat-dialog-close class="modal--btn-cerrar" [mat-dialog-close]="null">
+      <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+    </button>
+    
+    <h1 class="title-menu--h1">
+        Avance acumulado por capítulo {{ data.seguimientoSemanal.contratacionProyecto.proyecto.llaveMen }}
+    </h1>
+    
+    <div class="d-flex justify-content-center mt-1em">
+        <b>Semana {{ data.seguimientoSemanal.numeroSemana }} </b>
+        <p class="ml-3em"> Periodo del reporte: <b> {{ data.seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ data.seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }} </b> </p>
+    </div>
+
+    <section class="table-responsive size-table">
+        <table mat-table [dataSource]="tablaAvanceAcumulado" matSort>
+      
+          <ng-container matColumnDef="nombreCapitulo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre del capítulo </th>
+            <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.actividad }} </b> </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="programacion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Programación </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.avanceFisicoCapitulo  }} </td>
+          </ng-container>
+      
+          <ng-container matColumnDef="avanceAcumulado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Avance acumulado </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.avanceAcumulado }} </td>
+          </ng-container>
+        
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </section>
+</section>

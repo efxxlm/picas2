@@ -344,6 +344,10 @@ namespace asivamosffie.services
 
         }
 
+        public async Task<List<VListaProyectos>> ListProyectoOpt() 
+        {
+            return await _context.VListaProyectos.OrderByDescending(r => r.ProyectoId).ToListAsync(); 
+        }
         public async Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto)
         {
             if (!(bool)pProyecto.Eliminado)
@@ -436,6 +440,22 @@ namespace asivamosffie.services
                 //CREAR PROYECTO 
                 if (pProyecto.ProyectoId == 0)
                 {
+                    //agrego una condición para validar llave MEN unica, si no estalla por bd
+                    var proyectoexistetne = _context.Proyecto.Where(x=>x.LlaveMen==pProyecto.LlaveMen).ToList();
+                    if(proyectoexistetne.Count()>0)
+                    {
+                        return respuesta =
+                          new Respuesta
+                          {
+                              IsSuccessful = false,
+                              IsException = false,
+                              IsValidation = true,
+                              Code = ConstantMessagesProyecto.ErrorLLAVEMEN,
+                              Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, 
+                                ConstantMessagesProyecto.ErrorLLAVEMEN, idAccionCrearProyecto, pProyecto.UsuarioCreacion, "LLAVE MEN EXISTENTE")
+                          };
+                    }
+
                     CrearEditar = "CREAR PROYECTO";
                     int? predioid = null;
                     Predio pPredioPrincipal = new Predio();
@@ -584,10 +604,40 @@ namespace asivamosffie.services
                             valorinterventoria += proyectoAportante.ValorInterventoria != null ? Convert.ToDecimal(proyectoAportante.ValorInterventoria) : 0;
                             valortotal += valorobra + valorinterventoria;
                             _context.ProyectoAportante.Add(proyectoAportante1);
+
+                            //por cada aportante relaciono las fuentes del aportante al proyecto
+                            var fuentes = _context.FuenteFinanciacion.Where(x => x.AportanteId == proyectoAportante.AportanteId && !(bool)x.Eliminado).ToList();
+                            foreach (var fuente in fuentes)
+                            {
+                                var proyectosfuenteExiste = _context.ProyectoFuentes.Where(x => x.ProyectoId == ProyectoCreado.ProyectoId
+                                      && x.FuenteId == fuente.FuenteFinanciacionId);
+                                if(proyectosfuenteExiste.FirstOrDefault()==null)
+                                {
+                                    _context.ProyectoFuentes.Add(new ProyectoFuentes
+                                    {
+                                        Eliminado = false,
+                                        FechaCreacion = DateTime.Now,
+                                        UsuarioCreacion = ProyectoCreado.UsuarioCreacion,
+                                        FuenteId = fuente.FuenteFinanciacionId,
+                                        ProyectoId = ProyectoCreado.ProyectoId
+                                    }); ;
+                                }
+                                else
+                                {
+                                    var proyectoFuenteAEditar = proyectosfuenteExiste.FirstOrDefault();
+                                    proyectoFuenteAEditar.UsuarioModificacion = ProyectoCreado.UsuarioCreacion;
+                                    proyectoFuenteAEditar.FechaModificacion = DateTime.Now;
+                                    proyectoFuenteAEditar.Eliminado = false;
+                                    _context.ProyectoFuentes.Update(proyectoFuenteAEditar);
+                                }
+                                
+                            }
                             _context.SaveChanges();
                         }
                         
                     }
+                   
+
                     ProyectoCreado.ValorInterventoria = valorinterventoria;
                     ProyectoCreado.ValorObra = valorobra;
                     ProyectoCreado.ValorTotal = valortotal;
@@ -790,6 +840,34 @@ namespace asivamosffie.services
                             valortotal += valorobra + valorinterventoria;
 
                             _context.ProyectoAportante.Add(proyectoAportante1);
+
+                            //por cada aportante relaciono las fuentes del aportante al proyecto
+                            var fuentes = _context.FuenteFinanciacion.Where(x => x.AportanteId == proyectoAportante.AportanteId && !(bool)x.Eliminado).ToList();
+                            foreach (var fuente in fuentes)
+                            {
+                                var proyectosfuenteExiste = _context.ProyectoFuentes.Where(x => x.ProyectoId == pProyecto.ProyectoId
+                                      && x.FuenteId == fuente.FuenteFinanciacionId);
+                                if (proyectosfuenteExiste.FirstOrDefault() == null)
+                                {
+                                    _context.ProyectoFuentes.Add(new ProyectoFuentes
+                                    {
+                                        Eliminado = false,
+                                        FechaCreacion = DateTime.Now,
+                                        UsuarioCreacion = pProyecto.UsuarioCreacion,
+                                        FuenteId = fuente.FuenteFinanciacionId,
+                                        ProyectoId = pProyecto.ProyectoId
+                                    }); ;
+                                }
+                                else
+                                {
+                                    var proyectoFuenteAEditar = proyectosfuenteExiste.FirstOrDefault();
+                                    proyectoFuenteAEditar.UsuarioModificacion = pProyecto.UsuarioCreacion;
+                                    proyectoFuenteAEditar.FechaModificacion = DateTime.Now;
+                                    proyectoFuenteAEditar.Eliminado = false;
+                                    _context.ProyectoFuentes.Update(proyectoFuenteAEditar);
+                                }
+
+                            }
                             _context.SaveChanges();
                         }
 

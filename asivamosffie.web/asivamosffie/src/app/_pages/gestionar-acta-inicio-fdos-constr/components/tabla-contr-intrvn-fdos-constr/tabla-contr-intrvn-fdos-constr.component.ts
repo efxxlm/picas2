@@ -1,3 +1,4 @@
+import { GestionarActPreConstrFUnoService } from './../../../../core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -71,7 +72,7 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   dataTable:any = [];
   loadDataItems: Subscription;
-  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService) { }
+  constructor(private router: Router, public dialog: MatDialog, private services: ActBeginService, private gestionarActaSvc: GestionarActPreConstrFUnoService) { }
 
   ngOnInit(): void {
     /*
@@ -100,14 +101,14 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };
   validarActaParaInicio(id) {
-    localStorage.setItem("origin", "interventoria");
+    localStorage.setItem("origin", "interventoria"); 
     localStorage.setItem("editable", "false");
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
   }
   verDetalleEditar(id) {
     localStorage.setItem("origin", "interventoria");
     localStorage.setItem("editable", "true");
-    this.router.navigate(['/generarActaInicioConstruccion/validarActaDeInicio', id]);
+    this.router.navigate(['/generarActaInicioConstruccion/generarActaFDos', id]);
   }
   verDetalle(id) {
     this.router.navigate(['/generarActaInicioConstruccion/verDetalleActaConstruccion', id]);
@@ -134,14 +135,15 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
     }
   }
   enviarActaParaFirma(id) {
-    if (localStorage.getItem("origin") == "interventoria") {
+    //console.log(localStorage.getItem("origin"))
+    //if (localStorage.getItem("origin") == "interventoria") {
       this.services.CambiarEstadoActa(id, "6", "usr2").subscribe(data => {
         this.router.navigateByUrl('/', { skipLocationChange: true }).then(
           () => this.router.navigate(['/generarActaInicioConstruccion'])
         );
       });
       this.descargarActaDesdeTabla(id);
-    }
+    //}
   }
   enviarInterventorBtn(id){
     if (localStorage.getItem("origin") == "interventoria") {
@@ -179,9 +181,9 @@ export class TablaContrIntrvnFdosConstrComponent implements OnInit {
       }
     });
   }
-  descargarActaDesdeTabla(id) {
-    this.services.GetPlantillaActaInicio(id).subscribe(resp => {
-      const documento = `Prueba.pdf`; // Valor de prueba
+  descargarActaDesdeTabla(id, numContrato?) {
+    this.gestionarActaSvc.GetActaByIdPerfil(id, 'True').subscribe(resp => {
+      const documento = `${numContrato}.pdf`; // Valor de prueba
       const text = documento,
         blob = new Blob([resp], { type: 'application/pdf' }),
         anchor = document.createElement('a');

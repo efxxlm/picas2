@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogObservacionesComponent } from '../dialog-observaciones/dialog-observaciones.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Proyecto } from 'src/app/core/_services/project/project.service';
 
 @Component({
   selector: 'app-planes-programas',
@@ -13,12 +14,16 @@ import { MatSort } from '@angular/material/sort';
 })
 export class PlanesProgramasComponent implements OnInit {
 
+  estaEditando = false;
+
   @Input() planesProgramas: any;
+  @Input() proyecto: Proyecto;
+
   @Output() planesProgramasForm = new EventEmitter();
-  @ViewChild( MatSort, { static: true } ) sort : MatSort;
+  @ViewChild( MatSort, { static: true } ) sort: MatSort;
   dataPlanesProgramas: any[] = [];
   dataSource                 = new MatTableDataSource();
-  displayedColumns: string[] = [ 
+  displayedColumns: string[] = [
     'planesProgramas',
     'recibioRequisito',
     'fechaRadicado',
@@ -26,28 +31,34 @@ export class PlanesProgramasComponent implements OnInit {
     'requiereObservacion',
     'observaciones'
   ];
+
+  minDate: Date;
+  maxDate: Date;
+
   booleanosRequisitos: any[] = [
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
-  ]
+  ];
   requisitosNoSeRequire: any[] = [
     { value: 2, viewValue: 'Si' },
     { value: 1, viewValue: 'No' },
     { value: 3, viewValue: 'No se requiere' }
-  ]
+  ];
   require: any;
   booleanosObservacion: any[] = [
     { value: true, viewValue: 'Si' },
     { value: false, viewValue: 'No' }
-  ]
+  ];
   urlSoporte: string;
 
-  constructor ( private dialog: MatDialog ) {
+  constructor( private dialog: MatDialog ) {
   }
 
   ngOnInit(): void {
     if ( this.planesProgramas ) {
+      console.log( this.planesProgramas );
       this.getDataPlanesProgramas();
+      this.estaEditando = true;
     } else {
       this.getDataPlanes();
     }
@@ -63,7 +74,7 @@ export class PlanesProgramasComponent implements OnInit {
 
     dialogObservacion.afterClosed().subscribe( resp => {
       this.dataPlanesProgramas.forEach( data => {
-        if ( data.id === id ) {
+        if ( resp !== null && data.id === id ) {
           data.observaciones = resp.data;
           return;
         }
@@ -72,10 +83,10 @@ export class PlanesProgramasComponent implements OnInit {
   };
 
   getSemaforo ( observacion: string ) {
-    if ( observacion !== null ) {
-      return 'completo';
-    } else {
+    if ( observacion === null || observacion === undefined || observacion.length === 0  ) {
       return 'sin-diligenciar';
+    } else {
+      return 'completo';
     }
   }
 
@@ -88,6 +99,9 @@ export class PlanesProgramasComponent implements OnInit {
   }
 
   getDataPlanesProgramas () {
+    this.minDate = this.proyecto.fechaInicioEtapaObra;
+    this.maxDate = this.proyecto.fechaFinEtapaObra;
+    console.log( this.proyecto.fechaInicioEtapaObra )
     this.urlSoporte = this.planesProgramas.planRutaSoporte ? this.planesProgramas.planRutaSoporte : null;
     this.dataPlanesProgramas.push(
       {

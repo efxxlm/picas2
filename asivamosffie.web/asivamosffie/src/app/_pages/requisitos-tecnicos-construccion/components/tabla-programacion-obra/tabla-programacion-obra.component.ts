@@ -19,6 +19,9 @@ export class TablaProgramacionObraComponent implements OnInit {
   dataSource = new MatTableDataSource();
   @Input() contratoConstruccionId: number;
   @Input() observacionDevolucionProgramacionObra: number;
+  @Input() proyectoId: number;
+  @Input() contratoId: number;
+
   @Output() tieneRegistros = new EventEmitter();
   @Output() realizoObservacion = new EventEmitter();
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
@@ -84,7 +87,7 @@ export class TablaProgramacionObraComponent implements OnInit {
   addObservaciones( pArchivoCargueId: number, estadoCargue: string, fechaCreacion, observaciones?: string  ){
     const dialogCargarProgramacion = this.dialog.open( DialogObservacionesProgramacionComponent, {
       width: '75em',
-      data: { pArchivoCargueId, observaciones, estadoCargue, fechaCreacion }
+      data: { pArchivoCargueId, observaciones, estadoCargue, fechaCreacion, esFlujoInversion: false }
     });
     dialogCargarProgramacion.afterClosed()
       .subscribe( response => {
@@ -100,8 +103,9 @@ export class TablaProgramacionObraComponent implements OnInit {
       .subscribe(
         response => {
           this.openDialog( '', response.message );
-          this.dataSource = new MatTableDataSource();
-          this.getData();
+          //this.dataSource = new MatTableDataSource();
+          //this.getData();
+          this.realizoObservacion.emit( true );
         },
         err => this.openDialog( '', err.message )
       )

@@ -25,14 +25,13 @@ export class ProcesosContractualesService {
             procesos.push( proceso );
           };
         };
-        console.log( procesos );
         return procesos;
       } )
     );
   };
 
   getContratacion ( contratacionId: number ) {
-    return this.http.get<DataSolicitud>( `${ this.url }/GetContratacionByContratacionId/?pContratacionId=${ contratacionId }` );
+    return this.http.get<DataSolicitud>( `${ this.url }/GetContratacionByContratacionId?pContratacionId=${ contratacionId }` );
   };
 
   getDdp ( sesionComiteSolicitudId: number ) {
@@ -43,12 +42,19 @@ export class ProcesosContractualesService {
 
     const formData = new FormData();
     formData.append( 'contratacionId', `${ contratacion.contratacionId }` );
+    
     if ( contratacion.observaciones !== null ) {
       formData.append( 'observaciones', contratacion.observaciones );
     };
+
     if ( documento !== undefined ) {
       formData.append('pFile', documento, documento.name);
     };
+
+    if ( contratacion.rutaMinuta !== null ) {
+      formData.append( 'rutaMinuta', contratacion.rutaMinuta );
+    };
+
     return this.http.post<Respuesta>( `${ this.url }/RegistrarTramiteContratacion?FechaEnvioDocumentacion=${ contratacion.fechaEnvioDocumentacion }`, formData );
   };
 

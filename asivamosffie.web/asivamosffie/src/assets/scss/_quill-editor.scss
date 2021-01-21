@@ -22,6 +22,7 @@
   width: 100%;
   margin-bottom: 1.5em;
   position: relative;
+  max-width: calc(100% - 7.3em);
 
   &.color-secondaryColor {
     border-color: $secondaryColor;
@@ -82,6 +83,10 @@
     }
   }
 
+  &.invalid .quill-editor-style.card .ql-container.ql-snow {
+    border-color: $secondaryColor;
+  }
+
   &.card {
     width: 100%;
 
@@ -92,11 +97,7 @@
       }
     }
     .ql-container.ql-snow {
-
-      .mat-dialog & {
-        max-width: 70em;
-      }
-
+      max-width: 70em;
       border-bottom: $fontColor solid 1px;
 
       .quill-sin-borde & {
@@ -110,6 +111,25 @@
 
       .mat-card & {
         max-width: initial;
+      }
+    }
+  }
+  &.card.color-secondaryColor .ql-container.ql-snow{
+    border-bottom: $secondaryColor solid 1px;
+  }
+  &.card-80em {
+    width: 100%;
+    .ql-container.ql-snow {
+      max-width: 80em;
+      border-bottom: $fontColor solid 1px;
+
+      .quill-sin-borde & {
+        border-bottom: none;
+      }
+
+      .w-quill & {
+        max-width: 30em;
+        margin: auto;
       }
     }
   }

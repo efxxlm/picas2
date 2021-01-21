@@ -41,6 +41,7 @@ namespace asivamosffie.api.Controllers
         {
             return await _registerPreContructionPhase1Service.GetListContratacion();
         }
+                
 
         [HttpGet]
         [Route("GetContratoByContratoId")]

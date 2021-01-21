@@ -28,6 +28,23 @@ namespace asivamosffie.api.Controllers
             _documentService = documentService;
         }
 
+        [Route("DeleteComponenteAportante")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteComponenteAportante([FromBody] int pComponenteAportanteId)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _projectContractingService.DeleteComponenteAportante(pComponenteAportanteId, HttpContext.User.FindFirst("User").Value.ToUpper());
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
 
         [Route("ChangeStateContratacionByIdContratacion")]
         [HttpPost]
@@ -207,6 +224,13 @@ namespace asivamosffie.api.Controllers
         {
             var respuesta = await _projectContractingService.GetContratacionProyectoById(idContratacionProyecto);
             return respuesta;
+        }
+
+        [Route("GetListFaseComponenteUso")]
+        [HttpGet]
+        public async Task<List<FaseComponenteUso>> GetListFaseComponenteUso()
+        {
+            return await _projectContractingService.GetListFaseComponenteUso();
         }
     }
 }

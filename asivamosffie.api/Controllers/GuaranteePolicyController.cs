@@ -113,8 +113,7 @@ namespace asivamosffie.api.Controllers
             Respuesta respuesta = new Respuesta();
             try
             {
-                asivamosffie.model.APIModels.AppSettingsService _appSettingsService;
-
+               AppSettingsService _appSettingsService; 
                 _appSettingsService = toAppSettingsService(_settings);
                 contratoPoliza.UsuarioCreacion = HttpContext.User.FindFirst("User").Value;
                 respuesta = await _guaranteePolicy.InsertContratoPoliza(contratoPoliza, _appSettingsService);
@@ -290,12 +289,26 @@ namespace asivamosffie.api.Controllers
         }
          
         [HttpGet]
-        [Route("GetListGrillaContratoGarantiaPoliza")]
+        [Route("GetListGrillaContratoGarantiaPolizaOld")]
         public async Task<ActionResult<List<GrillaContratoGarantiaPoliza>>> GetListGrillaContratoGarantiaPoliza()
         {
             try
             {
                 return await _guaranteePolicy.ListGrillaContratoGarantiaPoliza();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("GetListGrillaContratoGarantiaPoliza")]
+        public async Task<List<VGestionarGarantiasPolizas>> ListGrillaContratoGarantiaPolizaOptz()
+        {
+            try
+            {
+                return await _guaranteePolicy.ListGrillaContratoGarantiaPolizaOptz();
             }
             catch (Exception ex)
             {

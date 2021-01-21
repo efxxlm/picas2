@@ -16,6 +16,7 @@ export class DiagnosticoComponent implements OnInit {
   formDiagnostico: FormGroup;
   totalConstruccion: number;
   @Input() contratoConstruccion;
+  @Input() proyecto;
   @Output() diagnostico = new EventEmitter();
   @ViewChild( 'valorTotalFaseConstruccion', { static: true } ) totalFaseConstruccion: ElementRef;
 
@@ -23,7 +24,7 @@ export class DiagnosticoComponent implements OnInit {
 
 
   solicitudesModificacion: any[] = [
-    {value: 'PI_00089', viewValue: 'PI_00089'}
+
   ];
 
   constructor( private fb: FormBuilder,
@@ -59,15 +60,15 @@ export class DiagnosticoComponent implements OnInit {
 
   crearFormulario() {
     this.formDiagnostico = this.fb.group({
-      esInformeDiagnostico: [ null ],
-      rutaInforme: [ '' ],
-      costoDirecto: [ null ],
-      administracion: [ null ],
-      imprevistos: [ null ],
-      utilidad: [ null ],
-      valorTotalFaseConstruccion: [ null ],
-      requiereModificacionContractual: [ null ],
-      numeroSolicitudModificacion: [ null ]
+      esInformeDiagnostico: [null, Validators.required],
+      rutaInforme: [null, Validators.required],
+      costoDirecto: [null, Validators.required],
+      administracion: [null, Validators.required],
+      imprevistos: [null, Validators.required],
+      utilidad: [null, Validators.required],
+      valorTotalFaseConstruccion: [null, Validators.required],
+      requiereModificacionContractual: [null, Validators.required],
+      numeroSolicitudModificacion: [null, Validators.required]
     });
   }
 
@@ -88,6 +89,11 @@ export class DiagnosticoComponent implements OnInit {
   }
 
   enviar() {
+    console.log( this.proyecto.valorFaseConstruccion, this.totalConstruccion )
+    if ( this.proyecto.valorFaseConstruccion != this.totalConstruccion){
+      this.openDialog('','El valor total de la <b> fase 2 - construcción </b> después del diagnóstico no coincide con el valor registrado en el <b> DRP </> para el componente')
+      return false;
+    }
 
     this.formDiagnostico.get( 'valorTotalFaseConstruccion' ).setValue( this.totalConstruccion );
     console.log( this.formDiagnostico.value.requiereModificacionContractual );

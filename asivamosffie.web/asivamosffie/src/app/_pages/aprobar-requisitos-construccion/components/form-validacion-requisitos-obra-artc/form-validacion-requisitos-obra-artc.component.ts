@@ -11,6 +11,11 @@ import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 export class FormValidacionRequisitosObraArtcComponent implements OnInit {
 
   contrato: Contrato;
+  estadoConstruccion = {
+    enviadoAlSupervisor: '6',
+    enProcesoValidacionReqTecnicos: '7',
+    conReqTecnicosValidados: '8'
+  };
 
   constructor(
     private faseDosConstruccionSvc: FaseUnoConstruccionService,
@@ -29,28 +34,31 @@ export class FormValidacionRequisitosObraArtcComponent implements OnInit {
         this.contrato = response;
         console.log( this.contrato );
         for ( const contratacion of this.contrato.contratacion.contratacionProyecto ) {
-          const totalAcordeones = 6;
+          let totalAcordeones = 5;
           let semaforoSinDiligenciar = 0;
           let semaforoEnProceso = 0;
           let semaforoCompleto = 0;
           // Semaforo Diagnostico
-          contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'sin-diligenciar';
-          if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor !== undefined
-                && (  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === true
-                      || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === false )
-              )
-          {
-            contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'completo';
-            if (  contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor !== undefined
-                  && contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor.observaciones === undefined
-                  && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === true ) {
-              contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
+          if ( contratacion.fasePreConstruccionNotMapped === true ) {
+            totalAcordeones = 6;
+            contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'sin-diligenciar';
+            if  ( contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor !== undefined
+                  && (  contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === true
+                        || contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === false )
+                )
+            {
+              contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'completo';
+              if (  contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor !== undefined
+                    && contratacion.proyecto.contratoConstruccion[0].observacionDiagnosticoSupervisor.observaciones === undefined
+                    && contratacion.proyecto.contratoConstruccion[0].tieneObservacionesDiagnosticoSupervisor === true ) {
+                contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico = 'en-proceso';
+              }
             }
-          }
 
-          if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'sin-diligenciar' ) { semaforoSinDiligenciar++; }
-          if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'en-proceso' ) { semaforoEnProceso++; }
-          if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'completo' ) { semaforoCompleto++; }
+            if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'sin-diligenciar' ) { semaforoSinDiligenciar++; }
+            if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'en-proceso' ) { semaforoEnProceso++; }
+            if ( contratacion.proyecto.contratoConstruccion[0].semaforoDiagnostico === 'completo' ) { semaforoCompleto++; }
+          }
 
           // Semaforo planes y programas
           contratacion.proyecto.contratoConstruccion[0].semaforoPlanes = 'sin-diligenciar';

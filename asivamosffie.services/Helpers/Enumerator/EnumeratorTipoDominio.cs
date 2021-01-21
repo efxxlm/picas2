@@ -57,14 +57,15 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_de_Solicitud = 29,
 
-        Etapa_Proceso_Seleccion = 34,
 
-     	Tipo_Documento = 30,
+
+        Tipo_Documento = 30,
 
         Estado_Solicitud = 31,
 
         Estado_Solicitud_Presupuestal = 33,
 
+        Etapa_Proceso_Seleccion = 34,
 
         Estado_Proceso_Seleccion = 35,
 
@@ -77,7 +78,8 @@ namespace asivamosffie.services.Helpers.Enumerator
         EstadoComite = 38,
 
         Estado_Comite = 38,
-         
+
+
         Estado_Solicitud_Disponibilidad_Presupuestal = 39,
 
         Estado_Cronograma_Seguimiento = 40,
@@ -98,7 +100,7 @@ namespace asivamosffie.services.Helpers.Enumerator
 
         Tipo_DDP_Espacial = 49,
 
-        Estado_Sesion_Comite_Solicitud=50,
+        Estado_Sesion_Comite_Solicitud = 50,
 
         Estado_Contrato_Poliza = 51,
 
@@ -121,28 +123,65 @@ namespace asivamosffie.services.Helpers.Enumerator
         PlaceHolderDDP = 66,
 
         Responsable_Equipo_Tecnico = 71,
+
         Responsable_Equipo_Estructurador = 73,
+
         Tipos_De_Ensayos_De_Laboratorio = 74,
+
         Causas_De_Accidentes_Laborales = 75,
-
-
+         
         Tiempo_Aprobar_Acta = 84,
+
+        Disponibilidad_Material = 92,
+        Disponibilidad_Equipo = 93,
+
+        Productividad = 94,
+        Causa_Baja_Disponibilidad_Material = 95,
+        Causa_Baja_Disponibilidad_Equipo = 96,
+        Causa_Baja_Disponibilidad_Productividad = 97,
+        Estados_Seguimiento_Diario = 98,
+        
+        Estado_controversia= 89,
 
         Estados_actas_inicio_obra = 85,
 
-        Estados_actas_inicio_interventoria = 86,    
-               
+        Estados_actas_inicio_interventoria = 86,
+
         Estado_Programacion_Inicial = 88,
-        
-        Tipo_de_controversia=80,
+
+        Tipo_de_controversia = 80,
 
         Estado_controversia_contractual_TAI = 90,
 
         Estado_avance_reclamacion = 91,
-
         Estados_acta_Interventoria_319 = 107,
+        Estado_Actuacion_Derivada_4_4_1 = 114,
+
+        Estado_Actuacion_Derivada_r_4_4_1 = 125,
 
 
+        //Estado_avance_reclamacion = 91,
 
+        Proxima_actuacion_requerida =103,
+
+        Procesos_judiciales=105,
+
+        Tipo_accion_judicial = 106,
+        Estados_Actuacion=110,
+        Estados_Actuacion_Derivada = 114,
+
+        Tipo_Actividad = 109,
+
+        Estado_Obra_Avance_Semanal = 111,
+
+        Estado_Reporte_Semanal_Y_Muestras = 112,
+
+        Tipo_Observacion_Seguimiento_Semanal = 123,
+        
+        Jurisdiccion =116,
+        Actuaciones_Recomendadas=119,
+        Estados_Defensa_Judicial=120,
+
+        Estados_Reclamacion = 126,
     }
 }

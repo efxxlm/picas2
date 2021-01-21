@@ -58,6 +58,7 @@
           <button mat-raised-button
                   color="accent"
                   class="btn-table"
+                  *ngIf="element.estadoCodigo === estadosConstruccionObra.conReqTecnicosValidados.codigo && element.tieneObservaciones === 0"
                   (click)="aprobarInicio( element.contratoId, estadosConstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo )">
                   Aprobar inicio
           </button>
@@ -65,6 +66,7 @@
           <button mat-raised-button
                   color="accent"
                   class="btn-table"
+                  *ngIf="element.estadoCodigo === estadosConstruccionObra.conReqTecnicosValidados.codigo && element.tieneObservaciones > 0"
                   (click)="aprobarInicio( element.contratoId, estadosConstruccionObra.enviadoAlInterventor.codigo )">
                   Enviar al interventor
           </button>
@@ -81,9 +83,10 @@
           <button mat-raised-button
                   color="accent"
                   class="btn-table"
-                  (click)="verDetalle(element.id)"
-                  *ngIf=" element.estadoCodigo === estadosConstruccionObra.enviadoAlInterventor.codigo
-                          || element.estadoCodigo === estadosConstruccionObra.conReqTecnicosAprobadosPorSupervisor.codigo">
+                  (click)="verDetalle(element.contratoId)"
+                  *ngIf=" element.estadoCodigo !== estadosConstruccionObra.enviadoAlSupervisor.codigo
+                          && element.estadoCodigo !== estadosConstruccionObra.enProcesoValidacionReqTecnicos.codigo
+                          && element.estadoCodigo !== estadosConstruccionObra.conReqTecnicosValidados.codigo">
                   Ver detalle
           </button>
 

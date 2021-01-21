@@ -27,6 +27,21 @@ namespace asivamosffie.services
             _context = context;
         }
 
+        public async Task<Respuesta> DeleteComponenteAportante(int pComponenteAportanteId, string pUsuarioMod)
+        {
+            ComponenteAportante componenteAportanteDelete = _context.ComponenteAportante.Find(pComponenteAportanteId);
+
+            componenteAportanteDelete.Eliminado = true;
+            componenteAportanteDelete.FechaModificacion = DateTime.Now;
+            componenteAportanteDelete.UsuarioModificacion = pUsuarioMod;
+            _context.Update(componenteAportanteDelete);
+
+            await _context.SaveChangesAsync();
+
+
+            return new Respuesta();
+        }
+
         public async Task<Respuesta> ChangeStateContratacionByIdContratacion(int idContratacion, string PCodigoEstado, string pUsusarioModifico
             , string pDominioFront, string pMailServer, int pMailPort, bool pEnableSSL, string pPassword, string pSentender
             )
@@ -256,23 +271,23 @@ namespace asivamosffie.services
                         //verifico si tiene municipio
                         if (praportante.CofinanciacionAportante.MunicipioId != null)
                         {
-                            praportante.CofinanciacionAportante.NombreAportanteString = _context.Localizacion.Find(praportante.CofinanciacionAportante.MunicipioId).Descripcion;
+                            praportante.CofinanciacionAportante.NombreAportanteString = "Alcaldía de "+ _context.Localizacion.Find(praportante.CofinanciacionAportante.MunicipioId).Descripcion;
                         }
                         else//solo departamento
                         {
-                            praportante.CofinanciacionAportante.NombreAportanteString = praportante.CofinanciacionAportante.DepartamentoId == null ? "Error" : _context.Localizacion.Find(praportante.CofinanciacionAportante.DepartamentoId).Descripcion;
+                            praportante.CofinanciacionAportante.NombreAportanteString = "Gobernación de " + praportante.CofinanciacionAportante.DepartamentoId == null ? "Error" : _context.Localizacion.Find(praportante.CofinanciacionAportante.DepartamentoId).Descripcion;
                         }
                     }
                     else
                     {
                         praportante.CofinanciacionAportante.NombreAportanteString = _context.Dominio.Find(praportante.CofinanciacionAportante.NombreAportanteId).Nombre;
-                    }                     
+                    }
                     praportante.CofinanciacionAportante.TipoAportanteString = _context.Dominio.Find(praportante.CofinanciacionAportante.TipoAportanteId).Nombre;
 
                 }
                 DateTime? fechaComitetecnico = null;
                 string numerocomietetecnico = "";
-                var comite= _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
+                var comite = _context.SesionComiteSolicitud.Where(x => x.SolicitudId == contratacion.ContratacionId && x.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion).
                     Include(x => x.ComiteTecnico).ToList();
                 if (comite.Count() > 0)
                 {
@@ -322,20 +337,20 @@ namespace asivamosffie.services
 
             contratacionProyecto = await _context.ContratacionProyecto
                 .Where(r => !(bool)r.Eliminado && r.ContratacionProyectoId == idContratacionProyecto)
-                
+
                 //Tipo ET DEPARTAMENTO
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
                            .ThenInclude(r => r.Departamento)
                  .Include(r => r.Proyecto)
-                
-                 //Tipo ET MUNICIPIO
+
+                     //Tipo ET MUNICIPIO
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
                            .ThenInclude(r => r.Municipio)
-                
-                 //Tipo TERCERO DOMINIO
+
+                //Tipo TERCERO DOMINIO
                 .Include(r => r.Proyecto)
                      .ThenInclude(r => r.ProyectoAportante)
                          .ThenInclude(r => r.Aportante)
@@ -364,6 +379,10 @@ namespace asivamosffie.services
                 decimal ValorGastado = 0;
                 decimal ValorDisponible = (decimal)ContratacionProyectoAportante.CofinanciacionAportante.FuenteFinanciacion.Select(r => r.ValorFuente).Sum();
 
+                if (ContratacionProyectoAportante.ComponenteAportante.Count() > 0)
+                {
+                    ContratacionProyectoAportante.ComponenteAportante = ContratacionProyectoAportante.ComponenteAportante.Where(r => !r.Eliminado.HasValue || ( r.Eliminado.HasValue && !(bool)r.Eliminado)).ToList();
+                }
                 foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                 {
                     ValorGastado = ComponenteAportante.ComponenteUso.Select(r => r.ValorUso).Sum();
@@ -583,9 +602,9 @@ namespace asivamosffie.services
             {
 
                 //Contratista 
-               /* if (Pcontratacion.Contratista != null)
-                    await CreateEditContratista(Pcontratacion.Contratista, true);
-                    */
+                /* if (Pcontratacion.Contratista != null)
+                     await CreateEditContratista(Pcontratacion.Contratista, true);
+                     */
                 //ContratacionProyecto 
                 foreach (var ContratacionProyecto in Pcontratacion.ContratacionProyecto)
                 {
@@ -903,13 +922,13 @@ namespace asivamosffie.services
                 && pContratacionProyectoAntiguo.RequiereLicencia.HasValue  //Pregunta 4 
               )
             {
-                if(pContratacionProyectoAntiguo.RequiereLicencia==false)
+                if (pContratacionProyectoAntiguo.RequiereLicencia == false)
                 {
                     return true;
                 }
-                
+
             }
-            
+
 
             if (
                   pContratacionProyectoAntiguo.TieneMonitoreoWeb.HasValue    //Pregunta 0?
@@ -918,7 +937,7 @@ namespace asivamosffie.services
                && pContratacionProyectoAntiguo.LicenciaVigente.HasValue   //Pregunta 5
             )
             {
-                if (pContratacionProyectoAntiguo.LicenciaVigente==true)   //Pregunta 5
+                if (pContratacionProyectoAntiguo.LicenciaVigente == true)   //Pregunta 5
                 {
                     if (pContratacionProyectoAntiguo.NumeroLicencia != null && pContratacionProyectoAntiguo.FechaVigencia != null)   //Pregunta 5
                     {
@@ -929,7 +948,7 @@ namespace asivamosffie.services
                 {
                     return true;
                 }
-            }            
+            }
             return false;
         }
 
@@ -1092,14 +1111,14 @@ namespace asivamosffie.services
 
                         foreach (var ComponenteAportante in ContratacionProyectoAportante.ComponenteAportante)
                         {
-                            if (!(bool)ComponenteAportante.Eliminado)
+                            if (ComponenteAportante.Eliminado.HasValue && !(bool)ComponenteAportante.Eliminado)
                             {
                                 if (string.IsNullOrEmpty(ComponenteAportante.TipoComponenteCodigo)
                                    || string.IsNullOrEmpty(ComponenteAportante.FaseCodigo))
                                     return false;
                                 foreach (var ComponenteUso in ComponenteAportante.ComponenteUso)
                                 {
-                                    if (string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo.ToString()) || ComponenteUso.ValorUso == 0)
+                                    if (ComponenteUso.TipoUsoCodigo==null || string.IsNullOrEmpty(ComponenteUso.TipoUsoCodigo.ToString()) || ComponenteUso.ValorUso == 0)
                                         return false;
                                 }
                             }
@@ -1237,6 +1256,11 @@ namespace asivamosffie.services
                      Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Proyecto, ConstantMessagesProyecto.Error, idAccionCrearContratacionProyecto, usuarioCreacion, ex.InnerException.ToString())
                  };
             }
+        }
+
+        public async Task<List<FaseComponenteUso>> GetListFaseComponenteUso()
+        {
+            return _context.FaseComponenteUso.ToList();
         }
 
     }

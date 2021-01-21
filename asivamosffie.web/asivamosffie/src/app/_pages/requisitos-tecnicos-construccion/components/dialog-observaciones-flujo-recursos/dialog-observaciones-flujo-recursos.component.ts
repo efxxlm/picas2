@@ -38,11 +38,25 @@ export class DialogObservacionesFlujoRecursosComponent implements OnInit {
   };
 
   textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
-    };
-  };
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
+    }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
+  }
 
   textoLimpioMessage(texto: string) {
     if (texto) {
@@ -64,7 +78,7 @@ export class DialogObservacionesFlujoRecursosComponent implements OnInit {
   };
   guardar() {
     this.dialogRef.close({ data: this.formObservacion.get('observaciones').value });
-    this.openDialog("","La información ha sido guardada exitosamente");
+    this.openDialog("","<b>La información ha sido guardada exitosamente</b>");
   }
 
 }

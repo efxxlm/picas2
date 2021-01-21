@@ -24,7 +24,7 @@ export class TablaRegistroProgramacionComponent implements OnInit {
     conAprobacionProgramacionPersonal: '3'
   };
   @ViewChild( MatPaginator, { static: true } ) paginator: MatPaginator;
-  @ViewChild( MatSort, { static: true } ) sort          : MatSort;
+  @ViewChild( MatSort, { static: true } ) sort: MatSort;
   displayedColumns: string[]  = [
     'fechaFirmaActaInicio',
     'llaveMen',
@@ -33,12 +33,13 @@ export class TablaRegistroProgramacionComponent implements OnInit {
     'institucionEducativaSede',
     'sede',
     'estadoProgramacionInicial',
-    'gestion' 
+    'gestion'
   ];
 
-  constructor ( private dialog: MatDialog,
-                private programacionPersonalSvc: ProgramacionPersonalObraService,
-                private routes: Router ) {
+  constructor(
+    private dialog: MatDialog,
+    private programacionPersonalSvc: ProgramacionPersonalObraService,
+    private routes: Router ) {
   }
 
   ngOnInit(): void {
@@ -52,21 +53,21 @@ export class TablaRegistroProgramacionComponent implements OnInit {
           this.paginator._intl.itemsPerPageLabel = 'Elementos por página';
         }
       );
-  };
+  }
 
-  applyFilter ( event: Event ) {
+  applyFilter( event: Event ) {
     const filterValue      = (event.target as HTMLInputElement).value;
     this.tablaRegistro.filter = filterValue.trim().toLowerCase();
-  };
+  }
 
-  openDialog (modalTitle: string, modalText: string) {
+  openDialog(modalTitle: string, modalText: string) {
     this.dialog.open(ModalDialogComponent, {
       width: '28em',
       data : { modalTitle, modalText }
     });
-  };
+  }
 
-  openRegistroProgramacion ( contrato: any ) {
+  openRegistroProgramacion( contrato: any ) {
     const dialogProgramacion = this.dialog.open( DialogRegistroProgramacionComponent, {
       width: '80em',
       data: { contrato }
@@ -76,23 +77,24 @@ export class TablaRegistroProgramacionComponent implements OnInit {
       .subscribe( value => {
         if ( value === true ) {
           this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-            () => this.routes.navigate( [ '/registrarProgramacionPersonalObra' ] )
+            () => this.routes.navigate( [ '/programacionPersonalObra' ] )
           );
         }
-      } )
-  };
+      } );
+  }
 
-  aprobarProgramacion ( contratoConstruccionId: number ) {
-    this.programacionPersonalSvc.changeStatusProgramacionContratoPersonal( contratoConstruccionId, this.estadosProgramacion.conAprobacionProgramacionPersonal )
+  aprobarProgramacion( contratoConstruccionId: number ) {
+    this.programacionPersonalSvc
+      .changeStatusProgramacionContratoPersonal( contratoConstruccionId, this.estadosProgramacion.conAprobacionProgramacionPersonal )
       .subscribe(
         response => {
           this.openDialog( '', response.message );
           this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-            () => this.routes.navigate( [ '/registrarProgramacionPersonalObra' ] )
+            () => this.routes.navigate( [ '/programacionPersonalObra' ] )
           );
         },
         err => this.openDialog( '', err.message )
-      )
-  };
+      );
+  }
 
-};
+}

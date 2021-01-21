@@ -19,6 +19,10 @@ strong {
   font-weight: lighter;
 }
 
+.color-fontColor {
+  color: $fontColor;
+}
+
 .colorMainColor {
   color: $mainColor;
 }
@@ -28,6 +32,11 @@ strong {
 }
 
 .container {
+  @media only screen and (max-width: 48em) {
+    margin-right: .5em;
+    margin-left: .5em;
+  }
+
   @media only screen and (min-width: 48em) {
     width: 46rem;
   }
@@ -58,6 +67,10 @@ strong {
   padding: 0;
   border-radius: 2em;
   margin-top: 1em;
+
+  @media only screen and (max-width: 48em) {
+    margin-bottom: .5em;
+  }
 
   img {
     height: 2em;
@@ -101,6 +114,10 @@ strong {
   }
 }
 
+.line-25 {
+  line-height: 25px !important;
+}
+
 .m-0 {
   margin: 0 !important;
 }
@@ -109,12 +126,30 @@ strong {
   margin-bottom: 0 !important;
 }
 
+.mt-0,
+.header-card--text.sub-text.mt-0 {
+  margin-top: 0 !important;
+}
+
 .mt-05em {
-  margin-top: 0.5em;
+  margin-top: 0.5em !important;
+}
+
+.mb-05em {
+  margin-bottom: .5em !important;
+}
+
+.mt-05em {
+  margin-top: .5em !important;
+  margin-bottom: 0.5em !important;
 }
 
 .mt-1em {
   margin-top: 1em;
+}
+
+.mt-2em {
+  margin-top: 2em;
 }
 
 .mt-3em {
@@ -122,11 +157,24 @@ strong {
 }
 
 .mb-1em {
-  margin-bottom: 1em;
+  margin-bottom: 1em !important;
+}
+
+.mb-4em {
+  margin-bottom: 4em !important;
 }
 
 .mr-0 {
   margin-right: 0 !important;
+}
+
+.mr-1em {
+  margin-right: 1em !important;
+}
+
+.mx-1em {
+  margin-left: 1em;
+  margin-right: 1em;
 }
 
 .ml-05 {
@@ -145,8 +193,17 @@ strong {
   padding-right: 0.5em;
 }
 
+.px-2em {
+  padding-left: 2em !important;
+  padding-right: 2em !important;
+}
+
 .pt-1 {
   padding-top: 0.5em;
+}
+
+.pt-3em {
+  padding-top: 3em;
 }
 
 .pr-3em {
@@ -165,6 +222,10 @@ strong {
   justify-content: center;
 }
 
+.justify-content-flex-end {
+  justify-content: flex-end;
+}
+
 .m1 {
   margin: 1em;
 }
@@ -175,7 +236,11 @@ strong {
 }
 
 .mb-2em {
-  margin-bottom: 2em;
+  margin-bottom: 2em !important;
+}
+
+.mt-2em {
+  margin-top: 2em;
 }
 
 .m05_important {
@@ -184,6 +249,10 @@ strong {
 
 .opaco {
   opacity: 0.6;
+}
+
+.left-1-7 {
+  left: 1.7em;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -241,7 +310,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .d-block {
-  display: block;
+  display: block !important;
 }
 
 .font-weight-bold {
@@ -277,4 +346,14 @@ input[type="number"]::-webkit-outer-spin-button {
   animation-name: animatedSelect;
   animation-duration: .2s;
   animation-fill-mode: forwards;
+}
+
+@media only screen and (max-width: 63em) {
+  .col-md-4,
+  .col-md-6,
+  .col-md-8,
+  .col-md-12 {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
 }

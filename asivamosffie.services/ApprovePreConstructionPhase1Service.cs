@@ -67,10 +67,14 @@ namespace asivamosffie.services
                      
                         foreach (var ContratoPerfil in c.ContratoPerfil.Where(r => !(bool)r.Eliminado && r.ProyectoId == ContratacionProyecto.ProyectoId))
                         {
-                            if (ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && string.IsNullOrEmpty(ContratoPerfil.ContratoPerfilObservacion.Where(r=> r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).LastOrDefault().Observacion))
-                                RegistroCompletoObservaciones = false;
+                            string UltimaObservacionSupervisor = string.Empty;
 
-                            if(!ContratoPerfil.TieneObservacionSupervisor.HasValue)
+                            UltimaObservacionSupervisor = ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).Count() > 0 ? ContratoPerfil.ContratoPerfilObservacion.OrderBy(r => r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).LastOrDefault().Observacion : string.Empty;
+
+                            if ((ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && UltimaObservacionSupervisor == null))
+                                RegistroCompleto = false;
+
+                            if (!ContratoPerfil.TieneObservacionSupervisor.HasValue)
                                 RegistroCompletoObservaciones = false;
 
 
@@ -158,7 +162,9 @@ namespace asivamosffie.services
                 bool RegistroCompleto = true;
                 foreach (var ContratoPerfil in contrato.ContratoPerfil.Where(r => !(bool)r.Eliminado))
                 {
-                    string UltimaObservacionSupervisor = ContratoPerfil.ContratoPerfilObservacion.OrderBy(r=> r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).LastOrDefault().Observacion;
+                    string UltimaObservacionSupervisor = string.Empty;
+
+                    UltimaObservacionSupervisor = ContratoPerfil.ContratoPerfilObservacion.Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).Count() > 0 ? ContratoPerfil.ContratoPerfilObservacion.OrderBy(r => r.ContratoPerfilObservacionId).Where(r => r.TipoObservacionCodigo == ConstanCodigoTipoObservacion.Supervisor).LastOrDefault().Observacion : string.Empty;
 
                     if ((ContratoPerfil.TieneObservacionSupervisor.HasValue && (bool)ContratoPerfil.TieneObservacionSupervisor && UltimaObservacionSupervisor == null))
                          RegistroCompleto = false;

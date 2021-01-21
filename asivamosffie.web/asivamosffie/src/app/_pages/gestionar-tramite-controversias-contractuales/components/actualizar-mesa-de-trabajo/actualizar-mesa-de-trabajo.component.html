@@ -1,0 +1,35 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Actualizar mesa de trabajo MT_0001
+    </h1>
+    <div>
+        <mat-card class="shipping-card mainGris">
+            <mat-card-content style="text-align: left;">
+                <p><strong>Fecha de solicitud:</strong> {{this.fechaSolicitud | date:'dd/MM/yyyy'}}</p>
+                <p><strong>Número del contrato:</strong>  {{this.numContrato}}</p>
+                <p><strong>Tipo de Controversia:</strong> {{this.tipoControversia}}</p>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="shipping-card mainGris">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text textoGris">
+                    Datos del contrato
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="text-align: left;">
+                <p><strong>Nombre del contratista:</strong> {{this.nomContratista}}</p>
+                <p><strong>Tipo de identificación:</strong> {{this.tipoIdentificacion}}</p>
+                <p><strong>Número de identificación:</strong> {{this.numeroIdentificacion}}</p>
+                <p><strong>Número de póliza:</strong> {{this.numPoliza}}</p>
+                <p><strong>Número de radicación ante la aseguradora:</strong> {{this.numRadicacionAseguradora}}</p>
+                <p><strong>Fecha de radicación:</strong> {{this.fechaRadicacion | date:'dd/MM/yyyy'}}</p>
+            </mat-card-content>
+        </mat-card>
+        <app-control-y-tabla-actuacion-mt></app-control-y-tabla-actuacion-mt>
+    </div>
+</div>

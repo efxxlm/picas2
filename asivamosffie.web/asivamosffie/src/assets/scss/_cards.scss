@@ -5,6 +5,10 @@ mat-card.mat-card:not([class*="mat-elevation-z"]) {
     padding: 1em 4em;
     box-shadow: none;
     margin-bottom: 2em;
+
+    @media only screen and (max-width: 48em) {
+      padding: 1em 2em;
+    }
 }
 
 .mat-card-header.header-card {
@@ -47,4 +51,8 @@ h2.card-subTitle {
 
 mat-card.mat-card {
     color: $fontColor;
+}
+
+.border {
+    border: solid 1px rgba(0,0,0,.54) !important;
 }

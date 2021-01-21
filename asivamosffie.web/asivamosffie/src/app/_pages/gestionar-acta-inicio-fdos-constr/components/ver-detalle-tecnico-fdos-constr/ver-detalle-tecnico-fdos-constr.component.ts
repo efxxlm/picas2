@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.service';
 import { CommonService } from 'src/app/core/_services/common/common.service';
+import { Contrato } from 'src/app/_interfaces/faseUnoPreconstruccion.interface';
 
 @Component({
   selector: 'app-ver-detalle-tecnico-fdos-constr',
@@ -39,6 +40,7 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
   obsConEspeciales: string;
   plazoEjecucionConstrM: number;
   plazoEjecucionConstrD: number;
+  mostrarCarga= false;
 
   botonDescargar: boolean =false;
   conObservacionesSupervisor: boolean;
@@ -108,11 +110,16 @@ export class VerDetalleTecnicoFdosConstrComponent implements OnInit {
       this.plazoEjecucionConstrD = data.plazoFase2ConstruccionMeses;
       //ruta del acta suscrita
       this.rutaActaSuscrita = data.rutaActaSuscrita;
+      //console.log(data.contrato.estadoActaFase2, data.contrato.estadoActaFase2 == 20 );
+      if ( data.contrato && ( data.contrato.estadoActaFase2 == 20 || data.contrato.estadoActaFase2 == 7 ) )
+        this.mostrarCarga = true;
     });
     this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data1=>{
-      this.conObservacionesSupervisor = data1.esActa;
-      this.observacionesSupervisor = data1.observaciones;
-      this.fechaCreacion = data1.fechaCreacion;
+      if ( data1 ){
+        this.conObservacionesSupervisor = data1.esActa;
+        this.observacionesSupervisor = data1.observaciones;
+        this.fechaCreacion = data1.fechaCreacion;
+      }
     });
     this.idContrato = id;
   }

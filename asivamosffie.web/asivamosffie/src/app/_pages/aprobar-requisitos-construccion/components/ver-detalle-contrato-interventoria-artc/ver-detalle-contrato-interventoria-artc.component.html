@@ -5,7 +5,7 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle requisitos de inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
+        Ver detalle requisitos para inicio contrato {{ contrato.numeroContrato }} fase 2 - Construcción
     </h1>
     <section class="container margin-1em color-primary" *ngIf="contrato.contratacion">
         <div class="text-center section-flex">
@@ -67,7 +67,12 @@
                                 </mat-card-content>
                             </mat-card>
                         </div>
-                        <app-hojas-vida-interventoria-artc [observacionesCompleted]="true" [observacionesPerfil]="perfil.construccionPerfilObservacion"></app-hojas-vida-interventoria-artc>
+                        <app-hojas-vida-interventoria-artc  [observacionesCompleted]="true"
+                                                            [observacionesPerfil]="perfil.construccionPerfilObservacion"
+                                                            [observacionDevolucion]="perfil.observacionDevolucion !== undefined ? perfil.observacionDevolucion : undefined"
+                                                            [tieneObservacion]="perfil.tieneObservacionesSupervisor !== undefined ? perfil.tieneObservacionesSupervisor : undefined"
+                                                            [fechaModificacion]="perfil.fechaModificacion">
+                        </app-hojas-vida-interventoria-artc>
                     </mat-expansion-panel>
                 </mat-accordion>
             </mat-expansion-panel>

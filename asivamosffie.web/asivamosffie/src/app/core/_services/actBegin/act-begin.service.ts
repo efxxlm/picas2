@@ -31,9 +31,16 @@ export class ActBeginService {
   CreateTieneObservacionesActaInicio(pContratoId:number, pObservacionesActa:string, pUsuarioModificacion: string, pEsSupervisor:boolean, pEsActa:boolean){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateTieneObservacionesActaInicio?pContratoId=${pContratoId}&pObservacionesActa=${pObservacionesActa}&pUsuarioModificacion=${pUsuarioModificacion}&pEsSupervisor=${pEsSupervisor}&pEsActa=${pEsActa}`, "");
   }
+
   EditarContratoObservacion(pContratoId: number,  pPlazoFase2PreMeses:number , pPlazoFase2PreDias:number, pObservacion:string, pUsuarioModificacion:string,pFechaActaInicioFase1:string,pFechaTerminacionFase2:string, pEsSupervisor:boolean, pEsActa:boolean){
-    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditarContratoObservacion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacion=${pObservacion}&pUsuarioModificacion=${pUsuarioModificacion}&pFechaActaInicioFase1=${pFechaActaInicioFase1}&pFechaTerminacionFase2=${pFechaTerminacionFase2}&pEsSupervisor=${pEsSupervisor}&pEsActa=${pEsActa}`, "");
+
+    let construccionObservacion: ConstruccionObservacion = {
+      Observaciones: pObservacion
+    }
+
+    return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/EditarContratoObservacion?pContratoId=${pContratoId}&pPlazoFase2PreMeses=${pPlazoFase2PreMeses}&pPlazoFase2PreDias=${pPlazoFase2PreDias}&pObservacion=${pObservacion}&pUsuarioModificacion=${pUsuarioModificacion}&pFechaActaInicioFase1=${pFechaActaInicioFase1}&pFechaTerminacionFase2=${pFechaTerminacionFase2}&pEsSupervisor=${pEsSupervisor}&pEsActa=${pEsActa}`, construccionObservacion);
   }
+
   CambiarEstadoActa(pContratoId :number, pNuevoCodigoEstadoActa:string, pUsuarioModifica:string){
     return this.http.put<Respuesta>(`${environment.apiUrl}/actBegin/CambiarEstadoActa?pContratoId=${pContratoId}&pNuevoCodigoEstadoActa=${pNuevoCodigoEstadoActa}&pUsuarioModifica=${pUsuarioModifica}`, null);  
   }
@@ -46,7 +53,7 @@ export class ActBeginService {
   GetContratoByIdContratoId(pContratoId: number){
     return this.http.get<GetContratoByIdContratoId>(`${environment.apiUrl}/actBegin/GetContratoByIdContratoId?pContratoId=${pContratoId}`);
   }
-  CreateEditContratoObservacion(contratoObs:ConstruccionObservacion){
+  CreateEditContratoObservacion(contratoObs: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/actBegin/CreateEditContratoObservacion`, contratoObs);
   }
   EnviarCorreoSupervisorContratista(pContratoId: number, pPerfilId: number){
@@ -110,24 +117,24 @@ export interface ContratoObservacion{
   contratoObservacionId: number;
   contratoId: number;
   observaciones: string;
-  fechaCreacion: any;
-  usuarioCreacion: any;
+  fechaCreacion?: any;
+  usuarioCreacion?: any;
   
   //opcionales
-  esActa: boolean;
-  fechaModificacion: any;
-  usuarioModificacion: any;
-  esActaFase2: boolean;
+  esActa?: boolean;
+  fechaModificacion?: any;
+  usuarioModificacion?: any;
+  esActaFase2?: boolean;
 }
 export interface ConstruccionObservacion{
 //ConstruccionObservacionId: number;
- ContratoConstruccionId: number;
- TipoObservacionConstruccion: string;
- Observaciones: string;
- UsuarioModificacion: string;
- FechaCreacion:any;
- UsuarioCreacion: string;
- EsSupervision:boolean;
- EsActa:boolean;
-FechaModificacion:any;
+ ContratoConstruccionId?: number;
+ TipoObservacionConstruccion?: string;
+ Observaciones?: string;
+ UsuarioModificacion?: string;
+ FechaCreacion?:any;
+ UsuarioCreacion?: string;
+ EsSupervision?:boolean;
+ EsActa?:boolean;
+FechaModificacion?:any;
 }

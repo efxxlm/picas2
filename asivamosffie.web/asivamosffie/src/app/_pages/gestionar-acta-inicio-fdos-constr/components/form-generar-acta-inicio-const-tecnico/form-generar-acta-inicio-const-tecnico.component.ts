@@ -7,6 +7,7 @@ import { ActBeginService } from 'src/app/core/_services/actBegin/act-begin.servi
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DatePipe } from '@angular/common';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { GestionarActPreConstrFUnoService } from 'src/app/core/_services/GestionarActPreConstrFUno/gestionar-act-pre-constr-funo.service';
 
 @Component({
   selector: 'app-form-generar-acta-inicio-const-tecnico',
@@ -57,13 +58,14 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   public plazoActualContratoDias;
   public plazoEjecucionPreConstruccionMeses;
   public plazoEjecucionPreConstruccionDias;
+  public contrato;
 
   fechaSesionString: string;
   fechaSesion: Date;
 
   fechaSesionString2: string;
   fechaSesion2: Date;
-  
+
   addressForm = this.fb.group({});
   dataDialog: {
     modalTitle: string,
@@ -80,7 +82,7 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   realizoPeticion: boolean = false;
   esRojo: boolean = false;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, public dialog: MatDialog, private fb: FormBuilder, public datepipe: DatePipe, private services: ActBeginService, private service: GestionarActPreConstrFUnoService) {
     this.maxDate = new Date();
     this.maxDate2 = new Date();
   }
@@ -127,10 +129,10 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     })
   }
   loadData(id) {
-    this.services.GetVistaGenerarActaInicio(id).subscribe((data:any) => {
+    this.services.GetVistaGenerarActaInicio(id).subscribe((data: any) => {
       /*Titulo*/
       this.contratoCode = data.numeroContrato;
-      this.fechaAprobacionSupervisor = data.fechaAprobacionRequisitosSupervisor;
+      this.fechaAprobacionSupervisor = data.fechaAprobacionRequisitosSupervisorDate;
       /*Cuadro 1*/
       this.vigenciaContrato = data.vigenciaContrato;
       this.fechaFirmaContrato = data.fechaFirmaContrato;
@@ -142,7 +144,8 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.fechaAprobacionGarantiaPoliza = data.fechaAprobacionGarantiaPoliza;
       this.observacionOConsideracionesEspeciales = data.objeto;
       this.numeroIdentificacionRepresentanteContratistaInterventoria = data.numeroIdentificacionRepresentanteContratistaInterventoria;
-      this.valorInicialContrato = data.valorInicialContrato;
+      //this.valorInicialContrato = data.valorInicialContrato;
+      this.valorInicialContrato = data.valorActualContrato;
       this.valorActualContrato = data.valorActualContrato;
       this.valorFase1Preconstruccion = data.valorFase1Preconstruccion;
       this.valorfase2ConstruccionObra = data.valorfase2ConstruccionObra;
@@ -154,31 +157,46 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
       this.plazoActualContratoDias = data.plazoActualContratoDias;
       this.plazoEjecucionPreConstruccionMeses = data.plazoFase1PreMeses;
       this.plazoEjecucionPreConstruccionDias = data.plazoFase1PreDias;
+      this.contrato = data.contrato;
       /*Campo de texto editable*/
-      if(this.editable == true){
+      if (this.editable == true) {
         this.addressForm.get('fechaActaInicioFDosConstruccion').setValue(data.fechaActaInicioFase2DateTime);
         this.addressForm.get('fechaPrevistaTerminacion').setValue(data.fechaPrevistaTerminacionDateTime);
-        this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
-        this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
         this.addressForm.get('observacionesEspeciales').setValue(data.observacionOConsideracionesEspeciales);
+        if ( data.plazoFase1PreMeses !== undefined && data.plazoFase1PreDias !== undefined ) {
+          const mesesPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoMeses;
+          const diasPlazoInicial = data.contrato.contratacion.disponibilidadPresupuestal[0].plazoDias;
+          this.service.getFiferenciaMesesDias( mesesPlazoInicial, diasPlazoInicial, data.plazoFase1PreMeses, data.plazoFase1PreDias )
+            .subscribe(
+              response => {
+                this.addressForm.get( 'mesPlazoEjFase2' ).setValue( response[0] );
+                this.addressForm.get('diasPlazoEjFase2').setValue( response[1] );
+              }
+            );
+            this.addressForm.get('mesPlazoEjFase2').disable();
+            this.addressForm.get('diasPlazoEjFase2').disable();
+        } else {
+          this.addressForm.get('mesPlazoEjFase2').setValue(data.plazoFase2ConstruccionMeses);
+          this.addressForm.get('diasPlazoEjFase2').setValue(data.plazoFase2ConstruccionDias);
+        }
       }
     });
     this.idContrato = id;
   }
-  loadDataObservaciones(id){
-      this.services.GetContratoObservacionByIdContratoId(id,true).subscribe(data0=>{
-        this.conObervacionesActa = data0.esActa;
-        this.observacionesActaFase2 = data0.observaciones;
-        this.fechaCreacion = data0.fechaCreacion;
-      });
+  loadDataObservaciones(id) {
+    this.services.GetContratoObservacionByIdContratoId(id, true).subscribe(data0 => {
+      this.conObervacionesActa = data0.esActa;
+      this.observacionesActaFase2 = data0.observaciones;
+      this.fechaCreacion = data0.fechaCreacion;
+    });
 
   }
-  generarFechaRestante(){
+  generarFechaRestante() {
     let newdate = new Date(this.addressForm.value.fechaActaInicioFDosConstruccion);
-    newdate.setDate(newdate.getDate() + (this.plazoActualContratoMeses*30.43));
+    newdate.setDate(newdate.getDate() + (this.plazoActualContratoMeses * 30.43));
     let newDateFinal = new Date(newdate);
     newDateFinal.setDate(newDateFinal.getDate() + this.plazoActualContratoDias)
-    console.log(newDateFinal);
+    // console.log(newDateFinal);
     this.addressForm.get('fechaPrevistaTerminacion').setValue(newDateFinal);
 
   }
@@ -214,11 +232,26 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
   }
 
   textoLimpio(texto: string) {
-    if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length > 500 ? 500 : textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
+    if (texto) {
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
   }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
+  }
+
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
     if (tecla === 8) { return true; } // Tecla de retroceso (para poder borrar)
@@ -246,82 +279,107 @@ export class FormGenerarActaInicioConstTecnicoComponent implements OnInit, OnDes
     }
   }
   onSubmit() {
-    let fecha = Date.parse(this.addressForm.get( 'fechaActaInicioFDosConstruccion' ).value);
-    this.fechaSesion = new Date(fecha);
-    this.fechaSesionString = `${this.fechaSesion.getFullYear()}/${this.fechaSesion.getMonth() + 1}/${this.fechaSesion.getDate()}`;
 
-    let fecha2 = Date.parse(this.addressForm.get( 'fechaPrevistaTerminacion' ).value);
-    this.fechaSesion2 = new Date(fecha2);
-    this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}/${this.fechaSesion2.getMonth() + 1}/${this.fechaSesion2.getDate()}`;
-    //compara los meses
-    if(this.addressForm.value.fechaActaInicioFDosConstruccion==null || this.addressForm.value.fechaPrevistaTerminacion==null || this.addressForm.value.mesPlazoEjFase2==null ||
-      this.addressForm.value.diasPlazoEjFase2==null){
-        this.openDialog2('','<b>Falta registrar información</b>');
-        this.esRojo = true;
+
+    let meses: number = this.plazoEjecucionPreConstruccionMeses === undefined ? 0 : this.plazoEjecucionPreConstruccionMeses;
+    meses = meses + (this.addressForm.get('mesPlazoEjFase2').value === undefined ? 0 : this.addressForm.get('mesPlazoEjFase2').value);
+
+    let dias: number = this.plazoEjecucionPreConstruccionDias === undefined ? 0 : this.plazoEjecucionPreConstruccionDias;
+    dias = dias + (this.addressForm.get('diasPlazoEjFase2').value === undefined ? 0 : this.addressForm.get('diasPlazoEjFase2').value);
+
+    let plazoDias: number = this.plazoActualContratoDias;
+    let plazoMeses: number = this.plazoActualContratoMeses;
+
+    console.log(this.plazoEjecucionPreConstruccionMeses, this.addressForm.get('mesPlazoEjFase2').value, this.plazoEjecucionPreConstruccionDias, this.addressForm.get('diasPlazoEjFase2').value)
+    console.log(plazoDias, dias, plazoMeses, meses )
+
+    if (plazoDias != dias || plazoMeses != meses) {
+      this.openDialog( '', 'Debe verificar la información ingresada en el campo <b>Plazo de ejecución fase 2 – Construcción</b>, dado que no coincide con la información inicial registrada para el contrato ' )
+      return false;
     }
-    else{
-      if(localStorage.getItem("editable") == "false"){
-        var sumaMeses;
-        var sumaDias;
-        sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
-        sumaDias = this.plazoEjecucionPreConstruccionDias + parseInt(this.addressForm.value.diasPlazoEjFase2);
-        console.log(sumaDias);
-        if (sumaMeses > this.plazoActualContratoMeses) {
-          this.openDialog("", 'Debe verificar la información ingresada en el campo <b>Meses</b>, dado que no coincide con la información inicial registrada para el contrato');
-        }
-        else if (sumaDias > this.plazoActualContratoDias){
-          this.openDialog("", 'Debe verificar la información ingresada en el campo <b>Días</b>, dado que no coincide con la información inicial registrada para el contrato');
-        }
-        else{
-          this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(data1 => {
-            if (data1.code == "200") {
-              if(localStorage.getItem("origin")=="interventoria"){
-                this.services.CambiarEstadoActa(this.idContrato,"2","usr2").subscribe(resp=>{
-                  this.realizoPeticion = true;
-                  this.openDialog("", '<b>La información ha sido guardada exitosamente.</b>');
-                  this.router.navigate(['/generarActaInicioConstruccion']);
-                });
-              }
-              else{
-                this.services.CambiarEstadoActa(this.idContrato,"14","usr2").subscribe(resp=>{
-                  this.realizoPeticion = true;
-                  this.openDialog("", '<b>La información ha sido guardada exitosamente.</b>');
-                  this.router.navigate(['/generarActaInicioConstruccion']);
-                });
-              }
-              
-            }
-            else {
-              this.openDialog(data1.message, "");
-            }
-          });
-  
-        }
+
+    if (this.addressForm.valid) {
+      let fecha = Date.parse(this.addressForm.get('fechaActaInicioFDosConstruccion').value);
+      this.fechaSesion = new Date(fecha);
+      this.fechaSesionString = `${this.fechaSesion.getFullYear()}/${this.fechaSesion.getMonth() + 1}/${this.fechaSesion.getDate()}`;
+
+      let fecha2 = Date.parse(this.addressForm.get('fechaPrevistaTerminacion').value);
+      this.fechaSesion2 = new Date(fecha2);
+      this.fechaSesionString2 = `${this.fechaSesion2.getFullYear()}/${this.fechaSesion2.getMonth() + 1}/${this.fechaSesion2.getDate()}`;
+      //compara los meses
+      if (this.addressForm.value.fechaActaInicioFDosConstruccion == null || this.addressForm.value.fechaPrevistaTerminacion == null || this.addressForm.value.mesPlazoEjFase2 == null ||
+        this.addressForm.value.diasPlazoEjFase2 == null) {
+        this.openDialog2('', '<b>Falta registrar información</b>');
+        this.esRojo = true;
       }
-      else{
-        this.services.EditarContratoObservacion(this.idContrato,this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2,this.removeTags(this.addressForm.value.observacionesEspeciales), "usr2",this.fechaSesionString,this.fechaSesionString2,false,true).subscribe(resp=>{
-          if (resp.code == "200") {
-            this.realizoPeticion = true;
-            this.openDialog("", 'La información ha sido guardada exitosamente.');
-            this.router.navigate(['/generarActaInicioConstruccion']);
+      else {
+        if (localStorage.getItem("editable") == "false") {
+          var sumaMeses;
+          var sumaDias;
+          sumaMeses = this.plazoEjecucionPreConstruccionMeses + parseInt(this.addressForm.value.mesPlazoEjFase2);
+          sumaDias = this.plazoEjecucionPreConstruccionDias + parseInt(this.addressForm.value.diasPlazoEjFase2);
+          // console.log(sumaDias);
+          if (sumaMeses > this.plazoActualContratoMeses) {
+            this.openDialog("", 'Debe verificar la información ingresada en el campo <b>Meses</b>, dado que no coincide con la información inicial registrada para el contrato');
+          }
+          else if (sumaDias > this.plazoActualContratoDias) {
+            this.openDialog("", 'Debe verificar la información ingresada en el campo <b>Días</b>, dado que no coincide con la información inicial registrada para el contrato');
           }
           else {
-            this.openDialog("", resp.message);
+            this.services.CreatePlazoEjecucionFase2Construccion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.addressForm.value.observacionesEspeciales, "usr2", this.fechaSesionString, this.fechaSesionString2, false, true).subscribe(data1 => {
+              if (data1.code == "200") {
+                if (localStorage.getItem("origin") == "interventoria") {
+                  this.services.CambiarEstadoActa(this.idContrato, "2", "usr2").subscribe(resp => {
+                    this.realizoPeticion = true;
+                    this.openDialog2("", '<b>La información ha sido guardada exitosamente.</b>');
+                    this.router.navigate(['/generarActaInicioConstruccion']);
+                  });
+                }
+                else {
+                  this.services.CambiarEstadoActa(this.idContrato, "14", "usr2").subscribe(resp => {
+                    this.realizoPeticion = true;
+                    this.openDialog2("", '<b>La información ha sido guardada exitosamente.</b>');
+                    this.router.navigate(['/generarActaInicioConstruccion']);
+                  });
+                }
+
+              }
+              else {
+                this.openDialog2('', `<b>${data1.message}</b>`);
+              }
+            });
+
           }
-        })
+        }
+        else {
+          this.services.EditarContratoObservacion(this.idContrato, this.addressForm.value.mesPlazoEjFase2, this.addressForm.value.diasPlazoEjFase2, this.addressForm.value.observacionesEspeciales, "usr2", this.fechaSesionString, this.fechaSesionString2, false, true).subscribe(resp => {
+            if (resp.code == "200") {
+              this.realizoPeticion = true;
+              this.openDialog2("", '<b>La información ha sido guardada exitosamente.</b>');
+              this.router.navigate(['/generarActaInicioConstruccion']);
+            }
+            else {
+              this.openDialog("", `<b>${resp.message}</b>`);
+            }
+          })
+        }
       }
-    }
 
-    if(localStorage.getItem("origin")=="interventoria"){
-      if(this.addressForm.value.observacionesEspeciales==null){
-        localStorage.setItem("observacionesEspecialesInterventoria","No");
+      if (localStorage.getItem("origin") == "interventoria") {
+        if (this.addressForm.value.observacionesEspeciales == null) {
+          localStorage.setItem("observacionesEspecialesInterventoria", "No");
+        }
+        else {
+          localStorage.setItem("observacionesEspecialesInterventoria", "Si");
+        }
       }
-      else{
-        localStorage.setItem("observacionesEspecialesInterventoria","Si");
-      }
-    }
-    console.log(this.addressForm.value);
+      // console.log(this.addressForm.value);
 
+    } else {
+      this.openDialog2('', '<b>El formulario está incompleto</b>');
+    }
   }
+
+
 
 }

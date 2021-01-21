@@ -7,9 +7,13 @@
         </div>
         <div class="col d-flex">
           <mat-form-field class="w-38">
-            <input matInput type="text" maxlength="3" formControlName="numeroPerfiles" #cantidadPerfiles required>
+            <input matInput type="number" maxlength="3" min="1" max="999" required (keypress)="validateNumberKeypress($event)"
+            formControlName="numeroPerfiles" #cantidadPerfiles required
+            onKeyPress="if(this.value.length>=this.maxLength) return false;">
           </mat-form-field>
-          <span class="contador">{{3 - formContratista.get( 'numeroPerfiles' ).value.length}}</span>
+          <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico"matTooltipClass="info-tooltip">
+            {{3 - cantidadPerfiles.value.length}}
+          </span>
         </div>
       </div>
     </div>
@@ -53,14 +57,20 @@
                 <div class="col d-flex">
                   <mat-form-field>
                     <input  matInput
-                            type="text"
+                            type="number"
                             maxlength="3"
+                            min="1"
+                            max="999"
+                            (keypress)="validateNumberKeypress($event)"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
                             formControlName="cantidadHvRequeridas"
                             required
                             (ngModelChange)="validateNumber( $event, i, 'cantidadHvRequeridas' )"
                             [class.invalid]="perfil.get( 'cantidadHvRequeridas' ).value.length > 0 ? perfil.get( 'cantidadHvRequeridas' ).markAsUntouched() : perfil.get( 'cantidadHvRequeridas' ).markAsTouched()">
                   </mat-form-field>
-                  <span class="contador">{{3 - perfil.get( 'cantidadHvRequeridas' ).value.toString().length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+                    {{3 - perfil.get( 'cantidadHvRequeridas' ).value.toString().length}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -75,14 +85,20 @@
                 <div class="col d-flex">
                   <mat-form-field>
                     <input  matInput
-                            type="text"
+                            type="number"
                             maxlength="3"
+                            min="1"
+                            max="999"
+                            (keypress)="validateNumberKeypress($event)"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
                             formControlName="cantidadHvRecibidas"
                             required
                             (ngModelChange)="validateNumber( $event, i, 'cantidadHvRecibidas' )"
                             [class.invalid]="perfil.get( 'cantidadHvRecibidas' ).value.length > 0 ? perfil.get( 'cantidadHvRecibidas' ).markAsUntouched() : perfil.get( 'cantidadHvRecibidas' ).markAsTouched()">
                   </mat-form-field>
-                  <span class="contador">{{3 - perfil.get( 'cantidadHvRecibidas' ).value.toString().length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+                    {{3 - perfil.get( 'cantidadHvRecibidas' ).value.toString().length}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -97,14 +113,20 @@
                 <div class="col d-flex">
                   <mat-form-field>
                     <input  matInput
-                            type="text"
+                            type="number"
                             maxlength="3"
+                            min="1"
+                            max="999"
+                            (keypress)="validateNumberKeypress($event)"
+                            onKeyPress="if(this.value.length>=this.maxLength) return false;"
                             formControlName="cantidadHvAprobadas"
                             required
                             (ngModelChange)="validateNumber( $event, i, 'cantidadHvAprobadas' )"
                             [class.invalid]="perfil.get( 'cantidadHvAprobadas' ).value.length > 0 ? perfil.get( 'cantidadHvAprobadas' ).markAsUntouched() : perfil.get( 'cantidadHvAprobadas' ).markAsTouched()">
                   </mat-form-field>
-                  <span class="contador">{{3 - perfil.get( 'cantidadHvAprobadas' ).value.toString().length}}</span>
+                  <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo numérico" matTooltipClass="info-tooltip">
+                    {{3 - perfil.get( 'cantidadHvAprobadas' ).value.toString().length}}
+                  </span>
                 </div>
               </div>
             </div>
@@ -186,7 +208,7 @@
                                 required
                                 [class.invalid]="numero.get( 'numeroRadicado' ).value.length > 0 ? numero.get( 'numeroRadicado' ).markAsUntouched() : numero.get( 'numeroRadicado' ).markAsTouched()">
                       </mat-form-field>
-                      <span class="contador">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
+                      <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{20 - numero.get( 'numeroRadicado' ).value.length}}</span>
                     </div>
                   </div>
                 </div>
@@ -245,15 +267,12 @@
                     <input  matInput
                             type="text"
                             formControlName="rutaSoporte"
+                            required
                             [class.invalid]="perfil.get( 'rutaSoporte' ).value.length > 0 ? perfil.get( 'rutaSoporte' ).markAsUntouched() : perfil.get( 'rutaSoporte' ).markAsTouched()">
                   </mat-form-field>
                 </div>
                 <div class="d-flex justify-content-center size-text-descriptivo">
-                  <p class="color-text-descriptivo">
-                      <i>
-                          Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación del personal.
-                      </i>
-                  </p>
+                  <span class="info-url">Indique la ruta en la que se encuentra el soporte de las hojas de vida y el Acta de aprobación del personal.</span>
               </div>
               </div>
             </div>
@@ -281,17 +300,6 @@
         </button>
       </div>
 
-      <div class="text-center">
-        <button mat-button
-                color="warn"
-                class="btn-guardar"
-                type="button"
-                (click)="guardar()"
-                [disabled]="formContratista.dirty === false">
-                <img  src="assets/img/icon/guardar.svg">
-        </button>
-      </div>
-
       <mat-card class="shipping-card var-main-gris" style="margin-top: 3em;" *ngIf="perfil.get( 'observacionSupervisor' ).value !== null">
         <mat-card-header class="header-card">
           <mat-card-title class="header-card--text">
@@ -307,6 +315,19 @@
           </p>
         </mat-card-content>
       </mat-card>
+
+      <div class="text-center">
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
+                type="button"
+                (click)="guardar()"
+                [disabled]="formContratista.dirty === false">
+                <img  src="assets/img/icon/guardar.svg">
+        </button>
+      </div>
+
+      
     </mat-expansion-panel>
   </mat-accordion>
 

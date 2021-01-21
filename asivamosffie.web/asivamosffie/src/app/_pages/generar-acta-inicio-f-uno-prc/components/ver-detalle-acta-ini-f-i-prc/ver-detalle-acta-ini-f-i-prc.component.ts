@@ -48,6 +48,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
   nomEntidadContratistaIntervn: any;
   numIdContratistaObra: any;
   tieneObservacionesBool: any;
+  tieneObservacionesBool2: any;
   observacionesUltimas: any;
   dataElements: any;
   contratoObservacionId: any;
@@ -112,7 +113,7 @@ export class VerDetalleActaIniFIPreconstruccioComponent implements OnInit {
         }
         else{
           this.observacionesUltimasSup = this.dataElements[i].observaciones;
-          this.tieneObservacionesBool = this.dataElements[i].esActaFase1;
+          this.tieneObservacionesBool2 = this.dataElements[i].esActaFase1;
         }
       }
     });

@@ -1,0 +1,22 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+  <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+
+<div class="text-center">
+  <h1 class="title-menu--h1">
+    Cargar flujo de inversión de recursos
+  </h1>
+
+  <div class="input-file">
+    <span class="input-file--text">{{archivo}}</span>
+    <button mat-raised-button color="primary" type="button" (click)="fileInput.click()"
+      class="input-file--btn">Explorar</button>
+    <input required hidden (change)="fileName()" #fileInput type="file" id="file" [formControl]="fileProgramacion"
+      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+  </div>
+  <p class="fontColor">
+    Explore en su computador o dispositivo y seleccione el documento que desea cargar
+    <b>los formatos permitidos son: xlsx</b>
+  </p>
+  <button mat-raised-button color="accent" [disabled]="fileProgramacion.invalid" (click)="onSubmit()">Cargar</button>
+</div>

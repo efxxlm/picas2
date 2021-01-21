@@ -97,7 +97,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
                   cantidadHvRecibidas         : [ '' ],
                   cantidadHvAprobadas         : [ '' ],
                   fechaAprobacion             : [ null ],
-                  observacion                 : [ null ],
+                  observaciones               : [ null ],
                   observacionSupervisor       : [ null ],
                   fechaObservacion            : [ null ],
                   contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
@@ -121,7 +121,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
                   cantidadHvRecibidas         : [ '' ],
                   cantidadHvAprobadas         : [ '' ],
                   fechaAprobacion             : [ null ],
-                  observacion                 : [ null ],
+                  observaciones               : [ null ],
                   observacionSupervisor       : [ null ],
                   fechaObservacion            : [ null ],
                   contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
@@ -159,7 +159,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
                     cantidadHvRecibidas         : [ '' ],
                     cantidadHvAprobadas         : [ '' ],
                     fechaAprobacion             : [ null ],
-                    observacion                 : [ null ],
+                    observaciones               : [ null ],
                     observacionSupervisor       : [ null ],
                     fechaObservacion            : [ null ],
                     contratoPerfilNumeroRadicado: this.fb.array([ this.fb.group({ numeroRadicado: '' }) ]),
@@ -234,7 +234,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
               cantidadHvRecibidas         : [ perfil.cantidadHvRecibidas ? String( perfil.cantidadHvRecibidas ) : '' ],
               cantidadHvAprobadas         : [ perfil.cantidadHvAprobadas ? String( perfil.cantidadHvAprobadas ) : '' ],
               fechaAprobacion             : [ perfil.fechaAprobacion ? new Date( perfil.fechaAprobacion ) : null ],
-              observacion                 : [ observaciones ],
+              observaciones               : [ perfil.observaciones ],
               observacionDevolucion       : [ perfil.observacionDevolucion],
               observacionSupervisor       : [ observacionSupervisor ],
               fechaObservacion            : [ fechaObservacion ],
@@ -293,10 +293,24 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
   }
 
   textoLimpio(texto: string) {
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
+
     if ( texto ){
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length;
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
 
   textoLimpioMessage(texto: string) {
@@ -419,7 +433,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
         value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 )
                                                       ? null : value.contratoPerfilNumeroRadicado;
-        value['construccionPerfilObservacion']    = value.observacion ? [{ observacion: value.observacion }] : null;
+        value['observaciones']                    = value.observaciones;
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;
@@ -433,7 +447,7 @@ export class RegistroHojasVidaVrtcComponent implements OnInit {
         value.cantidadHvRequeridas                = Number( value.cantidadHvRequeridas );
         value['construccionPerfilNumeroRadicado'] = ( value.contratoPerfilNumeroRadicado[0][ 'numeroRadicado' ].length === 0 )
                                                       ? null : value.contratoPerfilNumeroRadicado;
-        value['observaciones']                    = value.observacion;
+        value['observaciones']                    = value.observaciones;
         value.fechaAprobacion                     = value.fechaAprobacion ? new Date( value.fechaAprobacion ).toISOString() : null;
         value.contratoId                          = this.contratoId;
         value.proyectoId                          = this.proyectoId;

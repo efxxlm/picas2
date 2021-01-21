@@ -49,8 +49,8 @@ namespace asivamosffie.services
             try
             {
                 SesionComiteSolicitud sesionComiteSolicitudOld = await
-                    _context.SesionComiteSolicitud.Where(r => r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
-                    .Include(r => r.ComiteTecnico).FirstOrDefaultAsync();
+                    _context.SesionComiteSolicitud.Where(r=> r.SesionComiteSolicitudId == pSesionComiteSolicitud.SesionComiteSolicitudId)
+                    .Include(r=> r.ComiteTecnico).FirstOrDefaultAsync();
                 sesionComiteSolicitudOld.EstadoCodigo = pSesionComiteSolicitud.EstadoCodigo;
                 sesionComiteSolicitudOld.FechaModificacion = DateTime.Now;
                 sesionComiteSolicitudOld.UsuarioModificacion = pSesionComiteSolicitud.UsuarioCreacion;
@@ -58,8 +58,8 @@ namespace asivamosffie.services
                 //TODO :se cambia el estado tambien a la contratacion o solo a la contratacion?
 
                 Contratacion contratacion = _context.Contratacion
-                    .Where(r => r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
-                    .Include(r => r.Contrato)
+                    .Where(r=> r.ContratacionId == pSesionComiteSolicitud.SolicitudId)
+                    .Include(r=> r.Contrato)
                     .Include(r => r.DisponibilidadPresupuestal)
                     .FirstOrDefault();
                 contratacion.EstadoSolicitudCodigo = pSesionComiteSolicitud.EstadoCodigo;
@@ -167,7 +167,7 @@ namespace asivamosffie.services
         }
 
         public string ReemplazarDatosPlantillaContratacion(string pPlantilla, Contratacion pContratacion, SesionComiteSolicitud pSesionComiteSolicitud)
-        {
+        { 
             pSesionComiteSolicitud.ComiteTecnico = _context.ComiteTecnico
                 .Where(r => !(bool)r.EsComiteFiduciario && r.ComiteTecnicoId == pSesionComiteSolicitud.ComiteTecnicoId)
                 .FirstOrDefault();
@@ -191,6 +191,8 @@ namespace asivamosffie.services
             {
                 foreach (var ProyectoAportante in ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado))
                 {
+                    ProyectoAportante.Aportante.FuenteFinanciacion = _context.FuenteFinanciacion.Where( ff => ff.AportanteId == ProyectoAportante.Aportante.CofinanciacionAportanteId ).ToList();
+
                     TotalPlantillaRegistrosAportante += PlantillaRegistrosAportante;
                     foreach (Dominio placeholderDominio in placeholders)
                     {
@@ -201,12 +203,34 @@ namespace asivamosffie.services
                             case ConstanCodigoVariablesPlaceHolders.NOMBRE_APORTANTE:
 
                                 string NombreAportante = "";
-                                if (ProyectoAportante.Aportante.NombreAportanteId > 0)
+
+                                if ( ProyectoAportante.Aportante.TipoAportanteId.Equals( ConstanTipoAportante.Ffie ) ){
+                                    NombreAportante = ConstanStringTipoAportante.Ffie;
+                                }else if (ProyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
                                 {
-                                    NombreAportante = LisParametricas
+                                    NombreAportante = ProyectoAportante.Aportante.NombreAportanteId == null
+                                        ? "Error" :
+                                        NombreAportante = LisParametricas
                                         .Where(r => r.DominioId == ProyectoAportante.Aportante.NombreAportanteId)
                                         .FirstOrDefault().Nombre;
+
                                 }
+                                else
+                                {
+                                    if (ProyectoAportante.Aportante.MunicipioId == null)
+                                    {
+                                        NombreAportante = ProyectoAportante.Aportante.DepartamentoId == null
+                                        ? "Error" :
+                                        "Gobernación " + _context.Localizacion.Find(ProyectoAportante.Aportante.DepartamentoId).Descripcion;
+                                    }
+                                    else
+                                    {
+                                        NombreAportante = ProyectoAportante.Aportante.MunicipioId == null
+                                        ? "Error" :
+                                        "Alcaldía " + _context.Localizacion.Find(ProyectoAportante.Aportante.MunicipioId).Descripcion;
+                                    }
+                                }
+
                                 TotalPlantillaRegistrosAportante = TotalPlantillaRegistrosAportante
                                     .Replace(placeholderDominio.Nombre, NombreAportante);
                                 break;
@@ -284,6 +308,8 @@ namespace asivamosffie.services
                 foreach (Dominio placeholderDominio in placeholders)
                 {
 
+                    ProyectoAportante proyectoAportante = ContratacionProyecto.Proyecto.ProyectoAportante.Where(r => !(bool)r.Eliminado).FirstOrDefault();
+                    
                     switch (placeholderDominio.Codigo)
                     {
                         case ConstanCodigoVariablesPlaceHolders.LLAVE_MEN:
@@ -318,28 +344,32 @@ namespace asivamosffie.services
 
                             try
                             {
-                                string strNombreAportante = string.Empty;
-                                switch (ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.TipoAportanteId)
+
+                                if ( proyectoAportante.Aportante.TipoAportanteId.Equals( ConstanTipoAportante.Ffie ) ){
+                                    nombreAportante = ConstanStringTipoAportante.Ffie;
+                                }else if (proyectoAportante.Aportante.TipoAportanteId.Equals(ConstanTipoAportante.Tercero))
                                 {
+                                    nombreAportante = proyectoAportante.Aportante.NombreAportanteId == null
+                                        ? "Error" :
+                                        nombreAportante = LisParametricas
+                                        .Where(r => r.DominioId == proyectoAportante.Aportante.NombreAportanteId)
+                                        .FirstOrDefault().Nombre;
 
-                                    case ConstanTipoAportante.Ffie:
-                                        strNombreAportante = ConstanStringTipoAportante.Ffie;
-                                        break;
-
-                                    case ConstanTipoAportante.ET:
-
-                                        if (ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Departamento != null)
-                                        {
-                                            strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Departamento.Descripcion;
-                                        }
-                                        else
-                                        {
-                                            strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.Municipio.Descripcion;
-                                        }
-                                        break;
-                                    case ConstanTipoAportante.Tercero:
-                                        strNombreAportante = ContratacionProyecto.ContratacionProyectoAportante.FirstOrDefault().CofinanciacionAportante.NombreAportante.Nombre;
-                                        break;
+                                }
+                                else
+                                {
+                                    if (proyectoAportante.Aportante.MunicipioId == null)
+                                    {
+                                        nombreAportante = proyectoAportante.Aportante.DepartamentoId == null
+                                        ? "Error" :
+                                        "Gobernación " + _context.Localizacion.Find(proyectoAportante.Aportante.DepartamentoId).Descripcion;
+                                    }
+                                    else
+                                    {
+                                        nombreAportante = proyectoAportante.Aportante.MunicipioId == null
+                                        ? "Error" :
+                                        "Alcaldía " + _context.Localizacion.Find(proyectoAportante.Aportante.MunicipioId).Descripcion;
+                                    }
                                 }
                             }
                             catch (Exception)
@@ -351,13 +381,14 @@ namespace asivamosffie.services
 
                         case ConstanCodigoVariablesPlaceHolders.SALDO_ACTUAL_FUENTE:
 
-                            if (ContratacionProyecto.Proyecto.ProyectoAportante
-                                                  .FirstOrDefault().Aportante.FuenteFinanciacion.Count() > 0)
+                            proyectoAportante.Aportante.FuenteFinanciacion = _context.FuenteFinanciacion.Where( ff => ff.AportanteId == proyectoAportante.Aportante.CofinanciacionAportanteId ).ToList();
+
+                            if (proyectoAportante.Aportante.FuenteFinanciacion.Count() > 0)
                             {
                                 TotalRegistrosContratacionProyectos = TotalRegistrosContratacionProyectos
                                     .Replace(placeholderDominio.Nombre, string
-                                    .Format("{0:#,0}", ContratacionProyecto.Proyecto.ProyectoAportante
-                                    .FirstOrDefault().Aportante.FuenteFinanciacion
+                                    .Format("{0:#,0}", proyectoAportante
+                                    .Aportante.FuenteFinanciacion
                                     .FirstOrDefault().GestionFuenteFinanciacion
                                     .Sum(r => r.SaldoActual)));
                             }
@@ -557,7 +588,8 @@ namespace asivamosffie.services
             {
                 List<ComiteTecnico> ListComiteTecnicos = _context.ComiteTecnico
                     .Where(r => (bool)r.EsComiteFiduciario && r.EstadoActaCodigo == ConstantCodigoActas.Aprobada && !(bool)r.Eliminado)
-                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario).ToList();
+                    .Include(r => r.SesionComiteSolicitudComiteTecnicoFiduciario)
+                    .Include(r=> r.SesionComiteSolicitudComiteTecnico).ToList();
 
                 ////ListComiteTecnicos = ListComiteTecnicos.Where(r => r.EstadoActaCodigo == ConstantCodigoActas.Aprobada).ToList();
 
@@ -586,6 +618,13 @@ namespace asivamosffie.services
                                 {
                                     break;
                                 }
+
+                                //jflorez, peque�o ajsute porque toteaba                                    
+                                if (contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp == null || string.IsNullOrEmpty(contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp))
+                                {
+                                    break;
+                                }
+
                                 // sesionComiteSolicitud.Contratacion = contratacion;
                                 sesionComiteSolicitud.EstadoCodigo = contratacion.EstadoSolicitudCodigo;
 
@@ -671,7 +710,7 @@ namespace asivamosffie.services
                      .FirstOrDefaultAsync();
 
                 List<SesionComiteSolicitud> sesionComiteSolicitud = _context.SesionComiteSolicitud
-                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion)
+                     .Where(r => r.SolicitudId == contratacion.ContratacionId && r.TipoSolicitudCodigo == ConstanCodigoTipoSolicitud.Contratacion && !(bool)r.Eliminado)
                      .Include(r => r.ComiteTecnico)
                      .Include(r => r.ComiteTecnicoFiduciario)
                      .ToList();
@@ -783,8 +822,9 @@ namespace asivamosffie.services
                 contratacionOld.RegistroCompleto = pContratacion.RegistroCompleto;
                 contratacionOld.FechaEnvioDocumentacion = pContratacion.FechaEnvioDocumentacion;
                 contratacionOld.Observaciones = pContratacion.Observaciones;
-                if (pFile != null && pFile.Length > 0)
-                    contratacionOld.RutaMinuta = strFilePatch + "//" + pFile.FileName;
+                
+                //if (pFile != null && pFile.Length > 0)
+                contratacionOld.RutaMinuta = pContratacion.RutaMinuta;
                 contratacionOld.RegistroCompleto1 = ValidarCamposContratacion(contratacionOld);
 
                 await _context.SaveChangesAsync();
@@ -838,7 +878,7 @@ namespace asivamosffie.services
             {
                 TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
                 //TODO Validar Cuandos sea otro tipo de solicitud
-
+                 
                 bool blEnvioCorreo = false;
                 var usuariosecretario = _context.UsuarioPerfil.Where(x => x.PerfilId == (int)EnumeratorPerfil.Fiduciaria).Select(x => x.Usuario.Email).ToList();
                 List<Dominio> ListDominio = _context.Dominio.ToList();
@@ -848,14 +888,14 @@ namespace asivamosffie.services
                     string template =
                         TemplateActaAprobada.Contenido
                         .Replace("_LinkF_", pDominioFront)
-                        .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r => r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
+                        .Replace("[TIPO_SOLICITUD]", ListDominio.Where(r=> r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_Solicitud && r.Codigo == pSesionComiteSolicitud.TipoSolicitudCodigo).FirstOrDefault().Nombre)
                         .Replace("[NUMERO_DDP]", pSesionComiteSolicitud.Contratacion.DisponibilidadPresupuestal.FirstOrDefault().NumeroDdp ?? " ")
-                        .Replace("[OBJETO]", " ")
+                        .Replace("[OBJETO]", pSesionComiteSolicitud.Contratacion?.DisponibilidadPresupuestal?.FirstOrDefault().Objeto ?? " ")
                         .Replace("[FECHA_COMITE_FIDUCIARIO]", pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia.HasValue ? ((DateTime)pSesionComiteSolicitud.ComiteTecnico.FechaOrdenDia).ToString("dd-MMMM-yy") : " ")
                         .Replace("[FECHA_TRAMITE]", pSesionComiteSolicitud.Contratacion.FechaTramite.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.FechaTramite).ToString("dd-MMMM-yy") : " ")
                         .Replace("[FECHA_ENVIO_TRAMITE]", pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma.HasValue ? ((DateTime)pSesionComiteSolicitud.Contratacion.Contrato.FirstOrDefault().FechaEnvioFirma).ToString("dd-MMMM-yy") : " ")
                         .Replace("[NUMERO_SOLICITUD]", pSesionComiteSolicitud.Contratacion.NumeroSolicitud ?? " ");
-                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisi�n", template, pSender, pPassword, pMailServer, pMailPort);
+                    blEnvioCorreo = Helpers.Helpers.EnviarCorreo(usuario, "Minuta contractual para revisi�n", template, pSender, pPassword, pMailServer, pMailPort);
                 }
 
                 return blEnvioCorreo;

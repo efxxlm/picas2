@@ -144,7 +144,7 @@
                   <input type="hidden" formControlName="temaCompromisoId">
                   <input type="hidden" formControlName="sesionTemaId">
                 </mat-form-field>
-                <span class="contador">{{100 - tarea.value.length}}</span>
+                <span class="contador" [matTooltipPosition]="'above'" matTooltip="Campo alfanumérico" matTooltipClass="info-tooltip">{{100 - tarea.value.length}}</span>
               </div>
             </div>
           </div>
@@ -170,8 +170,13 @@
                 </div>
                 <div class="col d-flex">
                   <mat-form-field class="example-full-width">
-                    <input matInput [matDatepicker]="picker" formControlName="fecha" readonly (click)="picker.open()"
-                      placeholder="DD/MM/AAAA">
+                    <input matInput 
+                            [matDatepicker]="picker" 
+                            formControlName="fecha" 
+                            readonly 
+                            (click)="picker.open()"
+                            placeholder="DD/MM/AAAA"
+                            [min]="fechaComite">
                     <mat-datepicker #picker></mat-datepicker>
                   </mat-form-field>
                   <button mat-button color="primary" type="button" (click)="picker.open()" class="btn-calendario">

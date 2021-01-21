@@ -26,7 +26,7 @@
           </mat-form-field>
         </div>
       </div>
-      <p class="text-center cursivayeso">Indique la ruta del soporte de esta información</p>
+      <span class="info-url">Indique la ruta del soporte de esta información</span>
       </section>
 
     </mat-card-content>
@@ -135,8 +135,7 @@
           </div>
 
             <div class="d-flex">
-              <label class="mr-label" class="label-left"
-              [ngClass]="{'color-secondaryColor' : formDiagnostico.get('valorTotalFaseConstruccion').invalid && formDiagnostico.get('valorTotalFaseConstruccion').dirty|| formDiagnostico.get('valorTotalFaseConstruccion').invalid && estaEditando}">
+              <label class="mr-label" class="label-left">
                 <b>Valor total de la fase 2 - Construcción</b>
               </label>
             <div class="col d-flex">
@@ -211,9 +210,9 @@
           </mat-card-title>
       </mat-card-header>
       <mat-card-content align="left" >
-          <p><b>{{ contratoConstruccion.observacionDevolucionDiagnostico.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
-          <p><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
-          <p>{{ contratoConstruccion.observacionDevolucionDiagnostico.observaciones }}</p>
+          <p style="margin-left: 2em;"><b>{{ contratoConstruccion.observacionDevolucionDiagnostico.fechaCreacion | date: "dd/MM/yyyy" }}</b></p>
+          <p style="margin-left: 2em;"><b>¿Tiene observaciones al diagnóstico?:</b> Sí</p>
+          <section [innerHTML]="contratoConstruccion.observacionDevolucionDiagnostico.observaciones" style="margin-left: 2em;"></section>
       </mat-card-content>
   </mat-card>
 </div>

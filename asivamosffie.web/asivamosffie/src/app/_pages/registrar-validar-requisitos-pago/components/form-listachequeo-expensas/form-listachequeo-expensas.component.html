@@ -1,0 +1,65 @@
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="pr-1">
+                    <label class="label-left" for="listaCheqeueoSelected">Modalidad del contrato</label>
+                </div>
+                <div class="col">
+                    <mat-form-field class="select-width">
+                        <mat-select formControlName="listaCheqeueoSelected" required>
+                            <mat-option *ngFor="let contr of listaChqequeoExpensasArray"
+                                [value]="contr.value">
+                                {{ contr.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="info-sub-title supportBlack">
+        <span>Criterio de pago: <b>Lista de chequeo número u1 expensas</b></span>
+        <span>Tipo de pago: <b>Costos y variables</b></span>
+    </p>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="item">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.item }}</b> </td>
+            </ng-container>
+            <ng-container matColumnDef="documento">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
+                <td mat-cell *matCellDef="let element" align="left" class="supportBlack"> {{ element.documento }} </td>
+            </ng-container>
+            <ng-container matColumnDef="revTecnica">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Revisión técnica </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <div class="col">
+                        <mat-form-field class="select-width">
+                            <mat-select required>
+                                <mat-option *ngFor="let revision of booleanosRevisionTecnica"
+                                    [value]="revision.viewValue">
+                                    {{ revision.viewValue }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="observaciones">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Observaciones </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+    </div>
+    <div class="text-center mb-2em" style="margin-top: 10px;">
+        <button mat-button color="warn" class="btn-guardar" type="submit">
+          <img src="assets/img/icon/guardar.svg" alt="Regresar">
+        </button>
+      </div>
+</form>

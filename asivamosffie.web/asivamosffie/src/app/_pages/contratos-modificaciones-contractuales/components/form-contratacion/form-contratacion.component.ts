@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,7 +29,8 @@ export class FormContratacionComponent implements OnInit {
                 private routes: Router,
                 private commonSvc: CommonService,
                 private dialog: MatDialog,
-                private contratosContractualesSvc: ContratosModificacionesContractualesService ) {
+                private contratosContractualesSvc: ContratosModificacionesContractualesService,
+                @Inject(DOCUMENT) readonly document: Document ) {
     this.crearFormulario();
     this.getContratacionId( this.activatedRoute.snapshot.params.id );
     this.getEstadoCodigo();
@@ -50,6 +52,16 @@ export class FormContratacionComponent implements OnInit {
       documentoFile                 : [ null ]
     });
   };
+
+  get window(): Window { return this.document.defaultView; }
+
+  goToLink(url: string){
+    if ( url.includes("http://") || url.includes("https://"))
+      this.window.open(url, "_blank");
+    else{
+      window.open('//' + url, "_blank");
+    }
+  }
 
   getContratacionId ( id ) {
     this.contratosContractualesSvc.getContratacionId( id )

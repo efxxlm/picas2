@@ -226,7 +226,24 @@ namespace asivamosffie.api.Controllers
             }
         }
 
-        
+        [HttpDelete]
+        [Route("EliminarCuentaBancaria")]
+        public async Task<IActionResult> EliminarCuentaBancaria(int id)
+        {
+            Respuesta respuesta = new Respuesta();
+            try
+            {
+                respuesta = await _sourceFunding.EliminarCuentaBancaria(id, HttpContext.User.FindFirst("User").Value);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                respuesta.Data = ex.InnerException.ToString();
+                return BadRequest(respuesta);
+            }
+        }
+
+
     }
 
 

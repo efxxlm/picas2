@@ -49,6 +49,7 @@ export class TablaValidacionSolicitudesContractualesComponent implements OnInit 
       return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
     };
   }
+
   verSoporte(pTablaId: string, pRegistroId: number, numeroSolicitud: string) {
 
     //console.log(pTablaId, pRegistroId)

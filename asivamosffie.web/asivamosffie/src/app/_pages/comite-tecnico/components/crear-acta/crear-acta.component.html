@@ -55,7 +55,8 @@
                     <app-form-solicitud #Solicitud [sesionComiteSolicitud]="sesionComiteSolicitud"
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante" 
                         (validar)="habilitar($event)"
-                        [style.pointer-events]="getStyle()">
+                        [style.pointer-events]="getStyle()"
+                        [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
 
                     </app-form-solicitud>
                 </mat-expansion-panel>
@@ -84,7 +85,8 @@
                     <app-form-otros-temas #otros [sesionComiteTema]="tema"
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante" 
                         (validar)="habilitar($event)"
-                        [style.pointer-events]="getStyle()">
+                        [style.pointer-events]="getStyle()"
+                        [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
                     </app-form-otros-temas>
                 </mat-expansion-panel>
             </mat-accordion>
@@ -114,7 +116,8 @@
                     <app-form-otros-temas #proposiciones [sesionComiteTema]="tema"
                         [listaMiembros]="objetoComiteTecnico.sesionParticipante" 
                         (validar)="habilitar($event)"
-                        [style.pointer-events]="getStyle()">
+                        [style.pointer-events]="getStyle()"
+                        [fechaComite]="objetoComiteTecnico.fechaOrdenDia">
                     </app-form-otros-temas>
                 </mat-expansion-panel>
             </mat-accordion>

@@ -32,24 +32,18 @@
       </span>
     </div>
     <div class="d-flex">
-      <label class="mr-3em"
-        [class.color-secondaryColor]="dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched || dataFormulario.get('minuta').invalid && camposFaltantes">
-        Minuta adjunta</label>
-      <div class="input" style="width: 90%;">
-        <span class="input-file-text text-center required" (click)="fileInput.click()"
-          [class.color-secondaryColor]="dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched || dataFormulario.get('minuta').invalid && camposFaltantes">
-          {{archivo}}
-        </span>
-        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">
-          Adjuntar
-        </button>
-        <input required hidden (change)="fileName( $event )" #fileInput type="file" id="file" formControlName="minuta"
-          [placeholder]="archivo"
-          accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+      <div class="pr-1">
+        <label class="label-left" 
+        [class.color-secondaryColor]="dataFormulario.get('minuta').invalid && dataFormulario.get('minuta').touched || dataFormulario.get('minuta').invalid && camposFaltantes">Minuta</label>
       </div>
-    </div>
-    <div class="container text-center">
-      <p class="align-text"><small>Adjunte el documento que contenga la minuta del contrato</small></p>
+      <div class="input" style="width: 90%;">
+        <div class="col pr-3em">
+          <mat-form-field class="full-width">
+            <input matInput type="url" required formControlName="rutaDocumento" maxlength="300">
+          </mat-form-field>
+          <span class="info-url">indique la ruta donde se encuentra la minuta del contrato</span>
+        </div>
+      </div>
     </div>
 
     <div class="text-center">

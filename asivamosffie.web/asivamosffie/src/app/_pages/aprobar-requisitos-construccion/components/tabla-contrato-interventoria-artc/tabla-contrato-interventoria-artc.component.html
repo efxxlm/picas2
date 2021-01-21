@@ -36,7 +36,7 @@
       </ng-container>
 
       <ng-container matColumnDef="estadoRequisito">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la validación </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
         <td mat-cell *matCellDef="let element" align="center">
           <section *ngIf="element.estadoCodigo !== estadosConstruccionInterventoria.enviadoAlSupervisor.codigo"> {{ element.estadoNombre }} </section>
           <section *ngIf="element.estadoCodigo === estadosConstruccionInterventoria.enviadoAlSupervisor.codigo"> {{ estadosConstruccionInterventoria.enviadoAlSupervisor.nombre }} </section>
@@ -58,7 +58,7 @@
           <button mat-raised-button
                   color="accent"
                   class="btn-table"
-                  *ngIf="element.estadoRequisito === '2' || element.estadoRequisito === '4'"
+                  *ngIf="element.estadoCodigo === estadosConstruccionInterventoria.conReqTecnicosValidados.codigo && element.tieneObservaciones === 0"
                   (click)="aprobarInicio( element.contratoId, estadosConstruccionInterventoria.conReqTecnicosAprobadosPorSupervisor.codigo )">
                   Aprobar inicio
           </button>
@@ -66,7 +66,7 @@
           <button mat-raised-button
                   color="accent"
                   class="btn-table"
-                  *ngIf="element.estadoRequisito === '2' || element.estadoRequisito === '4'"
+                  *ngIf="element.estadoCodigo === estadosConstruccionInterventoria.conReqTecnicosValidados.codigo && element.tieneObservaciones > 0"
                   (click)="aprobarInicio( element.contratoId, estadosConstruccionInterventoria.enviadoAlApoyo.codigo )">
                   Enviar al apoyo de la supervisión
           </button>
@@ -84,8 +84,9 @@
                   color="accent"
                   class="btn-table"
                   (click)="verDetalle( element.contratoId )"
-                  *ngIf=" element.estadoCodigo === estadosConstruccionInterventoria.enviadoAlApoyo.codigo
-                          || element.estadoCodigo === estadosConstruccionInterventoria.conReqTecnicosAprobadosPorSupervisor.codigo">
+                  *ngIf=" element.estadoCodigo !== estadosConstruccionInterventoria.enviadoAlSupervisor.codigo
+                          && element.estadoCodigo !== estadosConstruccionInterventoria.enProcesoValidacionReqTecnicos.codigo
+                          && element.estadoCodigo !== estadosConstruccionInterventoria.conReqTecnicosValidados.codigo">
                   Ver detalle
           </button>
 

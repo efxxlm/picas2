@@ -23,8 +23,9 @@ namespace asivamosffie.api.Controllers
         public readonly IManagementCommitteeReportService _managementCommitteeReportService;
         public readonly IOptions<AppSettings> _settings;
         public readonly IManagePreContructionActPhase1Service _managePreContructionActPhase1Service;
+        public readonly IActBeginService _actBeginService;
 
-        public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy)
+        public PublicController(IManagePreContructionActPhase1Service managePreContructionActPhase1Service, IRegisterPreContructionPhase1Service registerPreContructionPhase1Service, IManagementCommitteeReportService managementCommitteeReportService, ISourceFundingService sourceFunding, ISelectionProcessService selectionProcess, IOptions<AppSettings> settings, IGuaranteePolicyService guaranteePolicy, IActBeginService actBeginService)
         {
             _managePreContructionActPhase1Service = managePreContructionActPhase1Service;
             _RegisterPreContructionPhase1Service = registerPreContructionPhase1Service;
@@ -33,6 +34,7 @@ namespace asivamosffie.api.Controllers
             _selectionProcess = selectionProcess;
             _managementCommitteeReportService = managementCommitteeReportService;
             _guaranteePolicy = guaranteePolicy;
+            _actBeginService = actBeginService;
         }
 
         public AppSettingsService ToAppSettingsService(IOptions<AppSettings> appSettings)
@@ -190,7 +192,7 @@ namespace asivamosffie.api.Controllers
                 throw ex;
             }
         }
-        //3.1.9
+        //319
         [HttpGet("GetListContratoConActaSinDocumento")]
         public async Task GetListContratoConActaSinDocumento()
         {
@@ -198,6 +200,34 @@ namespace asivamosffie.api.Controllers
             {
                 AppSettingsService appSettingsService = ToAppSettingsService(_settings);
                 await _managePreContructionActPhase1Service.GetListContratoConActaSinDocumento(appSettingsService);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetDiasHabilesActaConstruccionEnviada")]
+        public async Task GetDiasHabilesActaConstruccionEnviada()
+        {
+            try
+            {
+                AppSettingsService appSettingsService = ToAppSettingsService(_settings);
+                await _actBeginService.GetDiasHabilesActaConstruccionEnviada(appSettingsService);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("GetDiasHabilesActaRegistrada")]
+        public async Task GetDiasHabilesActaRegistrada()
+        {
+            try
+            {
+                AppSettingsService appSettingsService = ToAppSettingsService(_settings);
+                await _actBeginService.GetDiasHabilesActaRegistrada(appSettingsService);
             }
             catch (Exception ex)
             {

@@ -1,0 +1,49 @@
+<button mat-button mat-dialog-close class="modal--btn-cerrar">
+    <img src="assets/img/icon/cerrar-blanco.svg" alt="cerrar">
+</button>
+<h1 class="title-menu--h1 centerIng">
+    {{this.title}} {{this.llaveMen}}
+</h1>
+<div class="centerIng2">
+    <p><b>{{this.departamento}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.municipio}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.instEdu}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{this.sede}}</b>
+    </p>
+</div>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+    <div class="flex-editor mt-2em">
+        <mat-card class="shipping-card w-85" style="padding: 1em 2em;">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text f16">
+                    URL para monitoreo en línea
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content style="height: 75px;">
+                <!--
+                <mat-form-field class="full-width noBorderForm">
+                    <textarea matInput formControlName="urlMonitoreo" #urlMonitoreo type="text" style="margin: 0px; width: 100%;border: none;height: auto;" maxlength="300" required>
+                    </textarea>
+                </mat-form-field>
+                <span class="required-form-group">*</span>
+            Area de texto, consultar con QA
+                <textarea matInput formControlName="urlMonitoreo" #urlMonitoreo type="text"
+                    style="margin: 0px; width: 100%;border: none;height: auto;" maxlength="300" required>
+                    </textarea>
+            -->
+                <input matInput #urlMonitoreo type="text" class="alignLeft" formControlName="urlMonitoreo"
+                    maxlength="300">
+                <span class="required-form-group">*</span>
+            </mat-card-content>
+        </mat-card>
+        <span class="contador miles mt-2em mb-2em" *ngIf="addressForm.value.urlMonitoreo">
+            {{300 - textoLimpio(addressForm.get('urlMonitoreo').value)}}
+        </span>
+        <span class="contador miles mt-2em mb-2em" *ngIf="!addressForm.value.urlMonitoreo">
+            300
+        </span>
+    </div>
+    <div class="text-center">
+        <div class="mtop">
+            <button mat-raised-button color="accent" type="submit"
+                [disabled]="!addressForm.value.urlMonitoreo">Cargar</button>
+        </div>
+    </div>
+</form>

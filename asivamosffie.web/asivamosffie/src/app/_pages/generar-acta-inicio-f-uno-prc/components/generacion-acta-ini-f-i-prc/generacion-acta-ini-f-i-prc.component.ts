@@ -193,10 +193,24 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
     }
   }
   textoLimpio(texto: string) {
-    if (texto) {
-      const textolimpio = texto.replace(/<[^>]*>/g, '');
-      return textolimpio.length > 500 ? 500 : textolimpio.length;
+    let saltosDeLinea = 0;
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p');
+    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li');
+
+    if ( texto ){
+      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
+      return textolimpio.length + saltosDeLinea;
     }
+  }
+
+  private contarSaltosDeLinea(cadena: string, subcadena: string) {
+    let contadorConcurrencias = 0;
+    let posicion = 0;
+    while ((posicion = cadena.indexOf(subcadena, posicion)) !== -1) {
+      ++contadorConcurrencias;
+      posicion += subcadena.length;
+    }
+    return contadorConcurrencias;
   }
   number(e: { keyCode: any; }) {
     const tecla = e.keyCode;
@@ -279,14 +293,14 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
               if (localStorage.getItem("origin") == "obra") {
                 this.service.CambiarEstadoActa(this.idContrato, "14").subscribe(data0 => {
                   this.realizoPeticion = true;
-                  this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+                  this.openDialog2('', '<b>La información ha sido guardada exitosamente.</b>');
                   this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
                 });
               }
               else {
                 this.service.CambiarEstadoActa(this.idContrato, "2").subscribe(data0 => {
                   this.realizoPeticion = true;
-                  this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+                  this.openDialog2('', '<b>La información ha sido guardada exitosamente.</b>');
                   this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
                 });
               }
@@ -356,14 +370,14 @@ export class GeneracionActaIniFIPreconstruccionComponent implements OnInit, OnDe
               if (localStorage.getItem("origin") == "obra") {
                 this.service.CambiarEstadoActa(this.idContrato, "14").subscribe(data0 => {
                   this.realizoPeticion = true;
-                  this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+                  this.openDialog2('', '<b>La información ha sido guardada exitosamente.</b>');
                   this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
                 });
               }
               else {
                 this.service.CambiarEstadoActa(this.idContrato, "2").subscribe(data0 => {
                   this.realizoPeticion = true;
-                  this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
+                  this.openDialog2('', '<b>La información ha sido guardada exitosamente.</b>');
                   this.router.navigate(['/generarActaInicioFaseIPreconstruccion']);
                 });
               }

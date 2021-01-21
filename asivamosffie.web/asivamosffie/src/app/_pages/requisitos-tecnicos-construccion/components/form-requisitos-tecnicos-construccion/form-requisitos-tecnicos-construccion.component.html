@@ -1,4 +1,4 @@
-<div class="text-center container-table margin-auto" *ngIf="contrato" style="margin-bottom: 2em;">
+<div class="text-center container-table margin-auto" *ngIf="contrato !== undefined" style="margin-bottom: 2em;">
   <div class="text-right">
       <a routerLink="/requisitosTecnicosConstruccion" mat-button color="primary" class="btn-regresar">
           <img src="assets/img/icon/regresar.svg" alt="Regresar">
@@ -59,7 +59,9 @@
 
           <app-diagnostico 
                           [contratoConstruccion]="contratacion.proyecto.contratoConstruccion[0]" 
-                          (diagnostico)="getDiagnostico( i, $event )">
+                          [proyecto]="contratacion.proyecto" 
+                          (diagnostico)="getDiagnostico( i, $event )"
+                          >
           </app-diagnostico>
 
         </mat-expansion-panel>
@@ -74,7 +76,12 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
-          <app-planes-programas [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]" (planesProgramasForm)="getPlanesProgramas( i, $event )"></app-planes-programas>
+          <app-planes-programas 
+                                [planesProgramas]="contratacion.proyecto.contratoConstruccion[0]" 
+                                [proyecto]="contratacion.proyecto" 
+                                (planesProgramasForm)="getPlanesProgramas( i, $event )"
+                                >
+          </app-planes-programas>
 
         </mat-expansion-panel>
         
@@ -104,6 +111,7 @@
                                         [contratoId]="contrato.contratoId"
                                         [proyectoId]="contratacion.proyectoId"
                                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
+                                        (actualizarRegistros)="getContrato()"
                                         (perfilesCompletados)="estadoSemaforo( i, $event )">
             </app-hoja-vida-contratista>
           </section>
@@ -112,7 +120,8 @@
                                         [contratoId]="contrato.contratoId"
                                         [proyectoId]="contratacion.proyectoId"
                                         (enviarPerfilesContrato)="getPerfilesContrato( i, $event )"
-                                        (perfilesCompletados)="estadoSemaforo( i, $event )">
+                                        (perfilesCompletados)="estadoSemaforo( i, $event )"
+                                        (actualizarRegistros)="getContrato()">
             </app-hoja-vida-contratista>
           </section>
           
@@ -128,21 +137,36 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
 
+          <div class="d-flex mt-2em text-center" style="justify-content: center;">
+            <p class="mr-1em" style="margin-right: 2em;">
+              Fecha Inicio: <b>{{ contratacion.proyecto.fechaInicioEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
+              <p class="mr-1em" style="margin-right: 2em;">Fecha Fin: <b>{{ contratacion.proyecto.fechaFinEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
+              <p class="mr-1em" style="margin-right: 2em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
+              <p class="mr-1em" style="margin-right: 2em;">Valor total del Proyecto: <b> {{ contratacion.proyecto.valorObra | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
+
+          </div>
+
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
             <app-programacion-obra-flujo-inversion 
                                                   [esFlujoInversion]="false" 
                                                   [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
                                                   [observacionDevolucionProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionProgramacionObra"
-                                                  [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra"
-                                                  (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
+                                                  [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
+                                                  [proyectoId]="contratacion.proyecto.proyectoId"
+                                                  [contrato]="contrato"
+                                                  (terminoCarga)="getCargaMasiva( $event )"
+                                                  (realizoObservacion)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
             <app-programacion-obra-flujo-inversion 
                                                   [esFlujoInversion]="false" 
                                                   [contratoConstruccionId]="0"
-                                                  [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra"
-                                                  (terminoCarga)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
+                                                  [proyectoId]="contratacion.proyecto.proyectoId"
+                                                  [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
+                                                  [contrato]="contrato"
+                                                  (terminoCarga)="getCargaMasiva( $event )"
+                                                  (realizoObservacion)="getCargaMasiva( $event )"></app-programacion-obra-flujo-inversion>
           </section>
 
         </mat-expansion-panel>
@@ -158,25 +182,36 @@
           </mat-expansion-panel-header>
 
           <div class="d-flex mt-2em text-center" style="justify-content: center;">
-            <p class="mr-1em w-23" style="margin-right: 6em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoMesesObra'] }}</b></p>
-            <p>Valor total del Proyecto: <b> {{ contratacion.proyecto.valorTotal | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
+            <p class="mr-1em" style="margin-right: 2em;">
+              Fecha Inicio: <b>{{ contratacion.proyecto.fechaInicioEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
+              <p class="mr-1em" style="margin-right: 2em;">Fecha Fin: <b>{{ contratacion.proyecto.fechaFinEtapaObra | date: 'dd/MM/yyyy' }}</b></p>  
+              <p class="mr-1em" style="margin-right: 2em;">Duración en meses del proyecto: <b>{{ contratacion.proyecto['plazoEnSemanas'] | number : '1.1-1' }}</b></p>
+              <p class="mr-1em" style="margin-right: 2em;">Valor total del Proyecto: <b> {{ contratacion.proyecto.valorObra | currency:'COP':'symbol-narrow':'.0-0' }} </b></p>
+
           </div>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length > 0">
             <app-programacion-obra-flujo-inversion  
                                                     [esFlujoInversion]="true" 
-                                                    [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId" 
+                                                    [contratoConstruccionId]="contratacion.proyecto.contratoConstruccion[0].contratoConstruccionId"
+                                                    [contrato]="contrato"
+                                                    [proyectoId]="contratacion.proyecto.proyectoId"
                                                     (terminoCarga)="getCargaMasiva( $event )"
                                                     [observacionDevolucionFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].observacionDevolucionFlujoInversion"
-                                                    [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion"
+                                                    [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
+                                                    [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion : undefined"
                                                     (realizoObservacion)="getCargaMasiva( $event )">
             </app-programacion-obra-flujo-inversion>
           </section>
           <section *ngIf="contratacion.proyecto.contratoConstruccion.length === 0">
             <app-programacion-obra-flujo-inversion  [esFlujoInversion]="true"
                                                     [contratoConstruccionId]="0"
-                                                    [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion"
-                                                    (terminoCarga)="getCargaMasiva( $event )">
-            </app-programacion-obra-flujo-inversion>
+                                                    [contrato]="contrato" 
+                                                    [proyectoId]="contratacion.proyecto.proyectoId"
+                                                    [archivoCargueIdFlujoInversion]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdFlujoInversion : undefined"
+                                                    [archivoCargueIdProgramacionObra]="contratacion.proyecto.contratoConstruccion.length > 0 ? contratacion.proyecto.contratoConstruccion[0].archivoCargueIdProgramacionObra : undefined"
+                                                    (terminoCarga)="getCargaMasiva( $event )"
+                                                    (realizoObservacion)="getCargaMasiva( $event )">
+            </app-programacion-obra-flujo-inversion> 
           </section>
 
         </mat-expansion-panel>

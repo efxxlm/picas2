@@ -28,6 +28,25 @@ namespace asivamosffie.api.Controllers
             _settings = settings;
             _documentService = documentService;
         }
+        /// <summary>
+        /// Lista Optimizada Julian Martinez  301220
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("ListProject")]
+        public async Task<List<VListaProyectos>> ListProyectoOpt( )
+        {
+            var result = await _projectService.ListProyectoOpt( );
+            return result;
+        }
+
+        [Route("ListProjectOld")]
+        [HttpGet]
+        public async Task<List<ProyectoGrilla>> ListProjects()
+        {
+            var respuesta = await _projectService.ListProyectos();
+            return respuesta; 
+        }
 
         [HttpGet]
         [Route("GetProyectoGrillaByProyectoId")]
@@ -36,8 +55,7 @@ namespace asivamosffie.api.Controllers
             var result = await _projectService.GetProyectoGrillaByProyectoId(idProyecto);
             return result;
         }
-
-
+         
         [HttpGet]
         [Route("GetProyectoGrillaByProyecto")]
         public async Task<ProyectoGrilla> GetProyectoGrillaByProyecto(Proyecto pProyecto)
@@ -45,8 +63,7 @@ namespace asivamosffie.api.Controllers
             var result = await _projectService.GetProyectoGrillaByProyecto(pProyecto);
             return result;
         }
-
-
+         
         [Route("CreateOrEditAdministrativeProject")]
         [HttpPost]
         public async Task<IActionResult> CreateOrEditAdministrativeProject([FromBody] ProyectoAdministrativo pProyectoAdministrativo)
@@ -67,6 +84,7 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+         
         [Route("SetValidateMassiveLoadProjects")]
         [HttpPost]
         public async Task<IActionResult> SetValidateCargueMasivoProyectos(IFormFile file)
@@ -124,11 +142,7 @@ namespace asivamosffie.api.Controllers
                 return Ok(respuesta);
             }
         }
-
-
-
-
-
+         
         [Route("ListAdministrativeProject")]
         [HttpGet]
         public async Task<List<ProyectoAdministracionGrilla>> ListAdministrativeProjects()
@@ -147,9 +161,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectService.DeleteProyectoAdministrativoByProyectoId(pProyectoId, pUsuarioModifico);
             return respuesta;
         }
-
-
-
+         
         [Route("EnviarProyectoAdministrativoByProyectoId")]
         [HttpGet]
         public async Task<bool> EnviarProyectoAdministrativoByProyectoId(int pProyectoId)
@@ -159,17 +171,7 @@ namespace asivamosffie.api.Controllers
                 , _settings.Value.MailServer, _settings.Value.MailPort, _settings.Value.EnableSSL, _settings.Value.Password, _settings.Value.Sender);
             return respuesta;
         }
-
-        [Route("ListProject")]
-        [HttpGet]
-        public async Task<List<ProyectoGrilla>> ListProjects()
-        {
-            var respuesta = await _projectService.ListProyectos();
-            return respuesta;
-
-        }
-
-
+           
         [Route("GetProyectoByProyectoId")]
         [HttpGet]
         public async Task<Proyecto> GetProyectoByProyectoId(int pProyectoId)
@@ -203,6 +205,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectService.deleteFontByID(pId, pUsuarioModifico);
             return respuesta;
         }
+
         [Route("deletePredioByID")]
         [HttpPost]
         public async Task<bool> deletePredioByID(int pId)
@@ -211,6 +214,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectService.deletePredioByID(pId, pUsuarioModifico);
             return respuesta;
         }
+
         [Route("deleteAportantesByID")]
         [HttpPost]
         public async Task<bool> deleteAportantesByID(int pId)
@@ -219,6 +223,7 @@ namespace asivamosffie.api.Controllers
             var respuesta = await _projectService.deleteAportantesByID(pId, pUsuarioModifico);
             return respuesta;
         }
+      
         [Route("deleteInfraestructuraByID")]
         [HttpPost]
         public async Task<bool> deleteInfraestructuraByID(int pId)
