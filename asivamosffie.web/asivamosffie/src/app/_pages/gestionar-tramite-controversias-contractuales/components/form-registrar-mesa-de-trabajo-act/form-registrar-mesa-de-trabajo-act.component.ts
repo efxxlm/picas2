@@ -48,22 +48,31 @@ export class FormRegistrarMesaDeTrabajoActComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) { }
-
-  ngOnInit(): void {
-    if (this.isEditable == true) {
-      //this.services.GetActuacionMesaByActuacionMesaId()
-      this.addressForm.get('estadoAvanceTramite').setValue('1');
-      this.addressForm.get('fechaActuacionAdelantada').setValue('10/10/2020');
-      this.addressForm.get('actuacionAdelantada').setValue('Pruebas');
-      this.addressForm.get('proximaActuacionRequerida').setValue('Pruebas');
-      this.addressForm.get('diasVencimientoTerminos').setValue('3');
-      this.addressForm.get('resultadoDefinitivo').setValue(true);
-    }
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) {
     this.common.listaEstadoAvanceMesaTrabajo().subscribe(a => {
       this.estadoAvanceTramiteArray = a;
     });
   }
+
+  ngOnInit(): void {
+    if (this.isEditable == true) {
+      this.services.GetActuacionMesaByActuacionMesaId(this.idSeguimientoMesa).subscribe((resp: any) => {
+        for (let i = 0; i < this.estadoAvanceTramiteArray.length; i++) {
+          const estadoAvanceTramiteSelected = this.estadoAvanceTramiteArray.find(p => p.codigo === resp.estadoAvanceMesaCodigo);
+          this.addressForm.get('estadoAvanceTramite').setValue(estadoAvanceTramiteSelected);
+        }
+        this.addressForm.get('fechaActuacionAdelantada').setValue(resp.fechaActuacionAdelantada);
+        this.addressForm.get('actuacionAdelantada').setValue(resp.actuacionAdelantada);
+        this.addressForm.get('proximaActuacionRequerida').setValue(resp.proximaActuacionRequerida);
+        this.addressForm.get('diasVencimientoTerminos').setValue(resp.cantDiasVencimiento);
+        this.addressForm.get('fechaVencimientoTerminos').setValue(resp.fechaVencimiento);
+        this.addressForm.get('observaciones').setValue(resp.observaciones);
+        this.addressForm.get('resultadoDefinitivo').setValue(resp.resultadoDefinitivo);
+        this.addressForm.get('urlSoporte').setValue(resp.rutaSoporte);
+      });
+    }
+  }
+
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
     const inputChar = String.fromCharCode(event.charCode);

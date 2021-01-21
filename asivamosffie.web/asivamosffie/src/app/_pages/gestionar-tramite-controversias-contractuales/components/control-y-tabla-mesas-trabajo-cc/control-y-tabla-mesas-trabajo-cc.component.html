@@ -54,7 +54,7 @@
                         Finalizar mesa de trabajo
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='1'"
-                        (click)="this.verDetalleEditar(element.actuacionId)">
+                        (click)="this.verDetalleEditar(element.actuacionId,element.numeroMesa,element.mesaId)">
                         Ver detalle/Editar
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='2'"
@@ -62,7 +62,7 @@
                         Actualizar mesa de trabajo
                     </button>
                     <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoMesa=='2'"
-                        (click)="this.verDetalleMesaTrabajo(element.actuacionId)">
+                        (click)="this.verDetalleMesaTrabajo(element.actuacionId,element.numeroMesa,element.mesaId)">
                         Ver detalle
                     </button>
                 </td>
