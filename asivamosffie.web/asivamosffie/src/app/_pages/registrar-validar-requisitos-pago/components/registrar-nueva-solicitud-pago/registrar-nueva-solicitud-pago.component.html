@@ -1,4 +1,4 @@
-<section class="container text-center" *ngIf="tiposSolicitudArray.length > 0">
+<section class="container text-center mb-2em" *ngIf="tiposSolicitudArray.length > 0">
     <section class="container text-center">
         <div class="text-right">
             <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
@@ -213,21 +213,19 @@
                 <mat-accordion>
                     <mat-expansion-panel class="expansion-style">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            <mat-panel-title class="expansion-style--title en-alerta">
                                 Registrar solicitud de pago
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-registrar-solicitud-de-pago></app-form-registrar-solicitud-de-pago>
                     </mat-expansion-panel>
                 </mat-accordion>
                 <mat-accordion>
                     <mat-expansion-panel class="expansion-style">
                         <mat-expansion-panel-header class="expansion-style--header">
-                            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                            <mat-panel-title class="expansion-style--title en-alerta">
                                 Validar lista de chequeo
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                       <app-validar-lista-chequeo></app-validar-lista-chequeo>
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>  
@@ -247,7 +245,7 @@
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title completo">
                             Lista de chequeo
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -257,7 +255,7 @@
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title completo">
                             Soporte
                         </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -266,4 +264,10 @@
             </mat-accordion>
         </div>
     </form>
+    <div style="margin-top: 1em;" *ngIf="contrato !== undefined && ( addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoObra || addressForm.get( 'tipoSolicitud' ).value.codigo === tipoSolicitudCodigo.contratoInterventoria )">
+        <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+            Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
+            sección anterior
+        </div>
+    </div>
 </section>

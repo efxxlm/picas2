@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,33 +11,35 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class FormCriteriosPagoComponent implements OnInit {
 
+    @Input() contrato: any;
+    @Input() esPreconstruccion = true;
     addressForm = this.fb.group({
-      criterioPago: [null, Validators.required],
-      tipoPago: [null, Validators.required],
-      conceptoPago: [null, Validators.required],
-      valorFacturado: [null, Validators.required],
-      criterios: this.fb.array( [] )
+        criterioPago: [null, Validators.required],
+        tipoPago: [null, Validators.required],
+        conceptoPago: [null, Validators.required],
+        valorFacturado: [null, Validators.required],
+        criterios: this.fb.array( [] )
     });
     criteriosArray = [
-      { name: 'Estudios y diseños interventoria hasta 90%', value: '1' },
-      { name: 'Criterio 2', value: '2' },
-      { name: 'Criterio 3', value: '3' },
-      { name: 'Criterio 4', value: '4' },
-      { name: 'Criterio 5', value: '5' },
+        { name: 'Estudios y diseños interventoria hasta 90%', value: '1' },
+        { name: 'Criterio 2', value: '2' },
+        { name: 'Criterio 3', value: '3' },
+        { name: 'Criterio 4', value: '4' },
+        { name: 'Criterio 5', value: '5' },
     ];
     criteriosCodigo = {
-      estudio: '1',
-      criterio2: '2',
-      criterio3: '3',
-      criterio4: '4',
-      criterio5: '5'
+        estudio: '1',
+        criterio2: '2',
+        criterio3: '3',
+        criterio4: '4',
+        criterio5: '5'
     }
     tipoPagoArray = [
-      { name: 'Costo variable', value: '1' },
-      { name: 'Tipo de pago 2', value: '2' },
-      { name: 'Tipo de pago 3', value: '3' },
-      { name: 'Tipo de pago 4', value: '4' },
-      { name: 'Tipo de pago 5', value: '5' },
+        { name: 'Costo variable', value: '1' },
+        { name: 'Tipo de pago 2', value: '2' },
+        { name: 'Tipo de pago 3', value: '3' },
+        { name: 'Tipo de pago 4', value: '4' },
+        { name: 'Tipo de pago 5', value: '5' },
     ];
     conceptoPagoArray = [
       { name: '718100002002- DEMOLICIONES', value: '1' }
@@ -49,10 +52,22 @@ export class FormCriteriosPagoComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private dialog: MatDialog )
+        private dialog: MatDialog,
+        private registrarPagosSvc: RegistrarRequisitosPagoService, )
     { }
 
     ngOnInit(): void {
+        const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+        if ( this.esPreconstruccion === true ) {
+            const fasePreConstruccionFormaPagoCodigo = solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo;
+            this.registrarPagosSvc.getCriterioByFormaPagoCodigo( fasePreConstruccionFormaPagoCodigo )
+                .subscribe(
+                    response => {
+                        console.log( response );
+                        // tipoCriterioCodigo
+                    }
+                );
+        }
     }
 
     validateNumberKeypress(event: KeyboardEvent) {

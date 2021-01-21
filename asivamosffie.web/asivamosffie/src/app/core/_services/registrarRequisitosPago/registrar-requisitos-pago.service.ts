@@ -32,4 +32,8 @@ export class RegistrarRequisitosPagoService {
     return this.http.post<Respuesta>( `${ this.apiUrl }/CreateEditNewPayment`, pSolicitudPago );
   }
 
+  getListSolicitudPago() {
+    return this.http.get<any[]>( `${ this.apiUrl }/GetListSolicitudPago` );
+  }
+
 }

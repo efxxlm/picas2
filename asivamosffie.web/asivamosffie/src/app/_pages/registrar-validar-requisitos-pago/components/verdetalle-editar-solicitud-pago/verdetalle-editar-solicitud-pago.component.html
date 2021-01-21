@@ -1,14 +1,17 @@
-<section class="container text-center" *ngIf="contrato !== undefined">
+<section class="container text-center mb-2em" *ngIf="contrato !== undefined">
     <div class="text-right">
         <a routerLink="/registrarValidarRequisitosPago" mat-button color="primary" class="btn-regresar">
             <img src="assets/img/icon/regresar.svg" alt="Regresar">
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle/Editar solicitud de pago SolPagoO0001
+        Ver detalle/Editar solicitud de pago {{ contrato.solicitudPagoOnly.numeroSolicitud }}
     </h1>
     <p class="info-sub-title supportBlack">
-        <span>Tipo de solicitud: <b>Contratos de obra</b></span>
+        <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoObra">Tipo de solicitud: <b>Contratos de obra</b></span>
+        <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.contratoInterventoria">Tipo de solicitud: <b>Contratos de interventoria</b></span>
+        <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.expensas">Tipo de solicitud: <b>Expensas</b></span>
+        <span *ngIf="contrato.solicitudPagoOnly.tipoSolicitudCodigo === tipoSolicitudCodigo.otrosCostos">Tipo de solicitud: <b>Otros costos/servicios</b></span>
     </p>
     <div>
         <mat-card class="shipping-card var-main-gris">
@@ -18,27 +21,29 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
-                <p><strong>Modalidad del contrato:</strong> Tipo B</p>
-                <p><strong>Número de contrato:</strong> N801801</p>
+                <p><strong>Modalidad del contrato:</strong> No se ha implementado el campo en el contrato</p>
+                <p><strong>Número de contrato:</strong> {{ contrato.numeroContrato }} </p>
             </mat-card-content>
         </mat-card>
         <mat-card class="shipping-card var-main-gris">
             <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text textoGris">
-                    N801801
+                    {{ contrato.numeroContrato }}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
                 <div class="chartGen">
                     <div class="chart1">
-                        <p><strong>Nombre de entidad contratista:</strong> Interventores S.A</p>
-                        <p><strong>Fecha de inicio del contrato:</strong> 26/09/2020</p>
-                        <p><strong>Plazo fase 1 - Preconstruccion: Meses:</strong> 02 <strong>Días:</strong> 00</p>
+                        <p><strong>Nombre de entidad contratista:</strong> {{ contrato.contratacion.contratista.nombre }} </p>
+                        <p><strong>Fecha de inicio del contrato:</strong> {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
+                        <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo fase 1 - Preconstruccion: Meses:</strong> {{ contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias }} </p>
+                        <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
                     </div>
                     <div class="chart2">
-                        <p><strong>Plazo: Meses:</strong> 06 <strong>Días:</strong> 13</p>
-                        <p><strong>Fecha fin del contrato:</strong> 14/11/2021</p>
-                        <p><strong>Plazo fase 2 - Construccion: Meses:</strong> 05 <strong>Días:</strong> 28</p>
+                        <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses + contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias + contrato.plazoFase2ConstruccionDias }} </p>
+                        <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
+                        <p><strong>Fecha fin del contrato:</strong> Se trae del CU3.1.13 del campo posible fecha de terminacion de contrato</p>
+                        <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
                     </div>
                 </div>
                 <h2 class="card-subTitle">DRP</h2>
@@ -46,19 +51,19 @@
                     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
                         <ng-container matColumnDef="drp">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> DRP </th>
-                            <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.drp }}</b> </td>
+                            <td mat-cell *matCellDef="let element; index as i" align="center"> <b> {{ i + 1 }} </b> </td>
                         </ng-container>
                         <ng-container matColumnDef="numDrp">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Número DRP </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.numDrp }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroDrp }} </td>
                         </ng-container>
                         <ng-container matColumnDef="valor">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.valor }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> {{ element.valorSolicitud }} </td>
                         </ng-container>
                         <ng-container matColumnDef="saldo">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo </th>
-                            <td mat-cell *matCellDef="let element" align="center"> {{ element.saldo }} </td>
+                            <td mat-cell *matCellDef="let element" align="center"> Viene del CU Generar documento de registro presupuestal de alli viene el saldo inicial </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -84,34 +89,50 @@
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="semaforoFormaDePago">
                             Cargar forma de pago
                         </mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <app-form-cargar-forma-de-pago [contrato]="contrato" [tipoSolicitud]="contrato.solicitudPago[0].tipoSolicitudCodigo"></app-form-cargar-forma-de-pago>
+                    <app-form-cargar-forma-de-pago [contrato]="contrato" [tipoSolicitud]="contrato.solicitudPagoOnly.tipoSolicitudCodigo"></app-form-cargar-forma-de-pago>
                 </mat-expansion-panel>
             </mat-accordion>
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeon( 'solicitudDePago', acordeones.tieneFormaDePago )">
                             Registrar solicitud de pago
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-form-registrar-solicitud-de-pago [contrato]="contrato"></app-form-registrar-solicitud-de-pago>
+                    <app-form-registrar-solicitud-de-pago [contrato]="contrato" *ngIf="acordeones.tieneFormaDePago === true"></app-form-registrar-solicitud-de-pago>
                 </mat-expansion-panel>
             </mat-accordion>
             <mat-accordion>
                 <mat-expansion-panel class="expansion-style">
                     <mat-expansion-panel-header class="expansion-style--header">
-                        <mat-panel-title class="expansion-style--title sin-diligenciar">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeon( 'listaChequeo', acordeones.tieneRegistroSolicitudPago )">
                             Validar lista de chequeo
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <app-validar-lista-chequeo></app-validar-lista-chequeo>
+                    <app-validar-lista-chequeo *ngIf="acordeones.tieneRegistroSolicitudPago === true"></app-validar-lista-chequeo>
                 </mat-expansion-panel>
             </mat-accordion>
+            <mat-accordion>
+                <mat-expansion-panel class="expansion-style">
+                    <mat-expansion-panel-header class="expansion-style--header">
+                        <mat-panel-title class="expansion-style--title" [ngClass]="enabledAcordeon( 'soporteSolicitud', acordeones.tieneListaChequeo )">
+                            Soporte de la solicitud
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <app-form-soporte-solicitud-url *ngIf="acordeones.tieneListaChequeo === true"></app-form-soporte-solicitud-url>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+    </div>
+    <div style="margin-top: 1em;" *ngIf="contrato !== undefined">
+        <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+            Los acordeones se habilitarán de forma secuencial, una vez se tenga completa la información de la
+            sección anterior
         </div>
     </div>
 </section>

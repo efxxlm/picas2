@@ -15,65 +15,113 @@ import { DialogProyectosAsociadosComponent } from '../dialog-proyectos-asociados
 })
 export class VerdetalleEditarSolicitudPagoComponent implements OnInit {
 
-    contrato: any;
     dataSource = new MatTableDataSource();
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
+    contrato: any;
+    tipoSolicitudCodigo: any = {};
+    // Semaforos
+    semaforoFormaDePago = 'sin-diligenciar';
+    // Acordeones habilitados
+    acordeones: any = {
+        tieneFormaDePago: false,
+        tieneRegistroSolicitudPago: false,
+        tieneListaChequeo: false
+    }
     displayedColumns: string[] = [
       'drp',
       'numDrp',
       'valor',
       'saldo'
     ];
-    dataTable: any[] = [
-      {
-        drp: '1',
-        numDrp: 'IP_00090',
-        valor: '$100.000.000',
-        saldo: '$100.000.000'
-      },
-      {
-        drp: '2',
-        numDrp: 'IP_00123',
-        valor: '$5.000.000',
-        saldo: '$5.000.000'
-      }
-    ];
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    public dialog: MatDialog,
-    private registrarPagosSvc: RegistrarRequisitosPagoService,
-    private commonSvc: CommonService )
-  {
-    this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.id )
-        .subscribe(
-            response => {
-                this.contrato = response;
-                console.log( this.contrato );
-            }
-        );
-  }
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        public dialog: MatDialog,
+        private registrarPagosSvc: RegistrarRequisitosPagoService,
+        private commonSvc: CommonService )
+    {
+        this.registrarPagosSvc.getContratoByContratoId( this.activatedRoute.snapshot.params.id )
+            .subscribe(
+                response => {
+                    this.contrato = response;
+                    console.log( this.contrato );
+                    this.dataSource = new MatTableDataSource( this.contrato.contratacion.disponibilidadPresupuestal );
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    // Get semaforo forma de pago
+                    const solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+                    if ( solicitudPagoCargarFormaPago.registroCompleto === false ) {
+                        this.semaforoFormaDePago = 'en-proceso';
+                    }
+                    if ( solicitudPagoCargarFormaPago.registroCompleto === true ) {
+                        this.semaforoFormaDePago = 'completo';
+                        this.acordeones.tieneFormaDePago = true;
+                    }
+                }
+            );
+        this.commonSvc.tiposDeSolicitudes()
+            .subscribe(
+              solicitudes => {
+                for ( const solicitud of solicitudes ) {
+                  if ( solicitud.codigo === '1' ) {
+                    this.tipoSolicitudCodigo.contratoObra = solicitud.codigo;
+                  }
+                  if ( solicitud.codigo === '2' ) {
+                    this.tipoSolicitudCodigo.contratoInterventoria = solicitud.codigo;
+                  }
+                  if ( solicitud.codigo === '3' ) {
+                    this.tipoSolicitudCodigo.expensas = solicitud.codigo;
+                  }
+                  if ( solicitud.codigo === '4' ) {
+                    this.tipoSolicitudCodigo.otrosCostos = solicitud.codigo;
+                  }
+                }
+              }
+            );
+    }
 
-  ngOnInit(): void {
-    this.activatedRoute.params.subscribe(param => {
+    ngOnInit(): void {
+    }
 
-    });
-    this.dataSource = new MatTableDataSource(this.dataTable);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  };
-  openProyectosAsociados(){
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.height = 'auto';
-    dialogConfig.width = '865px';
-    //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-    const dialogRef = this.dialog.open(DialogProyectosAsociadosComponent, dialogConfig);
-    //dialogRef.afterClosed().subscribe(value => {});
-  }
+    applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    };
+
+    openProyectosAsociados() {
+        if ( this.contrato === undefined ) {
+            return;
+        }
+
+        const dialogRef = this.dialog.open( DialogProyectosAsociadosComponent, {
+            width: '80em',
+            data: { contrato: this.contrato }
+        });
+    }
+
+    enabledAcordeon( nombreAcordeon: string, tieneRegistroAnterior: boolean ) {
+        // Acordeon solicitud de pago
+        if ( nombreAcordeon === 'solicitudDePago' && tieneRegistroAnterior === false ) {
+            return 'en-alerta';
+        }
+        if ( nombreAcordeon === 'solicitudDePago' && tieneRegistroAnterior === true ) {
+            return 'sin-diligenciar';
+        }
+        // Acordeon lista de chequeo
+        if ( nombreAcordeon === 'listaChequeo' && tieneRegistroAnterior === false ) {
+            return 'en-alerta';
+        }
+        if ( nombreAcordeon === 'listaChequeo' && tieneRegistroAnterior === true ) {
+            return 'sin-diligenciar';
+        }
+        // Acordeon soporte de la solicitud
+        if ( nombreAcordeon === 'soporteSolicitud' && tieneRegistroAnterior === false ) {
+            return 'en-alerta';
+        }
+        if ( nombreAcordeon === 'soporteSolicitud' && tieneRegistroAnterior === true ) {
+            return 'sin-diligenciar';
+        }
+    }
 
 }

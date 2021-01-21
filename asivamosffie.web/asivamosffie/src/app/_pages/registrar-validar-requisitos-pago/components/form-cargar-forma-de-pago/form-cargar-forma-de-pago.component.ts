@@ -19,6 +19,7 @@ export class FormCargarFormaDePagoComponent implements OnInit {
       formaPagoPreconstruccion: [null, Validators.required],
       formaPagoConstruccion: [null, Validators.required]
     });
+    formaDePago: any;
     formaPagoArray: Dominio[] = [];
     solicitudPagoId = 0;
     solicitudPagoCargarFormaPago: any;
@@ -32,22 +33,32 @@ export class FormCargarFormaDePagoComponent implements OnInit {
         private routes: Router,
         private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
-        this.commonSvc.formasDePago()
-            .subscribe( response => {
-              console.log( response );
-              this.formaPagoArray = response;
-            } );
     }
 
     ngOnInit(): void {
-        if ( this.contrato.plazoFase1PreDias !== undefined ) {
-            this.tieneFase1 = true;
-        }
-        if ( this.contrato.solicitudPago.length > 0 ) {
-            this.solicitudPagoId = this.contrato.solicitudPago[0].solicitudPagoId;
-            this.solicitudPagoCargarFormaPago = this.contrato.solicitudPago[0].solicitudPagoCargarFormaPago;
-            console.log( this.solicitudPagoCargarFormaPago );
-        }
+        this.commonSvc.formasDePago()
+            .subscribe( response => {
+                this.formaPagoArray = response;
+
+                if ( this.contrato.plazoFase1PreDias !== undefined ) {
+                    this.tieneFase1 = true;
+                }
+                if ( this.contrato.solicitudPagoOnly !== undefined ) {
+                    this.solicitudPagoId = this.contrato.solicitudPagoOnly.solicitudPagoId;
+                    this.solicitudPagoCargarFormaPago = this.contrato.solicitudPagoOnly.solicitudPagoCargarFormaPago[0];
+                    this.solicitudPagoCargarFormaPagoId = this.solicitudPagoCargarFormaPago.solicitudPagoCargarFormaPagoId;
+                    // Get values seleccionados
+                    if ( this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined ) {
+                        const formaPreConstruccionSeleccionada = this.formaPagoArray.filter( forma => forma.codigo === this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo );
+                        this.addressForm.get( 'formaPagoPreconstruccion' ).setValue( formaPreConstruccionSeleccionada.length > 0 ? formaPreConstruccionSeleccionada[0] : null );
+                    }
+
+                    if ( this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined ) {
+                        const formaConstruccionSeleccionada = this.formaPagoArray.filter( forma => forma.codigo === this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo );
+                        this.addressForm.get( 'formaPagoConstruccion' ).setValue( formaConstruccionSeleccionada.length > 0 ? formaConstruccionSeleccionada[0] : null );
+                    }
+                }
+            } );
     }
 
     openDialog(modalTitle: string, modalText: string) {
@@ -78,11 +89,11 @@ export class FormCargarFormaDePagoComponent implements OnInit {
             response => {
                 this.openDialog( '', `<b>${ response.message }</b>` );
                 this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                    () =>   this.routes.navigate(
-                                [
-                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId
-                                ]
-                            )
+                    () => this.routes.navigate(
+                        [
+                            '/registrarValidarRequisitosPago/verDetalleEditar', this.contrato.contratoId
+                        ]
+                    )
                 );
             },
             err => this.openDialog( '', `<b>${ err.message }</b>` )
