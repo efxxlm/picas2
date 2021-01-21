@@ -167,6 +167,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<TemporalProyecto> TemporalProyecto { get; set; }
         public virtual DbSet<TipoActividadGestionObra> TipoActividadGestionObra { get; set; }
         public virtual DbSet<TipoDominio> TipoDominio { get; set; }
+        public virtual DbSet<TipoPagoCodigoConceptoPagoCriterioCodigo> TipoPagoCodigoConceptoPagoCriterioCodigo { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioPerfil> UsuarioPerfil { get; set; }
         public virtual DbSet<VGestionarGarantiasPolizas> VGestionarGarantiasPolizas { get; set; }
@@ -5949,6 +5950,19 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false)
                     .HasComment("Usuario que realizo la modificación de los datos no de auditoria");
+            });
+
+            modelBuilder.Entity<TipoPagoCodigoConceptoPagoCriterioCodigo>(entity =>
+            {
+                entity.Property(e => e.ConceptoPagoCriterioCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TipoPagoCodigo)
+                    .IsRequired()
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<Usuario>(entity =>
