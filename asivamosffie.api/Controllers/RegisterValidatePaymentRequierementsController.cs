@@ -32,6 +32,13 @@ namespace asivamosffie.api.Controllers
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterioProyectoId, HttpContext.User.FindFirst("User").Value));
         }
+  
+        [HttpPost]
+        [Route("DeleteSolicitudLlaveCriterioProyecto")]
+        public async Task<IActionResult> DeleteSolicitudLlaveCriterioProyecto([FromBody] int pContratacionProyectoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudLlaveCriterioProyecto(pContratacionProyectoId, HttpContext.User.FindFirst("User").Value));
+        }
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterio")]
         public async Task<IActionResult> DeleteSolicitudPagoFaseCriterio([FromBody] int pSolicitudPagoFaseCriterioId)
