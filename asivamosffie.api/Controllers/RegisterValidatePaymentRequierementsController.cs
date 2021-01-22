@@ -26,19 +26,28 @@ namespace asivamosffie.api.Controllers
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
             _settings = settings;
         }
+
+        [HttpPost]
+        [Route("DeleteSolicitudPago")]
+        public async Task<IActionResult> DeleteSolicitudPago([FromBody] int pSolicitudPagoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPago(pSolicitudPagoId, HttpContext.User.FindFirst("User").Value));
+        }
+
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterioProyecto")]
         public async Task<IActionResult> DeleteSolicitudPagoFaseCriterioProyecto([FromBody] int SolicitudPagoFaseCriterioProyectoId)
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterioProyecto(SolicitudPagoFaseCriterioProyectoId, HttpContext.User.FindFirst("User").Value));
         }
-  
+
         [HttpPost]
         [Route("DeleteSolicitudLlaveCriterioProyecto")]
         public async Task<IActionResult> DeleteSolicitudLlaveCriterioProyecto([FromBody] int pContratacionProyectoId)
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudLlaveCriterioProyecto(pContratacionProyectoId, HttpContext.User.FindFirst("User").Value));
         }
+       
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterio")]
         public async Task<IActionResult> DeleteSolicitudPagoFaseCriterio([FromBody] int pSolicitudPagoFaseCriterioId)

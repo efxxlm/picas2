@@ -53,7 +53,7 @@ namespace asivamosffie.services
         public async Task<string> EnumeradorSolicitudPago(bool esObra)
         {
             int cantidadDeResgistros = _context.SolicitudPago.Count();
-            string Nomeclatura = "SolPago";
+            string Nomeclatura = "SolPagoI";
             if(esObra)
                 Nomeclatura = "SolPagoO";
             string consecutivo = (cantidadDeResgistros + 1).ToString("000");

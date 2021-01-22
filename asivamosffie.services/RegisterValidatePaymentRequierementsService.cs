@@ -34,7 +34,7 @@ namespace asivamosffie.services
         #region Get
         public async Task<dynamic> GetListSolicitudPago()
         {
-            var result = await _context.SolicitudPago
+            var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
                 .Include(r => r.Contrato)
                              .Select(s => new
                              {
@@ -44,7 +44,8 @@ namespace asivamosffie.services
                                  s.Contrato.NumeroContrato,
                                  s.EstadoCodigo,
                                  s.ContratoId,
-                                 s.SolicitudPagoId
+                                 s.SolicitudPagoId,
+                                 RegistroCompleto = s.RegistroCompleto ?? false
                              }).ToListAsync();
 
             List<dynamic> grind = new List<dynamic>();
@@ -63,7 +64,6 @@ namespace asivamosffie.services
                     Modalidad = !string.IsNullOrEmpty(r.Modalidad) ? ListParametricas.Where(l => l.Codigo == r.Modalidad && l.TipoDominioId == (int)EnumeratorTipoDominio.Modalidad_Contrato).FirstOrDefault().Nombre : " - "
                 });
             });
-
             return grind;
         }
 
@@ -194,7 +194,8 @@ namespace asivamosffie.services
                                                                     p.Municipio,
                                                                     p.InstitucionEducativa,
                                                                     p.Sede,
-                                                                    p.ContratacionProyectoId
+                                                                    p.ContratacionProyectoId,
+                                                                    p.ValorTotal
                                                                 }).ToListAsync();
             dynamics.Add(resultContrato);
             dynamics.Add(resultProyectos);
@@ -258,6 +259,41 @@ namespace asivamosffie.services
         #endregion
 
         #region Create Edit Delete
+        public async Task<Respuesta> DeleteSolicitudPago(int pSolicitudPagoId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Solicitud_Pago, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SolicitudPago SolicitudPagoDelete = _context.SolicitudPago.Find(pSolicitudPagoId);
+                SolicitudPagoDelete.Eliminado = true;
+                SolicitudPagoDelete.UsuarioModificacion = pUsuarioModificacion;
+                SolicitudPagoDelete.FechaModificacion = DateTime.Now;
+
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
 
         #region  Tipo Obra Interventoria
         public async Task<Respuesta> DeleteSolicitudLlaveCriterioProyecto(int pContratacionProyectoId, string pUsuarioModificacion)
@@ -267,7 +303,7 @@ namespace asivamosffie.services
             try
             {
                 List<SolicitudPagoFaseCriterioProyecto> ListSolicitudPagoFaseCriterioProyectoDelete = _context.SolicitudPagoFaseCriterioProyecto.Where(s => s.ContratacionProyectoId == pContratacionProyectoId).ToList();
-               
+
                 foreach (var SolicitudPagoFaseCriterioProyecto in ListSolicitudPagoFaseCriterioProyectoDelete)
                 {
                     SolicitudPagoFaseCriterioProyecto.FechaModificacion = DateTime.Now;
@@ -282,7 +318,7 @@ namespace asivamosffie.services
                          IsException = false,
                          IsValidation = false,
                          Code = GeneralCodes.OperacionExitosa,
-                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO FASE CRITERIO")
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO FASE CRITERIO PROYECTO")
                      };
             }
             catch (Exception ex)
