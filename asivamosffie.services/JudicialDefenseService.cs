@@ -1101,8 +1101,8 @@ namespace asivamosffie.services
                         RegistroCompletoNombre =strRegistroCompleto,
                         TipoProceso= _commonService.GetDominioByNombreDominioAndTipoDominio(defensaJudicial.TipoProcesoCodigo, (int)EnumeratorTipoDominio.Procesos_judiciales).Result.Nombre,
                         TipoProcesoCodigo = defensaJudicial.TipoProcesoCodigo,
-                        VaAProcesoJudicial= defensaJudicial.FichaEstudio.Count()==0?false:defensaJudicial.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite
-                                          
+                        VaAProcesoJudicial= defensaJudicial.FichaEstudio.Count()==0?false:defensaJudicial.FichaEstudio.FirstOrDefault().EsActuacionTramiteComite,
+                        FechaCreacion = defensaJudicial.FechaCreacion,
                     };
 
                     //if (!(bool)proyecto.RegistroCompleto)
@@ -1132,7 +1132,7 @@ namespace asivamosffie.services
                     ListDefensaJudicialGrilla.Add(defensaJudicialGrilla);
                 }
             }
-            return ListDefensaJudicialGrilla.ToList();
+            return ListDefensaJudicialGrilla.OrderByDescending(x=>x.FechaCreacion).ToList();
 
         }
 

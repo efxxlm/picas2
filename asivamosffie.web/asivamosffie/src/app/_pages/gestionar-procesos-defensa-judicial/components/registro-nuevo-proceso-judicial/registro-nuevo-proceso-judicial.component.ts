@@ -24,6 +24,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   convocados_class:number=0;
   soporte_class:number=0;
   ficha_class:number=3;
+  textCabecera: string;
   
 
   constructor(private fb: FormBuilder, public dialog: MatDialog, 
@@ -51,6 +52,7 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
         this.judicialServices.GetDefensaJudicialById(this.controlJudicialId)
       ]).subscribe( proceso => {
           this.defensaJudicial=proceso[0];    
+          this.textCabecera="Ver detalle/Editar proceso de defensa judicial "+this.defensaJudicial.numeroProceso;
           console.log(this.defensaJudicial); 
           this.contratos_class=this.estaIncompletocontratos(this.defensaJudicial);
           this.detalle_class=this.estaIncompletodetalle(this.defensaJudicial);
@@ -149,11 +151,13 @@ export class RegistroNuevoProcesoJudicialComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.textCabecera="Registrar nuevo proceso de defensa judicial";
     this.activatedRoute.params.subscribe( param => {
       this.controlJudicialId = param['id'];
       
       if(this.controlJudicialId)
       {
+        
         this.editMode();
         
       }
