@@ -86,7 +86,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                     } );
                                                 }
                                                 if ( criterioValue.solicitudPagoFaseCriterioProyecto.length > 0 ) {
-                                                    criteriosDiligenciados = criterios.filter( value => value.codigo === criterioValue.tipoCriterioCodigo );
+                                                    criteriosDiligenciados.push( criterios.filter( value => value.codigo === criterioValue.tipoCriterioCodigo )[0] );
                                                     criterioValue.solicitudPagoFaseCriterioProyecto.forEach( criterioProyectoValue => {
                                                         criterioSelect.forEach( value => {
                                                             criteriosSeleccionados.push(
@@ -104,9 +104,9 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                     } );
                                                 }
                                             } );
-                                            console.log( criteriosArray );
                                             for ( const proyecto of proyectos[1] ) {
                                                 const criteriosProyectoSeleccionados = criteriosSeleccionados.filter( criterioValue => criterioValue.value.contratacionProyectoId === proyecto.contratacionProyectoId );
+                                                const criterioPagoArray = [];
                                                 if ( criteriosSeleccionados.length > 0 ) {
                                                     criteriosSeleccionados.forEach( criterioValue => {
                                                         if ( criterioValue.value.contratacionProyectoId === proyecto.contratacionProyectoId ) {
@@ -119,6 +119,13 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                 } else {
                                                     proyecto.check = false;
                                                 }
+                                                criteriosDiligenciados.forEach( value => {
+                                                    criteriosProyectoSeleccionados.forEach( criterioValue => {
+                                                        if ( value.codigo === criterioValue.value.tipoCriterioCodigo ) {
+                                                            criterioPagoArray.push( value );
+                                                        }
+                                                    } );
+                                                } );
                                                 this.projects.push(
                                                     this.fb.group(
                                                         {
@@ -126,7 +133,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                             listaCriterios: [ criteriosArray ],
                                                             contratacionProyectoId: [ proyecto.contratacionProyectoId ],
                                                             llaveMen: [ proyecto.llaveMen ],
-                                                            criterioPago: [ criteriosDiligenciados.length > 0 ? criteriosDiligenciados : null ],
+                                                            criterioPago: [ criterioPagoArray.length > 0 ? criterioPagoArray : null ],
                                                             solicitudPagoFaseCriterioId: [ 0 ],
                                                             criteriosProyecto: this.fb.array( criteriosProyectoSeleccionados.length > 0 ? criteriosProyectoSeleccionados : [] )
                                                         }
@@ -171,22 +178,34 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
 
     getvalues( criteriosDePago: any[], index: number ) {
         if ( criteriosDePago.length > 0 ) {
-            criteriosDePago.forEach( criterioValue => {
-                this.criteriosProyecto( index ).controls.forEach( criterio => {
-                    if ( criterio.value.nombre !== criterioValue.nombre ) {
-                        this.criteriosProyecto( index ).push(
-                            this.fb.group(
-                                {
-                                    tipoCriterioCodigo: [ criterioValue.codigo ],
-                                    nombre: [ criterioValue.nombre ],
-                                    solicitudPagoFaseCriterioProyectoId: [ 0 ],
-                                    valorFacturado: [ '' ]
-                                }
-                            )
-                        );
+            const criteriosDePagoArray = [ ...criteriosDePago ];
+
+            this.criteriosProyecto( index ).controls.forEach( ( criterio, indexValue ) => {
+                criteriosDePagoArray.forEach( ( value, index ) => {
+                    if ( value.codigo === criterio.value.tipoCriterioCodigo ) {
+                        criteriosDePagoArray.splice( index, 1 );
                     }
-                } )
+                } );
+                const test = criteriosDePago.filter( value => value.codigo === criterio.value.tipoCriterioCodigo );
+                if ( test.length === 0 ) {
+                    this.criteriosProyecto( index ).removeAt( indexValue );
+                }
             } );
+
+            criteriosDePagoArray.forEach( criterioValue => {
+                this.criteriosProyecto( index ).push(
+                    this.fb.group(
+                        {
+                            tipoCriterioCodigo: [ criterioValue.codigo ],
+                            nombre: [ criterioValue.nombre ],
+                            solicitudPagoFaseCriterioProyectoId: [ 0 ],
+                            valorFacturado: [ '' ]
+                        }
+                    )
+                );
+            } );
+        } else {
+            this.criteriosProyecto( index ).clear();
         }
     }
 
@@ -226,15 +245,15 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     guardar() {
         const proyectos = this.projects.controls.filter( control => control.value.check === true );
         const setProyectos = [];
-        console.log( setProyectos );
         if ( proyectos.length > 0 ) {
             proyectos.forEach( proyecto => {
                 if ( proyecto.value.criteriosProyecto.length > 0 ) {
                     proyecto.value.criteriosProyecto.forEach( criterioValue => {
                         setProyectos.push(
                             {
+                                tipoCriterioCodigo: criterioValue.tipoCriterioCodigo,
                                 solicitudPagoFaseCriterioProyectoId: criterioValue.solicitudPagoFaseCriterioProyectoId,
-                                solicitudPagoFaseCriterioId: proyecto.value.criterioPago[0].solicitudPagoFaseCriterioId,
+                                solicitudPagoFaseCriterioId: proyecto.value.criterioPago.filter( value => criterioValue.tipoCriterioCodigo === value.codigo )[0].solicitudPagoFaseCriterioId,
                                 contratacionProyectoId: proyecto.value.contratacionProyectoId,
                                 valorFacturado: criterioValue.valorFacturado
                             }
@@ -244,24 +263,29 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
             } );
         }
         this.solicitudPagoFaseCriterio.forEach( criterioValue => {
-            criterioValue.solicitudPagoFaseCriterioProyecto = setProyectos.filter( value => value.solicitudPagoFaseCriterioId === criterioValue.solicitudPagoFaseCriterioId );
+            criterioValue.solicitudPagoFaseCriterioProyecto = [];
+            setProyectos.forEach( value => {
+                if ( criterioValue.tipoCriterioCodigo === value.tipoCriterioCodigo ) {
+                    criterioValue.solicitudPagoFaseCriterioProyecto.push( value );
+                }
+            } );
         } );
         console.log( this.solicitudPagoFaseCriterio );
-        // this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = this.solicitudPagoFaseCriterio;
-        // this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
-        //     .subscribe(
-        //         response => {
-        //             this.openDialog( '', `<b>${ response.message }</b>` );
-        //             this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-        //                 () => this.routes.navigate(
-        //                     [
-        //                         '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
-        //                     ]
-        //                 )
-        //             );
-        //         },
-        //         err => this.openDialog( '', `<b>${ err.message }</b>` )
-        //     );
+        this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = this.solicitudPagoFaseCriterio;
+        this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
