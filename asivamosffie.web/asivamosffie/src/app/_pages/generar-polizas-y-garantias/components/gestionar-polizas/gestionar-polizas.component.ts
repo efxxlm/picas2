@@ -46,7 +46,6 @@ export class GestionarPolizasComponent implements OnInit, OnDestroy {
     responsableAprob: ['', Validators.required],
     observacionesGenerales: ['']
   });
-
   polizasYSegurosArray: Dominio[] = [];
   estadoArray: any[];
   estadosPoliza: any;

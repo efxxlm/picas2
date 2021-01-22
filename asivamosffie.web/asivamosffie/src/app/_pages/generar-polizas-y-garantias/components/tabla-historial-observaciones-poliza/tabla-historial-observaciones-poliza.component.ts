@@ -28,6 +28,7 @@ export class TablaHistorialObservacionesPolizaComponent implements OnInit {
   }
   cargarTablaDeDatos(){
     this.loadTableObservaciones = this.polizaService.loadTableObservaciones.subscribe((loadTableObservaciones: any) => {
+      console.log( loadTableObservaciones );
       if(loadTableObservaciones!=''){
       this.dataTable=loadTableObservaciones;
       this.dataSource = new MatTableDataSource(this.dataTable);
