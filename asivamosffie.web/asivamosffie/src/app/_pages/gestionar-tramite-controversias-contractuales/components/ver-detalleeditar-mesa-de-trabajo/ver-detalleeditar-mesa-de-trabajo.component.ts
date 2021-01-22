@@ -12,6 +12,7 @@ export class VerDetalleeditarMesaDeTrabajoComponent implements OnInit {
   solictud: any;
   numContrato: any;
   tipoControversia: any;
+  public nomMesaTrabajo = localStorage.getItem("nomMesaTrabajo");
   constructor(private services: ContractualControversyService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {

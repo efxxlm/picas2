@@ -5,24 +5,24 @@
         </a>
     </div>
     <h1 class="title-menu--h1">
-        Ver detalle mesa de trabajo ACT_MT 0001
+        Ver detalle mesa de trabajo {{this.nomMesaTrabajo}}
     </h1>
     <p class="info-sub-title">
-        <span>Solicitud: <b>CO00002</b> Número del contrato: <b>C223456789</b> Tipo de controversia: <b>Terminación anticipada por imposibilidad de ejecución (TAIE)</b></span>
+        <span>Solicitud: <b>{{this.solicitud}}</b> Número del contrato: <b>{{this.numContrato}}</b> Tipo de controversia: <b>{{ this.tipoControversia}}</b></span>
     </p>
     <mat-card class="shipping-card mainGris">
         <mat-card-content style="text-align: left;">
-            <p><strong>Estado de avance de la mesa de trabajo:</strong> En análisis de evidencias</p>
-            <p><strong>Fecha de la actuación adelantada:</strong> 28/08/2020</p>
+            <p><strong>Estado de avance de la mesa de trabajo:</strong> {{ this.estadoAvanceMesaTrabajo }}</p>
+            <p><strong>Fecha de la actuación adelantada:</strong> {{this.fechaActuacionAdelantada | date:'dd/MM/yyyy'}}</p>
             <p><strong>Actuación adelantada:</strong></p>
-            <p>YYY</p>
+            <div [innerHtml]="this.actuacionAdelantada"></div> 
             <p><strong>Próxima actuación requerida:</strong></p>
-            <p>YYY</p>
-            <p><strong>Días de vencimiento de términos para la próxima actuación requerida:</strong> 15</p>
-            <p><strong>Fecha de vencimiento de términos para la próxima actuación requerida:</strong> 30/09/2020</p>
+            <div [innerHtml]="this.proximaActuacionRequerida"></div> 
+            <p><strong>Días de vencimiento de términos para la próxima actuación requerida:</strong> {{this.diasVencimientoTerminos}}</p>
+            <p><strong>Fecha de vencimiento de términos para la próxima actuación requerida:</strong> {{this.fechaVencimientoActReq | date:'dd/MM/yyyy'}}</p>
             <p><strong>Observaciones:</strong></p>
-            <p>YYY</p>
-            <p><strong>¿La mesa de trabajo tiene resultado definitivo y se considera cerrado el trámite?:</strong> Sí</p>
+            <div [innerHtml]="this.observaciones"></div> 
+            <p><strong>¿La mesa de trabajo tiene resultado definitivo y se considera cerrado el trámite?:</strong> {{this.resultadoDefinitivo}}</p>
         </mat-card-content>
     </mat-card>
     <mat-card class="shipping-card mainGris">
@@ -33,7 +33,7 @@
         </mat-card-header>
         <mat-card-content style="text-align: left;">
             <p><strong>URL con soporte:</strong>
-                https://drive.google.com/drive/registrodecontroversiacontractual/registronuevaactualizaciondelareclamacion
+                {{this.urlSporte}}
             </p>
         </mat-card-content>
     </mat-card>

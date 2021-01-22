@@ -24,7 +24,7 @@ export class DefensaJudicialService {
   }
   
   GetListGrillaProcesosDefensaJudicial( ) {
-    return this.http.get<Contrato[]>( `${ this.url }/JudicialDefense/GetListGrillaProcesosDefensaJudicial` );
+    return this.http.get<any[]>( `${ this.url }/JudicialDefense/GetListGrillaProcesosDefensaJudicial` );
   }
 
   

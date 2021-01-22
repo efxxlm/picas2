@@ -125,6 +125,9 @@ export class ContractualControversyService implements OnInit{
   GetActuacionesMesasByMesaId(pControversiaMesaID: number){
     return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetActuacionesMesasByMesaId?pControversiaMesaID=${pControversiaMesaID}`);
   }
+  GetActuacionesMesasByActuacionId(pActuacionId:number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetActuacionesMesasByActuacionId?pActuacionId=${pActuacionId}`);
+  }
   GetActuacionMesaByActuacionMesaId(pControversiaActuacionMesaID:number){
     return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetActuacionMesaByActuacionMesaId?pControversiaActuacionMesaID=${pControversiaActuacionMesaID}`);
   }
@@ -133,6 +136,12 @@ export class ContractualControversyService implements OnInit{
   }
   CreateEditarActuacionMesa(controversiaActuacionMesa: any){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/CreateEditarActuacionMesa`, controversiaActuacionMesa);
+  }
+  EliminacionActuacionMesa(pControversiaActuacionMesaId:number){
+    return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/EliminacionActuacionMesa?pControversiaActuacionMesaId=${pControversiaActuacionMesaId}`, null);
+  }
+  GetMesaByMesaId(pControversiaMesaID: number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetMesaByMesaId?pControversiaMesaID=${pControversiaMesaID}`);
   }
   FinalizarActuacion(id: any) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacion?pControversiaActuacionId=${id}`, null);

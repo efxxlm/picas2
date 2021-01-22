@@ -10,5 +10,5 @@
     <p class="info-sub-title">
         <span>Solicitud: <b>{{this.solicitud}}</b> Número del contrato: <b>{{this.numContrato}}</b> Tipo de controversia: <b>{{ this.tipoControversia}}</b></span>
     </p>
-    <app-form-registrar-mesa-de-trabajo></app-form-registrar-mesa-de-trabajo>
+    <app-form-registrar-mesa-de-trabajo [idActuacion]="this.idActuacion" [isEditable]=false></app-form-registrar-mesa-de-trabajo>
 </div>

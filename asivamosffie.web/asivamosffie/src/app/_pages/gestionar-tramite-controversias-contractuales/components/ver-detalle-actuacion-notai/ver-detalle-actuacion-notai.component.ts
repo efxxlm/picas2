@@ -62,7 +62,7 @@ export class VerDetalleActuacionNotaiComponent implements OnInit {
             this.tipoControversia = "Otras controversias contractuales (OCC) a solicitud del contratante";
           break;
         };
-        this.numSolicitud = b.numeroSolicitudFormat;
+        this.numSolicitud = b.numeroSolicitud;
         this.numContrato = b.contrato.numeroContrato;
       });
       this.actuacionNum = a.numeroActuacionFormat;
