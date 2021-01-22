@@ -74,13 +74,28 @@ namespace asivamosffie.api.Controllers
         {
             try
             {
-                 _registerPayPerformanceService.setObservationPaymentsPerformances(data.typeFile,data.observaciones,data.cargaPagosRendimientosId);
+                _registerPayPerformanceService.setObservationPaymentsPerformances(data.typeFile, data.observaciones, data.cargaPagosRendimientosId);
 
                 return Ok("Se actualizo correctamente");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.ToString());
+            }
+        }
+
+        [Route("deletePaymentPerformance")]
+        [HttpGet]
+        public async Task<IActionResult> deleteUpload(string uploadedPaymentPerformanceId)
+        {
+            try
+            {
+                await _registerPayPerformanceService.setStatusPaymentPerformance(uploadedPaymentPerformanceId, "Eliminado");
+                return Ok("Se actualizo correctamente");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

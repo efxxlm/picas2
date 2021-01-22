@@ -64,7 +64,10 @@
         Gestión
       </th>
       <td mat-cell *matCellDef="let element" align="center">
-        <button mat-raised-button color="accent" class="btn-table">
+        <button mat-raised-button color="accent" 
+          class="btn-table"
+          (click)="viewDetails(element.cargaPagosRendimientosId)"
+          >
           Ver detalle
         </button>
         <button
@@ -73,9 +76,16 @@
           class="btn-table"
           [class.sin-diligenciar]="element.estadoCargue == 'Fallido'"
           *ngIf="element.registrosInvalidos > 0"
-          (click)="this.abrirObservaciones(element.cargaPagosRendimientosId)"
+          (click)="abrirObservaciones(element.cargaPagosRendimientosId)"
         >
           Observaciones
+        </button>
+        <button mat-raised-button color="accent" 
+          *ngIf="element.estadoCargue == 'Valido'"
+          class="btn-table"
+          (click)="deleteUpload(element.cargaPagosRendimientosId)"
+          >
+          Eliminar
         </button>
       </td>
     </ng-container>

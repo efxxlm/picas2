@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table'
 import { DialogCargarReportPagosRprComponent } from '../dialog-cargar-report-pagos-rpr/dialog-cargar-report-pagos-rpr.component'
 import { ObservacionesReportPagoRprComponent } from '../observaciones-report-pago-rpr/observaciones-report-pago-rpr.component'
 import { FaseDosPagosRendimientosService } from '../../../../core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service'
+import { FileDownloader } from 'src/app/_helpers/file-downloader'
 
 @Component({
   selector: 'app-tabla-registrar-pagos-rpr',
@@ -80,6 +81,21 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
       this.getData()
     })
   }
+
+  deleteUpload(uploadPaymentId: number){
+    this.faseDosPagosRendimientosSvc.setPaymentsPerformanceStatus(uploadPaymentId)
+     .subscribe(()=>{
+
+    },onError => {
+      
+    });
+  }
+
+  viewDetails(uploadPaymentId: number){
+
+    FileDownloader.exportExcel("RegistrarPagos.xlsx", {})
+  }
+
   abrirObservaciones(cargaPagosRendimientosId: number) {
     const dialogConfig = new MatDialogConfig()
     dialogConfig.height = 'auto'

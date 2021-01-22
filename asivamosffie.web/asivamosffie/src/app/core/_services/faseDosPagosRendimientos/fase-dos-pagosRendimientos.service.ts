@@ -36,4 +36,8 @@ export class FaseDosPagosRendimientosService {
       data
     )
   }
+
+  setPaymentsPerformanceStatus(uploadedPaymentPerformanceId){
+    return this.http.get(`${this.urlApi}/deletePaymentPerformance`, uploadedPaymentPerformanceId )
+  }
 }

@@ -12,8 +12,13 @@
                     <span class="input-file--text">{{archivo}}</span>
                     <button mat-raised-button color="primary" type="button" (click)="fileInput.click()"
                         class="input-file--btn">Explorar</button>
-                    <input required hidden (change)="fileName( $event )" #fileInput type="file" id="file"
-                        formControlName="documentoFile">
+                    <input required hidden (change)="fileName($event)" #fileInput type="file" id="file"
+                        formControlName="documentoFile"
+                        accept=".xlsx, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+
+                        <!-- <button mat-raised-button color="primary" type="button" (click)="fileInput.click()" class="input-file--btn">Explorar</button>
+                        <input required hidden (change)="fileName()" #fileInput type="file" id="file" [formControl]="fileElegibilidad"
+                            accept=".xlsx, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"> -->
                 </div>
                 <div class="textoGris">
                     Explore en su computador o dispositivo y seleccione el documento que desea cargar <b>el formato permitido es: xlsx</b>

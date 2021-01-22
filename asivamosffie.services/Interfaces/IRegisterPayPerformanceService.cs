@@ -15,5 +15,7 @@ namespace asivamosffie.services.Interfaces
         Task<List<dynamic>> getPaymentsPerformances(string typeFile);
 
         void setObservationPaymentsPerformances(string typeFile, string observaciones, string cargaPagosRendimientosId);
+
+        Task<bool> setStatusPaymentPerformance(string cargaPagosRendimientosId, string uploadStatus);
     }
 }
