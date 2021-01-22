@@ -293,8 +293,11 @@ export class FormCriteriosPagoComponent implements OnInit {
                                 } );
                             }
                             this.addressForm.get( 'criterioPago' ).setValue( criteriosSeleccionados );
-                            this.openDialog( '', '<b>Falta el servicio.</b>' );
-                            // this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                            this.registrarPagosSvc.deleteSolicitudPagoFaseCriterio( solicitudPagoFaseCriterioId )
+                                .subscribe(
+                                    () => this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' ),
+                                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                                )
                         }
                     }
                 }

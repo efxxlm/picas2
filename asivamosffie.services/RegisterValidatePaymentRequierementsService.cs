@@ -587,7 +587,7 @@ namespace asivamosffie.services
 
                 if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId > 0)
                 {
-                    SolicitudPagoFaseCriterio SolicitudPagoFaseCriterioOld = _context.SolicitudPagoFaseCriterio.Find(SolicitudPagoFaseCriterio);
+                    SolicitudPagoFaseCriterio SolicitudPagoFaseCriterioOld = _context.SolicitudPagoFaseCriterio.Find(SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioId);
 
                     SolicitudPagoFaseCriterioOld.FechaModificacion = DateTime.Now;
                     SolicitudPagoFaseCriterioOld.UsuarioModificacion = strUsuarioCreacion;

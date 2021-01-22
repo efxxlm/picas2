@@ -58,4 +58,12 @@ export class RegistrarRequisitosPagoService {
     } );
   }
 
+  deleteSolicitudPagoFaseCriterio( pSolicitudPagoFaseCriterioId: number ) {
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterio?pSolicitudPagoFaseCriterioId=${ pSolicitudPagoFaseCriterioId }`, '' );
+  }
+
+  deleteSolicitudPagoFaseCriterioProyecto( SolicitudPagoFaseCriterioProyectoId: number ) {
+    return this.http.post( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterioProyecto?SolicitudPagoFaseCriterioProyectoId=${ SolicitudPagoFaseCriterioProyectoId }`, '' );
+  }
+
 }
