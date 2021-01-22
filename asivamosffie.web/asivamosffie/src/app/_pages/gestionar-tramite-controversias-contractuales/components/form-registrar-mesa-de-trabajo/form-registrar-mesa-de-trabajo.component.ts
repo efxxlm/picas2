@@ -15,6 +15,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
   @Input() isEditable;
   @Input() idActuacion;
   @Input() idSeguimientoMesa;
+  public idMesadeTrabajo = parseInt(localStorage.getItem('idMesa'));
   addressForm = this.fb.group({
     estadoAvanceTramite: [null, Validators.required],
     fechaActuacionAdelantada: [null, Validators.required],
@@ -27,7 +28,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     urlSoporte: [null, Validators.required]
   });
   estadoAvanceTramiteArray = [
-  
+
   ];
   actuacionAdelantadaArray = [
     { name: 'Otro', value: '1' },
@@ -46,20 +47,29 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
       [{ align: [] }],
     ]
   };
-  constructor(private fb: FormBuilder, public dialog: MatDialog,private services: ContractualControversyService, private common: CommonService,private router: Router) { }
+  constructor(private fb: FormBuilder, public dialog: MatDialog, private services: ContractualControversyService, private common: CommonService, private router: Router) {
+    this.common.listaEstadoAvanceMesaTrabajo().subscribe(a => {
+      this.estadoAvanceTramiteArray = a;
+    });
+  }
 
   ngOnInit(): void {
     if (this.isEditable == true) {
-      this.addressForm.get('estadoAvanceTramite').setValue('1');
-      this.addressForm.get('fechaActuacionAdelantada').setValue('10/10/2020');
-      this.addressForm.get('actuacionAdelantada').setValue('Pruebas');
-      this.addressForm.get('proximaActuacionRequerida').setValue('Pruebas');
-      this.addressForm.get('diasVencimientoTerminos').setValue('3');
-      this.addressForm.get('resultadoDefinitivo').setValue(true);
+      this.services.GetMesaByMesaId(this.idMesadeTrabajo).subscribe((data: any) => {
+        for (let i = 0; i < this.estadoAvanceTramiteArray.length; i++) {
+          const estadoAvanceTramiteSelected = this.estadoAvanceTramiteArray.find(p => p.codigo === data.estadoAvanceMesaCodigo);
+          this.addressForm.get('estadoAvanceTramite').setValue(estadoAvanceTramiteSelected);
+        }
+        this.addressForm.get('fechaActuacionAdelantada').setValue(data.fechaActuacionAdelantada);
+        this.addressForm.get('actuacionAdelantada').setValue(data.actuacionAdelantada);
+        this.addressForm.get('proximaActuacionRequerida').setValue(data.proximaActuacionRequerida);
+        this.addressForm.get('diasVencimientoTerminos').setValue(data.cantDiasVencimiento);
+        this.addressForm.get('fechaVencimientoTerminos').setValue(data.fechaVencimiento);
+        this.addressForm.get('observaciones').setValue(data.observaciones);
+        this.addressForm.get('resultadoDefinitivo').setValue(data.resultadoDefinitivo);
+        this.addressForm.get('urlSoporte').setValue(data.rutaSoporte);
+      });
     }
-    this.common.listaEstadoAvanceMesaTrabajo().subscribe(a=>{
-      this.estadoAvanceTramiteArray = a;
-    });
   }
   validateNumberKeypress(event: KeyboardEvent) {
     const alphanumeric = /[0-9]/;
@@ -91,7 +101,7 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
     if (this.isEditable == true) {
       mesaTrabajoArray =
       {
-        "controversiaActuacionMesaId": this.idSeguimientoMesa,
+        "controversiaActuacionMesaId": this.idMesadeTrabajo,
         "controversiaActuacionId": parseInt(this.idActuacion),
         "estadoAvanceMesaCodigo": this.addressForm.value.estadoAvanceTramite.codigo,
         "fechaActuacionAdelantada": this.addressForm.value.fechaActuacionAdelantada,
@@ -119,12 +129,12 @@ export class FormRegistrarMesaDeTrabajoComponent implements OnInit {
         "rutaSoporte": this.addressForm.value.urlSoporte
       }
     }
-    this.services.CreateEditarMesa(mesaTrabajoArray).subscribe((data:any)=>{
-      if (data.isSuccessful==true){
+    this.services.CreateEditarMesa(mesaTrabajoArray).subscribe((data: any) => {
+      if (data.isSuccessful == true) {
         this.openDialog('', '<b>La información ha sido guardada exitosamente.</b>');
         this.router.navigate(['/gestionarTramiteControversiasContractuales/actualizarTramiteControversia']);
       }
-      else{
+      else {
         this.openDialog('', data.message);
       }
     });

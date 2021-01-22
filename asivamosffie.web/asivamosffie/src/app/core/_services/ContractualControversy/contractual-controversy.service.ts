@@ -134,6 +134,9 @@ export class ContractualControversyService implements OnInit{
   EliminacionActuacionMesa(pControversiaActuacionMesaId:number){
     return this.http.post<Respuesta>(`${environment.apiUrl}/ContractualControversy/EliminacionActuacionMesa?pControversiaActuacionMesaId=${pControversiaActuacionMesaId}`, null);
   }
+  GetMesaByMesaId(pControversiaMesaID: number){
+    return this.http.get<any>(`${environment.apiUrl}/ContractualControversy/GetMesaByMesaId?pControversiaMesaID=${pControversiaMesaID}`);
+  }
   FinalizarActuacion(id: any) {
     return this.http.put<Respuesta>(`${environment.apiUrl}/ContractualControversy/FinalizarActuacion?pControversiaActuacionId=${id}`, null);
   }
