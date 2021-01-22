@@ -154,6 +154,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
         public virtual DbSet<SolicitudPagoFaseFactura> SolicitudPagoFaseFactura { get; set; }
         public virtual DbSet<SolicitudPagoFaseFacturaDescuento> SolicitudPagoFaseFacturaDescuento { get; set; }
+        public virtual DbSet<SolicitudPagoObservacion> SolicitudPagoObservacion { get; set; }
         public virtual DbSet<SolicitudPagoOtrosCostosServicios> SolicitudPagoOtrosCostosServicios { get; set; }
         public virtual DbSet<SolicitudPagoRegistrarSolicitudPago> SolicitudPagoRegistrarSolicitudPago { get; set; }
         public virtual DbSet<SolicitudPagoSoporteSolicitud> SolicitudPagoSoporteSolicitud { get; set; }
@@ -182,6 +183,7 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -5447,6 +5449,36 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SolicitudPagoFaseFacturaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SolicitudPagoFaseFacturaDescuentoId_SolicitudPagoFaseFacturaId");
+            });
+
+            modelBuilder.Entity<SolicitudPagoObservacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoObservacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.PerfilObservacion)
+                    .WithMany(p => p.SolicitudPagoObservacion)
+                    .HasForeignKey(d => d.PerfilObservacionId)
+                    .HasConstraintName("FK_SolicitudPagoObervacion_PerfilObservacion");
+
+                entity.HasOne(d => d.SolicitudPago)
+                    .WithMany(p => p.SolicitudPagoObservacion)
+                    .HasForeignKey(d => d.SolicitudPagoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoObervacion_SolicitudPago");
             });
 
             modelBuilder.Entity<SolicitudPagoOtrosCostosServicios>(entity =>

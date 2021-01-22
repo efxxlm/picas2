@@ -8,6 +8,7 @@ namespace asivamosffie.model.Models
         public Perfil()
         {
             MenuPerfil = new HashSet<MenuPerfil>();
+            SolicitudPagoObservacion = new HashSet<SolicitudPagoObservacion>();
         }
 
         public int PerfilId { get; set; }
@@ -19,5 +20,6 @@ namespace asivamosffie.model.Models
         public bool? Eliminado { get; set; }
 
         public virtual ICollection<MenuPerfil> MenuPerfil { get; set; }
+        public virtual ICollection<SolicitudPagoObservacion> SolicitudPagoObservacion { get; set; }
     }
 }

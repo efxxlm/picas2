@@ -26,6 +26,12 @@ namespace asivamosffie.api.Controllers
             _registerValidatePaymentRequierementsService = registerValidatePaymentRequierementsService;
             _settings = settings;
         }
+        [HttpGet]
+        [Route("GetProyectosByIdContrato")]
+        public async Task<IActionResult> GetProyectosByIdContrato([FromQuery] int pContratoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.GetProyectosByIdContrato(pContratoId));
+        }
 
         [HttpPost]
         [Route("DeleteSolicitudPago")]
@@ -46,13 +52,6 @@ namespace asivamosffie.api.Controllers
         public async Task<IActionResult> DeleteSolicitudLlaveCriterioProyecto([FromBody] int pContratacionProyectoId)
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudLlaveCriterioProyecto(pContratacionProyectoId, HttpContext.User.FindFirst("User").Value));
-        }
-       
-        [HttpPost]
-        [Route("DeleteSolicitudPagoFaseCriterio")]
-        public async Task<IActionResult> DeleteSolicitudPagoFaseCriterio([FromBody] int pSolicitudPagoFaseCriterioId)
-        {
-            return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterio(pSolicitudPagoFaseCriterioId, HttpContext.User.FindFirst("User").Value));
         }
 
         [HttpPost]
@@ -121,11 +120,14 @@ namespace asivamosffie.api.Controllers
             return Ok(await _registerValidatePaymentRequierementsService.GetContratoByContratoId(pContratoId));
         }
 
-        [HttpGet]
-        [Route("GetProyectosByIdContrato")]
-        public async Task<IActionResult> GetProyectosByIdContrato([FromQuery] int pContratoId)
+       
+
+        [HttpPost]
+        [Route("DeleteSolicitudPagoFaseCriterio")]
+        public async Task<IActionResult> DeleteSolicitudPagoFaseCriterio([FromBody] int pSolicitudPagoFaseCriterioId)
         {
-            return Ok(await _registerValidatePaymentRequierementsService.GetProyectosByIdContrato(pContratoId));
+            return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseCriterio(pSolicitudPagoFaseCriterioId, HttpContext.User.FindFirst("User").Value));
         }
+
     }
 }
