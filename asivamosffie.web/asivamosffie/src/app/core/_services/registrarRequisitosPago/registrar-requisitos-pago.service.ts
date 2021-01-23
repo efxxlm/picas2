@@ -57,17 +57,21 @@ export class RegistrarRequisitosPagoService {
         );
     } );
   }
+
+  getListProyectosByLlaveMen( pLlaveMen: string ) {
+    return this.http.get( `${ this.apiUrl }/GetListProyectosByLlaveMen?pLlaveMen=${ pLlaveMen }` );
+  }
   // Eliminar criterio del contrato
   deleteSolicitudPagoFaseCriterio( pSolicitudPagoFaseCriterioId: number ) {
     return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterio?pSolicitudPagoFaseCriterioId=${ pSolicitudPagoFaseCriterioId }`, '' );
   }
   // Eliminar criterio del proyecto
   deleteSolicitudPagoFaseCriterioProyecto( SolicitudPagoFaseCriterioProyectoId: number ) {
-    return this.http.post( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterioProyecto?SolicitudPagoFaseCriterioProyectoId=${ SolicitudPagoFaseCriterioProyectoId }`, '' );
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterioProyecto?SolicitudPagoFaseCriterioProyectoId=${ SolicitudPagoFaseCriterioProyectoId }`, '' );
   }
   // Eliminar llave del proyecto
   deleteSolicitudLlaveCriterioProyecto( pContratacionProyectoId: number ) {
-    return this.http.post( `${ this.apiUrl }/DeleteSolicitudLlaveCriterioProyecto?pContratacionProyectoId=${ pContratacionProyectoId }`, '' );
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudLlaveCriterioProyecto?pContratacionProyectoId=${ pContratacionProyectoId }`, '' );
   }
   // Eliminar solicitud de pago
   deleteSolicitudPago( pSolicitudPagoId: number ) {

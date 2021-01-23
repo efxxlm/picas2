@@ -15,6 +15,7 @@ export class FormCriteriosPagoComponent implements OnInit {
 
     @Input() solicitudPago: any;
     @Input() esPreconstruccion = true;
+    @Input() contratacionProyectoId: number;
     solicitudPagoRegistrarSolicitudPago: any;
     solicitudPagoFase: any;
     addressForm = this.fb.group({
@@ -59,6 +60,7 @@ export class FormCriteriosPagoComponent implements OnInit {
                         const criteriosArray = [];
                         this.solicitudPagoRegistrarSolicitudPago = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0];
                         this.solicitudPagoFase = this.solicitudPagoRegistrarSolicitudPago.solicitudPagoFase[0];
+
                         if ( this.solicitudPagoFase.solicitudPagoFaseCriterio.length > 0 ) {
                             this.solicitudPagoFase.solicitudPagoFaseCriterio.forEach( async criterio => {
                                 // GET Criterio seleccionado
@@ -305,34 +307,74 @@ export class FormCriteriosPagoComponent implements OnInit {
     }
 
     guardar() {
-        this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
-        this.criterios.controls.forEach( control => {
-            const criterio = control.value;
-            this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
-                {
-                    tipoCriterioCodigo: criterio.tipoCriterioCodigo,
-                    solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
-                    tipoPagoCodigo: criterio.tipoPago.codigo,
-                    conceptoPagocriterio: criterio.conceptoPago.codigo,
-                    valorFacturado: criterio.valorFacturado,
-                    solicitudPagoFaseId: criterio.solicitudPagoFaseId
-                }
-            );
-        } );
-        this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
-            .subscribe(
-                response => {
-                    this.openDialog( '', `<b>${ response.message }</b>` );
-                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
-                        () => this.routes.navigate(
-                            [
-                                '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
-                            ]
-                        )
-                    );
-                },
-                err => this.openDialog( '', `<b>${ err.message }</b>` )
-            );
+        if ( this.contratacionProyectoId === 0 ) {
+            this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
+            this.criterios.controls.forEach( control => {
+                const criterio = control.value;
+                this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
+                    {
+                        tipoCriterioCodigo: criterio.tipoCriterioCodigo,
+                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
+                        tipoPagoCodigo: criterio.tipoPago.codigo,
+                        conceptoPagocriterio: criterio.conceptoPago.codigo,
+                        valorFacturado: criterio.valorFacturado,
+                        solicitudPagoFaseId: criterio.solicitudPagoFaseId
+                    }
+                );
+            } );
+            this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
+                .subscribe(
+                    response => {
+                        this.openDialog( '', `<b>${ response.message }</b>` );
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
+                                ]
+                            )
+                        );
+                    },
+                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                );
+        } else {
+            this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio = [];
+            this.criterios.controls.forEach( control => {
+                const criterio = control.value;
+                const solicitudPagoFaseCriterioProyecto = [];
+                solicitudPagoFaseCriterioProyecto.push(
+                    {
+                        contratacionProyectoId: this.contratacionProyectoId,
+                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
+                        valorFacturado: criterio.valorFacturado
+                    }
+                );
+                this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseCriterio.push(
+                    {
+                        tipoCriterioCodigo: criterio.tipoCriterioCodigo,
+                        solicitudPagoFaseCriterioId: criterio.solicitudPagoFaseCriterioId,
+                        tipoPagoCodigo: criterio.tipoPago.codigo,
+                        conceptoPagocriterio: criterio.conceptoPago.codigo,
+                        valorFacturado: criterio.valorFacturado,
+                        solicitudPagoFaseId: criterio.solicitudPagoFaseId,
+                        solicitudPagoFaseCriterioProyecto
+                    }
+                );
+            } );
+            this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
+                .subscribe(
+                    response => {
+                        this.openDialog( '', `<b>${ response.message }</b>` );
+                        this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                            () => this.routes.navigate(
+                                [
+                                    '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
+                                ]
+                            )
+                        );
+                    },
+                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                );
+        }
     }
 
 }

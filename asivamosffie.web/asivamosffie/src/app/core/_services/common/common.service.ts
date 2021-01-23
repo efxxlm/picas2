@@ -277,6 +277,10 @@ listaEstadoRevision(){
     return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=135`);
   }
 
+  tiposDescuento() {
+    return this.http.get<Dominio[]>(`${environment.apiUrl}/Common/dominioByIdDominio?pIdDominio=146`);
+  }
+
   public listaUsuarios(){
 
     let lista: Usuario[] = [];

@@ -147,7 +147,7 @@
                     <div class="chartGen">
                         <div class="chart1">
                             <p><strong>Nombre de entidad contratista:</strong> {{ contrato.contratacion.contratista.nombre }} </p>
-                            <p><strong>Fecha de inicio del contrato:</strong> {{ contrato.contratoPoliza[0].fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
+                            <p><strong>Fecha de inicio del contrato:</strong> {{ contrato.contratoPoliza[0]?.fechaAprobacion | date: 'dd/MM/yyyy' }} </p>
                             <p *ngIf="contrato.plazoFase1PreDias !== undefined"><strong>Plazo fase 1 - Preconstruccion: Meses:</strong> {{ contrato.plazoFase1PreMeses }} <strong>Días:</strong> {{ contrato.plazoFase1PreDias }} </p>
                             <p *ngIf="contrato.plazoFase1PreDias === undefined"><strong>Plazo fase 2 - Construccion: Meses:</strong> {{ contrato.plazoFase2ConstruccionMeses }} <strong>Días:</strong> {{ contrato.plazoFase2ConstruccionDias }} </p>
                         </div>

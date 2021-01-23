@@ -51,6 +51,7 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     fasesArray: Dominio[] = [];
     faseContrato: any = {};
     postConstruccion = '3';
+    contratacionProyectoId = 0;
 
     constructor(
         private fb: FormBuilder,
@@ -64,6 +65,9 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
         this.commonSvc.listaFases()
             .subscribe(
                 response => {
+                    if ( this.contrato.contratacion.contratacionProyecto.length  > 0 && this.contrato.contratacion.contratacionProyecto.length < 2 ) {
+                        this.contratacionProyectoId = this.contrato.contratacion.contratacionProyecto[0].contratacionProyectoId;
+                    }
                     response.forEach( ( fase, index ) => {
                         if ( fase.codigo === this.postConstruccion ) {
                             response.splice( index, 1 );
@@ -78,7 +82,6 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
                         }
                     } );
                     this.fasesArray = response;
-
                     if ( this.contrato.solicitudPago.length > 0 ) {
                         this.solicitudPagoId = this.contrato.solicitudPago[0].solicitudPagoId;
                     }
@@ -130,6 +133,9 @@ export class FormRegistrarSolicitudDePagoComponent implements OnInit {
     };
 
     enabledAcordeonFase( registroCompleto: boolean, esPreconstruccion: boolean ) {
+        if ( registroCompleto === undefined || registroCompleto === null ) {
+            return 'en-alerta';
+        }
         // Acordeon fase preconstruccion
         if ( registroCompleto === true && esPreconstruccion === true ) {
             return 'sin-diligenciar';
