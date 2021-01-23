@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { RegistrarRequisitosPagoService } from 'src/app/core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 import { DialogDevolverSolicitudComponent } from '../dialog-devolver-solicitud/dialog-devolver-solicitud.component';
 
 @Component({
@@ -56,13 +57,19 @@ export class RegistrarValidarRequisitosPagoComponent implements OnInit {
         this.router.navigate(['registrarValidarRequisitosPago/registrarNuevaSolicitudPago'])
     }
 
-    devolverSolictud(){
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.height = 'auto';
-        dialogConfig.width = '865px';
-        //dialogConfig.data = { id: id, idRol: idRol, numContrato: numContrato, fecha1Titulo: fecha1Titulo, fecha2Titulo: fecha2Titulo };
-        const dialogRef = this.dialog.open(DialogDevolverSolicitudComponent, dialogConfig);
-        //dialogRef.afterClosed().subscribe(value => {});
+    openDialog(modalTitle: string, modalText: string) {
+        const dialogRef = this.dialog.open(ModalDialogComponent, {
+          width: '28em',
+          data: { modalTitle, modalText }
+        });
+    }
+
+    devolverSolictud( pSolicitudPagoId: number ){
+        this.registrarPagosSvc.deleteSolicitudPago( pSolicitudPagoId )
+            .subscribe(
+                response => this.openDialog( '', `<b>${ response.message }</b>` ),
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }

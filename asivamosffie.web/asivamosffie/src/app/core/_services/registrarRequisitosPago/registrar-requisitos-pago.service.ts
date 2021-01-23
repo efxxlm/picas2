@@ -71,7 +71,7 @@ export class RegistrarRequisitosPagoService {
   }
   // Eliminar solicitud de pago
   deleteSolicitudPago( pSolicitudPagoId: number ) {
-    return this.http.post( `${ this.apiUrl }/DeleteSolicitudPago?pSolicitudPagoId=${ pSolicitudPagoId }`, '' );
+    return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPago?pSolicitudPagoId=${ pSolicitudPagoId }`, '' );
   }
 
 }
