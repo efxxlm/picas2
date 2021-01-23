@@ -9,6 +9,8 @@ namespace asivamosffie.services.Interfaces
 {
     public interface IRegisterValidatePaymentRequierementsService
     {
+        Task<dynamic> GetListProyectosByLlaveMen(string pLlaveMen);
+
         Task<Respuesta> DeleteSolicitudPago(int pSolicitudPagoId, string pUsuarioModificacion);
 
         Task<Respuesta> DeleteSolicitudLlaveCriterioProyecto(int pContratacionProyectoId, string pUsuarioModificacion);

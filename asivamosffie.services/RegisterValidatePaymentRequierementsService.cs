@@ -32,6 +32,16 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
+        public async Task <dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
+        { 
+            return await _context.Proyecto.Include(r => r.ContratacionProyecto)
+                .Where(r => r.LlaveMen.Contains(pLlaveMen))
+                .Select(r => new { 
+                    r.ContratacionProyecto.FirstOrDefault().ContratacionProyectoId,
+                    r.LlaveMen 
+                }).ToListAsync(); 
+        }
+         
         public async Task<dynamic> GetListSolicitudPago()
         {
             var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
