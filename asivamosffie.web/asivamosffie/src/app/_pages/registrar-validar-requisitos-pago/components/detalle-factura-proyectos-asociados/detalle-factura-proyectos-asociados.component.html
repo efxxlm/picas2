@@ -100,7 +100,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="text-right">
-                                        <button mat-button color="warn" type="button" class="btn-eliminar">
+                                        <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteCriterio( criterioProyecto, i, j )">
                                           <img src="assets/img/icon/menos.svg">
                                           Eliminar criterio
                                         </button>
@@ -112,7 +112,7 @@
                 </mat-card-content>
             </mat-card>
             <div class="text-right" *ngIf="project.get( 'check' ).value === true">
-                <button mat-button color="warn" type="button" class="btn-eliminar">
+                <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteLLave( project, i )">
                   <img src="assets/img/icon/menos.svg">
                   Eliminar llave
                 </button>

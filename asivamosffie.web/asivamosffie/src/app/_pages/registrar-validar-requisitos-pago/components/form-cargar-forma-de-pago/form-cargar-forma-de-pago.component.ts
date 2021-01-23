@@ -51,11 +51,17 @@ export class FormCargarFormaDePagoComponent implements OnInit {
                     if ( this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo !== undefined ) {
                         const formaPreConstruccionSeleccionada = this.formaPagoArray.filter( forma => forma.codigo === this.solicitudPagoCargarFormaPago.fasePreConstruccionFormaPagoCodigo );
                         this.addressForm.get( 'formaPagoPreconstruccion' ).setValue( formaPreConstruccionSeleccionada.length > 0 ? formaPreConstruccionSeleccionada[0] : null );
+                        if ( this.solicitudPagoCargarFormaPago.registroCompleto === true ) {
+                            this.addressForm.get( 'formaPagoPreconstruccion' ).disable();
+                        }
                     }
 
                     if ( this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo !== undefined ) {
                         const formaConstruccionSeleccionada = this.formaPagoArray.filter( forma => forma.codigo === this.solicitudPagoCargarFormaPago.faseConstruccionFormaPagoCodigo );
                         this.addressForm.get( 'formaPagoConstruccion' ).setValue( formaConstruccionSeleccionada.length > 0 ? formaConstruccionSeleccionada[0] : null );
+                        if ( this.solicitudPagoCargarFormaPago.registroCompleto === true ) {
+                            this.addressForm.get( 'formaPagoConstruccion' ).disable();
+                        }
                     }
                 }
             } );

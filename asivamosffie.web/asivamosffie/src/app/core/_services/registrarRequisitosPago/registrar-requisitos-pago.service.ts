@@ -57,13 +57,21 @@ export class RegistrarRequisitosPagoService {
         );
     } );
   }
-
+  // Eliminar criterio del contrato
   deleteSolicitudPagoFaseCriterio( pSolicitudPagoFaseCriterioId: number ) {
     return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterio?pSolicitudPagoFaseCriterioId=${ pSolicitudPagoFaseCriterioId }`, '' );
   }
-
+  // Eliminar criterio del proyecto
   deleteSolicitudPagoFaseCriterioProyecto( SolicitudPagoFaseCriterioProyectoId: number ) {
     return this.http.post( `${ this.apiUrl }/DeleteSolicitudPagoFaseCriterioProyecto?SolicitudPagoFaseCriterioProyectoId=${ SolicitudPagoFaseCriterioProyectoId }`, '' );
+  }
+  // Eliminar llave del proyecto
+  deleteSolicitudLlaveCriterioProyecto( pContratacionProyectoId: number ) {
+    return this.http.post( `${ this.apiUrl }/DeleteSolicitudLlaveCriterioProyecto?pContratacionProyectoId=${ pContratacionProyectoId }`, '' );
+  }
+  // Eliminar solicitud de pago
+  deleteSolicitudPago( pSolicitudPagoId: number ) {
+    return this.http.post( `${ this.apiUrl }/DeleteSolicitudPago?pSolicitudPagoId=${ pSolicitudPagoId }`, '' );
   }
 
 }
