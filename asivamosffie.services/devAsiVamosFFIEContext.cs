@@ -1106,7 +1106,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
-                entity.Property(e => e.Modalidad)
+                entity.Property(e => e.ModalidadCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
