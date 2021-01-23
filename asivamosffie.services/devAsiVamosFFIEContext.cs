@@ -146,10 +146,10 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SesionTemaVoto> SesionTemaVoto { get; set; }
         public virtual DbSet<Solicitud> Solicitud { get; set; }
         public virtual DbSet<SolicitudPago> SolicitudPago { get; set; }
-        public virtual DbSet<SolicitudPagoAmortizacion> SolicitudPagoAmortizacion { get; set; }
         public virtual DbSet<SolicitudPagoCargarFormaPago> SolicitudPagoCargarFormaPago { get; set; }
         public virtual DbSet<SolicitudPagoExpensas> SolicitudPagoExpensas { get; set; }
         public virtual DbSet<SolicitudPagoFase> SolicitudPagoFase { get; set; }
+        public virtual DbSet<SolicitudPagoFaseAmortizacion> SolicitudPagoFaseAmortizacion { get; set; }
         public virtual DbSet<SolicitudPagoFaseCriterio> SolicitudPagoFaseCriterio { get; set; }
         public virtual DbSet<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
         public virtual DbSet<SolicitudPagoFaseFactura> SolicitudPagoFaseFactura { get; set; }
@@ -183,7 +183,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VValidarSeguimientoSemanal> VValidarSeguimientoSemanal { get; set; }
         public virtual DbSet<VVerificarSeguimientoSemanal> VVerificarSeguimientoSemanal { get; set; }
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
-
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -5224,31 +5223,6 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_SolicitudPagoId_ContratoId");
             });
 
-            modelBuilder.Entity<SolicitudPagoAmortizacion>(entity =>
-            {
-                entity.HasKey(e => e.SolicitudPagoFaseAmortizacionId)
-                    .HasName("PK__Registra__A833D9FF66862EE2");
-
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(25, 1)");
-
-                entity.HasOne(d => d.SolicitudPagoFase)
-                    .WithMany(p => p.SolicitudPagoAmortizacion)
-                    .HasForeignKey(d => d.SolicitudPagoFaseId)
-                    .HasConstraintName("FK_SolicitudPagoFaseAmortizacionAnticipo_SolicitudPagoFase");
-            });
-
             modelBuilder.Entity<SolicitudPagoCargarFormaPago>(entity =>
             {
                 entity.Property(e => e.FaseConstruccionFormaPagoCodigo)
@@ -5332,6 +5306,28 @@ namespace asivamosffie.model.Models
                     .HasForeignKey(d => d.SolicitudPagoRegistrarSolicitudPagoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SolicitudPagoFase_SolicitudPagoRegistrarSolicitudPago");
+            });
+
+            modelBuilder.Entity<SolicitudPagoFaseAmortizacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(25, 1)");
+
+                entity.HasOne(d => d.SolicitudPagoFase)
+                    .WithMany(p => p.SolicitudPagoFaseAmortizacion)
+                    .HasForeignKey(d => d.SolicitudPagoFaseId)
+                    .HasConstraintName("FK_SolicitudPagoFaseAmortizacionAnticipo_SolicitudPagoFase");
             });
 
             modelBuilder.Entity<SolicitudPagoFaseCriterio>(entity =>

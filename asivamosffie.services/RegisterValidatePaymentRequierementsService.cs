@@ -145,7 +145,7 @@ namespace asivamosffie.services
                                    .ThenInclude(r => r.SolicitudPagoFaseCriterioProyecto)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                           .ThenInclude(r => r.SolicitudPagoFase)
-                              .ThenInclude(r => r.SolicitudPagoAmortizacion)
+                              .ThenInclude(r => r.SolicitudPagoFaseAmortizacion)
                        .Include(r => r.SolicitudPagoRegistrarSolicitudPago)
                           .ThenInclude(r => r.SolicitudPagoFase)
                               .ThenInclude(r => r.SolicitudPagoFaseFactura)
@@ -599,8 +599,8 @@ namespace asivamosffie.services
                     CreateEditSolicitudPagoFaseCriterio(SolicitudPagoFase.SolicitudPagoFaseCriterio, SolicitudPagoFase.UsuarioCreacion);
                 if (SolicitudPagoFase.SolicitudPagoFaseFactura.Count() > 0)
                     CreateEditSolicitudPagoFaseFactura(SolicitudPagoFase.SolicitudPagoFaseFactura, pUsuarioCreacion);
-                if (SolicitudPagoFase.SolicitudPagoAmortizacion.Count() > 0)
-                    CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoAmortizacion, pUsuarioCreacion);
+                if (SolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() > 0)
+                    CreateEditSolicitudPagoSolicitudPagoAmortizacion(SolicitudPagoFase.SolicitudPagoFaseAmortizacion, pUsuarioCreacion);
 
                 if (SolicitudPagoFase.SolicitudPagoFaseId > 0)
                 {
@@ -620,13 +620,13 @@ namespace asivamosffie.services
             }
         }
 
-        private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoAmortizacion> pSolicitudPagoAmortizacionList, string pUsuarioCreacion)
+        private void CreateEditSolicitudPagoSolicitudPagoAmortizacion(ICollection<SolicitudPagoFaseAmortizacion> pSolicitudPagoAmortizacionList, string pUsuarioCreacion)
         {
             foreach (var SolicitudPagoAmortizacion in pSolicitudPagoAmortizacionList)
             {
                 if (SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId > 0)
                 {
-                    SolicitudPagoAmortizacion solicitudPagoAmortizacionOld = _context.SolicitudPagoAmortizacion.Find(SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId);
+                    SolicitudPagoFaseAmortizacion solicitudPagoAmortizacionOld = _context.SolicitudPagoFaseAmortizacion.Find(SolicitudPagoAmortizacion.SolicitudPagoFaseAmortizacionId);
                     solicitudPagoAmortizacionOld.UsuarioModificacion = pUsuarioCreacion;
                     solicitudPagoAmortizacionOld.FechaModificacion = DateTime.Now;
 
@@ -641,7 +641,7 @@ namespace asivamosffie.services
                     SolicitudPagoAmortizacion.FechaCreacion = DateTime.Now;
                     SolicitudPagoAmortizacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion);
 
-                    _context.SolicitudPagoAmortizacion.Add(SolicitudPagoAmortizacion);
+                    _context.SolicitudPagoFaseAmortizacion.Add(SolicitudPagoAmortizacion);
                 }
             }
         }
@@ -841,7 +841,7 @@ namespace asivamosffie.services
         private bool ValidateCompleteRecordSolicitudPagoFase(SolicitudPagoFase pSolicitudPagoFase)
         {
             if (pSolicitudPagoFase.SolicitudPagoFaseFactura.Count() == 0
-                || pSolicitudPagoFase.SolicitudPagoAmortizacion.Count() == 0
+                || pSolicitudPagoFase.SolicitudPagoFaseAmortizacion.Count() == 0
                 ) return false;
 
             foreach (var SolicitudPagoFaseFactura in pSolicitudPagoFase.SolicitudPagoFaseFactura)
@@ -850,7 +850,7 @@ namespace asivamosffie.services
                     return false;
             }
 
-            foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoAmortizacion)
+            foreach (var SolicitudPagoAmortizacion in pSolicitudPagoFase.SolicitudPagoFaseAmortizacion)
             {
                 if (!ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion))
                     return false;
@@ -858,7 +858,7 @@ namespace asivamosffie.services
             return true;
         }
 
-        private bool ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion solicitudPagoAmortizacion)
+        private bool ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoFaseAmortizacion solicitudPagoAmortizacion)
         {
             if (string.IsNullOrEmpty(solicitudPagoAmortizacion.PorcentajeAmortizacion.ToString())
                   || string.IsNullOrEmpty(solicitudPagoAmortizacion.ValorAmortizacion.ToString())
