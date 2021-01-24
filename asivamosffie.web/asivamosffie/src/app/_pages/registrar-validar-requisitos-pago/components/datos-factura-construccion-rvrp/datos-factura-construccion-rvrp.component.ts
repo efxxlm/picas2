@@ -58,6 +58,19 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
             this.addressForm.get( 'fechaFactura' ).setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date( this.solicitudPagoFaseFactura.fecha ) : null );
             this.addressForm.get( 'aplicaDescuento' ).setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
             this.addressForm.get( 'numeroDescuentos' ).setValue( `${ this.solicitudPagoFaseFacturaDescuento.length }` );
+            this.addressForm.get( 'valorAPagarDespues' ).setValue( this.solicitudPagoFaseFactura.valorFacturadoConDescuento !== undefined ? this.solicitudPagoFaseFactura.valorFacturadoConDescuento : null );
+            for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
+                this.descuentos.push(
+                    this.fb.group(
+                        {
+                            solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
+                            solicitudPagoFaseFacturaId: [ descuento.solicitudPagoFaseFacturaId ],
+                            tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                            valorDescuento: [ descuento.valorDescuento ]
+                        }
+                    )
+                );
+            }
         }
         for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
             this.valorFacturado += criterio.valorFacturado;
@@ -189,8 +202,11 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                         } else {
                             this.descuentos.removeAt( index );
                             this.addressForm.get( 'numeroDescuentos' ).setValue( `${ this.descuentos.length }` );
-                            this.openDialog( '', '<b>Falta el servicio.</b>' );
-                            // this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' );
+                            this.registrarPagosSvc.deleteSolicitudPagoFaseFacturaDescuento( descuentoId )
+                                .subscribe(
+                                    () => this.openDialog( '', '<b>La información se ha eliminado correctamente.</b>' ),
+                                    err => this.openDialog( '', `<b>${ err.message }</b>` )
+                                );
                         }
                     }
                 }
@@ -218,6 +234,7 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                 valorFacturado: this.valorFacturado,
                 numero: this.addressForm.get( 'numeroFactura' ).value,
                 tieneDescuento: this.addressForm.get( 'aplicaDescuento' ).value,
+                valorFacturadoConDescuento: this.addressForm.get( 'valorAPagarDespues' ).value,
                 solicitudPagoFaseFacturaDescuento: getSolicitudPagoFaseFacturaDescuento()
             }
         ]

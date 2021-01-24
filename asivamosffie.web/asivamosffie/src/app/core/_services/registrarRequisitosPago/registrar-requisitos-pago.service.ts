@@ -77,5 +77,9 @@ export class RegistrarRequisitosPagoService {
   deleteSolicitudPago( pSolicitudPagoId: number ) {
     return this.http.post<Respuesta>( `${ this.apiUrl }/DeleteSolicitudPago?pSolicitudPagoId=${ pSolicitudPagoId }`, '' );
   }
+  // Eliminar descuentos
+  deleteSolicitudPagoFaseFacturaDescuento( pSolicitudPagoFaseFacturaDescuentoId: number ) {
+    return this.http.post( `${ this.apiUrl }/DeleteSolicitudPagoFaseFacturaDescuento?pSolicitudPagoFaseFacturaDescuentoId=${ pSolicitudPagoFaseFacturaDescuentoId }`, '' );
+  }
 
 }
