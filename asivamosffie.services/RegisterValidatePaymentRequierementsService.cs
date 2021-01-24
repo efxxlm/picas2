@@ -335,7 +335,6 @@ namespace asivamosffie.services
             }
         }
 
-
         #region  Tipo Obra Interventoria
         public async Task<Respuesta> DeleteSolicitudPagoFaseFacturaDescuento(int pSolicitudPagoFaseFacturaDescuentoId, string pUsuarioModificacion)
         {
