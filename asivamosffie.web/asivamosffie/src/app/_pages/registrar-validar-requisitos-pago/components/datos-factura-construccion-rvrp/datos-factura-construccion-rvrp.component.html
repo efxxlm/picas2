@@ -41,7 +41,7 @@
             </div>
           </div>
         </div>
-        <p style="margin-top: 10px;"><strong>Valor facturado: </strong>$15.000.000</p>
+        <p style="margin-top: 10px;"><strong>Valor facturado: </strong> ${{ valorFacturado | currency:' ':'symbol-narrow':'.0-0' }} </p>
 
         <h2 class="card-subTitle">Descuentos dirección técnica asociados a la factura</h2>
         <div class="row">
@@ -89,7 +89,7 @@
                   <div class="col">
                     <mat-form-field class="select-width">
                       <mat-select formControlName="tipoDescuentoCodigo" required>
-                        <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento">
+                        <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento.codigo">
                           {{ tipoDescuento.nombre }}
                         </mat-option>
                       </mat-select>
@@ -127,7 +127,7 @@
               </button>
             </div>
             <div class="text-right" *ngIf="descuentos.length > 1">
-              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteDescuento( i, descuento.get( 'descuentoId' ).value )">
+              <button mat-button color="warn" type="button" class="btn-eliminar" (click)="deleteDescuento( i, descuento.get( 'solicitudPagoFaseFacturaDescuentoId' ).value )">
                 <img src="assets/img/icon/menos.svg">
                 Eliminar descuento
               </button>

@@ -1,3 +1,5 @@
+import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
+import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,8 +22,11 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
         descuentos: this.fb.array( [] ),
         valorAPagarDespues: [null, Validators.required]
     });
+    valorFacturado = 0;
     tiposDescuentoArray: Dominio[] = [];
-    solicitudPagoFaseFactura: any[] = [];
+    solicitudPagoFaseFacturaDescuento: any[] = [];
+    solicitudPagoFaseFacturaId = 0;
+    solicitudPagoFaseFactura: any;
     solicitudPagoFase: any;
 
     get descuentos() {
@@ -31,7 +36,9 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private dialog: MatDialog,
-        private commonSvc: CommonService )
+        private commonSvc: CommonService,
+        private routes: Router,
+        private registrarPagosSvc: RegistrarRequisitosPagoService )
     {
         this.commonSvc.tiposDescuento()
             .subscribe( response => this.tiposDescuentoArray = response );
@@ -43,24 +50,54 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
 
     getDatosFactura() {
         this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
+        this.solicitudPagoFaseFactura = this.solicitudPagoFase.solicitudPagoFaseFactura[0];
+        if ( this.solicitudPagoFaseFactura !== undefined ) {
+            this.solicitudPagoFaseFacturaId = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaId;
+            this.solicitudPagoFaseFacturaDescuento = this.solicitudPagoFaseFactura.solicitudPagoFaseFacturaDescuento;
+            this.addressForm.get( 'numeroFactura' ).setValue( this.solicitudPagoFaseFactura.numero !== undefined ? this.solicitudPagoFaseFactura.numero : null );
+            this.addressForm.get( 'fechaFactura' ).setValue( this.solicitudPagoFaseFactura.fecha !== undefined ? new Date( this.solicitudPagoFaseFactura.fecha ) : null );
+            this.addressForm.get( 'aplicaDescuento' ).setValue( this.solicitudPagoFaseFactura.tieneDescuento !== undefined ? this.solicitudPagoFaseFactura.tieneDescuento : null );
+            this.addressForm.get( 'numeroDescuentos' ).setValue( `${ this.solicitudPagoFaseFacturaDescuento.length }` );
+        }
+        for ( const criterio of this.solicitudPagoFase.solicitudPagoFaseCriterio ) {
+            this.valorFacturado += criterio.valorFacturado;
+        }
         this.addressForm.get( 'numeroDescuentos' ).valueChanges
             .subscribe(
                 value => {
                     value = Number( value );
-                    if ( value > 0 ) {
-                        if ( this.descuentos.dirty === false ) {
+                    if ( this.solicitudPagoFaseFactura !== undefined && this.solicitudPagoFaseFacturaDescuento.length > 0 ) {
+                        if ( value > 0 ) {
                             this.descuentos.clear();
-                            for ( let i = 0; i < value; i++ ) {
+                            for ( const descuento of this.solicitudPagoFaseFacturaDescuento ) {
                                 this.descuentos.push(
                                     this.fb.group(
                                         {
-                                            solicitudPagoFaseDescuentoId: [ 0 ],
-                                            solicitudPagoFaseFacturaId: [ 0 ],
-                                            tipoDescuentoCodigo: [ null ],
-                                            valorDescuento: [ null ]
+                                            solicitudPagoFaseFacturaDescuentoId: [ descuento.solicitudPagoFaseFacturaDescuentoId ],
+                                            solicitudPagoFaseFacturaId: [ descuento.solicitudPagoFaseFacturaId ],
+                                            tipoDescuentoCodigo: [ descuento.tipoDescuentoCodigo ],
+                                            valorDescuento: [ descuento.valorDescuento ]
                                         }
                                     )
                                 );
+                            }
+                        }
+                    } else {
+                        if ( value > 0 ) {
+                            if ( this.descuentos.dirty === false ) {
+                                this.descuentos.clear();
+                                for ( let i = 0; i < value; i++ ) {
+                                    this.descuentos.push(
+                                        this.fb.group(
+                                            {
+                                                solicitudPagoFaseFacturaDescuentoId: [ 0 ],
+                                                solicitudPagoFaseFacturaId: [ this.solicitudPagoFaseFacturaId ],
+                                                tipoDescuentoCodigo: [ null ],
+                                                valorDescuento: [ null ]
+                                            }
+                                        )
+                                    );
+                                }
                             }
                         }
                     }
@@ -81,22 +118,32 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     }
 
     maxLength(e: any, n: number) {
-      if (e.editor.getLength() > n) {
-        e.editor.deleteText(n, e.editor.getLength());
-      }
+        if (e.editor.getLength() > n) {
+          e.editor.deleteText(n, e.editor.getLength());
+        }
     }
 
     totalPagoDescuentos() {
         let totalDescuentos = 0;
+        let valorDespuesDescuentos = 0;
         this.descuentos.controls.forEach( control => {
             if ( control.value.valorDescuento !== null ) {
                 totalDescuentos += control.value.valorDescuento;
             }
         } );
         if ( totalDescuentos > 0 ) {
-            this.addressForm.get( 'valorAPagarDespues' ).setValue( totalDescuentos );
+            if ( totalDescuentos > this.valorFacturado ) {
+                this.openDialog( '', '<b>El valor total de los descuentos es mayor al valor facturado.</b>' );
+                this.addressForm.get( 'valorAPagarDespues' ).setValue( null );
+                return;
+            } else {
+                valorDespuesDescuentos = this.valorFacturado - totalDescuentos;
+                this.addressForm.get( 'valorAPagarDespues' ).setValue( valorDespuesDescuentos );
+                return;
+            }
         } else {
             this.addressForm.get( 'valorAPagarDespues' ).setValue( null );
+            return;
         }
     }
 
@@ -121,8 +168,8 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
         this.descuentos.push(
             this.fb.group(
                 {
-                    solicitudPagoFaseDescuentoId: [ 0 ],
-                    solicitudPagoFaseFacturaId: [ 0 ],
+                    solicitudPagoFaseFacturaDescuentoId: [ 0 ],
+                    solicitudPagoFaseFacturaId: [ this.solicitudPagoFaseFacturaId ],
                     tipoDescuentoCodigo: [ null ],
                     valorDescuento: [ null ]
                 }
@@ -151,24 +198,45 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     }
 
     onSubmit() {
+        const getSolicitudPagoFaseFacturaDescuento = () => {
+            if ( this.descuentos.length > 0 ) {
+                if ( this.addressForm.get( 'aplicaDescuento' ).value === true ) {
+                    return this.descuentos.value;
+                } else {
+                    return [];
+                }
+            } else {
+                return [];
+            }
+        }
+
         const solicitudPagoFaseFactura = [
             {
-                solicitudPagoFaseFacturaId: 0,
-                solicitudPagoFaseId: 0,
-                fecha: '',
-                valorFacturado: 15,
-                numero: '',
-                tieneDescuento: false,
-                solicitudPagoFaseDescuento: [
-                    {
-                        solicitudPagoFaseDescuentoId: 0,
-                        solicitudPagoFaseFacturaId: 0,
-                        tipoDescuentoCodigo: 0,
-                        valorDescuento: 0
-                    }
-                ]
+                solicitudPagoFaseFacturaId: this.solicitudPagoFaseFacturaId,
+                solicitudPagoFaseId: this.solicitudPagoFase.solicitudPagoFaseId,
+                fecha: new Date( this.addressForm.get( 'fechaFactura' ).value ).toISOString(),
+                valorFacturado: this.valorFacturado,
+                numero: this.addressForm.get( 'numeroFactura' ).value,
+                tieneDescuento: this.addressForm.get( 'aplicaDescuento' ).value,
+                solicitudPagoFaseFacturaDescuento: getSolicitudPagoFaseFacturaDescuento()
             }
         ]
+        console.log( solicitudPagoFaseFactura );
+        this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0].solicitudPagoFaseFactura = solicitudPagoFaseFactura;
+        this.registrarPagosSvc.createEditNewPayment( this.solicitudPago )
+            .subscribe(
+                response => {
+                    this.openDialog( '', `<b>${ response.message }</b>` );
+                    this.routes.navigateByUrl( '/', {skipLocationChange: true} ).then(
+                        () => this.routes.navigate(
+                            [
+                                '/registrarValidarRequisitosPago/verDetalleEditar', this.solicitudPago.contratoId
+                            ]
+                        )
+                    );
+                },
+                err => this.openDialog( '', `<b>${ err.message }</b>` )
+            );
     }
 
 }
