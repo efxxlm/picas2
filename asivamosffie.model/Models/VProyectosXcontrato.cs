@@ -18,5 +18,6 @@ namespace asivamosffie.model.Models
         public int ContratacionId { get; set; }
         public int ContratacionProyectoId { get; set; }
         public DateTime? FechaActaInicioFase2 { get; set; }
+        public decimal? ValorTotal { get; set; }
     }
 }

@@ -146,14 +146,15 @@ namespace asivamosffie.model.Models
         public virtual DbSet<SesionTemaVoto> SesionTemaVoto { get; set; }
         public virtual DbSet<Solicitud> Solicitud { get; set; }
         public virtual DbSet<SolicitudPago> SolicitudPago { get; set; }
-        public virtual DbSet<SolicitudPagoAmortizacion> SolicitudPagoAmortizacion { get; set; }
         public virtual DbSet<SolicitudPagoCargarFormaPago> SolicitudPagoCargarFormaPago { get; set; }
         public virtual DbSet<SolicitudPagoExpensas> SolicitudPagoExpensas { get; set; }
         public virtual DbSet<SolicitudPagoFase> SolicitudPagoFase { get; set; }
+        public virtual DbSet<SolicitudPagoFaseAmortizacion> SolicitudPagoFaseAmortizacion { get; set; }
         public virtual DbSet<SolicitudPagoFaseCriterio> SolicitudPagoFaseCriterio { get; set; }
         public virtual DbSet<SolicitudPagoFaseCriterioProyecto> SolicitudPagoFaseCriterioProyecto { get; set; }
         public virtual DbSet<SolicitudPagoFaseFactura> SolicitudPagoFaseFactura { get; set; }
         public virtual DbSet<SolicitudPagoFaseFacturaDescuento> SolicitudPagoFaseFacturaDescuento { get; set; }
+        public virtual DbSet<SolicitudPagoObservacion> SolicitudPagoObservacion { get; set; }
         public virtual DbSet<SolicitudPagoOtrosCostosServicios> SolicitudPagoOtrosCostosServicios { get; set; }
         public virtual DbSet<SolicitudPagoRegistrarSolicitudPago> SolicitudPagoRegistrarSolicitudPago { get; set; }
         public virtual DbSet<SolicitudPagoSoporteSolicitud> SolicitudPagoSoporteSolicitud { get; set; }
@@ -1104,7 +1105,7 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaTramite).HasColumnType("datetime");
 
-                entity.Property(e => e.Modalidad)
+                entity.Property(e => e.ModalidadCodigo)
                     .HasMaxLength(2)
                     .IsUnicode(false);
 
@@ -5222,31 +5223,6 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_SolicitudPagoId_ContratoId");
             });
 
-            modelBuilder.Entity<SolicitudPagoAmortizacion>(entity =>
-            {
-                entity.HasKey(e => e.SolicitudPagoFaseAmortizacionId)
-                    .HasName("PK__Registra__A833D9FF66862EE2");
-
-                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
-
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
-
-                entity.Property(e => e.UsuarioCreacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.UsuarioModificacion)
-                    .HasMaxLength(200)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(25, 1)");
-
-                entity.HasOne(d => d.SolicitudPagoFase)
-                    .WithMany(p => p.SolicitudPagoAmortizacion)
-                    .HasForeignKey(d => d.SolicitudPagoFaseId)
-                    .HasConstraintName("FK_SolicitudPagoFaseAmortizacionAnticipo_SolicitudPagoFase");
-            });
-
             modelBuilder.Entity<SolicitudPagoCargarFormaPago>(entity =>
             {
                 entity.Property(e => e.FaseConstruccionFormaPagoCodigo)
@@ -5332,6 +5308,28 @@ namespace asivamosffie.model.Models
                     .HasConstraintName("FK_SolicitudPagoFase_SolicitudPagoRegistrarSolicitudPago");
             });
 
+            modelBuilder.Entity<SolicitudPagoFaseAmortizacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ValorAmortizacion).HasColumnType("decimal(25, 1)");
+
+                entity.HasOne(d => d.SolicitudPagoFase)
+                    .WithMany(p => p.SolicitudPagoFaseAmortizacion)
+                    .HasForeignKey(d => d.SolicitudPagoFaseId)
+                    .HasConstraintName("FK_SolicitudPagoFaseAmortizacionAnticipo_SolicitudPagoFase");
+            });
+
             modelBuilder.Entity<SolicitudPagoFaseCriterio>(entity =>
             {
                 entity.Property(e => e.ConceptoPagoCriterio)
@@ -5404,6 +5402,10 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
 
+                entity.Property(e => e.Numero)
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.UsuarioCreacion)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -5414,6 +5416,8 @@ namespace asivamosffie.model.Models
 
                 entity.Property(e => e.ValorFacturado).HasColumnType("decimal(25, 3)");
 
+                entity.Property(e => e.ValorFacturadoConDescuento).HasColumnType("decimal(25, 3)");
+
                 entity.HasOne(d => d.SolicitudPagoFase)
                     .WithMany(p => p.SolicitudPagoFaseFactura)
                     .HasForeignKey(d => d.SolicitudPagoFaseId)
@@ -5422,8 +5426,6 @@ namespace asivamosffie.model.Models
 
             modelBuilder.Entity<SolicitudPagoFaseFacturaDescuento>(entity =>
             {
-                entity.Property(e => e.SolicitudPagoFaseFacturaDescuentoId).ValueGeneratedNever();
-
                 entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
 
                 entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
@@ -5440,13 +5442,43 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 3)");
 
                 entity.HasOne(d => d.SolicitudPagoFaseFactura)
                     .WithMany(p => p.SolicitudPagoFaseFacturaDescuento)
                     .HasForeignKey(d => d.SolicitudPagoFaseFacturaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SolicitudPagoFaseFacturaDescuentoId_SolicitudPagoFaseFacturaId");
+            });
+
+            modelBuilder.Entity<SolicitudPagoObservacion>(entity =>
+            {
+                entity.Property(e => e.FechaCreacion).HasColumnType("datetime");
+
+                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+
+                entity.Property(e => e.TipoObservacionCodigo)
+                    .HasMaxLength(2)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioCreacion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UsuarioModificacion)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.PerfilObservacion)
+                    .WithMany(p => p.SolicitudPagoObservacion)
+                    .HasForeignKey(d => d.PerfilObservacionId)
+                    .HasConstraintName("FK_SolicitudPagoObervacion_PerfilObservacion");
+
+                entity.HasOne(d => d.SolicitudPago)
+                    .WithMany(p => p.SolicitudPagoObservacion)
+                    .HasForeignKey(d => d.SolicitudPagoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SolicitudPagoObervacion_SolicitudPago");
             });
 
             modelBuilder.Entity<SolicitudPagoOtrosCostosServicios>(entity =>
@@ -6239,6 +6271,8 @@ namespace asivamosffie.model.Models
                     .HasColumnName("tipoIntervencion")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.Property(e => e.ValorTotal).HasColumnType("numeric(18, 2)");
             });
 
             modelBuilder.Entity<VRegistrarAvanceSemanal>(entity =>
