@@ -126,7 +126,7 @@ namespace asivamosffie.services
                             r.ContratoId,
                             r.NumeroContrato
                         }).ToList();
-                } 
+                }
             }
             catch (Exception ex)
             {
@@ -640,6 +640,7 @@ namespace asivamosffie.services
                     SolicitudPagoFaseFacturaDescuento solicitudPagoFaseDescuentoOld = _context.SolicitudPagoFaseFacturaDescuento.Find(SolicitudPagoFaseDescuento.SolicitudPagoFaseFacturaDescuentoId);
                     solicitudPagoFaseDescuentoOld.TipoDescuentoCodigo = SolicitudPagoFaseDescuento.TipoDescuentoCodigo;
                     solicitudPagoFaseDescuentoOld.ValorDescuento = SolicitudPagoFaseDescuento.ValorDescuento;
+
                     solicitudPagoFaseDescuentoOld.UsuarioModificacion = pUsusarioCreacion;
                     solicitudPagoFaseDescuentoOld.FechaModificacion = DateTime.Now;
                     solicitudPagoFaseDescuentoOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseFacturaDescuento(SolicitudPagoFaseDescuento);
@@ -724,7 +725,7 @@ namespace asivamosffie.services
                     solicitudPagoFaseFacturaOld.UsuarioModificacion = SolicitudPagoFaseFactura.UsuarioModificacion;
                     solicitudPagoFaseFacturaOld.FechaModificacion = SolicitudPagoFaseFactura.FechaModificacion;
                     solicitudPagoFaseFacturaOld.RegistroCompleto = ValidateCompleteRecordSolicitudPagoFaseFactura(SolicitudPagoFaseFactura);
-
+                    solicitudPagoFaseFacturaOld.TieneDescuento = SolicitudPagoFaseFactura.TieneDescuento;
                     solicitudPagoFaseFacturaOld.Fecha = SolicitudPagoFaseFactura.Fecha;
                     solicitudPagoFaseFacturaOld.ValorFacturado = SolicitudPagoFaseFactura.ValorFacturado;
                     solicitudPagoFaseFacturaOld.Numero = SolicitudPagoFaseFactura.Numero;
