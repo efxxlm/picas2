@@ -10,10 +10,13 @@ namespace asivamosffie.model.Models
     {
         [NotMapped]
         public string EstadoSolicitudNombre { get; set; }
-        /*jflorez, dejo el notmapped en el nombre par no generar confusiï¿½n*/
+        /*jflorez, dejo el notmapped en el nombre par no generar confusión*/
         [NotMapped]
         public DateTime FechaComiteTecnicoNotMapped { get; set; }
         [NotMapped]
         public string stringAportante{ get; set; }
+
+        [NotMapped]
+        public string[] observacionesRechazo{ get; set; }
     }
 }

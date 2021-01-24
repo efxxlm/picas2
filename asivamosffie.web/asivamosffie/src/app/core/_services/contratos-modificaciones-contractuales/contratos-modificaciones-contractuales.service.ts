@@ -12,7 +12,7 @@ export class ContratosModificacionesContractualesService {
 
   url: string = environment.apiUrl;
 
-  constructor( private http: HttpClient ) { }
+  constructor ( private http: HttpClient ) { };
 
   getGrilla() {
     return this.http.get( `${ this.url }/RegisterContractsAndContractualModifications/GetListSesionComiteSolicitud` )
@@ -29,15 +29,35 @@ export class ContratosModificacionesContractualesService {
           return solicitudes;
 
         } )
-      );
-  }
+      )
+  };
 
-  getContratacionId( solicitudId: number ) {
+  getContratacionId ( solicitudId: number ) {
     return this.http.get( `${ this.url }/RegisterContractsAndContractualModifications/GetContratacionByContratacionId?ContratacionId=${ solicitudId }` );
+  };
+
+  postRegistroTramiteContrato ( pContrato: FormData, pEstadoCodigo: string ) {
+    return this.http.post<Respuesta>( `${ this.url }/RegisterContractsAndContractualModifications/RegistrarTramiteContrato?pEstadoCodigo=${ pEstadoCodigo }`, pContrato );
+  };
+
+
+  getContratosAutocomplete()
+  {
+    return this.http.get<Contrato[]>( `${ this.url }/ContractualModification/GetListContract` ); 
+  }
+  
+  postRegistroNovedadContractual( pNContrato: FormData) {
+    return this.http.post<Respuesta>( `${ this.url }/ContractualModification/CreateEditarModification`, pNContrato );
   }
 
-  postRegistroTramiteContrato( pContrato: FormData, pEstadoCodigo: string ) {
-    return this.http.post<Respuesta>( `${ this.url }/RegisterContractsAndContractualModifications/RegistrarTramiteContrato?pEstadoCodigo=${ pEstadoCodigo }`, pContrato );
+  
+  getListGrillaNovedadContractual()
+  {
+    return this.http.get( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
+  }
+
+  getProyectosContrato(ncontrato) {
+    return this.http.get<any[]>( `${ this.url }/ContractualModification/GetListGrillaNovedadContractual` ); 
   }
 
 }

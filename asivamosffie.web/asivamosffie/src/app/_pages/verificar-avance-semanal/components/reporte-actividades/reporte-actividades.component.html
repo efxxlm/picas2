@@ -1,0 +1,152 @@
+<section class="text-center" *ngIf="reporteActividad !== undefined">
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoReporte">
+                    Resumen general del estado del contrato
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div class="mt-3em" align="left">
+                <mat-card class="border">
+                    <mat-card-header class="header-card">
+                        <mat-card-title class="header-card--text text-color">
+                            Resumen general del estado del contrato
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="mt-1em">
+                        <section [innerHTML]="reporteActividad.resumenEstadoContrato" style="margin-left: 2em;"></section>
+                    </mat-card-content>
+                </mat-card>
+
+                <ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+                    <mat-card class="shipping-card var-main-gris" align="left" *ngIf="formResumenGeneral.get( 'fechaCreacion' ).value !== null">
+                        <mat-card-header class="header-card">
+                          <mat-card-title class="header-card--text">
+                            Verificación del apoyo a la supervisión
+                          </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p style="margin-left: 2em;"><b> {{ formResumenGeneral.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+                            <p style="margin-left: 2em;" *ngIf="formResumenGeneral.get( 'tieneObservaciones' ).value === true"><b>¿Tiene observaciones al resumen general del estado del contrato?</b>: Si</p>
+                            <p style="margin-left: 2em;" *ngIf="formResumenGeneral.get( 'tieneObservaciones' ).value === false"><b>¿Tiene observaciones al resumen general del estado del contrato?</b>: No</p>
+                            <section [innerHTML]="formResumenGeneral.get( 'observaciones' ).value" style="margin-left: 2em;" *ngIf="formResumenGeneral.get( 'tieneObservaciones' ).value === true"></section>
+                        </mat-card-content>
+                    </mat-card>
+                </ng-container>
+                <ng-template #noEsVerDetalle>
+                    <form [formGroup]="formResumenGeneral" novalidate (ngSubmit)="guardar()">
+                        <div class="row justify-content-center align-items-center">
+                            <div class="col-md-12">
+                                <div class="row justify-content-center align-items-center" style="width: 100%;">
+                                    <div class="pr-1">
+                                        <label class="label-left" for="tieneObservaciones">¿Tiene observaciones al resumen general del estado del contrato?</label>
+                                    </div>
+                                    <div>
+                                        <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                                            <mat-radio-button [value]="true" [checked]="formResumenGeneral.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                                            <mat-radio-button [value]="false" [checked]="formResumenGeneral.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                                        </mat-radio-group>
+                                    </div>
+                                    <span class="required-form-group m-0 margin-required">*</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formResumenGeneral.value.tieneObservaciones == true" align="left">
+                            <div class="text-area-quill"
+                            [class.color-secondaryColor]="formResumenGeneral.get('observaciones').invalid && formResumenGeneral.get('observaciones').touched || formResumenGeneral.get('observaciones').invalid">
+                                <label  class="text-area-quill--label align-left-label"
+                                        [class.colorMainColor]="!(formResumenGeneral.get('observaciones').invalid && formResumenGeneral.get('observaciones').touched || formResumenGeneral.get('observaciones').invalid)">
+                                        Observaciones al resumen general del estado del contrato
+                                </label>
+                                <quill-editor   class="quill-editor-style ml-1em"
+                                                [styles]="editorStyle"
+                                                [modules]="config"
+                                                (onContentChanged)="maxLength($event, 1000)"
+                                                formControlName="observaciones"
+                                                #obsResumenGeneral
+                                                required>
+                                </quill-editor>
+                            </div>
+                            <span class="contador miles" *ngIf="formResumenGeneral.get('observaciones').value !== null">
+                              {{1000 - textoLimpio( obsResumenGeneral.quillEditor, 1000 )}}
+                            </span>
+                            <span class="contador miles" *ngIf="formResumenGeneral.get('observaciones').value === null">
+                              1000
+                            </span>
+                        </div>
+                        <div class="text-center mt-1em">
+                            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formResumenGeneral.get('tieneObservaciones').value === null">
+                                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+                            </button>
+                        </div>
+                    </form>
+                
+                    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
+                        <table mat-table [dataSource]="tablaHistorial" matSort>
+                      
+                            <ng-container matColumnDef="fechaRevision">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+                              <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+                            </ng-container>
+                      
+                            <ng-container matColumnDef="responsable">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                                <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                    <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                                        <p>Supervisor</p>
+                                    </ng-container>
+                                    <ng-template #noEsSupervisor>
+                                        <p>Apoyo a la supervisión</p>
+                                    </ng-template>
+                                </td>
+                            </ng-container>
+                      
+                            <ng-container matColumnDef="historial">
+                              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+                              <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                                  <section [innerHTML]="element.observacion"></section>
+                              </td>
+                            </ng-container>
+                        
+                          <tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+                        </table>
+                    </section>
+                </ng-template>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoActividad">
+                    Actividades realizadas
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-reporte-actividades-realizadas    [reporteActividad]="reporteActividad"
+                                                        [esSiguienteSemana]="false"
+                                                        [esVerDetalle]="esVerDetalle"
+                                                        [seguimientoSemanal]="seguimientoSemanal"
+                                                        [tipoReporteActividad]="tipoReporteActividad"
+                                                        [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId">
+            </app-form-reporte-actividades-realizadas>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title" [ngClass]="semaforoActividadSiguiente">
+                    Actividades a realizar la siguiente semana
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-form-reporte-actividades-realizadas    [reporteActividad]="reporteActividad"
+                                                        [esSiguienteSemana]="true"
+                                                        [esVerDetalle]="esVerDetalle"
+                                                        [seguimientoSemanal]="seguimientoSemanal"
+                                                        [tipoReporteActividad]="tipoReporteActividad"
+                                                        [seguimientoSemanalReporteActividadId]="seguimientoSemanalReporteActividadId">
+            </app-form-reporte-actividades-realizadas>
+        </mat-expansion-panel>
+    </mat-accordion>
+</section>

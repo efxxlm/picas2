@@ -1,0 +1,170 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarProcesoDefensaJudicial" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Registrar nuevo proceso de defensa judicial
+    </h1>
+    <form [formGroup]="addressForm" novalidate>
+        <mat-card class="shipping-card">
+            <mat-card-content align="left">
+                <div class="row">
+                    <div class="col-md-6" style="padding-left: 0;">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="legitimacionActiva">Legitimación</label>
+                            </div>
+                            <div class="col">
+                                <mat-radio-group class="radioInput" formControlName="legitimacionActiva" required>
+                                    <mat-radio-button [value]="true">Activa</mat-radio-button>
+                                    <mat-radio-button [value]="false">Pasiva</mat-radio-button>
+                                </mat-radio-group>
+                                <span class="required-form-group" style="margin-left: 1px;">*</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6" style="padding-left: 0;">
+                        <div class="row">
+                            <div class="pr-1">
+                                <label class="label-left" for="tipoProceso">Tipo de proceso</label>
+                            </div>
+                            <div class="col">
+                                <mat-form-field class="select-width">
+                                    <mat-select formControlName="tipoProceso" required>
+                                        <mat-option *ngFor="let tipoProceso of tipoProcesoArray"
+                                            [value]="tipoProceso.codigo">
+                                            {{ tipoProceso.nombre }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </form>
+    <div class="text-center">
+        <p class="info-container">
+            <span class="info-text sin-diligenciar">Sin diligenciar</span>
+            <span class="info-text en-proceso">En proceso</span>
+            <span class="info-text completo">Completo</span>
+        </p>
+    </div>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title"
+                [ngClass]="{'sin-diligenciar':contratos_class===0,'en-proceso':contratos_class===1,'completo':contratos_class===2}"
+                 (click)="descripcion.cargarRegistro()">
+                    Contratos asociados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <button style="display: none;" type="button" (click)="descripcion.cargarRegistro()"
+                id="botonDescripcion"></button>
+            <app-form-contratos-asociados-dj #descripcion
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"
+             ></app-form-contratos-asociados-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title "
+                
+                [ngClass]="{'sin-diligenciar':detalle_class===0,'en-proceso':detalle_class===1,'completo':detalle_class===2}"
+                >
+                    Detalle del proceso
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-detalle-proceso-dj #detalleproceso
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"
+            *ngIf="this.addressForm.value.legitimacionActiva==true">
+            </app-form-detalle-proceso-dj>
+            <app-form-detalle-proceso-pasivo-dj #detallepasivo
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"
+                *ngIf="this.addressForm.value.legitimacionActiva==false">
+            </app-form-detalle-proceso-pasivo-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==true">
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':convocados_class===0,'en-proceso':convocados_class===1,'completo':convocados_class===2}"
+                (click)="convocado.cargarRegistro()">
+                    Convocados
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-convocados-dj #convocado
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"></app-form-convocados-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion *ngIf="this.addressForm.value.legitimacionActiva==false">
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':convocados_class===0,'en-proceso':convocados_class===1,'completo':convocados_class===2}"
+                (click)="demandantes.cargarRegistro()">
+                    Demandantes/Convocantes
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-demandantes-convocantes-dj
+                #demandantes
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"
+                ></app-form-demandantes-convocantes-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'sin-diligenciar':soporte_class===0,'en-proceso':soporte_class===1,'completo':soporte_class===2}"
+                (click)="soporte.cargarRegistro()">
+                    Soporte del registro del proceso
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-urlsoporte-dj
+                #soporte
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"></app-form-urlsoporte-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion>
+        <mat-expansion-panel class="expansion-style">
+            <mat-expansion-panel-header class="expansion-style--header">
+                <mat-panel-title class="expansion-style--title "
+                [ngClass]="{'en-alerta':ficha_class===3,'sin-diligenciar':ficha_class===0,'en-proceso':ficha_class===1,'completo':ficha_class===2}"
+               >
+                    Ficha de estudio
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <app-form-ficha-estudio-dj *ngIf="defensaJudicial && defensaJudicial.urlSoporteProceso!='' "
+                #ficha
+                [legitimacion]="addressForm.get('legitimacionActiva').value"
+                [tipoProceso]="addressForm.get('tipoProceso').value" 
+                [defensaJudicial]="defensaJudicial"></app-form-ficha-estudio-dj>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div style="margin-top: 1em;">
+        <div class="d-flex align-items-center solbloq ml8 info-text en-alertaLibre mb-2em">
+            Una vez las secciones habilitadas se encuentren diligenciadas y en color verde se habilitará la sección
+            <strong><em>“Ficha de estudio”</em></strong> para continuar el proceso
+        </div>
+    </div>
+</div>

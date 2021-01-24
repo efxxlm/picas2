@@ -46,6 +46,8 @@ export class RegistrarComponent implements OnInit {
   solonombres: any[]=[];
   edicion: boolean;
   fuentesDeRecursosListaArr: any[]=[];
+  listaBase: CofinanciacionDocumento[];
+  documentoFFIEID=0;
 
   constructor(private fb: FormBuilder,
               private commonService: CommonService,
@@ -105,8 +107,21 @@ export class RegistrarComponent implements OnInit {
         else{
           if(event==3)
           {
-            this.cuentasBancaria(i).removeAt(j);  
-            this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+            console.log(this.cuentasBancaria(i).value[j]);
+            if(this.cuentasBancaria(i).value[j].cuentaBancariaId!=null)
+            {
+              this.fuenteFinanciacionService.eliminarCuentaBancaria(this.cuentasBancaria(i).value[j].cuentaBancariaId).
+              subscribe( response =>{
+                this.cuentasBancaria(i).removeAt(j);                
+                this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+              });
+              
+            }
+            else{
+              this.cuentasBancaria(i).removeAt(j);  
+              this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+            }
+            
           }
           else{
             this.borrarVigencia(borrarForm,i);
@@ -175,7 +190,12 @@ export class RegistrarComponent implements OnInit {
           
           const tipo = this.tipoDocumentoap.filter(x=>x.dominioId==ff.cofinanciacionDocumento.tipoDocumentoId);      
           this.addressForm.get('tipoDocumento').setValue(tipo[0].dominioId);        
-          const numerodoc = this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);        
+          const numerodoc = this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);
+          this.listaDocumentos=this.listaDocumentosApropiacion.filter(x=>x.cofinanciacionDocumentoId==ff.cofinanciacionDocumentoId);        
+          this.listaDocumentos.forEach(element => {
+            this.valorTotal+=element.valorDocumento;
+          });
+          this.documentoFFIEID=ff.cofinanciacionDocumentoId;
           this.addressForm.get('numerodocumento').setValue(numerodoc[0]);
         }
         const grupo: FormGroup = this.crearFuenteEdit(ff.valorFuente);
@@ -479,7 +499,7 @@ export class RegistrarComponent implements OnInit {
   changeNombreAportanteFFIE()
   {
     if (this.addressForm.get('nombreAportanteFFIE').value) {
-
+      this.tipoDocumentoap=[];
       this.idAportante = 
         this.addressForm.get('nombreAportanteFFIE').value.cofinanciacionAportanteId;
 
@@ -490,6 +510,7 @@ export class RegistrarComponent implements OnInit {
             //this.addressForm.get('numerodocumento').setValue(listDoc[0].numeroActa);
             //this.addressForm.get('documentoApropiacion').setValue(listDoc[0].tipoDocumento.nombre);
             this.listaDocumentosApropiacion=listDoc;
+            this.listaBase=this.listaDocumentosApropiacion;
             listDoc.forEach(element => {
               let m = this.tipoDocumentoap.some(function(item) {
                 return item.dominioId === element.tipoDocumentoId
@@ -574,7 +595,7 @@ export class RegistrarComponent implements OnInit {
         }
         else{
           this.openDialog("","<b>Debe eliminar uno de los registros diligenciados para disminuir el total de los registros requeridos.</b>");
-          //this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);
         }
       }          
     }
@@ -672,22 +693,49 @@ export class RegistrarComponent implements OnInit {
   }
   borrarVigencia(borrarForm: any, i: number)
   {
-    console.log(borrarForm);console.log(i);
-    borrarForm.removeAt(i);  
-    this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+    console.log(borrarForm.value[i]);
+    if(borrarForm.value[i].fuenteFinanciacionId!=null)
+    {
+      this.fuenteFinanciacionService.eliminarFuentesFinanciacion(borrarForm.value[i].fuenteFinanciacionId).subscribe(response=>
+        {
+          borrarForm.removeAt(i);
+          this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);  
+        });
+      
+    }
+    else
+    {
+      borrarForm.removeAt(i);  
+      this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+    }
+    
   }
   borrarArrayVigencias(borrarForm: any, i: number,j:number) {    
     this.openDialogSiNo("","<b>¿Está seguro de eliminar este registro?</b>",borrarForm,i,j,1);
   }
   removeItemVigencia(borrarForm: any, i: number,j:number,mensaje=true)
-  {
-    borrarForm.removeAt(i);
-    console.log(this.vigencias1(j).length);
-    this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
-    if(mensaje)
+  {    
+    if(borrarForm.value[i].vigenciaAporteId!=null)
     {
-      this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+      this.cofinanciacionService.eliminarVigencia(borrarForm.value[i].vigenciaAporteId).subscribe(response=>
+        {
+          borrarForm.removeAt(i);
+          this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
+      
+          this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);  
+        });
+      
     }
+    else
+    {
+      borrarForm.removeAt(i);
+      this.addressForm.get("fuenteRecursosArray")['controls'][j].get("cuantasVigencias").setValue(this.vigencias1(j).length);    
+      if(mensaje)
+      {
+        this.openDialog("","<b>La información a sido eliminada correctamente.</b>",false);
+      }
+    }
+    
     
   }
   // evalua tecla a tecla
@@ -700,7 +748,15 @@ export class RegistrarComponent implements OnInit {
   filterDocumento(variable)
   {
     console.log(variable);
-    this.listaDocumentosApropiacion=this.listaDocumentosApropiacion.filter(x=>x.tipoDocumentoId==variable);
+    
+    this.listaDocumentosApropiacion=this.listaBase.filter(x=>x.tipoDocumentoId==variable);
+    this.listaDocumentos=this.listaDocumentosApropiacion;
+    console.log(this.listaDocumentos);
+    this.documentoFFIEID=this.listaDocumentos[0].cofinanciacionDocumentoId;
+    this.listaDocumentos.forEach(element => {
+      this.valorTotal+=element.valorDocumento;  
+    });
+    
   }
 
   onSubmit() {
@@ -719,6 +775,7 @@ export class RegistrarComponent implements OnInit {
       console.log(this.addressForm.get('numerodocumento'));
       let valortotla=0;
       let valorBase=this.valorTotal;
+      let valorBase2=0;
       this.fuenteRecursosArray.controls.forEach(controlFR => {      
         const vigencias = controlFR.get('vigencias') as FormArray;
         if (vigencias.controls.length==0) {          
@@ -732,7 +789,7 @@ export class RegistrarComponent implements OnInit {
           cantVigencias: controlFR.get('cuantasVigencias').value,
           cuentaBancaria: [],
           vigenciaAporte: [],
-          cofinanciacionDocumentoId:this.addressForm.get('numerodocumento').value==null?0:this.addressForm.get('numerodocumento').value.cofinanciacionDocumentoId,
+          cofinanciacionDocumentoId:this.documentoFFIEID,
           aportante:{
             cofinanciacionAportanteId:this.idAportante,
             cuentaConRp:this.addressForm.get('tieneRP').value=="1"?true:false,
@@ -764,7 +821,7 @@ export class RegistrarComponent implements OnInit {
             
           });     
             //si tengo vigencias mi valor base es la fuente
-            valorBase+=controlFR.get('valorFuenteRecursos').value;
+            valorBase2+=controlFR.get('valorFuenteRecursos').value;
 
         }
         
@@ -801,13 +858,28 @@ export class RegistrarComponent implements OnInit {
 
         lista.push(fuente);
       });
-      if(valorBase!=valortotla)
-          {            
-            console.log(valorBase+" vs "+valortotla);
-            this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
-            bitValorok=false;
-            return false;
-          }
+      //si tengo vigencias
+      if(valorBase2>0)
+      {
+        if(valorBase2!=valortotla)
+        {            
+          console.log(valorBase+" vs "+valortotla);
+          this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+          bitValorok=false;
+          return false;
+        }  
+      }
+      else
+      {
+        if(valorBase!=valortotla)
+        {            
+          console.log(valorBase+" vs "+valortotla);
+          this.openDialog("","<b>Los valores de aporte de las vigencias son diferentes al valor de aporte de la fuente.</b>");
+          bitValorok=false;
+          return false;
+        }
+      }
+      
       if(bitValorok)
       {
         forkJoin([
@@ -865,5 +937,19 @@ export class RegistrarComponent implements OnInit {
       }      
     });
     console.log();
+  }
+  mostrarDocumento()
+  {       
+    var documento=this.addressForm.get("numerodocumento").value;
+    console.log(documento);
+    this.valorTotal=documento.valorDocumento;
+    this.listaDocumentos.push(documento);
+  }
+
+  sinRPS()
+  {
+    console.log("sin rp");
+    this.registrosPresupuestales.clear();
+    this.addressForm.get("cuantosRP").setValue(0);    
   }
 }

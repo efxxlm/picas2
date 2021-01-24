@@ -183,7 +183,7 @@
                                             type="text"
                                             maxlength="10"
                                             formControlName="numeroContrato">-->
-                                        <input matInput #nombre2 type="text" maxlength="10" [formControl]="myFilter" required
+                                        <input matInput #nombre2 type="text" maxlength="1000" [formControl]="myFilter" required
                                             [matAutocomplete]="auto2">
                                         <mat-autocomplete #auto2="matAutocomplete">
                                         <mat-option (click)="seleccionAutocomplete(nombres)" *ngFor="let nombres of filteredContrato  | async"
@@ -223,6 +223,7 @@
                 </p>
             </mat-card-content>
         </mat-card>
+        
 
         <mat-card class="shipping-card var-main-gris animatedDown" *ngIf="contrato">
             <mat-card-header class="header-card header-card--margin">
@@ -336,6 +337,16 @@
                 <span class="info-url">Indique la ruta del soporte de esta información</span>
             </div>
         </div>
+        <mat-card class="shipping-card animatedDown" *ngIf="disponibilidadaeditar?.disponibilidadPresupuestalObservacion.length>0">
+            <mat-card-header class="header-card header-card--margin">
+                <mat-card-title class="header-card--text">
+                    Observaciones
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content align="left" *ngFor="let ob of disponibilidadaeditar.disponibilidadPresupuestalObservacion">
+                <div [innerHtml]="ob.observacion"></div>
+            </mat-card-content>
+        </mat-card>
 
         <div class="text-center">
             <button mat-button color="warn" class="btn-guardar" type="submit">

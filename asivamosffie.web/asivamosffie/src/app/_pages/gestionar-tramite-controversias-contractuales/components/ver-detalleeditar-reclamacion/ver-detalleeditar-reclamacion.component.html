@@ -1,0 +1,16 @@
+<div class="container text-center">
+    <div class="text-right">
+        <a routerLink="/gestionarTramiteControversiasContractuales/actualizarTramiteControversia" mat-button color="primary" class="btn-regresar">
+            <img src="assets/img/icon/regresar.svg" alt="Regresar">
+        </a>
+    </div>
+    <h1 class="title-menu--h1">
+        Ver detalle/Editar reclamación {{this.numReclamacion}}
+    </h1>
+    <p class="info-sub-title">
+        <span>Actuación: <b>{{this.actuacion}}</b> Número de actuación: <b>{{this.numActuacion}}</b></span>
+    </p>
+    <app-form-reclamacion-aseguradora-actuacion [controversiaAct]=this.idControversia [isEditable]="true" 
+    (numReclamacion)="this.numReclamacion=$event" (actuacion)="this.actuacion=$event"
+    (numActuacion)="this.numActuacion=$event"></app-form-reclamacion-aseguradora-actuacion>
+</div>

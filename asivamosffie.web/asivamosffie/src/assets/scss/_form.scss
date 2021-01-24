@@ -91,21 +91,27 @@ mat-form-field {
 .mat-select-value {
   color: $mainColor;
   text-align: center;
+  padding-right: 1em;
+}
+
+.mat-select-trigger {
+  width: calc(100% + 2.5em);
 }
 
 .mat-select-arrow-wrapper {
   position: relative;
-  right: -2.7em;
+  right: 0;
   top: 0.3em;
 
   &:hover::before {
     @extend %tooltip;
     content: 'Lista desplegable de selección única';
-    .mat-table & {
-      right: -12em;
-    }
+    .mat-table &,
     .mat-card & {
       right: -12em;
+    }
+    .col-md-8 & {
+      right: auto;
     }
     .mat-paginator & {
       content: none;
@@ -216,8 +222,23 @@ div.mat-select-arrow {
   color: $mainColor;
 }
 
+
 .table-checkbox {
   padding: 0.5em;
+
+  &.radio {
+    .mat-checkbox-background, .mat-checkbox-frame{
+      border-radius: 50%;
+      border: var(--mainColor) 1.5px solid;
+    }
+    .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+      box-shadow: 0 0 0 1px #fff, 0 0 0 2px $mainColor
+    }
+
+    .mat-checkbox-checked .mat-checkbox-checkmark {
+      display: none;
+    }
+  }
 }
 
 .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
@@ -286,11 +307,19 @@ div.mat-select-arrow {
 .info-url {
   display: block;
   text-align: center;
-  font-size: 0.8em;
+  font-size: 0.85em;
   color: var(--fontColor);
   font-style: italic;
 }
 
 .mat-sin-borde .mat-form-field-underline {
   background-color: transparent;
+}
+
+.noBorderForm{
+    height: 0px;
+}
+
+.noBorderForm:focus{
+    height: 0px;
 }

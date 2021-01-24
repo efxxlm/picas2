@@ -6,20 +6,22 @@
   </div>
   <div class="text-center">
     <h1 class="title-menu--h1">
-        Detallar la solicitud {{ contratacion.numeroSolicitud }}
+      Detallar la solicitud {{ contratacion.numeroSolicitud }}
     </h1>
-    <p class="text-primary" *ngIf="contratacion.contratacionProyecto" style="margin-top: 1em;"> Proyectos incluidos: <b> {{ contratacion.contratacionProyecto.length }} </b></p>
+    <p class="text-primary" *ngIf="contratacion.contratacionProyecto" style="margin-top: 1em;"> Proyectos incluidos: <b>
+        {{ contratacion.contratacionProyecto.length }} </b></p>
   </div>
 
   <mat-accordion>
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title">
-            Proyectos de la solicitud
-          </mat-panel-title>
+        <mat-panel-title class="expansion-style--title">
+          Proyectos de la solicitud
+        </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <app-tabla-otros-descuentos [displayedColumns]="displayedColumns" [ELEMENT_DATA]="ELEMENT_DATA" [data]="dataTable"></app-tabla-otros-descuentos>
+      <app-tabla-otros-descuentos [displayedColumns]="displayedColumns" [ELEMENT_DATA]="ELEMENT_DATA"
+        [data]="dataTable"></app-tabla-otros-descuentos>
 
     </mat-expansion-panel>
 
@@ -45,12 +47,13 @@
 
     <mat-expansion-panel class="expansion-style">
       <mat-expansion-panel-header class="expansion-style--header">
-          <mat-panel-title class="expansion-style--title">
-              Características técnicas y jurídicas especiales
-          </mat-panel-title>
+        <mat-panel-title class="expansion-style--title">
+          Características técnicas y jurídicas especiales
+        </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <mat-expansion-panel class="expansion-style sub-expansion" *ngFor="let proyecto of contratacion.contratacionProyecto">
+      <mat-expansion-panel class="expansion-style sub-expansion"
+        *ngFor="let proyecto of contratacion.contratacionProyecto">
         <mat-expansion-panel-header class="expansion-style--header">
           <mat-panel-title class="expansion-style--title">
             {{ proyecto.proyecto.llaveMen }} - {{ proyecto.proyecto.localizacionIdMunicipio }}
@@ -58,17 +61,20 @@
         </mat-expansion-panel-header>
 
         <mat-card class="border" align="left">
-          <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales</mat-card-title>
+          <mat-card-title class="text-area-quill--label">Características técnicas o jurídicas especiales
+          </mat-card-title>
           <mat-card-content class="mt-1em">
-  
-            <p *ngIf="!proyecto.tieneMonitoreoWeb"> 
+
+            <p *ngIf="!proyecto.tieneMonitoreoWeb">
               <b>
-                ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
+                ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
+                través de cámaras con acceso web?
               </b>: No
             </p>
             <p *ngIf="proyecto.tieneMonitoreoWeb">
               <b>
-                ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a través de cámaras con acceso web?
+                ¿El proyecto tiene contemplada la obligación de disponer de servicio de monitoreo en tiempo real a
+                través de cámaras con acceso web?
               </b>: Sí
             </p>
             <p *ngIf="proyecto.esReasignacion">
@@ -84,7 +90,8 @@
               <b>¿El proyecto tiene avance de obra?</b>: No
             </p>
             <p *ngIf="proyecto['porcentajeAvanceObra'] > 0">
-              <b>¿Cuál es el porcentaje de avance de obra?</b>: {{ contratacion.contratacionProyecto[0].porcentajeAvanceObra }}%
+              <b>¿Cuál es el porcentaje de avance de obra?</b>: {{
+              contratacion.contratacionProyecto[0].porcentajeAvanceObra }}%
             </p>
             <p *ngIf="proyecto.requiereLicencia">
               <b>¿El proyecto requiere licencias?</b>: Sí
@@ -104,7 +111,7 @@
             <p *ngIf="proyecto.fechaVigencia">
               <b>Fecha de vigencia</b>: {{ contratacion.contratacionProyecto[0].fechaVigencia | date: 'dd/MM/yyyy' }}
             </p>
-  
+
           </mat-card-content>
         </mat-card>
 
@@ -143,21 +150,36 @@
       </mat-expansion-panel-header>
 
       <section *ngFor="let contratacionProyecto of contratacion.contratacionProyecto;index as i">
-        <mat-expansion-panel class="expansion-style sub-expansion">
-          <mat-expansion-panel-header class="expansion-style--header">
-            <mat-panel-title class="expansion-style--title">
-              Aportante {{ i+1 }}
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-    
-          <section class="d-flex" style="justify-content: center;">
-            <p style="margin-right: 2em;"><b> {{ contratacionProyecto.proyecto.tipoIntervencionCodigo }} </b></p>
-            <p style="margin-right: 2em;"><b> {{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{ contratacionProyecto.proyecto.sede.nombre }} </b></p>
-            <p><b> {{ contratacionProyecto.proyecto.localizacionIdMunicipio }} </b></p>
-          </section>
-          <app-tabla-detalle-fuentes-uso [contratacionProyecto]="contratacionProyecto"></app-tabla-detalle-fuentes-uso>
-    
-        </mat-expansion-panel>
+      <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+          <mat-panel-title class="expansion-style--title">
+            Proyecto {{ i+1 }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <section class="d-flex" style="justify-content: center;">
+          <p style="margin-right: 2em;"><b> {{ contratacionProyecto.proyecto.tipoIntervencionCodigo }} </b></p>
+          <p style="margin-right: 2em;"><b> {{ contratacionProyecto.proyecto.institucionEducativa.nombre }} - {{
+              contratacionProyecto.proyecto.sede.nombre }} </b></p>
+          <p><b> {{ contratacionProyecto.proyecto.localizacionIdMunicipio }} </b></p>
+        </section>
+
+        <section *ngFor="let contratacionProyectoAportante of contratacionProyecto.contratacionProyectoAportante;index as j">
+          <mat-expansion-panel class="expansion-style sub-expansion">
+            <mat-expansion-panel-header class="expansion-style--header">
+              <mat-panel-title class="expansion-style--title">
+                Aportante {{ j+1 }}
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <app-tabla-detalle-fuentes-uso 
+                                          [contratacionProyecto]="contratacionProyecto"
+                                          [contratacionProyectoAportanteId]="contratacionProyectoAportante.contratacionProyectoAportanteId">
+            </app-tabla-detalle-fuentes-uso>
+
+          </mat-expansion-panel>
+        </section>
+      </mat-expansion-panel>
       </section>
 
     </mat-expansion-panel>

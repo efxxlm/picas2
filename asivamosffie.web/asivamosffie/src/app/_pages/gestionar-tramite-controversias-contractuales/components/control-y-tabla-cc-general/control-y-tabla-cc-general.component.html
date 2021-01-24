@@ -1,0 +1,179 @@
+<a routerLink="/gestionarTramiteControversiasContractuales/registrarControversiaContractual" mat-raised-button
+    color="accent" class="btn-cargar-proyecto">Registrar controversia contractual</a><br>
+<div style="margin-top: 2em;">
+    <div class="busqueda">
+        <mat-form-field appearance="outline" class="busqueda--input">
+            <mat-label>Buscador / Filtro</mat-label>
+            <input matInput #filtro (keyup)="applyFilter($event)">
+        </mat-form-field>
+        <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+            <img src="assets/img/icon/lupa.svg" alt="Buscar">
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="fechaSolicitud">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Fecha de solicitud </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaSolicitud }} </b> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numeroSolicitud">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Número de solicitud </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroSolicitud }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numeroContrato">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Número de contrato </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="tipoControversia">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Tipo de controversia </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    {{element.tipoControversia}}
+                    <!--
+                    <div *ngIf="element.tipoControversia=='1'">Terminación anticipada por incumplimiento (TAI)</div>
+                    <div *ngIf="element.tipoControversia=='2'">Terminación anticipada por imposibilidad de ejecución
+                        (TAIE)</div>
+                    <div *ngIf="element.tipoControversia=='3'">Arreglo Directo (AD)</div>
+                    <div *ngIf="element.tipoControversia=='4'">Otras controversias contractuales (OCC)</div>
+                    -->
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estadoControversia">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Estado de la controversia </th>
+                <td mat-cell *matCellDef="let element" align="center">
+                    <div *ngIf="element.estadoControversiaCodigo=='1' && element.tipoControversiaCodigo=='1'">En proceso
+                        de registro</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='2' && element.tipoControversiaCodigo=='1'">Rechazada
+                        en comité pre-tecnico</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='3' && element.tipoControversiaCodigo=='1'">Avalada en
+                        comité pre-tecnico</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='4' && element.tipoControversiaCodigo=='1'">Avalada en
+                        comité pre-tecnico</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='5' && element.tipoControversiaCodigo=='1'">Enviada a
+                        comité técnico</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='6' && element.tipoControversiaCodigo=='1'">Rechazada
+                        a comité técnico</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='7' && element.tipoControversiaCodigo=='1'">Rechazada
+                        por comité fiduciario</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='8' && element.tipoControversiaCodigo=='1'">Aprobada
+                        por comité técnico</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='9' && element.tipoControversiaCodigo=='1'">Aprobada
+                        por comité fiduciario</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='10' && element.tipoControversiaCodigo=='1'">En
+                        tramite</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='11' && element.tipoControversiaCodigo=='1'">Cerrada
+                    </div>
+                    <div *ngIf="element.estadoControversiaCodigo=='1' && element.tipoControversiaCodigo!='1'">En proceso
+                        de registro</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='2' && element.tipoControversiaCodigo!='1'">En proceso
+                        de registro</div>
+                    <div *ngIf="element.estadoControversiaCodigo=='3' && element.tipoControversiaCodigo!='1'">Registrada
+                    </div>
+                    <div *ngIf="element.estadoControversiaCodigo=='4' && element.tipoControversiaCodigo!='1'">En tramite
+                    </div>
+                    <div *ngIf="element.estadoControversiaCodigo=='5' && element.tipoControversiaCodigo!='1'">Cerrada
+                    </div>
+
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="gestion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Gestión </th>
+                <td mat-cell *matCellDef="let element">
+                    <div *ngIf="element.tipoControversiaCodigo=='1'">
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='10'"
+                            (click)="this.consultarActualizaciones(element.controversiaContractualId)">
+                            Consultar / Editar actualizaciones
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='10'"
+                            (click)="this.cerrarTramite(element.controversiaContractualId)">
+                            Cerrar trámite
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='4'"
+                            (click)="this.sendTramiteToComite(element.controversiaContractualId)">
+                            Enviar trámite a comité técnico
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4'"
+                            (click)=this.verDetalleEditarTramiteButton(element.controversiaContractualId);>
+                            Ver detalle/Editar
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='3' || element.estadoControversiaCodigo=='4'"
+                            (click)=this.deleteControversia(element.controversiaContractualId);>
+                            Eliminar
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='11'"
+                            (click)="this.descargarProcesoControversia(element.controversiaContractualId)">
+                            Descargar proceso de controversia
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='9'"
+                            (click)=this.actualizarTramiteButton(element.controversiaContractualId);>
+                            Actualizar trámite
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='5' || element.estadoControversiaCodigo=='6' || element.estadoControversiaCodigo=='7' || element.estadoControversiaCodigo=='8' || element.estadoControversiaCodigo=='9' || element.estadoControversiaCodigo=='10'"
+                            (click)="this.verDetalleButton(element.controversiaContractualId)">
+                            Ver detalle
+                        </button>
+                    </div>
+                    <div *ngIf="element.tipoControversiaCodigo!='1'">
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='3'"
+                            (click)=this.actualizarTramiteButtonNoTAI(element.controversiaContractualId);>
+                            Actualizar trámite
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='2'"
+                            (click)=this.registrarControversia(element.controversiaContractualId);>
+                            Registrar controversia
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2' || element.estadoControversiaCodigo=='3'"
+                            (click)=this.verDetalleEditarTramiteButton(element.controversiaContractualId);>
+                            Ver detalle/Editar
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='1' || element.estadoControversiaCodigo=='2'"
+                            (click)=this.deleteControversia(element.controversiaContractualId);>
+                            Eliminar
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='5'"
+                            (click)="this.descargarProcesoControversia(element.controversiaContractualId)">
+                            Descargar proceso de controversia
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='4'"
+                            (click)="this.consultarActualizaciones(element.controversiaContractualId)">
+                            Consultar / Editar actualizaciones
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='4'"
+                            (click)="this.cerrarTramiteNoTAI(element.controversiaContractualId)">
+                            Cerrar Tramite
+                        </button>
+                        <button mat-raised-button color="accent" class="btn-table"
+                            *ngIf="element.estadoControversiaCodigo=='4'"
+                            (click)="this.verDetalleButton(element.controversiaContractualId)">
+                            Ver detalle
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+</div>

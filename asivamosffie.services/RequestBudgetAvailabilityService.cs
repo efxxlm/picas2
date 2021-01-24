@@ -535,6 +535,7 @@ namespace asivamosffie.services
             {
                 DisponibilidadPresupuestal disponibilidad = await _context.DisponibilidadPresupuestal
                                                 .Where(dp => dp.DisponibilidadPresupuestalId == disponibilidadPresupuestalId)
+                                                .Include(r=>r.DisponibilidadPresupuestalObservacion)
                                                 .Include(r => r.DisponibilidadPresupuestalProyecto)
                                                    .ThenInclude(r => r.Proyecto)
                                                    .ThenInclude(r => r.LocalizacionIdMunicipioNavigation)
@@ -1583,7 +1584,8 @@ namespace asivamosffie.services
                     ThenInclude(v => v.ProyectoAportante).
                     ThenInclude(c => c.Aportante).
                         ThenInclude(c => c.FuenteFinanciacion).
-                Include(x => x.DisponibilidadPresupuestalObservacion).ToListAsync();
+                Include(x => x.DisponibilidadPresupuestalObservacion).
+                Include(x=>x.Contratacion).ToListAsync();
             
             List<DetailValidarDisponibilidadPresupuesal> ListDetailValidarDisponibilidadPresupuesal = new List<DetailValidarDisponibilidadPresupuesal>();
             decimal saldototal = 0;
@@ -1703,12 +1705,13 @@ namespace asivamosffie.services
                             }
                             if(detailDP.TipoSolicitudCodigo==ConstanCodigoTipoDisponibilidadPresupuestal.DDP_Tradicional)
                             {
+                                var valorproyecto = detailDP.Contratacion.TipoSolicitudCodigo == "2" ? ppapor.ValorInterventoria : ppapor.ValorObra;
                                 aportantes.Add(new CofinanicacionAportanteGrilla
                                 {
                                     CofinanciacionAportanteId = ppapor.AportanteId,
                                     Nombre = getNombreAportante(ppapor.Aportante),
                                     TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(ppapor.Aportante.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
-                                    ValorAportanteAlProyecto = ppapor.ValorTotalAportante,
+                                    ValorAportanteAlProyecto = valorproyecto,
                                     FuentesFinanciacion = fuentes
                                 });
                                 aportantesxProyecto.Add(new CofinanicacionAportanteGrilla
@@ -1716,7 +1719,7 @@ namespace asivamosffie.services
                                     CofinanciacionAportanteId = ppapor.AportanteId,
                                     Nombre = getNombreAportante(ppapor.Aportante),
                                     TipoAportante = _context.Dominio.Where(r => (bool)r.Activo && r.DominioId.Equals(ppapor.Aportante.TipoAportanteId) && r.TipoDominioId == (int)EnumeratorTipoDominio.Tipo_de_aportante).Select(r => r.Nombre).FirstOrDefault(),
-                                    ValorAportanteAlProyecto = ppapor.ValorTotalAportante,
+                                    ValorAportanteAlProyecto = valorproyecto,
                                     FuentesFinanciacion = fuentes,
                                     ValorGestionado = _context.GestionFuenteFinanciacion.Where(x => !(bool)x.Eliminado && x.DisponibilidadPresupuestalProyectoId == proyectospp.DisponibilidadPresupuestalProyectoId && fuentes.Select(x=>x.FuenteFinanciacionID).Contains(x.FuenteFinanciacionId)).Sum(x => x.ValorSolicitado)
                             });

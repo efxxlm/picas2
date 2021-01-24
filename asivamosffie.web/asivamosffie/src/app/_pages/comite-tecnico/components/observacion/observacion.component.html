@@ -11,29 +11,30 @@
       Devuelto por el comité
     </b>
   </div>
-
-  <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
-    <thead>
-      <tr class="mat-header-row cdk-header-row ng-star-inserted">
-        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-          Miembro participante
-        </th>
-        <th class="mat-header-cell cdk-header-cell ng-star-inserted">
-          Observación
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let observacion of listaObservaciones">
-        <td class="mat-cell cdk-cell ng-star-inserted">
-          {{ observacion.sesionParticipante.usuario.nombres }}
-        </td>
-        <td class="mat-cell cdk-cell ng-star-inserted">
-          <div class="p-table" [innerHTML]="observacion.observacion"></div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="mat-table cdk-table mat-sort mat-table-style table-form table-form--2">
+      <thead>
+        <tr class="mat-header-row cdk-header-row ng-star-inserted">
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Miembro participante
+          </th>
+          <th class="mat-header-cell cdk-header-cell ng-star-inserted">
+            Observación
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let observacion of listaObservaciones">
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            {{ observacion.sesionParticipante.usuario.nombres }}
+          </td>
+          <td class="mat-cell cdk-cell ng-star-inserted">
+            <div class="p-table" [innerHTML]="observacion.observacion"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
   <div class="d-flex align-items-center">
     <div class="text-area-quill">

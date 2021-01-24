@@ -107,6 +107,18 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
   }
 
   buscar(){
+
+    if ( this.unionTemporal.value !== true && this.unionTemporal.value !== false ){
+      this.openDialog( '', '<b>No se encontraron registros asociados al criterio de búsqueda seleccionado.</b>' );
+      return false;
+    }
+
+    if (this.contratista)
+      this.contratista.idContratista = 0;
+    
+    if (this.contratacion[ 'contratista' ] !== undefined)
+      this.contratacion[ 'contratista' ].numeroIdentificacion = '';
+
     let nombre = this.nombreContratista.value;
     let numero = this.numeroDocumento.value;
     let esConsorcio = this.unionTemporal.value;
@@ -122,11 +134,27 @@ export class TablaResultadosContratistasComponent implements OnInit, OnChanges {
 
   }
 
+  changeUnionTemporal(){
+    this.nombreContratista.setValue('');
+    this.numeroDocumento.setValue('');
+    if (this.contratista)
+      this.contratista.idContratista = 0;
+    if (this.contratacion[ 'contratista' ] !== undefined)
+      this.contratacion[ 'contratista' ].numeroIdentificacion = '';
+    this.dataSource = new MatTableDataSource(null);
+  }
+
   cargarRegistros(){
 
   }
 
   onSave(){
+    console.log( this.contratista.idContratista )
+    if (!this.contratista.idContratista || this.contratista.idContratista == 0)
+    {
+      this.openDialog('', 'No se ha seleccionado ningun contratista');
+      return false;
+    }
     this.contratacion.contratistaId = this.contratista.idContratista;
     this.guardar.emit(null);
   }

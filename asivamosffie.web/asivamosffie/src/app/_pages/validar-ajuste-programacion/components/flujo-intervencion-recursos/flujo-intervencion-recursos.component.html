@@ -1,0 +1,43 @@
+<div class="text-center mt-1em mb-1em">
+  <button mat-raised-button color="accent">Descargar archivo</button>
+</div>
+<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+  <div class="row justify-content-center mb-2em">
+    <div class="pr-1">
+      <label class="label-left" for="tieneObservaciones">
+        ¿Desde la supervisión tiene observaciones al nuevo flujo de inversiones de recursos?
+      </label>
+    </div>
+    <div>
+      <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+        <mat-radio-button [value]="true">Sí</mat-radio-button>
+        <mat-radio-button [value]="false">No</mat-radio-button>
+      </mat-radio-group>
+      <span class="required-form-group m-0">*</span>
+    </div>
+  </div>
+  <div class="d-flex align-items-center animatedDown" *ngIf="addressForm.get('tieneObservaciones').value === true">
+    <div class="text-area-quill">
+      <label for="alcanceParticular" class="text-area-quill--label size-label colorMainColor">
+        Observaciones al nuevo flujo de inversiones de recursos
+      </label>
+      <quill-editor class="quill-editor-style miles" [styles]="editorStyle" [modules]="config"
+        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" required>
+      </quill-editor>
+    </div>
+    <span class="contador miles" *ngIf="addressForm.get('observaciones').value !== null">
+      {{1000 -
+      (textoLimpio(addressForm.get('observaciones').value)>1000?1000:textoLimpio(addressForm.get('observaciones').value))}}
+    </span>
+    <span class="contador miles" *ngIf="addressForm.get('observaciones').value === null">
+      1000
+    </span>
+  </div>
+  <div class="text-center">
+    <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="
+      addressForm.get('tieneObservaciones').invalid ||
+      addressForm.get('tieneObservaciones').value === true && addressForm.get('observaciones').invalid">
+      <img src="assets/img/icon/guardar.svg" alt="Guardar">
+    </button>
+  </div>
+</form>

@@ -106,6 +106,25 @@ namespace asivamosffie.api.Controllers
             }
         }
 
+        
+        [Route("EliminarVigenciaAportanteId")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarVigenciaAportanteId(int pVigenciaAportanteId)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _Cofinancing.EliminarVigenciaAportanteId(pVigenciaAportanteId, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
+            }
+        }
+
         [Route("EliminarCofinanciacionAportanteByCofinanciacionAportanteId")]
         [HttpPost]
         public async Task<IActionResult> EliminarCofinanciacionAportanteByCofinanciacionAportanteId(int pCofinancicacionId)
@@ -152,6 +171,24 @@ namespace asivamosffie.api.Controllers
             {
 
                 throw ex;
+            }
+        }
+
+        [Route("EliminarDocumentoAportanteId")]
+        [HttpPost]
+        public async Task<IActionResult> EliminarDocumentoAportanteId(int pDocumentID)
+        {
+            try
+            {
+                Respuesta respuesta = new Respuesta();
+                string pUsuarioModifico = HttpContext.User.FindFirst("User").Value.ToUpper();
+                respuesta = await _Cofinancing.EliminarDocumentoAportanteId(pDocumentID, pUsuarioModifico);
+
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.ToString());
             }
         }
     }

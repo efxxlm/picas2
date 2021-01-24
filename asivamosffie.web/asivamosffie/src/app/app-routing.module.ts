@@ -97,12 +97,22 @@ const routes: Routes = [
       {
         path: 'generarRegistroPresupuestal',
         loadChildren: () => import('./_pages/generar-registro-presupuestal/generar-registro-presupuestal.module')
-        .then(m => m.GenerarRegistroPresupuestalModule),
-
+        .then(m => m.GenerarRegistroPresupuestalModule)
+      },
+      {
+        path: 'generarActaInicioFaseIPreconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
+        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
+      },
+      {
+        path: 'generarActaInicioFaseIPreconstruccion',
+        loadChildren: () => import('./_pages/generar-acta-inicio-f-uno-prc/generar-acta-inicio-f-uno-prc.module')
+        .then(m => m.GenerarActaInicioFaseunoPreconstruccionModule)
       },
       {
         path: 'registrarFuentes/:idTipoAportante/:idAportante',
         component: RegistrarComponent,
+
       },
       {
         path: 'solicitarDisponibilidadPresupuestal',
@@ -153,11 +163,14 @@ const routes: Routes = [
 
       },
       {
-
         path: 'solicitarContratacion',
         loadChildren: () => import('./_pages/solicitar-contratacion/solicitar-contratacion.module')
-        .then(m => m.SolicitarContratacionModule),
-
+        .then(m => m.SolicitarContratacionModule)
+      },
+      {
+        path: 'preconstruccion',
+        loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
+        .then(m => m.FasePreconstruccionModule)
       },
       {
         path: 'generarDisponibilidadPresupuestal',
@@ -182,8 +195,12 @@ const routes: Routes = [
       {
         path: 'generarDisponibilidadPresupuestal',
         loadChildren: () => import('./_pages/generar-disponibilidad-presupuestal/generar-disponibilidad-presupuestal.module')
-        .then(m => m.GenerarDisponibilidadPresupuestalModule),
-
+        .then(m => m.GenerarDisponibilidadPresupuestalModule)
+      },
+      {
+        path: 'compromisosActasComite',
+        loadChildren: () => import( './_pages/compromisos-actas-comite/compromisos-actas-comite.module' )
+          .then( module => module.CompromisosActasComiteModule ),
       },
       {
         path: 'compromisosActasComite',
@@ -191,31 +208,174 @@ const routes: Routes = [
           .then( module => module.CompromisosActasComiteModule )
       },
 	  {
-
         path: 'generarActaInicioConstruccion',
         loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
         .then(m => m.GestionarActaInicioFdosConstrModule)
     },
+      {
+        path: 'registroSeguimientoDiario',
+        loadChildren: () => import('./_pages/registro-seguimiento-diario/registro-seguimiento-diario.module')
+        .then(m => m.RegistroSeguimientoDiarioModule),
+      },
+      {
+        path: 'verificarSeguimientoDiario',
+        loadChildren: () => import('./_pages/verificar-seguimiento-diario/verificar-seguimiento-diario.module')
+        .then(m => m.VerificarSeguimientoDiarioModule),
+      },
+      {
+        path: 'aprobarSeguimientoDiario',
+        loadChildren: () => import('./_pages/aprobar-seguimiento-diario/aprobar-seguimiento-diario.module')
+        .then(m => m.AprobarSeguimientoDiarioModule),
+          
+      },
+      {
+        path: 'gestionarTramiteControversiasContractuales',
+        loadChildren: () => import( './_pages/gestionar-tramite-controversias-contractuales/gestionar-tramite-controversias-contractuales.module' )
+          .then( module => module.GestionarTramiteControversiasContractualesModule ),
+
+      },
+      {
+        path: 'registrarSolicitudNovedadContractual',
+        loadChildren: () => import('./_pages/registrar-solicitud-novedad-contractual/registrar-solicitud-novedad-contractual.module')
+        .then(m => m.RegistrarSolicitudNovedadContractualModule),
+      },
+	    {
+
+        path: 'generarActaInicioConstruccion',
+        loadChildren: () => import('./_pages/gestionar-acta-inicio-fdos-constr/gestionar-acta-inicio-fdos-constr.module')
+        .then(m => m.GestionarActaInicioFdosConstrModule)
+      },
+      {
+        path: 'programacionPersonalObra',
+        loadChildren: () => import( './_pages/programacion-personal-obra/programacion-personal-obra.module' )
+          .then( module => module.ProgramacionPersonalObraModule )
+      },
+      {
+        path: 'registrarAvanceSemanal',
+        loadChildren: () => import( './_pages/registrar-avance-semanal/registrar-avance-semanal.module' )
+          .then( module => module.RegistrarAvanceSemanalModule )
+      },
       {
         path: 'aprobarRequisitosTecnicosConstruccion',
         loadChildren: () => import( './_pages/aprobar-requisitos-construccion/aprobar-requisitos-construccion.module' )
           .then( module => module.AprobarRequisitosConstruccionModule )
  
       },
-      { 
+      {
         path: 'verificarRequisitosTecnicosConstruccion',
         loadChildren: () => import( './_pages/verificar-requisitos-construccion/verificar-requisitos-construccion.module' )
           .then( module => module.VerificarRequisitosConstruccionModule )
       },
       {
+        path: 'verificarAvanceSemanal',
+        loadChildren: () => import( './_pages/verificar-avance-semanal/verificar-avance-semanal.module' )
+          .then( module => module.VerificarAvanceSemanalModule )
+      },
+      {
         path: 'requisitosTecnicosConstruccion',
         loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
           .then( module => module.RequisitosTecnicosConstruccionModule )
+      },      
+      {
+        path: 'validarAvanceSemanal',
+        loadChildren: () => import( './_pages/validar-avance-semanal/validar-avance-semanal.module' )
+          .then( module => module.ValidarAvanceSemanalModule )
       },
       {
-        path: 'preconstruccion',
-        loadChildren: () => import('./_pages/fase-preconstruccion/fase-preconstruccion.module')
-        .then(m => m.FasePreconstruccionModule)
+        path: 'requisitosTecnicosConstruccion',
+        loadChildren: () => import( './_pages/requisitos-tecnicos-construccion/requisitos-tecnicos-construccion.module' )
+          .then( module => module.RequisitosTecnicosConstruccionModule )
+      }, 
+      {
+        path: 'verificarSolicitudDeNovedades',
+        loadChildren: () => import('./_pages/verificar-solicitud-de-novedades/verificar-solicitud-de-novedades.module')
+        .then(m => m.VerificarSolicitudDeNovedadesModule)
+      },
+      {
+        path: 'validarSolicitudDeNovedades',
+        loadChildren: () => import('./_pages/validar-solicitud-novedades/validar-solicitud-novedades.module')
+        .then(m => m.ValidarSolicitudNovedadesModule)
+      },
+      {
+        path: 'gestionarTramiteNovedadesContractualesAprobadas',
+        loadChildren: () => import('./_pages/gestionar-novedades-aprobadas/gestionar-novedades-aprobadas.module')
+        .then(m => m.GestionarNovedadesAprobadasModule)
+      },
+      {
+        path: 'registratAjusteProgramacion',
+        loadChildren: () => import('./_pages/registrar-ajuste-programacion/registrar-ajuste-programacion.module')
+        .then(m => m.RegistrarAjusteProgramacionModule)
+      },
+      {
+        path: 'validarAjusteProgramacion',
+        loadChildren: () => import('./_pages/validar-ajuste-programacion/validar-ajuste-programacion.module')
+        .then(m => m.ValidarAjusteProgramacionModule)
+      },
+      {
+        path: 'cargarEnlaceMonitoreoEnLinea',
+        loadChildren: () => import( './_pages/cargar-enlace-sistema-monitoreo-linea/cargar-enlace-sistema-monitoreo-linea.module' )
+          .then( module => module.CargarEnlaceSistemaMonitoreoLineaModule )
+      },      
+      {    
+        path: 'visualizarAvanceObraTiempoReal',
+        loadChildren: () => import( './_pages/visualizar-avance-obra-tiempo-real/visualizar-avance-obra-tiempo-real.module' )
+          .then( module => module.VisualizarAvanceObraTiempoRealModule )
+      },
+      {
+        path: 'registrarActuacionesControversiasContractuales',
+        loadChildren: () => import('./_pages/registrar-actuacion-controv-contrc/registrar-actuacion-controv-contrc.module')
+        .then(m => m.RegistrarActuacionControvContrcModule)
+      },
+      {
+        path: 'gestionarTramiteControversiasContractuales',
+        loadChildren: () => import( './_pages/gestionar-tramite-controversias-contractuales/gestionar-tramite-controversias-contractuales.module' )
+          .then( module => module.GestionarTramiteControversiasContractualesModule ),
+
+      },
+      {
+        path: 'programacionPersonalObra',
+        loadChildren: () => import( './_pages/programacion-personal-obra/programacion-personal-obra.module' )
+          .then( module => module.ProgramacionPersonalObraModule )
+      },
+      {
+        path: 'registrarAvanceSemanal',
+        loadChildren: () => import( './_pages/registrar-avance-semanal/registrar-avance-semanal.module' )
+          .then( module => module.RegistrarAvanceSemanalModule )
+      },
+      {
+        path: 'registrarValidarRequisitosPago',
+        loadChildren: () => import('./_pages/registrar-validar-requisitos-pago/registrar-validar-requisitos-pago.module')
+        .then(m => m.RegistrarValidarRequisitosPagoModule)
+      },
+      {
+        path: 'aprobarSolicitudesPago',
+        loadChildren: () => import('./_pages/aprobar-solicitudes-pago/aprobar-solicitudes-pago.module')
+        .then(m => m.AprobarSolicitudesPagoModule)
+      },
+      {
+        path: 'autorizarSolicitudDePago',
+        loadChildren: () => import('./_pages/autorizar-solicitud-pago/autorizar-solicitud-pago.module')
+        .then(m => m.AutorizarSolicitudPagoModule)
+      },      
+      {
+        path: 'verificarFinancieramenteSolicitudDePago',
+        loadChildren: () => import('./_pages/verificar-financ-solicitud-pago/verificar-financ-solicitud-pago.module')
+        .then(m => m.VerificarFinancSolicitudPagoModule)
+      },
+      {
+        path: 'validarFinancieramenteSolicitudDePago',
+        loadChildren: () => import('./_pages/validar-financ-solicitud-pago/validar-financ-solicitud-pago.module')
+        .then(m => m.ValidarFinancSolicitudPagoModule)
+      },
+      {
+        path: 'generarOrdenDeGiro',
+        loadChildren: () => import('./_pages/generar-orden-giro/generar-orden-giro.module')
+        .then(m => m.GenerarOrdenGiroModule)
+      },
+      {
+        path: 'gestionarProcesoDefensaJudicial',
+        loadChildren: () => import('./_pages/gestionar-procesos-defensa-judicial/gestionar-procesos-defensa-judicial.module')
+        .then(m => m.GestionarProcesosDefensaJudicialModule)
       },
       {
         path: 'registrarPagosRendimientos',
@@ -250,7 +410,7 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es'},
-    AuthGuard,CanDeactivateGuard
+    AuthGuard, CanDeactivateGuard
   ]
 })
 export class AppRoutingModule { }

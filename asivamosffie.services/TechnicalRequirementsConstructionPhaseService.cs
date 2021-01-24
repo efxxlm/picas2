@@ -1613,7 +1613,7 @@ namespace asivamosffie.services
             return proyecto;
         }
 
-        private Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId)
+        public Proyecto CalcularFechaInicioContrato(int pContratoConstruccionId)
         {
 
             Proyecto proyecto = new Proyecto();
@@ -1626,6 +1626,8 @@ namespace asivamosffie.services
 
             
         }
+
+        
 
         #endregion private
 

@@ -9,45 +9,38 @@ namespace asivamosffie.services.Helpers.Enumerator
         CargueMasivoProyecto = 9,
         Proyecto = 10,
         Fuentes = 14,
-        Contratacion_Proyecto = 17,
         Aportantes = 15,
-
-
-        Procesos_Seleccion = 18,
-        
+        Contratacion_Proyecto = 17, 
+        Procesos_Seleccion = 18, 
         Procesos_Seleccion_Cronograma = 20,
         Procesos_Seleccion_Grupo = 21,
         CargueMasivoOrdenes = 22,
         CronogramaSeguimiento = 23,
         RegistrarComiteTecnico = 24,
-
+        SesionComiteTema = 26,
+        GenerarDisponibilidadPresupuestal = 28,
+        RegistrarSesionComiteFiduciario = 29,
+        DisponibilidadPresupuestal = 30,
         Gestionar_Procesos_Contractuales = 31,
 
-        Preconstruccion_Fase_1 = 37,
-
-        Registrar_Requisitos_Tecnicos_Construccion = 41,
- 
-
-        DisponibilidadPresupuestal = 30,
-        SesionComiteTema = 26,
-        RegistrarSesionComiteFiduciario = 29, 
-        GenerarDisponibilidadPresupuestal = 28,
-
         
-        GestionarGarantias= 35,
- 
+       	GestionarGarantias= 35, 
         Generar_Registro_Presupuestal=36,
-        Registrar_contratos_modificaciones_contractuales = 46,
-
-     	Registrar_Programacion_Personal_Obra = 48,
-        Gestionar_controversias_contractuales=47,
-
-        Gestionar_procesos_Defensa_Judicial = 52,
+        Preconstruccion_Fase_1 = 37,
+        Registrar_Requisitos_Tecnicos_Construccion = 41,
         Gestionar_acta_inicio_fase_2 = 42,
+        Cargar_enlace_monitoreo=43,
         Verificar_Requisitos_Tecnicos_Construccion = 45,
-
-        
-    }
+        Registrar_contratos_modificaciones_contractuales = 46,
+		Gestionar_controversias_contractuales=47, 
+		Registrar_Programacion_Personal_Obra = 48,
+		Registrar_solicitud_novedad_contractual= 50,
+		Gestionar_procesos_Defensa_Judicial = 52,
+        Registrar_seguimiento_diario = 53,
+        Verificar_seguimiento_diario = 54,      
+        Registrar_Avance_Semanal = 55,
+        Registrar_actuaciones_controversias_contractuales=57,    
+	}
 
     public enum enumeratorAccion
     {

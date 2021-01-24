@@ -18,6 +18,7 @@ export interface GrillaDisponibilidadPresupuestal{
 }
 
 export interface DisponibilidadPresupuestal{
+    disponibilidadPresupuestalObservacion?: any[];
     
     
     disponibilidadPresupuestalId?: number,

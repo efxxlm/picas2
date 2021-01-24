@@ -9,6 +9,7 @@ using System.Text;
 using asivamosffie.model.Models;
 using asivamosffie.services.Helpers.Enumerator;
 using System.Text.RegularExpressions;
+using System; 
 using System.IO;
 using asivamosffie.model.APIModels;
 using System.Data.Common;
@@ -75,7 +76,7 @@ namespace asivamosffie.services.Helpers
 
             SHA1CryptoServiceProvider sha = new SHA1CryptoServiceProvider();
 
-            result = sha.ComputeHash(data) ;
+            result = sha.ComputeHash(data);
 
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < result.Length; i++)
@@ -96,7 +97,7 @@ namespace asivamosffie.services.Helpers
         public static string CleanStringInput(string text)//ÁÉÍÓÚ //
         {
 
-            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ',/* ' ',*/ ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+            char[] replacement = { 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', ' ', ' ', ' ', ' ', ' ', /*' ',*/ ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
             char[] accents = { 'à', 'á', 'â', 'ã', 'ä', 'å', 'ç', 'é', 'è', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'ö', 'õ', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Á', 'É', 'Í', 'Ó', 'Ú', /*'/',*/ '.', ',', '@', '_', '(', ')', ':', ';' };
 
             if (text != null)
@@ -153,13 +154,19 @@ namespace asivamosffie.services.Helpers
             {
                 return $"{"ACTCRONO"}{(number).ToString("D4")}";
             }
-
+            //DefensaJudicial
+            if (input == "DJ")
+            {
+                return $"{"DJ"}-{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
+            }
 
             //Invitacion Abierta SA
             else
             {
                 return $"{"SA"}{(++number).ToString("D4")}-{DateTime.Now.ToString("yyyy")}";
             }
+
+            
         }
 
         //TODO: Implementacion para cosultas complejas
@@ -233,7 +240,6 @@ namespace asivamosffie.services.Helpers
         }
 
         public static bool EnviarCorreo(string pDestinatario, string pAsunto, string pMensajeHtml ,string pCorreoLocal ,string pPassword, string pStrSmtpServerV ,int pSmtpPort, bool pMailHighPriority=false, string pFileNamePath="")
-
         {
             try
             {
@@ -323,6 +329,5 @@ namespace asivamosffie.services.Helpers
             string def = "Az-" + randomw.Next(5).ToString();
             return string.Join(null, password) + def;
         }
-         
     }
 }

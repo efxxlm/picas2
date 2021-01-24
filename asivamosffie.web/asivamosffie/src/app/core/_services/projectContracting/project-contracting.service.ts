@@ -64,14 +64,14 @@ export class ProjectContractingService {
 
   getContratacionByContratacionIdWithGrillaProyecto( id: number ){
     return this.http.get<Contratacion>(`${environment.apiUrl}/ProjectContracting/getContratacionByContratacionIdWithGrillaProyecto?pContratacionId=${ id }`);
+   }
+
+  getListFaseComponenteUso( ){
+    return this.http.get<any>( `${ environment.apiUrl }/ProjectContracting/getListFaseComponenteUso` );
   }
 
   deleteComponenteAportante( pComponenteAportanteId: number ) {
     return this.http.post( `${ environment.apiUrl }/ProjectContracting/DeleteComponenteAportante`, pComponenteAportanteId );
-  }
-
-  getListFaseComponenteUso( ){
-    return this.http.get<any>( `${ environment.apiUrl }/ProjectContracting/getListFaseComponenteUso` );
   }
 
 }

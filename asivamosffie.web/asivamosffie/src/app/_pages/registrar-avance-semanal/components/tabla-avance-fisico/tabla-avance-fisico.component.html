@@ -1,1 +1,152 @@
-<p>tabla-avance-fisico works!</p>
+<section class="text-center" *ngIf="esVerDetalle === false || true">
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+                <section class="d-flex">
+                    <p class="ml-1em"><b>Programación acumulada de la obra</b>: {{ valuePendingProgramacionObra() }}%</p>
+                    <p class="ml-final-date"><b>Avance acumulado ejecutado de la obra</b>: {{ valuePendingAvanceEjecutado() }}%</p>
+                </section>
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <div class="text-center" style="width: 25%;display: inline-block;">
+        <button mat-raised-button color="accent" class="btn-table" (click)="openDialogObservaciones()">
+            Ver avance acumulado por capítulo
+        </button>
+    </div>
+</section>
+<section class="table-responsive size-table" style="margin-top: 2em;" *ngIf="esVerDetalle === false">
+    <table mat-table [dataSource]="tablaAvanceFisico" matSort>
+  
+        <ng-container matColumnDef="semanaNumero">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Semana número </th>
+          <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.semanaNumero }}</b> </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="periodoReporte">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Período del reporte </th>
+          <td mat-cell *matCellDef="let element" align="center"> {{ element.periodoReporte }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="programacionSemana">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Programación de la semana </th>
+          <td mat-cell *matCellDef="let element" align="center"> {{ element.programacionSemana }}% </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="capitulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="w-20"> Capítulo </th>
+          <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let capitulo of element.avancePorCapitulo">
+              {{ capitulo.capitulo }}
+            </div>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="programacionCapitulo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Programación por capítulo </th>
+            <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let programacionCapitulo of element.avancePorCapitulo">
+                {{ programacionCapitulo.programacionCapitulo }}%
+              </div>
+            </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="avanceFisicoCapitulo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 14%;"> Avance físico por capítulo </th>
+            <td mat-cell *matCellDef="let element" align="center" class="padding-0em">
+              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em" *ngFor="let avanceFisicoCapitulo of element.avancePorCapitulo">
+                <section class="d-flex justify-content-center">
+                  <mat-form-field style="width: 3em;">
+                      <input  matInput
+                              type="number"
+                              min="0"
+                              [max]="avanceFisicoCapitulo.programacionCapitulo"
+                              [(ngModel)]="avanceFisicoCapitulo.avanceFisicoCapitulo"
+                              required
+                              style="width: 2em;"
+                              autocomplete="off"
+                              (ngModelChange)="valuePending( $event, avanceFisicoCapitulo )">
+                  </mat-form-field>
+                  <span style="margin: .5em;">%</span>
+                  <span class="contador">{{3 - textoLimpio( avanceFisicoCapitulo.avanceFisicoCapitulo ) }}</span>
+              </section>
+              </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="avanceFisicoSemana">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Avance físico de la semana </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.avanceFisicoSemana > 0 ? element.avanceFisicoSemana+'%' : '' }} </td>
+        </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class="text-center" style="margin-top: 2em;">
+        <button mat-button
+                color="warn"
+                class="btn-guardar"
+                type="button"
+                [disabled]="seRealizoCambio === false"
+                (click)="guardar()">
+                <img  src="assets/img/icon/guardar.svg">
+        </button>
+      </div>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="esVerDetalle === true">
+    <table mat-table [dataSource]="tablaAvanceFisico" matSort>
+  
+        <ng-container matColumnDef="semanaNumero">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Semana número </th>
+          <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.semanaNumero }}</b> </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="periodoReporte">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Período del reporte </th>
+          <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.periodoReporte }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="programacionSemana">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Programación de la semana </th>
+          <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.programacionSemana }} </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="capitulo">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Capítulo </th>
+          <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+            <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let capitulo of element.avancePorCapitulo">
+              {{ capitulo.capitulo }}
+            </div>
+          </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="programacionCapitulo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Programación por capítulo </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let programacionCapitulo of element.avancePorCapitulo">
+                {{ programacionCapitulo.programacionCapitulo }}%
+              </div>
+            </td>
+        </ng-container>
+  
+        <ng-container matColumnDef="avanceFisicoCapitulo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 14%;" class="back-color"> Avance físico por capítulo </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text" class="padding-0em border-color-detalle">
+              <div class="sub-item-table flex-table justify-content-center align-items-center h-3em color-text" *ngFor="let avanceFisicoCapitulo of element.avancePorCapitulo">
+                {{ avanceFisicoCapitulo.avanceFisicoCapitulo }}%
+              </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="avanceFisicoSemana">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Avance físico de la semana </th>
+            <td mat-cell *matCellDef="let element" align="center" class="color-text"> {{ element.avanceFisicoSemana > 0 ? element.avanceFisicoSemana+'%' : '' }} </td>
+        </ng-container>
+    
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</section>

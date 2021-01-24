@@ -1,0 +1,97 @@
+<section class="text-center" *ngIf="esVerDetalle === false && seguimientoSemanal !== undefined && numeroComiteObra !== undefined">
+    <div class="d-flex justify-content-center colorMainColor">
+        <p>Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+        <p style="margin-left: 2em;">Número de comité de obra: <b> {{ numeroComiteObra }} </b> </p>
+    </div>
+
+    <form autocomplete="off" [formGroup]="formComiteObra" (ngSubmit)="guardar()">
+        <div align="left">
+            <mat-card>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-6">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left">Fecha de comité de obra</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field>
+                                    <input  matInput
+                                            [matDatepicker]="pickerComiteObra"
+                                            formControlName="fechaComite"
+                                            placeholder="DD/MM/AAAA"
+                                            [min]="seguimientoSemanal.fechaInicio"
+                                            [max]="seguimientoSemanal.fechaFin"
+                                            (click)="pickerComiteObra.open()"
+                                            readonly required>
+                                    <mat-datepicker #pickerComiteObra></mat-datepicker>
+                                </mat-form-field>
+                                <button mat-button
+                                        color="primary"
+                                        type="button"
+                                        (click)="pickerComiteObra.open()"
+                                        class="btn-calendario">
+                                        <img  class="mr-bottom-1"
+                                              src="assets/img/icon/calendarioCirculo.svg"
+                                              alt="Abrir Calendario">
+                                </button>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-1em">
+                        <div class="col-md-12">
+                          <div class="row">
+                            <div class="pr-1">
+                              <label class="label-left">URL con soporte</label>
+                            </div>
+                            <div class="col d-flex">
+                                <mat-form-field style="width: 100%;">
+                                    <input  matInput
+                                            type="text"
+                                            maxlength="400"
+                                            formControlName="urlSoporteComite">
+                                </mat-form-field>
+                            </div>
+                            <div class="d-flex justify-content-center size-text-descriptivo">
+                                <p class="color-text-descriptivo">
+                                    <i> 
+                                        Indique la ruta en la que se encuentra del acta del comité de obra
+                                    </i>
+                                </p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="text-center" style="margin-top: 2em;">
+            <button mat-button
+                    color="warn"
+                    class="btn-guardar"
+                    type="submit"
+                    [disabled]="formComiteObra.dirty === false">
+                    <img  src="assets/img/icon/guardar.svg">
+            </button>
+        </div>
+    </form>
+</section>
+
+<!-- Ver detalle -->
+<section class="text-center" *ngIf="esVerDetalle === true && gestionComiteObra !== undefined">
+    <div class="d-flex justify-content-center colorMainColor">
+        <p>Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+        <p style="margin-left: 2em;">Número de comité de obra: <b> {{ numeroComiteObra }} </b> </p>
+    </div>
+
+    <div align="left">
+        <mat-card class="border">
+            <mat-card-content class="mt-1em">
+              <p><b>Fecha de comité de obra</b>: {{ gestionComiteObra.fechaComite | date: 'dd/MM/yyyy' }} </p>
+              <p><b>URL con soporte</b>: {{ gestionComiteObra.urlSoporteComite }} </p>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</section>

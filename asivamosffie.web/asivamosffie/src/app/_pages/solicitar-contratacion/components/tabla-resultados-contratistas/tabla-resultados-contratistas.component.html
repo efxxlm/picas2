@@ -2,7 +2,7 @@
     <div class="pr-1">
         <label class="label-left" for="unionTemporal">¿El contratista es una unión temporal o consorcio? </label>
     </div>
-    <mat-radio-group class="radioInput" [formControl]="unionTemporal" required>
+    <mat-radio-group class="radioInput" [formControl]="unionTemporal" required (change)="changeUnionTemporal()" >
         <mat-radio-button [value]="true" >Sí</mat-radio-button>
         <mat-radio-button [value]="false" >No</mat-radio-button>
     </mat-radio-group>

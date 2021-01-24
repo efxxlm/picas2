@@ -1,0 +1,51 @@
+<mat-accordion *ngIf="seguimientoSemanal !== undefined && tipoObservaciones !== undefined">
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionAmbiental">
+                Gestión ambiental
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-ambiental [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionAmbiental]="tipoObservaciones.gestionAmbiental"></app-gestion-ambiental>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionCalidad">
+                Gestión de calidad
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-calidad [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionCalidad]="tipoObservaciones.gestionCalidad"></app-gestion-calidad>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionSst">
+                Gestión de seguridad y salud en el trabajo
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-sst [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionSst]="tipoObservaciones.gestionSst"></app-gestion-sst>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoGestionSocial">
+                Gestión social
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-gestion-social [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionSocial]="tipoObservaciones.gestionSocial"></app-gestion-social>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title" [ngClass]="semaforoAlertasRelevantes">
+                Alertas relevantes
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <app-alertas-relevantes [seguimientoSemanal]="seguimientoSemanal" [esVerDetalle]="esVerDetalle" [tipoObservacionAlertas]="tipoObservaciones.alertasRelevantes"></app-alertas-relevantes>
+    </mat-expansion-panel>
+</mat-accordion>

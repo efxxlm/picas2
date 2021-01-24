@@ -1,0 +1,80 @@
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Lista de chequeo 1
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p class="info-sub-title supportBlack">
+            <span>Criterio de pago: <b>Estudios y diseños interventoria hasta 90%</b></span>
+            <span>Tipo de pago: <b>Costo variable</b></span>
+        </p>
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+                <ng-container matColumnDef="item">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Item </th>
+                    <td mat-cell *matCellDef="let element" align="center"> <b>{{ element.item }}</b> </td>
+                </ng-container>
+                <ng-container matColumnDef="documento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
+                    <td mat-cell *matCellDef="let element" align="left"> {{ element.documento }} </td>
+                </ng-container>
+                <ng-container matColumnDef="revTecnica">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Revisión técnica </th>
+                    <td mat-cell *matCellDef="let element" align="center"> 
+                        {{ element.revTecnica }}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+        </div>
+        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <div class="row mtop justCenter">
+                <div class="col-md-7">
+                    <label class="label-left">¿Desde la coordinación tiene observaciones a la lista de chequeo 1?</label>
+                </div>
+                <div class="col-md-2">
+                    <mat-radio-group aria-labelledby="example-radio-group-label" class="radioInput"
+                        formControlName="tieneObservaciones">
+                        <mat-radio-button class="radio-button" [value]="true">Sí</mat-radio-button>
+                        <mat-radio-button class="radio-button" [value]="false">No</mat-radio-button>
+                    </mat-radio-group>
+                    <span class="required-form-group" style="margin-left: 1px;">*</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center mtop" *ngIf="addressForm.get('tieneObservaciones').value === true">
+                <div class="text-area-quill izqTitle">
+                    <label for="observaciones" class="text-area-quill--label" style="color: #174193;">Observaciones a la lista de chequeo 1</label>
+                    <quill-editor class="quill-editor-style" [styles]="editorStyle" [modules]="config" required
+                        (onContentChanged)="maxLength($event, 1000)" formControlName="observaciones" #observaciones></quill-editor>
+                </div>
+                <span class="contador" *ngIf="addressForm.get('observaciones').value">
+                    {{1000 - (textoLimpio(observaciones.quillEditor,1000))}}
+                </span>
+                <span class="contador" *ngIf="addressForm.get('observaciones').value === null">
+                    1000
+                </span>
+            </div>
+            <button mat-button color="warn" class="btn-guardar mt1"
+                type="submit">
+                <img src="assets/img/icon/guardar.svg" alt="Guardar">
+            </button>
+        </form>
+    </mat-expansion-panel>
+</mat-accordion>
+<!--Ahi ya seria con ciclo for, se dejo maqueteado-->
+<mat-accordion>
+    <mat-expansion-panel class="expansion-style sub-expansion">
+        <mat-expansion-panel-header class="expansion-style--header">
+            <mat-panel-title class="expansion-style--title sin-diligenciar">
+                Lista de chequeo 2
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p class="info-sub-title supportBlack">
+            <span>Criterio de pago: <b>Estudios y diseños interventoria hasta 90%</b></span>
+            <span>Tipo de pago: <b>Costo variable</b></span>
+        </p>
+    </mat-expansion-panel>
+</mat-accordion>

@@ -1,11 +1,17 @@
 ﻿namespace asivamosffie.model.APIModels
 {
+
+//    namespace asivamosffie.services
+//{
+    //internal class AppSettings
+    //{
+    //}
+
     public class AppSettingsService
     {
         public string Dominio { get; set; }
 
         public string DominioFront { get; set; }
-        
 
         public string MailServer { get; set; }
 
@@ -30,11 +36,13 @@
         public string DirectoryBaseCargue { get; set; }
 
         public string DirectoryBaseProyectos { get; set; }
-         
 
         public string YearVigente { get; set; }
 
         public bool YearSiguienteEsVigente { get; set; }
+
         public string DirectoryBaseOrdeELegibilidad { get; set; }
+
+        public string DirectoryRutaCargaActaTerminacionContrato { get; set; }
     }
 }

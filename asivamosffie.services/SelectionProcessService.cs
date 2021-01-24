@@ -1491,7 +1491,10 @@ namespace asivamosffie.services
                             TelefonoProponente = tempOrdenLegibilidad.Telefono,
                             EmailProponente = tempOrdenLegibilidad.Correo,
                             NombreRepresentanteLegal = tempOrdenLegibilidad.RepresentanteLegal,
-                            CedulaRepresentanteLegal = tempOrdenLegibilidad.CedulaRepresentanteLegal.ToString()
+                            CedulaRepresentanteLegal = tempOrdenLegibilidad.CedulaRepresentanteLegal.ToString(),
+                            Eliminado = false,
+                            FechaCreacion = DateTime.Now,
+                            UsuarioCreacion= pUsuarioModifico
                         };
 
                         _context.ProcesoSeleccionProponente.Add(procesoSeleccionProponente);

@@ -1,0 +1,28 @@
+<div class="table-responsive">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+        <ng-container matColumnDef="nombreAportante">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre del aportante </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.nombreAportante }} </td>
+        </ng-container>
+        <ng-container matColumnDef="fuenteRecursos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fuente de recursos </th>
+            <td mat-cell *matCellDef="let element" align="center"> {{ element.fuenteRecursos }} </td>
+        </ng-container>
+        <ng-container matColumnDef="saldoActualFRecursos">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo actual fuente de recursos </th>
+            <td mat-cell *matCellDef="let element" align="center">
+                {{ element.saldoActualFRecursos }}
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="saldoValorFacturado">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Saldo fuente de recursos afectado
+                por el valor facturado </th>
+            <td mat-cell *matCellDef="let element" align="center">
+                {{ element.saldoValorFacturado }}
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
+</div>

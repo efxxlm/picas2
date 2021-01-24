@@ -1,0 +1,86 @@
+<section class="busqueda">
+    <mat-form-field appearance="outline" class="busqueda--input">
+      <mat-label>Buscador / Filtro</mat-label>
+      <input matInput #filtro (keyup)="applyFilter($event)">
+    </mat-form-field>
+    <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+      <img src="assets/img/icon/lupa.svg" alt="Buscar">
+    </button>
+</section>
+
+<section class="table-responsive">
+  <table mat-table [dataSource]="tablaRegistro" matSort>
+
+    <ng-container matColumnDef="fechaReporte">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha del reporte </th>
+        <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaReporte | date: 'dd/MM/yyyy' }} </b> </td>
+    </ng-container>
+
+    <ng-container matColumnDef="llaveMen">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Llave MEN </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.llaveMen }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numeroContrato">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Número del contrato de obra </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroContrato  }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="tipoIntervencion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de intervención </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.tipoIntervencion }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="institucionEducativa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Institución Educativa </th>
+      <td mat-cell *matCellDef="let element" align="center"> {{ element.institucionEducativa }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="sede">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sede </th>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.sede }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="estadoObra">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la obra </th>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoObra }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="estadoVerificacion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la verificación </th>
+        <td mat-cell *matCellDef="let element" align="center"> {{ element.estadoSeguimientoSemanal }} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="gestion">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Gestión </th>
+        <td mat-cell *matCellDef="let element">
+            <button mat-raised-button
+                    color="accent" 
+                    class="btn-table"
+                    *ngIf="element.verAvanceApoyo !== undefined"
+                    [routerLink]="[ 'verificarSeguimientoSemanal', element.seguimientoSemanalId ]">
+                    {{ element.fechaModificacionVerificar === undefined ? 'Verificar avance' : 'Ver detalle/Editar' }}
+            </button>
+            <button mat-raised-button
+                    color="accent" 
+                    class="btn-table"
+                    *ngIf="element.numeroSemana !== primeraSemana"
+                    [routerLink]="[ 'consultarBitacora', element.contratacionProyectoId ]">
+                    Consultar bitacora
+            </button>
+            <button mat-raised-button
+                    color="accent" 
+                    class="btn-table"
+                    *ngIf="element.registroCompletoVerificar === true"
+                    (click)="enviarVerificacion( element.seguimientoSemanalId )">
+                    Enviar al supervisor
+            </button>
+        </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</section>

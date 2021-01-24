@@ -9,19 +9,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using asivamosffie.services.Helpers.Enumerator;
+using Z.EntityFramework.Plus;
+
 namespace asivamosffie.services
 {
     public class SourceFundingService : ISourceFundingService
     {
         private readonly ICommonService _commonService;
-        private readonly ICofinancingContributorService _contributor;
         private readonly devAsiVamosFFIEContext _context;
 
-        public SourceFundingService(devAsiVamosFFIEContext context, ICommonService commonService, ICofinancingContributorService contributor)
+        public SourceFundingService(devAsiVamosFFIEContext context, ICommonService commonService)
         {
             _context = context;
             _commonService = commonService;
-            _contributor = contributor;
         }
 
         public async Task<List<FuenteFinanciacion>> GetISourceFunding()
@@ -120,6 +120,7 @@ namespace asivamosffie.services
                 {
                     cb.UsuarioCreacion = fuentefinanciacion.UsuarioCreacion == null ? fuentefinanciacion.UsuarioModificacion.ToUpper() : fuentefinanciacion.UsuarioCreacion.ToUpper();
                     cb.FechaCreacion = DateTime.Now;
+                    cb.Eliminado = false;
                     await bankAccountService.CreateEditarCuentasBancarias(cb);
                 };
 
@@ -239,6 +240,36 @@ namespace asivamosffie.services
 
             try
             {
+                //verifico que no tenga relación con proyectos de infraestructura
+                var proyectoFuentes = _context.ProyectoFuentes.Where(x => x.FuenteId==id && !(bool)x.Eliminado).Count();
+                if(proyectoFuentes>0)
+                {
+                    return
+                      new Respuesta
+                      {
+                          IsSuccessful = true,
+                          IsException = false,
+                          IsValidation = false,
+                          Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
+                      };
+                }
+                //verifico que no tenga relación con proyectos administrativos
+                var proyectoFuentesad = _context.AportanteFuenteFinanciacion.Where(x => x.FuenteFinanciacionId== id && !(bool)x.Eliminado).Count();
+                if (proyectoFuentesad > 0)
+                {
+                    return
+                      new Respuesta
+                      {
+                          IsSuccessful = true,
+                          IsException = false,
+                          IsValidation = false,
+                          Code = ConstantMessagesFuentesFinanciacion.EliminacionFallida,
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionFallida, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN IMPOSIBLE")
+                      };
+                }
+
+
                 var entity = await _context.FuenteFinanciacion.FindAsync(id);
                 entity.FechaModificacion = DateTime.Now;
                 entity.UsuarioModificacion = UsuarioModifico;
@@ -313,15 +344,16 @@ namespace asivamosffie.services
 
         public async Task<List<FuenteFinanciacion>> GetFuentesFinanciacionByAportanteId(int AportanteId)
         {
-            return await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
+            var res= await _context.FuenteFinanciacion.Where(r => !(bool)r.Eliminado)
                         .Where(r => r.AportanteId == AportanteId)
                         .Include(r => r.ControlRecurso)
-                        .Include(r => r.CuentaBancaria)
-                        .Include(r => r.VigenciaAporte)
                         .Include(r => r.CofinanciacionDocumento)
-                        .Include(r => r.Aportante)                        
+                        .Include(r => r.Aportante)
                         .ThenInclude(r => r.RegistroPresupuestal)
-                        .ToListAsync();
+                        .IncludeFilter(r => r.CuentaBancaria.Where(r => !(bool)r.Eliminado))
+                        .IncludeFilter(r => r.VigenciaAporte.Where(r => !(bool)r.Eliminado))
+                        .ToListAsync();            
+            return res;
         }
 
         public async Task<List<FuenteFinanciacion>> GetListFuentesFinanciacion()
@@ -331,7 +363,7 @@ namespace asivamosffie.services
             var retorno= await _context.FuenteFinanciacion.
                 Where(r => !(bool)r.Eliminado).Distinct().Include(r => r.ControlRecurso).
                 Include(r => r.CuentaBancaria).
-                Include(r => r.VigenciaAporte).
+                IncludeFilter(r => r.VigenciaAporte.Where(r => !(bool)r.Eliminado)).
                 Include(r => r.Aportante).
                 ThenInclude(r => r.RegistroPresupuestal).ToListAsync();
             foreach(var ret in retorno)
@@ -658,6 +690,44 @@ namespace asivamosffie.services
                 });
             }
             return ListaRetorno;
+        }
+
+        public async Task<Respuesta> EliminarCuentaBancaria(int id, string UsuarioModifico)
+        {
+            int idAccionEliminarFinanciacion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Fuentes_Financiacion, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                var entity = await _context.CuentaBancaria.FindAsync(id);
+                entity.FechaModificacion = DateTime.Now;
+                entity.UsuarioModificacion = UsuarioModifico;
+                entity.Eliminado = true;
+
+                _context.Update(entity);
+                await _context.SaveChangesAsync();
+
+                return
+                      new Respuesta
+                      {
+                          IsSuccessful = true,
+                          IsException = false,
+                          IsValidation = false,
+                          Code = ConstantMessagesFuentesFinanciacion.OperacionExitosa,
+                          Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.EliminacionExitosa, idAccionEliminarFinanciacion, UsuarioModifico, "ELIMINAR FUENTE DE FINANCIACIÓN")
+                      };
+            }
+            catch (Exception ex)
+            {
+                return
+                 new Respuesta
+                 {
+                     IsSuccessful = false,
+                     IsException = true,
+                     IsValidation = false,
+                     Code = ConstantMessagesFuentesFinanciacion.Error,
+                     Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Fuentes, ConstantMessagesFuentesFinanciacion.Error, idAccionEliminarFinanciacion, UsuarioModifico, ex.InnerException.ToString().Substring(0, 500))
+                 };
+            }
         }
     }
 }

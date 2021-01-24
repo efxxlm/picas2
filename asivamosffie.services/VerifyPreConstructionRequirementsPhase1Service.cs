@@ -53,12 +53,12 @@ namespace asivamosffie.services
 
                 foreach (var c in listContratos.OrderBy(r => r.EstadoVerificacionCodigo))
                 {
-
                     int CantidadProyectosConPerfilesAprobados = 0;
                     int CantidadProyectosConPerfilesPendientes = 0;
-                    bool RegistroCompleto = true;
+                    bool RegistroCompleto = false;
                     bool EstaDevuelto = false;
-
+                    if (c.EstaDevuelto.HasValue && (bool)c.EstaDevuelto)
+                        EstaDevuelto = true;
                     foreach (var ContratacionProyecto in c.Contratacion.ContratacionProyecto.Where(r => !(bool)r.Eliminado))
                     {
                         bool RegistroCompletoObservaciones = true;
@@ -84,12 +84,10 @@ namespace asivamosffie.services
                                  && ContratoPerfil.ContratoPerfilObservacion.LastOrDefault().TipoObservacionCodigo == ConstanCodigoTipoObservacion.ApoyoSupervisor)))
                                 RegistroCompleto = false;
                         }
-
                         if (RegistroCompletoObservaciones)
                             CantidadProyectosConPerfilesAprobados++;
                         else
                             CantidadProyectosConPerfilesPendientes++;
-
                     }
 
                     if (c.Contratacion.ContratacionProyecto.Count(r => !r.Eliminado) == CantidadProyectosConPerfilesAprobados)
@@ -323,7 +321,6 @@ namespace asivamosffie.services
                     contratoOld.EstadoVerificacionCodigo = ConstanCodigoEstadoVerificacionContratoObra.Con_requisitos_del_contratista_de_obra_avalados;
                     contratoOld.UsuarioModificacion = pContrato.UsuarioCreacion;
                     contratoOld.FechaModificacion = DateTime.Now;
-                    _context.Update(contratoOld);
                 }
                 _context.SaveChanges();
                 return
@@ -490,7 +487,6 @@ namespace asivamosffie.services
                         RegistroCompleto = false;
                     if (!ContratoPerfil.TieneObservacionApoyo.HasValue)
                         RegistroCompleto = false;
-
                 }
 
                 if (RegistroCompleto)

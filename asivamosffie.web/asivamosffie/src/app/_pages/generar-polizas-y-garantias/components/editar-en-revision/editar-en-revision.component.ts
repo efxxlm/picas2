@@ -43,7 +43,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     estadoRevision: [null, Validators.required],
     fechaAprob: ['', Validators.required],
     responsableAprob: ['', Validators.required],
-    observacionesGenerales: ['']
+    observacionesGenerales: [ null ]
   });
 
   polizasYSegurosArray: Dominio[] = [];
@@ -96,6 +96,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   ultimaFechaRevision: any;
   listaUsuarios: any[] = [];
   realizoPeticion: boolean = false;
+  estadosPoliza: any;
 
   constructor(
     private router: Router,
@@ -107,6 +108,12 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
     private contratacion: ProjectContractingService
   ) {
     this.minDate = new Date();
+    this.common.listaEstadosPoliza()
+      .subscribe(
+        estadosPoliza => {
+          this.estadosPoliza = estadosPoliza;
+        }
+      );
   }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param => {
@@ -170,7 +177,7 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
       this.addressForm.get('nombre').setValue(data.nombreAseguradora);
       this.addressForm.get('numeroPoliza').setValue(data.numeroPoliza);
       this.addressForm.get('numeroCertificado').setValue(data.numeroCertificado);
-      this.addressForm.get('observacionesGenerales').setValue(data.observacionesRevisionGeneral);
+      this.addressForm.get('observacionesGenerales').setValue( data.observacionesRevisionGeneral !== undefined ? ( data.observacionesRevisionGeneral.length === 0 ? null : data.observacionesRevisionGeneral ) : null );
       this.addressForm.get('fecha').setValue(data.fechaExpedicion);
       this.addressForm.get('fechaAprob').setValue(data.fechaAprobacion);
       this.addressForm.get('cumpleAsegurado').setValue(data.cumpleDatosAsegurado);
@@ -305,18 +312,15 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
   }
   maxLength(e: any, n: number) {
     if (e.editor.getLength() > n) {
-      e.editor.deleteText(n, e.editor.getLength());
+      e.editor.deleteText(n - 1, e.editor.getLength());
     }
   }
 
-  textoLimpio(texto: string) {
-    let saltosDeLinea = 0;
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<p>');
-    saltosDeLinea += this.contarSaltosDeLinea(texto, '<li>');
-
-    if ( texto ){
-      const textolimpio = texto.replace(/<(?:.|\n)*?>/gm, '');
-      return textolimpio.length + saltosDeLinea;
+  textoLimpio( evento: any, n: number ) {
+    if ( evento !== undefined ) {
+        return evento.getLength() > n ? n : evento.getLength();
+    } else {
+        return 0;
     }
   }
 
@@ -354,15 +358,15 @@ export class EditarEnRevisionComponent implements OnInit, OnDestroy {
         nombreAprobado = this.addressForm.value.responsableAprob.usuarioId;
       }
     }
-    var statePoliza = "2";
+    var statePoliza = this.estadosPoliza.enRevision;
     let revEstado;
     if (this.addressForm.value.estadoRevision != undefined || this.addressForm.value.estadoRevision != null) {
       revEstado = this.addressForm.value.estadoRevision.codigo;
-      if (revEstado == "1") {
-        statePoliza = "3";
+      if (revEstado == this.estadosPoliza.sinRadicacion ) {
+        statePoliza = this.estadosPoliza.polizaDevuelta;
       }
       else {
-        statePoliza = "2";
+        statePoliza = this.estadosPoliza.enRevision;
       }
     }
     var completo: boolean;

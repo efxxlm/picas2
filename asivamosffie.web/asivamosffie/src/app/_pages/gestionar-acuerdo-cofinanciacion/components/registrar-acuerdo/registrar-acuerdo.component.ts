@@ -399,7 +399,15 @@ export class RegistrarAcuerdoComponent implements OnInit {
       {
         console.log(respuesta);
         if (parcial) {
-          this.router.navigate([`/registrarAcuerdos/${respuesta.data.cofinanciacionId}`]);
+          if(this.id>0)
+          {
+            location.reload()
+          }
+          else
+          {
+            this.router.navigate([`/registrarAcuerdos/${respuesta.data.cofinanciacionId}`]);
+          }
+          
         } else {
           this.router.navigate(['/gestionarAcuerdos']);
         }
@@ -528,6 +536,7 @@ export class RegistrarAcuerdoComponent implements OnInit {
   eliminadoc(aportante: any, documento: any, indexd: any) {
     console.log(aportante);
     console.log(indexd);
+    let docid=aportante.cofinanciacionDocumento[indexd].cofinanciacionDocumentoId;
     const index = aportante.cofinanciacionDocumento.indexOf(documento, 0);
     if (index > -1) {
       aportante.cofinanciacionDocumento.splice(index, 1);
@@ -535,6 +544,15 @@ export class RegistrarAcuerdoComponent implements OnInit {
     aportante.cauntosDocumentos = aportante.cofinanciacionDocumento.length;
     this.datosAportantes.get('aportantes')['controls'][indexd]
       .controls.cauntosDocumentos.setValue(aportante.cofinanciacionDocumento.length);
+    if(docid>0)
+    {
+      this.cofinanciacionService.eliminarDocumento(docid).subscribe( cof => 
+        {
+           
+        } );
+    }
+    this.actualizarValores();
+      
   }
 
   // evalua tecla a tecla

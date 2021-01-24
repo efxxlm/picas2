@@ -1,0 +1,74 @@
+<div style="margin-top: 2em;">
+    <div class="busqueda">
+        <mat-form-field appearance="outline" class="busqueda--input">
+            <mat-label>Buscador / Filtro</mat-label>
+            <input matInput #filtro (keyup)="applyFilter($event)">
+        </mat-form-field>
+        <button mat-button color="primary" class="busqueda--img" (click)="filtro.focus()">
+            <img src="assets/img/icon/lupa.svg" alt="Buscar">
+        </button>
+    </div>
+    <div class="table-responsive">
+        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+            <ng-container matColumnDef="fechaActualizacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de actualización </th>
+                <td mat-cell *matCellDef="let element" align="center"> <b> {{ element.fechaActualizacion }} </b> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actuacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Actuación </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.descripcionActuacion }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numActuacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de actuación </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.descripcionActuacion }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numReclamacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Número de mesa de trabajo </th>
+                <td mat-cell *matCellDef="let element" align="center"> {{ element.numeroMesa }} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="estadoReclamacion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado de la mesa de trabajo </th>
+                <td mat-cell *matCellDef="let element" align="center"> 
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='1'"> Sin registro </div> 
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='2'"> En proceso de registro </div> 
+                    <div *ngIf="element.estadoActuacionReclamacionCodigo=='3'"> Finalizada </div> 
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="gestion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 16%;"> Gestión </th>
+                <td mat-cell *matCellDef="let element">
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='1'"
+                        (click)="this.registrarNuevaMesa(element.actuacionId)">
+                        Registrar nueva mesa de trabajo
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='2'"
+                        (click)="this.finalizarMesaTrabajo(element.actuacionId)">
+                        Finalizar mesa de trabajo
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='2'"
+                        (click)="this.verDetalleEditar(element.actuacionId)">
+                        Ver detalle/Editar
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='3'"
+                        (click)="this.actualizarMesaTrabajo(element.actuacionId)">
+                        Actualizar mesa de trabajo
+                    </button>
+                    <button mat-raised-button color="accent" class="btn-table" *ngIf="element.estadoActuacionReclamacionCodigo=='3'"
+                        (click)="this.verDetalleMesaTrabajo(element.actuacionId)">
+                        Ver detalle
+                    </button>
+                </td>
+            </ng-container>
+            
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </div>
+</div>

@@ -11,7 +11,7 @@ namespace asivamosffie.model.Models
         }
 
         public int ControversiaActuacionMesaId { get; set; }
-        public int ControversiaActuacionId { get; set; }
+        public int ControversiaActuacionlId { get; set; }
         public string EstadoAvanceMesaCodigo { get; set; }
         public DateTime? FechaActuacionAdelantada { get; set; }
         public string ActuacionAdelantada { get; set; }

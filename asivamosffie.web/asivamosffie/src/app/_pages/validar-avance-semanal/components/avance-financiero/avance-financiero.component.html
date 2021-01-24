@@ -1,0 +1,144 @@
+<section class="text-center" *ngIf="avanceFinanciero !== undefined">
+    <p class="colorMainColor">Periodo del reporte: <b>{{ seguimientoSemanal.fechaInicio | date: 'dd/MM/yyyy' }} - {{ seguimientoSemanal.fechaFin | date: 'dd/MM/yyyy' }}</b> </p>
+  
+    <app-tabla-avance-financiero class="mt-1em"></app-tabla-avance-financiero>
+  
+    <div class="mt-1em" align="left">
+      	<mat-card class="border">
+      	    <mat-card-content class="mt-1em">
+      	        <p *ngIf="this.avanceFinanciero.requiereObservacion === true"><b>¿Requiere hacer alguna observación al avance financiero?</b>: Si </p>
+      	        <p *ngIf="this.avanceFinanciero.requiereObservacion === false"><b>¿Requiere hacer alguna observación al avance financiero?</b>: No </p>
+      	        <section *ngIf="this.avanceFinanciero.requiereObservacion === true">
+      	          <b>Observaciones</b>:
+      	          <div [innerHTML]="avanceFinanciero.observacion"></div>
+      	        </section>
+      	        <p *ngIf="avanceFinanciero.generarAlerta === true"><b>¿Considera que se debe generar una alerta sobre el avance financiero de la obra?</b>: Si </p>
+      	        <p *ngIf="avanceFinanciero.generarAlerta === false"><b>¿Considera que se debe generar una alerta sobre el avance financiero de la obra?</b>: No </p>
+      	    </mat-card-content>
+      	</mat-card>
+  	</div>
+</section>
+
+<ng-container *ngIf="esVerDetalle === true; else noEsVerDetalle">
+    <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="observacionApoyo.length > 0">
+        <mat-card-header class="header-card">
+              <mat-card-title class="header-card--text">
+                    Verificación del apoyo a la supervisión
+              </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b> {{ observacionApoyo[0].fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="avanceFinanciero.tieneObservacionApoyo === true"><b>¿Tiene observaciones al avance financiero?</b>: Si</p>
+            <p style="margin-left: 2em;" *ngIf="avanceFinanciero.tieneObservacionApoyo === false"><b>¿Tiene observaciones al avance financiero?</b>: No</p>
+            <section [innerHTML]="observacionApoyo[0].observacion" style="margin-left: 2em;" *ngIf="avanceFinanciero.tieneObservacionApoyo === true"></section>
+        </mat-card-content>
+    </mat-card>
+	
+    <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="formAvanceFinanciero.get( 'fechaCreacion' ).value !== null">
+        <mat-card-header class="header-card">
+          	<mat-card-title class="header-card--text">
+				Validación de la supervisión
+          	</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b> {{ formAvanceFinanciero.get( 'fechaCreacion' ).value | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="formAvanceFinanciero.get( 'tieneObservaciones' ).value === true"><b>¿Desde la supervisión tiene observaciones al avance financiero?</b>: Si</p>
+            <p style="margin-left: 2em;" *ngIf="formAvanceFinanciero.get( 'tieneObservaciones' ).value === false"><b>¿Desde la supervisión tiene observaciones al avance financiero?</b>: No</p>
+            <section [innerHTML]="formAvanceFinanciero.get( 'observacion' ).value" style="margin-left: 2em;" *ngIf="formAvanceFinanciero.get( 'tieneObservaciones' ).value === true"></section>
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+<ng-template #noEsVerDetalle>
+    <mat-card class="shipping-card var-main-gris mt-1em" align="left" *ngIf="observacionApoyo.length > 0">
+        <mat-card-header class="header-card">
+              <mat-card-title class="header-card--text">
+                    Verificación del apoyo a la supervisión
+              </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p style="margin-left: 2em;"><b> {{ observacionApoyo[0].fechaCreacion | date: 'dd/MM/yyyy' }} </b></p>
+            <p style="margin-left: 2em;" *ngIf="avanceFinanciero.tieneObservacionApoyo === true"><b>¿Tiene observaciones al avance financiero?</b>: Si</p>
+            <p style="margin-left: 2em;" *ngIf="avanceFinanciero.tieneObservacionApoyo === false"><b>¿Tiene observaciones al avance financiero?</b>: No</p>
+            <section [innerHTML]="observacionApoyo[0].observacion" style="margin-left: 2em;" *ngIf="avanceFinanciero.tieneObservacionApoyo === true"></section>
+        </mat-card-content>
+    </mat-card>
+
+    <form [formGroup]="formAvanceFinanciero" novalidate (ngSubmit)="guardar()">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-12">
+                <div class="row justify-content-center align-items-center" style="width: 100%;">
+                    <div class="pr-1">
+                        <label class="label-left" for="tieneObservaciones">¿Desde la supervisión tiene observaciones al avance financiero?</label>
+                    </div>
+                    <div>
+                        <mat-radio-group class="radioInput" formControlName="tieneObservaciones">
+                            <mat-radio-button [value]="true" [checked]="formAvanceFinanciero.get( 'tieneObservaciones' ).value === true">Sí</mat-radio-button>
+                            <mat-radio-button [value]="false" [checked]="formAvanceFinanciero.get( 'tieneObservaciones' ).value === false">No</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <span class="required-form-group m-0 margin-required">*</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex mt-2em align-items-center animatedDown" *ngIf="formAvanceFinanciero.value.tieneObservaciones == true" align="left">
+            <div class="text-area-quill"
+            [class.color-secondaryColor]="formAvanceFinanciero.get('observaciones').invalid && formAvanceFinanciero.get('observaciones').touched || formAvanceFinanciero.get('observaciones').invalid">
+                <label  class="text-area-quill--label align-left-label"
+                        [class.colorMainColor]="!(formAvanceFinanciero.get('observaciones').invalid && formAvanceFinanciero.get('observaciones').touched || formAvanceFinanciero.get('observaciones').invalid)">
+                        Observaciones al avance financiero
+                </label>
+                <quill-editor   class="quill-editor-style ml-1em"
+                                [styles]="editorStyle"
+                                [modules]="config"
+                                (onContentChanged)="maxLength($event, 1000)"
+                                formControlName="observaciones"
+                                #obsAvanceFinanciero
+                                required>
+                </quill-editor>
+            </div>
+            <span class="contador miles" *ngIf="formAvanceFinanciero.get('observaciones').value !== null">
+              {{1000 - textoLimpio( obsAvanceFinanciero.quillEditor, 1000 )}}
+            </span>
+            <span class="contador miles" *ngIf="formAvanceFinanciero.get('observaciones').value === null">
+              1000
+            </span>
+        </div>
+        <div class="text-center mt-1em">
+            <button mat-button color="warn" class="btn-guardar" type="submit" [disabled]="formAvanceFinanciero.get('tieneObservaciones').value === null">
+                <img src="assets/img/icon/guardar.svg" alt="Regresar">
+            </button>
+        </div>
+    </form>
+
+    <section class="text-center table-responsive size-table" style="margin-top: 2em;" *ngIf="dataHistorial.length > 0">
+        <table mat-table [dataSource]="tablaHistorial" matSort>
+      
+            <ng-container matColumnDef="fechaRevision">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Fecha de revisión </th>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text"> <b>{{ element.fechaCreacion | date: 'dd/MM/yyyy' }}</b> </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="responsable">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color w-20"> Responsable de la observación </th>
+                <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                    <ng-container *ngIf="element.esSupervisor === true; else noEsSupervisor">
+                        <p>Supervisor</p>
+                    </ng-container>
+                    <ng-template #noEsSupervisor>
+                        <p>Apoyo a la supervisión</p>
+                    </ng-template>
+                </td>
+            </ng-container>
+      
+            <ng-container matColumnDef="historial">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="back-color"> Historial de observaciones </th>
+              <td mat-cell *matCellDef="let element" align="center" class="color-text">
+                  <section [innerHTML]="element.observacion"></section>
+              </td>
+            </ng-container>
+        
+          	<tr mat-header-row *matHeaderRowDef="displayedColumnsHistorial"></tr>
+          	<tr mat-row *matRowDef="let row; columns: displayedColumnsHistorial;"></tr>
+        </table>
+    </section>
+</ng-template>
