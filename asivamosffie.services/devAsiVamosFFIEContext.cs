@@ -185,7 +185,6 @@ namespace asivamosffie.model.Models
         public virtual DbSet<VigenciaAporte> VigenciaAporte { get; set; }
 
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ActuacionSeguimiento>(entity =>
@@ -5439,7 +5438,7 @@ namespace asivamosffie.model.Models
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(25, 3)");
+                entity.Property(e => e.ValorDescuento).HasColumnType("decimal(38, 3)");
 
                 entity.HasOne(d => d.SolicitudPagoFaseFactura)
                     .WithMany(p => p.SolicitudPagoFaseFacturaDescuento)
