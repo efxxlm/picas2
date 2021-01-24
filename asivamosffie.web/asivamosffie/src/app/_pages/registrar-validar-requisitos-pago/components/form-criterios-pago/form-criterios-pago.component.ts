@@ -23,16 +23,6 @@ export class FormCriteriosPagoComponent implements OnInit {
         criterios: this.fb.array( [] )
     });
     criteriosArray: { codigo: string, nombre: string }[] = [];
-    tipoPagoArray = [
-        { name: 'Costo variable', value: '1' },
-        { name: 'Tipo de pago 2', value: '2' },
-        { name: 'Tipo de pago 3', value: '3' },
-        { name: 'Tipo de pago 4', value: '4' },
-        { name: 'Tipo de pago 5', value: '5' },
-    ];
-    conceptoPagoArray = [
-      { name: '718100002002- DEMOLICIONES', value: '1' }
-    ];
     obj1: boolean;
 
     get criterios() {
@@ -43,7 +33,7 @@ export class FormCriteriosPagoComponent implements OnInit {
         private fb: FormBuilder,
         private dialog: MatDialog,
         private routes: Router,
-        private registrarPagosSvc: RegistrarRequisitosPagoService, )
+        private registrarPagosSvc: RegistrarRequisitosPagoService )
     { }
 
     ngOnInit(): void {

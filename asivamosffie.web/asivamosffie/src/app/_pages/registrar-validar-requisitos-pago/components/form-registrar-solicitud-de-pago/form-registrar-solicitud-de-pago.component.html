@@ -159,7 +159,7 @@
                                 Amortización del anticipo
                             </mat-panel-title>
                         </mat-expansion-panel-header>
-                        <app-form-amortizacion-anticipo></app-form-amortizacion-anticipo>
+                        <app-form-amortizacion-anticipo [solicitudPago]="contrato.solicitudPagoOnly"></app-form-amortizacion-anticipo>
                     </mat-expansion-panel>
                     <mat-expansion-panel class="expansion-style sub-expansion-black">
                         <mat-expansion-panel-header class="expansion-style--header">
@@ -180,7 +180,7 @@
                     Datos de la factura
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <app-datos-factura-construccion-rvrp></app-datos-factura-construccion-rvrp>
+            <app-datos-factura-construccion-rvrp [solicitudPago]="contrato.solicitudPagoOnly"></app-datos-factura-construccion-rvrp>
         </mat-expansion-panel>
     </mat-accordion>
 </section>

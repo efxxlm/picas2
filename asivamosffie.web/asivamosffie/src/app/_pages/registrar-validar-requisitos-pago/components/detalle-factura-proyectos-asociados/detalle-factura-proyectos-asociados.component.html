@@ -164,24 +164,27 @@
         </table>
         <!--<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>-->
     </div>
-    <div style="margin-top: 3em;">
-        <mat-card class="shipping-card var-main-gris">
+    <div style="margin-top: 3em;" *ngIf="proyectos !== undefined">
+        <mat-card class="shipping-card var-main-gris" *ngFor="let proyecto of proyectos">
             <mat-card-header class="header-card header-card--margin">
                 <mat-card-title class="header-card--text">
-                    LL457326
+                    {{ proyecto.llaveMen }}
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content style="text-align: left;">
                 <p><strong>Monto máximo a pagar en el proyecto:</strong> $30.000.000</p>
                 <p><strong>Monto pendiente a pagar en el proyecto:</strong> $30.000.000</p>
                 <br>
-                <p><strong>Criterio:</strong> Estudios y diseños interventoria hasta 90%, Criterio 3</p>
+                <div class="d-flex">
+                    <strong>Criterio:</strong>
+                    <p *ngFor="let criterio of criteriosArraySeleccionados; index as i" style="margin-left: .4em;"> {{ filterCriterios( criterio.codigo ) }}<span *ngIf="criteriosArraySeleccionados.length - 1 !== i">,</span><span *ngIf="criteriosArraySeleccionados.length - 1 === i">.</span> </p>
+                </div>
                 <br>
-                <h1><b>Estudios y diseños interventoria hasta 90%</b></h1>
-                <p><strong>Valor facturado para el proyecto en el criterio:</strong> $8.000.000</p>
-                <br>
-                <h1><b>Criterio 3</b></h1>
-                <p><strong>Valor facturado para el proyecto en el criterio:</strong> $7.000.000</p>
+                <div *ngFor="let criterio of solicitudPagoFaseCriterio">
+                    <h1><b> {{ filterCriterios( criterio.tipoCriterioCodigo ) }} </b></h1>
+                    <p><strong>Valor facturado para el proyecto en el criterio:</strong> ${{ criterio.valorFacturado | currency:' ':'symbol-narrow':'.0-0' }} </p>
+                    <br>
+                </div>
             </mat-card-content>
         </mat-card>
     </div>

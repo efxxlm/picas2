@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Validators, FormBuilder, FormArray } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Dominio, CommonService } from 'src/app/core/_services/common/common.service';
 import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/modal-dialog.component';
 
 @Component({
@@ -10,6 +11,7 @@ import { ModalDialogComponent } from 'src/app/shared/components/modal-dialog/mod
 })
 export class DatosFacturaConstruccionRvrpComponent implements OnInit {
 
+    @Input() solicitudPago: any;
     addressForm = this.fb.group({
         numeroFactura: [null, Validators.required],
         fechaFactura: [null, Validators.required],
@@ -18,10 +20,9 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
         descuentos: this.fb.array( [] ),
         valorAPagarDespues: [null, Validators.required]
     });
-    tiposDescuentoArray = [
-        { name: '2x1000', value: '1' },
-        { name: '4x1000', value: '2' },
-    ];
+    tiposDescuentoArray: Dominio[] = [];
+    solicitudPagoFaseFactura: any[] = [];
+    solicitudPagoFase: any;
 
     get descuentos() {
         return this.addressForm.get( 'descuentos' ) as FormArray;
@@ -29,10 +30,19 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private dialog: MatDialog )
-    { }
+        private dialog: MatDialog,
+        private commonSvc: CommonService )
+    {
+        this.commonSvc.tiposDescuento()
+            .subscribe( response => this.tiposDescuentoArray = response );
+    }
 
     ngOnInit(): void {
+        this.getDatosFactura();
+    }
+
+    getDatosFactura() {
+        this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
         this.addressForm.get( 'numeroDescuentos' ).valueChanges
             .subscribe(
                 value => {
@@ -44,9 +54,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
                                 this.descuentos.push(
                                     this.fb.group(
                                         {
-                                            tipoDescuento: [null, Validators.required],
-                                            valorDescuento: [null, Validators.required],
-                                            descuentoId: [ 0 ]
+                                            solicitudPagoFaseDescuentoId: [ 0 ],
+                                            solicitudPagoFaseFacturaId: [ 0 ],
+                                            tipoDescuentoCodigo: [ null ],
+                                            valorDescuento: [ null ]
                                         }
                                     )
                                 );
@@ -110,9 +121,10 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
         this.descuentos.push(
             this.fb.group(
                 {
-                    tipoDescuento: [null, Validators.required],
-                    valorDescuento: [null, Validators.required],
-                    descuentoId: [ 0 ]
+                    solicitudPagoFaseDescuentoId: [ 0 ],
+                    solicitudPagoFaseFacturaId: [ 0 ],
+                    tipoDescuentoCodigo: [ null ],
+                    valorDescuento: [ null ]
                 }
             )
         );
@@ -139,6 +151,24 @@ export class DatosFacturaConstruccionRvrpComponent implements OnInit {
     }
 
     onSubmit() {
+        const solicitudPagoFaseFactura = [
+            {
+                solicitudPagoFaseFacturaId: 0,
+                solicitudPagoFaseId: 0,
+                fecha: '',
+                valorFacturado: 15,
+                numero: '',
+                tieneDescuento: false,
+                solicitudPagoFaseDescuento: [
+                    {
+                        solicitudPagoFaseDescuentoId: 0,
+                        solicitudPagoFaseFacturaId: 0,
+                        tipoDescuentoCodigo: 0,
+                        valorDescuento: 0
+                    }
+                ]
+            }
+        ]
     }
 
 }

@@ -88,9 +88,9 @@
                   </div>
                   <div class="col">
                     <mat-form-field class="select-width">
-                      <mat-select formControlName="tipoDescuento" required>
-                        <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento.value">
-                          {{ tipoDescuento.name }}
+                      <mat-select formControlName="tipoDescuentoCodigo" required>
+                        <mat-option *ngFor="let tipoDescuento of tiposDescuentoArray" [value]="tipoDescuento">
+                          {{ tipoDescuento.nombre }}
                         </mat-option>
                       </mat-select>
                     </mat-form-field>

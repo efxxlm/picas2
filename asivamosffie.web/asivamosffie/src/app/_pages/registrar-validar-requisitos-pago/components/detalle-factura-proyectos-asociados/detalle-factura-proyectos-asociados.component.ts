@@ -1,3 +1,4 @@
+import { Dominio } from './../../../../core/_services/common/common.service';
 import { RegistrarRequisitosPagoService } from './../../../../core/_services/registrarRequisitosPago/registrar-requisitos-pago.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormGroup } from '@angular/forms';
@@ -42,6 +43,9 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
         }
     );
     esMultiProyecto = false;
+    proyectos: any;
+    listaCriterios: Dominio[] = [];
+    criteriosArraySeleccionados: Dominio[] = [];
     solicitudPagoFaseCriterio: any;
     solicitudPagoFaseCriterioProyecto: any;
     solicitudPagoCargarFormaPago: any;
@@ -60,6 +64,10 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
     { }
 
     ngOnInit(): void {
+        this.getProyectos();
+    };
+
+    getProyectos() {
         if ( this.solicitudPago !== undefined ) {
             this.solicitudPagoCargarFormaPago = this.solicitudPago.solicitudPagoCargarFormaPago[0];
             this.solicitudPagoFase = this.solicitudPago.solicitudPagoRegistrarSolicitudPago[0].solicitudPagoFase[0];
@@ -75,6 +83,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                         const criteriosArray = [];
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
+                                        this.listaCriterios = criterios;
                                         if ( proyectos[1].length > 1 ) {
                                             this.esMultiProyecto = true;
                                             this.solicitudPagoFaseCriterio.forEach( criterioValue => {
@@ -140,6 +149,11 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                     )
                                                 );
                                             }
+                                        } else {
+                                            this.solicitudPagoFaseCriterio.forEach( criterio => {
+                                                this.criteriosArraySeleccionados.push( this.listaCriterios.filter( criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo )[0] );
+                                            } );
+                                            this.proyectos = proyectos[1];
                                         }
                                         this.dataSource = new MatTableDataSource( proyectos[1] );
                                         this.dataSource.paginator = this.paginator;
@@ -159,6 +173,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                         const criteriosArray = [];
                                         const criteriosSeleccionados = [];
                                         let criteriosDiligenciados = [];
+                                        this.listaCriterios = criterios;
                                         if ( proyectos[1].length > 1 ) {
                                             this.esMultiProyecto = true;
                                             this.solicitudPagoFaseCriterio.forEach( criterioValue => {
@@ -224,6 +239,11 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                                                     )
                                                 );
                                             }
+                                        } else {
+                                            this.solicitudPagoFaseCriterio.forEach( criterio => {
+                                                this.criteriosArraySeleccionados.push( this.listaCriterios.filter( criterioValue => criterioValue.codigo === criterio.tipoCriterioCodigo )[0] );
+                                            } );
+                                            this.proyectos = proyectos[1];
                                         }
                                         this.dataSource = new MatTableDataSource( proyectos[1] );
                                         this.dataSource.paginator = this.paginator;
@@ -234,7 +254,7 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
                     );
             }
         }
-    };
+    }
 
     applyFilter(event: Event) {
         const filterValue = (event.target as HTMLInputElement).value;
@@ -246,6 +266,13 @@ export class DetalleFacturaProyectosAsociadosComponent implements OnInit {
         const inputChar = String.fromCharCode(event.charCode);
 
         return alphanumeric.test(inputChar) ? true : false;
+    }
+
+    filterCriterios( tipoCriterioCodigo: string ) {
+        if ( this.listaCriterios.length > 0 ) {
+            const criterio = this.listaCriterios.filter( criterio => criterio.codigo === tipoCriterioCodigo );
+            return criterio[0].nombre;
+        }
     }
 
     criteriosProyecto( i: number ) {
