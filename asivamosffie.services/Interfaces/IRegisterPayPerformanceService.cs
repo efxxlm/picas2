@@ -16,6 +16,11 @@ namespace asivamosffie.services.Interfaces
 
         void setObservationPaymentsPerformances(string typeFile, string observaciones, string cargaPagosRendimientosId);
 
-        Task<bool> setStatusPaymentPerformance(string cargaPagosRendimientosId, string uploadStatus);
+        Task<Respuesta> setStatusPaymentPerformance(string cargaPagosRendimientosId, string uploadStatus);
+
+        Respuesta DownloadPaymentPerformanceAsync(int uploadOrderId);
+
+
+        Task<Respuesta> ManagePerformanceAsync(int uploadOrderId);
     }
 }

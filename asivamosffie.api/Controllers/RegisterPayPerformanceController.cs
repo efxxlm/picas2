@@ -8,6 +8,7 @@ using asivamosffie.model.Models;
 using asivamosffie.services.Interfaces;
 using DinkToPdf;
 using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -16,6 +17,7 @@ namespace asivamosffie.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class RegisterPayPerformanceController : ControllerBase
     {
         private readonly IRegisterPayPerformanceService _registerPayPerformanceService;
@@ -86,17 +88,63 @@ namespace asivamosffie.api.Controllers
 
         [Route("deletePaymentPerformance")]
         [HttpGet]
-        public async Task<IActionResult> deleteUpload(string uploadedPaymentPerformanceId)
+        public async Task<IActionResult> deleteUpload(string uploadedOrderId)
         {
             try
             {
-                await _registerPayPerformanceService.setStatusPaymentPerformance(uploadedPaymentPerformanceId, "Eliminado");
-                return Ok("Se actualizo correctamente");
+                var result = await _registerPayPerformanceService.setStatusPaymentPerformance(uploadedOrderId, "Eliminado");
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
+
+        [Route("downloadPaymentPerformance")]
+        [HttpGet]
+        public async Task<IActionResult> DownloadPaymentPerformance(int uploadedOrderId)
+        {
+            try
+            {
+                return Ok(_registerPayPerformanceService.DownloadPaymentPerformanceAsync(uploadedOrderId));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        //[Route("getPaymentsPerformances")]
+        //[HttpGet]
+        //public async Task<List<dynamic>> getPaymentsPerformances([FromQuery] string typeFile)
+        //{
+        //    try
+        //    {
+        //        return await _registerPayPerformanceService.getPaymentsPerformances(typeFile);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
+
+
+        [Route("managePerformance")]
+        [HttpGet]
+        public async Task<IActionResult> ManagePerformance(int uploadedOrderId)
+        {
+            try
+            {
+                var result = await _registerPayPerformanceService.ManagePerformanceAsync(uploadedOrderId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

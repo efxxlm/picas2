@@ -7,6 +7,7 @@ import { DialogCargarReportPagosRprComponent } from '../dialog-cargar-report-pag
 import { ObservacionesReportPagoRprComponent } from '../observaciones-report-pago-rpr/observaciones-report-pago-rpr.component'
 import { FaseDosPagosRendimientosService } from '../../../../core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service'
 import { FileDownloader } from 'src/app/_helpers/file-downloader'
+import exportFromJSON from 'export-from-json'
 
 @Component({
   selector: 'app-tabla-registrar-pagos-rpr',
@@ -84,16 +85,27 @@ export class TablaRegistrarPagosRprComponent implements OnInit {
 
   deleteUpload(uploadPaymentId: number){
     this.faseDosPagosRendimientosSvc.setPaymentsPerformanceStatus(uploadPaymentId)
-     .subscribe(()=>{
-
+     .subscribe(( isDeleted)=>{
+        console.log("Eliminado", isDeleted)
+        this.getData()
     },onError => {
       
     });
   }
 
   viewDetails(uploadPaymentId: number){
+    this.faseDosPagosRendimientosSvc.downlaodPaymentsPerformanceStatus(uploadPaymentId)
+    .subscribe((content: any)=>{
+      const data = content.data.archivoJson;
 
-    FileDownloader.exportExcel("RegistrarPagos.xlsx", {})
+      const fileName = content.data.nombreArchivo
+      const exportType = 'xls'
+ 
+      exportFromJSON({ data, fileName, exportType, withBOM: true })
+    },onError => {
+      
+    });
+    // FileDownloader.exportExcel("RegistrarPagos.xlsx", {})
   }
 
   abrirObservaciones(cargaPagosRendimientosId: number) {

@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import exportFromJSON from 'export-from-json';
 import { FaseDosPagosRendimientosService } from 'src/app/core/_services/faseDosPagosRendimientos/fase-dos-pagosRendimientos.service';
 import { DialogCargarReportRendRprComponent } from '../dialog-cargar-report-rend-rpr/dialog-cargar-report-rend-rpr.component';
 
@@ -80,6 +81,31 @@ export class TablaRegistrarRendimientosRprComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   };  
+
+  deleteUpload(uploadPaymentId: number){
+    this.faseDosPagosRendimientosSvc.setPaymentsPerformanceStatus(uploadPaymentId)
+     .subscribe(( isDeleted)=>{
+        console.log("Eliminado", isDeleted)
+        this.loadDataSource()
+    },onError => {
+      
+    });
+  }
+
+  viewDetails(uploadPaymentId: number){
+    this.faseDosPagosRendimientosSvc.downlaodPaymentsPerformanceStatus(uploadPaymentId)
+    .subscribe((content: any)=>{
+      const data = content.data.archivoJson;
+
+      const fileName = content.data.nombreArchivo
+      const exportType = 'xls'
+ 
+      exportFromJSON({ data, fileName, exportType, withBOM: true })
+    },onError => {
+      
+    });
+    // FileDownloader.exportExcel("RegistrarPagos.xlsx", {})
+  }
 
   cargarNuevoReportedeRendimiento(){
     const dialogConfig = new MatDialogConfig();

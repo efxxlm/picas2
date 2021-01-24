@@ -41,8 +41,20 @@ export class DialogCargarReportRendRprComponent implements OnInit {
   openDialogConfirmar (modalTitle: string, modalText: string) {
     const confirmarDialog = this.dialog.open(ModalDialogComponent, {
       width: '40em',
-      data : { modalTitle, modalText, siNoBoton:true }
-    });
+      data: { modalTitle, modalText, siNoBoton: true }
+    })
+
+    confirmarDialog.afterClosed().subscribe((response) => {
+      if (response === true) {
+        let pFile = this.addressForm.get('documentoFile').value
+
+        this.faseDosPagosRendimientosSvc
+          .uploadFileToValidate(pFile, this.typeFile, true)
+          .subscribe((response: any) => {
+            this.openDialog('', 'La información ha sido guardada exitosamente')
+          })
+      }
+    })
   };
   fileName(event: any) {
     if (event.target.files.length > 0) {

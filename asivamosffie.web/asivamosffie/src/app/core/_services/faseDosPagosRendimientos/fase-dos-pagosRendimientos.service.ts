@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { environment } from 'src/environments/environment'
 import { CarguePagosRendimientos } from '../../../_interfaces/faseDosPagosRendimientos'
+import exportFromJSON from 'export-from-json'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -37,7 +39,15 @@ export class FaseDosPagosRendimientosService {
     )
   }
 
-  setPaymentsPerformanceStatus(uploadedPaymentPerformanceId){
-    return this.http.get(`${this.urlApi}/deletePaymentPerformance`, uploadedPaymentPerformanceId )
+  setPaymentsPerformanceStatus(uploadedOrderId: number){
+    return this.http.get<any>(`${this.urlApi}/deletePaymentPerformance?uploadedOrderId=${uploadedOrderId}`)
+  }
+
+  downlaodPaymentsPerformanceStatus(uploadedOrderId: number){
+    return this.http.get<any>(`${this.urlApi}/downloadPaymentPerformance?uploadedOrderId=${uploadedOrderId}`)
+  }
+
+  managePerformance(uploadedOrderId :number){
+    return this.http.get<any>(`${this.urlApi}/managePerformance?uploadedOrderId=${uploadedOrderId}`)
   }
 }
