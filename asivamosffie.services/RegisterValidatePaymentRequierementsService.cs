@@ -32,16 +32,17 @@ namespace asivamosffie.services
         #endregion
 
         #region Get
-        public async Task <dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
-        { 
+        public async Task<dynamic> GetListProyectosByLlaveMen(string pLlaveMen)
+        {
             return await _context.Proyecto.Include(r => r.ContratacionProyecto)
                 .Where(r => r.LlaveMen.Contains(pLlaveMen))
-                .Select(r => new { 
+                .Select(r => new
+                {
                     r.ContratacionProyecto.FirstOrDefault().ContratacionProyectoId,
-                    r.LlaveMen 
-                }).ToListAsync(); 
+                    r.LlaveMen
+                }).ToListAsync();
         }
-         
+
         public async Task<dynamic> GetListSolicitudPago()
         {
             var result = await _context.SolicitudPago.Where(s => s.Eliminado != true)
@@ -164,6 +165,12 @@ namespace asivamosffie.services
                             {
                                 if (SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Count() > 0)
                                     SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto = SolicitudPagoFaseCriterio.SolicitudPagoFaseCriterioProyecto.Where(r => r.Eliminado != true).ToList();
+                            }
+
+                            foreach (var SolicitudPagoFaseFactura in SolicitudPagoFase.SolicitudPagoFaseFactura)
+                            {
+                                if (SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Count() > 0)
+                                    SolicitudPagoFaseFactura.SolicitudPagoFaseFacturaDescuento.Where(r => r.Eliminado != true);
                             }
                         }
                     }
@@ -306,6 +313,40 @@ namespace asivamosffie.services
 
 
         #region  Tipo Obra Interventoria
+        public async Task<Respuesta> DeleteSolicitudPagoFaseFacturaDescuento(int pSolicitudPagoFaseFacturaDescuentoId, string pUsuarioModificacion)
+        {
+            int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Descuento, (int)EnumeratorTipoDominio.Acciones);
+
+            try
+            {
+                SolicitudPagoFaseFacturaDescuento SolicitudPagoFaseFacturaDescuento = _context.SolicitudPagoFaseFacturaDescuento.Find(pSolicitudPagoFaseFacturaDescuentoId);
+                SolicitudPagoFaseFacturaDescuento.Eliminado = true;
+                SolicitudPagoFaseFacturaDescuento.UsuarioModificacion = pUsuarioModificacion;
+                SolicitudPagoFaseFacturaDescuento.FechaModificacion = DateTime.Now;
+                return
+                     new Respuesta
+                     {
+                         IsSuccessful = true,
+                         IsException = false,
+                         IsValidation = false,
+                         Code = GeneralCodes.OperacionExitosa,
+                         Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.OperacionExitosa, idAccion, pUsuarioModificacion, "ELIMINAR SOLICITUD PAGO FASE CRITERIO PROYECTO")
+                     };
+            }
+            catch (Exception ex)
+            {
+                return
+                    new Respuesta
+                    {
+                        IsSuccessful = false,
+                        IsException = true,
+                        IsValidation = false,
+                        Code = GeneralCodes.Error,
+                        Message = await _commonService.GetMensajesValidacionesByModuloAndCodigo((int)enumeratorMenu.Registrar_validar_requisitos_de_pago, GeneralCodes.Error, idAccion, pUsuarioModificacion, ex.InnerException.ToString())
+                    };
+            }
+        }
+
         public async Task<Respuesta> DeleteSolicitudLlaveCriterioProyecto(int pContratacionProyectoId, string pUsuarioModificacion)
         {
             int idAccion = await _commonService.GetDominioIdByCodigoAndTipoDominio(ConstantCodigoAcciones.Eliminar_Llave_Criterio_Proyecto, (int)EnumeratorTipoDominio.Acciones);
@@ -636,7 +677,7 @@ namespace asivamosffie.services
                 }
                 else
                 {
-                    SolicitudPagoAmortizacion.Eliminado = SolicitudPagoAmortizacion.Eliminado;
+                    SolicitudPagoAmortizacion.Eliminado = true;
                     SolicitudPagoAmortizacion.UsuarioCreacion = pUsuarioCreacion;
                     SolicitudPagoAmortizacion.FechaCreacion = DateTime.Now;
                     SolicitudPagoAmortizacion.RegistroCompleto = ValidateCompleteRecordSolicitudPagoAmortizacion(SolicitudPagoAmortizacion);

@@ -42,9 +42,16 @@ namespace asivamosffie.api.Controllers
 
         [HttpPost]
         [Route("DeleteSolicitudPago")]
-        public async Task<IActionResult> DeleteSolicitudPago([FromBody] int pSolicitudPagoId)
+        public async Task<IActionResult> DeleteSolicitudPago([FromQuery] int pSolicitudPagoId)
         {
             return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPago(pSolicitudPagoId, HttpContext.User.FindFirst("User").Value));
+        }
+ 
+        [HttpPost]
+        [Route("DeleteSolicitudPagoFaseFacturaDescuento")]
+        public async Task<IActionResult> DeleteSolicitudPagoFaseFacturaDescuento([FromQuery] int pSolicitudPagoFaseFacturaDescuentoId)
+        {
+            return Ok(await _registerValidatePaymentRequierementsService.DeleteSolicitudPagoFaseFacturaDescuento(pSolicitudPagoFaseFacturaDescuentoId, HttpContext.User.FindFirst("User").Value));
         }
         [HttpPost]
         [Route("DeleteSolicitudPagoFaseCriterio")]
