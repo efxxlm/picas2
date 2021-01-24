@@ -82,27 +82,51 @@ namespace asivamosffie.services
         {
             try
             {
-                ///Siempre aparecera el contrato Reunion ivhon 20/01/201 - 5:16  
-                List<int?> ListContratosConSolicitudPago = _context.SolicitudPago
-                 .Include(c => c.Contrato)
-                 .Where(s => s.Eliminado == false && s.ContratoId != null)
-                         .Select(r => r.ContratoId).ToList();
+                if (!string.IsNullOrEmpty(pTipoSolicitud) && !string.IsNullOrEmpty(pModalidadContrato))
+                {
+                    ///Siempre aparecera el contrato Reunion ivhon 20/01/201 - 5:16  
+                    List<int?> ListContratosConSolicitudPago = _context.SolicitudPago
+                     .Include(c => c.Contrato)
+                     .Where(s => s.Eliminado == false && s.ContratoId != null)
+                             .Select(r => r.ContratoId).ToList();
 
-                List<Contrato> ListContratos = await _context.Contrato
-                                .Include(c => c.Contratacion)
-                                         .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
-                                               && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
-                                               && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
-                                               ).ToListAsync();
+                    List<Contrato> ListContratos = await _context.Contrato
+                                    .Include(c => c.Contratacion)
+                                             .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                                   && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                   && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
+                                                   ).ToListAsync();
 
-                ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
-                return ListContratos
-                    .Select(r => new
-                    {
-                        r.ContratoId,
-                        r.NumeroContrato
-                    }).ToList();
+                    ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
+                    return ListContratos
+                        .Select(r => new
+                        {
+                            r.ContratoId,
+                            r.NumeroContrato
+                        }).ToList();
+                }
+                else
+                {
+                    List<int?> ListContratosConSolicitudPago = _context.SolicitudPago
+                   .Include(c => c.Contrato)
+                   .Where(s => s.Eliminado == false && s.ContratoId != null)
+                           .Select(r => r.ContratoId).ToList();
 
+                    List<Contrato> ListContratos = await _context.Contrato
+                                    .Include(c => c.Contratacion)
+                                             .Where(c => c.NumeroContrato.Trim().ToLower().Contains(pNumeroContrato.Trim().ToLower())
+                                                   // && c.Contratacion.TipoSolicitudCodigo == pTipoSolicitud
+                                                   && c.EstadoActaFase2 == ConstanCodigoEstadoActaContrato.Con_acta_suscrita_y_cargada
+                                                   ).ToListAsync();
+
+                    ListContratos.RemoveAll(item => ListContratosConSolicitudPago.Contains(item.ContratoId));
+                    return ListContratos
+                        .Select(r => new
+                        {
+                            r.ContratoId,
+                            r.NumeroContrato
+                        }).ToList();
+                } 
             }
             catch (Exception ex)
             {
@@ -243,7 +267,7 @@ namespace asivamosffie.services
         {
             List<dynamic> ListDynamics = new List<dynamic>();
             List<string> strCriterios = _context.CriterioCodigoTipoPagoCodigo.Where(r => r.CriterioCodigo == pCriterioCodigo).Select(r => r.TipoPagoCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago);
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Tipo_Pago_Obra_Interventoria);
 
             strCriterios.ForEach(l =>
             {
@@ -260,7 +284,7 @@ namespace asivamosffie.services
         {
             List<dynamic> ListDynamics = new List<dynamic>();
             List<string> strCriterios = _context.TipoPagoCodigoConceptoPagoCriterioCodigo.Where(r => r.TipoPagoCodigo == TipoPagoCodigo).Select(r => r.ConceptoPagoCriterioCodigo).ToList();
-            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Concepto_Pago_Criterio);
+            List<Dominio> ListCriterio = await _commonService.GetListDominioByIdTipoDominio((int)EnumeratorTipoDominio.Concepto_Pago_Criterio_Obra_Interventoria);
 
             strCriterios.ForEach(l =>
             {
