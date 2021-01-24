@@ -170,8 +170,7 @@
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="shipping-card"
-      *ngIf="tipoAportante.Tercero.includes(tipoAportanteId.toString()) || tipoAportante.ET.includes(tipoAportanteId.toString())">
+    <mat-card class="shipping-card">
       <mat-card-content>
         <div class="row mt-1em" *ngFor="let documento of listaDocumentos; let i = index">
           <div class="col-md-6">
